@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Economic Calendar · New York Time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#d2d5dd; --card:#e6e8ed; --card-b:#b8bbc5; --ink:#141518; --muted:#6c707b; --faint:#9a9ea8;
+  --red:#e5484d; --orange:#f2a12b; --teal:#3f8b84; --hand:#c9302c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#c4c7cf;font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+
+/* toolbar */
+.bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
+  padding:10px 14px;background:#1b1c20;color:#eee}
+.bar button,.bar label.btn{background:#2c2e34;border:1px solid #3d4048;border-radius:8px;padding:6px 11px;cursor:pointer;font-size:13px;color:#eee}
+.bar button:hover{background:#383b43}
+.bar .month{font-weight:600;min-width:150px;text-align:center}
+.bar .sep{width:1px;height:22px;background:#3d4048;margin:0 4px}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.chip.off{opacity:.4}
+.dot{width:8px;height:8px;border-radius:2px;display:inline-block;flex:none}
+.dot.high{background:var(--red)} .dot.med{background:var(--orange)} .dot.low{background:#8a8f99}
+
+.wrap{overflow-x:auto;padding:22px 12px 40px}
+.poster{width:1200px;margin:0 auto;background:var(--bg);padding:36px 42px 26px;border-radius:4px;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+
+/* header */
+.head{display:flex;justify-content:space-between;align-items:flex-start}
+.kicker{display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.18em;color:#4b4e57}
+.kicker .usd{border:1.5px solid var(--ink);border-radius:6px;padding:2px 8px;letter-spacing:.05em;font-weight:700;color:var(--ink)}
+h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing:-.02em}
+.sub{font-size:20px;color:#5e626c;margin:0}
+.brand{display:flex;flex-direction:column;align-items:flex-end;gap:10px;cursor:pointer}
+.logo{width:66px;height:66px;border-radius:50%;background:#0d0d0f;color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-weight:700;font-size:18px;letter-spacing:.04em;text-align:center;line-height:1}
+.handle{font-size:17px;color:#2e3036}
+
+/* grid */
+.grid{display:grid;grid-template-columns:118px repeat(5,1fr);gap:8px 10px;margin-top:26px}
+.colh{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#555963;padding:0 0 4px 12px;font-weight:700}
+.colh:first-child{padding-left:0}
+.wk{border-left:3px solid var(--teal);padding:4px 0 0 10px;cursor:pointer}
+.wk b{display:block;font-size:14px;font-weight:700;line-height:1.2}
+.wk small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.day{position:relative;min-height:114px;background:var(--card);border:1px solid var(--card-b);border-radius:10px;padding:9px 11px 10px;cursor:pointer;transition:box-shadow .15s}
+.day:hover{box-shadow:0 0 0 2px #8f949f}
+.day.out{background:transparent;border:1.5px dashed #b3b7c0;cursor:default}
+.day.out:hover{box-shadow:none}
+.day.out .num{color:#a9adb6}
+.day.closed{background-image:repeating-linear-gradient(135deg,transparent 0 9px,rgba(120,126,140,.22) 9px 10.5px)}
+.day.today{box-shadow:0 0 0 2px var(--teal)}
+.num{font-size:21px;font-weight:600;line-height:1;margin-bottom:9px}
+.badge{position:absolute;top:10px;right:10px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;
+  border:1.3px solid #7d818b;color:#555963;border-radius:20px;padding:2px 7px;background:var(--card)}
+.badge.red{border-color:var(--hand);color:var(--hand)}
+.ev{display:grid;grid-template-columns:10px 64px 1fr;align-items:start;margin-bottom:6px;font-size:12.5px;line-height:1.22}
+.ev .dot{margin-top:4px}
+.ev .t{font-family:'Space Mono',monospace;font-size:11.2px;margin-top:1px;white-space:nowrap}
+.ev .n{font-weight:500}
+.ev.earn{grid-template-columns:16px 1fr;font-weight:500}
+.ev.earn .ic{font-size:13px;color:#3a3d44}
+.none{font-size:12.5px;color:#7b7f89}
+.note{font-family:'Caveat',cursive;color:var(--hand);font-size:17px;line-height:1.08;font-weight:600}
+.hidden-ev{display:none}
+
+.foot{margin-top:20px;font-size:12.5px;color:#3d4048;line-height:1.6}
+.foot .star{color:var(--red);font-weight:700}
+.legend{display:flex;justify-content:space-between;align-items:flex-start;border-top:1px solid #a9adb6;margin-top:12px;padding-top:12px;font-size:12.5px;color:#4b4e57}
+.legend .items{display:flex;gap:24px;align-items:center}
+.legend .items span{display:inline-flex;gap:7px;align-items:center}
+.legend .src{text-align:left;max-width:240px}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(10,10,14,.45);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+.ov.show{display:flex}
+.modal{background:#f3f4f7;border-radius:14px;width:min(640px,100%);max-height:90vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal h2{margin:0 0 14px;font-size:22px}
+.modal label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px;font-family:'Space Mono',monospace;letter-spacing:.06em}
+.modal input,.modal select,.modal textarea{width:100%;border:1px solid #c5c8d0;border-radius:8px;padding:7px 9px;background:#fff;font-size:14px}
+.row{display:grid;grid-template-columns:96px 1fr 104px 118px 32px;gap:6px;margin-bottom:6px;align-items:center}
+.row button{border:none;background:#e0e2e8;border-radius:8px;height:34px;cursor:pointer}
+.row button:hover{background:#f2c9ca}
+.two{display:grid;grid-template-columns:170px 1fr;gap:10px}
+.actions{display:flex;justify-content:space-between;gap:8px;margin-top:18px}
+.actions button{border:none;border-radius:9px;padding:9px 16px;cursor:pointer;font-weight:600}
+.primary{background:#141518;color:#fff}
+.ghost{background:#e0e2e8}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+textarea.json{font-family:'Space Mono',monospace;font-size:11px;height:260px}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <button id="prev" title="Mois précédent">←</button>
+  <div class="month" id="mlabel"></div>
+  <button id="next" title="Mois suivant">→</button>
+  <button id="today">Aujourd'hui</button>
+  <span class="sep"></span>
+  <button class="chip" data-f="high"><span class="dot high"></span>High</button>
+  <button class="chip" data-f="med"><span class="dot med"></span>Medium</button>
+  <button class="chip" data-f="earn">☾ Earnings</button>
+  <span class="sep"></span>
+  <button id="brandBtn">Marque</button>
+  <button id="dataBtn">Sauvegarde / Import</button>
+</div>
+
+<div class="wrap"><div class="poster" id="poster">
+  <div class="head">
+    <div>
+      <div class="kicker"><span class="usd">USD</span>ECONOMIC CALENDAR · NEW YORK TIME (ET)</div>
+      <h1 id="title"></h1>
+      <p class="sub">The month at a glance: news, holidays and key earnings.</p>
+    </div>
+    <div class="brand" id="brandBox" title="Modifier la marque">
+      <div class="logo" id="logo"></div>
+      <div class="handle" id="handle"></div>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="foot" id="foot"></div>
+  <div class="legend">
+    <div class="items">
+      <span><span class="dot high"></span>High impact</span>
+      <span><span class="dot med"></span>Medium impact</span>
+      <span>☾ After close</span>
+      <span>✳ Pre-market</span>
+      <span>◌ Time TBD</span>
+    </div>
+    <div class="src" id="src">Sources: Forex Factory, NYSE, Nasdaq</div>
+  </div>
+</div></div>
+
+<!-- day editor -->
+<div class="ov" id="ovDay"><div class="modal">
+  <h2 id="dTitle"></h2>
+  <div id="rows"></div>
+  <button class="ghost" id="addRow" style="border:none;border-radius:8px;padding:7px 12px;cursor:pointer">+ Ajouter un événement</button>
+  <div class="hint">Heure en ET (ex. 8:30 AM, All day, Tentative). Type « Earnings » : la colonne heure est ignorée.</div>
+  <div class="two">
+    <div><label>STATUT DU JOUR</label>
+      <select id="dStatus">
+        <option value="auto">Auto (calendrier NYSE)</option>
+        <option value="">Normal</option>
+        <option value="bank">Bank holiday</option>
+        <option value="closed">Closed</option>
+        <option value="early">Early close</option>
+      </select></div>
+    <div><label>NOTE MANUSCRITE (rouge)</label><input id="dNote" placeholder="Laisser vide = note auto"></div>
+  </div>
+  <div class="actions">
+    <button class="ghost" id="dCancel">Annuler</button>
+    <button class="primary" id="dSave">Enregistrer</button>
+  </div>
+</div></div>
+
+<!-- week editor -->
+<div class="ov" id="ovWeek"><div class="modal">
+  <h2>Libellé de la semaine</h2>
+  <label>TITRE</label><input id="wLabel" placeholder="Auto si vide">
+  <label>SOUS-TITRE</label><input id="wSub" placeholder="Auto si vide">
+  <div class="actions"><button class="ghost" id="wCancel">Annuler</button><button class="primary" id="wSave">Enregistrer</button></div>
+</div></div>
+
+<!-- brand editor -->
+<div class="ov" id="ovBrand"><div class="modal">
+  <h2>Marque</h2>
+  <label>HANDLE</label><input id="bHandle" placeholder="@ton_handle">
+  <label>TEXTE DU LOGO (2–4 lettres)</label><input id="bLogo" maxlength="4">
+  <div class="actions"><button class="ghost" id="bCancel">Annuler</button><button class="primary" id="bSave">Enregistrer</button></div>
+</div></div>
+
+<!-- data -->
+<div class="ov" id="ovData"><div class="modal">
+  <h2>Sauvegarde / Import</h2>
+  <div class="hint" style="margin:0 0 8px">Tes modifications sont gardées dans ce navigateur. Copie ce JSON pour les sauvegarder ailleurs, ou colle un JSON puis « Importer ».</div>
+  <textarea class="json" id="jsonBox"></textarea>
+  <div class="actions">
+    <button class="ghost" id="jReset">Réinitialiser les données</button>
+    <span style="display:flex;gap:8px">
+      <button class="ghost" id="jCopy">Copier</button>
+      <button class="ghost" id="jClose">Fermer</button>
+      <button class="primary" id="jImport">Importer</button>
+    </span>
+  </div>
+</div></div>
+
+<script>
+/* ---------- seed data (Nov 2026, Forex Factory / NYSE / Nasdaq) ---------- */
+const SEED = {
+  brand:{handle:"@ton_handle", logo:"ET"},
+  events:{
+    "2026-11-02":[{t:"10:00 AM",n:"ISM Manufacturing PMI",i:"med",k:"ev"},{n:"AAPL earnings",k:"after"}],
+    "2026-11-03":[{t:"10:00 AM",n:"JOLTS Job Openings",i:"med",k:"ev"},{t:"All day",n:"Congressional Elections",i:"high",k:"ev"}],
+    "2026-11-04":[{t:"10:00 AM",n:"ISM Services PMI",i:"med",k:"ev"}],
+    "2026-11-05":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}],
+    "2026-11-06":[{t:"8:30 AM",n:"NFP · Unemployment Rate",i:"high",k:"ev"},{t:"10:00 AM",n:"Prelim UoM",i:"med",k:"ev"}],
+    "2026-11-10":[{t:"8:30 AM",n:"CPI & Core CPI (m/m, y/y)",i:"high",k:"ev"}],
+    "2026-11-12":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}],
+    "2026-11-13":[{t:"8:30 AM",n:"PPI & Core PPI",i:"high",k:"ev"}],
+    "2026-11-17":[{t:"8:30 AM",n:"Retail Sales & Core Retail Sales",i:"high",k:"ev"},{n:"NVDA earnings",k:"after"}],
+    "2026-11-18":[{t:"2:00 PM",n:"FOMC Meeting Minutes",i:"high",k:"ev"}],
+    "2026-11-19":[{t:"8:30 AM",n:"Philly Fed · Unemployment Claims",i:"med",k:"ev"}],
+    "2026-11-20":[{t:"10:00 AM",n:"Revised UoM",i:"med",k:"ev"},{t:"Tentative",n:"Treasury Currency Report",i:"med",k:"ev"}],
+    "2026-11-23":[{t:"9:45 AM",n:"Flash Manufacturing & Services PMI",i:"med",k:"ev"}],
+    "2026-11-24":[{t:"10:00 AM",n:"CB Consumer Confidence",i:"med",k:"ev"},{n:"DELL · BABA earnings",k:"tbd"}],
+    "2026-11-25":[{t:"8:30 AM",n:"Core PCE · Prelim GDP",i:"high",k:"ev"},{t:"8:30 AM",n:"GDP Price Index · Claims",i:"med",k:"ev"}],
+    "2026-12-01":[{t:"10:00 AM",n:"ISM Manufacturing PMI",i:"med",k:"ev"},{t:"10:00 AM",n:"JOLTS Job Openings",i:"med",k:"ev"}],
+    "2026-12-03":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"},{t:"10:00 AM",n:"ISM Services PMI",i:"med",k:"ev"}],
+    "2026-12-04":[{t:"8:30 AM",n:"NFP · Unemployment Rate · AHE",i:"high",k:"ev"},{t:"10:00 AM",n:"Prelim UoM",i:"med",k:"ev"}],
+    "2026-12-09":[{t:"2:00 PM",n:"FOMC Rate Decision · Statement · SEP",i:"high",k:"ev"},{t:"2:30 PM",n:"FOMC Press Conference",i:"high",k:"ev"}],
+    "2026-12-10":[{t:"8:30 AM",n:"CPI & Core CPI (m/m, y/y)",i:"high",k:"ev"},{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}],
+    "2026-12-15":[{t:"8:30 AM",n:"PPI & Core PPI",i:"high",k:"ev"}],
+    "2026-12-16":[{t:"8:30 AM",n:"Retail Sales & Core Retail Sales",i:"high",k:"ev"}],
+    "2026-12-17":[{t:"8:30 AM",n:"Philly Fed · Unemployment Claims",i:"med",k:"ev"}],
+    "2026-12-18":[{t:"10:00 AM",n:"Revised UoM",i:"med",k:"ev"}],
+    "2026-12-22":[{t:"10:00 AM",n:"CB Consumer Confidence",i:"med",k:"ev"}],
+    "2026-12-23":[{t:"8:30 AM",n:"Core PCE · Final GDP",i:"high",k:"ev"},{t:"8:30 AM",n:"Final GDP Price Index",i:"med",k:"ev"}],
+    "2026-12-24":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}],
+    "2026-12-30":[{t:"2:00 PM",n:"FOMC Meeting Minutes",i:"high",k:"ev"}],
+    "2026-12-31":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}]
+  },
+  days:{},
+  weeks:{
+    "2026-11-02":{l:"NFP week",s:"Midterm elections Tue"},
+    "2026-11-09":{l:"CPI & PPI week",s:"Veterans Day Wed"},
+    "2026-11-16":{l:"NVDA earnings week",s:"Retail Sales Tue · FOMC Minutes Wed"},
+    "2026-11-23":{l:"Thanksgiving week",s:"Holiday Thu · early close Fri"},
+    "2026-11-30@11":{l:"NFP week",s:"ISM & JOLTS Tue · NFP Fri"},
+    "2026-12-07":{l:"FOMC & CPI week",s:"Fed decision Wed · CPI Thu"},
+    "2026-12-14":{l:"PPI & Retail Sales week",s:"PPI Tue · Retail Sales Wed"},
+    "2026-12-21":{l:"Christmas week",s:"Core PCE Wed · early close Thu · closed Fri"},
+    "2026-12-28":{l:"Year end",s:"FOMC Minutes Wed"}
+  }
+};
+const EXTRA={"2027-01-04":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-01-06":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-02-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-02-03":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-03-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-03-03":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-04-01":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"},{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-04-05":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-05-03":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-05-05":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-06-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-06-03":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"},{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-07-01":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"},{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-07-06":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-08-02":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-08-04":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-09-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-09-03":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"},{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-10-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-10-05":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-11-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-11-03":[{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-12-01":[{"t":"10:00 AM","n":"ISM Manufacturing PMI (est.)","i":"med","k":"ev"}],"2027-12-03":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"},{"t":"10:00 AM","n":"ISM Services PMI (est.)","i":"med","k":"ev"}],"2027-01-08":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-02-05":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-03-05":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-04-02":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-05-07":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-06-04":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-07-02":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-08-06":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-10-08":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-11-05":[{"t":"8:30 AM","n":"NFP · Unemployment Rate · AHE","i":"high","k":"ev"}],"2027-01-13":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-02-11":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-10":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-04-13":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-05-12":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-06-10":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-07-14":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-08-11":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-09-14":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-10-14":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-10":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-12-10":[{"t":"8:30 AM","n":"CPI & Core CPI (m/m, y/y)","i":"high","k":"ev"}],"2027-01-14":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-02-12":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-03-12":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-04-14":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-05-13":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-06-11":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-07-15":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-10":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-09-10":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-10-15":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"},{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-11-12":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"}],"2027-12-15":[{"t":"8:30 AM","n":"PPI & Core PPI","i":"high","k":"ev"},{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-01-29":[{"t":"8:30 AM","n":"Employment Cost Index q/q","i":"med","k":"ev"}],"2027-04-30":[{"t":"8:30 AM","n":"Employment Cost Index q/q","i":"med","k":"ev"}],"2027-07-30":[{"t":"8:30 AM","n":"Employment Cost Index q/q","i":"med","k":"ev"}],"2027-10-29":[{"t":"8:30 AM","n":"Employment Cost Index q/q","i":"med","k":"ev"}],"2027-01-15":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-02-17":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"},{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-03-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-04-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-05-14":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-06-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-07-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-08-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-09-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-16":[{"t":"8:30 AM","n":"Retail Sales & Core Retail Sales","i":"high","k":"ev"}],"2027-01-28":[{"t":"8:30 AM","n":"Core PCE · Advance GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-02-25":[{"t":"8:30 AM","n":"Core PCE · Prelim GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-31":[{"t":"8:30 AM","n":"Core PCE · Final GDP","i":"high","k":"ev"}],"2027-04-29":[{"t":"8:30 AM","n":"Core PCE · Advance GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-05-27":[{"t":"8:30 AM","n":"Core PCE · Prelim GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-06-25":[{"t":"8:30 AM","n":"Core PCE · Final GDP","i":"high","k":"ev"}],"2027-07-29":[{"t":"8:30 AM","n":"Core PCE · Advance GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-25":[{"t":"8:30 AM","n":"Core PCE · Prelim GDP","i":"high","k":"ev"}],"2027-09-30":[{"t":"8:30 AM","n":"Core PCE · Final GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-10-28":[{"t":"8:30 AM","n":"Core PCE · Advance GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-24":[{"t":"8:30 AM","n":"Core PCE · Prelim GDP","i":"high","k":"ev"},{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-22":[{"t":"8:30 AM","n":"Core PCE · Final GDP","i":"high","k":"ev"}],"2027-01-27":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-03-17":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement · SEP","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-04-07":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-04-28":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-05-19":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-06-09":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement · SEP","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-06-30":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-07-28":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-08-18":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-09-15":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement · SEP","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-10-06":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-10-27":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-11-17":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-12-08":[{"t":"2:00 PM","n":"FOMC Rate Decision · Statement · SEP","i":"high","k":"ev"},{"t":"2:30 PM","n":"FOMC Press Conference","i":"high","k":"ev"}],"2027-12-29":[{"t":"2:00 PM","n":"FOMC Meeting Minutes","i":"high","k":"ev"}],"2027-01-07":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-01-21":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-02-04":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-02-18":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-04":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-11":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-18":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-03-25":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-04-08":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-04-15":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-04-22":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-05-06":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-05-20":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-06-17":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-06-24":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-07-08":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-07-22":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-05":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-12":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-19":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-08-26":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-09-02":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-09-09":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-09-23":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-10-07":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-10-21":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-04":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-11":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-11-18":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-02":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-09":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-16":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-23":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2027-12-30":[{"t":"8:30 AM","n":"Unemployment Claims","i":"med","k":"ev"}],"2026-12-01":[{"n":"CRWD · MRVL earnings","k":"tbd"}],"2026-12-02":[{"n":"CRM · SNOW earnings","k":"tbd"}],"2026-12-09":[{"n":"ORCL · ADBE earnings","k":"tbd"}],"2026-12-10":[{"n":"AVGO · COST earnings","k":"tbd"}],"2026-12-16":[{"n":"MU earnings","k":"tbd"}],"2026-12-17":[{"n":"ACN earnings","k":"tbd"}]};
+for(const k in EXTRA) SEED.events[k]=(SEED.events[k]||[]).concat(EXTRA[k]);
+const KEY="econcal-v1";
+let S; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.events) S=JSON.parse(JSON.stringify(SEED));
+if((S.seedV||1)<2){ for(const k in SEED.events) if(k>="2026-11-30"&&!S.events[k]) S.events[k]=SEED.events[k];
+  for(const k in SEED.weeks) if(!S.weeks[k]) S.weeks[k]=SEED.weeks[k]; }
+if((S.seedV||1)<3){ for(const k in SEED.events){ if(k<"2026-12-01") continue; const cur=S.events[k]||[];
+    SEED.events[k].forEach(e=>{ if(!cur.some(c=>c.n===e.n)) cur.push(e) }); if(cur.length) S.events[k]=cur; } }
+S.seedV=3; SEED.seedV=3; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- date helpers ---------- */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MFR=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const DOW=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const SH=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const D=(y,m,d)=>new Date(y,m,d,12);
+const addD=(d,n)=>D(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const nthDow=(y,m,dow,n)=>{const f=D(y,m,1);return D(y,m,1+((dow-f.getDay()+7)%7)+7*(n-1))};
+const lastDow=(y,m,dow)=>{const l=D(y,m+1,0);return D(y,m,l.getDate()-((l.getDay()-dow+7)%7))};
+const observed=d=>d.getDay()===6?addD(d,-1):d.getDay()===0?addD(d,1):d;
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+  h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return D(y,mo-1,da)}
+
+/* NYSE + bank holidays for a year: iso -> {st, name, note} */
+function holidays(y){
+  const H={};
+  const put=(d,st,name)=>{ if(d.getFullYear()===y) H[iso(d)]={st,name}; };
+  const ny=observed(D(y,0,1)); if(ny.getDay()!==5||ny.getMonth()===0) put(ny,"closed","New Year's Day");
+  put(nthDow(y,0,1,3),"closed","Martin Luther King Jr. Day");
+  put(nthDow(y,1,1,3),"closed","Presidents' Day");
+  put(addD(easter(y),-2),"closed","Good Friday");
+  put(lastDow(y,4,1),"closed","Memorial Day");
+  put(observed(D(y,5,19)),"closed","Juneteenth");
+  const j4=observed(D(y,6,4)); put(j4,"closed","Independence Day");
+  const j3=D(y,6,3); if(j3.getDay()>=1&&j3.getDay()<=4) put(j3,"early","Independence Day eve");
+  put(nthDow(y,8,1,1),"closed","Labor Day");
+  put(nthDow(y,9,1,2),"bank","Columbus Day");
+  const vd=D(y,10,11); put(vd.getDay()===0?addD(vd,1):vd,"bank","Veterans Day");
+  const tg=nthDow(y,10,4,4); put(tg,"closed","Thanksgiving"); put(addD(tg,1),"early","Day after Thanksgiving");
+  const c24=D(y,11,24); if(c24.getDay()>=1&&c24.getDay()<=4) put(c24,"early","Christmas Eve");
+  put(observed(D(y,11,25)),"closed","Christmas");
+  return H;
+}
+const autoNote=h=>h.st==="closed"?`${h.name}*. Bank holiday. NYSE closed.`:
+  h.st==="early"?`Early close* at 1:00 PM ET.`:`${h.name}. Banks closed. NYSE open: lower volume and liquidity.`;
+
+function dayInfo(d){
+  const k=iso(d), o=S.days[k]||{}, h=holidays(d.getFullYear())[k];
+  let st = (o.st===undefined||o.st==="auto") ? (h?h.st:"") : o.st;
+  let note = o.note || (st ? (h&&h.st===st ? autoNote(h) : autoNote({st,name:h?h.name:"Holiday"})) : "");
+  return {k,st,note,h};
+}
+
+/* ---------- state ---------- */
+let cur=(()=>{const t=new Date();return D(t.getFullYear(),t.getMonth(),1)})();
+const filt={high:true,med:true,earn:true};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const isoToday=iso(new Date());
+
+function autoWeek(days,m){
+  const inM=days.filter(d=>d.getMonth()===m);
+  const evs=inM.flatMap(d=>(S.events[iso(d)]||[]).map(e=>({...e,d})));
+  const has=re=>evs.find(e=>re.test(e.n));
+  let l="";
+  const fomc=evs.find(e=>/FOMC/.test(e.n)&&!/Minutes/i.test(e.n));
+  if(inM.some(d=>{const i=dayInfo(d);return i.st==="closed"&&i.h&&/Thanksgiving|Christmas/.test(i.h.name)})) l=(dayInfo(inM.find(d=>dayInfo(d).st==="closed")).h.name)+" week";
+  else if(fomc) l="FOMC week";
+  else if(has(/NFP|Non-Farm/i)) l="NFP week";
+  else if(has(/CPI/)&&has(/PPI/)) l="CPI & PPI week";
+  else if(has(/CPI/)) l="CPI week";
+  else if(has(/PCE/)) l="PCE week";
+  else if(has(/Retail Sales/)) l="Retail Sales week";
+  else { const er=evs.find(e=>e.k!=="ev"); if(er) l=er.n.split(/[ ·]/)[0]+" earnings week"; else if(has(/FOMC Meeting Minutes/)) l="FOMC Minutes week"; }
+  if(!l && inM.length && inM[inM.length-1].getDate()===new Date(inM[0].getFullYear(),m+1,0).getDate()) l="Month end";
+  if(!l) l=inM.length?`${MONTHS[m].slice(0,3)} ${inM[0].getDate()}–${inM[inM.length-1].getDate()}`:"";
+  const subs=[];
+  inM.forEach(d=>{const i=dayInfo(d); if(i.st&&i.h) subs.push(`${i.h.name.replace(/ Day$/,"")} ${SH[d.getDay()]}`)});
+  evs.filter(e=>e.i==="high").slice(0,2).forEach(e=>{ if(!subs.length||subs.length<2) subs.push(`${e.n.split(" · ")[0].replace(/ &.*$/,"")} ${SH[e.d.getDay()]}`)});
+  return {l,s:subs.slice(0,2).join(" · ")};
+}
+
+function render(){
+  const y=cur.getFullYear(), m=cur.getMonth();
+  document.getElementById("title").textContent=`${MONTHS[m]} ${y}`;
+  document.getElementById("src").textContent = (y>2026) ? "Sources: Fed, BLS, BEA, Census, NYSE" : "Sources: Forex Factory, NYSE, Nasdaq";
+  document.getElementById("mlabel").textContent=`${MFR[m]} ${y}`;
+  document.getElementById("logo").textContent=S.brand.logo||"";
+  document.getElementById("handle").textContent=S.brand.handle||"";
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("off",!filt[c.dataset.f]));
+
+  // weeks whose Mon–Fri touch this month
+  let mon=D(y,m,1); mon=addD(mon,-((mon.getDay()+6)%7));
+  const weeks=[];
+  while(true){
+    const days=[0,1,2,3,4].map(i=>addD(mon,i));
+    if(days.some(d=>d.getMonth()===m&&d.getFullYear()===y)) weeks.push(days);
+    else if(weeks.length) break;
+    mon=addD(mon,7);
+  }
+  let h=`<div class="colh">WEEK</div>`+["MON","TUE","WED","THU","FRI"].map(x=>`<div class="colh">${x}</div>`).join("");
+  const footNotes=[];
+  weeks.forEach(days=>{
+    const wk=iso(days[0])+(days[0].getMonth()===m?"":"@"+m), ov=S.weeks[wk]||{}, au=autoWeek(days,m);
+    h+=`<div class="wk" data-w="${wk}" title="Modifier le libellé"><b>${esc(ov.l||au.l)}</b><small>${esc(ov.s!==undefined&&ov.s!==""?ov.s:au.s)}</small></div>`;
+    days.forEach(d=>{
+      if(d.getMonth()!==m){h+=`<div class="day out"><div class="num">${d.getDate()}</div></div>`;return}
+      const info=dayInfo(d), evs=S.events[info.k]||[];
+      let cls="day"+(info.st==="closed"?" closed":"")+(info.k===isoToday?" today":"");
+      let badge = info.st==="bank"?`<span class="badge">BANK HOLIDAY</span>`:info.st==="closed"?`<span class="badge red">CLOSED</span>`:info.st==="early"?`<span class="badge red">EARLY CLOSE</span>`:"";
+      let body="";
+      evs.forEach(e=>{
+        if(e.k==="ev"){
+          const show=filt[e.i==="high"?"high":"med"]||(e.i==="low");
+          body+=`<div class="ev${show?"":" hidden-ev"}"><span class="dot ${e.i||"low"}"></span><span class="t">${esc(e.t)}</span><span class="n">${esc(e.n)}</span></div>`;
+        } else {
+          const ic=e.k==="after"?"☾":e.k==="pre"?"✳":"◌";
+          body+=`<div class="ev earn${filt.earn?"":" hidden-ev"}"><span class="ic">${ic}</span><span>${esc(e.n)}</span></div>`;
+        }
+      });
+      if(info.note) body+=`<div class="note">${esc(info.note)}</div>`;
+      if(!evs.length&&!info.note) body=`<div class="none">No news</div>`;
+      h+=`<div class="${cls}" data-d="${info.k}">${badge}<div class="num">${d.getDate()}</div>${body}</div>`;
+      if(info.st&&info.h) footNotes.push({d,info});
+    });
+  });
+  document.getElementById("grid").innerHTML=h;
+
+  // footer
+  const fmt=d=>`${DOW[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  const lines=[]; const used=new Set();
+  footNotes.forEach(({d,info},i)=>{
+    if(used.has(i)) return;
+    if(info.st==="closed"){
+      let s=`<span class="star">*</span> ${esc(info.h.name)}: NYSE closed on ${fmt(d)}.`;
+      const j=footNotes.findIndex((f,x)=>x>i&&f.info.st==="early"&&(f.d-d)<4*864e5);
+      if(j>-1){used.add(j);s+=` Early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(footNotes[j].d)}.`}
+      lines.push(s);
+    } else if(info.st==="early"){
+      lines.push(`<span class="star">*</span> ${esc(info.h.name)}: early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(d)}.`);
+    } else if(info.st==="bank"){
+      lines.push("~"+`${esc(info.h.name)} (${fmt(d)}): bank holiday. NYSE stays open, but expect lower volume and liquidity.`);
+    }
+  });
+  lines.sort((a,b)=>(a[0]==="~")-(b[0]==="~"));
+  document.getElementById("foot").innerHTML=lines.map(x=>x.replace(/^~/,"")).join("<br>");
+}
+
+/* ---------- interactions ---------- */
+const $=id=>document.getElementById(id);
+const open=id=>$(id).classList.add("show"), close=id=>$(id).classList.remove("show");
+document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("show")}));
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".ov.show").forEach(o=>o.classList.remove("show"));
+  if(!document.querySelector(".ov.show")&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
+    if(e.key==="ArrowLeft") $("prev").click(); if(e.key==="ArrowRight") $("next").click(); }});
+$("prev").onclick=()=>{cur=D(cur.getFullYear(),cur.getMonth()-1,1);render()};
+$("next").onclick=()=>{cur=D(cur.getFullYear(),cur.getMonth()+1,1);render()};
+$("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1);render()};
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f];render()});
+
+let editDay=null, editWeek=null;
+function rowHTML(e={}){
+  return `<div class="row">
+   <input class="rt" value="${esc(e.t||"")}" placeholder="8:30 AM">
+   <input class="rn" value="${esc(e.n||"")}" placeholder="Événement">
+   <select class="ri"><option value="high"${e.i==="high"?" selected":""}>High</option><option value="med"${e.i==="med"||!e.i?" selected":""}>Medium</option><option value="low"${e.i==="low"?" selected":""}>Low</option></select>
+   <select class="rk"><option value="ev"${!e.k||e.k==="ev"?" selected":""}>News</option><option value="after"${e.k==="after"?" selected":""}>☾ After close</option><option value="pre"${e.k==="pre"?" selected":""}>✳ Pre-market</option><option value="tbd"${e.k==="tbd"?" selected":""}>◌ Time TBD</option></select>
+   <button title="Supprimer">✕</button></div>`;
+}
+$("rows").addEventListener("click",e=>{ if(e.target.tagName==="BUTTON") e.target.parentElement.remove(); });
+$("addRow").onclick=()=>$("rows").insertAdjacentHTML("beforeend",rowHTML());
+$("grid").addEventListener("click",e=>{
+  const w=e.target.closest(".wk");
+  if(w){editWeek=w.dataset.w;const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
+  const d=e.target.closest(".day[data-d]"); if(!d) return;
+  editDay=d.dataset.d; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
+  $("dTitle").textContent=`${DOW[dt.getDay()]} ${Dd} ${MONTHS[M-1]} ${Y}`;
+  $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join("");
+  const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||"";
+  open("ovDay");
+});
+$("dCancel").onclick=()=>close("ovDay");
+$("dSave").onclick=()=>{
+  const evs=[...$("rows").querySelectorAll(".row")].map(r=>({t:r.querySelector(".rt").value.trim(),n:r.querySelector(".rn").value.trim(),
+    i:r.querySelector(".ri").value,k:r.querySelector(".rk").value})).filter(e=>e.n);
+  const order=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);return h*60+ +m[2]};
+  evs.sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||order(a.t)-order(b.t));
+  if(evs.length) S.events[editDay]=evs; else delete S.events[editDay];
+  const st=$("dStatus").value, note=$("dNote").value.trim();
+  if(st==="auto"&&!note) delete S.days[editDay]; else S.days[editDay]={st:st==="auto"?undefined:st,note};
+  save();close("ovDay");render();
+};
+$("wCancel").onclick=()=>close("ovWeek");
+$("wSave").onclick=()=>{const l=$("wLabel").value.trim(),s=$("wSub").value.trim();
+  if(!l&&!s) delete S.weeks[editWeek]; else S.weeks[editWeek]={l,s}; save();close("ovWeek");render()};
+const openBrand=()=>{$("bHandle").value=S.brand.handle||"";$("bLogo").value=S.brand.logo||"";open("ovBrand")};
+$("brandBtn").onclick=openBrand; $("brandBox").onclick=openBrand;
+$("bCancel").onclick=()=>close("ovBrand");
+$("bSave").onclick=()=>{S.brand={handle:$("bHandle").value.trim(),logo:$("bLogo").value.trim().toUpperCase()};save();close("ovBrand");render()};
+$("dataBtn").onclick=()=>{$("jsonBox").value=JSON.stringify(S,null,1);open("ovData")};
+$("jClose").onclick=()=>close("ovData");
+$("jCopy").onclick=async()=>{try{await navigator.clipboard.writeText($("jsonBox").value);$("jCopy").textContent="Copié ✓"}catch(e){$("jsonBox").select();$("jCopy").textContent="Ctrl+C"}setTimeout(()=>$("jCopy").textContent="Copier",1500)};
+$("jImport").onclick=()=>{try{const v=JSON.parse($("jsonBox").value);if(!v.events)throw 0;v.days=v.days||{};v.weeks=v.weeks||{};v.brand=v.brand||{};S=v;save();close("ovData");render()}catch(e){$("jImport").textContent="JSON invalide";setTimeout(()=>$("jImport").textContent="Importer",1500)}};
+$("jReset").onclick=()=>{if($("jReset").dataset.c){S=JSON.parse(JSON.stringify(SEED));save();close("ovData");render();$("jReset").dataset.c="";$("jReset").textContent="Réinitialiser les données"}
+  else{$("jReset").dataset.c="1";$("jReset").textContent="Confirmer ?"}};
+
+render();
+</script>
+</body>
+</html>

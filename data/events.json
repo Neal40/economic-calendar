@@ -1,0 +1,1622 @@
+{
+ "events": {
+  "2026-11-02": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "n": "AAPL earnings",
+    "k": "after"
+   }
+  ],
+  "2026-11-03": [
+   {
+    "t": "10:00 AM",
+    "n": "JOLTS Job Openings",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "All day",
+    "n": "Congressional Elections",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-11-04": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-05": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-06": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "Prelim UoM",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-11-12": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-13": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-11-17": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "n": "NVDA earnings",
+    "k": "after"
+   }
+  ],
+  "2026-11-18": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-11-19": [
+   {
+    "t": "8:30 AM",
+    "n": "Philly Fed · Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-20": [
+   {
+    "t": "10:00 AM",
+    "n": "Revised UoM",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "Tentative",
+    "n": "Treasury Currency Report",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-23": [
+   {
+    "t": "9:45 AM",
+    "n": "Flash Manufacturing & Services PMI",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-11-24": [
+   {
+    "t": "10:00 AM",
+    "n": "CB Consumer Confidence",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "n": "DELL · BABA earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-11-25": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Prelim GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "GDP Price Index · Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "JOLTS Job Openings",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "n": "CRWD · MRVL earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-02": [
+   {
+    "n": "CRM · SNOW earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-03": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-04": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "Prelim UoM",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-09": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement · SEP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "n": "ORCL · ADBE earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "n": "AVGO · COST earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-15": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-12-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "n": "MU earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-17": [
+   {
+    "t": "8:30 AM",
+    "n": "Philly Fed · Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "n": "ACN earnings",
+    "k": "tbd"
+   }
+  ],
+  "2026-12-18": [
+   {
+    "t": "10:00 AM",
+    "n": "Revised UoM",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-22": [
+   {
+    "t": "10:00 AM",
+    "n": "CB Consumer Confidence",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-23": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Final GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Final GDP Price Index",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-24": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2026-12-30": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2026-12-31": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-04": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-06": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-07": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-08": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-01-13": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-01-14": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-15": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-01-21": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-27": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-01-28": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Advance GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-01-29": [
+   {
+    "t": "8:30 AM",
+    "n": "Employment Cost Index q/q",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-03": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-04": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-05": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-02-11": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-12": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-02-17": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-02-18": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-02-25": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Prelim GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-03": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-04": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-05": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-03-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-03-11": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-12": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-03-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-03-17": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement · SEP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-03-18": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-25": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-03-31": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Final GDP",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-01": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-02": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-05": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-07": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-08": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-13": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-14": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-15": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-22": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-28": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-04-29": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Advance GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-04-30": [
+   {
+    "t": "8:30 AM",
+    "n": "Employment Cost Index q/q",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-03": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-05": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-06": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-07": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-05-12": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-05-13": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-14": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-05-19": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-05-20": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-05-27": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Prelim GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-03": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-04": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-06-09": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement · SEP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-06-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-11": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-06-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-06-17": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-24": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-06-25": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Final GDP",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-06-30": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-07-01": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-02": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-07-06": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-08": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-14": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-07-15": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-07-22": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-28": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-07-29": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Advance GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-07-30": [
+   {
+    "t": "8:30 AM",
+    "n": "Employment Cost Index q/q",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-02": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-04": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-05": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-06": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-10": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-11": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-12": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-18": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-19": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-08-25": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Prelim GDP",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-08-26": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-02": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-03": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-09": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-10": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-09-14": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-09-15": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement · SEP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-09-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-23": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-09-30": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Final GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-05": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-06": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-10-07": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-08": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-10-14": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-15": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-10-21": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-27": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-10-28": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Advance GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-10-29": [
+   {
+    "t": "8:30 AM",
+    "n": "Employment Cost Index q/q",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-03": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-04": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-05": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-11-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-11-11": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-12": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-11-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-11-17": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-11-18": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-11-24": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Prelim GDP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-01": [
+   {
+    "t": "10:00 AM",
+    "n": "ISM Manufacturing PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-02": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-03": [
+   {
+    "t": "8:30 AM",
+    "n": "NFP · Unemployment Rate · AHE",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "10:00 AM",
+    "n": "ISM Services PMI (est.)",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-08": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Rate Decision · Statement · SEP",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "2:30 PM",
+    "n": "FOMC Press Conference",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-12-09": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-10": [
+   {
+    "t": "8:30 AM",
+    "n": "CPI & Core CPI (m/m, y/y)",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-12-15": [
+   {
+    "t": "8:30 AM",
+    "n": "PPI & Core PPI",
+    "i": "high",
+    "k": "ev"
+   },
+   {
+    "t": "8:30 AM",
+    "n": "Retail Sales & Core Retail Sales",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-12-16": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-22": [
+   {
+    "t": "8:30 AM",
+    "n": "Core PCE · Final GDP",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-12-23": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ],
+  "2027-12-29": [
+   {
+    "t": "2:00 PM",
+    "n": "FOMC Meeting Minutes",
+    "i": "high",
+    "k": "ev"
+   }
+  ],
+  "2027-12-30": [
+   {
+    "t": "8:30 AM",
+    "n": "Unemployment Claims",
+    "i": "med",
+    "k": "ev"
+   }
+  ]
+ },
+ "weeks": {
+  "2026-11-02": {
+   "l": "NFP week",
+   "s": "Midterm elections Tue"
+  },
+  "2026-11-09": {
+   "l": "CPI & PPI week",
+   "s": "Veterans Day Wed"
+  },
+  "2026-11-16": {
+   "l": "NVDA earnings week",
+   "s": "Retail Sales Tue · FOMC Minutes Wed"
+  },
+  "2026-11-23": {
+   "l": "Thanksgiving week",
+   "s": "Holiday Thu · early close Fri"
+  },
+  "2026-11-30@11": {
+   "l": "NFP week",
+   "s": "ISM & JOLTS Tue · NFP Fri"
+  },
+  "2026-12-07": {
+   "l": "FOMC & CPI week",
+   "s": "Fed decision Wed · CPI Thu"
+  },
+  "2026-12-14": {
+   "l": "PPI & Retail Sales week",
+   "s": "PPI Tue · Retail Sales Wed"
+  },
+  "2026-12-21": {
+   "l": "Christmas week",
+   "s": "Core PCE Wed · early close Thu · closed Fri"
+  },
+  "2026-12-28": {
+   "l": "Year end",
+   "s": "FOMC Minutes Wed"
+  }
+ }
+}
