@@ -1,0 +1,43 @@
+name: Build Windows .exe
+
+on:
+  push:
+    branches: [main]
+    paths: ["index.html", "desktop/**", ".github/workflows/build-exe.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - run: npm ci
+      - run: npm run dist
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EconomicCalendar-windows
+          path: desktop/dist/*.exe
+      - name: Publish release "latest"
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Economic Calendar (Windows)
+          body: "Latest Windows build. **Setup** = installer, **portable** = single .exe, no install."
+          prerelease: false
+          make_latest: true
+          files: |
+            desktop/dist/EconomicCalendar-*-setup.exe
+            desktop/dist/EconomicCalendar-*-portable.exe

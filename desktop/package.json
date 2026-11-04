@@ -1,0 +1,41 @@
+{
+  "name": "economic-calendar",
+  "productName": "Economic Calendar",
+  "version": "1.0.0",
+  "description": "USD economic calendar (New York time)",
+  "author": "Neal_ICT",
+  "main": "main.js",
+  "scripts": {
+    "prepare-app": "node prepare.js ../index.html",
+    "dist": "npm run prepare-app && electron-builder --win portable nsis --x64"
+  },
+  "build": {
+    "appId": "com.nealict.economiccalendar",
+    "files": [
+      "main.js",
+      "app/**/*"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "EconomicCalendar-${version}-portable.exe"
+    },
+    "nsis": {
+      "artifactName": "EconomicCalendar-${version}-setup.exe",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "@fontsource/caveat": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "@fontsource/space-mono": "^5.3.0",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0"
+  }
+}

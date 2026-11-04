@@ -28,9 +28,17 @@ All times are New York time (ET).
 ## Files
 - `index.html` — the app (data embedded)
 - `data/events.json` — the same events as plain JSON (`YYYY-MM-DD` → list of events)
+- `desktop/` — Electron project for the Windows .exe
 - `scripts/generate_2027.py` — script that builds the 2027 events from the official release dates
 
 Event format: `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
+
+## Windows app (.exe)
+Download from **Releases → latest**: `EconomicCalendar-x.y.z-setup.exe` (installer) or `EconomicCalendar-x.y.z-portable.exe` (no install).
+The `.exe` is built automatically by GitHub Actions (`.github/workflows/build-exe.yml`) on every change to `index.html` or `desktop/`.
+It is an Electron wrapper around the same `index.html`, with fonts bundled so it works offline.
+
+Build locally on Windows: `cd desktop && npm ci && npm run dist` → `desktop/dist/`.
 
 ## Run
 Open `index.html` in a browser. To host it, enable **GitHub Pages** (Settings → Pages → Deploy from branch `main`, folder `/`).
