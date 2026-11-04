@@ -5,7 +5,7 @@ One self-contained page (`index.html`), no build step, no dependencies.
 
 ## Features
 - Monthly Mon–Fri grid with week labels (auto-generated or editable)
-- High / medium impact news, earnings (☾ after close, ✳ pre-market, ◌ time TBD)
+- High / medium / low impact news (low = yellow, Forex Factory), earnings (☾ after close, ✳ pre-market, ◌ time TBD)
 - NYSE holidays computed for any year: **CLOSED**, **EARLY CLOSE**, **BANK HOLIDAY** with footnotes
 - Click a day to add / edit / delete events; click a week label to rename it
 - Filters (High / Medium / Earnings), custom handle and logo
