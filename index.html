@@ -345,11 +345,14 @@ body{background:#060607}
   <div class="jtop">
     <div><h2>Journal de trading</h2><p class="lead" style="margin:0" id="jSync">Stats TopstepX par compte.</p></div>
     <div class="acts">
-      <label class="btn gray" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
-      <label class="btn gray" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
+      <button class="btn" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
+      <button class="btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
+      <label class="btn gray jimp" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
+      <label class="btn gray jimp" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
       <a class="btn gray" id="jNotion" href="#" target="_blank" rel="noopener" style="text-decoration:none">Journal Notion ↗</a>
     </div>
   </div>
+  <div class="jempty" id="jLogin" hidden><b>Connecte ton compte TopstepX</b>L'app récupère tes comptes et tes trades directement depuis TopstepX et les garde dans sa base locale.<div class="row2" style="justify-content:center"><button class="btn" id="jLoginBtn">Se connecter à TopstepX</button></div></div>
   <div class="jempty" id="jEmpty" hidden><b>Aucune donnée TopstepX</b>Importe tes fichiers <code>comptes.json</code> et <code>trades.json</code> (export du dashboard Stats TopstepX) avec les boutons ci-dessus.</div>
 <div class="tsx" id="jroot">
   <div class="tsx-bar">
@@ -893,7 +896,28 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   if (st && st.params) params = st.params;
   window.addEventListener("DOMContentLoaded", () => {});
   const seed = window.JOURNAL_SEED || {};
-  setTimeout(() => dash.load((st && st.comptes) || seed.comptes || null, (st && st.trades) || seed.trades || null), 0);
+  const D = window.desktop;
+  if (!D) setTimeout(() => dash.load((st && st.comptes) || seed.comptes || null, (st && st.trades) || seed.trades || null), 0);
+  else {
+    // Desktop app: local database + automatic TopstepX sync
+    document.querySelectorAll(".jimp").forEach((x) => (x.hidden = true));
+    const btn = document.getElementById("jSyncBtn"), out = document.getElementById("jLogout"), login = document.getElementById("jLogin");
+    btn.hidden = false; out.hidden = false;
+    const apply = (db) => { if (db && db.comptes && db.comptes.length) { login.hidden = true; dash.load(db.comptes, db.trades || []); } };
+    const run = async (interactive) => {
+      btn.disabled = true; btn.textContent = "⟳ Synchronisation…";
+      const r = await D.journalSync(interactive);
+      btn.disabled = false; btn.textContent = "⟳ Synchroniser TopstepX";
+      if (r.ok) apply(r.db);
+      else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else alertBox("Session TopstepX expirée — clique sur Synchroniser pour te reconnecter."); }
+      else alertBox("Synchro impossible (" + r.reason + "). Données locales affichées.");
+    };
+    btn.onclick = () => run(true);
+    document.getElementById("jLoginBtn").onclick = () => run(true);
+    out.onclick = async () => { await D.journalLogout(); alertBox("Déconnecté de TopstepX. Les données locales restent affichées."); };
+    D.journalGet().then((db) => { apply(db); if (!(db && db.comptes && db.comptes.length)) { document.getElementById("jEmpty").hidden = true; } run(false); });
+    setInterval(() => run(false), 5 * 60 * 1000);
+  }
   const imp = (id, key) => document.getElementById(id).addEventListener("change", async (e) => {
     const f = e.target.files[0]; if (!f) return;
     try { let v = JSON.parse(await f.text()); if (!Array.isArray(v)) v = v.rows || v.data || v.results; if (!Array.isArray(v)) throw 0;

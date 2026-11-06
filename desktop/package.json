@@ -13,6 +13,8 @@
     "appId": "com.nealict.economiccalendar",
     "files": [
       "main.js",
+      "preload.js",
+      "topstepx.js",
       "app/**/*"
     ],
     "win": {

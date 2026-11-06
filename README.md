@@ -6,7 +6,7 @@ One self-contained page (`index.html`), no build step, no dependencies.
 ## Features
 - Sidebar menu: **Laboratoire** (Terminal Économique, FinancialJuice live news, Journal de trading = Stats TopstepX) and **Paramètres** (Profil, Abonnement, Factures)
 - FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
-- Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). No account data in this repo: import your `comptes.json` / `trades.json` in the app (stored locally)
+- Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). In the Windows app the data is synced automatically from TopstepX (sign in once; local database `journal-db.json` in the app data folder, auto-sync at launch and every 5 min). On the website: import `comptes.json` / `trades.json`. No account data in this repo
 - Abonnement: recurring costs (monthly / yearly, € and $), next due date
 - Factures: expenses by year, category, currency
 - Monthly Mon–Fri grid with week labels (auto-generated or editable)
@@ -33,7 +33,7 @@ All times are New York time (ET).
 ## Files
 - `index.html` — the app (data embedded)
 - `data/events.json` — the same events as plain JSON (`YYYY-MM-DD` → list of events)
-- `desktop/` — Electron project for the Windows .exe
+- `desktop/` — Electron project for the Windows .exe (`topstepx.js` = TopstepX sync + stats)
 - `scripts/generate_2027.py` — script that builds the 2027 events from the official release dates
 
 Event format: `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
