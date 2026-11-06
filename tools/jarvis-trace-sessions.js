@@ -378,6 +378,40 @@
       const sb = fv.find(f => f.t1 >= ny(d, 10, 0) && f.t3 < ny(d, 11, 0)) || null;
       return { first, refl, sb, all };
     },
+    // Data for the "NWOG & 1st" homework: FVG lifetimes, NWOG/NDOG levels touched during RTH and the reaction
+    async nwogStats(sym = '/NQ', d = day()) {
+      const thr = sym === '/NQ' ? 20 : 5, tol = sym === '/NQ' ? 1 : 0.25, end = Math.min(now(), ny(d, 16, 0));
+      const rth = await bars(sym, ny(d, 9, 30), end);
+      const fd = await J.fvgData(sym, d);
+      const life = z => { // minutes until a candle closes through the far side (BISI below / SIBI above)
+        if (!z) return null;
+        const brk = rth.find(b => b.t > z.t3 && (z.type === 'BISI' ? b.c < z.bot : b.c > z.top));
+        return { min: Math.round(((brk ? brk.t : end) - z.t3) / 60), held: !brk };
+      };
+      const fv = {};
+      for (const k of ['first', 'refl', 'sb']) { const z = fd[k]; fv[k] = z ? { ...z, life: life(z) } : null; }
+      const lifes = Object.values(fv).filter(Boolean).map(z => z.life.min);
+      const gaps = await J.gapsData(sym, 1); // current week NWOG + previous evening NDOG
+      const names = { 0: 'Low', 0.125: 'Octant', 0.25: 'Quadrant', 0.375: 'Octant', 0.5: 'CE', 0.625: 'Octant', 0.75: 'Quadrant', 0.875: 'Octant', 1: 'High' };
+      const touches = [];
+      for (const g of gaps) {
+        for (const [k, nm] of Object.entries(names)) {
+          const L = g.bot + (g.top - g.bot) * +k, i = rth.findIndex(b => b.l - tol <= L && b.h + tol >= L);
+          if (i < 1) continue;
+          const from = rth[i - 1].c >= L ? 'dessus' : 'dessous', next = rth.slice(i, i + 31);
+          const away = from === 'dessus' ? next.some(b => b.h >= L + thr) : next.some(b => b.l <= L - thr);
+          const crossed = from === 'dessus' ? next.some(b => b.c < L - tol) : next.some(b => b.c > L + tol);
+          const beyond = from === 'dessus' ? next.some(b => b.l <= L - thr) : next.some(b => b.h >= L + thr);
+          let reaction = 'Traversé';
+          if (away && !crossed) reaction = 'Rejet';
+          else if (crossed && !beyond) reaction = 'Support/Résistance';
+          touches.push({ gap: g.kind, label: g.label, level: `${nm} ${g.kind}`, coeff: +k, price: +L.toFixed(2), t: rth[i].t, from, reaction });
+        }
+      }
+      touches.sort((a, b) => a.t - b.t);
+      return { date: d, fvg: fv, avgLife: lifes.length ? Math.round(lifes.reduce((a, b) => a + b, 0) / lifes.length) : null, gaps, touches,
+        first: touches[0] || null };
+    },
     async nwog(opts = {}) {
       const d = day(), dm = d.slice(8, 10) + '/' + d.slice(5, 7), out = [];
       const rectTpl = { NWOG: '10. NWOG', NDOG: '10. NDOG', first: '8. 1st p.FVG 9h30', refl: '9. 1st p.FVG Reflection', sb: '9. 1st p.FVG Silver Bullet' };
