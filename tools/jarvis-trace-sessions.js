@@ -254,7 +254,8 @@
           return { i, sym, isH, P, t: b.t, hits, liq, macro: mac, catchable: ok };
         };
         const from = ny(d, 2, 0), to = Math.min(ny(d, 16, 0), now());
-        const day = all.filter(b => b.t >= ny(addDays(d, -1), 18, 0));
+        const day = all.filter(b => b.t >= ny(d, 0, 0) && b.t <= to); // day = Midnight Open → 16h (STDV levels exist)
+        if (!day.length) continue;
         const hiB = day.reduce((a, b) => (b.h > a.h ? b : a)), loB = day.reduce((a, b) => (b.l < a.l ? b : a));
         const res = [{ ...analyse(hiB, true), dayExtreme: 'High du jour' }, { ...analyse(loB, false), dayExtreme: 'Low du jour' }];
         res.forEach(r => r.liq && used.add(r.liq.side + r.liq.t + r.liq.p));
