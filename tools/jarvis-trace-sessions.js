@@ -119,6 +119,8 @@
   }
 
   // shape bookkeeping: only shapes created by Jarvis are removed
+  // in a multi-chart layout, draw a timeframe only on the chart(s) showing that resolution (else on every chart)
+  const targets = res => { const all = [...Array(api.chartsCount()).keys()]; const m = all.filter(i => api.chart(i).resolution() === res); return m.length ? m : all; };
   const keyOf = (i, g) => `jarvis:${api.layoutId ? api.layoutId() : api.layoutName()}:${i}:${g}`;
   function clearGroup(i, g) {
     const c = api.chart(i), k = keyOf(i, g);
@@ -524,11 +526,12 @@
         fvgs: fvr, reaction: firstHit ? firstHit.reaction : (touched.length ? 'Niveaux touchés' : 'Pas touché') };
     },
     async htf(tf = 'H4', opts = {}) {
-      const d = day(), out = [];
+      const d = day(), out = [], res = { H4: '240', H1: '60', m15: '15' }[tf], tg = targets(res);
       for (let i = 0; i < api.chartsCount(); i++) {
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'htf' + tf);
+        if (!tg.includes(i)) continue;
         const x = await J.htfData(sym, tf, d), ids = [];
         if (!x) { out.push(`${c.symbol()} ${tf} : pas de données`); continue; }
         ids.push(await fib(c, x.tS, x.tE + (x.tE - x.tS) * 0.6, x.E, x.S, '4. OTE'));
@@ -565,11 +568,12 @@
       return { fvg: f, pool };
     },
     async premarket() {
-      const d = day(), dm = d.slice(8, 10) + '/' + d.slice(5, 7), out = [];
+      const d = day(), dm = d.slice(8, 10) + '/' + d.slice(5, 7), out = [], tg = targets('1');
       for (let i = 0; i < api.chartsCount(); i++) {
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'pm');
+        if (!tg.includes(i)) continue;
         const x = await J.pmData(sym, d), ids = [];
         for (const [h, m] of [[7, 0], [8, 0], [9, 0]]) ids.push(await c.createShape({ time: ny(d, h, m) }, { shape: 'vertical_line', lock: false, overrides: { linecolor: '#787b86', linestyle: 1, linewidth: 1, showLabel: false } }));
         if (x.fvg) {
