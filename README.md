@@ -7,6 +7,7 @@ One self-contained page (`index.html`), no build step, no dependencies.
 - Sidebar menu: **Laboratoire** (Terminal Économique, FinancialJuice live news, Journal de trading = Stats TopstepX) and **Paramètres** (Profil, Abonnement, Factures)
 - FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
 - Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). In the Windows app the data is synced automatically from TopstepX (sign in once; local database `journal-db.json` in the app data folder, auto-sync at launch and every 5 min). On the website: import `comptes.json` / `trades.json`. No account data in this repo
+- Journal: Hexagone de performance (Winrate, RR, DD, Positions, Risque — account vs average of your accounts), Tags popup (attributes of the Notion « Respect du plan » base), Images popup (NQ/ES H4 … Vraie Exécution, paste / drop), RR théorique column (from Entrée / Stop / TP théoriques). Tags & images stay local (export / import JSON)
 - Abonnement: recurring costs (monthly / yearly, € and $), next due date
 - Factures: expenses by year, category, currency
 - Monthly Mon–Fri grid with week labels (auto-generated or editable)

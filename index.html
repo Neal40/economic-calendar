@@ -231,6 +231,8 @@ body{background:#060607}
 .tsx-t th:nth-child(-n+2),.tsx-t td:nth-child(-n+2){text-align:left}
 .jtop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .jtop .acts{display:flex;gap:8px;flex-wrap:wrap}
+.tsx-hexa{grid-column:span 2}
+@media (max-width:900px){.tsx-hexa{grid-column:auto}}
 .jempty{background:#0c0f13;border:1px dashed #2a3038;border-radius:12px;padding:40px 24px;text-align:center;color:#8d95a0}
 .jempty b{display:block;color:#eef1f5;font-size:17px;margin-bottom:6px}
 </style>
@@ -341,7 +343,7 @@ body{background:#060607}
     <table class="tbl"><thead><tr><th style="width:140px">Date</th><th>Fournisseur</th><th>Description</th><th>Catégorie</th><th class="num">Montant</th><th>Devise</th><th></th></tr></thead><tbody id="billT"></tbody></table>
     <div class="row2"><button class="btn" id="billAdd">+ Ajouter une facture</button></div></div>
 </div></section>
-<section class="view" id="v-journal"><div class="page" style="max-width:1400px">
+<section class="view" id="v-journal"><div class="page" style="max-width:none;padding:26px 28px 60px">
   <div class="jtop">
     <div><h2>Journal de trading</h2><p class="lead" style="margin:0" id="jSync">Stats TopstepX par compte.</p></div>
     <div class="acts">
@@ -349,6 +351,8 @@ body{background:#060607}
       <button class="btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
       <label class="btn gray jimp" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
       <label class="btn gray jimp" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
+      <button class="btn gray" id="jMetaExp" title="Sauvegarder tags + images">Exporter tags & images</button>
+      <label class="btn gray" style="cursor:pointer" title="Restaurer tags + images">Importer tags & images<input type="file" id="jMetaImp" accept=".json" hidden></label>
       <a class="btn gray" id="jNotion" href="#" target="_blank" rel="noopener" style="text-decoration:none">Journal Notion ↗</a>
     </div>
   </div>
@@ -378,6 +382,7 @@ body{background:#060607}
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Profit Factor</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Profit Factor" data-fmt="num">—</div></div>
       <div class="tsx-viz" style="width:190px;height:86px"><div style="position:absolute;left:52px;top:0" data-draw="ring" data-a="Gains totaux" data-b="Pertes totales"></div><span class="tsx-ring-l up" style="left:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Gains totaux" data-fmt="usd">—</span><span class="tsx-ring-l dn" style="right:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Pertes totales" data-fmt="usd">—</span></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Best Day % of Total Profit</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Best Day % of Total Profit" data-fmt="pct">—</div></div></div>
+    <div class="tsx-card tsx-hexa"><div class="tsx-h" style="justify-content:space-between"><span style="letter-spacing:.08em;text-transform:uppercase;font-size:13px;font-weight:700">Hexagone de performance</span><span style="font-size:12.5px"><b style="color:#4ccf6a">Ce compte</b> / <span style="color:#cfd5dc">Moyenne de tes comptes</span></span></div><div data-draw="hexa"></div></div>
   </div>
 
   <div class="tsx-card" style="margin-bottom:14px"><div class="tsx-h">Daily Account Balance</div><div class="tsx-chart" data-draw="balance"></div></div>
@@ -423,7 +428,7 @@ body{background:#060607}
 
   <div class="tsx-card"><div class="tsx-h">Trades</div>
     <div class="tsx-tw"><table class="tsx-t">
-      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th></tr></thead>
+      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>RR théo</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th><th style="text-align:center">Tags</th><th style="text-align:center">Images</th></tr></thead>
       <tbody data-draw="rows"></tbody>
     </table></div>
     <div class="tsx-pager"><span>Rows per page:</span><select class="tsx-rpp" aria-label="Rows per page"><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select><span data-draw="range">—</span><button class="tsx-pg" data-step="-1" aria-label="Page précédente">‹</button><button class="tsx-pg" data-step="1" aria-label="Page suivante">›</button></div>
@@ -854,6 +859,211 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 </script>
 <!--JSEED-->
 <script>
+/* ---------- Journal : Tags, Images, RR théorique, Hexagone de performance ---------- */
+(() => {
+  const C = { default: "#9b9a97", gray: "#9b9a97", brown: "#a27763", orange: "#d9730d", yellow: "#dfab01", green: "#4dab9a", blue: "#529cca", purple: "#9a6dd7", pink: "#e255a1", red: "#e03e3e" };
+  const o = (s) => s.split("|").map((x) => { const [n, c] = x.split("~"); return { n, c: c || "default" }; });
+  // Same attributes, options and colours as the Notion database "Respect du plan"
+  const SECTIONS = [
+    ["Contexte", [
+      ["Time", "multi", o("Macro~brown|8h30~yellow|1:50 to 2:10~blue|2:50 to 3:10~blue|Silver Bullet London~blue|3:50 to 4:10~blue|4:50 to 5:10~blue|5:50 to 6:10~red|Open Range~pink|6:50 to 7:10~orange|Premarket 7/9h~pink|7:50 to 8:10~orange|8:50 to 9:10~orange|Open Range 2~pink|9:50 to 10:10~yellow|Silver Bullet NY AM~yellow|10:50 to 11:10~yellow|11:50 to 12:10~gray|11:30 to 13:00 - Lunch~gray|12:50 to 13:10~gray|13:50 to 14:10~green|14:50 to 15:10~green")],
+      ["Actif", "select", o("NQ~blue|ES~red")],
+      ["Type de compte", "multi", o("Funded|Challenge|Paper")],
+    ]],
+    ["Setup", [
+      ["Sens", "select", o("Long~blue|Short~red")],
+      ["Model", "select", o("Long~blue|Short~red|Model de continuation~brown")],
+      ["PDA HTF", "multi", o("FVG~red|IFVG~red|BPR~red|OB~blue|BB~blue|MB~blue|RB~blue|Susp Block~purple|NWOG~yellow|NDOG~yellow|Liquidity Void~gray|Old High / Low~brown")],
+      ["PD Array M1", "multi", o("Avec quadrents|Avec niveaux|MSS~blue|BBU~blue|BB~blue|OB~blue|PB~blue|RB~blue|BPR~red|FVG~red|IFVG~red|Susp Block~red|Inversion Susp Block~red|Reclamed~red|1st P.FVG MACRO~yellow|1st P.FVG 2H~yellow|1st P.FVG 7h~yellow|1st P.FVG 9h30~yellow|1st. P.FVG Reflection~yellow|1.st P.FVG Silver Bullet~yellow")],
+      ["Prise de liquidité", "multi", o("N/A|SMT~gray|Grosse prise de liquidités~blue|Petite prise de liquidités~red|TS~yellow|SF~pink")],
+    ]],
+    ["Exécution théorique", [
+      ["Entrée théorique", "num"], ["Stop théorique", "num"], ["TP théorique", "num"],
+      ["RR théorique", "num", null, "Calculé avec Entrée / Stop / TP théoriques, ou saisi à la main"],
+      ["RR souhaité", "num", null, "Final Draw On Liquidity comme target"], ["Risque", "num", null, "Risque en $"],
+    ]],
+    ["Résultat", [
+      ["Status", "multi", o("TP~green|BE (SL)~yellow|BE (TP)~yellow|SL~red|Pas pris (TP)~purple|Pas pris (SL)~purple|Pas pris (BE ~ TP)~purple|Pas pris (BE ~ SL)~purple")],
+      ["RR fait", "num"], ["MAE (R)", "num", null, "Perte max. non réalisée pendant le trade"], ["MFE (R)", "num", null, "Gain max. non réalisé pendant le trade"],
+    ]],
+    ["Discipline", [
+      ["Respect du plan ?", "multi", o("Oui~green|Entre les deux~yellow|Non~red")],
+      ["Règles respectées", "select", o("Oui~green|Non~red")],
+      ["Réussite", "multi", o("N/A|Manage risk~green|Model connu~green|Suivit du plan~green|Didn't chase~green|Took early partials~green|Flipped biais~green|Step away after my loss~green|Step away after my win~green")],
+      ["Erreur", "multi", o("N/A|Low Hunging Fruit~red|Gambling~red|Overtrading~red|Scalping~red|Revenge trade~red|Model pas connu~red|FOMO~red|Taille de position~red|Hors macro~purple|Setup non A+~blue|News majeure~pink|Stop déplacé~brown|Sortie anticipée~gray|Oubli d'un élément clé~green|Autre|Pas pris Partiels~orange")],
+    ]],
+    ["Psychologie", [
+      ["Péchés capitaux", "multi", o("N/A|Colère~red|Désir~red|Fierté~red|Gourmandise~red|Paresse~red|Luxure~red|Avarice~red")],
+      ["Ressentis / Émotions", "multi", o("N/A|Impulsif~red|Stress~red|Doutes~red|Besoin / Envie~red|Frustation~red|Peur~red|Esprit de revanche~red|Euphorie~orange|Excès de confiance~orange|Impatience~orange|Ennui~orange|Fatigue~orange|Calme / Serein~green|Confiant~green|Patient~green")],
+    ]],
+    ["Notes", [["Commentaire", "text"]]],
+  ];
+  const SLOTS = ["NQ H4", "ES H4", "NQ H1", "ES H1", "NQ m15", "ES m15", "NQ m1", "ES m1", "NQ - NWOG & 1st m15", "ES - NWOG & 1st m15", "NQ - NWOG & 1st m1", "ES - NWOG & 1st m1", "NQ - RTH ORG m15", "ES - RTH ORG m15", "NQ - RTH ORG m1", "ES - RTH ORG m1", "NQ - STDV", "ES - STDV", "Exécution théorique", "Vraie Exécution"];
+  const optColor = {}; SECTIONS.forEach(([, fs]) => fs.forEach(([n, , opts]) => (opts || []).forEach((x) => (optColor[n + "|" + x.n] = C[x.c]))));
+
+  /* ----- storage: tags (localStorage) + images (IndexedDB) ----- */
+  const MK = "econcal-journal-meta";
+  let META = { tags: {} };
+  try { META = JSON.parse(localStorage.getItem(MK)) || META; } catch (e) {}
+  if (!META.tags) META.tags = {};
+  const seed = (window.JOURNAL_SEED || {}).tags;
+  if (seed && !META.seeded) { for (const k in seed) if (!META.tags[k]) META.tags[k] = seed[k]; META.seeded = true; }
+  const saveMeta = () => { try { localStorage.setItem(MK, JSON.stringify(META)); } catch (e) {} };
+  saveMeta();
+  const mem = new Map(); let dbp = null;
+  const idb = () => dbp || (dbp = new Promise((ok) => { try { const r = indexedDB.open("econcal-images", 1); r.onupgradeneeded = () => r.result.createObjectStore("img"); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); } catch (e) { ok(null); } }));
+  const imgGet = async (k) => { const db = await idb(); if (!db) return mem.get(k) || []; return new Promise((ok) => { const q = db.transaction("img").objectStore("img").get(k); q.onsuccess = () => ok(q.result || []); q.onerror = () => ok([]); }); };
+  const imgSet = async (k, v) => { const db = await idb(); if (!db) { mem.set(k, v); return; } return new Promise((ok) => { const t = db.transaction("img", "readwrite"); v.length ? t.objectStore("img").put(v, k) : t.objectStore("img").delete(k); t.oncomplete = ok; t.onerror = ok; }); };
+  const IMGCOUNT = "econcal-journal-imgcount"; let IC = {}; try { IC = JSON.parse(localStorage.getItem(IMGCOUNT)) || {}; } catch (e) {}
+  const saveIC = () => { try { localStorage.setItem(IMGCOUNT, JSON.stringify(IC)); } catch (e) {} };
+
+  /* ----- RR théorique ----- */
+  const num = (v) => (v === "" || v === null || v === undefined || isNaN(+v) ? null : +v);
+  const rrTheo = (t) => {
+    if (!t) return null;
+    const e = num(t["Entrée théorique"]), s = num(t["Stop théorique"]), p = num(t["TP théorique"]);
+    if (e !== null && s !== null && p !== null && e !== s) return Math.round((Math.abs(p - e) / Math.abs(e - s)) * 100) / 100;
+    return num(t["RR théorique"]);
+  };
+  window.jmeta = { rrTheo: (id) => rrTheo(META.tags[id]), tags: (id) => META.tags[id], imgCount: (id) => IC[id] || 0, all: () => META.tags };
+
+  /* ----- shared modal ----- */
+  const css = document.createElement("style");
+  css.textContent = `
+.jm-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+.jm-ov.show{display:flex}
+.jm{background:#0c0f13;border:1px solid #1f242b;border-radius:14px;width:min(980px,100%);max-height:92vh;display:flex;flex-direction:column;color:#eef1f5;font-family:"Roboto Condensed","Arial Narrow",sans-serif;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.jm-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #1f242b}
+.jm-h b{font-size:18px}.jm-h small{color:#8d95a0;font-size:13px;display:block;margin-top:2px}
+.jm-x{background:none;border:none;color:#8d95a0;font-size:22px;cursor:pointer}
+.jm-b{overflow:auto;padding:6px 20px 18px}
+.jm-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #1f242b}
+.jm-sec{margin-top:14px}.jm-sec>h4{margin:0 0 8px;font-size:12px;letter-spacing:.12em;color:#8d95a0;text-transform:uppercase;font-weight:700}
+.jm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px 16px}
+.jm-fl{background:#10141a;border:1px solid #1f242b;border-radius:9px;padding:9px 11px}
+.jm-fl.wide{grid-column:1/-1}
+.jm-fl label{display:block;font-size:12.5px;color:#aab2bc;margin-bottom:6px;font-weight:700}
+.jm-fl label i{font-style:normal;color:#6f7782;font-weight:400;margin-left:6px}
+.jm-ch{display:flex;flex-wrap:wrap;gap:5px}
+.jm-c{border:1px solid #2a3038;background:transparent;color:#aab2bc;border-radius:5px;padding:3px 8px;font:inherit;font-size:12.5px;cursor:pointer}
+.jm-c.on{color:#fff;border-color:var(--c);background:color-mix(in srgb,var(--c) 34%,transparent)}
+.jm-fl input,.jm-fl textarea{width:100%;background:#0a0d11;border:1px solid #2a3038;border-radius:6px;color:#eef1f5;padding:7px 9px;font:inherit;font-size:14px}
+.jm-fl textarea{min-height:70px;resize:vertical}
+.jm-rr{font-size:20px;font-weight:700;color:#4ccf6a}
+.jm-btn{background:#2f54eb;color:#fff;border:none;border-radius:7px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer}
+.jm-btn.g{background:#1a1f26;color:#d9dae0;border:1px solid #2a3038}
+.jm-acc{border-bottom:1px solid #161a20}
+.jm-acc>button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:#eef1f5;font:inherit;font-size:15px;padding:10px 4px;cursor:pointer;text-align:left}
+.jm-acc>button .tri{color:#8d95a0;transition:transform .15s;font-size:11px}
+.jm-acc.open>button .tri{transform:rotate(90deg)}
+.jm-acc>button .n{margin-left:auto;color:#8d95a0;font-size:12px}
+.jm-acc .bd{display:none;padding:2px 4px 14px 24px}
+.jm-acc.open .bd{display:block}
+.jm-drop{border:1.5px dashed #2a3038;border-radius:9px;padding:14px;text-align:center;color:#8d95a0;font-size:13px;cursor:pointer}
+.jm-drop.hl{border-color:#2f54eb;color:#cfd8ff}
+.jm-th{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.jm-th figure{position:relative;margin:0}
+.jm-th img{max-width:100%;max-height:360px;border-radius:8px;border:1px solid #1f242b;display:block;cursor:zoom-in}
+.jm-th figure button{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;color:#fff;border-radius:50%;width:26px;height:26px;cursor:pointer}
+.jm-lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60;display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.jm-lb.show{display:flex}.jm-lb img{max-width:96vw;max-height:94vh}
+.tsx-t td.tg,.tsx-t td.im{text-align:center;cursor:pointer;color:#8d95a0}
+.tsx-t td.tg:hover,.tsx-t td.im:hover{background:#121821;color:#fff}
+.tsx-t .pill{display:inline-block;border-radius:4px;padding:1px 6px;font-size:11px;margin:0 2px;color:#fff;font-weight:700}
+`;
+  document.head.append(css);
+  const ov = document.createElement("div"); ov.className = "jm-ov"; ov.innerHTML = `<div class="jm"><div class="jm-h"><div><b></b><small></small></div><button class="jm-x" aria-label="Fermer">×</button></div><div class="jm-b"></div><div class="jm-f"></div></div>`;
+  const lb = document.createElement("div"); lb.className = "jm-lb"; lb.innerHTML = "<img alt=''>"; lb.onclick = () => lb.classList.remove("show");
+  document.body.append(ov, lb);
+  const close = () => { ov.classList.remove("show"); window.removeEventListener("paste", onPaste); };
+  ov.querySelector(".jm-x").onclick = close; ov.addEventListener("mousedown", (e) => { if (e.target === ov) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (lb.classList.contains("show")) lb.classList.remove("show"); else if (ov.classList.contains("show")) close(); } });
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const head = (t) => { const fmt = (v) => new Date(v).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    return `${t.Direction} ${t.Size} ${t.Contract} · ${fmt(t.Entry)} → ${fmt(t.Exit)} · ${(t["Net P&L"] >= 0 ? "+" : "") + t["Net P&L"].toFixed(2)} $ net · trade ${t.ID}`; };
+
+  /* ----- Tags popup ----- */
+  function openTags(t) {
+    const cur = JSON.parse(JSON.stringify(META.tags[t.ID] || {}));
+    ov.querySelector(".jm-h b").textContent = "Tags du trade"; ov.querySelector(".jm-h small").textContent = head(t);
+    const body = ov.querySelector(".jm-b");
+    body.innerHTML = SECTIONS.map(([sec, fs]) => `<div class="jm-sec"><h4>${sec}</h4><div class="jm-grid">` + fs.map(([n, ty, opts, hint]) => {
+      const v = cur[n];
+      let inner;
+      if (ty === "multi" || ty === "select") inner = `<div class="jm-ch" data-f="${esc(n)}" data-t="${ty}">` + opts.map((x) => { const on = ty === "multi" ? (v || []).includes(x.n) : v === x.n;
+        return `<button type="button" class="jm-c${on ? " on" : ""}" style="--c:${C[x.c]}" data-v="${esc(x.n)}">${esc(x.n)}</button>`; }).join("") + "</div>";
+      else if (ty === "text") inner = `<textarea data-f="${esc(n)}">${esc(v || "")}</textarea>`;
+      else inner = `<input type="number" step="any" data-f="${esc(n)}" value="${v ?? ""}">` + (n === "RR théorique" ? `<div class="jm-rr" id="jmRR"></div>` : "");
+      const wide = ty === "text" || (opts && opts.length > 10);
+      return `<div class="jm-fl${wide ? " wide" : ""}"><label>${esc(n)}${hint ? `<i>${esc(hint)}</i>` : ""}</label>${inner}</div>`;
+    }).join("") + "</div></div>").join("");
+    const upd = () => { const r = rrTheo(cur); const el = body.querySelector("#jmRR"); if (el) { el.textContent = r === null ? "" : "RR théorique : " + r + " R"; } };
+    body.onclick = (e) => { const b = e.target.closest(".jm-c"); if (!b) return; const g = b.parentElement, f = g.dataset.f, v = b.dataset.v;
+      if (g.dataset.t === "select") { const was = b.classList.contains("on"); g.querySelectorAll(".jm-c").forEach((x) => x.classList.remove("on")); if (!was) { b.classList.add("on"); cur[f] = v; } else delete cur[f]; }
+      else { b.classList.toggle("on"); cur[f] = [...g.querySelectorAll(".jm-c.on")].map((x) => x.dataset.v); if (!cur[f].length) delete cur[f]; } };
+    body.oninput = (e) => { const f = e.target.dataset.f; if (!f) return; const v = e.target.value; if (e.target.type === "number") { if (v === "") delete cur[f]; else cur[f] = +v; } else { if (v) cur[f] = v; else delete cur[f]; } upd(); };
+    upd();
+    const foot = ov.querySelector(".jm-f");
+    foot.innerHTML = `<button class="jm-btn g" data-a="clear">Effacer</button><button class="jm-btn g" data-a="cancel">Annuler</button><button class="jm-btn" data-a="save">Enregistrer</button>`;
+    foot.onclick = (e) => { const a = e.target.dataset.a; if (!a) return;
+      if (a === "cancel") return close();
+      if (a === "clear") { delete META.tags[t.ID]; } else { if (Object.keys(cur).length) META.tags[t.ID] = cur; else delete META.tags[t.ID]; }
+      saveMeta(); close(); window.jdash && jdash.redraw(); };
+    ov.classList.add("show");
+  }
+
+  /* ----- Images popup ----- */
+  let pasteSlot = null, curTrade = null;
+  async function addFiles(slot, files) {
+    const key = curTrade.ID + "|" + slot, arr = await imgGet(key);
+    for (const f of files) { if (!f.type.startsWith("image/")) continue; arr.push(await shrink(f)); }
+    await imgSet(key, arr); await refreshCount(curTrade.ID); renderSlot(slot);
+  }
+  const shrink = (f) => new Promise((ok) => { const im = new Image(); im.onload = () => { const s = Math.min(1, 1920 / Math.max(im.width, im.height)); const c = document.createElement("canvas");
+    c.width = Math.round(im.width * s); c.height = Math.round(im.height * s); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(im.src); ok(c.toDataURL("image/jpeg", 0.88)); }; im.src = URL.createObjectURL(f); });
+  async function refreshCount(id) { let n = 0; for (const s of SLOTS) n += (await imgGet(id + "|" + s)).length; if (n) IC[id] = n; else delete IC[id]; saveIC(); }
+  async function renderSlot(slot) {
+    const acc = ov.querySelector(`.jm-acc[data-s="${CSS.escape(slot)}"]`); if (!acc) return;
+    const arr = await imgGet(curTrade.ID + "|" + slot);
+    acc.querySelector(".n").textContent = arr.length ? arr.length + " image" + (arr.length > 1 ? "s" : "") : "";
+    acc.querySelector(".jm-th").innerHTML = arr.map((src, i) => `<figure><img src="${src}" alt="${esc(slot)}" data-i="${i}"><button data-del="${i}" title="Supprimer">×</button></figure>`).join("");
+  }
+  const onPaste = (e) => { if (!pasteSlot || !curTrade) return; const fs = [...(e.clipboardData || {}).files || []]; if (fs.length) { e.preventDefault(); addFiles(pasteSlot, fs); } };
+  function openImages(t) {
+    curTrade = t; pasteSlot = null;
+    ov.querySelector(".jm-h b").textContent = "Images du trade"; ov.querySelector(".jm-h small").textContent = head(t);
+    const body = ov.querySelector(".jm-b");
+    body.innerHTML = SLOTS.map((s) => `<div class="jm-acc" data-s="${esc(s)}"><button type="button"><span class="tri">▶</span>${esc(s)}<span class="n"></span></button><div class="bd"><div class="jm-th"></div>
+      <div class="jm-drop" tabindex="0">Colle une capture (Ctrl+V), glisse une image ici ou clique pour choisir<input type="file" accept="image/*" multiple hidden></div></div></div>`).join("");
+    SLOTS.forEach(renderSlot);
+    body.onclick = async (e) => {
+      const acc = e.target.closest(".jm-acc"); if (!acc) return; const slot = acc.dataset.s;
+      if (e.target.closest(".jm-acc>button")) { acc.classList.toggle("open"); if (acc.classList.contains("open")) pasteSlot = slot; return; }
+      if (e.target.dataset.del !== undefined) { const k = t.ID + "|" + slot, arr = await imgGet(k); arr.splice(+e.target.dataset.del, 1); await imgSet(k, arr); await refreshCount(t.ID); renderSlot(slot); return; }
+      if (e.target.tagName === "IMG") { lb.querySelector("img").src = e.target.src; lb.classList.add("show"); return; }
+      const d = e.target.closest(".jm-drop"); if (d) { pasteSlot = slot; d.querySelector("input").click(); }
+    };
+    body.onchange = (e) => { if (e.target.type === "file") { addFiles(e.target.closest(".jm-acc").dataset.s, [...e.target.files]); e.target.value = ""; } };
+    body.addEventListener("focusin", (e) => { const acc = e.target.closest(".jm-acc"); if (acc) pasteSlot = acc.dataset.s; });
+    body.ondragover = (e) => { const d = e.target.closest(".jm-drop"); if (d) { e.preventDefault(); d.classList.add("hl"); } };
+    body.ondragleave = (e) => { const d = e.target.closest(".jm-drop"); if (d) d.classList.remove("hl"); };
+    body.ondrop = (e) => { const d = e.target.closest(".jm-drop"); if (!d) return; e.preventDefault(); d.classList.remove("hl"); addFiles(d.closest(".jm-acc").dataset.s, [...e.dataTransfer.files]); };
+    const foot = ov.querySelector(".jm-f"); foot.innerHTML = `<span style="margin-right:auto;color:#8d95a0;font-size:12.5px;align-self:center">Ouvre une section puis colle ta capture TradingView (Ctrl+V)</span><button class="jm-btn" data-a="ok">Terminé</button>`;
+    foot.onclick = (e) => { if (e.target.dataset.a) { close(); window.jdash && jdash.redraw(); } };
+    window.addEventListener("paste", onPaste);
+    ov.classList.add("show");
+  }
+  window.jmeta.openTags = openTags; window.jmeta.openImages = openImages;
+  window.jmeta.pillHTML = (id) => {
+    const t = META.tags[id]; if (!t) return "+";
+    const pick = [["Status"], ["Time"], ["Respect du plan ?"]].map(([f]) => { const v = t[f]; const x = Array.isArray(v) ? v[0] : v; return x ? `<span class="pill" style="background:${(optColor[f + "|" + x] || "#555")}">${esc(x)}</span>` : ""; }).join("");
+    return pick || `<span class="pill" style="background:#2a3038">✓ tags</span>`;
+  };
+  window.jmeta.exportMeta = async () => { const imgs = {}; for (const id in IC) for (const s of SLOTS) { const a = await imgGet(id + "|" + s); if (a.length) imgs[id + "|" + s] = a; } return { tags: META.tags, images: imgs }; };
+  window.jmeta.importMeta = async (m) => { if (m.tags) { Object.assign(META.tags, m.tags); saveMeta(); } if (m.images) { for (const k in m.images) { await imgSet(k, m.images[k]); await refreshCount(k.split("|")[0]); } } window.jdash && jdash.redraw(); };
+})();
+</script>
+<script>
 /* ---------- Journal de trading : Stats TopstepX ---------- */
 (() => {
   // mini runtime (calc / data / params / draw) used by the dashboard code below
@@ -926,6 +1136,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   });
   const alertBox = (t) => { document.getElementById("jSync").textContent = t; };
   imp("jImpC", "comptes"); imp("jImpT", "trades");
+  document.getElementById("jMetaExp").onclick = async () => { const m = await jmeta.exportMeta(); const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: "application/json" })); a.download = "journal-tags-images.json"; document.body.append(a); a.click(); a.remove(); };
+  document.getElementById("jMetaImp").onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { await jmeta.importMeta(JSON.parse(await f.text())); alertBox("Tags & images importés ✓"); } catch (err) { alertBox("Fichier invalide"); } e.target.value = ""; };
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(dash.redraw, 150); });
 
   /* ----- calcs ----- */
@@ -1122,6 +1335,38 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     svg.selectAll(".bl").data(bars).join("text").attr("x", (d) => x(d.v) + 6).attr("y", (d) => y(d.lab) + y.bandwidth() / 2).attr("dy", "0.32em").attr("fill", "#cfd5dc").attr("font-size", 11).text((d) => (win ? Math.round(d.v * 100) + "%" : d.v));
   });
 
+  /* ----- Hexagone de performance ----- */
+  const hexaStats = (c) => {
+    const T = (dash.data("fills_calc").data || []).filter((t) => t["ID TopstepX"] === String(c["ID TopstepX"])).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
+    const start = Number(c["Solde de départ"]) || 50000; let bal = start, peak = start, dd = 0;
+    for (const t of T) { bal += t["Net P&L"]; peak = Math.max(peak, bal); dd = Math.max(dd, peak - bal); }
+    const risks = T.map((t) => (window.jmeta && jmeta.tags(t.ID) || {})["Risque"]).filter((v) => typeof v === "number" && v > 0);
+    return { Winrate: Number(c["Trade Win %"]) || 0, RR: Number(c["Avg Win / Avg Loss"]) || 0, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: risks.length ? (d3.mean(risks) / start) * 100 : 0 };
+  };
+  dash.draw("hexa", (el) => {
+    el.replaceChildren(); const c = curRow(); const all = dash.data("comptes"); if (!c || all.status !== "ok") return;
+    const me = hexaStats(c), avgs = all.data.map(hexaStats), avg = {};
+    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions)), (v) => String(Math.round(v))], ["Risque", 2, (v) => v.toFixed(2) + "%"]];
+    AXES.forEach(([k]) => (avg[k] = d3.mean(avgs, (a) => a[k])));
+    const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, R = Math.min(118, W / 2 - 70);
+    const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
+    const ang = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length, pt = (i, r) => [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
+    for (let l = 1; l <= 5; l++) svg.append("polygon").attr("points", AXES.map((a, i) => pt(i, (R * l) / 5).join(",")).join(" ")).attr("fill", "none").attr("stroke", "#232a33");
+    AXES.forEach((a, i) => { const [x, y] = pt(i, R); svg.append("line").attr("x1", cx).attr("y1", cy).attr("x2", x).attr("y2", y).attr("stroke", "#232a33");
+      const [lx, ly] = pt(i, R + 22); svg.append("text").attr("x", lx).attr("y", ly).attr("dy", "0.35em").attr("text-anchor", Math.abs(lx - cx) < 10 ? "middle" : lx > cx ? "start" : "end").attr("fill", "#eef1f5").attr("font-size", 14).attr("font-weight", 700).text(a[0]); });
+    const poly = (o) => AXES.map(([k, max], i) => pt(i, Math.max(0.04, Math.min(1, (o[k] || 0) / max)) * R));
+    svg.append("polygon").attr("points", poly(avg).map((p) => p.join(",")).join(" ")).attr("fill", "rgba(160,168,180,.28)").attr("stroke", "rgba(160,168,180,.5)");
+    const mp = poly(me);
+    svg.append("polygon").attr("points", mp.map((p) => p.join(",")).join(" ")).attr("fill", "rgba(47,84,235,.38)").attr("stroke", "#3b5bff").attr("stroke-width", 2);
+    const tip = d3.select(el).append("div").attr("class", "tsx-tip").style("opacity", 0); el.style.position = "relative";
+    AXES.forEach(([k, , f], i) => { const [x, y] = mp[i]; const txt = f(me[k] || 0); const w = txt.length * 7 + 12;
+      const g = svg.append("g").attr("transform", `translate(${x},${y})`).style("cursor", "default");
+      g.append("rect").attr("x", -w / 2).attr("y", -10).attr("width", w).attr("height", 20).attr("rx", 5).attr("fill", "#2f54eb");
+      g.append("text").attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", "#fff").attr("font-size", 11.5).attr("font-weight", 700).text(txt);
+      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl">Ce compte : ${txt}</div><div class="tl" style="color:#cfd5dc">Moyenne : ${f(avg[k] || 0)}</div>`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
+       .on("mouseleave", () => tip.style("opacity", 0)); });
+  });
+
   /* ----- P&L calendar + trades table ----- */
   const mk = (cls, txt) => { const d = document.createElement("div"); d.className = cls; if (txt !== undefined) d.textContent = txt; return d; };
   dash.draw("calmonth", (el) => { const [y, m] = month(trades() || []).split("-").map(Number);
@@ -1156,7 +1401,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (const t of [...T].sort((a, b) => String(b.Entry).localeCompare(String(a.Entry))).slice(pg * rpp, pg * rpp + rpp)) {
       const tr = document.createElement("tr"); const cell = (txt, cls) => { const td = document.createElement("td"); td.textContent = txt; if (cls) td.className = cls; tr.append(td); };
       cell(t.ID); cell(t.Contract); cell(String(t.Size)); cell(fts(t.Entry)); cell(fts(t.Exit)); cell(fdur(t["Duration (s)"])); cell(px2(t["Entry Price"])); cell(px2(t["Exit Price"]));
-      cell(m2(t["P&L"]), t["P&L"] > 0 ? "up" : t["P&L"] < 0 ? "dn" : ""); cell(m2(-t.Commissions), "dn"); cell(m2(-t.Fees), "dn"); cell(t.Direction); tb.append(tr); }
+      { const rr = window.jmeta ? jmeta.rrTheo(t.ID) : null; cell(rr === null ? "—" : rr.toFixed(2) + " R", rr === null ? "" : rr > 0 ? "up" : rr < 0 ? "dn" : ""); }
+      cell(m2(t["P&L"]), t["P&L"] > 0 ? "up" : t["P&L"] < 0 ? "dn" : ""); cell(m2(-t.Commissions), "dn"); cell(m2(-t.Fees), "dn"); cell(t.Direction);
+      if (window.jmeta) { const tg = document.createElement("td"); tg.className = "tg"; tg.innerHTML = jmeta.pillHTML(t.ID); tg.title = "Tags"; tg.onclick = () => jmeta.openTags(t);
+        const im = document.createElement("td"); im.className = "im"; const n = jmeta.imgCount(t.ID); im.textContent = n ? "🖼 " + n : "-"; im.title = "Images"; im.onclick = () => jmeta.openImages(t); tr.append(tg, im); }
+      tb.append(tr); }
   });
   dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
     el.textContent = T.length ? `${pg * rpp + 1}–${Math.min(T.length, (pg + 1) * rpp)} of ${T.length}` : "0 of 0"; });
