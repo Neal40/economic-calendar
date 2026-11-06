@@ -4,7 +4,7 @@
  *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
  *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
- *   await JARVIS.macros()            -> boxes for macros XX:50–XX:10 and mini macros XX:25–XX:35
+ *   await JARVIS.macros()            -> 2 vertical lines per macro XX:50–XX:10 (grey) and mini macro XX:25–XX:35 (purple)
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -52,7 +52,7 @@
     else if (wd === 0) d = addDays(d, 1); // Sunday evening -> Monday's session
     return d;
   };
-  const now = () => Math.floor(Date.now() / 1000);
+  const now = () => Math.min(Math.floor(Date.now() / 1000), J.day ? ny(J.day, 17, 0) : Infinity); // past day: stop at 17h NY
   const root = s => { s = String(s || '').toUpperCase(); return s.includes('NQ') ? '/NQ' : (s.includes('ES') ? '/ES' : null); };
 
   const cache = {};
@@ -306,30 +306,23 @@
         (f.depth ? ` · profondeur depuis ${f.depth.toFixed(2)}` : '') + ` → catch ${f.catchable ? 'POSSIBLE ✅' : 'non ❌'}`).join('\n')
         : 'Aucune donnée';
     },
-    // Macros XX:50–XX:10 and mini macros XX:25–XX:35 (02h50 → 16h10 New York), drawn as boxes on every chart
+    // Macros XX:50–XX:10 and mini macros XX:25–XX:35 (02h50 → 16h10 New York): two vertical lines each (start with label, end)
     async macros() {
       const d = day(), out = [];
       for (let i = 0; i < api.chartsCount(); i++) {
-        const c = api.chart(i), sym = root(c.symbol());
-        if (!sym) continue;
+        const c = api.chart(i);
+        if (!root(c.symbol())) continue;
         clearGroup(i, 'macros');
-        const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
-        if (!all.length) continue;
-        const hi = Math.max(...all.map(b => b.h)), lo = Math.min(...all.map(b => b.l)), pad = (hi - lo) * 0.05;
         const ids = [];
-        for (let h = 2; h <= 16; h++) {
-          const boxes = [[ny(d, h, 0) - 600, ny(d, h, 10), `Macro ${h}h`, 'rgba(120,120,120,0.10)'], [ny(d, h, 25), ny(d, h, 35), `Mini ${h}h30`, 'rgba(156,39,176,0.07)']];
-          for (const [a, b, txt, bg] of boxes) {
-            if (h === 16 && txt.startsWith('Mini')) continue;
-            const st = { backgroundColor: bg, fillBackground: true, transparency: 0, color: 'rgba(0,0,0,0)', linewidth: 1, extendLeft: false, extendRight: false,
-              showLabel: true, textColor: '#555555', fontSize: 10, horzLabelsAlign: 'center', vertLabelsAlign: 'top', middleLine: { showLine: false } };
-            const id = await c.createMultipointShape([{ time: a, price: hi + pad }, { time: b, price: lo - pad }], { shape: 'rectangle', text: txt, lock: false, overrides: st });
-            try { c.getShapeById(id).setProperties(st); } catch (e) { /* ignore */ }
-            ids.push(id);
-          }
+        const vl = async (t, text, color) => ids.push(await c.createShape({ time: t }, { shape: 'vertical_line', text, lock: false,
+          overrides: { linecolor: color, linestyle: 2, linewidth: 1, showLabel: !!text, textcolor: color, horzLabelsAlign: 'right', vertLabelsAlign: 'bottom', textOrientation: 'vertical' } }));
+        for (let h = 3; h <= 16; h++) {
+          await vl(ny(d, h - 1, 50), `Macro ${h}h`, '#787b86');
+          await vl(ny(d, h, 10), '', '#787b86');
+          if (h < 16) { await vl(ny(d, h, 25), `Mini ${h}h30`, '#9c27b0'); await vl(ny(d, h, 35), '', '#9c27b0'); }
         }
         keep(i, 'macros', ids);
-        out.push(`${c.symbol()} : ${ids.length} zones`);
+        out.push(`${c.symbol()} : ${ids.length} lignes`);
       }
       return out;
     },
