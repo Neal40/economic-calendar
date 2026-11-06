@@ -427,6 +427,21 @@ table.tbl:has(#subT){min-width:900px}
 .jrec b{color:#fff;font-size:14px}.jrec p{margin:0;color:#9a9ca6;font-size:12.5px;line-height:1.4}
 .jrec input{background:#0d0e11;border:1px solid #2c2d35;border-radius:7px;color:#eef0f4;font:inherit;padding:8px 10px;outline:none}
 .jrec small{color:#9a9ca6;font-size:12px}
+
+#v-journal .jtop{flex-direction:column;align-items:flex-start}
+.rv-props-sep{grid-column:1/-1;border-top:1px solid #26272e;margin:8px 0 4px}
+.rv-acc{color:#7d9bff;text-decoration:none;font-weight:700}.rv-acc:hover{text-decoration:underline}
+.rv-gal{margin:16px 0 18px}
+.rv-gal .rv-car-n{font-size:15px;color:#fff}
+.rv-gal .rv-car-cap{font-size:14px;color:#7d9bff}
+.rv-car-hint{margin-left:auto;color:#6f727d;font-size:12px}
+.rv-gal .rv-car-v{background:#000;border-radius:8px}
+.rv-gal .rv-car-b{width:46px;height:46px;font-size:26px;background:rgba(0,0,0,.75);border:1px solid #3a3b44}
+.rv-th{flex:none;background:none;border:2px solid transparent;border-radius:6px;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.55;color:#c9cbd2;font:inherit;font-size:10.5px;max-width:96px}
+.rv-car-th .rv-th img{width:92px;height:52px;object-fit:cover;border-radius:4px;display:block;border:none;opacity:1}
+.rv-th span{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px 2px}
+.rv-th.on{border-color:#4a6cf7;opacity:1}
+.rv-img img{cursor:zoom-in}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -1631,11 +1646,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const RK = { Actif: 0, "Passé": 1, "Archivé": 2, "Cramé": 3 };
     const rows = [...d.data].sort((a, b) => (b._all ? 1 : 0) - (a._all ? 1 : 0) || (RK[a.Statut] ?? 2) - (RK[b.Statut] ?? 2) || String(a.Nom).localeCompare(String(b.Nom)));
     const etat = (r) => { if (r._all) return { col: "#a077d6", pre: "◆ ", suf: "  ·  P&L " + F.usd(r["Total P&L"]) + "  ·  " + (d.data.length - 1) + " comptes" };
-      if (r.Statut === "Passé") return { col: "#e2b33d", pre: "★ ", suf: "  ·  challenge réussi (archivé)" };
+      if (r.Statut === "Passé") return { col: "#4ccf6a", pre: "★ ", suf: "  ·  challenge réussi (archivé)" };
       if (r.Statut === "Archivé") return { col: "#8b93a1", pre: "▣ ", suf: "  ·  archivé" };
       if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
       const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0);
-      if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#4ccf6a", pre: "● ", suf: "" }; };
+      if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#f0a033", pre: "● ", suf: "  ·  en cours" }; };
     sel.replaceChildren(...rows.map((r) => { const e = etat(r); const o = new Option(e.pre + r.Nom + (r._all ? "" : "  ·  " + F.usd(r["Solde TopstepX"])) + e.suf, String(r["ID TopstepX"]));
       o.style.color = e.col; o.style.backgroundColor = "#10141a"; return o; }));
     sel.value = curId(); const cur = rows.find((r) => String(r["ID TopstepX"]) === sel.value);
@@ -1910,11 +1925,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
         case "heading_3": out += `<h4>${rt(b.rt)}</h4>`; break;
         case "quote": out += `<blockquote${st}>${rt(b.rt)}</blockquote>`; break;
         case "callout": out += `<div class="rv-callout"${st}>${b.icon ? `<span>${esc(b.icon)}</span>` : ""}<div>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</div></div>`; break;
-        case "toggle": if (ctx && ctx.carousel && ((b.children || []).some((k) => k.type === "image" && k.src) || ed)) { out += carHTML(b, ctx, ed); break; }
+        case "toggle": if (ctx && ctx.noImg) { const kids = b.children || [], ni = kids.filter((k) => k.type === "image" && k.src).length, rest = kids.filter((k) => !(k.type === "image" && k.src));
+            out += `<details class="rv-tg"${ed ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}${ni ? ` <span class="rv-mut" style="font-size:12px;font-weight:400">· ${ni} image${ni > 1 ? "s" : ""} dans la galerie</span>` : ""}</summary><div>${rest.length ? blocksHTML(rest, ctx) : ed || ni ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Coller une image (Ctrl+V) ou écrire du texte (Entrée) dans « ${esc((b.rt || []).map((x) => x.t || "").join("").trim())} »…"></div>` : ""}</div></details>`; break; }
           out += `<details class="rv-tg"${ctx && ctx.open ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : ed ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Écrire (Entrée pour envoyer) ou coller une image…"></div>` : ""}</div></details>`; break;
         case "to_do": out += `<p>${b.checked ? "☑" : "☐"} ${rt(b.rt)}</p>`; break;
         case "divider": out += "<hr>"; break;
-        case "image": out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
+        case "image": if (ctx && ctx.noImg && b.src) break; out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
         case "child_database": out += ctx && ctx.db ? ctx.db(b) : `<p class="rv-mut">Base « ${esc(b.title)} »</p>`; break;
         case "child_page": out += `<p>📄 ${esc(b.title)}</p>`; break;
         default: if (b.rt) out += `<p>${rt(b.rt)}</p>`;
@@ -1976,18 +1992,49 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       `<tr><td>${a.k === "(vide)" ? '<span class="rv-mut">(vide)</span>' : chips(schema, f, a.k)}</td><td><div class="rv-bar"><i style="width:${(a.n / maxN) * 100}%"></i><span>${a.n}</span></div></td><td class="${a.wr === null ? "" : a.wr >= 0.5 ? "up" : "dn"}">${pct(a.wr)}</td><td>${f2(a.rr)}</td><td class="${a.sum >= 0 ? "up" : "dn"}">${f2(a.sum)}</td></tr>`).join("") + "</tbody></table>";
   }
   /* link a Notion setup to the TopstepX trades taken at the same time (entry within -2 / +3 min) */
+  const nyFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const nyParts = (iso) => { const p = Object.fromEntries(nyFmt.formatToParts(new Date(iso)).map((x) => [x.type, x.value])); return { day: `${p.year}-${p.month}-${p.day}`, min: +p.hour * 60 + +p.minute }; };
+  const TWIN = { "Open Range": [570, 600], "Open Range 2": [600, 630], "Silver Bullet": [600, 660] };
+  const winOf = (s) => { if (TWIN[s]) return TWIN[s]; const m = /^(\d{1,2}):(\d{2}) to (\d{1,2}):(\d{2})$/.exec(s || ""); if (!m) return null; let a = +m[1] * 60 + +m[2], b = +m[3] * 60 + +m[4]; if (a < 420) { a += 0; } return [a - 2, b + 5]; };
+  const TAKEN_ST = ["TP", "SL", "BE (SL)", "BE (TP)"];
   function tsxMatch(r) {
-    if (!r["Entrée"] || !window.jdash) return null; const d = jdash.data("fills_calc"); if (d.status !== "ok") return null;
-    const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return null;
-    const hit = d.data.filter((t) => { const dt = new Date(t.Entry).getTime() - t0; return dt >= -120000 && dt <= 180000; });
+    if (!window.jdash) return null; const d = jdash.data("fills_calc"); if (d.status !== "ok") return null;
+    const act = r.Actif ? String(r.Actif).toUpperCase() : null, okSym = (t) => !act || String(t.Contract || t.Symbol || "").toUpperCase().includes(act);
+    let hit = [];
+    if (r["Entrée"] && String(r["Entrée"]).length > 10) { const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return null;
+      hit = d.data.filter((t) => { const dt = new Date(t.Entry).getTime() - t0; return dt >= -120000 && dt <= 180000 && okSym(t); }); }
+    else if (r.Date && (r.Status || []).some((x) => TAKEN_ST.includes(x))) {
+      const day = String(r.Date).slice(0, 10), wins = (r.Time || []).map(winOf).filter(Boolean); if (!wins.length) return null;
+      hit = d.data.filter((t) => { if (!okSym(t)) return false; const p = nyParts(t.Entry); return p.day === day && wins.some(([a, b]) => p.min >= a && p.min <= b); });
+    }
     return hit.length ? hit : null;
   }
-  const COLS = ["Name", "Type", "Date", "TopstepX", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
+  /* P&L per linked account : Compte 1 (Master) = first entry, the others = Slaves */
+  function tsxAccounts(h) {
+    const by = new Map(); (h || []).forEach((t) => { const k = String(t["ID TopstepX"]); const o = by.get(k) || { id: k, net: 0, n: 0, first: Infinity, size: 0 }; o.net += t["Net P&L"]; o.n++; o.size += Number(t.Size) || 0; o.first = Math.min(o.first, new Date(t.Entry).getTime()); by.set(k, o); });
+    const C = window.jdash ? jdash.data("comptes").data || [] : [];
+    return [...by.values()].sort((a, b) => a.first - b.first || b.size - a.size).map((o, i) => ({ ...o, net: Math.round(o.net * 100) / 100, label: `Compte ${i + 1} (${i ? "Slave" : "Master"})`, c: C.find((x) => String(x["ID TopstepX"]) === o.id) }));
+  }
+  const usd2 = (v) => (v >= 0 ? "+" : "-") + "$" + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function tsxAttrs(r) {
+    const h = tsxMatch(r); const A = h ? tsxAccounts(h) : [], tot = Math.round(A.reduce((a, x) => a + x.net, 0) * 100) / 100;
+    const link = (x) => x.c ? `<a href="#" class="rv-acc" data-acc="${esc(x.id)}" title="Ouvrir ce compte dans Stats TopstepX">${esc(x.c.Nom)}</a>` : `<span class="rv-mut">${esc(x.id)}</span>`;
+    const rows = [`<div class="pl">P&amp;L total TopstepX</div><div>${h ? `<b class="${tot >= 0 ? "up" : "dn"}">${usd2(tot)}</b> <span class="rv-mut">· ${h.length} trade(s) sur ${A.length} compte(s)</span>` : '<span class="rv-mut">Aucun trade TopstepX lié' + (r["Entrée"] ? "" : " — renseigne Time (ou Entrée) pour lier les trades") + "</span>"}</div>`];
+    for (let i = 0; i < Math.max(5, A.length); i++) { const x = A[i];
+      rows.push(`<div class="pl">Compte ${i + 1} (${i ? "Slave" : "Master"})</div><div>${x ? `${link(x)} <b class="${x.net >= 0 ? "up" : "dn"}" style="margin-left:6px">${usd2(x.net)}</b> <span class="rv-mut">· ${x.n} trade(s)</span>` : '<span class="rv-mut">Vide</span>'}</div>`); }
+    return rows.join("");
+  }
+  document.addEventListener("click", (e) => { const a = e.target.closest && e.target.closest("[data-acc]"); if (!a) return; e.preventDefault();
+    const ov2 = document.querySelector(".rv-ov.show"); if (ov2) ov2.classList.remove("show");
+    const tb = document.querySelector('.jtab[data-jt="tsx"]'); if (tb) tb.click(); location.hash = "#journal"; setTimeout(() => window.jdash && jdash.setParams({ acct: a.dataset.acc, mois: null, page: 0 }), 50); });
+  /* same order as the Notion page */
+  const MACRO_ORDER = ["Date", "Actif", "RR fait", "RR théorique", "PnL", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
+  const COLS = ["Name", "Date", "Actif", "RR fait", "RR théorique", "PnL", "TopstepX", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
   const cellOf = (r, c, schema) => {
     if (c === "Type") { const t = typeOf(r); return t ? `<span class="nchip" style="background:${NC()[typeColor(t)] || "#373737"}${r.Type ? "" : ";opacity:.7"}" title="${r.Type ? "" : "Déduit automatiquement (pas encore renseigné dans Notion)"}">${esc(t)}${r.Type ? "" : " ·auto"}</span>` : '<span class="rv-mut">—</span>'; }
     if (c === "TopstepX") { const h = tsxMatch(r); if (!h) return '<span class="rv-mut">—</span>';
-      const net = Math.round(h.reduce((a, t) => a + t["Net P&L"], 0) * 100) / 100, accts = new Set(h.map((t) => t["ID TopstepX"])).size;
-      return `<span class="${net >= 0 ? "up" : "dn"}" title="${h.length} trade(s) TopstepX sur ${accts} compte(s)">${net >= 0 ? "+" : ""}${net.toFixed(2)} $</span> <span class="rv-mut">· ${h.length}</span>`; }
+      const A = tsxAccounts(h), net = Math.round(A.reduce((a, x) => a + x.net, 0) * 100) / 100;
+      return `<span class="${net >= 0 ? "up" : "dn"}" title="${A.map((x) => x.label + " · " + (x.c ? x.c.Nom : x.id) + " : " + usd2(x.net)).join("\n")}">${usd2(net)}</span> <span class="rv-mut">· ${A.length} cpt</span>`; }
     const v = r[c], t = schema[c] ? schema[c].type : "";
     if (t === "multi_select" || t === "select") return chips(schema, c, v);
     if ((c === "Entrée" || c === "Sortie") && v) return new Date(v).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
@@ -2023,7 +2070,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const vrows = V.filter ? rows.filter(V.filter) : rows;
     let content = "";
     if (V.type === "bias") content = biasHTML(rows);
-    else if (V.type === "analyse") content = biasHTML(rows, true) + `<div class="kpis">
+    else if (V.type === "analyse") content = `<div class="kpis">
         <div class="kpi"><small>Setups</small><b>${s.n}</b><i>${s.w} gagnants · ${s.l} perdants · ${s.be} BE</i></div>
         <div class="kpi"><small>Winrate (TP vs SL)</small><b class="${s.wr >= 0.5 ? "pos" : "neg"}">${pct(s.wr)}</b><i>pris + pas pris</i></div>
         <div class="kpi"><small>RR moyen (RR fait)</small><b>${f2(s.rr)}</b><i>par setup</i></div>
@@ -2034,14 +2081,14 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     else if (V.type === "calendar") content = calendar("macro", { schema: m.schema, rows: vrows }, (r) => colorOf(m.schema, "Status", (r.Status || [])[0]), (r) => dotOf(m.schema, "Status", (r.Status || [])[0]));
     else if (V.type === "table") content = `<div class="panel"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div>${dbTable({ schema: m.schema, rows: vrows }, V.cols, "macro")}</div>`;
     else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
-    body.innerHTML = `<div class="rv-page wide">${note ? `<div class="rv-note">${note}</div>` : ""}
+    body.innerHTML = `<div class="rv-page wide">
       <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}${API.canEdit ? '<button class="rv-new" data-new="macro" style="margin-left:auto">＋ Nouveau</button>' : ""}</div>
       <div class="rv-types">${(() => { const base = state.macro.rows.filter((r) => FILTERS.every((f) => { const want = state.filt[f]; if (!want || !want.length) return true; const v = Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []; return want.some((w) => v.includes(w)); }));
         const cnt = (t) => base.filter((r) => (t === "none" ? !typeOf(r) : typeOf(r) === t)).length, nn = cnt("none");
         return `<button class="rv-ty${!state.type ? " on" : ""}" data-ty="">Tous <small>${base.length}</small></button>` + TYPES.map((t) => `<button class="rv-ty${state.type === t ? " on" : ""}" data-ty="${t}"><i style="background:${DOT[typeColor(t)]}"></i>${t === "Review" ? "Reviews" : t === "Paper" ? "Trades paper" : t === "Funded" ? "Fundeds" : "Challenges"} <small>${cnt(t)}</small></button>`).join("") + (nn ? `<button class="rv-ty${state.type === "none" ? " on" : ""}" data-ty="none">Non classés <small>${nn}</small></button>` : ""); })()}</div>
       <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
         <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
-      ${content}</div>`;
+      ${content}${note ? `<div class="rv-note" style="margin-top:18px">${note}</div>` : ""}</div>`;
     if (V.type === "chart") drawChart(body.querySelector(".rv-cv"), V, vrows, m.schema);
   }
 
@@ -2055,18 +2102,27 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       ${others.length ? `<div class="rv-car-x">${blocksHTML(others, ctx)}</div>` : ""}
       ${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Coller une image (Ctrl+V) ou écrire du texte (Entrée)…"></div>` : ""}</section>`;
   }
+  /* one gallery for the whole page : every image, subtitle = its section (NQ, ES, NQ - NWOG & 1st…) */
+  function galleryHTML(bs) {
+    const L = []; const walk = (arr, sec) => (arr || []).forEach((b) => { if (b.type === "image" && b.src) L.push({ b, sec }); else if (b.children && b.type !== "child_database") walk(b.children, b.type === "toggle" ? (b.rt || []).map((x) => x.t || "").join("").trim() : sec); });
+    walk(bs, ""); if (!L.length) return "";
+    const cap = (x) => [x.sec, x.b.caption].filter(Boolean).join(" · ");
+    return `<section class="rv-car rv-gal" data-car data-gal="1"><div class="rv-car-h"><b class="rv-car-n">Image 1 / ${L.length}</b><span class="rv-car-cap">${esc(cap(L[0]))}</span><span class="rv-car-hint">← → pour défiler · clic pour agrandir</span></div>
+      <div class="rv-car-v">${L.length > 1 ? '<button class="rv-car-b" data-dir="-1" title="Précédente (←)">‹</button>' : ""}<div class="rv-car-t">${L.map((x) => `<figure class="rv-slide" data-cap="${esc(cap(x))}"><img src="${x.b.src}" alt="" loading="lazy"></figure>`).join("")}</div>${L.length > 1 ? '<button class="rv-car-b" data-dir="1" title="Suivante (→)">›</button>' : ""}</div>
+      ${L.length > 1 ? `<div class="rv-car-th">${L.map((x, i) => `<button class="rv-th${i ? "" : " on"}" data-slide="${i}" title="${esc(cap(x))}"><img src="${x.b.src}" alt=""><span>${esc(x.sec || "Page")}</span></button>`).join("")}</div>` : ""}</section>`;
+  }
   let carActive = null;
   const carIdx = (car) => { const t = car.querySelector(".rv-car-t"); return t ? Math.round(t.scrollLeft / Math.max(1, t.clientWidth)) : 0; };
   function carUpdate(car) {
     const sl = car.querySelectorAll(".rv-slide"); if (!sl.length) return; const i = Math.min(sl.length - 1, carIdx(car));
-    car.querySelector(".rv-car-n").textContent = `${i + 1} / ${sl.length}`; car.querySelector(".rv-car-cap").textContent = sl[i].dataset.cap || "";
-    car.querySelectorAll(".rv-car-th img").forEach((im, k) => { im.classList.toggle("on", k === i); if (k === i) im.scrollIntoView({ block: "nearest", inline: "nearest" }); });
+    car.querySelector(".rv-car-n").textContent = (car.dataset.gal ? "Image " : "") + `${i + 1} / ${sl.length}`; car.querySelector(".rv-car-cap").textContent = sl[i].dataset.cap || "";
+    const th = car.querySelector(".rv-car-th"); if (th) [...th.children].forEach((im, k) => { im.classList.toggle("on", k === i); if (k === i) th.scrollLeft = Math.max(0, im.offsetLeft - th.clientWidth / 2 + im.offsetWidth / 2); });
     if (lb && lb.car === car) lbShow(i);
   }
   function carGo(car, i) { const t = car.querySelector(".rv-car-t"), n = car.querySelectorAll(".rv-slide").length; if (!t || !n) return; i = (i + n) % n; t.scrollTo({ left: i * t.clientWidth, behavior: lb ? "instant" : "smooth" }); if (lb && lb.car === car) lbShow(i); }
   let lb = null;
   function lbShow(i) { const sl = lb.car.querySelectorAll(".rv-slide")[i]; if (!sl) return; lb.el.querySelector("img").src = sl.querySelector("img").src;
-    lb.el.querySelector(".rv-lb-t").textContent = `${lb.car.querySelector(".rv-car-h b").textContent} ${sl.dataset.cap || ""} · ${i + 1} / ${lb.car.querySelectorAll(".rv-slide").length}`; }
+    const n = lb.car.querySelectorAll(".rv-slide").length; lb.el.querySelector(".rv-lb-t").textContent = lb.car.dataset.gal ? `Image ${i + 1} / ${n}${sl.dataset.cap ? " · " + sl.dataset.cap : ""}` : `${lb.car.querySelector(".rv-car-h b").textContent} ${sl.dataset.cap || ""} · ${i + 1} / ${n}`; }
   function lbOpen(car, i) { lbClose(); const el = document.createElement("div"); el.className = "rv-lb";
     el.innerHTML = `<div class="rv-lb-t"></div><button class="rv-car-b" data-lb="-1" style="left:20px">‹</button><img alt=""><button class="rv-car-b" data-lb="1" style="right:20px">›</button>`;
     document.body.append(el); lb = { el, car }; lbShow(i);
@@ -2078,12 +2134,16 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const th = e.target.closest("[data-slide]"); if (th) { carGo(car, +th.dataset.slide); return; }
     const im = e.target.closest(".rv-slide img"); if (im) lbOpen(car, [...car.querySelectorAll(".rv-slide")].indexOf(im.closest(".rv-slide")));
   });
+  document.addEventListener("click", (e) => { const im = e.target.closest && e.target.closest(".rv-img img"); if (!im || e.target.closest("[data-car]")) return;
+    lbClose(); const el = document.createElement("div"); el.className = "rv-lb"; el.innerHTML = '<div class="rv-lb-t">Clic ou Échap pour fermer</div><img alt="">'; el.querySelector("img").src = im.src; document.body.append(el);
+    lb = { el, car: { querySelectorAll: () => [], dataset: {} }, single: true }; el.onclick = () => lbClose(); });
   document.addEventListener("mouseover", (e) => { const car = e.target.closest && e.target.closest("[data-car]"); if (car) carActive = car; });
   document.addEventListener("scroll", (e) => { const t = e.target; if (t && t.classList && t.classList.contains("rv-car-t")) { clearTimeout(t._tm); t._tm = setTimeout(() => carUpdate(t.closest("[data-car]")), 60); } }, true);
   document.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "Escape") return;
     const a = document.activeElement; if (a && (a.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(a.tagName))) return;
     if (e.key === "Escape") { if (lb) { e.stopPropagation(); lbClose(); } return; }
+    if (lb && lb.single) return;
     const car = lb ? lb.car : carActive && carActive.isConnected && carActive.checkVisibility() ? carActive : null; if (!car || !car.querySelector(".rv-slide")) return;
     e.preventDefault(); e.stopPropagation(); carGo(car, carIdx(car) + (e.key === "ArrowRight" ? 1 : -1));
   }, true);
@@ -2156,7 +2216,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     { name: "Trades", icon: "▦", type: "calendar" },
     { name: "In", icon: "▦", type: "calendar", filter: ST("TP", "BE (SL)", "BE (TP)", "SL") },
     { name: "Review & Paper", icon: "▦", type: "calendar", filter: ST("Pas pris (TP)", "Pas pris (SL)", "Pas pris (BE ~ SL)", "Pas pris (BE ~ TP)") },
-    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Type", "Date", "TopstepX", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
+    { name: "Statistiques", icon: "▤", type: "table", cols: COLS },
     { name: "Status", icon: "◔", type: "chart", chart: "donut", by: "Status", filter: ST("SL", "BE (TP)", "BE (SL)", "TP"), sort: "y-desc" },
     { name: "PD Array m1", icon: "◔", type: "chart", chart: "donut", by: "PD Array M1", hideEmpty: true },
     { name: "Prise de liquidité", icon: "▥", type: "chart", chart: "column", by: "Prise de liquidité", sort: "manual" },
@@ -2256,9 +2316,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   async function openRow(kind, id) {
     const db = kind === "hw" ? state.homework : state.macro; const r = db.rows.find((x) => x._id === id); if (!r) return;
     ov.querySelector(".rv-mh b").textContent = (r._icon ? r._icon + " " : "") + (r.Name || "Sans titre");
-    const props = Object.keys(db.schema).filter((k) => k !== "Name" && r[k] != null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length));
+    const has = (k) => r[k] != null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length);
+    const props = kind === "macro" ? [...MACRO_ORDER.filter((k) => db.schema[k]), ...Object.keys(db.schema).filter((k) => k !== "Name" && !MACRO_ORDER.includes(k))] : Object.keys(db.schema).filter((k) => k !== "Name" && has(k));
     const mb = ov.querySelector(".rv-mb");
-    const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${db.schema[k].options ? chips(db.schema, k, r[k]) : db.schema[k].type === "date" && String(r[k]).length > 10 ? esc(new Date(r[k]).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}</div>`;
+    const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${!has(k) ? '<span class="rv-mut">Vide</span>' : db.schema[k].options ? chips(db.schema, k, r[k]) : db.schema[k].type === "date" && String(r[k]).length > 10 ? esc(new Date(r[k]).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}${kind === "macro" ? `<div class="rv-props-sep"></div>${tsxAttrs(r)}` : ""}</div>`;
     const h = kind === "macro" ? tsxMatch(r) : null;
     const tsx = h ? `<div class="panel" style="margin-bottom:16px"><div class="ptitle">Trades TopstepX liés · ${h.length}</div><table class="rv-bt"><thead><tr><th>Compte</th><th>Sens</th><th>Taille</th><th>Entrée</th><th>Sortie</th><th>Net</th></tr></thead><tbody>${h.map((t) => { const c = (jdash.data("comptes").data || []).find((x) => String(x["ID TopstepX"]) === t["ID TopstepX"]);
       const f = (v) => new Date(v).toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit", second: "2-digit" });
@@ -2269,7 +2330,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     let blocks = await kget("page:" + id);
     API.curPage = id;
     const ed = API.canEdit && !!D;
-    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs, { edit: ed, carousel: true }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
+    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${galleryHTML(bs)}${blocksHTML(bs, { edit: ed, noImg: true }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
     API.refreshPage = async () => { if (!D) return; const res = await D.notionBlocks(id); if (!res.ok || API.curPage !== id || !ov.classList.contains("show")) return; await kset("page:" + id, res.data);
       const st = mb.scrollTop, pg = mb.querySelector(".rv-page"); if (pg) pg.outerHTML = '<div id="rvPg"></div>'; show(res.data); mb.scrollTop = st; };
     if (blocks) show(blocks);
