@@ -121,6 +121,8 @@ body{background:#060607}
 .items{padding:6px 0 2px 0}
 .nav{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px 9px 26px;border-radius:6px;color:#e3e4ea;font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:none;border:none;background:none;text-align:left;margin:2px 0}
 .nav .ic{width:15px;height:15px;opacity:.9}
+.nav.sub{padding-left:44px;font-size:13px;color:#c9cbd2}
+.app.mini .nav.sub{padding-left:9px}
 .nav:hover{background:#17171c}
 .nav.on{background:#2f54eb;color:#fff}
 .nav .ext{margin-left:auto;width:12px;height:12px;opacity:.5}
@@ -233,6 +235,45 @@ body{background:#060607}
 .jtop .acts{display:flex;gap:8px;flex-wrap:wrap}
 .tsx-hexa{grid-column:span 2}
 @media (max-width:900px){.tsx-hexa{grid-column:auto}}
+.rv-tabs{display:flex;background:#121216;border:1px solid #23232a;border-radius:8px;padding:3px;gap:2px}
+.rv-tab{background:none;border:none;color:#9a9ca7;padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600}
+.rv-tab.on{background:#2f54eb;color:#fff}
+.rv-steps{margin:0 0 6px;padding-left:20px;line-height:2;font-size:13.5px;color:#cfd2da}.rv-steps a{color:#7d9bff}
+.rv-steps input{background:#141418;border:1px solid #24242b;border-radius:6px;color:#e3e4ea;padding:5px 8px}
+.rv-page{max-width:900px;margin:0 auto;color:#e6e6e6;font-size:15px;line-height:1.6}
+.rv-page.wide{max-width:none}
+.rv-page h1{font-size:30px;margin:6px 0 16px;color:#fff}.rv-page h2{font-size:22px}.rv-page h3{font-size:18px}
+.rv-page blockquote{border-left:3px solid #e6e6e6;margin:8px 0;padding:4px 14px;font-size:16px}
+.rv-page p{margin:4px 0}.rv-page a{color:#7d9bff}
+.rv-tg{margin:4px 0}.rv-tg>summary{cursor:pointer;padding:3px 0;list-style:none}.rv-tg>summary::before{content:"▶";font-size:10px;color:#9b9b9b;margin-right:8px;display:inline-block;transition:transform .15s}
+.rv-tg[open]>summary::before{transform:rotate(90deg)}.rv-tg>div{padding-left:20px}
+.rv-img{margin:8px 0}.rv-img img{max-width:100%;border-radius:6px;border:1px solid #23232a}.rv-img figcaption{font-size:12px;color:#8b8d98}
+.rv-callout{display:flex;gap:10px;background:#1c1c20;border-radius:6px;padding:10px 12px;margin:6px 0}
+.rv-mut{color:#6f727d}.rv-note{background:#0e0e11;border:1px solid #1d1d22;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:14px}
+.rv-dbt{margin:18px 0 8px}
+.rv-filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;align-items:center}
+.rv-f{background:#141418;border:1px solid #26262d;color:#c9cbd2;border-radius:999px;padding:5px 11px;cursor:pointer;font:inherit;font-size:12.5px}
+.rv-f.on{border-color:#2f54eb;color:#fff;background:#18203d}
+.rv-q{background:#141418;border:1px solid #26262d;color:#e3e4ea;border-radius:999px;padding:5px 12px;font-size:12.5px;width:200px}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px}
+.rv-grid .panel+.panel{margin-top:0}
+.rv-bt{width:100%;border-collapse:collapse;font-size:13px}.rv-bt th{text-align:left;color:#8b8d98;font-weight:500;font-size:11.5px;text-transform:uppercase;padding:6px;border-bottom:1px solid #1f1f25}
+.rv-bt td{padding:5px 6px;border-bottom:1px solid #16161a}
+.rv-bar{position:relative;height:20px;min-width:90px;background:#141418;border-radius:4px;overflow:hidden}.rv-bar i{position:absolute;inset:0 auto 0 0;background:#28456c}.rv-bar span{position:relative;padding-left:7px;font-size:12px;line-height:20px}
+.up{color:#4ccf6a}.dn{color:#e5534b}
+.rv-tw{overflow:auto;max-height:70vh;border:1px solid #1d1d22;border-radius:8px}
+.rv-t{width:100%;border-collapse:collapse;font-size:13px}
+.rv-t th{position:sticky;top:0;background:#101014;color:#8b8d98;font-weight:500;text-align:left;padding:8px;border-bottom:1px solid #1f1f25;white-space:nowrap;z-index:1}
+.rv-t td{padding:6px 8px;border-bottom:1px solid #15151a;white-space:nowrap;vertical-align:top}
+.rv-t tr:hover td{background:#121218;cursor:pointer}
+.rv-cm{display:inline-block;max-width:280px;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;color:#b9bcc6}
+.rv-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:45;padding:4vh 18px;overflow:auto}
+.rv-ov.show{display:flex}
+.rv-m{background:#191919;border:1px solid #2a2a2a;border-radius:12px;width:min(1000px,100%);color:#e6e6e6}
+.rv-mh{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid #2a2a2a}.rv-mh b{font-size:22px}
+.rv-mh button{background:none;border:none;color:#9b9b9b;font-size:24px;cursor:pointer}
+.rv-mb{padding:16px 22px 26px}
+.rv-props{display:grid;grid-template-columns:190px 1fr;gap:8px 12px;margin-bottom:18px;font-size:14px}.rv-props .pl{color:#9b9b9b}
 .jempty{background:#0c0f13;border:1px dashed #2a3038;border-radius:12px;padding:40px 24px;text-align:center;color:#8d95a0}
 .jempty b{display:block;color:#eef1f5;font-size:17px;margin-bottom:6px}
 </style>
@@ -246,9 +287,10 @@ body{background:#060607}
   <div class="mlabel">Menu principal</div>
   <div class="grp" id="gLab"><button class="gh" data-grp="gLab"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.5 19A2 2 0 0 0 6.3 22h11.4a2 2 0 0 0 1.8-3L14 9.5V2M8.5 2h7M7 16h10"/></svg><span>Laboratoire</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
-      <button class="nav" data-go="calendrier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Terminal Économique</span></button>
+      <button class="nav" data-go="calendrier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Calendrier Économique</span></button>
       <button class="nav" data-go="financialjuice"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg><span>FinancialJuice</span></button>
       <button class="nav" data-go="journal"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal de trading</span></button>
+      <button class="nav sub" data-go="review"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Review</span></button>
     </div></div>
   <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
@@ -434,6 +476,23 @@ body{background:#060607}
     <div class="tsx-pager"><span>Rows per page:</span><select class="tsx-rpp" aria-label="Rows per page"><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select><span data-draw="range">—</span><button class="tsx-pg" data-step="-1" aria-label="Page précédente">‹</button><button class="tsx-pg" data-step="1" aria-label="Page suivante">›</button></div>
   </div>
 </div>
+</div></section>
+<section class="view" id="v-review"><div class="page" style="max-width:none;padding:26px 28px 60px">
+  <div class="jtop">
+    <div><h2>Review</h2><p class="lead" style="margin:0"><span id="rvStamp"></span> <span id="rvStatus" style="color:#ff8a8a"></span></p></div>
+    <div class="acts"><div class="rv-tabs"><button class="rv-tab" data-t="wtf">📷 What to focus on ?</button><button class="rv-tab on" data-t="journal">Journal de Neal</button></div>
+      <button class="btn" id="rvSync">⟳ Synchroniser Notion</button><button class="btn gray" id="rvSetupBtn" title="Connexion Notion">⚙</button></div>
+  </div>
+  <div class="panel" id="rvSetup" hidden style="margin-bottom:14px">
+    <div class="ptitle">Connecter Notion (une seule fois)</div>
+    <ol class="rv-steps">
+      <li>Va sur <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener">notion.so/profile/integrations</a> → <b>Nouvelle intégration</b> (type interne, ton espace) → copie le <b>secret</b>.</li>
+      <li>Dans Notion, ouvre la page <b>Mon temple</b> → <b>•••</b> → <b>Connexions</b> → ajoute ton intégration (elle aura accès à « Journal de Neal » et « What to focus on ? »).</li>
+      <li>Colle le secret ici : <input id="rvToken" type="password" placeholder="ntn_…" style="width:320px"> <button class="btn" id="rvTokenSave">Connecter</button> <span id="rvTokenMsg" class="hintd"></span></li>
+    </ol>
+    <div class="hintd">Le secret reste chiffré sur ton PC. L'app lit seulement tes pages (lecture seule).</div>
+  </div>
+  <div id="rvBody"></div>
 </div></section>
 </main></div>
 
@@ -753,7 +812,7 @@ $("bSave").onclick=()=>{S.brand={name:$("bName").value.trim(),handle:$("bHandle"
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","journal","profil","abonnement","factures"];
+const VIEWS=["calendrier","financialjuice","journal","review","profil","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -861,7 +920,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 <script>
 /* ---------- Journal : Tags, Images, RR théorique, Hexagone de performance ---------- */
 (() => {
-  const C = { default: "#9b9a97", gray: "#9b9a97", brown: "#a27763", orange: "#d9730d", yellow: "#dfab01", green: "#4dab9a", blue: "#529cca", purple: "#9a6dd7", pink: "#e255a1", red: "#e03e3e" };
+  const C = { default: "#373737", gray: "#5a5a5a", brown: "#603b2c", orange: "#854c1d", yellow: "#89632a", green: "#2b593f", blue: "#28456c", purple: "#492f64", pink: "#69314c", red: "#6e3630" };
+  window.NOTION_COLORS = C;
   const o = (s) => s.split("|").map((x) => { const [n, c] = x.split("~"); return { n, c: c || "default" }; });
   // Same attributes, options and colours as the Notion database "Respect du plan"
   const SECTIONS = [
@@ -967,6 +1027,29 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 .jm-th figure button{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;color:#fff;border-radius:50%;width:26px;height:26px;cursor:pointer}
 .jm-lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60;display:none;align-items:center;justify-content:center;cursor:zoom-out}
 .jm-lb.show{display:flex}.jm-lb img{max-width:96vw;max-height:94vh}
+.jm .prow{display:grid;grid-template-columns:200px 1fr;align-items:center;min-height:36px;border-radius:6px;padding:2px 6px}
+.jm .prow:hover{background:#12161c}
+.jm .prow.pick{cursor:pointer}
+.jm .pl{color:#9ba3ad;font-size:14px;display:flex;align-items:center;gap:8px}
+.jm .pi{width:16px;text-align:center;color:#6f7782;font-size:12px}
+.jm .pv{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:30px;padding:3px 0}
+.jm .pe{color:#5d646d;font-size:14px}
+.jm .pv input,.jm .pv textarea{background:transparent;border:1px solid transparent;border-radius:5px;color:#eef1f5;font:inherit;font-size:14px;padding:4px 6px;width:180px}
+.jm .pv textarea{width:100%;min-height:60px;resize:vertical}
+.jm .pv input:focus,.jm .pv textarea:focus,.jm .pv input:hover,.jm .pv textarea:hover{border-color:#2a3038;background:#0a0d11;outline:none}
+.jm-rr{font-size:15px;font-weight:700;color:#4ccf6a;margin-left:6px}
+.nchip{display:inline-flex;align-items:center;gap:4px;border-radius:4px;padding:1px 7px;font-size:13.5px;line-height:21px;color:rgba(255,255,255,.88);white-space:nowrap;font-family:"Space Grotesk",system-ui,sans-serif}
+.nchip b{cursor:pointer;opacity:.6;font-weight:400}.nchip b:hover{opacity:1}
+.npop{position:fixed;z-index:70;width:330px;max-height:420px;display:flex;flex-direction:column;background:#252525;border:1px solid #373737;border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.55);font-family:"Space Grotesk",system-ui,sans-serif}
+.npop-in{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:6px 8px;background:#1f1f1f;border-bottom:1px solid #373737;border-radius:8px 8px 0 0}
+.npop-in input{flex:1;min-width:120px;background:none;border:none;color:#ddd;font:inherit;font-size:14px;outline:none;padding:4px 2px}
+.npop-t{font-size:12px;color:#9b9b9b;padding:8px 12px 4px}
+.npop-list{overflow:auto;padding:2px 6px 8px}
+.nopt{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:5px;cursor:pointer}
+.nopt:hover{background:#2f2f2f}
+.nopt .grip{color:#5f5f5f;font-size:10px;letter-spacing:-2px}
+.nopt .ck{margin-left:auto;color:#9b9b9b}
+.nempty{color:#777;font-size:13px;padding:8px}
 .tsx-t td.tg,.tsx-t td.im{text-align:center;cursor:pointer;color:#8d95a0}
 .tsx-t td.tg:hover,.tsx-t td.im:hover{background:#121821;color:#fff}
 .tsx-t .pill{display:inline-block;border-radius:4px;padding:1px 6px;font-size:11px;margin:0 2px;color:#fff;font-weight:700}
@@ -975,37 +1058,67 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const ov = document.createElement("div"); ov.className = "jm-ov"; ov.innerHTML = `<div class="jm"><div class="jm-h"><div><b></b><small></small></div><button class="jm-x" aria-label="Fermer">×</button></div><div class="jm-b"></div><div class="jm-f"></div></div>`;
   const lb = document.createElement("div"); lb.className = "jm-lb"; lb.innerHTML = "<img alt=''>"; lb.onclick = () => lb.classList.remove("show");
   document.body.append(ov, lb);
-  const close = () => { ov.classList.remove("show"); window.removeEventListener("paste", onPaste); };
+  const close = () => { pop && pop.remove(); pop = null; ov.classList.remove("show"); window.removeEventListener("paste", onPaste); };
   ov.querySelector(".jm-x").onclick = close; ov.addEventListener("mousedown", (e) => { if (e.target === ov) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (lb.classList.contains("show")) lb.classList.remove("show"); else if (ov.classList.contains("show")) close(); } });
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const head = (t) => { const fmt = (v) => new Date(v).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
     return `${t.Direction} ${t.Size} ${t.Contract} · ${fmt(t.Entry)} → ${fmt(t.Exit)} · ${(t["Net P&L"] >= 0 ? "+" : "") + t["Net P&L"].toFixed(2)} $ net · trade ${t.ID}`; };
 
-  /* ----- Tags popup ----- */
+  /* ----- Tags popup (Notion-like properties: click an attribute to pick its options) ----- */
+  const chip = (f, v, x) => `<span class="nchip" style="background:${optColor[f + "|" + v] || C.default}">${esc(v)}${x ? `<b data-rm="${esc(v)}">×</b>` : ""}</span>`;
+  const FIELD = {}; SECTIONS.forEach(([, fs]) => fs.forEach((f) => (FIELD[f[0]] = f)));
+  let pop = null;
+  const closePop = () => { if (pop) { pop.remove(); pop = null; } };
+  function openPop(row, cur, rerender) {
+    closePop();
+    const [n, ty, opts] = FIELD[row.dataset.f];
+    pop = document.createElement("div"); pop.className = "npop";
+    const draw = (q) => {
+      const sel = ty === "multi" ? cur[n] || [] : cur[n] ? [cur[n]] : [];
+      const list = opts.filter((x) => !q || x.n.toLowerCase().includes(q.toLowerCase()));
+      pop.querySelector(".npop-sel").innerHTML = sel.map((v) => chip(n, v, true)).join("") ;
+      pop.querySelector(".npop-list").innerHTML = list.map((x) => `<div class="nopt${sel.includes(x.n) ? " on" : ""}" data-v="${esc(x.n)}"><span class="grip">⋮⋮</span>${chip(n, x.n)}${sel.includes(x.n) ? '<span class="ck">✓</span>' : ""}</div>`).join("") || '<div class="nempty">Aucune option</div>';
+    };
+    pop.innerHTML = `<div class="npop-in"><div class="npop-sel"></div><input placeholder="Rechercher une option…"></div><div class="npop-t">${ty === "multi" ? "Sélectionnez une ou plusieurs options" : "Sélectionnez une option"}</div><div class="npop-list"></div>`;
+    document.body.append(pop);
+    const r = row.querySelector(".pv").getBoundingClientRect();
+    pop.style.left = Math.min(r.left, innerWidth - 340) + "px";
+    const below = innerHeight - r.bottom;
+    if (below > 300) pop.style.top = r.bottom + 4 + "px"; else pop.style.bottom = innerHeight - r.top + 4 + "px";
+    draw(""); const inp = pop.querySelector("input"); inp.focus(); inp.oninput = () => draw(inp.value);
+    const pick = (v) => {
+      if (ty === "select") { if (cur[n] === v) delete cur[n]; else cur[n] = v; rerender(); closePop(); return; }
+      const arr = cur[n] || []; const i = arr.indexOf(v); i >= 0 ? arr.splice(i, 1) : arr.push(v); if (arr.length) cur[n] = arr; else delete cur[n]; rerender(); draw(inp.value);
+    };
+    pop.onclick = (e) => { const rm = e.target.dataset.rm; if (rm !== undefined) return pick(rm); const o = e.target.closest(".nopt"); if (o) pick(o.dataset.v); };
+    inp.onkeydown = (e) => { if (e.key === "Enter") { const f = pop.querySelector(".nopt"); if (f) pick(f.dataset.v); } };
+  }
+  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target) && !e.target.closest(".prow")) closePop(); });
   function openTags(t) {
     const cur = JSON.parse(JSON.stringify(META.tags[t.ID] || {}));
     ov.querySelector(".jm-h b").textContent = "Tags du trade"; ov.querySelector(".jm-h small").textContent = head(t);
     const body = ov.querySelector(".jm-b");
-    body.innerHTML = SECTIONS.map(([sec, fs]) => `<div class="jm-sec"><h4>${sec}</h4><div class="jm-grid">` + fs.map(([n, ty, opts, hint]) => {
+    const val = (n, ty) => {
       const v = cur[n];
-      let inner;
-      if (ty === "multi" || ty === "select") inner = `<div class="jm-ch" data-f="${esc(n)}" data-t="${ty}">` + opts.map((x) => { const on = ty === "multi" ? (v || []).includes(x.n) : v === x.n;
-        return `<button type="button" class="jm-c${on ? " on" : ""}" style="--c:${C[x.c]}" data-v="${esc(x.n)}">${esc(x.n)}</button>`; }).join("") + "</div>";
-      else if (ty === "text") inner = `<textarea data-f="${esc(n)}">${esc(v || "")}</textarea>`;
-      else inner = `<input type="number" step="any" data-f="${esc(n)}" value="${v ?? ""}">` + (n === "RR théorique" ? `<div class="jm-rr" id="jmRR"></div>` : "");
-      const wide = ty === "text" || (opts && opts.length > 10);
-      return `<div class="jm-fl${wide ? " wide" : ""}"><label>${esc(n)}${hint ? `<i>${esc(hint)}</i>` : ""}</label>${inner}</div>`;
-    }).join("") + "</div></div>").join("");
-    const upd = () => { const r = rrTheo(cur); const el = body.querySelector("#jmRR"); if (el) { el.textContent = r === null ? "" : "RR théorique : " + r + " R"; } };
-    body.onclick = (e) => { const b = e.target.closest(".jm-c"); if (!b) return; const g = b.parentElement, f = g.dataset.f, v = b.dataset.v;
-      if (g.dataset.t === "select") { const was = b.classList.contains("on"); g.querySelectorAll(".jm-c").forEach((x) => x.classList.remove("on")); if (!was) { b.classList.add("on"); cur[f] = v; } else delete cur[f]; }
-      else { b.classList.toggle("on"); cur[f] = [...g.querySelectorAll(".jm-c.on")].map((x) => x.dataset.v); if (!cur[f].length) delete cur[f]; } };
+      if (ty === "multi" || ty === "select") { const arr = ty === "multi" ? v || [] : v ? [v] : []; return arr.length ? arr.map((x) => chip(n, x)).join("") : '<span class="pe">Vide</span>'; }
+      if (ty === "text") return `<textarea data-f="${esc(n)}" placeholder="Vide">${esc(v || "")}</textarea>`;
+      return `<input type="number" step="any" data-f="${esc(n)}" value="${v ?? ""}" placeholder="Vide">` + (n === "RR théorique" ? '<span class="jm-rr" id="jmRR"></span>' : "");
+    };
+    const ICON = { multi: "☰", select: "◉", num: "#", text: "≡" };
+    const render = () => {
+      body.innerHTML = SECTIONS.map(([sec, fs]) => `<div class="jm-sec"><h4>${sec}</h4>` + fs.map(([n, ty, , hint]) =>
+        `<div class="prow${ty === "multi" || ty === "select" ? " pick" : ""}" data-f="${esc(n)}"><div class="pl" title="${esc(hint || "")}"><span class="pi">${ICON[ty]}</span>${esc(n)}</div><div class="pv">${val(n, ty)}</div></div>`).join("") + "</div>").join("");
+      upd();
+    };
+    const upd = () => { const r = rrTheo(cur); const el = body.querySelector("#jmRR"); if (el) el.textContent = r === null ? "" : "= " + r + " R"; };
+    const rerender = () => { body.querySelectorAll(".prow.pick").forEach((row) => { const [n, ty] = FIELD[row.dataset.f]; row.querySelector(".pv").innerHTML = val(n, ty); }); };
+    body.onclick = (e) => { const row = e.target.closest(".prow.pick"); if (row) openPop(row, cur, rerender); };
     body.oninput = (e) => { const f = e.target.dataset.f; if (!f) return; const v = e.target.value; if (e.target.type === "number") { if (v === "") delete cur[f]; else cur[f] = +v; } else { if (v) cur[f] = v; else delete cur[f]; } upd(); };
-    upd();
+    render();
     const foot = ov.querySelector(".jm-f");
     foot.innerHTML = `<button class="jm-btn g" data-a="clear">Effacer</button><button class="jm-btn g" data-a="cancel">Annuler</button><button class="jm-btn" data-a="save">Enregistrer</button>`;
-    foot.onclick = (e) => { const a = e.target.dataset.a; if (!a) return;
+    foot.onclick = (e) => { const a = e.target.dataset.a; if (!a) return; closePop();
       if (a === "cancel") return close();
       if (a === "clear") { delete META.tags[t.ID]; } else { if (Object.keys(cur).length) META.tags[t.ID] = cur; else delete META.tags[t.ID]; }
       saveMeta(); close(); window.jdash && jdash.redraw(); };
@@ -1056,8 +1169,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   window.jmeta.openTags = openTags; window.jmeta.openImages = openImages;
   window.jmeta.pillHTML = (id) => {
     const t = META.tags[id]; if (!t) return "+";
-    const pick = [["Status"], ["Time"], ["Respect du plan ?"]].map(([f]) => { const v = t[f]; const x = Array.isArray(v) ? v[0] : v; return x ? `<span class="pill" style="background:${(optColor[f + "|" + x] || "#555")}">${esc(x)}</span>` : ""; }).join("");
-    return pick || `<span class="pill" style="background:#2a3038">✓ tags</span>`;
+    const pick = [["Status"], ["Time"], ["Respect du plan ?"]].map(([f]) => { const v = t[f]; const x = Array.isArray(v) ? v[0] : v; return x ? `<span class="nchip" style="background:${(optColor[f + "|" + x] || "#373737")};font-size:11.5px;line-height:18px;margin:0 2px">${esc(x)}</span>` : ""; }).join("");
+    return pick || `<span class="nchip" style="background:#373737;font-size:11.5px;line-height:18px">✓ tags</span>`;
   };
   window.jmeta.exportMeta = async () => { const imgs = {}; for (const id in IC) for (const s of SLOTS) { const a = await imgGet(id + "|" + s); if (a.length) imgs[id + "|" + s] = a; } return { tags: META.tags, images: imgs }; };
   window.jmeta.importMeta = async (m) => { if (m.tags) { Object.assign(META.tags, m.tags); saveMeta(); } if (m.images) { for (const k in m.images) { await imgSet(k, m.images[k]); await refreshCount(k.split("|")[0]); } } window.jdash && jdash.redraw(); };
@@ -1409,6 +1522,208 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   });
   dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
     el.textContent = T.length ? `${pg * rpp + 1}–${Math.min(T.length, (pg + 1) * rpp)} of ${T.length}` : "0 of 0"; });
+})();
+</script>
+<script>
+/* ---------- Review : What to focus on ? + Journal de Neal (Notion) ---------- */
+(() => {
+  const ID = { wtf: "3e6d85a64009805d8752e587433b54f1", homework: "e3ed85a6400982c5a181815ee98dedad", journal: "2e0d85a640098042b2b6f4e457a34e42", macro: "40cd85a6400980279ba4fffc1f12d785" };
+  const D = window.desktop, NC = () => window.NOTION_COLORS || {};
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  /* --- tiny IndexedDB cache (pages contain images) --- */
+  let dbp = null;
+  const idb = () => dbp || (dbp = new Promise((ok) => { try { const r = indexedDB.open("econcal-review", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); } catch (e) { ok(null); } }));
+  const mem = {};
+  const kget = async (k) => { const db = await idb(); if (!db) return mem[k]; return new Promise((ok) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ok(undefined); }); };
+  const kset = async (k, v) => { mem[k] = v; const db = await idb(); if (!db) return; return new Promise((ok) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = ok; t.onerror = ok; }); };
+
+  let state = { tab: "journal", macro: null, homework: null, wtf: null, journal: null, synced: null, filt: {} };
+  const colorOf = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return NC()[o ? o.c : "default"] || "#373737"; };
+  const chips = (schema, f, v) => (Array.isArray(v) ? v : v ? [v] : []).map((x) => `<span class="nchip" style="background:${colorOf(schema, f, x)}">${esc(x)}</span>`).join(" ");
+
+  /* --- Notion blocks → HTML --- */
+  const rt = (a) => (a || []).map((x) => { let h = esc(x.t).replace(/\n/g, "<br>"); if (x.b) h = `<b>${h}</b>`; if (x.i) h = `<i>${h}</i>`; if (x.c) h = `<code>${h}</code>`; if (x.href) h = `<a href="${esc(x.href)}" target="_blank" rel="noopener">${h}</a>`; return h; }).join("");
+  const BG = { red_background: "rgba(110,54,48,.55)", orange_background: "rgba(133,76,29,.5)", yellow_background: "rgba(137,99,42,.5)", green_background: "rgba(43,89,63,.5)", blue_background: "rgba(40,69,108,.5)", purple_background: "rgba(73,47,100,.5)", pink_background: "rgba(105,49,76,.5)", gray_background: "rgba(90,90,90,.45)", brown_background: "rgba(96,59,44,.5)" };
+  function blocksHTML(bs, ctx) {
+    let out = "", list = null;
+    const flush = () => { if (list) { out += `</${list}>`; list = null; } };
+    for (const b of bs || []) {
+      const st = b.color && BG[b.color] ? ` style="background:${BG[b.color]};padding:6px 10px;border-radius:4px"` : "";
+      if (b.type === "bulleted_list_item" || b.type === "numbered_list_item") { const t = b.type === "bulleted_list_item" ? "ul" : "ol"; if (list !== t) { flush(); out += `<${t}>`; list = t; } out += `<li>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</li>`; continue; }
+      flush();
+      switch (b.type) {
+        case "paragraph": out += `<p${st}>${rt(b.rt) || "&nbsp;"}</p>`; break;
+        case "heading_1": out += `<h2>${rt(b.rt)}</h2>`; break;
+        case "heading_2": out += `<h3>${rt(b.rt)}</h3>`; break;
+        case "heading_3": out += `<h4>${rt(b.rt)}</h4>`; break;
+        case "quote": out += `<blockquote${st}>${rt(b.rt)}</blockquote>`; break;
+        case "callout": out += `<div class="rv-callout"${st}>${b.icon ? `<span>${esc(b.icon)}</span>` : ""}<div>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</div></div>`; break;
+        case "toggle": out += `<details class="rv-tg"><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : '<p class="rv-mut">Vide</p>'}</div></details>`; break;
+        case "to_do": out += `<p>${b.checked ? "☑" : "☐"} ${rt(b.rt)}</p>`; break;
+        case "divider": out += "<hr>"; break;
+        case "image": out += b.src ? `<figure class="rv-img"><img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
+        case "child_database": out += ctx && ctx.db ? ctx.db(b) : `<p class="rv-mut">Base « ${esc(b.title)} »</p>`; break;
+        case "child_page": out += `<p>📄 ${esc(b.title)}</p>`; break;
+        default: if (b.rt) out += `<p>${rt(b.rt)}</p>`;
+      }
+    }
+    flush(); return out;
+  }
+
+  /* --- data loading --- */
+  async function loadCache() {
+    for (const k of ["macro", "homework", "wtf", "journal", "synced"]) { const v = await kget(k); if (v !== undefined) state[k] = v; }
+  }
+  async function sync() {
+    if (!D) return;
+    const st = $("rvStatus"), btn = $("rvSync"); btn.disabled = true; btn.textContent = "⟳ Synchronisation…"; st.textContent = "";
+    const step = async (k, fn) => { const r = await fn(); if (!r.ok) throw r.reason; state[k] = r.data; await kset(k, r.data); };
+    try {
+      await step("macro", () => D.notionDb(ID.macro)); render();
+      await step("journal", () => D.notionBlocks(ID.journal));
+      await step("homework", () => D.notionDb(ID.homework));
+      await step("wtf", () => D.notionBlocks(ID.wtf));
+      state.synced = new Date().toISOString(); await kset("synced", state.synced);
+    } catch (reason) {
+      st.textContent = reason === "token" ? "Token Notion invalide ou manquant." : reason === "access" ? "L'intégration n'a pas accès à la page : ajoute-la dans Notion (••• → Connexions) sur « Mon temple »." : "Synchro Notion impossible : " + reason;
+      if (reason === "token") showSetup(true);
+    }
+    btn.disabled = false; btn.textContent = "⟳ Synchroniser Notion"; render();
+  }
+
+  /* --- analytics on Macro --- */
+  const WIN = /^(TP|Pas pris \(TP\))$/, LOSS = /^(SL|Pas pris \(SL\))$/;
+  const outcome = (r) => { const s = r.Status || []; if (s.some((x) => WIN.test(x))) return 1; if (s.some((x) => LOSS.test(x))) return -1; return 0; };
+  const FILTERS = ["Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "Règles respectées"];
+  function filtered() {
+    const m = state.macro; if (!m) return [];
+    return m.rows.filter((r) => FILTERS.every((f) => { const want = state.filt[f]; if (!want || !want.length) return true; const v = Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []; return want.some((w) => v.includes(w)); }))
+      .filter((r) => !state.q || JSON.stringify(r).toLowerCase().includes(state.q.toLowerCase()));
+  }
+  const stats = (rows) => { const w = rows.filter((r) => outcome(r) === 1).length, l = rows.filter((r) => outcome(r) === -1).length, rr = rows.map((r) => r["RR fait"]).filter((x) => typeof x === "number");
+    return { n: rows.length, w, l, be: rows.length - w - l, wr: w + l ? w / (w + l) : null, rr: rr.length ? rr.reduce((a, b) => a + b, 0) / rr.length : null, sum: rr.reduce((a, b) => a + b, 0) }; };
+  const pct = (v) => (v === null ? "—" : (v * 100).toFixed(1) + "%"), f2 = (v) => (v === null || v === undefined ? "—" : (+v).toFixed(2));
+  function breakdown(rows, f, schema) {
+    const g = new Map(); rows.forEach((r) => (Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : ["(vide)"]).forEach((k) => { if (!g.has(k)) g.set(k, []); g.get(k).push(r); }));
+    const arr = [...g.entries()].map(([k, rs]) => ({ k, ...stats(rs) })).sort((a, b) => b.n - a.n);
+    const maxN = Math.max(1, ...arr.map((a) => a.n));
+    return `<table class="rv-bt"><thead><tr><th>${esc(f)}</th><th>Setups</th><th>Winrate</th><th>RR moyen</th><th>Σ RR</th></tr></thead><tbody>` + arr.map((a) =>
+      `<tr><td>${a.k === "(vide)" ? '<span class="rv-mut">(vide)</span>' : chips(schema, f, a.k)}</td><td><div class="rv-bar"><i style="width:${(a.n / maxN) * 100}%"></i><span>${a.n}</span></div></td><td class="${a.wr === null ? "" : a.wr >= 0.5 ? "up" : "dn"}">${pct(a.wr)}</td><td>${f2(a.rr)}</td><td class="${a.sum >= 0 ? "up" : "dn"}">${f2(a.sum)}</td></tr>`).join("") + "</tbody></table>";
+  }
+  const COLS = ["Name", "Date", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
+  const cellOf = (r, c, schema) => {
+    const v = r[c], t = schema[c] ? schema[c].type : "";
+    if (t === "multi_select" || t === "select") return chips(schema, c, v);
+    if (c === "Date") return v ? new Date(v.length > 10 ? v : v + "T12:00:00").toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" }) : "";
+    if (typeof v === "number") return `<span class="${c.startsWith("RR") || c === "PnL" ? (v > 0 ? "up" : v < 0 ? "dn" : "") : ""}">${v}</span>`;
+    if (c === "Commentaire") return `<span class="rv-cm" title="${esc(v)}">${esc(v)}</span>`;
+    if (c === "Name") return `<b>${esc(r._icon ? r._icon + " " : "")}${esc(v)}</b>`;
+    return esc(v ?? "");
+  };
+
+  /* --- rendering --- */
+  function render() {
+    const body = $("rvBody"); if (!body) return;
+    document.querySelectorAll(".rv-tab").forEach((b) => b.classList.toggle("on", b.dataset.t === state.tab));
+    $("rvStamp").textContent = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+    if (state.tab === "wtf") {
+      if (!state.wtf) { body.innerHTML = emptyMsg("What to focus on ?"); return; }
+      const hw = state.homework;
+      body.innerHTML = `<div class="rv-page"><h1>📷 What to focus on ?</h1>` + blocksHTML(state.wtf, { db: (b) => hw ? `<h3 class="rv-dbt">${esc(b.title || "Homework")}</h3>` + dbTable(hw, ["Name", "Date", "Tags"], "hw") : "" }) + "</div>";
+      return;
+    }
+    const m = state.macro;
+    if (!m) { body.innerHTML = emptyMsg("Journal de Neal"); return; }
+    const rows = filtered().sort((a, b) => String(b.Date || "").localeCompare(String(a.Date || ""))), s = stats(rows);
+    const note = state.journal ? blocksHTML(state.journal.filter((b) => b.type !== "child_database")) : "";
+    body.innerHTML = `<div class="rv-page wide"><h1>Journal de Neal</h1>${note ? `<div class="rv-note">${note}</div>` : ""}
+      <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
+        <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
+      <div class="kpis">
+        <div class="kpi"><small>Setups</small><b>${s.n}</b><i>${s.w} gagnants · ${s.l} perdants · ${s.be} BE</i></div>
+        <div class="kpi"><small>Winrate (TP vs SL)</small><b class="${s.wr >= 0.5 ? "pos" : "neg"}">${pct(s.wr)}</b><i>pris + pas pris</i></div>
+        <div class="kpi"><small>RR moyen (RR fait)</small><b>${f2(s.rr)}</b><i>par setup</i></div>
+        <div class="kpi"><small>Σ RR</small><b class="${s.sum >= 0 ? "pos" : "neg"}">${f2(s.sum)}</b><i>si tous les setups étaient pris</i></div>
+      </div>
+      <div class="rv-grid">${["Time", "PD Array M1", "Prise de liquidité", "Status"].map((f) => `<div class="panel"><div class="ptitle">Par ${esc(f)}</div>${breakdown(rows, f, m.schema)}</div>`).join("")}</div>
+      <div class="panel" style="margin-top:14px"><div class="ptitle">Macro · ${rows.length} setups</div>${dbTable({ schema: m.schema, rows }, COLS, "macro")}</div></div>`;
+  }
+  function dbTable(db, cols, kind) {
+    return `<div class="rv-tw"><table class="rv-t"><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>` +
+      db.rows.map((r) => `<tr data-k="${kind}" data-id="${esc(r._id)}">${cols.map((c) => `<td>${cellOf(r, c, db.schema)}</td>`).join("")}</tr>`).join("") + "</tbody></table></div>";
+  }
+  const emptyMsg = (what) => D ? `<div class="jempty"><b>${esc(what)}</b>Clique sur « Synchroniser Notion » pour récupérer la page depuis Notion.</div>`
+    : `<div class="jempty"><b>${esc(what)}</b>La synchro Notion fonctionne dans l'application Windows (.exe).<br>Ici, tu peux importer l'export CSV de ta base Macro (Notion → ••• → Exporter → Markdown & CSV).<div class="row2" style="justify-content:center"><label class="btn" style="cursor:pointer">Importer le CSV Macro<input type="file" id="rvCsv" accept=".csv" hidden></label></div></div>`;
+
+  /* --- page modal (row of Macro / Homework) --- */
+  const ov = document.createElement("div"); ov.className = "rv-ov"; ov.innerHTML = '<div class="rv-m"><div class="rv-mh"><b></b><button aria-label="Fermer">×</button></div><div class="rv-mb"></div></div>';
+  document.body.append(ov); ov.querySelector("button").onclick = () => ov.classList.remove("show"); ov.addEventListener("mousedown", (e) => { if (e.target === ov) ov.classList.remove("show"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") ov.classList.remove("show"); });
+  async function openRow(kind, id) {
+    const db = kind === "hw" ? state.homework : state.macro; const r = db.rows.find((x) => x._id === id); if (!r) return;
+    ov.querySelector(".rv-mh b").textContent = (r._icon ? r._icon + " " : "") + (r.Name || "Sans titre");
+    const props = Object.keys(db.schema).filter((k) => k !== "Name" && r[k] !== null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length));
+    const mb = ov.querySelector(".rv-mb");
+    const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${db.schema[k].options ? chips(db.schema, k, r[k]) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}</div>`;
+    mb.innerHTML = head + '<div class="rv-mut" id="rvPg">Chargement de la page…</div>';
+    ov.classList.add("show");
+    let blocks = await kget("page:" + id);
+    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs) || '<p class="rv-mut">Page vide</p>'}</div>`; };
+    if (blocks) show(blocks);
+    if (D) { const res = await D.notionBlocks(id); if (res.ok) { await kset("page:" + id, res.data); if (ov.classList.contains("show")) { const pg = mb.querySelector(".rv-page"); if (pg) pg.remove(); mb.insertAdjacentHTML("beforeend", '<div id="rvPg"></div>'); show(res.data); } } else if (!blocks) show([]); }
+    else if (!blocks) mb.querySelector("#rvPg").innerHTML = `<a href="${esc(r._url || "#")}" target="_blank" rel="noopener" style="color:#7d9bff">Ouvrir dans Notion ↗</a>`;
+  }
+
+  /* --- filter popover (reuses Notion-style list) --- */
+  let pop = null;
+  function openFilter(btn) {
+    pop && pop.remove(); const f = btn.dataset.f, m = state.macro; if (!m) return;
+    const opts = (m.schema[f] && m.schema[f].options) || [...new Set(m.rows.flatMap((r) => (Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : [])))].map((n) => ({ n, c: "default" }));
+    pop = document.createElement("div"); pop.className = "npop";
+    const draw = () => { const sel = state.filt[f] || []; pop.querySelector(".npop-list").innerHTML = opts.map((o) => `<div class="nopt${sel.includes(o.n) ? " on" : ""}" data-v="${esc(o.n)}"><span class="nchip" style="background:${NC()[o.c] || "#373737"}">${esc(o.n)}</span>${sel.includes(o.n) ? '<span class="ck">✓</span>' : ""}</div>`).join(""); };
+    pop.innerHTML = `<div class="npop-t">Filtrer : ${esc(f)}</div><div class="npop-list"></div>`;
+    document.body.append(pop); const r = btn.getBoundingClientRect(); pop.style.left = Math.min(r.left, innerWidth - 340) + "px"; pop.style.top = r.bottom + 4 + "px"; draw();
+    pop.onclick = (e) => { const o = e.target.closest(".nopt"); if (!o) return; const a = state.filt[f] || []; const i = a.indexOf(o.dataset.v); i >= 0 ? a.splice(i, 1) : a.push(o.dataset.v); state.filt[f] = a; draw(); render(); };
+  }
+  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target) && !e.target.closest(".rv-f")) { pop.remove(); pop = null; } });
+
+  /* --- CSV import (web fallback) --- */
+  function parseCSV(t) { const rows = []; let r = [], c = "", q = false; t = t.replace(/^﻿/, "");
+    for (let i = 0; i < t.length; i++) { const ch = t[i]; if (q) { if (ch === '"') { if (t[i + 1] === '"') { c += '"'; i++; } else q = false; } else c += ch; }
+      else if (ch === '"') q = true; else if (ch === ",") { r.push(c); c = ""; } else if (ch === "\n" || ch === "\r") { if (ch === "\r" && t[i + 1] === "\n") i++; r.push(c); rows.push(r); r = []; c = ""; } else c += ch; }
+    if (c || r.length) { r.push(c); rows.push(r); } return rows; }
+  const MULTI = ["Time", "PD Array M1", "Prise de liquidité", "Status", "Raison hors plan"], NUMS = ["RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL"];
+  async function importCSV(file) {
+    const rows = parseCSV(await file.text()); const h = rows.shift().map((x) => x.trim());
+    const schema = {}; h.forEach((k) => (schema[k] = { type: MULTI.includes(k) ? "multi_select" : NUMS.includes(k) ? "number" : ["Actif", "Sens", "Règles respectées"].includes(k) ? "select" : "rich_text" }));
+    const out = rows.filter((r) => r.length > 1).map((r, i) => { const o = { _id: "csv" + i }; h.forEach((k, j) => { const v = (r[j] || "").trim();
+      o[k] = MULTI.includes(k) ? (v ? v.split(/,\s*/) : []) : NUMS.includes(k) ? (v === "" ? null : +v.replace(",", ".")) : v || null; }); if (o.Date) { const d = new Date(o.Date); if (!isNaN(d)) o.Date = d.toISOString().slice(0, 10); } return o; });
+    // colours from the Notion schema of « Respect du plan » when the option exists there
+    state.macro = { title: "Macro", schema, rows: out }; await kset("macro", state.macro); render();
+  }
+
+  /* --- setup (token) --- */
+  function showSetup(force) { $("rvSetup").hidden = !force; }
+  window.addEventListener("DOMContentLoaded", () => {});
+  (async () => {
+    await loadCache();
+    if (!D) { $("rvSync").hidden = true; $("rvSetupBtn").hidden = true; }
+    else {
+      $("rvSync").onclick = sync;
+      $("rvTokenSave").onclick = async () => { const r = await D.notionSetToken($("rvToken").value); $("rvTokenMsg").textContent = r.ok ? "Connecté ✓ (" + r.bot + ")" : "Token refusé"; if (r.ok) { showSetup(false); sync(); } };
+      $("rvSetupBtn").onclick = () => showSetup($("rvSetup").hidden);
+      const st = await D.notionStatus(); if (!st.ok) showSetup(true); else if (!state.synced || Date.now() - new Date(state.synced) > 30 * 60 * 1000) sync();
+    }
+    document.querySelectorAll(".rv-tab").forEach((b) => (b.onclick = () => { state.tab = b.dataset.t; render(); }));
+    $("rvBody").addEventListener("click", (e) => {
+      const tr = e.target.closest("tr[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
+      const fb = e.target.closest(".rv-f"); if (fb) { if (fb.dataset.clear) { state.filt = {}; render(); } else openFilter(fb); }
+    });
+    $("rvBody").addEventListener("input", (e) => { if (e.target.classList.contains("rv-q")) { state.q = e.target.value; const pos = e.target.selectionStart; render(); const q = document.querySelector(".rv-q"); q.focus(); q.setSelectionRange(pos, pos); } });
+    $("rvBody").addEventListener("change", (e) => { if (e.target.id === "rvCsv" && e.target.files[0]) importCSV(e.target.files[0]); });
+    render();
+  })();
 })();
 </script>
 </body>

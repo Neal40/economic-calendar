@@ -1,7 +1,8 @@
-const { app, BrowserWindow, shell, ipcMain, session, net } = require("electron");
+const { app, BrowserWindow, shell, ipcMain, session, net, safeStorage } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const topstepx = require("./topstepx");
+const notion = require("./notion");
 
 const PART = "persist:topstepx";              // TopstepX login session (kept between launches)
 const DB = () => path.join(app.getPath("userData"), "journal-db.json");
@@ -69,6 +70,24 @@ ipcMain.handle("journal:logout", async () => {
   if (loginWin && !loginWin.isDestroyed()) loginWin.loadURL("https://www.topstepx.com/login");
   return true;
 });
+
+/* ---------- Notion (Review) ---------- */
+const NFILE = () => path.join(app.getPath("userData"), "notion-token.bin");
+function getNotionToken() {
+  try { const b = fs.readFileSync(NFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; }
+}
+function setNotionToken(t) {
+  if (!t) { try { fs.unlinkSync(NFILE()); } catch (e) {} return; }
+  fs.writeFileSync(NFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, "utf8"));
+}
+const nfetch = (url, opts) => net.fetch(url, opts);
+const wrap = async (fn) => { const t = getNotionToken(); if (!t) return { ok: false, reason: "token" };
+  try { return { ok: true, data: await fn(t) }; } catch (e) { return { ok: false, reason: e.status === 401 ? "token" : e.status === 404 ? "access" : String(e.message || e) }; } };
+ipcMain.handle("notion:status", async () => { const t = getNotionToken(); if (!t) return { ok: false, reason: "token" }; try { return await notion.check(t, nfetch); } catch (e) { return { ok: false, reason: e.status === 401 ? "token" : String(e.message || e) }; } });
+ipcMain.handle("notion:setToken", async (e, t) => { t = String(t || "").trim(); if (!t) { setNotionToken(null); return { ok: false, reason: "token" }; }
+  try { const r = await notion.check(t, nfetch); setNotionToken(t); return r; } catch (err) { return { ok: false, reason: err.status === 401 ? "token" : String(err.message || err) }; } });
+ipcMain.handle("notion:db", (e, id) => wrap((t) => notion.queryDatabase(t, nfetch, id)));
+ipcMain.handle("notion:blocks", (e, id) => wrap((t) => notion.pageBlocks(t, nfetch, id)));
 
 /* ---------- main window ---------- */
 function createWindow() {
