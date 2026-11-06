@@ -5,6 +5,7 @@
  *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
  *   await JARVIS.macros()            -> only macros (XX:50–XX:10, grey) / mini macros (XX:25–XX:35, purple) holding a top/bottom: 2 vertical lines
+ *   await JARVIS.nwog()              -> NWOG & 1st: last 5 NWOG + 5 NDOG (10. NWOG / 10. NDOG + 5. RTH Octant), 1st p.FVG 9h30 / Reflection / Silver Bullet (labels dd/mm)
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -108,16 +109,17 @@
 
   // Rudy's saved Fibonacci templates (TopstepX "Save drawing template"): GHAITH 2, Profondeur de marché…
   const tpls = {};
-  async function tpl(name) {
-    if (name in tpls) return tpls[name];
+  async function tpl(name, tool = 'LineToolFibRetracement') {
+    const key = tool + '/' + name;
+    if (key in tpls) return tpls[key];
     try {
       const h = { Authorization: 'Bearer ' + localStorage.getItem('token') };
-      const r = await fetch('https://userapi.topstepx.com/drawing-templates/content/LineToolFibRetracement/' + encodeURIComponent(name), { headers: h });
+      const r = await fetch('https://userapi.topstepx.com/drawing-templates/content/' + tool + '/' + encodeURIComponent(name), { headers: h });
       let j = await r.json();
       if (typeof j.content === 'string') j = JSON.parse(j.content); else if (j.content) j = j.content;
-      tpls[name] = j && typeof j === 'object' && Object.keys(j).some(k => /^level\d+$/.test(k)) ? j : null;
-    } catch (e) { tpls[name] = null; }
-    return tpls[name];
+      tpls[key] = j && typeof j === 'object' && Object.keys(j).length > 3 ? j : null;
+    } catch (e) { tpls[key] = null; }
+    return tpls[key];
   }
   // Fibonacci with level 0 at `base` and level 1 at `far` (extensions continue beyond `far`)
   async function fib(c, tA, tB, base, far, tplName = 'GHAITH 2') {
@@ -330,6 +332,88 @@
         }
         keep(i, 'macros', ids);
         out.push(`${c.symbol()} : ${[...seen].join(', ') || 'aucune macro utile'}`);
+      }
+      return out;
+    },
+    // ---- NWOG & 1st protocol (layout "NWOG & 1st Matrix") ----
+    // Gaps: NWOG = Friday 16:59 close → Sunday 18:00 open (label = Monday dd/mm) ; NDOG = 16:59 close → 18:00 open Mon–Thu (label = close day dd/mm)
+    async gapsData(sym, n = 5) {
+      const ref = day(), out = [];
+      const closeOpen = async (cd, od) => {
+        const a = await bars(sym, ny(cd, 16, 40), ny(cd, 17, 0)), b = await bars(sym, ny(od, 18, 0), ny(od, 18, 15));
+        const cl = a.filter(x => x.t < ny(cd, 17, 0)).pop(), op = b[0];
+        return cl && op ? { close: cl.c, open: op.o, tClose: cl.t, t: op.t, top: Math.max(cl.c, op.o), bot: Math.min(cl.c, op.o) } : null;
+      };
+      const dm = d => d.slice(8, 10) + '/' + d.slice(5, 7);
+      // NWOG: last n weeks
+      let mon = ref; while (new Date(mon + 'T12:00:00Z').getUTCDay() !== 1) mon = addDays(mon, -1);
+      for (let k = 0; k < n; k++, mon = addDays(mon, -7)) {
+        const g = await closeOpen(addDays(mon, -3), addDays(mon, -1));
+        if (g && g.top > g.bot) out.push({ kind: 'NWOG', label: 'NWOG ' + dm(mon), date: mon, ...g });
+      }
+      // NDOG: last n Mon–Thu evenings strictly before the reference session
+      let d = addDays(ref, -1), got = 0;
+      while (got < n) {
+        const wd = new Date(d + 'T12:00:00Z').getUTCDay();
+        if (wd >= 1 && wd <= 4 && ny(d, 18, 0) <= now()) {
+          const g = await closeOpen(d, d);
+          if (g && g.top > g.bot) { out.push({ kind: 'NDOG', label: 'NDOG ' + dm(d), date: d, ...g }); got++; } else got++;
+        }
+        d = addDays(d, -1);
+        if (d < addDays(ref, -30)) break;
+      }
+      return out;
+    },
+    // 1st p.FVG after 9:30, its Reflection (first FVG of the opposite type) and the Silver Bullet FVG (10:00–11:00)
+    async fvgData(sym, d = day()) {
+      const all = await bars(sym, ny(d, 9, 30), Math.min(now(), ny(d, 16, 0)));
+      const fv = [];
+      for (let j = 2; j < all.length; j++) {
+        const c1 = all[j - 2], c3 = all[j];
+        if (c3.l > c1.h) fv.push({ type: 'BISI', bot: c1.h, top: c3.l, t1: c1.t, t3: c3.t });
+        else if (c3.h < c1.l) fv.push({ type: 'SIBI', bot: c3.h, top: c1.l, t1: c1.t, t3: c3.t });
+      }
+      const first = fv[0] || null;
+      const refl = first ? fv.find(f => f.type !== first.type && f.t1 > first.t1) || null : null;
+      const sb = fv.find(f => f.t1 >= ny(d, 10, 0) && f.t3 < ny(d, 11, 0)) || null;
+      return { first, refl, sb, all };
+    },
+    async nwog(opts = {}) {
+      const d = day(), dm = d.slice(8, 10) + '/' + d.slice(5, 7), out = [];
+      const rectTpl = { NWOG: '10. NWOG', NDOG: '10. NDOG', first: '8. 1st p.FVG 9h30', refl: '9. 1st p.FVG Reflection', sb: '9. 1st p.FVG Silver Bullet' };
+      for (let i = 0; i < api.chartsCount(); i++) {
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
+        clearGroup(i, 'nwog');
+        const ids = [], tickTol = sym === '/NQ' ? 0.5 : 0.25;
+        // existing rectangles (Rudy's or older) to verify / fix instead of duplicating
+        const rects = c.getAllShapes().filter(s => s.name === 'rectangle').map(s => {
+          try { const sh = c.getShapeById(s.id), p = sh.getPoints(); return { id: s.id, sh, top: Math.max(p[0].price, p[1].price), bot: Math.min(p[0].price, p[1].price), t: Math.min(p[0].time, p[1].time) }; } catch (e) { return null; }
+        }).filter(Boolean);
+        const fibs = c.getAllShapes().filter(s => s.name === 'fib_retracement').map(s => { try { return c.getShapeById(s.id).getPoints().map(p => p.price).sort((a, b) => a - b); } catch (e) { return null; } }).filter(Boolean);
+        const place = async (z, tplName, text, tA, tB) => {
+          const props = (await tpl(tplName, 'LineToolRectangle')) || {};
+          const ex = rects.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol);
+          if (ex) { try { ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé'; }
+          const id = await c.createMultipointShape([{ time: tA, price: z.top }, { time: tB, price: z.bot }], { shape: 'rectangle', text, lock: false });
+          try { c.getShapeById(id).setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ }
+          ids.push(id);
+          return 'ajouté';
+        };
+        for (const g of await J.gapsData(sym, opts.n ?? 5)) {
+          const st = await place(g, rectTpl[g.kind], g.label, g.t, g.t + 3600);
+          // octants of the gap (5. RTH Octant), unless already drawn on the same bounds
+          if (!fibs.some(f => Math.abs(f[0] - g.bot) <= tickTol && Math.abs(f[1] - g.top) <= tickTol)) ids.push(await fib(c, g.t, g.t + 3600, g.bot, g.top, '5. RTH Octant'));
+          out.push(`${c.symbol()} ${g.label} ${g.bot}–${g.top} : ${st}`);
+        }
+        const fd = await J.fvgData(sym, d);
+        for (const [k, name] of [['first', '9h30'], ['refl', 'Reflection'], ['sb', 'Silver Bullet']]) {
+          const z = fd[k];
+          if (!z) { out.push(`${c.symbol()} 1st p.FVG ${name} : aucun`); continue; }
+          const st = await place(z, rectTpl[k], `1st p.FVG ${name} ${dm}`, z.t1, z.t3);
+          out.push(`${c.symbol()} 1st p.FVG ${name} ${dm} ${z.type} ${z.bot}–${z.top} (${nyHM(z.t1)}) : ${st}`);
+        }
+        keep(i, 'nwog', ids);
       }
       return out;
     },
