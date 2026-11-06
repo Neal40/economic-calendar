@@ -4,6 +4,10 @@ USD economic calendar — the month at a glance: news, NYSE holidays and key ear
 One self-contained page (`index.html`), no build step, no dependencies.
 
 ## Features
+- Sidebar menu: **Laboratoire** (Terminal Économique, FinancialJuice live news, Journal de trading → Notion) and **Paramètres** (Profil, Abonnement, Factures)
+- FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
+- Abonnement: recurring costs (monthly / yearly, € and $), next due date
+- Factures: expenses by year, category, currency
 - Monthly Mon–Fri grid with week labels (auto-generated or editable)
 - High / medium / low impact news (low = yellow, Forex Factory), earnings (☾ after close, ✳ pre-market, ◌ time TBD)
 - NYSE holidays computed for any year: **CLOSED**, **EARLY CLOSE**, **BANK HOLIDAY** with footnotes
