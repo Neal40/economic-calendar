@@ -4,8 +4,9 @@ USD economic calendar — the month at a glance: news, NYSE holidays and key ear
 One self-contained page (`index.html`), no build step, no dependencies.
 
 ## Features
-- Sidebar menu: **Laboratoire** (Terminal Économique, FinancialJuice live news, Journal de trading → Notion) and **Paramètres** (Profil, Abonnement, Factures)
+- Sidebar menu: **Laboratoire** (Terminal Économique, FinancialJuice live news, Journal de trading = Stats TopstepX) and **Paramètres** (Profil, Abonnement, Factures)
 - FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
+- Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). No account data in this repo: import your `comptes.json` / `trades.json` in the app (stored locally)
 - Abonnement: recurring costs (monthly / yearly, € and $), next due date
 - Factures: expenses by year, category, currency
 - Monthly Mon–Fri grid with week labels (auto-generated or editable)

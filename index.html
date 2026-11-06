@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Economic Calendar · New York Time</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#d2d5dd; --card:#e6e8ed; --card-b:#b8bbc5; --ink:#141518; --muted:#6c707b; --faint:#9a9ea8;
@@ -170,7 +170,71 @@ body{background:#060607}
 .fjwrap iframe{border:0;width:100%;height:100%;display:block}
 .bar{border-bottom:1px solid #1d1d22}
 @media (max-width:820px){.app:not(.mini) .side{position:absolute;z-index:30;height:100vh}}
+
+/* ---------- Journal de trading (Stats TopstepX) ---------- */
+.tsx{--bg:#06080b;--card:#0c0f13;--line:#1f242b;--fg:#eef1f5;--mut:#8d95a0;--up:#4ccf6a;--dn:#e5534b;--grid:#1a1f26;position:relative;background:var(--bg);color:var(--fg);font-family:"Roboto Condensed","Arial Narrow",sans-serif;border-radius:14px;padding:clamp(12px,2.5vw,28px);font-variant-numeric:tabular-nums}
+.tsx *{box-sizing:border-box}
+.tsx-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}
+.tsx-sel{background:#10141a;color:var(--fg);border:1px solid #2a3038;border-radius:8px;padding:8px 12px;font:inherit;font-weight:700;font-size:15px;max-width:100%}
+.tsx-chip{background:#10141a;border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:13px;color:var(--mut);white-space:nowrap}
+.tsx-chip .v{color:var(--fg);font-weight:700;margin-left:4px}
+.tsx-name{font-size:20px;font-weight:700;letter-spacing:.3px;margin:4px 0 16px}
+.tsx-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px;margin-bottom:14px}
+.tsx-g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:14px;margin-bottom:14px}
+.tsx-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-width:0;position:relative}
+.tsx-lab{color:var(--mut);font-size:14px;display:flex;align-items:center;gap:6px}
+.tsx-kpi{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:86px}
+.tsx-big{font-size:30px;font-weight:700;margin-top:10px;line-height:1.1}
+.tsx-mid{font-size:26px;font-weight:700;margin-top:8px}
+.tsx-sub{color:var(--mut);font-size:13px;text-align:right;line-height:1.5}
+.tsx-right{text-align:right;font-weight:700;font-size:17px}
+.tsx .up{color:var(--up)}.tsx .dn{color:var(--dn)}.tsx .wn{color:#f0a033}
+.tsx-viz{flex:0 0 auto;position:relative}
+.tsx-ring-l{position:absolute;font-size:11px;font-weight:700;white-space:nowrap}
+.tsx-avg{flex:1 1 auto;max-width:200px;text-align:right}
+.tsx-avgbar{height:9px;border-radius:5px;margin-bottom:12px;overflow:hidden;background:var(--dn)}
+.tsx-avgbar>div{height:100%;background:var(--up)}
+.tsx-avgv{display:flex;justify-content:flex-end;gap:14px;font-size:22px;font-weight:700}
+.tsx-chart{position:relative;min-height:260px}
+.tsx-h{font-size:15px;color:var(--mut);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.tsx-tip{position:absolute;pointer-events:none;background:#151a21;border:1px solid #2c333c;border-radius:6px;padding:6px 9px;font-size:12px;z-index:5;white-space:nowrap;transition:opacity .1s}
+.tsx-tip .th{color:var(--mut);margin-bottom:2px}
+.tsx-tip .tl{font-weight:700}
+.tsx svg text{font-family:inherit}
+.tsx-empty{color:var(--mut);font-size:13px;display:flex;align-items:center;justify-content:center;min-height:200px}
+.tsx-calhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 14px;flex-wrap:wrap}
+.tsx-calnavs{display:flex;align-items:center;gap:8px}
+.tsx-nav{background:none;border:none;color:var(--mut);font-size:18px;cursor:pointer;padding:2px 8px}
+.tsx-mon{font-weight:700;min-width:120px;text-align:center;text-transform:capitalize}
+.tsx-mpl{font-size:17px;font-weight:700;text-align:center;flex:1 1 100%}
+.tsx-cgrid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));border-left:1px solid #2a3038;border-top:1px solid #2a3038}
+.tsx-cgrid>div{border-right:1px solid #2a3038;border-bottom:1px solid #2a3038}
+.tsx-dow{color:var(--mut);font-size:12px;text-align:center;padding:6px 0;background:#0a0d11}
+.tsx-cell{min-height:86px;padding:6px;display:flex;flex-direction:column;align-items:center;font-size:12px;position:relative}
+.tsx-cell .dn0{align-self:flex-start;color:var(--mut);font-size:12px}
+.tsx-cell .p{font-size:clamp(12px,1.6vw,19px);font-weight:700;margin-top:auto}
+.tsx-cell .n{color:var(--mut);font-size:11px;margin-bottom:auto}
+.tsx-cell.out{background:#0a0c10;opacity:.45}
+.tsx-cell.win{background:rgba(46,160,67,.22)}
+.tsx-cell.loss{background:rgba(229,83,75,.22)}
+.tsx-cell.wk{background:#0e1217}
+.tsx-cell.wk .dn0{color:#b9c0c9;font-weight:700}
+.tsx-cell.today{outline:2px solid #3fa0ff;outline-offset:-2px}
+.tsx-tw{overflow:auto;border:1px solid var(--line);border-radius:8px}
+.tsx-pager{display:flex;justify-content:flex-end;align-items:center;gap:16px;color:#e4e8ed;font-size:13px;font-weight:700;padding:14px 6px 2px;flex-wrap:wrap}
+.tsx-rpp{background:#10141a;color:var(--fg);border:1px solid #2a3038;border-radius:6px;padding:4px 8px;font:inherit}
+.tsx-pg{background:none;border:none;color:var(--mut);font-size:20px;cursor:pointer;padding:0 6px}
+.tsx-pg:hover{color:var(--fg)}
+.tsx-t{width:100%;border-collapse:collapse;font-size:13px}
+.tsx-t th{position:sticky;top:0;background:#0f1318;color:var(--mut);font-weight:400;text-align:right;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tsx-t td{padding:10px;text-align:right;border-bottom:1px solid #161a20;white-space:nowrap;font-weight:700}
+.tsx-t th:nth-child(-n+2),.tsx-t td:nth-child(-n+2){text-align:left}
+.jtop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.jtop .acts{display:flex;gap:8px;flex-wrap:wrap}
+.jempty{background:#0c0f13;border:1px dashed #2a3038;border-radius:12px;padding:40px 24px;text-align:center;color:#8d95a0}
+.jempty b{display:block;color:#eef1f5;font-size:17px;margin-bottom:6px}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -182,7 +246,7 @@ body{background:#060607}
     <div class="items">
       <button class="nav" data-go="calendrier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Terminal Économique</span></button>
       <button class="nav" data-go="financialjuice"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg><span>FinancialJuice</span></button>
-      <a class="nav" id="nJournal" href="https://app.notion.com/p/2e0d85a640098042b2b6f4e457a34e42" target="_blank" rel="noopener"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal de trading</span><svg class="ic ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+      <button class="nav" data-go="journal"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal de trading</span></button>
     </div></div>
   <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
@@ -253,7 +317,7 @@ body{background:#060607}
     <div style="display:flex;gap:12px;align-items:center"><div class="logo" id="bPrev" style="width:54px;height:54px;flex:none"></div>
       <input type="file" id="bImg" accept="image/*" style="flex:1;background:none;border:none;padding:0"><button class="btn gray" id="bNoImg" type="button">Retirer</button></div>
     <label>Texte du logo (sans image)</label><input id="bLogo" maxlength="4">
-    <label>Lien du journal (Notion)</label><input id="bNotion" placeholder="https://www.notion.so/...">
+    <label>Lien Notion (bouton du journal)</label><input id="bNotion" placeholder="https://www.notion.so/...">
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Données</div>
@@ -276,6 +340,92 @@ body{background:#060607}
   <div class="panel"><div class="ptitle">Factures</div>
     <table class="tbl"><thead><tr><th style="width:140px">Date</th><th>Fournisseur</th><th>Description</th><th>Catégorie</th><th class="num">Montant</th><th>Devise</th><th></th></tr></thead><tbody id="billT"></tbody></table>
     <div class="row2"><button class="btn" id="billAdd">+ Ajouter une facture</button></div></div>
+</div></section>
+<section class="view" id="v-journal"><div class="page" style="max-width:1400px">
+  <div class="jtop">
+    <div><h2>Journal de trading</h2><p class="lead" style="margin:0" id="jSync">Stats TopstepX par compte.</p></div>
+    <div class="acts">
+      <label class="btn gray" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
+      <label class="btn gray" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
+      <a class="btn gray" id="jNotion" href="#" target="_blank" rel="noopener" style="text-decoration:none">Journal Notion ↗</a>
+    </div>
+  </div>
+  <div class="jempty" id="jEmpty" hidden><b>Aucune donnée TopstepX</b>Importe tes fichiers <code>comptes.json</code> et <code>trades.json</code> (export du dashboard Stats TopstepX) avec les boutons ci-dessus.</div>
+<div class="tsx" id="jroot">
+  <div class="tsx-bar">
+    <select class="tsx-sel" data-draw="acctsel" aria-label="Compte"></select>
+    <span class="tsx-chip">BAL:<span class="v" data-draw="k" data-source="comptes" data-field="Solde TopstepX" data-fmt="usd">—</span></span>
+    <span class="tsx-chip">Plus haut:<span class="v" data-draw="k" data-source="comptes" data-field="Plus haut solde" data-fmt="usd">—</span></span>
+    <span class="tsx-chip">MLL:<span class="v" data-draw="k" data-source="comptes" data-field="Plancher MLL" data-fmt="usd">—</span></span>
+    <span class="tsx-chip">Marge avant MLL:<span class="v" data-draw="k" data-source="compte_calc" data-field="Marge avant MLL" data-fmt="usd" data-warn="1000">—</span></span>
+    <span class="tsx-chip">DLL:<span class="v" data-draw="k" data-source="comptes" data-field="DLL" data-fmt="usd">—</span></span>
+    <span class="tsx-chip">Statut:<span class="v" data-draw="k" data-source="comptes" data-field="Statut">—</span></span>
+    <span class="tsx-chip">Synchro:<span class="v" data-draw="k" data-source="comptes" data-field="Dernière synchro" data-fmt="dt">—</span></span>
+  </div>
+  <div class="tsx-name" data-draw="k" data-source="comptes" data-field="Nom">—</div>
+
+  <div class="tsx-g">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total P&amp;L</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total P&amp;L" data-fmt="usd" data-sign="1">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Trade Win %</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Trade Win %" data-fmt="pct">—</div></div>
+      <div class="tsx-viz" style="width:150px;height:80px"><div data-draw="gauge" data-field="Trade Win %" data-counts="1"></div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Avg Win / Avg Loss</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Win / Avg Loss" data-fmt="num">—</div></div>
+      <div class="tsx-avg"><div class="tsx-avgbar" data-draw="avgbar"></div><div class="tsx-avgv"><span class="up" data-draw="k" data-source="comptes" data-field="Avg Winning Trade" data-fmt="usd">—</span><span class="dn" data-draw="k" data-source="comptes" data-field="Avg Losing Trade" data-fmt="usd">—</span></div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Day Win %</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Day Win %" data-fmt="pct">—</div></div>
+      <div class="tsx-viz" style="width:150px;height:80px"><div data-draw="gauge" data-field="Day Win %" data-counts="day"></div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Profit Factor</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Profit Factor" data-fmt="num">—</div></div>
+      <div class="tsx-viz" style="width:190px;height:86px"><div style="position:absolute;left:52px;top:0" data-draw="ring" data-a="Gains totaux" data-b="Pertes totales"></div><span class="tsx-ring-l up" style="left:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Gains totaux" data-fmt="usd">—</span><span class="tsx-ring-l dn" style="right:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Pertes totales" data-fmt="usd">—</span></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Best Day % of Total Profit</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Best Day % of Total Profit" data-fmt="pct">—</div></div></div>
+  </div>
+
+  <div class="tsx-card" style="margin-bottom:14px"><div class="tsx-h">Daily Account Balance</div><div class="tsx-chart" data-draw="balance"></div></div>
+
+  <div class="tsx-g">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Most Active Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le plus actif">—</div></div><div class="tsx-sub" data-draw="k" data-source="jours_calc" data-field="Détail">—</div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Most Profitable Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le plus rentable">—</div></div><div class="tsx-right" data-draw="k" data-source="jours_calc" data-field="P&amp;L jour le plus rentable" data-fmt="usd" data-sign="1">—</div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Least Profitable Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le moins rentable">—</div></div><div class="tsx-right" data-draw="k" data-source="jours_calc" data-field="P&amp;L jour le moins rentable" data-fmt="usd" data-sign="1">—</div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total Number of Trades</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total Trades" data-fmt="int">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total Number of Lots Traded</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total Lots" data-fmt="int">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Trade Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Trade Duration">—</div></div></div>
+  </div>
+  <div class="tsx-g2">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Win Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Win Duration">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Loss Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Loss Duration">—</div></div></div>
+  </div>
+  <div class="tsx-g">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Avg Winning Trade</div><div class="tsx-big up" data-draw="k" data-source="comptes" data-field="Avg Winning Trade" data-fmt="usd">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Avg Losing Trade</div><div class="tsx-big dn" data-draw="k" data-source="comptes" data-field="Avg Losing Trade" data-fmt="usd">—</div></div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Trade Direction %</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Trade Direction % (Long)" data-fmt="pct">—</div></div>
+      <div class="tsx-viz" style="width:120px;height:86px"><div style="position:absolute;left:17px;top:0" data-draw="ring" data-a="Long" data-b="Short"></div><span class="tsx-ring-l up" style="right:-4px;top:4px" data-draw="k" data-source="compte_calc" data-field="Long">—</span><span class="tsx-ring-l dn" style="left:-4px;top:60px" data-draw="k" data-source="compte_calc" data-field="Short">—</span></div></div>
+  </div>
+  <div class="tsx-g2">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Best Trade</div><div class="tsx-big up" data-draw="k" data-source="comptes" data-field="Best Trade" data-fmt="usd">—</div></div><div class="tsx-sub" style="max-width:200px" data-draw="k" data-source="comptes" data-field="Best Trade · détail">—</div></div>
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Worst Trade</div><div class="tsx-big dn" data-draw="k" data-source="comptes" data-field="Worst Trade" data-fmt="usd">—</div></div><div class="tsx-sub" style="max-width:200px" data-draw="k" data-source="comptes" data-field="Worst Trade · détail">—</div></div>
+  </div>
+
+  <div class="tsx-g2">
+    <div class="tsx-card"><div class="tsx-h">Daily Net Cumulative P&amp;L</div><div class="tsx-chart" data-draw="cum"></div></div>
+    <div class="tsx-card"><div class="tsx-h">Net Daily P&amp;L</div><div class="tsx-chart" data-draw="bars"></div></div>
+    <div class="tsx-card"><div class="tsx-h">Trade Duration Analysis</div><div class="tsx-chart" data-draw="hbar" data-mode="count"></div></div>
+    <div class="tsx-card"><div class="tsx-h">Win Rate Analysis</div><div class="tsx-chart" data-draw="hbar" data-mode="win"></div></div>
+  </div>
+
+  <div class="tsx-card" style="margin-bottom:14px">
+    <div class="tsx-calhead">
+      <div class="tsx-mpl">Monthly P/L: <span data-draw="mpl">—</span></div>
+      <div class="tsx-calnavs"><button class="tsx-nav" data-step="-1" aria-label="Mois précédent">‹</button><span class="tsx-mon" data-draw="calmonth">—</span><button class="tsx-nav" data-step="1" aria-label="Mois suivant">›</button></div>
+    </div>
+    <div class="tsx-cgrid" aria-hidden="true"><div class="tsx-dow">Lu</div><div class="tsx-dow">Ma</div><div class="tsx-dow">Me</div><div class="tsx-dow">Je</div><div class="tsx-dow">Ve</div><div class="tsx-dow">Sa</div><div class="tsx-dow">Di</div><div class="tsx-dow">Semaine</div></div>
+    <div class="tsx-cgrid" style="border-top:none" data-draw="cal"></div>
+  </div>
+
+  <div class="tsx-card"><div class="tsx-h">Trades</div>
+    <div class="tsx-tw"><table class="tsx-t">
+      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th></tr></thead>
+      <tbody data-draw="rows"></tbody>
+    </table></div>
+    <div class="tsx-pager"><span>Rows per page:</span><select class="tsx-rpp" aria-label="Rows per page"><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select><span data-draw="range">—</span><button class="tsx-pg" data-step="-1" aria-label="Page précédente">‹</button><button class="tsx-pg" data-step="1" aria-label="Page suivante">›</button></div>
+  </div>
+</div>
 </div></section>
 </main></div>
 
@@ -595,11 +745,11 @@ $("bSave").onclick=()=>{S.brand={name:$("bName").value.trim(),handle:$("bHandle"
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","profil","abonnement","factures"];
+const VIEWS=["calendrier","financialjuice","journal","profil","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
-  $("nJournal").href=b.notion||"https://www.notion.so";
+  $("jNotion").href=b.notion||"https://www.notion.so"; $("jNotion").hidden=!b.notion;
 }
 let fjLoaded=false;
 function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); const w=Math.max(320,box.clientWidth), h=Math.max(400,box.clientHeight);
@@ -608,7 +758,7 @@ function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); con
 function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
-  if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills();
+  if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -698,6 +848,295 @@ $("jReset").onclick=()=>{if($("jReset").dataset.c){S=JSON.parse(JSON.stringify(S
   else{$("jReset").dataset.c="1";$("jReset").textContent="Confirmer ?"}};
 
 render(); shell(); go(location.hash.slice(1)||"calendrier");
+</script>
+<!--JSEED-->
+<script>
+/* ---------- Journal de trading : Stats TopstepX ---------- */
+(() => {
+  // mini runtime (calc / data / params / draw) used by the dashboard code below
+  const RAW = { comptes: null, trades: null };
+  const CALC = {}, DRAW = {}, ONDATA = [];
+  let cache = {}, params = {};
+  const root = () => document.getElementById("jroot");
+  const dash = window.jdash = {
+    calc: (id, o) => { CALC[id] = o; },
+    data: (id) => {
+      if (id in RAW) return RAW[id] ? { status: "ok", data: RAW[id] } : { status: "empty", data: [] };
+      if (cache[id]) return cache[id];
+      const c = CALC[id]; if (!c) return { status: "error", data: [] };
+      const ins = c.inputs.map((i) => dash.data(i));
+      if (ins.some((d) => d.status !== "ok")) return { status: "empty", data: [] };
+      try { cache[id] = { status: "ok", data: c.fn(...ins.map((d) => d.data)) }; } catch (e) { console.error(e); cache[id] = { status: "error", data: [] }; }
+      return cache[id];
+    },
+    params: () => params,
+    setParams: (o) => { for (const k in o) { if (o[k] === null || o[k] === undefined) delete params[k]; else params[k] = o[k]; } save(); dash.redraw(); },
+    draw: (name, fn) => { DRAW[name] = fn; },
+    onData: (cb) => ONDATA.push(cb),
+    redraw: () => {
+      const r = root(); if (!r || r.closest(".view:not(.on)")) return;
+      for (const name in DRAW) r.querySelectorAll(`[data-draw="${name}"]`).forEach((el) => { try { DRAW[name](el); } catch (e) { console.error(name, e); } });
+      ONDATA.forEach((cb) => cb());
+    },
+    load: (comptes, trades) => {
+      if (comptes) RAW.comptes = comptes; if (trades) RAW.trades = trades; cache = {};
+      const has = !!(RAW.comptes && RAW.comptes.length);
+      document.getElementById("jroot").hidden = !has; document.getElementById("jEmpty").hidden = has;
+      const last = has ? RAW.comptes.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() : null;
+      document.getElementById("jSync").textContent = has ? `Stats TopstepX · ${RAW.comptes.length} comptes · ${(RAW.trades || []).length} trades` + (last ? ` · dernière synchro ${new Date(last).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "") : "Stats TopstepX par compte.";
+      dash.redraw();
+    },
+  };
+  const KEY = "econcal-journal";
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ comptes: RAW.comptes, trades: RAW.trades, params })); } catch (e) {} };
+  let st = null; try { st = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  if (st && st.params) params = st.params;
+  window.addEventListener("DOMContentLoaded", () => {});
+  const seed = window.JOURNAL_SEED || {};
+  setTimeout(() => dash.load((st && st.comptes) || seed.comptes || null, (st && st.trades) || seed.trades || null), 0);
+  const imp = (id, key) => document.getElementById(id).addEventListener("change", async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try { let v = JSON.parse(await f.text()); if (!Array.isArray(v)) v = v.rows || v.data || v.results; if (!Array.isArray(v)) throw 0;
+      key === "comptes" ? dash.load(v, null) : dash.load(null, v); save(); } catch (err) { alertBox("Fichier JSON invalide"); }
+    e.target.value = "";
+  });
+  const alertBox = (t) => { document.getElementById("jSync").textContent = t; };
+  imp("jImpC", "comptes"); imp("jImpT", "trades");
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(dash.redraw, 150); });
+
+  /* ----- calcs ----- */
+  dash.calc("compte_calc", { inputs: ["comptes"], fn: (comptes) => comptes.map((c) => {
+    const n = Number(c["Total Trades"]) || 0, w = Math.round(n * (Number(c["Trade Win %"]) || 0)), l = Math.round(n * (Number(c["Trade Direction % (Long)"]) || 0));
+    return { "ID TopstepX": String(c["ID TopstepX"]), Gagnants: w, Perdants: n - w, Long: l, Short: n - l,
+      "Gains totaux": Math.round(w * (Number(c["Avg Winning Trade"]) || 0) * 100) / 100,
+      "Pertes totales": Math.round((n - w) * (Number(c["Avg Losing Trade"]) || 0) * 100) / 100,
+      "Marge avant MLL": Math.round(((Number(c["Solde TopstepX"]) || 0) - (Number(c["Plancher MLL"]) || 0)) * 100) / 100 };
+  }) });
+  dash.calc("jours_calc", { inputs: ["comptes"], fn: (comptes) => comptes.map((c) => {
+    const sp = (s) => String(s || "").replace(/\\/g, "").split(" · ");
+    const a = sp(c["Most Active Day"]), p = sp(c["Most Profitable Day"]), m = sp(c["Least Profitable Day"]);
+    return { "ID TopstepX": String(c["ID TopstepX"]), "Jour le plus actif": a[0] || "", "Détail": a.slice(1).join(" · "),
+      "Jour le plus rentable": p[0] || "", "P&L jour le plus rentable": parseFloat(p[1]), "Jour le moins rentable": m[0] || "", "P&L jour le moins rentable": parseFloat(m[1]) };
+  }) });
+  dash.calc("fills_calc", { inputs: ["trades"], fn: (trades) => trades.map((t) => ({
+    ...t, ID: String(t.ID), "ID TopstepX": String(t["ID TopstepX"]), Day: String(t.Day).slice(0, 10),
+    Size: Number(t.Size), "Duration (s)": Number(t["Duration (s)"]), "Entry Price": Number(t["Entry Price"]), "Exit Price": Number(t["Exit Price"]),
+    "P&L": Number(t["P&L"]), Commissions: Number(t.Commissions), Fees: Number(t.Fees),
+    "Net P&L": Math.round((Number(t["P&L"]) - Number(t.Fees) - Number(t.Commissions)) * 100) / 100 })) });
+  dash.calc("mois_calc", { inputs: ["fills_calc"], fn: (fills) => {
+    const g = new Map();
+    for (const t of fills) { const a = t["ID TopstepX"], m = t.Day.slice(0, 7); if (!a || !m) continue; const k = a + "|" + m;
+      const o = g.get(k) || { "ID TopstepX": a, Mois: m, "P&L net": 0, Trades: 0 }; o["P&L net"] += t["Net P&L"]; o.Trades += 1; g.set(k, o); }
+    return [...g.values()].map((o) => ({ ...o, "P&L net": Math.round(o["P&L net"] * 100) / 100 }));
+  } });
+
+  /* ----- helpers ----- */
+  const usd = (v) => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const F = { usd: (v) => usd(Number(v)), pct: (v) => (Number(v) * 100).toFixed(2) + "%", num: (v) => Number(v).toFixed(2), int: (v) => String(Math.round(Number(v))), txt: (v) => String(v),
+    dt: (v) => new Date(v).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) };
+  const ok = (id) => dash.data(id).status === "ok";
+  const curId = () => { const d = dash.data("comptes"); const p = String(dash.params().acct ?? "");
+    if (d.status !== "ok" || !d.data.length) return p; return d.data.some((r) => String(r["ID TopstepX"]) === p) ? p : String(d.data[0]["ID TopstepX"]); };
+  const curRow = () => (ok("comptes") ? dash.data("comptes").data.find((r) => String(r["ID TopstepX"]) === curId()) : null);
+  const trades = () => { const c = curRow(); if (!c || dash.data("fills_calc").status !== "ok") return null;
+    return dash.data("fills_calc").data.filter((t) => t["ID TopstepX"] === String(c["ID TopstepX"])).map((t) => ({ ...t, day: t.Day, pnl: t["Net P&L"], n: 1, dur: t["Duration (s)"] })).filter((t) => t.day); };
+  const month = (T) => { const p = dash.params().mois; if (typeof p === "string" && /^\d{4}-\d{2}$/.test(p)) return p;
+    const days = (T || []).map((t) => t.day).sort(); return days.length ? days[days.length - 1].slice(0, 7) : new Date().toISOString().slice(0, 7); };
+  const fills = () => { const c = curRow(); if (!c || dash.data("fills_calc").status !== "ok") return null; return dash.data("fills_calc").data.filter((f) => f["ID TopstepX"] === String(c["ID TopstepX"])); };
+  const R = () => root();
+  R().querySelectorAll(".tsx-rpp").forEach((s) => s.addEventListener("change", () => dash.setParams({ rpp: Number(s.value), page: 0 })));
+  R().querySelectorAll(".tsx-pg").forEach((b) => b.addEventListener("click", () => { const all = fills() || []; const rpp = Number(dash.params().rpp) || 100;
+    const max = Math.max(0, Math.ceil(all.length / rpp) - 1); dash.setParams({ page: Math.min(max, Math.max(0, (Number(dash.params().page) || 0) + Number(b.dataset.step))) }); }));
+  dash.onData(() => { R().querySelectorAll(".tsx-rpp").forEach((s) => { s.value = String(Number(dash.params().rpp) || 100); }); });
+  R().querySelectorAll(".tsx-nav").forEach((b) => b.addEventListener("click", () => { const [y, m] = month(trades()).split("-").map(Number);
+    const d = new Date(Date.UTC(y, m - 1 + Number(b.dataset.step), 1)); dash.setParams({ mois: d.toISOString().slice(0, 7) }); }));
+
+  /* ----- account selector + KPIs ----- */
+  dash.draw("acctsel", (sel) => {
+    const d = dash.data("comptes"); if (d.status !== "ok") { sel.replaceChildren(new Option("—", "")); return; }
+    const rows = [...d.data].sort((a, b) => (a.Statut === "Actif" ? 0 : 1) - (b.Statut === "Actif" ? 0 : 1) || String(a.Nom).localeCompare(String(b.Nom)));
+    const etat = (r) => { if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
+      const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0);
+      if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#4ccf6a", pre: "● ", suf: "" }; };
+    sel.replaceChildren(...rows.map((r) => { const e = etat(r); const o = new Option(e.pre + r.Nom + "  ·  " + F.usd(r["Solde TopstepX"]) + e.suf, String(r["ID TopstepX"]));
+      o.style.color = e.col; o.style.backgroundColor = "#10141a"; return o; }));
+    sel.value = curId(); const cur = rows.find((r) => String(r["ID TopstepX"]) === sel.value);
+    if (cur) { const e = etat(cur); sel.style.color = e.col; sel.style.borderColor = e.col; }
+    sel.onchange = () => dash.setParams({ acct: sel.value, mois: null, page: 0 });
+  });
+  dash.draw("k", (el) => {
+    const d = dash.data(el.dataset.source); if (el.dataset.sign || el.dataset.warn) el.classList.remove("up", "dn", "wn");
+    if (d.status !== "ok" || !Array.isArray(d.data)) { el.textContent = "—"; return; }
+    const id = curId(), row = d.data.find((r) => String(r["ID TopstepX"]) === id), v = row ? row[el.dataset.field] : null;
+    if (v === null || v === undefined || v === "" || (typeof v === "number" && !isFinite(v))) { el.textContent = "—"; return; }
+    el.textContent = (F[el.dataset.fmt] || F.txt)(v);
+    if (el.dataset.sign) { if (Number(v) > 0) el.classList.add("up"); if (Number(v) < 0) el.classList.add("dn"); }
+    if (el.dataset.warn) { const dead = (dash.data("comptes").data || []).some((r) => String(r["ID TopstepX"]) === id && r.Statut !== "Actif");
+      el.classList.add(dead ? "dn" : Number(v) <= Number(el.dataset.warn) ? "wn" : "up"); if (!dead && Number(v) <= Number(el.dataset.warn)) el.textContent = "⚠ " + el.textContent; }
+  });
+  dash.draw("avgbar", (el) => { el.replaceChildren(); const c = curRow(); if (!c) return;
+    const w = Math.abs(Number(c["Avg Winning Trade"]) || 0), l = Math.abs(Number(c["Avg Losing Trade"]) || 0);
+    const b = document.createElement("div"); b.style.width = (w + l ? (w / (w + l)) * 100 : 0) + "%"; el.append(b); });
+  dash.draw("gauge", (el) => {
+    el.replaceChildren(); const c = curRow(); if (!c) return;
+    const p = Math.max(0, Math.min(1, Number(c[el.dataset.field]) || 0));
+    const svg = d3.select(el).append("svg").attr("width", 150).attr("height", 80).attr("viewBox", "0 0 150 80");
+    const g = svg.append("g").attr("transform", "translate(75,72)"); const R0 = 42, R1 = 52; const arc = d3.arc().innerRadius(R0).outerRadius(R1);
+    const a0 = -Math.PI / 2, a1 = Math.PI / 2, cut = a0 + (a1 - a0) * (1 - p);
+    if (p < 1) g.append("path").attr("d", arc({ startAngle: a0, endAngle: cut })).attr("fill", "#e5534b");
+    if (p > 0) g.append("path").attr("d", arc({ startAngle: cut, endAngle: a1 })).attr("fill", "#4ccf6a");
+    let r = null;
+    if (el.dataset.counts === "day") { const fl = fills(); if (fl && fl.length) { const last = fl.map((f) => f.Day).sort().pop(); const dd = fl.filter((f) => f.Day === last); const w = dd.filter((f) => f["Net P&L"] > 0).length; r = { Gagnants: w, Perdants: dd.length - w }; } }
+    else { const k = dash.data("compte_calc"); r = k.status === "ok" ? k.data.find((x) => x["ID TopstepX"] === curId()) : null; }
+    if (r) { const lab = (a, txt, col) => { const x = Math.sin(a) * (R1 + 9), y = -Math.cos(a) * (R1 + 9);
+        g.append("text").attr("x", x).attr("y", y).attr("dy", "0.35em").attr("text-anchor", Math.abs(x) < 8 ? "middle" : x > 0 ? "start" : "end").attr("fill", col).attr("font-size", 12).attr("font-weight", 700).text(txt); };
+      if (r.Perdants > 0) lab(Math.max(a0 + 0.35, Math.min(-0.15, (a0 + cut) / 2)), String(r.Perdants), "#e5534b");
+      if (r.Gagnants > 0) lab(Math.min(a1 - 0.05, Math.max(0.35, (cut + a1) / 2)), String(r.Gagnants), "#4ccf6a"); }
+  });
+  dash.draw("ring", (el) => {
+    el.replaceChildren(); const d = dash.data("compte_calc"); if (d.status !== "ok") return; const r = d.data.find((x) => x["ID TopstepX"] === curId()); if (!r) return;
+    const a = Math.abs(Number(r[el.dataset.a]) || 0), b = Math.abs(Number(r[el.dataset.b]) || 0);
+    const svg = d3.select(el).append("svg").attr("width", 86).attr("height", 86).attr("viewBox", "0 0 86 86"); const g = svg.append("g").attr("transform", "translate(43,43)");
+    const pie = d3.pie().sort(null).value((x) => x)([a, b]); const arc = d3.arc().innerRadius(29).outerRadius(40);
+    g.selectAll("path").data(pie).join("path").attr("d", arc).attr("fill", (x, i) => (i ? "#e5534b" : "#4ccf6a"));
+    if (!a && !b) g.append("circle").attr("r", 34.5).attr("fill", "none").attr("stroke", "#2a3038").attr("stroke-width", 11);
+  });
+
+  /* ----- charts ----- */
+  const AX = "#3a414b", MUT = "#8d95a0", GRID = "#1a1f26", UP = "#4ccf6a", DN = "#e5534b";
+  const empty = (el) => { el.replaceChildren(); const p = document.createElement("div"); p.className = "tsx-empty"; p.textContent = "Aucun trade sur ce compte"; el.append(p); };
+  const frame = (el, h) => { el.replaceChildren(); const w = Math.max(280, Math.floor(el.clientWidth || 600));
+    const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", h).attr("viewBox", `0 0 ${w} ${h}`).style("display", "block");
+    const tip = d3.select(el).append("div").attr("class", "tsx-tip").style("opacity", 0); return { svg, w, h, tip }; };
+  const show = (el, tip, ev, lines) => { tip.selectAll("*").remove(); lines.forEach((l, i) => tip.append("div").attr("class", i ? "tl" : "th").text(l));
+    const r = el.getBoundingClientRect(); let x = ev.clientX - r.left + 14, y = ev.clientY - r.top - 12; const tw = tip.node().offsetWidth;
+    if (x + tw > r.width) x = ev.clientX - r.left - tw - 14; tip.style("left", Math.max(0, x) + "px").style("top", Math.max(0, y) + "px").style("opacity", 1); };
+  const hide = (tip) => tip.style("opacity", 0);
+  const yAxis = (g, y, w, ml, fmt, n) => { const ticks = y.ticks(n);
+    g.selectAll(".gl").data(ticks).join("line").attr("x1", ml).attr("x2", w).attr("y1", (t) => y(t)).attr("y2", (t) => y(t)).attr("stroke", GRID);
+    g.selectAll(".yt").data(ticks).join("text").attr("x", ml - 8).attr("y", (t) => y(t)).attr("dy", "0.32em").attr("text-anchor", "end").attr("fill", "#cfd5dc").attr("font-size", 11).text(fmt); };
+  const pDay = (s) => new Date(s + "T12:00:00Z"), dLab = (s) => s.slice(5, 7) + "/" + s.slice(8, 10), compact = (v) => d3.format(",.0f")(v);
+  const marginFor = (labels) => { const m = d3.max(labels, (s) => String(s).length) || 4; return Math.min(110, 14 + m * 7); };
+  const daily = (T) => d3.rollups(T, (v) => ({ p: d3.sum(v, (t) => t.pnl), n: d3.sum(v, (t) => t.n) }), (t) => t.day).sort((a, b) => d3.ascending(a[0], b[0])).map(([day, o]) => ({ day, ...o }));
+  const xDays = (days, ml, w) => { if (days.length === 1) { const d = pDay(days[0]); return d3.scaleUtc([d3.utcDay.offset(d, -1), d3.utcDay.offset(d, 1)], [ml, w - 16]); }
+    return d3.scaleUtc([pDay(days[0]), pDay(days[days.length - 1])], [ml + 8, w - 16]); };
+  const xAxis = (g, x, days, h, mb) => { const step = Math.max(1, Math.ceil(days.length / 8)); const ds = days.filter((d, i) => i % step === 0 || i === days.length - 1);
+    g.selectAll(".xt").data(ds).join("text").attr("x", (d) => x(pDay(d))).attr("y", h - mb + 18).attr("text-anchor", "middle").attr("fill", "#cfd5dc").attr("font-size", 11).text(dLab);
+    g.append("line").attr("x1", x.range()[0] - 8).attr("x2", x.range()[1] + 8).attr("y1", h - mb).attr("y2", h - mb).attr("stroke", AX); };
+  const grad = (svg, id, color, flip) => { const lg = svg.append("defs").append("linearGradient").attr("id", id).attr("x1", 0).attr("x2", 0).attr("y1", flip ? 1 : 0).attr("y2", flip ? 0 : 1);
+    [[0, 0.45], [0.5, 0.15], [1, 0.02]].forEach(([o, a]) => lg.append("stop").attr("offset", o).attr("stop-color", color).attr("stop-opacity", a)); };
+  const uid = () => "g" + Math.random().toString(36).slice(2, 9);
+
+  dash.draw("balance", (el) => {
+    const T = trades(), c = curRow(); if (!T || !c) { el.replaceChildren(); return; }
+    const pts = T.filter((t) => t["Solde fin de journée"] !== undefined && t["Solde fin de journée"] !== null && t["Solde fin de journée"] !== "").map((t) => ({ day: t.day, v: Number(t["Solde fin de journée"]) })).sort((a, b) => d3.ascending(a.day, b.day));
+    if (!pts.length) { empty(el); return; }
+    const h = 300, mb = 30; const lo = d3.min([...pts.map((p) => p.v), Number(c["Plancher MLL"]) || Infinity]), hi = d3.max(pts, (p) => p.v);
+    const pad = Math.max(150, (hi - lo) * 0.12); const y = d3.scaleLinear([lo - pad, hi + pad], [h - mb, 12]).nice(); const ml = marginFor(y.ticks(5).map(compact));
+    const { svg, w, tip } = frame(el, h); const days = pts.map((p) => p.day); const x = xDays(days, ml, w); const g = svg.append("g");
+    yAxis(g, y, w, ml, compact, 5);
+    svg.append("text").attr("transform", `translate(12,${(h - mb) / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("fill", "#cfd5dc").attr("font-size", 11).text("Balance");
+    xAxis(g, x, days, h, mb);
+    const mll = Number(c["Plancher MLL"]);
+    if (mll) { g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(mll)).attr("y2", y(mll)).attr("stroke", DN).attr("stroke-dasharray", "5 4").attr("opacity", 0.7);
+      g.append("text").attr("x", w - 4).attr("y", y(mll) - 5).attr("text-anchor", "end").attr("fill", DN).attr("font-size", 11).text("MLL " + usd(mll)); }
+    const id = uid(); grad(svg, id, "#c9d1db"); const X = (p) => x(pDay(p.day));
+    svg.append("path").datum(pts).attr("d", d3.area().x(X).y0(h - mb).y1((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", `url(#${id})`);
+    svg.append("path").datum(pts).attr("d", d3.line().x(X).y((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", "none").attr("stroke", "#9aa3ad").attr("stroke-width", 1.6);
+    svg.selectAll(".pt").data(pts).join("circle").attr("cx", X).attr("cy", (p) => y(p.v)).attr("r", 3.5).attr("fill", "#0c0f13").attr("stroke", "#c9d1db").attr("stroke-width", 1.5)
+      .on("mousemove", (ev, p) => show(el, tip, ev, [dLab(p.day), usd(p.v)])).on("mouseleave", () => hide(tip));
+  });
+  dash.draw("cum", (el) => {
+    const T = trades(); if (!T) { el.replaceChildren(); return; } if (!T.length) { empty(el); return; }
+    let s = 0; const pts = daily(T).map((d) => ({ day: d.day, v: Math.round((s += d.p) * 100) / 100 }));
+    const h = 280, mb = 30; const lo = Math.min(0, d3.min(pts, (p) => p.v)), hi = Math.max(0, d3.max(pts, (p) => p.v));
+    const y = d3.scaleLinear([lo, hi], [h - mb, 12]).nice(); const ml = marginFor(y.ticks(5).map(compact));
+    const { svg, w, tip } = frame(el, h); const days = pts.map((p) => p.day); const x = xDays(days, ml, w); const g = svg.append("g");
+    yAxis(g, y, w, ml, compact, 5); xAxis(g, x, days, h, mb);
+    g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(0)).attr("y2", y(0)).attr("stroke", "#59616c").attr("stroke-dasharray", "3 3");
+    const X = (p) => x(pDay(p.day)); const ln = pts.length === 1 ? [pts[0], pts[0]] : pts;
+    const iu = uid(), idd = uid(), cu = uid(), cd = uid(); grad(svg, iu, UP); grad(svg, idd, DN, true);
+    const defs = svg.append("defs");
+    defs.append("clipPath").attr("id", cu).append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", y(0));
+    defs.append("clipPath").attr("id", cd).append("rect").attr("x", 0).attr("y", y(0)).attr("width", w).attr("height", h);
+    const area = d3.area().x(X).y0(y(0)).y1((p) => y(p.v)).curve(d3.curveMonotoneX), line = d3.line().x(X).y((p) => y(p.v)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(ln).attr("d", area).attr("fill", `url(#${iu})`).attr("clip-path", `url(#${cu})`);
+    svg.append("path").datum(ln).attr("d", area).attr("fill", `url(#${idd})`).attr("clip-path", `url(#${cd})`);
+    svg.append("path").datum(ln).attr("d", line).attr("fill", "none").attr("stroke", UP).attr("stroke-width", 2).attr("clip-path", `url(#${cu})`);
+    svg.append("path").datum(ln).attr("d", line).attr("fill", "none").attr("stroke", DN).attr("stroke-width", 2).attr("clip-path", `url(#${cd})`);
+    svg.selectAll(".pt").data(pts).join("circle").attr("cx", X).attr("cy", (p) => y(p.v)).attr("r", 3.5).attr("fill", (p) => (p.v >= 0 ? UP : DN))
+      .on("mousemove", (ev, p) => show(el, tip, ev, [dLab(p.day), usd(p.v)])).on("mouseleave", () => hide(tip));
+  });
+  dash.draw("bars", (el) => {
+    const T = trades(); if (!T) { el.replaceChildren(); return; } if (!T.length) { empty(el); return; }
+    const D = daily(T); const h = 280, mb = 30; const m = Math.max(100, d3.max(D, (d) => Math.abs(d.p)));
+    const y = d3.scaleLinear([-m, m], [h - mb, 12]).nice(); const ml = marginFor(y.ticks(5).map(compact));
+    const { svg, w, tip } = frame(el, h); const x = d3.scaleBand(D.map((d) => d.day), [ml + 6, w - 8]).padding(0.35); const g = svg.append("g");
+    yAxis(g, y, w, ml, compact, 5); g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(0)).attr("y2", y(0)).attr("stroke", AX);
+    const step = Math.max(1, Math.ceil(D.length / 8));
+    g.selectAll(".xt").data(D.filter((d, i) => i % step === 0)).join("text").attr("x", (d) => x(d.day) + x.bandwidth() / 2).attr("y", h - mb + 18).attr("text-anchor", "middle").attr("fill", "#cfd5dc").attr("font-size", 11).text((d) => dLab(d.day));
+    const bw = Math.min(48, x.bandwidth());
+    svg.selectAll(".b").data(D).join("rect").attr("x", (d) => x(d.day) + (x.bandwidth() - bw) / 2).attr("width", bw).attr("y", (d) => y(Math.max(0, d.p))).attr("height", (d) => Math.max(1, Math.abs(y(d.p) - y(0)))).attr("rx", 3).attr("fill", (d) => (d.p >= 0 ? UP : DN))
+      .on("mousemove", (ev, d) => show(el, tip, ev, [dLab(d.day), usd(Math.round(d.p * 100) / 100), d.n + " trade(s)"])).on("mouseleave", () => hide(tip));
+  });
+  const BK = [[15, "Under 15 sec"], [45, "15-45 sec"], [60, "45 sec - 1 min"], [120, "1 min - 2 min"], [300, "2 min - 5 min"], [600, "5 min - 10 min"], [1800, "10 min - 30 min"], [3600, "30 min - 1 hour"], [7200, "1 hour - 2 hours"], [14400, "2 hours - 4 hours"], [Infinity, "4 hours and up"]];
+  dash.draw("hbar", (el) => {
+    const T = fills(); if (!T) { el.replaceChildren(); return; } if (!T.length) { empty(el); return; }
+    const win = el.dataset.mode === "win";
+    const D = BK.map(([lim, lab], i) => { const lo = i ? BK[i - 1][0] : 0; const rows = T.filter((t) => t["Duration (s)"] >= lo && t["Duration (s)"] < lim);
+      const wr = rows.length ? rows.filter((t) => t["Net P&L"] > 0).length / rows.length : null; return { lab, rows: rows.length, v: win ? wr : rows.length }; });
+    const h = 330, mb = 24; const { svg, w, tip } = frame(el, h); const ml = 112;
+    const y = d3.scaleBand(D.map((d) => d.lab), [8, h - mb]).padding(0.28); const x = d3.scaleLinear([0, win ? 1 : Math.max(1, d3.max(D, (d) => d.v || 0))], [ml, w - 34]); const g = svg.append("g");
+    const ticks = win ? [0, 0.25, 0.5, 0.75, 1] : x.ticks(Math.min(6, x.domain()[1])).filter(Number.isInteger);
+    g.selectAll(".gl").data(ticks).join("line").attr("x1", (t) => x(t)).attr("x2", (t) => x(t)).attr("y1", 8).attr("y2", h - mb).attr("stroke", GRID).attr("stroke-dasharray", "3 3");
+    g.selectAll(".xt").data(ticks).join("text").attr("x", (t) => x(t)).attr("y", h - 6).attr("text-anchor", "middle").attr("fill", MUT).attr("font-size", 10).text((t) => (win ? Math.round(t * 100) + "%" : t));
+    g.selectAll(".yl").data(D).join("text").attr("x", ml - 8).attr("y", (d) => y(d.lab) + y.bandwidth() / 2).attr("dy", "0.32em").attr("text-anchor", "end").attr("fill", "#e4e8ed").attr("font-size", 11).attr("font-weight", 700).text((d) => d.lab);
+    g.append("line").attr("x1", ml).attr("x2", ml).attr("y1", 8).attr("y2", h - mb).attr("stroke", AX);
+    const bars = D.filter((d) => d.v);
+    svg.selectAll(".b").data(bars).join("rect").attr("x", ml).attr("y", (d) => y(d.lab)).attr("height", y.bandwidth()).attr("width", (d) => Math.max(2, x(d.v) - ml)).attr("rx", 3).attr("fill", win ? UP : "#8f969f")
+      .on("mousemove", (ev, d) => show(el, tip, ev, [d.lab, win ? Math.round(d.v * 100) + "% gagnants (" + d.rows + " position(s))" : d.v + " trade(s)"])).on("mouseleave", () => hide(tip));
+    svg.selectAll(".bl").data(bars).join("text").attr("x", (d) => x(d.v) + 6).attr("y", (d) => y(d.lab) + y.bandwidth() / 2).attr("dy", "0.32em").attr("fill", "#cfd5dc").attr("font-size", 11).text((d) => (win ? Math.round(d.v * 100) + "%" : d.v));
+  });
+
+  /* ----- P&L calendar + trades table ----- */
+  const mk = (cls, txt) => { const d = document.createElement("div"); d.className = cls; if (txt !== undefined) d.textContent = txt; return d; };
+  dash.draw("calmonth", (el) => { const [y, m] = month(trades() || []).split("-").map(Number);
+    el.textContent = new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("fr-FR", { month: "long", year: "numeric", timeZone: "UTC" }); });
+  dash.draw("mpl", (el) => { el.classList.remove("up", "dn"); const d = dash.data("mois_calc"); if (d.status !== "ok") { el.textContent = "—"; return; }
+    const id = curId(), m = month(trades() || []); const r = d.data.find((x) => x["ID TopstepX"] === id && x.Mois === m);
+    if (!r) { el.textContent = "—"; return; } el.textContent = usd(r["P&L net"]); el.classList.add(r["P&L net"] >= 0 ? "up" : "dn"); });
+  dash.draw("cal", (el) => {
+    el.replaceChildren(); const T = trades(); if (!T) return;
+    const [Y, M] = month(T).split("-").map(Number);
+    const by = new Map(d3.rollups(T, (v) => ({ p: d3.sum(v, (t) => t.pnl), n: d3.sum(v, (t) => t.n) }), (t) => t.day));
+    const first = new Date(Date.UTC(Y, M - 1, 1)), last = new Date(Date.UTC(Y, M, 0)), cur = new Date(first);
+    cur.setUTCDate(1 - ((first.getUTCDay() + 6) % 7)); const today = new Date().toISOString().slice(0, 10); let wk = 1;
+    do { let wp = 0, wn = 0;
+      for (let i = 0; i < 7; i++) { const key = cur.toISOString().slice(0, 10), inM = cur.getUTCMonth() === M - 1, o = by.get(key);
+        const cell = mk("tsx-cell" + (inM ? "" : " out") + (o ? (o.p >= 0 ? " win" : " loss") : "") + (key === today ? " today" : ""));
+        cell.append(mk("dn0", String(cur.getUTCDate())));
+        if (o) { wp += o.p; wn += o.n; cell.append(mk("p " + (o.p >= 0 ? "up" : "dn"), usd(Math.round(o.p * 100) / 100)), mk("n", o.n + " trade" + (o.n > 1 ? "s" : ""))); }
+        el.append(cell); cur.setUTCDate(cur.getUTCDate() + 1); }
+      const w = mk("tsx-cell wk"); w.append(mk("dn0", "Sem. " + wk));
+      w.append(mk("p " + (wp > 0 ? "up" : wp < 0 ? "dn" : ""), usd(Math.round(wp * 100) / 100)), mk("n", wn + " trade" + (wn > 1 ? "s" : ""))); el.append(w); wk++;
+    } while (cur <= last);
+  });
+  const fdur = (s) => { s = Math.round(Number(s) || 0); const p = (n) => String(n).padStart(2, "0"); return p(Math.floor(s / 3600)) + ":" + p(Math.floor((s % 3600) / 60)) + ":" + p(s % 60); };
+  const fts = (v) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Paris", month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true }).formatToParts(new Date(v)).map((x) => [x.type, x.value]));
+    return `${p.month} ${p.day} ${p.year} @ ${p.hour}:${p.minute}:${p.second} ${String(p.dayPeriod || "").toLowerCase()}`; };
+  const m2 = (v) => "$" + Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const px2 = (v) => Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const page = (n) => { const rpp = Number(dash.params().rpp) || 100; const pages = Math.max(1, Math.ceil(n / rpp)); return { rpp, pg: Math.min(pages - 1, Math.max(0, Number(dash.params().page) || 0)) }; };
+  dash.draw("rows", (tb) => {
+    tb.replaceChildren(); const T = fills(); if (!T) return; const { rpp, pg } = page(T.length);
+    for (const t of [...T].sort((a, b) => String(b.Entry).localeCompare(String(a.Entry))).slice(pg * rpp, pg * rpp + rpp)) {
+      const tr = document.createElement("tr"); const cell = (txt, cls) => { const td = document.createElement("td"); td.textContent = txt; if (cls) td.className = cls; tr.append(td); };
+      cell(t.ID); cell(t.Contract); cell(String(t.Size)); cell(fts(t.Entry)); cell(fts(t.Exit)); cell(fdur(t["Duration (s)"])); cell(px2(t["Entry Price"])); cell(px2(t["Exit Price"]));
+      cell(m2(t["P&L"]), t["P&L"] > 0 ? "up" : t["P&L"] < 0 ? "dn" : ""); cell(m2(-t.Commissions), "dn"); cell(m2(-t.Fees), "dn"); cell(t.Direction); tb.append(tr); }
+  });
+  dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
+    el.textContent = T.length ? `${pg * rpp + 1}–${Math.min(T.length, (pg + 1) * rpp)} of ${T.length}` : "0 of 0"; });
+})();
 </script>
 </body>
 </html>
