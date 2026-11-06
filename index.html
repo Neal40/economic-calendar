@@ -661,7 +661,7 @@ table.tbl:has(#subT){min-width:900px}
 
   <div class="tsx-card"><div class="tsx-h">Trades</div>
     <div class="tsx-tw"><table class="tsx-t">
-      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>RR théo</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th><th style="text-align:center">Tags</th><th style="text-align:center">Images</th></tr></thead>
+      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>RR parfait</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th><th style="text-align:center">Tags</th><th style="text-align:center">Images</th></tr></thead>
       <tbody data-draw="rows"></tbody>
       <tfoot data-draw="tfoot"></tfoot>
     </table></div>
@@ -1497,7 +1497,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       document.getElementById("jroot").hidden = !has; document.getElementById("jEmpty").hidden = has;
       const last = has ? RAW.comptes.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() : null;
       document.getElementById("jSync").textContent = has ? `Stats TopstepX · ${RAW.comptes.length} comptes · ${(RAW.trades || []).length} trades` + (last ? ` · dernière synchro ${new Date(last).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "") : "Stats TopstepX par compte.";
-      dash.redraw(); checkTarget(); setTimeout(() => { window.reviewRender && reviewRender(); const a = document.activeElement; if (window.renderBills && !(a && a.closest && a.closest("#billT"))) renderBills(); }, 0);
+      dash.redraw(); checkTarget(); setTimeout(() => window.reviewAutoFill && reviewAutoFill(), 1500); setTimeout(() => { window.reviewRender && reviewRender(); const a = document.activeElement; if (window.renderBills && !(a && a.closest && a.closest("#billT"))) renderBills(); }, 0);
     },
   };
   /* ----- "All datas" : every account together (stats over all trades) ----- */
@@ -1959,15 +1959,19 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
 
   /* --- data loading --- */
+  /* « RR théorique » was renamed « RR Parfait » in Notion */
+  const normMacro = (m) => { if (m && m.schema && m.schema["RR théorique"] && !m.schema["RR Parfait"]) { m.schema["RR Parfait"] = m.schema["RR théorique"]; delete m.schema["RR théorique"];
+    (m.rows || []).forEach((r) => { if ("RR théorique" in r) { r["RR Parfait"] = r["RR théorique"]; delete r["RR théorique"]; } }); } return m; };
   async function loadCache() {
     for (const k of ["macro", "homework", "wtf", "journal", "synced"]) { const v = await kget(k); if (v !== undefined) state[k] = v; }
+    normMacro(state.macro);
   }
   async function sync() {
     if (!D) return;
     const st = $("rvStatus"), btns = [$("rvSync"), $("rvSync2")].filter(Boolean); btns.forEach((b) => { b.disabled = true; b.textContent = "⟳ Synchronisation…"; }); st.textContent = "";
     const step = async (k, fn) => { const r = await fn(); if (!r.ok) throw r.reason; state[k] = r.data; await kset(k, r.data); };
     try {
-      await step("macro", () => D.notionDb(ID.macro)); render();
+      await step("macro", () => D.notionDb(ID.macro)); normMacro(state.macro); render(); if (API.autoFill) setTimeout(API.autoFill, 500);
       await step("journal", () => D.notionBlocks(ID.journal));
       await step("homework", () => D.notionDb(ID.homework));
       await step("wtf", () => D.notionBlocks(ID.wtf));
@@ -1983,7 +1987,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const WIN = /^(TP|Pas pris \(TP\))$/, LOSS = /^(SL|Pas pris \(SL\))$/;
   const outcome = (r) => { const s = r.Status || []; if (s.some((x) => WIN.test(x))) return 1; if (s.some((x) => LOSS.test(x))) return -1; return 0; };
   /* --- account type (Review / Paper / Funded / Challenge) --- */
-  const TYPES = ["Review", "Paper", "Funded", "Challenge"];
+  const TYPES = ["Challenge", "Funded", "Paper", "Review"];
   const TYPE_C = { Review: "purple", Paper: "gray", Funded: "green", Challenge: "blue" };
   function typeOf(r) {
     if (r.Type) return r.Type;
@@ -2047,8 +2051,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const ov2 = document.querySelector(".rv-ov.show"); if (ov2) ov2.classList.remove("show");
     const tb = document.querySelector('.jtab[data-jt="tsx"]'); if (tb) tb.click(); location.hash = "#journal"; setTimeout(() => window.jdash && jdash.setParams({ acct: a.dataset.acc, mois: null, page: 0 }), 50); });
   /* same order as the Notion page */
-  const MACRO_ORDER = ["Date", "Actif", "RR fait", "RR théorique", "PnL", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
-  const COLS = ["Name", "Date", "Actif", "RR fait", "RR théorique", "PnL", "TopstepX", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
+  const MACRO_ORDER = ["Date", "Actif", "RR fait", "RR Parfait", "PnL", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
+  const COLS = ["Name", "Date", "Actif", "RR fait", "RR Parfait", "PnL", "TopstepX", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
   const cellOf = (r, c, schema) => {
     if (c === "Type") { const t = typeOf(r); return t ? `<span class="nchip" style="background:${NC()[typeColor(t)] || "#373737"}${r.Type ? "" : ";opacity:.7"}" title="${r.Type ? "" : "Déduit automatiquement (pas encore renseigné dans Notion)"}">${esc(t)}${r.Type ? "" : " ·auto"}</span>` : '<span class="rv-mut">—</span>'; }
     if (c === "TopstepX") { const h = tsxMatch(r); if (!h) return '<span class="rv-mut">—</span>';
@@ -2067,7 +2071,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* --- rendering --- */
   function render() { renderWTF(); renderJournal(); }
   window.reviewRender = render;
-  const API = window.reviewAPI = { ID, state, kset, typeOf, curPage: null, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
+  const API = window.reviewAPI = { ID, state, kset, typeOf, tsxMatch: (r) => tsxMatch(r), tsxAccounts: (h) => tsxAccounts(h), curPage: null, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
   function renderWTF() {
     const body = $("rvBody"); if (!body) return;
     const stamp = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
@@ -2104,7 +2108,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}${API.canEdit ? '<button class="rv-new" data-new="macro" style="margin-left:auto">＋ Nouveau</button>' : ""}</div>
       <div class="rv-types">${(() => { const base = state.macro.rows.filter((r) => FILTERS.every((f) => { const want = state.filt[f]; if (!want || !want.length) return true; const v = Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []; return want.some((w) => v.includes(w)); }));
         const cnt = (t) => base.filter((r) => (t === "none" ? !typeOf(r) : typeOf(r) === t)).length, nn = cnt("none");
-        return `<button class="rv-ty${!state.type ? " on" : ""}" data-ty="">Tous <small>${base.length}</small></button>` + TYPES.map((t) => `<button class="rv-ty${state.type === t ? " on" : ""}" data-ty="${t}"><i style="background:${DOT[typeColor(t)]}"></i>${t === "Review" ? "Reviews" : t === "Paper" ? "Trades paper" : t === "Funded" ? "Fundeds" : "Challenges"} <small>${cnt(t)}</small></button>`).join("") + (nn ? `<button class="rv-ty${state.type === "none" ? " on" : ""}" data-ty="none">Non classés <small>${nn}</small></button>` : ""); })()}</div>
+        return `<button class="rv-ty${!state.type ? " on" : ""}" data-ty="">Tous <small>${base.length}</small></button>` + TYPES.map((t) => `<button class="rv-ty${state.type === t ? " on" : ""}" data-ty="${t}"><i style="background:${DOT[typeColor(t)]}"></i>${t} <small>${cnt(t)}</small></button>`).join("") + (nn ? `<button class="rv-ty${state.type === "none" ? " on" : ""}" data-ty="none">Non classés <small>${nn}</small></button>` : ""); })()}</div>
       <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
         <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
       ${content}${note ? `<div class="rv-note" style="margin-top:18px">${note}</div>` : ""}</div>`;
@@ -2176,7 +2180,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const T = rows.filter((r) => (r.Status || []).some((x) => TAKEN.includes(x))).map((r) => {
       const hasTime = !!r["Entrée"] && String(r["Entrée"]).length > 10;
       const t0 = new Date(r["Entrée"] || r.Date).getTime(), t1 = r.Sortie && String(r.Sortie).length > 10 ? new Date(r.Sortie).getTime() : t0;
-      const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : null, th = typeof r["RR théorique"] === "number" ? r["RR théorique"] : null, st = r.Status || [];
+      const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : null, th = typeof r["RR Parfait"] === "number" ? r["RR Parfait"] : null, st = r.Status || [];
       const loss = st.includes("SL") || (rr !== null && rr < 0) || (typeof r.PnL === "number" && r.PnL < 0);
       const win = !loss && (st.includes("TP") || (rr !== null && rr > 0));
       const h = tsxMatch(r), size = h ? h.reduce((a, t) => a + (Number(t.Size) || 0), 0) : null;
@@ -2226,7 +2230,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     return `<div class="panel bz-panel"><div class="ptitle">Détection des biais psychologiques</div>
       <div class="bz-top"><div><b class="bz-score" style="color:${sc}">${score}</b><span class="rv-mut"> /100 · Score d'hygiène</span></div><span class="bz-n">${B.N} trades analysés</span></div>
       <div class="bz-grid">${BIAS.map(tile).join("")}${good}</div>
-      ${sel ? `<div class="bz-list"><div class="ptitle" style="margin-top:14px">${esc(sb.t)} · ${sel.length} trade(s) <button class="rv-f" data-bias="${sb.k}" style="margin-left:8px">✕ Fermer</button></div>${dbTable({ schema: state.macro.schema, rows: sel.map((x) => x.r) }, ["Name", "Type", "Date", "Entrée", "Status", "RR théorique", "RR fait", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"], "macro")}</div>` : compact ? "" : `<p class="rv-mut" style="margin:12px 0 0;font-size:12.5px">Clique sur un biais pour voir les trades concernés. Survole-le pour la règle de détection.</p>`}
+      ${sel ? `<div class="bz-list"><div class="ptitle" style="margin-top:14px">${esc(sb.t)} · ${sel.length} trade(s) <button class="rv-f" data-bias="${sb.k}" style="margin-left:8px">✕ Fermer</button></div>${dbTable({ schema: state.macro.schema, rows: sel.map((x) => x.r) }, ["Name", "Type", "Date", "Entrée", "Status", "RR Parfait", "RR fait", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"], "macro")}</div>` : compact ? "" : `<p class="rv-mut" style="margin:12px 0 0;font-size:12.5px">Clique sur un biais pour voir les trades concernés. Survole-le pour la règle de détection.</p>`}
     </div>`;
   }
 
@@ -2380,7 +2384,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (let i = 0; i < t.length; i++) { const ch = t[i]; if (q) { if (ch === '"') { if (t[i + 1] === '"') { c += '"'; i++; } else q = false; } else c += ch; }
       else if (ch === '"') q = true; else if (ch === ",") { r.push(c); c = ""; } else if (ch === "\n" || ch === "\r") { if (ch === "\r" && t[i + 1] === "\n") i++; r.push(c); rows.push(r); r = []; c = ""; } else c += ch; }
     if (c || r.length) { r.push(c); rows.push(r); } return rows; }
-  const MULTI = ["Time", "PD Array M1", "Prise de liquidité", "Status", "Raison hors plan"], NUMS = ["RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL"];
+  const MULTI = ["Time", "PD Array M1", "Prise de liquidité", "Status", "Raison hors plan"], NUMS = ["RR Parfait", "RR fait", "MAE (R)", "MFE (R)", "PnL"];
   async function importCSV(file) {
     const rows = parseCSV(await file.text()); const h = rows.shift().map((x) => x.trim());
     const schema = {}; h.forEach((k) => (schema[k] = { type: MULTI.includes(k) ? "multi_select" : NUMS.includes(k) ? "number" : ["Actif", "Sens", "Règles respectées"].includes(k) ? "select" : "rich_text" }));
@@ -2432,7 +2436,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const NC = () => window.NOTION_COLORS || {};
   const TPL_HW = { "W": "40cd85a6400980c497bfd264fbb46ef8", "D": "40cd85a6400980b4b3d4d3d43d7689cb", "H4": "40cd85a6400980cf8da8c51fc8d67596", "H1": "40cd85a6400980e7a16eea898cfa0546", "m15": "40cd85a6400980678be5c00ef74574f0", "Premarket": "40cd85a6400980a5938dd12390138901", "First Hour of Trading": "40cd85a6400980aba981e9a45a37a438", "NWOG & 1st": "40cd85a6400980b391a6d585bbff0dc8", "RTH ORG": "40cd85a6400980e2aebbe3c295fed743", "STDV": "40cd85a6400980dda411fbf55ccaeb29", "Prediction": "40cd85a64009808eb688d83ef07e95ec" };
   const TPL_MACRO = "40cd85a64009809e8404ca096ae69d4a";
-  const MACRO_FIELDS = ["Name", "Type", "Date", "Entrée", "Sortie", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "PnL", "MAE (R)", "MFE (R)", "Règles respectées", "Raison hors plan", "Commentaire"];
+  const MACRO_FIELDS = ["Name", "Date", "Actif", "RR fait", "RR Parfait", "PnL", "Prise de liquidité", "PD Array M1", "Time", "Sens", "Status", "Raison hors plan", "Règles respectées", "Entrée", "MAE (R)", "MFE (R)", "Sortie", "Commentaire", "Type"];
   const HW_FIELDS = ["Name", "Date", "Tags"];
   const DB = { macro: R.ID.macro, hw: R.ID.homework };
   const dbOf = (kind) => (kind === "hw" ? R.state.homework : R.state.macro);
@@ -2618,7 +2622,36 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const res = await D.notionDeleteBlock(b.dataset.del); if (!res.ok) return msg(why(res), true);
     const el = b.closest("[data-bid]"); el && el.remove(); msg("Bloc supprimé de Notion ✓"); pageCache(); }, true);
 
-  R.canEdit = true; R.render();
+  /* --- after a TopstepX / Notion sync : fill Entrée, Sortie, MAE (R), MFE (R) of taken setups from the linked TopstepX trades --- */
+  const TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"], afDone = new Set(); let afRun = false;
+  const empty = (v) => v === null || v === undefined || v === "";
+  R.autoFill = async () => {
+    if (afRun || !D.notionUpdate || !R.state.macro || !window.jdash || jdash.data("fills_calc").status !== "ok") return; afRun = true; let n = 0;
+    try {
+      for (const r of R.state.macro.rows) {
+        if (afDone.has(r._id) || !(r.Status || []).some((x) => TAKEN.includes(x)) || !["Entrée", "Sortie", "MAE (R)", "MFE (R)"].some((f) => empty(r[f]))) continue;
+        const h = R.tsxMatch(r); if (!h) continue; afDone.add(r._id);
+        const m = R.tsxAccounts(h)[0]; const T = h.filter((t) => String(t["ID TopstepX"]) === m.id).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
+        const sz = T.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1, ep = T.reduce((a, t) => a + t["Entry Price"] * (Number(t.Size) || 0), 0) / sz, xp = T.reduce((a, t) => a + t["Exit Price"] * (Number(t.Size) || 0), 0) / sz;
+        const entry = T[0].Entry, exit = T.map((t) => t.Exit).sort().pop(), long = T[0].Direction === "Long";
+        const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10) props["Entrée"] = entry; if (empty(r.Sortie) || String(r.Sortie).length <= 10) props.Sortie = exit;
+        const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : null;
+        if ((empty(r["MAE (R)"]) || empty(r["MFE (R)"])) && rr && Math.abs(rr) >= 0.2 && D.tsxBars) {
+          const Rpts = Math.abs(xp - ep) / Math.abs(rr), sym = "/" + String(T[0].Symbol || "MNQ").replace(/^\//, "");
+          const b = await D.tsxBars(sym, Math.floor(Date.parse(entry) / 60000) * 60, Math.floor(Date.parse(exit) / 1000));
+          if (b && b.ok && b.data.length && Rpts > 0) { const hi = Math.max(...b.data.map((x) => x.h)), lo = Math.min(...b.data.map((x) => x.l));
+            const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
+            if (empty(r["MAE (R)"])) props["MAE (R)"] = rd(adv); if (empty(r["MFE (R)"])) props["MFE (R)"] = rd(fav); }
+        }
+        if (!Object.keys(props).length) continue;
+        const res = await D.notionUpdate(DB.macro, r._id, props);
+        if (res.ok) { Object.assign(r, props); n++; } else if (res.reason === "write" || res.reason === "token") { msg(why(res), true); break; }
+      }
+      if (n) { msg(`${n} setup(s) complété(s) depuis TopstepX : Entrée, Sortie, MAE, MFE ✓`); R.render(); refreshSoon("macro"); }
+    } finally { afRun = false; }
+  };
+  window.reviewAutoFill = R.autoFill;
+  R.canEdit = true; R.render(); setTimeout(R.autoFill, 3000);
 })();
 </script>
 </body>

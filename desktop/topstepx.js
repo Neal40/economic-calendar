@@ -122,4 +122,13 @@ async function sync(token, fetchFn, known = []) {
   return { comptes, trades, syncedAt, keepIds };
 }
 
-module.exports = { sync, toRow, buildAccount, targetOf };
+/** 1-minute bars (chart API) for MAE / MFE. sym = "/MNQ", "/MES"… ; from/to in seconds. */
+async function bars(token, fetchFn, sym, from, to) {
+  const n = Math.min(5000, Math.ceil((to - from) / 60) + 5);
+  const u = "https://chartapi.topstepx.com/History?Symbol=" + encodeURIComponent(sym) + "&Resolution=1&Countback=" + n + "&From=" + from + "&To=" + to;
+  const r = await fetchFn(u, { headers: { Authorization: "Bearer " + token, Accept: "application/json" } });
+  if (r.status === 401 || r.status === 403) { const e = new Error("auth"); e.code = "AUTH"; throw e; }
+  if (!r.ok) throw new Error("History " + r.status);
+  const j = await r.json(); return (j.t || []).map((t, i) => ({ t, h: j.h[i], l: j.l[i] })).filter((b) => b.t >= from - 60 && b.t <= to);
+}
+module.exports = { bars, sync, toRow, buildAccount, targetOf };

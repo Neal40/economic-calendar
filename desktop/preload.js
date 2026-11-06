@@ -3,6 +3,7 @@ contextBridge.exposeInMainWorld("desktop", {
   journalGet: () => ipcRenderer.invoke("journal:get"),
   journalSync: (interactive) => ipcRenderer.invoke("journal:sync", interactive),
   journalAddIds: (ids) => ipcRenderer.invoke("journal:addIds", ids),
+  tsxBars: (sym, from, to) => ipcRenderer.invoke("tsx:bars", sym, from, to),
   journalLogout: () => ipcRenderer.invoke("journal:logout"),
   notionStatus: () => ipcRenderer.invoke("notion:status"),
   notionSetToken: (t) => ipcRenderer.invoke("notion:setToken", t),
