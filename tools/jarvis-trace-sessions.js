@@ -446,14 +446,18 @@
           if (!fibs.some(f => Math.abs(f[0] - g.bot) <= tickTol && Math.abs(f[1] - g.top) <= tickTol)) ids.push(await fib(c, g.t, g.t + 3600, g.bot, g.top, '5. RTH Octant'));
           out.push(`${c.symbol()} ${g.label} ${g.bot}–${g.top} : ${st}`);
         }
-        const fd = await J.fvgData(sym, d);
-        const kinds = [['first', '9h30'], ['refl', 'Reflection'], ['sb', 'Silver Bullet']], res = {};
-        for (const [k, name] of kinds) if (fd[k]) res[k] = await place(fd[k], rectTpl[k], `1st p.FVG ${name} ${dm}`, fd[k].t1, fd[k].t3, 60, false); // boxes starting on the same minute first
-        for (const [k, name] of kinds) {
-          const z = fd[k];
-          if (!z) { out.push(`${c.symbol()} 1st p.FVG ${name} : aucun`); continue; }
-          const st = res[k] || await place(z, rectTpl[k], `1st p.FVG ${name} ${dm}`, z.t1, z.t3);
-          out.push(`${c.symbol()} 1st p.FVG ${name} ${dm} ${z.type} ${z.bot}–${z.top} (${nyHM(z.t1)}) : ${st}`);
+        // 1st p.FVG 9h30 / Reflection / Silver Bullet for the last n trading days
+        const days = []; for (let dd = d; days.length < (opts.n ?? 5); dd = addDays(dd, -1)) { const wd = new Date(dd + 'T12:00:00Z').getUTCDay(); if (wd >= 1 && wd <= 5) days.push(dd); }
+        for (const dd of days) {
+          const dmx = dd.slice(8, 10) + '/' + dd.slice(5, 7), fd = await J.fvgData(sym, dd);
+          const kinds = [['first', '9h30'], ['refl', 'Reflection'], ['sb', 'Silver Bullet']], res = {};
+          for (const [k, name] of kinds) if (fd[k]) res[k] = await place(fd[k], rectTpl[k], `1st p.FVG ${name} ${dmx}`, fd[k].t1, fd[k].t3, 60, false); // boxes starting on the same minute first
+          for (const [k, name] of kinds) {
+            const z = fd[k];
+            if (!z) { out.push(`${c.symbol()} 1st p.FVG ${name} ${dmx} : aucun`); continue; }
+            const st = res[k] || await place(z, rectTpl[k], `1st p.FVG ${name} ${dmx}`, z.t1, z.t3);
+            out.push(`${c.symbol()} 1st p.FVG ${name} ${dmx} ${z.type} ${z.bot}–${z.top} (${nyHM(z.t1)}) : ${st}`);
+          }
         }
         keep(i, 'nwog', ids);
       }
