@@ -91,6 +91,13 @@ ipcMain.handle("notion:blocks", (e, id) => wrap((t) => notion.pageBlocks(t, nfet
 ipcMain.handle("notion:create", (e, db, props, tpl) => wrap((t) => notion.createPage(t, nfetch, db, props, tpl)));
 ipcMain.handle("notion:update", (e, db, id, props) => wrap((t) => notion.updatePage(t, nfetch, db, id, props)));
 ipcMain.handle("notion:archive", (e, id) => wrap((t) => notion.archivePage(t, nfetch, id)));
+ipcMain.handle("notion:append", (e, parent, items) => wrap((t) => notion.appendBlocks(t, nfetch, parent, items)));
+ipcMain.handle("notion:delblock", (e, id) => wrap((t) => notion.deleteBlock(t, nfetch, id)));
+
+/* ---------- app data (abonnements + factures) : app-data.json ---------- */
+const STORE = () => path.join(app.getPath("userData"), "app-data.json");
+ipcMain.handle("store:get", () => { let data = null; try { data = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch (e) {} return { data, path: STORE() }; });
+ipcMain.handle("store:set", (e, d) => { try { const tmp = STORE() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify({ ...d, savedAt: new Date().toISOString() }, null, 1)); fs.renameSync(tmp, STORE()); return true; } catch (err) { return false; } });
 
 /* ---------- main window ---------- */
 function createWindow() {

@@ -145,6 +145,35 @@ async function updatePage(token, fetchFn, dbId, pageId, props) {
 }
 async function archivePage(token, fetchFn, pageId) { const { call } = client(token, fetchFn); await call(`/pages/${pageId}`, "PATCH", { archived: true }); return { id: pageId }; }
 
+
+/* ---------- page content: add text / pasted images, delete blocks ---------- */
+async function uploadImage(token, fetchFn, dataUrl, name) {
+  const m = /^data:([^;,]+);base64,([\s\S]*)$/.exec(String(dataUrl || "")); if (!m) throw new Error("image invalide");
+  const type = m[1], buf = Buffer.from(m[2], "base64");
+  const ext = (type.split("/")[1] || "png").replace("jpeg", "jpg").replace(/[^a-z0-9]/gi, "");
+  const filename = (name && /\.[a-z0-9]+$/i.test(name) ? name : "capture-" + Date.now() + "." + ext).replace(/["\r\n]/g, "");
+  const { call } = client(token, fetchFn);
+  const fu = await call("/file_uploads", "POST", { mode: "single_part", filename, content_type: type });
+  const B = "----econcal" + Date.now().toString(16);
+  const body = Buffer.concat([Buffer.from(`--${B}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: ${type}\r\n\r\n`), buf, Buffer.from(`\r\n--${B}--\r\n`)]);
+  const r = await fetchFn(`${API}/file_uploads/${fu.id}/send`, { method: "POST", headers: { Authorization: "Bearer " + token, "Notion-Version": VERSION, "Content-Type": `multipart/form-data; boundary=${B}` }, body });
+  if (!r.ok) { const j = await r.json().catch(() => ({})); const e = new Error(j.message || "upload " + r.status); e.status = r.status; throw e; }
+  return fu.id;
+}
+/** items: [{type:"text", text}] or [{type:"image", data: dataURL, name}] → appended as children of parentId (a page or a toggle). */
+async function appendBlocks(token, fetchFn, parentId, items) {
+  const { call } = client(token, fetchFn);
+  const children = [];
+  for (const it of items || []) {
+    if (it.type === "image") { const id = await uploadImage(token, fetchFn, it.data, it.name); children.push({ object: "block", type: "image", image: { type: "file_upload", file_upload: { id } } }); }
+    else for (const line of String(it.text || "").split(/\n/)) children.push({ object: "block", type: "paragraph", paragraph: { rich_text: line ? [{ type: "text", text: { content: line.slice(0, 2000) } }] : [] } });
+  }
+  if (!children.length) return { ids: [] };
+  const r = await call(`/blocks/${parentId}/children`, "PATCH", { children });
+  return { ids: (r.results || []).slice(-children.length).map((b) => b.id) };
+}
+async function deleteBlock(token, fetchFn, id) { const { call } = client(token, fetchFn); await call(`/blocks/${id}`, "DELETE"); return { id }; }
+
 async function check(token, fetchFn) { const { call } = client(token, fetchFn); const me = await call("/users/me"); return { ok: true, bot: me.name || "integration" }; }
 
-module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage };
+module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage, appendBlocks, deleteBlock };

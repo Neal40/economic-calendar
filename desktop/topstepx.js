@@ -19,6 +19,9 @@ function acctName(a) {
   return `Topstep ${k}K …${last4}` + (a.nickname ? ` « ${a.nickname} »` : "");
 }
 
+/** Account type from the TopstepX account name (PRAC = practice, EXPRESS/XFA = funded, otherwise Trading Combine). */
+function acctType(a) { const n = String(a.accountName || ""); if (/PRAC/i.test(n)) return "Paper"; if (/EXPRESS|XFA|FUNDED|LIVE|\bEFA/i.test(n)) return "Funded"; return "Challenge"; }
+
 /** API trade → journal row (one per entry). positionSize is the closing side: negative = long position. */
 function toRow(t) {
   const entry = new Date(t.createdAt), exit = new Date(t.exitedAt);
@@ -53,7 +56,7 @@ function buildAccount(a, rows, syncedAt) {
   const avgDur = (arr) => (arr.length ? sum(arr, "Duration (s)") / arr.length : 0);
   const bestDay = byDay.size ? Math.max(...byDay.values()) : 0;
   return {
-    Nom: acctName(a), "ID TopstepX": String(a.accountId), Statut: a.status === 0 ? "Actif" : "Cramé",
+    Nom: acctName(a), "ID TopstepX": String(a.accountId), "Nom TopstepX": String(a.accountName || ""), Type: acctType(a), Statut: a.status === 0 ? "Actif" : "Cramé",
     "Solde de départ": a.startingBalance, "Solde TopstepX": r2(a.balance), "Plus haut solde": r2(a.highestBalance ?? a.balance),
     "Plancher MLL": r2(a.maximumLoss ?? 0), DLL: a.dailyLoss ?? null, "Dernière synchro": syncedAt,
     "Total P&L": total, "Trade Win %": n ? r6(wins.length / n) : 0,

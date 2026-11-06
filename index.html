@@ -27,8 +27,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .dot{width:8px;height:8px;border-radius:2px;display:inline-block;flex:none}
 .dot.high{background:var(--red)} .dot.med{background:var(--orange)} .dot.low{background:#f0cf3a}
 
-.wrap{overflow-x:auto;padding:22px 12px 40px;background:#0a0a0c}
-.poster{width:1200px;margin:0 auto;background:var(--bg);padding:36px 42px 26px;border-radius:4px;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.wrap{overflow-x:auto;padding:22px 26px 40px;background:#0a0a0c}
+.poster{width:auto;min-width:1100px;margin:0;background:var(--bg);padding:36px 42px 26px;border-radius:4px;box-shadow:0 10px 40px rgba(0,0,0,.15)}
 
 /* header */
 .head{display:flex;justify-content:space-between;align-items:flex-start}
@@ -88,7 +88,7 @@ h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing
 .modal h2{margin:0 0 14px;font-size:22px}
 .modal label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px;font-family:'Space Mono',monospace;letter-spacing:.06em}
 .modal input,.modal select,.modal textarea{width:100%;border:1px solid #c5c8d0;border-radius:8px;padding:7px 9px;background:#fff;font-size:14px}
-.row{display:grid;grid-template-columns:96px 1fr 104px 118px 32px;gap:6px;margin-bottom:6px;align-items:center}
+.row{display:grid;grid-template-columns:96px 104px 1fr 118px 32px;gap:6px;margin-bottom:6px;align-items:center}
 .row button{border:none;background:#e0e2e8;border-radius:8px;height:34px;cursor:pointer}
 .row button:hover{background:#f2c9ca}
 .two{display:grid;grid-template-columns:170px 1fr;gap:10px}
@@ -298,13 +298,50 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
 .rv-props{display:grid;grid-template-columns:190px 1fr;gap:8px 12px;margin-bottom:18px;font-size:14px}.rv-props .pl{color:#9b9b9b}
 .jempty{background:#0c0f13;border:1px dashed #2a3038;border-radius:12px;padding:40px 24px;text-align:center;color:#8d95a0}
 .jempty b{display:block;color:#eef1f5;font-size:17px;margin-bottom:6px}
+
+.tsx-top{grid-template-columns:repeat(6,minmax(0,1fr))}
+.tsx-top .tsx-card{padding:14px 14px}
+.tsx-top .tsx-kpi{gap:8px}
+.tsx-top .tsx-big{font-size:clamp(20px,1.55vw,30px)}
+.tsx-top .tsx-lab{font-size:13px}
+.tsx-top .tsx-viz{zoom:.78}
+.tsx-top .tsx-avgv{font-size:clamp(13px,1.05vw,20px);gap:8px}
+@media (max-width:1500px){.tsx-top{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:800px){.tsx-top{grid-template-columns:1fr}}
+.tsx-row2 .tsx-hexa{grid-column:auto}
+.tsx-row2{display:grid;grid-template-columns:minmax(380px,1fr) minmax(0,2fr);gap:14px;margin-bottom:14px}
+@media (max-width:1100px){.tsx-row2{grid-template-columns:1fr}}
+.hx-tg{display:flex;gap:4px;background:#0b0e12;border:1px solid var(--line);border-radius:8px;padding:3px}
+.hx-tg button{background:none;border:none;color:#8d95a0;font:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:6px;cursor:pointer}
+.hx-tg button.on[data-hx="me"]{background:#2f54eb;color:#fff}
+.hx-tg button.on[data-hx="avg"]{background:#e2b33d;color:#17130a}
+.tsx-t tfoot td{padding:11px 10px;text-align:right;font-weight:800;border-top:2px solid #2a3038;background:#0f1318;white-space:nowrap}
+.tsx-t tfoot td:first-child{text-align:left;color:#cfd5dc}
+.bill-eur{color:#cfd5dc;font-weight:700;white-space:nowrap;text-align:right}
+.bill-eur small{display:block;color:#6f727d;font-weight:400;font-size:11px}
+.rv-ci[draggable="true"]{cursor:grab}
+.rv-ci.dragging{opacity:.45}
+.rv-cd.drop{outline:2px dashed #4a9be8;outline-offset:-3px;background:rgba(74,155,232,.08)}
+.rv-ndl.drop{outline:2px dashed #4a9be8}
+.rv-addin{min-height:30px;margin:6px 0 2px;padding:6px 10px;border:1px dashed #33343c;border-radius:6px;color:#e3e4ea;outline:none;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.rv-addin:empty::before{content:attr(data-ph);color:#6f727d}
+.rv-addin:focus{border-color:#4a9be8;background:#121318}
+.rv-addin.busy{opacity:.6;pointer-events:none}
+[data-bid]{position:relative}
+.rv-bdel{position:absolute;right:0;top:0;display:none;background:#2a2b31;border:none;color:#ff8a8a;border-radius:5px;font-size:11px;padding:2px 7px;cursor:pointer;z-index:2}
+[data-bid]:hover>.rv-bdel{display:block}
+.rv-types{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.rv-ty{background:#141519;border:1px solid #26272e;color:#c9cbd2;border-radius:16px;padding:5px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.rv-ty i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.rv-ty small{color:#8b8d98;font-weight:400}
+.rv-ty.on{background:#1f2330;border-color:#4a6cf7;color:#fff}
+.dt2{display:flex;gap:6px}.dt2 input{flex:1;min-width:0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
 <body>
 <div class="app" id="app">
 <aside class="side">
-  <div class="applogo"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div>
   <div class="who" data-go="profil" title="Profil"><div class="av" id="sAv"></div><div><b id="sName"></b><small id="sHandle"></small></div></div>
   <div class="mlabel">Menu principal</div>
   <div class="grp" id="gLab"><button class="gh" data-grp="gLab"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.5 19A2 2 0 0 0 6.3 22h11.4a2 2 0 0 0 1.8-3L14 9.5V2M8.5 2h7M7 16h10"/></svg><span>Laboratoire</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -387,7 +424,7 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Données</div>
-    <div class="hintd" style="margin:0 0 10px">Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Fais une sauvegarde pour les transférer.</div>
+    <div class="hintd" style="margin:0 0 10px">Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.</div><div class="hintd" id="storePath" style="margin:0 0 10px"></div>
     <button class="btn gray" id="dataBtn2">Sauvegarde / Import</button></div>
 </div></section>
 
@@ -399,12 +436,12 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
     <div class="row2"><button class="btn" id="subAdd">+ Ajouter un abonnement</button></div></div>
 </div></section>
 
-<section class="view" id="v-factures"><div class="page">
-  <h2>Factures</h2><p class="lead">Toutes tes dépenses : challenges, resets, activations, abonnements, data.</p>
+<section class="view" id="v-factures"><div class="page" style="max-width:1500px">
+  <h2>Factures</h2><p class="lead">Toutes tes dépenses : challenges, resets, activations. Les montants en $ sont convertis en € au taux EUR/USD du jour d'achat.</p>
   <div class="row2" style="margin:0 0 14px"><select id="billYear" class="btn gray" style="padding:7px 10px"></select></div>
   <div class="kpis" id="billK"></div>
   <div class="panel"><div class="ptitle">Factures</div>
-    <table class="tbl"><thead><tr><th style="width:140px">Date</th><th>Fournisseur</th><th>Description</th><th>Catégorie</th><th class="num">Montant</th><th>Devise</th><th></th></tr></thead><tbody id="billT"></tbody></table>
+    <table class="tbl"><thead><tr><th style="width:140px">Date d'achat</th><th>Identifiant</th><th>Fournisseur</th><th>Description</th><th>Catégorie</th><th class="num">Montant</th><th>Devise</th><th class="num">En €</th><th></th></tr></thead><tbody id="billT"></tbody></table>
     <div class="row2"><button class="btn" id="billAdd">+ Ajouter une facture</button></div></div>
 </div></section>
 <section class="view" id="v-journal"><div class="page" style="max-width:none;padding:26px 28px 60px">
@@ -438,7 +475,7 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
   </div>
   <div class="tsx-name" data-draw="k" data-source="comptes" data-field="Nom">—</div>
 
-  <div class="tsx-g">
+  <div class="tsx-g tsx-top">
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total P&amp;L</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total P&amp;L" data-fmt="usd" data-sign="1">—</div></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Trade Win %</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Trade Win %" data-fmt="pct">—</div></div>
       <div class="tsx-viz" style="width:150px;height:80px"><div data-draw="gauge" data-field="Trade Win %" data-counts="1"></div></div></div>
@@ -449,10 +486,11 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Profit Factor</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Profit Factor" data-fmt="num">—</div></div>
       <div class="tsx-viz" style="width:190px;height:86px"><div style="position:absolute;left:52px;top:0" data-draw="ring" data-a="Gains totaux" data-b="Pertes totales"></div><span class="tsx-ring-l up" style="left:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Gains totaux" data-fmt="usd">—</span><span class="tsx-ring-l dn" style="right:-4px;top:34px" data-draw="k" data-source="compte_calc" data-field="Pertes totales" data-fmt="usd">—</span></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Best Day % of Total Profit</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Best Day % of Total Profit" data-fmt="pct">—</div></div></div>
-    <div class="tsx-card tsx-hexa"><div class="tsx-h" style="justify-content:space-between"><span style="letter-spacing:.08em;text-transform:uppercase;font-size:13px;font-weight:700">Hexagone de performance</span><span style="font-size:12.5px"><b style="color:#4ccf6a">Ce compte</b> / <span style="color:#cfd5dc">Moyenne de tes comptes</span></span></div><div data-draw="hexa"></div></div>
   </div>
-
-  <div class="tsx-card" style="margin-bottom:14px"><div class="tsx-h">Daily Account Balance</div><div class="tsx-chart" data-draw="balance"></div></div>
+  <div class="tsx-row2">
+    <div class="tsx-card tsx-hexa"><div class="tsx-h" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="letter-spacing:.08em;text-transform:uppercase;font-size:13px;font-weight:700">Hexagone de performance</span><div class="hx-tg"><button data-hx="me" class="on">Ce compte</button><button data-hx="avg">Moyenne des comptes</button></div></div><div data-draw="hexa"></div></div>
+    <div class="tsx-card"><div class="tsx-h" data-draw="baltitle">Daily Account Balance</div><div class="tsx-chart" data-draw="balance"></div></div>
+  </div>
 
   <div class="tsx-g">
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Most Active Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le plus actif">—</div></div><div class="tsx-sub" data-draw="k" data-source="jours_calc" data-field="Détail">—</div></div>
@@ -497,6 +535,7 @@ body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
     <div class="tsx-tw"><table class="tsx-t">
       <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>RR théo</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th><th style="text-align:center">Tags</th><th style="text-align:center">Images</th></tr></thead>
       <tbody data-draw="rows"></tbody>
+      <tfoot data-draw="tfoot"></tfoot>
     </table></div>
     <div class="tsx-pager"><span>Rows per page:</span><select class="tsx-rpp" aria-label="Rows per page"><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select><span data-draw="range">—</span><button class="tsx-pg" data-step="-1" aria-label="Page précédente">‹</button><button class="tsx-pg" data-step="1" aria-label="Page suivante">›</button></div>
   </div>
@@ -636,7 +675,8 @@ const tOrd=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all da
 for(const k in S.events) S.events[k].sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||tOrd(a.t)-tOrd(b.t));
 S.seedV=4; SEED.seedV=4;
 if(S.brand&&S.brand.name===undefined){S.brand.name="Neal";} if(S.brand&&!S.brand.notion) S.brand.notion=SEED.brand.notion; S.subs=S.subs||[]; S.bills=S.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const DS=window.desktop;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(DS&&DS.storeSet) DS.storeSet({subs:S.subs||[],bills:S.bills||[]});};
 
 /* ---------- date helpers ---------- */
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -791,29 +831,41 @@ $("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1)
 document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f];render()});
 
 let editDay=null, editWeek=null;
+/* list of every news known in the calendar, by impact (or earnings) */
+function newsNames(imp,earn){ const set=new Set(); for(const k in S.events) for(const e of S.events[k]||[]){ const isE=e.k&&e.k!=="ev"; if(isE!==earn) continue; if(!earn&&(e.i||"med")!==imp) continue; if(e.n) set.add(e.n); } return [...set].sort((a,b)=>a.localeCompare(b,"en")); }
+function newsOpts(imp,earn,v){ const L=newsNames(imp,earn); if(v&&!L.includes(v)) L.unshift(v);
+  return `<option value="">— Choisir ${earn?"un earnings":"une news "+(imp==="high"?"High":imp==="low"?"Low":"Medium")} —</option>`+L.map(n=>`<option${n===v?" selected":""}>${esc(n)}</option>`).join("")+`<option value="__custom">✎ Autre (saisir)…</option>`; }
 function rowHTML(e={}){
+  const imp=e.i||"med", earn=!!(e.k&&e.k!=="ev");
   return `<div class="row">
    <input class="rt" value="${esc(e.t||"")}" placeholder="8:30 AM">
-   <input class="rn" value="${esc(e.n||"")}" placeholder="Événement">
-   <select class="ri"><option value="high"${e.i==="high"?" selected":""}>High</option><option value="med"${e.i==="med"||!e.i?" selected":""}>Medium</option><option value="low"${e.i==="low"?" selected":""}>Low</option></select>
+   <select class="ri" title="Impact"><option value="high"${imp==="high"?" selected":""}>● High</option><option value="med"${imp==="med"?" selected":""}>● Medium</option><option value="low"${imp==="low"?" selected":""}>● Low</option></select>
+   <select class="rn" title="News">${newsOpts(imp,earn,e.n||"")}</select>
    <select class="rk"><option value="ev"${!e.k||e.k==="ev"?" selected":""}>News</option><option value="after"${e.k==="after"?" selected":""}>☾ After close</option><option value="pre"${e.k==="pre"?" selected":""}>✳ Pre-market</option><option value="tbd"${e.k==="tbd"?" selected":""}>◌ Time TBD</option></select>
    <button title="Supprimer">✕</button></div>`;
 }
+const impCol=v=>v==="high"?"#e5484d":v==="low"?"#e6b422":"#f08c2a";
+function paintImp(r){ const s=r.querySelector(".ri"); s.style.color=impCol(s.value); s.style.fontWeight="700"; }
+$("rows").addEventListener("change",e=>{ const r=e.target.closest(".row"); if(!r) return;
+  if(e.target.classList.contains("ri")||e.target.classList.contains("rk")){ const n=r.querySelector(".rn"), v=n.tagName==="SELECT"?n.value:"";
+    if(n.tagName==="SELECT"){ const imp=r.querySelector(".ri").value, earn=r.querySelector(".rk").value!=="ev"; n.innerHTML=newsOpts(imp,earn,""); if([...n.options].some(o=>o.value===v)) n.value=v; } paintImp(r); }
+  if(e.target.classList.contains("rn")&&e.target.value==="__custom"){ const inp=document.createElement("input"); inp.className="rn"; inp.placeholder="Nom de l'événement"; e.target.replaceWith(inp); inp.focus(); }
+});
 $("rows").addEventListener("click",e=>{ if(e.target.tagName==="BUTTON") e.target.parentElement.remove(); });
-$("addRow").onclick=()=>$("rows").insertAdjacentHTML("beforeend",rowHTML());
+$("addRow").onclick=()=>{$("rows").insertAdjacentHTML("beforeend",rowHTML()); const r=$("rows").lastElementChild; paintImp(r);};
 $("grid").addEventListener("click",e=>{
   const w=e.target.closest(".wk");
   if(w){editWeek=w.dataset.w;const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
   const d=e.target.closest(".day[data-d]"); if(!d) return;
   editDay=d.dataset.d; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
   $("dTitle").textContent=`${DOW[dt.getDay()]} ${Dd} ${MONTHS[M-1]} ${Y}`;
-  $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join("");
+  $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join(""); $("rows").querySelectorAll(".row").forEach(paintImp);
   const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||"";
   open("ovDay");
 });
 $("dCancel").onclick=()=>close("ovDay");
 $("dSave").onclick=()=>{
-  const evs=[...$("rows").querySelectorAll(".row")].map(r=>({t:r.querySelector(".rt").value.trim(),n:r.querySelector(".rn").value.trim(),
+  const evs=[...$("rows").querySelectorAll(".row")].map(r=>({t:r.querySelector(".rt").value.trim(),n:(r.querySelector(".rn").value||"").replace("__custom","").trim(),
     i:r.querySelector(".ri").value,k:r.querySelector(".rk").value})).filter(e=>e.n);
   const order=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);return h*60+ +m[2]};
   evs.sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||order(a.t)-order(b.t));
@@ -903,7 +955,23 @@ $("subAdd").onclick=()=>{S.subs=S.subs||[];S.subs.push({on:true,name:"",cat:"Pro
   const r=$("subT").querySelectorAll("tr"); r[r.length-1].querySelector('[data-k="name"]').focus();};
 
 /* ---------- factures ---------- */
-const CATS_B=["Challenge","Reset","Activation","Abonnement","Data","Formation","Autre"];
+const CATS_B=["Challenge","Reset","Activation"];
+const optK=(arr,v)=>(v&&!arr.includes(v)?[v,...arr]:arr).map(a=>`<option${a===v?" selected":""}>${a}</option>`).join("");
+/* EUR/USD of the purchase day (frankfurter.app = ECB rates), cached */
+const FXK="econcal-fx"; let FX={}; try{FX=JSON.parse(localStorage.getItem(FXK))||{}}catch(e){}
+const fxPend=new Set();
+function fxRate(date){ const d=date&&date<isoToday?date:isoToday; if(FX[d]) return FX[d]; if(!fxPend.has(d)){fxPend.add(d); fetchFx(d);} return null; }
+async function fetchFx(d){
+  for(const u of [`https://api.frankfurter.app/${d}?from=USD&to=EUR`,`https://api.frankfurter.dev/v1/${d}?base=USD&symbols=EUR`]){
+    try{ const r=await fetch(u); if(!r.ok) continue; const j=await r.json(); const v=j&&j.rates&&j.rates.EUR; if(!v) continue;
+      FX[d]=v; try{localStorage.setItem(FXK,JSON.stringify(FX))}catch(e){}
+      const a=document.activeElement; if(a&&a.closest&&a.closest("#billT")) billsKpi(); else renderBills(); return; }catch(e){}
+  }
+}
+const eurOf=x=>{ const a=+x.amount||0; if((x.cur||"EUR")==="EUR") return a; const r=fxRate(x.date); return r?a*r:null; };
+const tsxAccts=()=>{ const d=window.jdash&&jdash.data("comptes"); return d&&d.status==="ok"?d.data.filter(c=>!c._all):[]; };
+function acctOpts(v){ const L=tsxAccts(); const has=L.some(c=>String(c["ID TopstepX"])===String(v));
+  return `<option value="">—</option>`+(v&&!has?`<option value="${esc(v)}" selected>${esc(v)}</option>`:"")+L.map(c=>{ const id=String(c["ID TopstepX"]); const lab=(c["Nom TopstepX"]||id)+" · "+c.Nom+(c.Statut!=="Actif"?" (cramé)":""); return `<option value="${esc(id)}"${id===String(v)?" selected":""}>${esc(lab)}</option>`; }).join(""); }
 function renderBills(keepYear){
   S.bills=S.bills||[];
   const years=[...new Set(S.bills.map(b=>(b.date||"").slice(0,4)).filter(Boolean))].sort().reverse();
@@ -914,26 +982,32 @@ function renderBills(keepYear){
   const yr=sel.value, idx=S.bills.map((b,i)=>i).filter(i=>yr==="all"||(S.bills[i].date||"").startsWith(yr)||!S.bills[i].date).sort((a,b)=>(S.bills[b].date||"9").localeCompare(S.bills[a].date||"9"));
   $("billT").innerHTML=idx.map(i=>{const x=S.bills[i];return `<tr data-i="${i}">
     <td><input data-k="date" type="date" value="${x.date||""}"></td>
+    <td><select data-k="acct" style="max-width:240px">${acctOpts(x.acct||"")}</select></td>
     <td><input data-k="vendor" value="${esc(x.vendor)}" placeholder="Topstep"></td>
     <td><input data-k="desc" value="${esc(x.desc)}" placeholder="Challenge 50K"></td>
-    <td><select data-k="cat">${opt(CATS_B,x.cat)}</select></td>
+    <td><select data-k="cat">${optK(CATS_B,x.cat)}</select></td>
     <td><input data-k="amount" type="number" step="0.01" class="num" value="${x.amount??""}"></td>
     <td><select data-k="cur">${opt(["EUR","USD"],x.cur)}</select></td>
-    <td class="x"><button title="Supprimer">✕</button></td></tr>`}).join("") || `<tr><td colspan="7" style="color:#6f727d;padding:14px 8px">Aucune facture pour cette période.</td></tr>`;
+    <td class="bill-eur" data-eur="${i}">${eurCell(x)}</td>
+    <td class="x"><button title="Supprimer">✕</button></td></tr>`}).join("") || `<tr><td colspan="9" style="color:#6f727d;padding:14px 8px">Aucune facture pour cette période.</td></tr>`;
   billsKpi(idx);
 }
+function eurCell(x){ if(x.amount==null||x.amount==="") return "—"; if((x.cur||"EUR")==="EUR") return money(+x.amount,"EUR");
+  const r=fxRate(x.date); return r?`${money(+x.amount*r,"EUR")}<small>1 $ = ${r.toFixed(4)} € (${(x.date&&x.date<isoToday?x.date:isoToday).split("-").reverse().join("/")})</small>`:'<span style="color:#6f727d">taux…</span>'; }
 let lastIdx=[];
 function billsKpi(idx){
   idx=idx||lastIdx; lastIdx=idx; const yr=$("billYear").value;
+  $("billT").querySelectorAll("[data-eur]").forEach(td=>{ const x=S.bills[+td.dataset.eur]; if(x) td.innerHTML=eurCell(x); });
   const list=idx.map(i=>S.bills[i]).filter(Boolean), sum=c=>list.filter(x=>(x.cur||"EUR")===c).reduce((a,x)=>a+(+x.amount||0),0);
+  const eur=L=>L.reduce((a,x)=>a+(eurOf(x)||0),0), miss=L=>L.some(x=>x.amount&&eurOf(x)===null);
   const byCat={}; list.forEach(x=>{const k=x.cat||"Autre"; byCat[k]=(byCat[k]||0)+1});
   const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
   const now=new Date(), mk=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`, mlist=S.bills.filter(x=>(x.date||"").startsWith(mk));
-  const msum=c=>mlist.filter(x=>(x.cur||"EUR")===c).reduce((a,x)=>a+(+x.amount||0),0);
-  $("billK").innerHTML=`<div class="kpi"><small>Total €</small><b class="neg">${money(sum("EUR"),"EUR")}</b><i>${yr==="all"?"toutes années":yr}</i></div>
-   <div class="kpi"><small>Total $</small><b class="neg">${money(sum("USD"),"USD")}</b><i>${yr==="all"?"toutes années":yr}</i></div>
-   <div class="kpi"><small>Ce mois-ci</small><b>${money(msum("EUR"),"EUR")}</b><i>+ ${money(msum("USD"),"USD")}</i></div>
-   <div class="kpi"><small>Factures</small><b>${list.length}</b><i>${top?`surtout : ${esc(top[0])} (${top[1]})`:""}</i></div>`;
+  const conv=list.filter(x=>(x.cur||"EUR")==="USD").reduce((a,x)=>a+(eurOf(x)||0),0);
+  $("billK").innerHTML=`<div class="kpi"><small>Total € (payé)</small><b class="neg">${money(eur(list),"EUR")}</b><i>${miss(list)?"conversion en cours… · ":""}dont ${money(conv,"EUR")} convertis depuis $</i></div>
+   <div class="kpi"><small>Total $</small><b class="neg">${money(sum("USD"),"USD")}</b><i>= ${money(conv,"EUR")} au taux du jour d'achat</i></div>
+   <div class="kpi"><small>Ce mois-ci</small><b>${money(eur(mlist),"EUR")}</b><i>dont ${money(mlist.filter(x=>(x.cur||"EUR")==="USD").reduce((a,x)=>a+(+x.amount||0),0),"USD")}</i></div>
+   <div class="kpi"><small>Factures</small><b>${list.length}</b><i>${top?`surtout : ${esc(top[0])} (${top[1]})`:""} · ${yr==="all"?"toutes années":yr}</i></div>`;
 }
 $("billYear").onchange=()=>renderBills();
 bindTable("billT","bills",k=>k?billsKpi():renderBills());
@@ -947,6 +1021,8 @@ $("jImport").onclick=()=>{try{const v=JSON.parse($("jsonBox").value);if(!v.event
 $("jReset").onclick=()=>{if($("jReset").dataset.c){S=JSON.parse(JSON.stringify(SEED));save();close("ovData");render();$("jReset").dataset.c="";$("jReset").textContent="Réinitialiser les données"}
   else{$("jReset").dataset.c="1";$("jReset").textContent="Confirmer ?"}};
 
+if(DS&&DS.storeGet) DS.storeGet().then(r=>{ if(!r) return; if(r.path) $("storePath").textContent="Fichier des abonnements & factures : "+r.path;
+  const d=r.data; if(d&&(Array.isArray(d.subs)||Array.isArray(d.bills))){ S.subs=d.subs||[]; S.bills=d.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} renderSubs(); renderBills(); } else save(); }).catch(()=>{});
 render(); shell(); go(location.hash.slice(1)||"calendrier");
 </script>
 <!--JSEED-->
@@ -1222,6 +1298,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const dash = window.jdash = {
     calc: (id, o) => { CALC[id] = o; },
     data: (id) => {
+      if (id === "comptes" && RAW.comptes && RAW.comptes.length) { if (!cache.__c) { let all = null; try { all = allRow(); } catch (e) { console.error(e); } cache.__c = { status: "ok", data: all ? [all, ...RAW.comptes] : RAW.comptes }; } return cache.__c; }
       if (id in RAW) return RAW[id] ? { status: "ok", data: RAW[id] } : { status: "empty", data: [] };
       if (cache[id]) return cache[id];
       const c = CALC[id]; if (!c) return { status: "error", data: [] };
@@ -1240,14 +1317,52 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       ONDATA.forEach((cb) => cb());
     },
     load: (comptes, trades) => {
-      if (comptes) RAW.comptes = comptes; if (trades) RAW.trades = trades; cache = {};
+      if (comptes) RAW.comptes = comptes.filter((c) => String(c["ID TopstepX"]) !== ALL); if (trades) RAW.trades = trades; cache = {};
       const has = !!(RAW.comptes && RAW.comptes.length);
       document.getElementById("jroot").hidden = !has; document.getElementById("jEmpty").hidden = has;
       const last = has ? RAW.comptes.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() : null;
       document.getElementById("jSync").textContent = has ? `Stats TopstepX · ${RAW.comptes.length} comptes · ${(RAW.trades || []).length} trades` + (last ? ` · dernière synchro ${new Date(last).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "") : "Stats TopstepX par compte.";
-      dash.redraw(); setTimeout(() => window.reviewRender && reviewRender(), 0);
+      dash.redraw(); setTimeout(() => { window.reviewRender && reviewRender(); const a = document.activeElement; if (window.renderBills && !(a && a.closest && a.closest("#billT"))) renderBills(); }, 0);
     },
   };
+  /* ----- "All datas" : every account together (stats over all trades) ----- */
+  const ALL = "ALL";
+  const WD = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const r2 = (v) => Math.round(v * 100) / 100, r6 = (v) => Math.round(v * 1e6) / 1e6;
+  const durTxt = (s) => { s = Math.round(s || 0); return `${Math.floor(s / 60)} min ${s % 60} sec`; };
+  function allRow() {
+    const C = RAW.comptes || [];
+    const rows = (RAW.trades || []).map((t) => ({ ...t, Day: String(t.Day).slice(0, 10), Size: Number(t.Size) || 0, "Duration (s)": Number(t["Duration (s)"]) || 0, "P&L": Number(t["P&L"]) || 0,
+      "Net P&L": r2((Number(t["P&L"]) || 0) - (Number(t.Fees) || 0) - (Number(t.Commissions) || 0)) })).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
+    const n = rows.length, sum = (a, k) => a.reduce((x, t) => x + (Number(t[k]) || 0), 0);
+    const wins = rows.filter((t) => t["Net P&L"] > 0), losses = rows.filter((t) => t["Net P&L"] <= 0);
+    const gains = sum(wins, "Net P&L"), lossSum = sum(losses, "Net P&L"), total = r2(sum(rows, "Net P&L"));
+    const byDay = new Map(); rows.forEach((t) => byDay.set(t.Day, (byDay.get(t.Day) || 0) + t["Net P&L"]));
+    const lastDay = [...byDay.keys()].sort().pop(), lastRows = rows.filter((t) => t.Day === lastDay);
+    const wd = new Map(); rows.forEach((t) => { const d = WD[new Date(t.Day + "T12:00:00Z").getUTCDay()]; const o = wd.get(d) || { days: new Set(), n: 0, pnl: 0 }; o.days.add(t.Day); o.n++; o.pnl += t["Net P&L"]; wd.set(d, o); });
+    const wds = [...wd.entries()];
+    const active = [...wds].sort((x, y) => y[1].n - x[1].n)[0], best = [...wds].sort((x, y) => y[1].pnl - x[1].pnl)[0], worst = [...wds].sort((x, y) => x[1].pnl - y[1].pnl)[0];
+    const bestT = [...rows].sort((x, y) => y["Net P&L"] - x["Net P&L"])[0], worstT = [...rows].sort((x, y) => x["Net P&L"] - y["Net P&L"])[0];
+    const nm = (t) => { const c = C.find((x) => String(x["ID TopstepX"]) === String(t["ID TopstepX"])); return c ? c.Nom : ""; };
+    const det = (t) => t ? `${t.Direction} ${t.Size} /${t.Symbol || t.Contract} @ ${t["Entry Price"]} · Exited @ ${t["Exit Price"]} · ${nm(t)}` : "";
+    const avgDur = (a) => (a.length ? sum(a, "Duration (s)") / a.length : 0);
+    const bestDay = byDay.size ? Math.max(...byDay.values()) : 0;
+    const act = C.filter((c) => c.Statut === "Actif");
+    return { _all: true, Nom: "All datas", "ID TopstepX": ALL, Statut: "Actif", Type: "", "Solde de départ": C.length ? d3.mean(C, (c) => Number(c["Solde de départ"]) || 0) : 0,
+      "Solde TopstepX": r2(d3.sum(act, (c) => Number(c["Solde TopstepX"]) || 0)), "Plus haut solde": null, "Plancher MLL": null, DLL: null,
+      "Dernière synchro": C.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() || null,
+      "Total P&L": total, "Trade Win %": n ? r6(wins.length / n) : 0,
+      "Day Win %": lastRows.length ? r6(lastRows.filter((t) => t["Net P&L"] > 0).length / lastRows.length) : 0,
+      "Avg Winning Trade": wins.length ? r2(gains / wins.length) : 0, "Avg Losing Trade": losses.length ? r2(lossSum / losses.length) : 0,
+      "Avg Win / Avg Loss": wins.length && losses.length && lossSum ? r2((gains / wins.length) / Math.abs(lossSum / losses.length)) : 0,
+      "Profit Factor": lossSum ? r2(gains / Math.abs(lossSum)) : 0, "Best Day % of Total Profit": total ? r6(bestDay / total) : 0,
+      "Most Active Day": active ? `${active[0]} · ${active[1].days.size} jour(s) actif(s) · ${active[1].n} trades` : "",
+      "Most Profitable Day": best ? `${best[0]} · ${r2(best[1].pnl)} $` : "", "Least Profitable Day": worst ? `${worst[0]} · ${r2(worst[1].pnl)} $` : "",
+      "Total Trades": n, "Total Lots": sum(rows, "Size"),
+      "Avg Trade Duration": durTxt(avgDur(rows)), "Avg Win Duration": durTxt(avgDur(rows.filter((t) => t["P&L"] > 0))), "Avg Loss Duration": durTxt(avgDur(rows.filter((t) => t["P&L"] < 0))),
+      "Trade Direction % (Long)": n ? r6(rows.filter((t) => t.Direction === "Long").length / n) : 0,
+      "Best Trade": bestT ? bestT["Net P&L"] : 0, "Best Trade · détail": det(bestT), "Worst Trade": worstT ? worstT["Net P&L"] : 0, "Worst Trade · détail": det(worstT) };
+  }
   const KEY = "econcal-journal";
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ comptes: RAW.comptes, trades: RAW.trades, params })); } catch (e) {} };
   let st = null; try { st = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
@@ -1295,7 +1410,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     return { "ID TopstepX": String(c["ID TopstepX"]), Gagnants: w, Perdants: n - w, Long: l, Short: n - l,
       "Gains totaux": Math.round(w * (Number(c["Avg Winning Trade"]) || 0) * 100) / 100,
       "Pertes totales": Math.round((n - w) * (Number(c["Avg Losing Trade"]) || 0) * 100) / 100,
-      "Marge avant MLL": Math.round(((Number(c["Solde TopstepX"]) || 0) - (Number(c["Plancher MLL"]) || 0)) * 100) / 100 };
+      "Marge avant MLL": c["Plancher MLL"] == null ? null : Math.round(((Number(c["Solde TopstepX"]) || 0) - (Number(c["Plancher MLL"]) || 0)) * 100) / 100 };
   }) });
   dash.calc("jours_calc", { inputs: ["comptes"], fn: (comptes) => comptes.map((c) => {
     const sp = (s) => String(s || "").replace(/\\/g, "").split(" · ");
@@ -1324,10 +1439,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (d.status !== "ok" || !d.data.length) return p; return d.data.some((r) => String(r["ID TopstepX"]) === p) ? p : String(d.data[0]["ID TopstepX"]); };
   const curRow = () => (ok("comptes") ? dash.data("comptes").data.find((r) => String(r["ID TopstepX"]) === curId()) : null);
   const trades = () => { const c = curRow(); if (!c || dash.data("fills_calc").status !== "ok") return null;
-    return dash.data("fills_calc").data.filter((t) => t["ID TopstepX"] === String(c["ID TopstepX"])).map((t) => ({ ...t, day: t.Day, pnl: t["Net P&L"], n: 1, dur: t["Duration (s)"] })).filter((t) => t.day); };
+    return dash.data("fills_calc").data.filter((t) => c._all || t["ID TopstepX"] === String(c["ID TopstepX"])).map((t) => ({ ...t, day: t.Day, pnl: t["Net P&L"], n: 1, dur: t["Duration (s)"] })).filter((t) => t.day); };
   const month = (T) => { const p = dash.params().mois; if (typeof p === "string" && /^\d{4}-\d{2}$/.test(p)) return p;
     const days = (T || []).map((t) => t.day).sort(); return days.length ? days[days.length - 1].slice(0, 7) : new Date().toISOString().slice(0, 7); };
-  const fills = () => { const c = curRow(); if (!c || dash.data("fills_calc").status !== "ok") return null; return dash.data("fills_calc").data.filter((f) => f["ID TopstepX"] === String(c["ID TopstepX"])); };
+  const fills = () => { const c = curRow(); if (!c || dash.data("fills_calc").status !== "ok") return null; return dash.data("fills_calc").data.filter((f) => c._all || f["ID TopstepX"] === String(c["ID TopstepX"])); };
   const R = () => root();
   R().querySelectorAll(".tsx-rpp").forEach((s) => s.addEventListener("change", () => dash.setParams({ rpp: Number(s.value), page: 0 })));
   R().querySelectorAll(".tsx-pg").forEach((b) => b.addEventListener("click", () => { const all = fills() || []; const rpp = Number(dash.params().rpp) || 100;
@@ -1339,11 +1454,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* ----- account selector + KPIs ----- */
   dash.draw("acctsel", (sel) => {
     const d = dash.data("comptes"); if (d.status !== "ok") { sel.replaceChildren(new Option("—", "")); return; }
-    const rows = [...d.data].sort((a, b) => (a.Statut === "Actif" ? 0 : 1) - (b.Statut === "Actif" ? 0 : 1) || String(a.Nom).localeCompare(String(b.Nom)));
-    const etat = (r) => { if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
+    const rows = [...d.data].sort((a, b) => (b._all ? 1 : 0) - (a._all ? 1 : 0) || (a.Statut === "Actif" ? 0 : 1) - (b.Statut === "Actif" ? 0 : 1) || String(a.Nom).localeCompare(String(b.Nom)));
+    const etat = (r) => { if (r._all) return { col: "#a077d6", pre: "◆ ", suf: "  ·  P&L " + F.usd(r["Total P&L"]) + "  ·  " + (d.data.length - 1) + " comptes" };
+      if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
       const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0);
       if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#4ccf6a", pre: "● ", suf: "" }; };
-    sel.replaceChildren(...rows.map((r) => { const e = etat(r); const o = new Option(e.pre + r.Nom + "  ·  " + F.usd(r["Solde TopstepX"]) + e.suf, String(r["ID TopstepX"]));
+    sel.replaceChildren(...rows.map((r) => { const e = etat(r); const o = new Option(e.pre + r.Nom + (r._all ? "" : "  ·  " + F.usd(r["Solde TopstepX"])) + e.suf, String(r["ID TopstepX"]));
       o.style.color = e.col; o.style.backgroundColor = "#10141a"; return o; }));
     sel.value = curId(); const cur = rows.find((r) => String(r["ID TopstepX"]) === sel.value);
     if (cur) { const e = etat(cur); sel.style.color = e.col; sel.style.borderColor = e.col; }
@@ -1412,23 +1528,32 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     [[0, 0.45], [0.5, 0.15], [1, 0.02]].forEach(([o, a]) => lg.append("stop").attr("offset", o).attr("stop-color", color).attr("stop-opacity", a)); };
   const uid = () => "g" + Math.random().toString(36).slice(2, 9);
 
+  const TARGET = { 50000: 3000, 100000: 6000, 150000: 9000 };
+  const targetOf = (c) => { if (!c || c._all || c.Type === "Funded" || c.Type === "Paper") return null; const st = Number(c["Solde de départ"]) || 0; if (!st) return null; return st + (TARGET[st] || Math.round(st * 0.06)); };
+  dash.draw("baltitle", (el) => { const c = curRow(); el.textContent = c && c._all ? "P&L cumulé · tous les comptes" : "Daily Account Balance"; });
   dash.draw("balance", (el) => {
     const T = trades(), c = curRow(); if (!T || !c) { el.replaceChildren(); return; }
-    const pts = T.filter((t) => t["Solde fin de journée"] !== undefined && t["Solde fin de journée"] !== null && t["Solde fin de journée"] !== "").map((t) => ({ day: t.day, v: Number(t["Solde fin de journée"]) })).sort((a, b) => d3.ascending(a.day, b.day));
+    let pts;
+    if (c._all) { let s0 = 0; pts = daily(T).map((d) => ({ day: d.day, v: Math.round((s0 += d.p) * 100) / 100 })); }
+    else pts = T.filter((t) => t["Solde fin de journée"] !== undefined && t["Solde fin de journée"] !== null && t["Solde fin de journée"] !== "").map((t) => ({ day: t.day, v: Number(t["Solde fin de journée"]) })).sort((a, b) => d3.ascending(a.day, b.day));
     if (!pts.length) { empty(el); return; }
-    const h = 300, mb = 30; const lo = d3.min([...pts.map((p) => p.v), Number(c["Plancher MLL"]) || Infinity]), hi = d3.max(pts, (p) => p.v);
+    const tgt = targetOf(c), mll = Number(c["Plancher MLL"]) || 0;
+    const h = 300, mb = 30; const lo = d3.min([...pts.map((p) => p.v), mll || Infinity, c._all ? 0 : Infinity]), hi = d3.max([...pts.map((p) => p.v), tgt || -Infinity, c._all ? 0 : -Infinity]);
     const pad = Math.max(150, (hi - lo) * 0.12); const y = d3.scaleLinear([lo - pad, hi + pad], [h - mb, 12]).nice(); const ml = marginFor(y.ticks(5).map(compact));
     const { svg, w, tip } = frame(el, h); const days = pts.map((p) => p.day); const x = xDays(days, ml, w); const g = svg.append("g");
     yAxis(g, y, w, ml, compact, 5);
-    svg.append("text").attr("transform", `translate(12,${(h - mb) / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("fill", "#cfd5dc").attr("font-size", 11).text("Balance");
+    svg.append("text").attr("transform", `translate(12,${(h - mb) / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("fill", "#cfd5dc").attr("font-size", 11).text(c._all ? "P&L" : "Balance");
     xAxis(g, x, days, h, mb);
-    const mll = Number(c["Plancher MLL"]);
     if (mll) { g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(mll)).attr("y2", y(mll)).attr("stroke", DN).attr("stroke-dasharray", "5 4").attr("opacity", 0.7);
       g.append("text").attr("x", w - 4).attr("y", y(mll) - 5).attr("text-anchor", "end").attr("fill", DN).attr("font-size", 11).text("MLL " + usd(mll)); }
-    const id = uid(); grad(svg, id, "#c9d1db"); const X = (p) => x(pDay(p.day));
+    if (tgt) { g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(tgt)).attr("y2", y(tgt)).attr("stroke", UP).attr("stroke-dasharray", "5 4").attr("opacity", 0.85);
+      g.append("text").attr("x", w - 4).attr("y", y(tgt) - 5).attr("text-anchor", "end").attr("fill", UP).attr("font-size", 11).text("Target " + usd(tgt)); }
+    if (c._all) g.append("line").attr("x1", ml).attr("x2", w).attr("y1", y(0)).attr("y2", y(0)).attr("stroke", "#59616c").attr("stroke-dasharray", "3 3");
+    const col = c._all ? "#a077d6" : "#c9d1db";
+    const id = uid(); grad(svg, id, col); const X = (p) => x(pDay(p.day));
     svg.append("path").datum(pts).attr("d", d3.area().x(X).y0(h - mb).y1((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", `url(#${id})`);
-    svg.append("path").datum(pts).attr("d", d3.line().x(X).y((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", "none").attr("stroke", "#9aa3ad").attr("stroke-width", 1.6);
-    svg.selectAll(".pt").data(pts).join("circle").attr("cx", X).attr("cy", (p) => y(p.v)).attr("r", 3.5).attr("fill", "#0c0f13").attr("stroke", "#c9d1db").attr("stroke-width", 1.5)
+    svg.append("path").datum(pts).attr("d", d3.line().x(X).y((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", "none").attr("stroke", c._all ? col : "#9aa3ad").attr("stroke-width", 1.6);
+    svg.selectAll(".pt").data(pts).join("circle").attr("cx", X).attr("cy", (p) => y(p.v)).attr("r", 3.5).attr("fill", "#0c0f13").attr("stroke", col).attr("stroke-width", 1.5)
       .on("mousemove", (ev, p) => show(el, tip, ev, [dLab(p.day), usd(p.v)])).on("mouseleave", () => hide(tip));
   });
   dash.draw("cum", (el) => {
@@ -1485,33 +1610,36 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 
   /* ----- Hexagone de performance ----- */
   const hexaStats = (c) => {
-    const T = (dash.data("fills_calc").data || []).filter((t) => t["ID TopstepX"] === String(c["ID TopstepX"])).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
+    const T = (dash.data("fills_calc").data || []).filter((t) => c._all || t["ID TopstepX"] === String(c["ID TopstepX"])).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
     const start = Number(c["Solde de départ"]) || 50000; let bal = start, peak = start, dd = 0;
     for (const t of T) { bal += t["Net P&L"]; peak = Math.max(peak, bal); dd = Math.max(dd, peak - bal); }
     const risks = T.map((t) => (window.jmeta && jmeta.tags(t.ID) || {})["Risque"]).filter((v) => typeof v === "number" && v > 0);
     return { Winrate: Number(c["Trade Win %"]) || 0, RR: Number(c["Avg Win / Avg Loss"]) || 0, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: risks.length ? (d3.mean(risks) / start) * 100 : 0 };
   };
+  R().addEventListener("click", (e) => { const b = e.target.closest("[data-hx]"); if (b) dash.setParams({ hx: b.dataset.hx }); });
   dash.draw("hexa", (el) => {
     el.replaceChildren(); const c = curRow(); const all = dash.data("comptes"); if (!c || all.status !== "ok") return;
-    const me = hexaStats(c), avgs = all.data.map(hexaStats), avg = {};
-    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions)), (v) => String(Math.round(v))], ["Risque", 2, (v) => v.toFixed(2) + "%"]];
-    AXES.forEach(([k]) => (avg[k] = d3.mean(avgs, (a) => a[k])));
-    const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, R = Math.min(118, W / 2 - 70);
+    const mode = dash.params().hx === "avg" ? "avg" : "me";
+    R().querySelectorAll("[data-hx]").forEach((b) => b.classList.toggle("on", b.dataset.hx === mode));
+    const real = all.data.filter((a) => !a._all);
+    const me = hexaStats(c), avgs = real.map(hexaStats), avg = {};
+    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions) || 0, me.Positions), (v) => String(Math.round(v))], ["Risque", 2, (v) => v.toFixed(2) + "%"]];
+    AXES.forEach(([k]) => (avg[k] = d3.mean(avgs, (a) => a[k]) || 0));
+    const data = mode === "avg" ? avg : me, fill = mode === "avg" ? "rgba(226,179,61,.30)" : "rgba(47,84,235,.38)", stroke = mode === "avg" ? "#e2b33d" : "#3b5bff", tagBg = mode === "avg" ? "#e2b33d" : "#2f54eb", tagFg = mode === "avg" ? "#17130a" : "#fff";
+    const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, Rr = Math.min(118, W / 2 - 70);
     const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
     const ang = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length, pt = (i, r) => [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
-    for (let l = 1; l <= 5; l++) svg.append("polygon").attr("points", AXES.map((a, i) => pt(i, (R * l) / 5).join(",")).join(" ")).attr("fill", "none").attr("stroke", "#232a33");
-    AXES.forEach((a, i) => { const [x, y] = pt(i, R); svg.append("line").attr("x1", cx).attr("y1", cy).attr("x2", x).attr("y2", y).attr("stroke", "#232a33");
-      const [lx, ly] = pt(i, R + 22); svg.append("text").attr("x", lx).attr("y", ly).attr("dy", "0.35em").attr("text-anchor", Math.abs(lx - cx) < 10 ? "middle" : lx > cx ? "start" : "end").attr("fill", "#eef1f5").attr("font-size", 14).attr("font-weight", 700).text(a[0]); });
-    const poly = (o) => AXES.map(([k, max], i) => pt(i, Math.max(0.04, Math.min(1, (o[k] || 0) / max)) * R));
-    svg.append("polygon").attr("points", poly(avg).map((p) => p.join(",")).join(" ")).attr("fill", "rgba(160,168,180,.28)").attr("stroke", "rgba(160,168,180,.5)");
-    const mp = poly(me);
-    svg.append("polygon").attr("points", mp.map((p) => p.join(",")).join(" ")).attr("fill", "rgba(47,84,235,.38)").attr("stroke", "#3b5bff").attr("stroke-width", 2);
+    for (let l = 1; l <= 5; l++) svg.append("polygon").attr("points", AXES.map((a, i) => pt(i, (Rr * l) / 5).join(",")).join(" ")).attr("fill", "none").attr("stroke", "#232a33");
+    AXES.forEach((a, i) => { const [x, y] = pt(i, Rr); svg.append("line").attr("x1", cx).attr("y1", cy).attr("x2", x).attr("y2", y).attr("stroke", "#232a33");
+      const [lx, ly] = pt(i, Rr + 22); svg.append("text").attr("x", lx).attr("y", ly).attr("dy", "0.35em").attr("text-anchor", Math.abs(lx - cx) < 10 ? "middle" : lx > cx ? "start" : "end").attr("fill", "#eef1f5").attr("font-size", 14).attr("font-weight", 700).text(a[0]); });
+    const mp = AXES.map(([k, max], i) => pt(i, Math.max(0.04, Math.min(1, (data[k] || 0) / max)) * Rr));
+    svg.append("polygon").attr("points", mp.map((p) => p.join(",")).join(" ")).attr("fill", fill).attr("stroke", stroke).attr("stroke-width", 2);
     const tip = d3.select(el).append("div").attr("class", "tsx-tip").style("opacity", 0); el.style.position = "relative";
-    AXES.forEach(([k, , f], i) => { const [x, y] = mp[i]; const txt = f(me[k] || 0); const w = txt.length * 7 + 12;
+    AXES.forEach(([k, , f], i) => { const [x, y] = mp[i]; const txt = f(data[k] || 0); const w = txt.length * 7 + 12;
       const g = svg.append("g").attr("transform", `translate(${x},${y})`).style("cursor", "default");
-      g.append("rect").attr("x", -w / 2).attr("y", -10).attr("width", w).attr("height", 20).attr("rx", 5).attr("fill", "#2f54eb");
-      g.append("text").attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", "#fff").attr("font-size", 11.5).attr("font-weight", 700).text(txt);
-      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl">Ce compte : ${txt}</div><div class="tl" style="color:#cfd5dc">Moyenne : ${f(avg[k] || 0)}</div>`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
+      g.append("rect").attr("x", -w / 2).attr("y", -10).attr("width", w).attr("height", 20).attr("rx", 5).attr("fill", tagBg);
+      g.append("text").attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", tagFg).attr("font-size", 11.5).attr("font-weight", 700).text(txt);
+      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl" style="color:#7d9bff">Ce compte : ${f(me[k] || 0)}</div><div class="tl" style="color:#e2b33d">Moyenne de tes ${real.length} comptes : ${f(avg[k] || 0)}</div>`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
        .on("mouseleave", () => tip.style("opacity", 0)); });
   });
 
@@ -1519,9 +1647,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const mk = (cls, txt) => { const d = document.createElement("div"); d.className = cls; if (txt !== undefined) d.textContent = txt; return d; };
   dash.draw("calmonth", (el) => { const [y, m] = month(trades() || []).split("-").map(Number);
     el.textContent = new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("fr-FR", { month: "long", year: "numeric", timeZone: "UTC" }); });
-  dash.draw("mpl", (el) => { el.classList.remove("up", "dn"); const d = dash.data("mois_calc"); if (d.status !== "ok") { el.textContent = "—"; return; }
-    const id = curId(), m = month(trades() || []); const r = d.data.find((x) => x["ID TopstepX"] === id && x.Mois === m);
-    if (!r) { el.textContent = "—"; return; } el.textContent = usd(r["P&L net"]); el.classList.add(r["P&L net"] >= 0 ? "up" : "dn"); });
+  dash.draw("mpl", (el) => { el.classList.remove("up", "dn"); const T = trades(); if (!T) { el.textContent = "—"; return; }
+    const m = month(T), L = T.filter((t) => String(t.day).slice(0, 7) === m); if (!L.length) { el.textContent = "—"; return; }
+    const v = Math.round(d3.sum(L, (t) => t.pnl) * 100) / 100; el.textContent = usd(v); el.classList.add(v >= 0 ? "up" : "dn"); });
   dash.draw("cal", (el) => {
     el.replaceChildren(); const T = trades(); if (!T) return;
     const [Y, M] = month(T).split("-").map(Number);
@@ -1555,6 +1683,15 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
         const im = document.createElement("td"); im.className = "im"; const n = jmeta.imgCount(t.ID); im.textContent = n ? "🖼 " + n : "-"; im.title = "Images"; im.onclick = () => jmeta.openImages(t); tr.append(tg, im); }
       tb.append(tr); }
   });
+  dash.draw("tfoot", (tf) => {
+    tf.replaceChildren(); const T = fills(); if (!T || !T.length) return;
+    const sz = d3.sum(T, (t) => t.Size), pl = d3.sum(T, (t) => t["P&L"]), co = d3.sum(T, (t) => t.Commissions), fe = d3.sum(T, (t) => t.Fees);
+    const tr = document.createElement("tr"); const cell = (txt, cls) => { const td = document.createElement("td"); td.textContent = txt; if (cls) td.className = cls; tr.append(td); };
+    cell("Total · " + T.length + " trades"); cell(""); cell(String(sz)); for (let i = 0; i < 6; i++) cell("");
+    cell(m2(pl), pl > 0 ? "up" : pl < 0 ? "dn" : ""); cell(m2(-co), "dn"); cell(m2(-fe), "dn");
+    const net = Math.round((pl - co - fe) * 100) / 100; cell("Net " + usd(net), net >= 0 ? "up" : "dn"); cell(""); cell("");
+    tf.append(tr);
+  });
   dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
     el.textContent = T.length ? `${pg * rpp + 1}–${Math.min(T.length, (pg + 1) * rpp)} of ${T.length}` : "0 of 0"; });
 })();
@@ -1574,7 +1711,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const kset = async (k, v) => { mem[k] = v; const db = await idb(); if (!db) return; return new Promise((ok) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = ok; t.onerror = ok; }); };
 
   let state = { tab: "journal", view: "Analyse", macro: null, homework: null, wtf: null, journal: null, synced: null, filt: {}, cal: {} };
-  try { const v = localStorage.getItem("econcal-review-view"); if (v) state.view = v; } catch (e) {}
+  try { const v = localStorage.getItem("econcal-review-view"); if (v) state.view = v; state.type = localStorage.getItem("econcal-review-type") || ""; } catch (e) {}
   const colorOf = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return NC()[o ? o.c : "default"] || "#373737"; };
   const chips = (schema, f, v) => (Array.isArray(v) ? v : v ? [v] : []).map((x) => `<span class="nchip" style="background:${colorOf(schema, f, x)}">${esc(x)}</span>`).join(" ");
 
@@ -1586,19 +1723,20 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const flush = () => { if (list) { out += `</${list}>`; list = null; } };
     for (const b of bs || []) {
       const st = b.color && BG[b.color] ? ` style="background:${BG[b.color]};padding:6px 10px;border-radius:4px"` : "";
+      const ed = ctx && ctx.edit && b.id, bid = ed ? ` data-bid="${esc(b.id)}"` : "", del = ed ? `<button class="rv-bdel" data-del="${esc(b.id)}" title="Supprimer ce bloc dans Notion">✕</button>` : "";
       if (b.type === "bulleted_list_item" || b.type === "numbered_list_item") { const t = b.type === "bulleted_list_item" ? "ul" : "ol"; if (list !== t) { flush(); out += `<${t}>`; list = t; } out += `<li>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</li>`; continue; }
       flush();
       switch (b.type) {
-        case "paragraph": out += `<p${st}>${rt(b.rt) || "&nbsp;"}</p>`; break;
+        case "paragraph": out += `<p${st}${bid}>${rt(b.rt) || "&nbsp;"}${del}</p>`; break;
         case "heading_1": out += `<h2>${rt(b.rt)}</h2>`; break;
         case "heading_2": out += `<h3>${rt(b.rt)}</h3>`; break;
         case "heading_3": out += `<h4>${rt(b.rt)}</h4>`; break;
         case "quote": out += `<blockquote${st}>${rt(b.rt)}</blockquote>`; break;
         case "callout": out += `<div class="rv-callout"${st}>${b.icon ? `<span>${esc(b.icon)}</span>` : ""}<div>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</div></div>`; break;
-        case "toggle": out += `<details class="rv-tg"><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : '<p class="rv-mut">Vide</p>'}</div></details>`; break;
+        case "toggle": out += `<details class="rv-tg"${ctx && ctx.open ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : ed ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Écrire (Entrée pour envoyer) ou coller une image…"></div>` : ""}</div></details>`; break;
         case "to_do": out += `<p>${b.checked ? "☑" : "☐"} ${rt(b.rt)}</p>`; break;
         case "divider": out += "<hr>"; break;
-        case "image": out += b.src ? `<figure class="rv-img"><img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
+        case "image": out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
         case "child_database": out += ctx && ctx.db ? ctx.db(b) : `<p class="rv-mut">Base « ${esc(b.title)} »</p>`; break;
         case "child_page": out += `<p>📄 ${esc(b.title)}</p>`; break;
         default: if (b.rt) out += `<p>${rt(b.rt)}</p>`;
@@ -1631,10 +1769,22 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* --- analytics on Macro --- */
   const WIN = /^(TP|Pas pris \(TP\))$/, LOSS = /^(SL|Pas pris \(SL\))$/;
   const outcome = (r) => { const s = r.Status || []; if (s.some((x) => WIN.test(x))) return 1; if (s.some((x) => LOSS.test(x))) return -1; return 0; };
+  /* --- account type (Review / Paper / Funded / Challenge) --- */
+  const TYPES = ["Review", "Paper", "Funded", "Challenge"];
+  const TYPE_C = { Review: "purple", Paper: "gray", Funded: "green", Challenge: "blue" };
+  function typeOf(r) {
+    if (r.Type) return r.Type;
+    const h = tsxMatch(r);
+    if (h && window.jdash) { const c = (jdash.data("comptes").data || []).find((x) => String(x["ID TopstepX"]) === h[0]["ID TopstepX"]); if (c && c.Type) return c.Type; }
+    if ((r.Status || []).some((x) => /^Pas pris/.test(x))) return "Review";
+    return null;
+  }
+  const typeColor = (t) => { const sc = state.macro && state.macro.schema.Type; const o = sc && (sc.options || []).find((x) => x.n === t); return o ? o.c : TYPE_C[t] || "default"; };
   const FILTERS = ["Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "Règles respectées"];
   function filtered() {
     const m = state.macro; if (!m) return [];
     return m.rows.filter((r) => FILTERS.every((f) => { const want = state.filt[f]; if (!want || !want.length) return true; const v = Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []; return want.some((w) => v.includes(w)); }))
+      .filter((r) => !state.type || (state.type === "none" ? !typeOf(r) : typeOf(r) === state.type))
       .filter((r) => !state.q || JSON.stringify(r).toLowerCase().includes(state.q.toLowerCase()));
   }
   const stats = (rows) => { const w = rows.filter((r) => outcome(r) === 1).length, l = rows.filter((r) => outcome(r) === -1).length, rr = rows.map((r) => r["RR fait"]).filter((x) => typeof x === "number");
@@ -1654,8 +1804,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const hit = d.data.filter((t) => { const dt = new Date(t.Entry).getTime() - t0; return dt >= -120000 && dt <= 180000; });
     return hit.length ? hit : null;
   }
-  const COLS = ["Name", "Date", "TopstepX", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
+  const COLS = ["Name", "Type", "Date", "TopstepX", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
   const cellOf = (r, c, schema) => {
+    if (c === "Type") { const t = typeOf(r); return t ? `<span class="nchip" style="background:${NC()[typeColor(t)] || "#373737"}${r.Type ? "" : ";opacity:.7"}" title="${r.Type ? "" : "Déduit automatiquement (pas encore renseigné dans Notion)"}">${esc(t)}${r.Type ? "" : " ·auto"}</span>` : '<span class="rv-mut">—</span>'; }
     if (c === "TopstepX") { const h = tsxMatch(r); if (!h) return '<span class="rv-mut">—</span>';
       const net = Math.round(h.reduce((a, t) => a + t["Net P&L"], 0) * 100) / 100, accts = new Set(h.map((t) => t["ID TopstepX"])).size;
       return `<span class="${net >= 0 ? "up" : "dn"}" title="${h.length} trade(s) TopstepX sur ${accts} compte(s)">${net >= 0 ? "+" : ""}${net.toFixed(2)} $</span> <span class="rv-mut">· ${h.length}</span>`; }
@@ -1672,7 +1823,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* --- rendering --- */
   function render() { renderWTF(); renderJournal(); }
   window.reviewRender = render;
-  const API = window.reviewAPI = { ID, state, kset, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
+  const API = window.reviewAPI = { ID, state, kset, typeOf, curPage: null, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
   function renderWTF() {
     const body = $("rvBody"); if (!body) return;
     const stamp = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
@@ -1706,6 +1857,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
     body.innerHTML = `<div class="rv-page wide">${note ? `<div class="rv-note">${note}</div>` : ""}
       <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}${API.canEdit ? '<button class="rv-new" data-new="macro" style="margin-left:auto">＋ Nouveau</button>' : ""}</div>
+      <div class="rv-types">${(() => { const base = state.macro.rows.filter((r) => FILTERS.every((f) => { const want = state.filt[f]; if (!want || !want.length) return true; const v = Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []; return want.some((w) => v.includes(w)); }));
+        const cnt = (t) => base.filter((r) => (t === "none" ? !typeOf(r) : typeOf(r) === t)).length, nn = cnt("none");
+        return `<button class="rv-ty${!state.type ? " on" : ""}" data-ty="">Tous <small>${base.length}</small></button>` + TYPES.map((t) => `<button class="rv-ty${state.type === t ? " on" : ""}" data-ty="${t}"><i style="background:${DOT[typeColor(t)]}"></i>${t === "Review" ? "Reviews" : t === "Paper" ? "Trades paper" : t === "Funded" ? "Fundeds" : "Challenges"} <small>${cnt(t)}</small></button>`).join("") + (nn ? `<button class="rv-ty${state.type === "none" ? " on" : ""}" data-ty="none">Non classés <small>${nn}</small></button>` : ""); })()}</div>
       <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
         <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
       ${content}</div>`;
@@ -1719,7 +1873,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     { name: "Trades", icon: "▦", type: "calendar" },
     { name: "In", icon: "▦", type: "calendar", filter: ST("TP", "BE (SL)", "BE (TP)", "SL") },
     { name: "Review & Paper", icon: "▦", type: "calendar", filter: ST("Pas pris (TP)", "Pas pris (SL)", "Pas pris (BE ~ SL)", "Pas pris (BE ~ TP)") },
-    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Date", "TopstepX", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
+    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Type", "Date", "TopstepX", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
     { name: "Status", icon: "◔", type: "chart", chart: "donut", by: "Status", filter: ST("SL", "BE (TP)", "BE (SL)", "TP"), sort: "y-desc" },
     { name: "PD Array m1", icon: "◔", type: "chart", chart: "donut", by: "PD Array M1", hideEmpty: true },
     { name: "Prise de liquidité", icon: "▥", type: "chart", chart: "column", by: "Prise de liquidité", sort: "manual" },
@@ -1728,6 +1882,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     { name: "MAE", icon: "▥", type: "chart", chart: "column", by: "MAE (R)", numeric: true, labels: true },
     { name: "MFE", icon: "▥", type: "chart", chart: "column", by: "MFE (R)", numeric: true, labels: true },
   ];
+  const HW_ORDER = ["W", "D", "H4", "H1", "m15", "Premarket", "First Hour of Trading", "NWOG & 1st", "RTH ORG", "STDV"];
   const DOT = { default: "#9b9b9b", gray: "#9b9b9b", brown: "#ba856f", orange: "#e08a35", yellow: "#e2b33d", green: "#4fb37e", blue: "#4a9be8", purple: "#a077d6", pink: "#d26da4", red: "#e5534b" };
   const dotOf = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return DOT[o ? o.c : "default"]; };
   const optC = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return o ? o.c : "default"; };
@@ -1786,6 +1941,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const first = new Date(Y, M - 1, 1), start = new Date(Y, M - 1, 1 - first.getDay());
     const byDay = new Map(); const nodate = [];
     db.rows.forEach((r) => { if (!r.Date) { nodate.push(r); return; } const k = String(r.Date).slice(0, 10); if (!byDay.has(k)) byDay.set(k, []); byDay.get(k).push(r); });
+    if (kind === "hw") { const rank = (r) => { const t = (r.Tags || [])[0] || r.Name || ""; const i = HW_ORDER.indexOf(t); return i < 0 ? HW_ORDER.length : i; }; byDay.forEach((a) => a.sort((x, y) => rank(x) - rank(y))); }
+    const drag = API.canEdit ? ' draggable="true"' : "";
+    const item = (r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}"${drag} style="background:${bg(r)}${kind === "macro" && typeOf(r) ? ";box-shadow:inset 3px 0 0 " + DOT[typeColor(typeOf(r))] : ""}" title="${kind === "macro" && typeOf(r) ? esc(typeOf(r)) : ""}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`;
     const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const today = iso(now);
     let cells = "";
@@ -1793,13 +1951,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (let i = 0; i < weeks * 7; i++) {
       const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), k = iso(d), items = byDay.get(k) || [];
       const lab = d.getDate() === 1 ? d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : d.getDate();
-      cells += `<div class="rv-cd${d.getMonth() !== M - 1 ? " out" : ""}"><div class="rv-cn${k === today ? " today" : ""}">${API.canEdit ? `<button class="rv-add" data-new="${kind}" data-date="${k}" title="Nouveau">+</button>` : ""}${lab}</div>` +
-        items.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("") + "</div>";
+      cells += `<div class="rv-cd${d.getMonth() !== M - 1 ? " out" : ""}" data-date="${k}" data-kind="${kind}"><div class="rv-cn${k === today ? " today" : ""}">${API.canEdit ? `<button class="rv-add" data-new="${kind}" data-date="${k}" title="Nouveau">+</button>` : ""}${lab}</div>` +
+        items.map(item).join("") + "</div>";
     }
     const mlab = first.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
     return `<div class="rv-cal"><div class="rv-ch"><b>${mlab}</b><span>${nodate.length ? `<button class="rv-nd" data-cal="${kind}">Aucune date (${nodate.length})</button>` : ""}${API.canEdit ? `<button class="rv-new" data-new="${kind}">＋ Nouveau</button>` : ""}<button data-cal="${kind}" data-step="-1">‹</button><button data-cal="${kind}" data-step="0">Aujourd'hui</button><button data-cal="${kind}" data-step="1">›</button></span></div>
       <div class="rv-cg">${["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."].map((d) => `<div class="rv-cw">${d}</div>`).join("")}${cells}</div>
-      ${state.cal[key + ":nd"] && nodate.length ? `<div class="rv-ndl">${nodate.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("")}</div>` : ""}</div>`;
+      ${state.cal[key + ":nd"] && nodate.length ? `<div class="rv-ndl" data-date="" data-kind="${kind}">${nodate.map(item).join("")}</div>` : ""}</div>`;
   }
   function dbTable(db, cols, kind) {
     return `<div class="rv-tw"><table class="rv-t"><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>` +
@@ -1826,7 +1984,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (API.onRowOpen) API.onRowOpen(kind, r, mb);
     ov.classList.add("show");
     let blocks = await kget("page:" + id);
-    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs) || '<p class="rv-mut">Page vide</p>'}</div>`; };
+    API.curPage = id;
+    const ed = API.canEdit && !!D;
+    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs, { edit: ed }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
     if (blocks) show(blocks);
     if (D) { const res = await D.notionBlocks(id); if (res.ok) { await kset("page:" + id, res.data); if (ov.classList.contains("show")) { const pg = mb.querySelector(".rv-page"); if (pg) pg.remove(); mb.insertAdjacentHTML("beforeend", '<div id="rvPg"></div>'); show(res.data); } } else if (!blocks) show([]); }
     else if (!blocks) mb.querySelector("#rvPg").innerHTML = `<a href="${esc(r._url || "#")}" target="_blank" rel="noopener" style="color:#7d9bff">Ouvrir dans Notion ↗</a>`;
@@ -1877,6 +2037,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     [$("rvBody"), $("rvBodyJ")].filter(Boolean).forEach((root) => {
     root.addEventListener("click", (e) => {
       const tr = e.target.closest("tr[data-id],.rv-ci[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
+      const ty = e.target.closest(".rv-ty"); if (ty) { state.type = ty.dataset.ty || ""; try { localStorage.setItem("econcal-review-type", state.type); } catch (err) {} render(); return; }
       const vb = e.target.closest(".rv-v"); if (vb) { state.view = vb.dataset.v; try { localStorage.setItem("econcal-review-view", state.view); } catch (err) {} render(); return; }
       const cb = e.target.closest("[data-cal]"); if (cb) { const k = cb.dataset.cal;
         if (cb.classList.contains("rv-nd")) { state.cal[k + ":nd"] = !state.cal[k + ":nd"]; render(); return; }
@@ -1902,7 +2063,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const NC = () => window.NOTION_COLORS || {};
   const TPL_HW = { "W": "40cd85a6400980c497bfd264fbb46ef8", "D": "40cd85a6400980b4b3d4d3d43d7689cb", "H4": "40cd85a6400980cf8da8c51fc8d67596", "H1": "40cd85a6400980e7a16eea898cfa0546", "m15": "40cd85a6400980678be5c00ef74574f0", "Premarket": "40cd85a6400980a5938dd12390138901", "First Hour of Trading": "40cd85a6400980aba981e9a45a37a438", "NWOG & 1st": "40cd85a6400980b391a6d585bbff0dc8", "RTH ORG": "40cd85a6400980e2aebbe3c295fed743", "STDV": "40cd85a6400980dda411fbf55ccaeb29", "Prediction": "40cd85a64009808eb688d83ef07e95ec" };
   const TPL_MACRO = "40cd85a64009809e8404ca096ae69d4a";
-  const MACRO_FIELDS = ["Name", "Date", "Entrée", "Sortie", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "PnL", "MAE (R)", "MFE (R)", "Règles respectées", "Raison hors plan", "Commentaire"];
+  const MACRO_FIELDS = ["Name", "Type", "Date", "Entrée", "Sortie", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "PnL", "MAE (R)", "MFE (R)", "Règles respectées", "Raison hors plan", "Commentaire"];
   const HW_FIELDS = ["Name", "Date", "Tags"];
   const DB = { macro: R.ID.macro, hw: R.ID.homework };
   const dbOf = (kind) => (kind === "hw" ? R.state.homework : R.state.macro);
@@ -1951,7 +2112,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const val = (f) => { const t = db.schema[f].type, v = cur[f];
       if (t === "select" || t === "multi_select") { const a = t === "multi_select" ? v || [] : v ? [v] : []; return a.length ? a.map((x) => chip(f, x)).join("") : '<span class="pe">Vide</span>'; }
       if (t === "number") return `<input type="number" step="any" data-f="${esc(f)}" value="${v ?? ""}" placeholder="Vide">`;
-      if (t === "date") return `<input type="${isDT(f) ? "datetime-local" : "date"}" data-f="${esc(f)}" value="${esc(toLocalInput(v))}">`;
+      if (t === "date" && isDT(f)) { const lv = toLocalInput(v); return `<div class="dt2"><input type="date" data-f="${esc(f)}" data-part="d" value="${esc(lv.slice(0, 10))}"><input type="time" data-f="${esc(f)}" data-part="t" value="${esc(lv.slice(11, 16))}" title="Heure (vide = date seule)"></div>`; }
+      if (t === "date") return `<input type="date" data-f="${esc(f)}" value="${esc(toLocalInput(v))}">`;
       if (f === "Commentaire") return `<textarea data-f="${esc(f)}" placeholder="Vide">${esc(v || "")}</textarea>`;
       return `<input type="text" data-f="${esc(f)}" value="${esc(v || "")}" placeholder="${t === "title" ? "Sans titre" : "Vide"}" style="width:100%">`; };
     const ICON = { title: "Aa", rich_text: "≡", number: "#", select: "◉", multi_select: "☰", date: "▦" };
@@ -1972,7 +2134,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       pop.onclick = (ev) => { if (ev.target.dataset.rm !== undefined) return pick(ev.target.dataset.rm); const o = ev.target.closest(".nopt"); if (o) pick(o.dataset.v); };
       inp.onkeydown = (ev) => { if (ev.key === "Enter") { const o = pop.querySelector(".nopt"); if (o) pick(o.dataset.v); } };
     };
+    const dtVal = (f) => { const d = body.querySelector(`[data-f="${CSS.escape(f)}"][data-part="d"]`), tm = body.querySelector(`[data-f="${CSS.escape(f)}"][data-part="t"]`);
+      if (!d || !d.value) { delete cur[f]; return; } cur[f] = tm && tm.value ? new Date(d.value + "T" + tm.value).toISOString() : d.value; };
     body.oninput = (e) => { const f = e.target.dataset.f; if (!f) return; const t = db.schema[f].type, v = e.target.value;
+      if (e.target.dataset.part) return dtVal(f);
+      if (f === "Date" && kind === "macro") { const old = cur.Date; ["Entrée", "Sortie"].forEach((g) => { const d = body.querySelector(`[data-f="${g}"][data-part="d"]`); if (d && v && (!d.value || d.value === old)) { d.value = v; dtVal(g); } }); }
       if (v === "") { delete cur[f]; return; }
       if (t === "number") cur[f] = +v; else if (t === "date") cur[f] = isDT(f) ? new Date(v).toISOString() : v; else cur[f] = v; };
     const foot = ov.querySelector(".jm-f");
@@ -2001,8 +2167,62 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     bar.onclick = (e) => { const a = e.target.dataset.a; if (a === "edit") editor(kind, row); if (a === "del") { if (!e.target.dataset.ok) { e.target.dataset.ok = 1; e.target.textContent = "Confirmer ?"; return; } del(kind, row); } };
   };
   document.addEventListener("click", (e) => {
-    const n = e.target.closest("[data-new]"); if (n) { const kind = n.dataset.new; if (kind === "hw") templateMenu(n, n.dataset.date); else editor("macro", null, { Date: n.dataset.date || today() }); return; }
+    const n = e.target.closest("[data-new]"); if (n) { const kind = n.dataset.new; if (kind === "hw") templateMenu(n, n.dataset.date); else { const d = n.dataset.date || today(), ty = R.state.type && R.state.type !== "none" ? R.state.type : undefined; editor("macro", null, { Date: d, "Entrée": d, Sortie: d, Type: ty }); } return; }
   });
+  /* --- drag & drop on the calendars (Homework + Journal de Neal) → new date in Notion --- */
+  let dragId = null, dragKind = null;
+  const shiftDT = (v, date) => { if (!v) return v; if (String(v).length <= 10) return date || null; if (!date) return v; const d = new Date(v); const p = (x) => String(x).padStart(2, "0");
+    return new Date(`${date}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`).toISOString(); };
+  document.addEventListener("dragstart", (e) => { const it = e.target.closest && e.target.closest(".rv-ci[draggable]"); if (!it) return;
+    dragId = it.dataset.id; dragKind = it.dataset.k; e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", dragId); } catch (err) {} setTimeout(() => it.classList.add("dragging"), 0); });
+  document.addEventListener("dragend", () => { document.querySelectorAll(".rv-ci.dragging,.drop").forEach((x) => x.classList.remove("dragging", "drop")); dragId = null; });
+  document.addEventListener("dragover", (e) => { if (!dragId) return; const c = e.target.closest && e.target.closest("[data-kind][data-date]"); if (!c || c.dataset.kind !== dragKind) return;
+    e.preventDefault(); e.dataTransfer.dropEffect = "move"; document.querySelectorAll(".drop").forEach((x) => x !== c && x.classList.remove("drop")); c.classList.add("drop"); });
+  document.addEventListener("drop", async (e) => { if (!dragId) return; const c = e.target.closest && e.target.closest("[data-kind][data-date]"); if (!c || c.dataset.kind !== dragKind) return; e.preventDefault();
+    const kind = dragKind, id = dragId, date = c.dataset.date || null; dragId = null; c.classList.remove("drop");
+    const db = dbOf(kind); const row = db && db.rows.find((r) => r._id === id); if (!row || String(row.Date || "").slice(0, 10) === (date || "")) return R.render();
+    const before = { ...row }, props = { Date: date };
+    if (kind === "macro") { ["Entrée", "Sortie"].forEach((f) => { if (row[f]) props[f] = shiftDT(row[f], date); }); }
+    Object.assign(row, props); R.render(); msg("Déplacement dans Notion…");
+    const res = await D.notionUpdate(DB[kind], id, props);
+    if (!res.ok) { Object.assign(row, before); R.render(); return msg(why(res), true); }
+    msg("« " + (row.Name || "Sans titre") + " » déplacé au " + (date ? new Date(date + "T12:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "sans date") + " ✓"); refreshSoon(kind);
+  });
+
+  /* --- page content: write text or paste images into toggles (and at the end of the page) → Notion --- */
+  const pageCache = () => { const pid = R.curPage; if (pid) setTimeout(async () => { const r = await D.notionBlocks(pid); if (r.ok) R.kset("page:" + pid, r.data); }, 800); };
+  const fileToData = (f) => new Promise((ok, ko) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = ko; fr.readAsDataURL(f); });
+  async function sendText(box) {
+    const text = box.innerText.replace(/ /g, " ").trim(); if (!text || !D.notionAppend) return;
+    box.classList.add("busy"); const res = await D.notionAppend(box.dataset.parent, [{ type: "text", text }]); box.classList.remove("busy");
+    if (!res.ok) return msg(why(res), true);
+    const lines = text.split(/\n/); (res.data.ids || []).forEach((bid, i) => box.insertAdjacentHTML("beforebegin", `<p data-bid="${esc(bid)}">${esc(lines[i] || "") || "&nbsp;"}<button class="rv-bdel" data-del="${esc(bid)}" title="Supprimer ce bloc dans Notion">✕</button></p>`));
+    box.textContent = ""; box.focus(); msg("Ajouté dans Notion ✓"); pageCache();
+  }
+  async function sendImages(box, files) {
+    for (const f of files) {
+      const data = await fileToData(f); const fig = document.createElement("figure"); fig.className = "rv-img"; fig.style.opacity = ".5"; fig.innerHTML = `<img src="${data}" alt="">`;
+      box.before(fig); msg("Envoi de l'image dans Notion…");
+      const res = await D.notionAppend(box.dataset.parent, [{ type: "image", data, name: f.name && f.name !== "image.png" ? f.name : "" }]);
+      if (!res.ok) { fig.remove(); return msg(why(res), true); }
+      fig.style.opacity = ""; const bid = (res.data.ids || [])[0]; if (bid) { fig.dataset.bid = bid; fig.insertAdjacentHTML("afterbegin", `<button class="rv-bdel" data-del="${esc(bid)}" title="Supprimer ce bloc dans Notion">✕</button>`); }
+      msg("Image ajoutée dans Notion ✓"); pageCache();
+    }
+  }
+  const imgs = (dt) => [...((dt && dt.files) || [])].filter((f) => /^image\//.test(f.type));
+  document.addEventListener("keydown", (e) => { const box = e.target.closest && e.target.closest(".rv-addin"); if (!box) return;
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendText(box); } });
+  document.addEventListener("paste", (e) => { const box = e.target.closest && e.target.closest(".rv-addin"); if (!box) return;
+    const im = imgs(e.clipboardData); e.preventDefault();
+    if (im.length) return sendImages(box, im);
+    const t = e.clipboardData.getData("text/plain"); if (t) document.execCommand("insertText", false, t); });
+  document.addEventListener("dragover", (e) => { const box = e.target.closest && e.target.closest(".rv-addin"); if (box && !dragId) e.preventDefault(); });
+  document.addEventListener("drop", (e) => { const box = e.target.closest && e.target.closest(".rv-addin"); if (!box || dragId) return; const im = imgs(e.dataTransfer); if (im.length) { e.preventDefault(); sendImages(box, im); } });
+  document.addEventListener("click", async (e) => { const b = e.target.closest && e.target.closest(".rv-bdel"); if (!b || !D.notionDeleteBlock) return; e.preventDefault(); e.stopPropagation();
+    if (!b.dataset.ok) { b.dataset.ok = 1; b.textContent = "Supprimer ?"; setTimeout(() => { if (b.isConnected) { b.dataset.ok = ""; b.textContent = "✕"; } }, 3000); return; }
+    const res = await D.notionDeleteBlock(b.dataset.del); if (!res.ok) return msg(why(res), true);
+    const el = b.closest("[data-bid]"); el && el.remove(); msg("Bloc supprimé de Notion ✓"); pageCache(); }, true);
+
   R.canEdit = true; R.render();
 })();
 </script>

@@ -10,4 +10,8 @@ contextBridge.exposeInMainWorld("desktop", {
   notionCreate: (db, props, tpl) => ipcRenderer.invoke("notion:create", db, props, tpl),
   notionUpdate: (db, id, props) => ipcRenderer.invoke("notion:update", db, id, props),
   notionArchive: (id) => ipcRenderer.invoke("notion:archive", id),
+  notionAppend: (parent, items) => ipcRenderer.invoke("notion:append", parent, items),
+  notionDeleteBlock: (id) => ipcRenderer.invoke("notion:delblock", id),
+  storeGet: () => ipcRenderer.invoke("store:get"),
+  storeSet: (d) => ipcRenderer.invoke("store:set", d),
 });
