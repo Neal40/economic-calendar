@@ -368,10 +368,15 @@
     async fvgData(sym, d = day()) {
       const all = await bars(sym, ny(d, 9, 30), Math.min(now(), ny(d, 16, 0)));
       const fv = [];
+      // FVG including Volume Imbalances: when the bodies of two consecutive candles don't overlap (VI),
+      // the zone edge on that side is the candle body instead of the wick (matches Rudy's boxes 29/10, 30/10, 06/11)
+      const bH = b => Math.max(b.o, b.c), bL = b => Math.min(b.o, b.c);
       for (let j = 2; j < all.length; j++) {
-        const c1 = all[j - 2], c3 = all[j];
-        if (c3.l > c1.h) fv.push({ type: 'BISI', bot: c1.h, top: c3.l, t1: c1.t, t3: c3.t });
-        else if (c3.h < c1.l) fv.push({ type: 'SIBI', bot: c3.h, top: c1.l, t1: c1.t, t3: c3.t });
+        const c1 = all[j - 2], c2 = all[j - 1], c3 = all[j];
+        const bBot = bL(c2) > bH(c1) ? bH(c1) : c1.h, bTop = bL(c3) > bH(c2) ? bL(c3) : c3.l; // BISI
+        const sTop = bH(c2) < bL(c1) ? bL(c1) : c1.l, sBot = bL(c2) > bH(c3) ? bH(c3) : c3.h; // SIBI
+        if (c2.c > c2.o && bTop > bBot) fv.push({ type: 'BISI', bot: bBot, top: bTop, t1: c1.t, t3: c3.t, vi: bBot !== c1.h || bTop !== c3.l });
+        else if (c2.c < c2.o && sTop > sBot) fv.push({ type: 'SIBI', bot: sBot, top: sTop, t1: c1.t, t3: c3.t, vi: sTop !== c1.l || sBot !== c3.h });
       }
       const first = fv[0] || null;
       const refl = first ? fv.find(f => f.type !== first.type && f.t1 > first.t1) || null : null;
