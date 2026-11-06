@@ -3,7 +3,8 @@
  *   await JARVIS.status()            -> layout, charts, symbols, TSX Sessions present?
  *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
  *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
- *   await JARVIS.tops()              -> tops/bottoms of the day: m15/H1 BSL/SSL sweep + zone of ≥2 STDV, depth Fib (NQ)
+ *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
+ *   await JARVIS.macros()            -> boxes for macros XX:50–XX:10 and mini macros XX:25–XX:35
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -28,6 +29,13 @@
   };
   const nyDate = ms => { const o = parts(ms); return `${o.year}-${o.month}-${o.day}`; };
   const nyHM = s => { const o = parts(s * 1000); return `${o.hour}h${o.minute}`; };
+  const macroOf = t => { // XX:50–XX:10 = Macro (hour of the :00), XX:25–XX:35 = mini macro
+    const o = parts(t * 1000), H = +o.hour, M = +o.minute;
+    if (M >= 50) return `Macro ${H + 1}h`;
+    if (M < 10) return `Macro ${H}h`;
+    if (M >= 25 && M < 35) return `Mini macro ${H}h30`;
+    return 'hors macro';
+  };
   const ny = (d, h, m) => { // New York wall time -> unix seconds
     const [Y, M, D] = d.split('-').map(Number), want = Date.UTC(Y, M - 1, D, h, m);
     let g = want;
@@ -196,8 +204,9 @@
       keep(i, 'lines', ids);
       return done;
     },
-    // Tops / bottoms of the day that sweep a m15/H1 BSL (SSL) and hit a zone of ≥ 2 STDV levels from different sessions.
-    // Draws the STDV levels hit, the swept liquidity and the "Profondeur de marché" Fibonacci (NQ: base = round 10.00 under the BSL / above the SSL).
+    // Top and bottom of the day (+ intermediate swings that qualify): was the move catchable?
+    // Data per extreme: STDV levels touched (which sessions), macro window, liquidity swept (H1 swing first, then m15).
+    // Draws STDV hit, swept liquidity, "Profondeur de marché" Fib (NQ). Result also in JARVIS.data (JSON).
     async tops(opts = {}) {
       const d = day(), found = [];
       const fmt = p => (Math.round(p * 4) / 4).toFixed(2);
@@ -207,6 +216,7 @@
         clearGroup(i, 'tops');
         const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 12 : 3), N = opts.pivot ?? 15;
         const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
+        if (!all.length) continue;
         const sess = (await sessionData(sym, d)).filter(s => !s.missing && !s.partial && s.hi > s.lo);
         const ext = LV.filter(k => k > 1);
         const lv = (s, up) => ext.map(k => ({ k, p: up ? s.hi + (k - 1) * (s.hi - s.lo) : s.lo - (k - 1) * (s.hi - s.lo) }));
@@ -219,60 +229,106 @@
           return [...m.values()].sort((a, b) => a.t - b.t);
         };
         const swings = [];
-        for (const [tf, min] of [['m15', 15], ['H1', 60]]) {
+        for (const [tf, min] of [['H1', 60], ['m15', 15]]) {
           const a = agg(min);
           for (let j = 1; j < a.length - 1; j++) {
             if (a[j].h > a[j - 1].h && a[j].h > a[j + 1].h) swings.push({ tf, side: 'BSL', p: a[j].h, t: a[j].t, conf: a[j + 1].t + min * 60 });
             if (a[j].l < a[j - 1].l && a[j].l < a[j + 1].l) swings.push({ tf, side: 'SSL', p: a[j].l, t: a[j].t, conf: a[j + 1].t + min * 60 });
           }
         }
+        const analyse = (b, isH) => {
+          const P = isH ? b.h : b.l, hits = [];
+          for (const s of sess.filter(s => s.to <= b.t)) {
+            const L = lv(s, isH).filter(x => Math.abs(x.p - P) <= tol).sort((x, y) => Math.abs(x.p - P) - Math.abs(y.p - P));
+            if (L.length) hits.push({ ...L[0], s });
+          }
+          const sw = swings.filter(w => w.side === (isH ? 'BSL' : 'SSL') && w.conf <= b.t && (isH ? w.p < P : w.p > P)).map(w => {
+            const tk = all.find(x => x.t >= w.conf && (isH ? x.h > w.p : x.l < w.p));
+            return tk && tk.t <= b.t && tk.t >= b.t - 90 * 60 ? { ...w, takenT: tk.t } : null;
+          }).filter(Boolean);
+          // H1 swing first, then m15 ; within a timeframe the one closest to the extreme
+          const pick = tf => sw.filter(w => w.tf === tf).sort((x, y) => (isH ? y.p - x.p : x.p - y.p))[0];
+          const liq = pick('H1') || pick('m15') || null;
+          const mac = macroOf(b.t);
+          const ok = hits.length >= (opts.minStdv ?? 2) && !!liq;
+          return { i, sym, isH, P, t: b.t, hits, liq, macro: mac, catchable: ok };
+        };
         const from = ny(d, 2, 0), to = Math.min(ny(d, 16, 0), now());
+        const day = all.filter(b => b.t >= ny(addDays(d, -1), 18, 0));
+        const hiB = day.reduce((a, b) => (b.h > a.h ? b : a)), loB = day.reduce((a, b) => (b.l < a.l ? b : a));
+        const res = [{ ...analyse(hiB, true), dayExtreme: 'High du jour' }, { ...analyse(loB, false), dayExtreme: 'Low du jour' }];
+        res.forEach(r => r.liq && used.add(r.liq.side + r.liq.t + r.liq.p));
         for (let j = 0; j < all.length; j++) {
           const b = all[j];
-          if (b.t < from || b.t > to || j + N >= all.length) continue;
+          if (b.t < from || b.t > to || j + N >= all.length || b === hiB || b === loB) continue;
           const win = all.slice(Math.max(0, j - N), j + N + 1);
           for (const isH of [true, false]) {
             const P = isH ? b.h : b.l;
-            if (win.some(x => (isH ? x.h > P : x.l < P))) continue;
-            if (win.find(x => (isH ? x.h : x.l) === P) !== b) continue;
-            const hits = [];
-            for (const s of sess.filter(s => s.to <= b.t)) {
-              const L = lv(s, isH).filter(x => Math.abs(x.p - P) <= tol).sort((x, y) => Math.abs(x.p - P) - Math.abs(y.p - P));
-              if (L.length) hits.push({ ...L[0], s });
-            }
-            if (hits.length < (opts.minStdv ?? 2)) continue;
-            const sw = swings.filter(w => w.side === (isH ? 'BSL' : 'SSL') && w.conf <= b.t && (isH ? w.p < P : w.p > P)).map(w => {
-              const tk = all.find(x => x.t >= w.conf && (isH ? x.h > w.p : x.l < w.p));
-              return tk && tk.t <= b.t && tk.t >= b.t - 90 * 60 ? { ...w, takenT: tk.t } : null;
-            }).filter(Boolean);
-            if (!sw.length) continue;
-            const liq = sw.sort((x, y) => (isH ? y.p - x.p : x.p - y.p))[0];
-            const lk = liq.side + liq.t + liq.p;
-            if (used.has(lk)) continue; // same liquidity already used by an earlier top
+            if (win.some(x => (isH ? x.h > P : x.l < P)) || win.find(x => (isH ? x.h : x.l) === P) !== b) continue;
+            const r = analyse(b, isH);
+            if (!r.catchable) continue;
+            const lk = r.liq.side + r.liq.t + r.liq.p;
+            if (used.has(lk)) continue; // same liquidity already used
             used.add(lk);
-            found.push({ i, sym, isH, P, t: b.t, hits, liq });
-            // drawing
-            for (const h of hits) {
-              ids.push(await c.createMultipointShape([{ time: b.t - 25 * 60, price: h.p }, { time: b.t + 35 * 60, price: h.p }], {
-                shape: 'trend_line', text: `${h.k} ${h.s.name} (${fmt(h.p)})`, lock: false,
-                overrides: { linecolor: lvColor(h.k), linewidth: 1, linestyle: 0, showLabel: true, textcolor: lvColor(h.k), horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
-            }
-            ids.push(await c.createMultipointShape([{ time: liq.t, price: liq.p }, { time: liq.takenT, price: liq.p }], {
-              shape: 'trend_line', text: `${liq.side} ${liq.tf}`, lock: false,
+            res.push(r);
+          }
+        }
+        res.sort((a, b) => a.t - b.t);
+        for (const r of res) {
+          const isH = r.isH;
+          for (const h of r.hits) {
+            ids.push(await c.createMultipointShape([{ time: r.t - 25 * 60, price: h.p }, { time: r.t + 35 * 60, price: h.p }], {
+              shape: 'trend_line', text: `${h.k} ${h.s.name} (${fmt(h.p)})`, lock: false,
+              overrides: { linecolor: lvColor(h.k), linewidth: 1, linestyle: 0, showLabel: true, textcolor: lvColor(h.k), horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
+          }
+          if (r.liq) {
+            ids.push(await c.createMultipointShape([{ time: r.liq.t, price: r.liq.p }, { time: r.liq.takenT, price: r.liq.p }], {
+              shape: 'trend_line', text: `${r.liq.side} ${r.liq.tf}`, lock: false,
               overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
             if (isNQ) {
-              const base = isH ? Math.floor((liq.p - 1e-6) / 10) * 10 : Math.ceil((liq.p + 1e-6) / 10) * 10;
-              ids.push(await fib(c, liq.takenT - 4 * 60, liq.takenT, base, isH ? base + 10 : base - 10, 'Profondeur de marché'));
-              found[found.length - 1].depth = base;
+              const base = isH ? Math.floor((r.liq.p - 1e-6) / 10) * 10 : Math.ceil((r.liq.p + 1e-6) / 10) * 10;
+              ids.push(await fib(c, r.liq.takenT - 4 * 60, r.liq.takenT, base, isH ? base + 10 : base - 10, 'Profondeur de marché'));
+              r.depth = base;
             }
           }
+          found.push(r);
         }
         keep(i, 'tops', ids);
       }
-      return found.length ? found.map(f => `${f.sym.slice(1)} ${f.isH ? 'Top' : 'Bottom'} ${nyHM(f.t)} @ ${fmt(f.P)} : ` +
-        f.hits.map(h => `${h.k} ${h.s.name} (${fmt(h.p)})`).join(' + ') +
-        ` · ${f.liq.side} ${f.liq.tf} ${fmt(f.liq.p)} sweep ${nyHM(f.liq.takenT)}` + (f.depth ? ` · profondeur depuis ${f.depth.toFixed(2)}` : '')).join('\n')
-        : 'Aucun top/bottom avec sweep m15/H1 + zone ≥ 2 STDV aujourd\'hui';
+      J.data = found.map(f => ({ date: d, actif: f.sym.slice(1), type: f.isH ? 'Top' : 'Bottom', extreme: f.dayExtreme || 'Swing', heure_ny: nyHM(f.t), prix: +fmt(f.P),
+        macro: f.macro, stdv: f.hits.map(h => ({ niveau: h.k, session: h.s.name, prix: +fmt(h.p) })),
+        liquidite: f.liq ? { type: f.liq.side, tf: f.liq.tf, prix: +fmt(f.liq.p), sweep_ny: nyHM(f.liq.takenT) } : null,
+        profondeur_depuis: f.depth ?? null, catch_possible: f.catchable }));
+      return found.length ? found.map(f => `${f.sym.slice(1)} ${f.dayExtreme || (f.isH ? 'Top' : 'Bottom')} ${nyHM(f.t)} @ ${fmt(f.P)} · ${f.macro} · ` +
+        (f.hits.length ? 'STDV ' + f.hits.map(h => `${h.k} ${h.s.name} (${fmt(h.p)})`).join(' + ') : 'aucun STDV') +
+        (f.liq ? ` · ${f.liq.side} ${f.liq.tf} ${fmt(f.liq.p)} sweep ${nyHM(f.liq.takenT)}` : ' · pas de sweep H1/m15') +
+        (f.depth ? ` · profondeur depuis ${f.depth.toFixed(2)}` : '') + ` → catch ${f.catchable ? 'POSSIBLE ✅' : 'non ❌'}`).join('\n')
+        : 'Aucune donnée';
+    },
+    // Macros XX:50–XX:10 and mini macros XX:25–XX:35 (02h50 → 16h10 New York), drawn as boxes on every chart
+    async macros() {
+      const d = day(), out = [];
+      for (let i = 0; i < api.chartsCount(); i++) {
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
+        clearGroup(i, 'macros');
+        const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
+        if (!all.length) continue;
+        const hi = Math.max(...all.map(b => b.h)), lo = Math.min(...all.map(b => b.l)), pad = (hi - lo) * 0.05;
+        const ids = [];
+        for (let h = 2; h <= 16; h++) {
+          const boxes = [[ny(d, h, 0) - 600, ny(d, h, 10), `Macro ${h}h`, 'rgba(120,120,120,0.10)'], [ny(d, h, 25), ny(d, h, 35), `Mini ${h}h30`, 'rgba(156,39,176,0.07)']];
+          for (const [a, b, txt, bg] of boxes) {
+            if (h === 16 && txt.startsWith('Mini')) continue;
+            ids.push(await c.createMultipointShape([{ time: a, price: hi + pad }, { time: b, price: lo - pad }], {
+              shape: 'rectangle', text: txt, lock: false,
+              overrides: { backgroundColor: bg, fillBackground: true, color: 'rgba(0,0,0,0)', linewidth: 0, showLabel: true, textColor: '#555555', fontSize: 10, horzLabelsAlign: 'center', vertLabelsAlign: 'top' } }));
+          }
+        }
+        keep(i, 'macros', ids);
+        out.push(`${c.symbol()} : ${ids.length} zones`);
+      }
+      return out;
     },
     async report() {
       const d = day(), lines = [`Jarvis 8H — ${d} (NY ${nyHM(now())})`];
