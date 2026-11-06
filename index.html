@@ -235,6 +235,22 @@ body{background:#060607}
 .jtop .acts{display:flex;gap:8px;flex-wrap:wrap}
 .tsx-hexa{grid-column:span 2}
 @media (max-width:900px){.tsx-hexa{grid-column:auto}}
+.rv-views{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 12px;border-bottom:1px solid #1d1d22;padding-bottom:8px}
+.rv-v{background:none;border:none;color:#9a9ca7;padding:6px 10px;border-radius:6px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.rv-v span{font-size:12px;opacity:.8}.rv-v:hover{background:#15151a;color:#e3e4ea}.rv-v.on{background:#1d1d24;color:#fff}
+.rv-cal{background:#0e0e11;border:1px solid #1d1d22;border-radius:10px;padding:12px}
+.rv-ch{display:flex;justify-content:space-between;align-items:center;margin:0 4px 8px}.rv-ch b{text-transform:capitalize;font-size:14px}
+.rv-ch span{display:flex;gap:6px}.rv-ch button{background:#15151a;border:1px solid #26262d;color:#d9dae0;border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit;font-size:13px}
+.rv-cg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1px solid #222228;border-top:1px solid #222228}
+.rv-cw{font-size:12px;color:#8b8d98;text-align:center;padding:6px 0;border-right:1px solid #222228;border-bottom:1px solid #222228}
+.rv-cd{min-height:120px;border-right:1px solid #222228;border-bottom:1px solid #222228;padding:4px 5px 6px;display:flex;flex-direction:column;gap:4px}
+.rv-cd.out{background:#0b0b0d}.rv-cd.out .rv-cn{color:#55575f}
+.rv-cn{align-self:flex-end;font-size:13px;color:#c9cbd2;padding:2px 4px;border-radius:50%;min-width:24px;text-align:center}
+.rv-cn.today{background:#e5534b;color:#fff;font-weight:700}
+.rv-ci{display:flex;align-items:center;gap:7px;border-radius:5px;padding:6px 8px;font-size:13px;font-weight:600;color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.rv-ci:hover{filter:brightness(1.18)}.rv-ci i{flex:none;width:8px;height:8px;border-radius:50%}
+.rv-ndl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rv-cv{min-height:380px}
 .rv-tabs{display:flex;background:#121216;border:1px solid #23232a;border-radius:8px;padding:3px;gap:2px}
 .rv-tab{background:none;border:none;color:#9a9ca7;padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600}
 .rv-tab.on{background:#2f54eb;color:#fff}
@@ -922,7 +938,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 (() => {
   const C = { default: "#373737", gray: "#5a5a5a", brown: "#603b2c", orange: "#854c1d", yellow: "#89632a", green: "#2b593f", blue: "#28456c", purple: "#492f64", pink: "#69314c", red: "#6e3630" };
   window.NOTION_COLORS = C;
-  const o = (s) => s.split("|").map((x) => { const [n, c] = x.split("~"); return { n, c: c || "default" }; });
+  const COLS_ = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
+  const o = (s) => s.split("|").map((x) => { const i = x.lastIndexOf("~"); const c = i > 0 ? x.slice(i + 1) : ""; return COLS_.includes(c) ? { n: x.slice(0, i), c } : { n: x, c: "default" }; });
   // Same attributes, options and colours as the Notion database "Respect du plan"
   const SECTIONS = [
     ["Contexte", [
@@ -1073,7 +1090,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function openPop(row, cur, rerender) {
     closePop();
     const [n, ty, opts] = FIELD[row.dataset.f];
-    pop = document.createElement("div"); pop.className = "npop";
+    pop = document.createElement("div"); pop.className = "npop"; pop.dataset.f = n;
     const draw = (q) => {
       const sel = ty === "multi" ? cur[n] || [] : cur[n] ? [cur[n]] : [];
       const list = opts.filter((x) => !q || x.n.toLowerCase().includes(q.toLowerCase()));
@@ -1094,7 +1111,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     pop.onclick = (e) => { const rm = e.target.dataset.rm; if (rm !== undefined) return pick(rm); const o = e.target.closest(".nopt"); if (o) pick(o.dataset.v); };
     inp.onkeydown = (e) => { if (e.key === "Enter") { const f = pop.querySelector(".nopt"); if (f) pick(f.dataset.v); } };
   }
-  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target) && !e.target.closest(".prow")) closePop(); });
+  let justClosed = null;
+  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target)) { justClosed = pop.dataset.f; closePop(); setTimeout(() => (justClosed = null), 0); } }, true);
   function openTags(t) {
     const cur = JSON.parse(JSON.stringify(META.tags[t.ID] || {}));
     ov.querySelector(".jm-h b").textContent = "Tags du trade"; ov.querySelector(".jm-h small").textContent = head(t);
@@ -1113,7 +1131,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     };
     const upd = () => { const r = rrTheo(cur); const el = body.querySelector("#jmRR"); if (el) el.textContent = r === null ? "" : "= " + r + " R"; };
     const rerender = () => { body.querySelectorAll(".prow.pick").forEach((row) => { const [n, ty] = FIELD[row.dataset.f]; row.querySelector(".pv").innerHTML = val(n, ty); }); };
-    body.onclick = (e) => { const row = e.target.closest(".prow.pick"); if (row) openPop(row, cur, rerender); };
+    body.onclick = (e) => { const row = e.target.closest(".prow.pick"); if (row && justClosed !== row.dataset.f) openPop(row, cur, rerender); };
     body.oninput = (e) => { const f = e.target.dataset.f; if (!f) return; const v = e.target.value; if (e.target.type === "number") { if (v === "") delete cur[f]; else cur[f] = +v; } else { if (v) cur[f] = v; else delete cur[f]; } upd(); };
     render();
     const foot = ov.querySelector(".jm-f");
@@ -1538,7 +1556,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const kget = async (k) => { const db = await idb(); if (!db) return mem[k]; return new Promise((ok) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ok(undefined); }); };
   const kset = async (k, v) => { mem[k] = v; const db = await idb(); if (!db) return; return new Promise((ok) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = ok; t.onerror = ok; }); };
 
-  let state = { tab: "journal", macro: null, homework: null, wtf: null, journal: null, synced: null, filt: {} };
+  let state = { tab: "journal", view: "Analyse", macro: null, homework: null, wtf: null, journal: null, synced: null, filt: {}, cal: {} };
+  try { const v = localStorage.getItem("econcal-review-view"); if (v) state.view = v; } catch (e) {}
   const colorOf = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return NC()[o ? o.c : "default"] || "#373737"; };
   const chips = (schema, f, v) => (Array.isArray(v) ? v : v ? [v] : []).map((x) => `<span class="nchip" style="background:${colorOf(schema, f, x)}">${esc(x)}</span>`).join(" ");
 
@@ -1615,6 +1634,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const cellOf = (r, c, schema) => {
     const v = r[c], t = schema[c] ? schema[c].type : "";
     if (t === "multi_select" || t === "select") return chips(schema, c, v);
+    if ((c === "Entrée" || c === "Sortie") && v) return new Date(v).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
     if (c === "Date") return v ? new Date(v.length > 10 ? v : v + "T12:00:00").toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" }) : "";
     if (typeof v === "number") return `<span class="${c.startsWith("RR") || c === "PnL" ? (v > 0 ? "up" : v < 0 ? "dn" : "") : ""}">${v}</span>`;
     if (c === "Commentaire") return `<span class="rv-cm" title="${esc(v)}">${esc(v)}</span>`;
@@ -1630,24 +1650,123 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (state.tab === "wtf") {
       if (!state.wtf) { body.innerHTML = emptyMsg("What to focus on ?"); return; }
       const hw = state.homework;
-      body.innerHTML = `<div class="rv-page"><h1>📷 What to focus on ?</h1>` + blocksHTML(state.wtf, { db: (b) => hw ? `<h3 class="rv-dbt">${esc(b.title || "Homework")}</h3>` + dbTable(hw, ["Name", "Date", "Tags"], "hw") : "" }) + "</div>";
+      body.innerHTML = `<div class="rv-page wide"><h1>📷 What to focus on ?</h1>` + blocksHTML(state.wtf, { db: (b) => hw ? `<h3 class="rv-dbt">${esc(b.title || "Homework")}</h3>` + calendar("hw", hw, (r) => colorOf(hw.schema, "Tags", (r.Tags || [])[0]), (r) => dotOf(hw.schema, "Tags", (r.Tags || [])[0])) : "" }) + "</div>";
       return;
     }
     const m = state.macro;
     if (!m) { body.innerHTML = emptyMsg("Journal de Neal"); return; }
     const rows = filtered().sort((a, b) => String(b.Date || "").localeCompare(String(a.Date || ""))), s = stats(rows);
     const note = state.journal ? blocksHTML(state.journal.filter((b) => b.type !== "child_database")) : "";
-    body.innerHTML = `<div class="rv-page wide"><h1>Journal de Neal</h1>${note ? `<div class="rv-note">${note}</div>` : ""}
-      <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
-        <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
-      <div class="kpis">
+    const V = VIEWS.find((v) => v.name === state.view) || VIEWS[0];
+    const vrows = V.filter ? rows.filter(V.filter) : rows;
+    let content = "";
+    if (V.type === "analyse") content = `<div class="kpis">
         <div class="kpi"><small>Setups</small><b>${s.n}</b><i>${s.w} gagnants · ${s.l} perdants · ${s.be} BE</i></div>
         <div class="kpi"><small>Winrate (TP vs SL)</small><b class="${s.wr >= 0.5 ? "pos" : "neg"}">${pct(s.wr)}</b><i>pris + pas pris</i></div>
         <div class="kpi"><small>RR moyen (RR fait)</small><b>${f2(s.rr)}</b><i>par setup</i></div>
         <div class="kpi"><small>Σ RR</small><b class="${s.sum >= 0 ? "pos" : "neg"}">${f2(s.sum)}</b><i>si tous les setups étaient pris</i></div>
       </div>
       <div class="rv-grid">${["Time", "PD Array M1", "Prise de liquidité", "Status"].map((f) => `<div class="panel"><div class="ptitle">Par ${esc(f)}</div>${breakdown(rows, f, m.schema)}</div>`).join("")}</div>
-      <div class="panel" style="margin-top:14px"><div class="ptitle">Macro · ${rows.length} setups</div>${dbTable({ schema: m.schema, rows }, COLS, "macro")}</div></div>`;
+      <div class="panel" style="margin-top:14px"><div class="ptitle">Macro · ${rows.length} setups</div>${dbTable({ schema: m.schema, rows }, COLS, "macro")}</div>`;
+    else if (V.type === "calendar") content = calendar("macro", { schema: m.schema, rows: vrows }, (r) => colorOf(m.schema, "Status", (r.Status || [])[0]), (r) => dotOf(m.schema, "Status", (r.Status || [])[0]));
+    else if (V.type === "table") content = `<div class="panel"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div>${dbTable({ schema: m.schema, rows: vrows }, V.cols, "macro")}</div>`;
+    else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
+    body.innerHTML = `<div class="rv-page wide"><h1>Journal de Neal</h1>${note ? `<div class="rv-note">${note}</div>` : ""}
+      <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}</div>
+      <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
+        <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
+      ${content}</div>`;
+    if (V.type === "chart") drawChart(body.querySelector(".rv-cv"), V, vrows, m.schema);
+  }
+
+  /* --- Notion views of the Macro database (same definitions as in Notion) --- */
+  const ST = (...v) => (r) => (r.Status || []).some((x) => v.includes(x));
+  const VIEWS = [
+    { name: "Analyse", icon: "◧", type: "analyse" },
+    { name: "Trades", icon: "▦", type: "calendar" },
+    { name: "In", icon: "▦", type: "calendar", filter: ST("TP", "BE (SL)", "BE (TP)", "SL") },
+    { name: "Review & Paper", icon: "▦", type: "calendar", filter: ST("Pas pris (TP)", "Pas pris (SL)", "Pas pris (BE ~ SL)", "Pas pris (BE ~ TP)") },
+    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Date", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
+    { name: "Status", icon: "◔", type: "chart", chart: "donut", by: "Status", filter: ST("SL", "BE (TP)", "BE (SL)", "TP"), sort: "y-desc" },
+    { name: "PD Array m1", icon: "◔", type: "chart", chart: "donut", by: "PD Array M1", hideEmpty: true },
+    { name: "Prise de liquidité", icon: "▥", type: "chart", chart: "column", by: "Prise de liquidité", sort: "manual" },
+    { name: "Time", icon: "◔", type: "chart", chart: "donut", by: "Time", hideEmpty: true },
+    { name: "RR /Month", icon: "▥", type: "chart", chart: "column", by: "Date:month", sum: "RR fait", filter: ST("TP", "BE (SL)", "SL", "BE (TP)"), sort: "x-asc" },
+    { name: "MAE", icon: "▥", type: "chart", chart: "column", by: "MAE (R)", numeric: true, labels: true },
+    { name: "MFE", icon: "▥", type: "chart", chart: "column", by: "MFE (R)", numeric: true, labels: true },
+  ];
+  const DOT = { default: "#9b9b9b", gray: "#9b9b9b", brown: "#ba856f", orange: "#e08a35", yellow: "#e2b33d", green: "#4fb37e", blue: "#4a9be8", purple: "#a077d6", pink: "#d26da4", red: "#e5534b" };
+  const dotOf = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return DOT[o ? o.c : "default"]; };
+  const optC = (schema, f, v) => { const o = schema && schema[f] && (schema[f].options || []).find((x) => x.n === v); return o ? o.c : "default"; };
+
+  function drawChart(el, V, rows, schema) {
+    if (!window.d3) { el.textContent = "Graphique indisponible (d3 non chargé)"; return; }
+    let data;
+    if (V.by === "Date:month") {
+      const g = new Map(); rows.forEach((r) => { if (!r.Date) return; const k = String(r.Date).slice(0, 7); g.set(k, (g.get(k) || 0) + (typeof r[V.sum] === "number" ? r[V.sum] : 0)); });
+      data = [...g.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, v]) => ({ k, label: new Date(k + "-15").toLocaleDateString("fr-FR", { month: "short", year: "numeric" }), v: Math.round(v * 100) / 100, c: v >= 0 ? "#4ccf6a" : "#e5534b" }));
+    } else if (V.numeric) {
+      const g = new Map(); rows.forEach((r) => { const x = r[V.by]; if (typeof x !== "number") return; g.set(x, (g.get(x) || 0) + 1); });
+      data = [...g.entries()].sort((a, b) => a[0] - b[0]).map(([k, v]) => ({ k, label: String(k), v, c: "#4a9be8" }));
+    } else {
+      const opts = (schema[V.by] && schema[V.by].options) || [];
+      const g = new Map(opts.map((o) => [o.n, 0])); rows.forEach((r) => (Array.isArray(r[V.by]) ? r[V.by] : r[V.by] ? [r[V.by]] : []).forEach((x) => g.set(x, (g.get(x) || 0) + 1)));
+      if (V.filter && V.by === "Status") for (const k of [...g.keys()]) if (!V.filter({ Status: [k] })) g.delete(k);
+      data = [...g.entries()].map(([k, v]) => ({ k, label: k, v, c: DOT[optC(schema, V.by, k)] }));
+      if (V.hideEmpty) data = data.filter((d) => d.v > 0);
+      if (V.sort === "y-desc") data.sort((a, b) => b.v - a.v);
+    }
+    const W = Math.max(320, el.clientWidth || 900);
+    if (!data.length) { el.innerHTML = '<div class="tsx-empty">Aucune donnée</div>'; return; }
+    if (V.chart === "donut") {
+      const H = 380, R = 150, total = d3.sum(data, (d) => d.v);
+      const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
+      const g = svg.append("g").attr("transform", `translate(${Math.min(W / 2 - 160, 260)},${H / 2})`);
+      const arcs = d3.pie().sort(null).value((d) => d.v)(data), arc = d3.arc().innerRadius(R * 0.58).outerRadius(R), lab = d3.arc().innerRadius(R * 0.8).outerRadius(R * 0.8);
+      g.selectAll("path").data(arcs).join("path").attr("d", arc).attr("fill", (d) => d.data.c).attr("stroke", "#0e0e11").attr("stroke-width", 2).append("title").text((d) => `${d.data.label} : ${d.data.v}`);
+      g.selectAll("text.v").data(arcs.filter((a) => a.endAngle - a.startAngle > 0.18)).join("text").attr("class", "v").attr("transform", (d) => `translate(${lab.centroid(d)})`).attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", "#fff").attr("font-size", 12).attr("font-weight", 700).text((d) => d.data.v);
+      g.append("text").attr("text-anchor", "middle").attr("dy", "-0.2em").attr("fill", "#fff").attr("font-size", 30).attr("font-weight", 700).text(total);
+      g.append("text").attr("text-anchor", "middle").attr("dy", "1.4em").attr("fill", "#8b8d98").attr("font-size", 12).text("Total");
+      const lg = svg.append("g").attr("transform", `translate(${Math.min(W / 2 - 160, 260) + R + 50},${Math.max(20, H / 2 - data.length * 11)})`);
+      data.forEach((d, i) => { const y = i * 22; lg.append("circle").attr("cx", 6).attr("cy", y + 6).attr("r", 5).attr("fill", d.c); lg.append("text").attr("x", 18).attr("y", y + 10).attr("fill", "#e3e4ea").attr("font-size", 13).text(`${d.label}`); lg.append("text").attr("x", 230).attr("y", y + 10).attr("fill", "#8b8d98").attr("font-size", 13).attr("text-anchor", "end").text(`${d.v} · ${((d.v / total) * 100).toFixed(0)}%`); });
+    } else {
+      const H = 380, mb = 70, ml = 46, mt = 18;
+      const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
+      const x = d3.scaleBand(data.map((d) => String(d.k)), [ml, W - 10]).padding(0.28);
+      const lo = Math.min(0, d3.min(data, (d) => d.v)), hi = Math.max(0, d3.max(data, (d) => d.v));
+      const y = d3.scaleLinear([lo, hi], [H - mb, mt]).nice();
+      y.ticks(6).forEach((t) => { svg.append("line").attr("x1", ml).attr("x2", W - 10).attr("y1", y(t)).attr("y2", y(t)).attr("stroke", "#1f1f25"); svg.append("text").attr("x", ml - 8).attr("y", y(t)).attr("dy", "0.32em").attr("text-anchor", "end").attr("fill", "#8b8d98").attr("font-size", 11).text(t); });
+      svg.append("line").attr("x1", ml).attr("x2", W - 10).attr("y1", y(0)).attr("y2", y(0)).attr("stroke", "#3a3a42");
+      const bw = Math.min(56, x.bandwidth());
+      svg.selectAll("rect").data(data).join("rect").attr("x", (d) => x(String(d.k)) + (x.bandwidth() - bw) / 2).attr("width", bw).attr("y", (d) => y(Math.max(0, d.v))).attr("height", (d) => Math.max(1, Math.abs(y(d.v) - y(0)))).attr("rx", 3).attr("fill", (d) => d.c).append("title").text((d) => `${d.label} : ${d.v}`);
+      svg.selectAll("text.v").data(data).join("text").attr("class", "v").attr("x", (d) => x(String(d.k)) + x.bandwidth() / 2).attr("y", (d) => (d.v >= 0 ? y(d.v) - 5 : y(d.v) + 13)).attr("text-anchor", "middle").attr("fill", "#e3e4ea").attr("font-size", 11).attr("font-weight", 700).text((d) => d.v);
+      const step = Math.max(1, Math.ceil(data.length / Math.floor((W - ml) / 46)));
+      svg.selectAll("text.x").data(data.filter((d, i) => i % step === 0)).join("text").attr("class", "x").attr("transform", (d) => `translate(${x(String(d.k)) + x.bandwidth() / 2},${H - mb + 14}) rotate(${data.length > 8 ? -35 : 0})`).attr("text-anchor", data.length > 8 ? "end" : "middle").attr("fill", "#c9cbd2").attr("font-size", 11.5).text((d) => d.label);
+    }
+  }
+
+  /* --- calendar view (like Notion) --- */
+  function calendar(kind, db, bg, dot) {
+    const key = kind, now = new Date();
+    const cur = state.cal[key] || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const [Y, M] = cur.split("-").map(Number);
+    const first = new Date(Y, M - 1, 1), start = new Date(Y, M - 1, 1 - first.getDay());
+    const byDay = new Map(); const nodate = [];
+    db.rows.forEach((r) => { if (!r.Date) { nodate.push(r); return; } const k = String(r.Date).slice(0, 10); if (!byDay.has(k)) byDay.set(k, []); byDay.get(k).push(r); });
+    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const today = iso(now);
+    let cells = "";
+    const weeks = Math.ceil((first.getDay() + new Date(Y, M, 0).getDate()) / 7);
+    for (let i = 0; i < weeks * 7; i++) {
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), k = iso(d), items = byDay.get(k) || [];
+      const lab = d.getDate() === 1 ? d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : d.getDate();
+      cells += `<div class="rv-cd${d.getMonth() !== M - 1 ? " out" : ""}"><div class="rv-cn${k === today ? " today" : ""}">${lab}</div>` +
+        items.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("") + "</div>";
+    }
+    const mlab = first.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    return `<div class="rv-cal"><div class="rv-ch"><b>${mlab}</b><span>${nodate.length ? `<button class="rv-nd" data-cal="${kind}">Aucune date (${nodate.length})</button>` : ""}<button data-cal="${kind}" data-step="-1">‹</button><button data-cal="${kind}" data-step="0">Aujourd'hui</button><button data-cal="${kind}" data-step="1">›</button></span></div>
+      <div class="rv-cg">${["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."].map((d) => `<div class="rv-cw">${d}</div>`).join("")}${cells}</div>
+      ${state.cal[key + ":nd"] && nodate.length ? `<div class="rv-ndl">${nodate.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("")}</div>` : ""}</div>`;
   }
   function dbTable(db, cols, kind) {
     return `<div class="rv-tw"><table class="rv-t"><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>` +
@@ -1680,13 +1799,15 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function openFilter(btn) {
     pop && pop.remove(); const f = btn.dataset.f, m = state.macro; if (!m) return;
     const opts = (m.schema[f] && m.schema[f].options) || [...new Set(m.rows.flatMap((r) => (Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : [])))].map((n) => ({ n, c: "default" }));
-    pop = document.createElement("div"); pop.className = "npop";
+    if (fClosed === f) return;
+    pop = document.createElement("div"); pop.className = "npop"; pop.dataset.f = f;
     const draw = () => { const sel = state.filt[f] || []; pop.querySelector(".npop-list").innerHTML = opts.map((o) => `<div class="nopt${sel.includes(o.n) ? " on" : ""}" data-v="${esc(o.n)}"><span class="nchip" style="background:${NC()[o.c] || "#373737"}">${esc(o.n)}</span>${sel.includes(o.n) ? '<span class="ck">✓</span>' : ""}</div>`).join(""); };
     pop.innerHTML = `<div class="npop-t">Filtrer : ${esc(f)}</div><div class="npop-list"></div>`;
     document.body.append(pop); const r = btn.getBoundingClientRect(); pop.style.left = Math.min(r.left, innerWidth - 340) + "px"; pop.style.top = r.bottom + 4 + "px"; draw();
     pop.onclick = (e) => { const o = e.target.closest(".nopt"); if (!o) return; const a = state.filt[f] || []; const i = a.indexOf(o.dataset.v); i >= 0 ? a.splice(i, 1) : a.push(o.dataset.v); state.filt[f] = a; draw(); render(); };
   }
-  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target) && !e.target.closest(".rv-f")) { pop.remove(); pop = null; } });
+  let fClosed = null;
+  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target)) { fClosed = pop.dataset.f; pop.remove(); pop = null; setTimeout(() => (fClosed = null), 0); } }, true);
 
   /* --- CSV import (web fallback) --- */
   function parseCSV(t) { const rows = []; let r = [], c = "", q = false; t = t.replace(/^﻿/, "");
@@ -1708,7 +1829,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   window.addEventListener("DOMContentLoaded", () => {});
   (async () => {
     await loadCache();
-    if (!D) { $("rvSync").hidden = true; $("rvSetupBtn").hidden = true; }
+    if (!D) { $("rvSync").hidden = true; }
     else {
       $("rvSync").onclick = sync;
       $("rvTokenSave").onclick = async () => { const r = await D.notionSetToken($("rvToken").value); $("rvTokenMsg").textContent = r.ok ? "Connecté ✓ (" + r.bot + ")" : "Token refusé"; if (r.ok) { showSetup(false); sync(); } };
@@ -1717,12 +1838,19 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     }
     document.querySelectorAll(".rv-tab").forEach((b) => (b.onclick = () => { state.tab = b.dataset.t; render(); }));
     $("rvBody").addEventListener("click", (e) => {
-      const tr = e.target.closest("tr[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
+      const tr = e.target.closest("tr[data-id],.rv-ci[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
+      const vb = e.target.closest(".rv-v"); if (vb) { state.view = vb.dataset.v; try { localStorage.setItem("econcal-review-view", state.view); } catch (err) {} render(); return; }
+      const cb = e.target.closest("[data-cal]"); if (cb) { const k = cb.dataset.cal;
+        if (cb.classList.contains("rv-nd")) { state.cal[k + ":nd"] = !state.cal[k + ":nd"]; render(); return; }
+        const st = +cb.dataset.step, now = new Date(); let [y, m] = (state.cal[k] || `${now.getFullYear()}-${now.getMonth() + 1}`).split("-").map(Number);
+        if (st === 0) { y = now.getFullYear(); m = now.getMonth() + 1; } else { m += st; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } }
+        state.cal[k] = `${y}-${String(m).padStart(2, "0")}`; render(); return; }
       const fb = e.target.closest(".rv-f"); if (fb) { if (fb.dataset.clear) { state.filt = {}; render(); } else openFilter(fb); }
     });
     $("rvBody").addEventListener("input", (e) => { if (e.target.classList.contains("rv-q")) { state.q = e.target.value; const pos = e.target.selectionStart; render(); const q = document.querySelector(".rv-q"); q.focus(); q.setSelectionRange(pos, pos); } });
     $("rvBody").addEventListener("change", (e) => { if (e.target.id === "rvCsv" && e.target.files[0]) importCSV(e.target.files[0]); });
     render();
+    let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (document.querySelector("#v-review.on .rv-chart")) render(); }, 200); });
   })();
 })();
 </script>
