@@ -103,6 +103,7 @@ ipcMain.handle("notion:create", (e, db, props, tpl) => wrap((t) => notion.create
 ipcMain.handle("notion:update", (e, db, id, props) => wrap((t) => notion.updatePage(t, nfetch, db, id, props)));
 ipcMain.handle("notion:archive", (e, id) => wrap((t) => notion.archivePage(t, nfetch, id)));
 ipcMain.handle("notion:append", (e, parent, items) => wrap((t) => notion.appendBlocks(t, nfetch, parent, items)));
+ipcMain.handle("notion:caption", (e, id, c) => wrap((t) => notion.setCaption(t, nfetch, id, c)));
 ipcMain.handle("notion:delblock", (e, id) => wrap((t) => notion.deleteBlock(t, nfetch, id)));
 
 /* ---------- app data (abonnements + factures) : app-data.json ---------- */

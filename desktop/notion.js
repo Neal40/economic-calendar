@@ -165,15 +165,18 @@ async function appendBlocks(token, fetchFn, parentId, items) {
   const { call } = client(token, fetchFn);
   const children = [];
   for (const it of items || []) {
-    if (it.type === "image") { const id = await uploadImage(token, fetchFn, it.data, it.name); children.push({ object: "block", type: "image", image: { type: "file_upload", file_upload: { id } } }); }
+    if (it.type === "image") { const id = await uploadImage(token, fetchFn, it.data, it.name); children.push({ object: "block", type: "image", image: { type: "file_upload", file_upload: { id }, caption: it.caption ? [{ type: "text", text: { content: String(it.caption).slice(0, 2000) } }] : [] } }); }
     else for (const line of String(it.text || "").split(/\n/)) children.push({ object: "block", type: "paragraph", paragraph: { rich_text: line ? [{ type: "text", text: { content: line.slice(0, 2000) } }] : [] } });
   }
   if (!children.length) return { ids: [] };
   const r = await call(`/blocks/${parentId}/children`, "PATCH", { children });
   return { ids: (r.results || []).slice(-children.length).map((b) => b.id) };
 }
+/** rename an image (its Notion caption) */
+async function setCaption(token, fetchFn, id, caption) { const { call } = client(token, fetchFn);
+  await call(`/blocks/${id}`, "PATCH", { image: { caption: caption ? [{ type: "text", text: { content: String(caption).slice(0, 2000) } }] : [] } }); return { id, caption }; }
 async function deleteBlock(token, fetchFn, id) { const { call } = client(token, fetchFn); await call(`/blocks/${id}`, "DELETE"); return { id }; }
 
 async function check(token, fetchFn) { const { call } = client(token, fetchFn); const me = await call("/users/me"); return { ok: true, bot: me.name || "integration" }; }
 
-module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage, appendBlocks, deleteBlock };
+module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage, appendBlocks, deleteBlock, setCaption };

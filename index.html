@@ -442,6 +442,25 @@ table.tbl:has(#subT){min-width:900px}
 .rv-th span{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px 2px}
 .rv-th.on{border-color:#4a6cf7;opacity:1}
 .rv-img img{cursor:zoom-in}
+
+.tsx-five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tsx-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tsx-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@container main (max-width:1250px){.tsx-five{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@container main (max-width:900px){.tsx-two,.tsx-three{grid-template-columns:1fr}.tsx-five{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container main (max-width:520px){.tsx-five{grid-template-columns:1fr}}
+.nm-ov{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center}
+.nm-box{width:420px;max-width:92vw;background:#16171c;border:1px solid #2c2d35;border-radius:12px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:12px}
+.nm-box b{color:#fff;font-size:15px}
+.nm-box img{max-height:180px;object-fit:contain;border-radius:6px;background:#000}
+.nm-box input{background:#0d0e11;border:1px solid #2c2d35;border-radius:8px;color:#eef0f4;font:inherit;font-size:14px;padding:9px 11px;outline:none}
+.nm-box input:focus{border-color:#4a6cf7}
+.nm-sug{display:flex;flex-wrap:wrap;gap:5px}
+.nm-sug button{background:#23242b;border:1px solid #2f3038;color:#d9dae0;border-radius:14px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
+.nm-act{display:flex;justify-content:flex-end;gap:8px}
+.rv-gtools{display:flex;gap:6px}
+.rv-gtools button{background:#23242b;border:1px solid #2f3038;color:#d9dae0;border-radius:7px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
+.rv-gtools button.del{color:#ff8a8a}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -601,15 +620,15 @@ table.tbl:has(#subT){min-width:900px}
     <div class="tsx-card"><div class="tsx-h" data-draw="baltitle">Daily Account Balance</div><div class="tsx-chart" data-draw="balance"></div></div>
   </div>
 
-  <div class="tsx-g">
+  <div class="tsx-g tsx-five">
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Most Active Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le plus actif">—</div></div><div class="tsx-sub" data-draw="k" data-source="jours_calc" data-field="Détail">—</div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Most Profitable Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le plus rentable">—</div></div><div class="tsx-right" data-draw="k" data-source="jours_calc" data-field="P&amp;L jour le plus rentable" data-fmt="usd" data-sign="1">—</div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Least Profitable Day</div><div class="tsx-mid" data-draw="k" data-source="jours_calc" data-field="Jour le moins rentable">—</div></div><div class="tsx-right" data-draw="k" data-source="jours_calc" data-field="P&amp;L jour le moins rentable" data-fmt="usd" data-sign="1">—</div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total Number of Trades</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total Trades" data-fmt="int">—</div></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Total Number of Lots Traded</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Total Lots" data-fmt="int">—</div></div></div>
-    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Trade Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Trade Duration">—</div></div></div>
   </div>
-  <div class="tsx-g2">
+  <div class="tsx-g2 tsx-three">
+    <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Trade Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Trade Duration">—</div></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Win Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Win Duration">—</div></div></div>
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Average Loss Duration</div><div class="tsx-big" data-draw="k" data-source="comptes" data-field="Avg Loss Duration">—</div></div></div>
   </div>
@@ -624,7 +643,7 @@ table.tbl:has(#subT){min-width:900px}
     <div class="tsx-card tsx-kpi"><div><div class="tsx-lab">Worst Trade</div><div class="tsx-big dn" data-draw="k" data-source="comptes" data-field="Worst Trade" data-fmt="usd">—</div></div><div class="tsx-sub" style="max-width:200px" data-draw="k" data-source="comptes" data-field="Worst Trade · détail">—</div></div>
   </div>
 
-  <div class="tsx-g2">
+  <div class="tsx-g2 tsx-two">
     <div class="tsx-card"><div class="tsx-h">Daily Net Cumulative P&amp;L</div><div class="tsx-chart" data-draw="cum"></div></div>
     <div class="tsx-card"><div class="tsx-h">Net Daily P&amp;L</div><div class="tsx-chart" data-draw="bars"></div></div>
     <div class="tsx-card"><div class="tsx-h">Trade Duration Analysis</div><div class="tsx-chart" data-draw="hbar" data-mode="count"></div></div>
@@ -2103,15 +2122,18 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       ${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Coller une image (Ctrl+V) ou écrire du texte (Entrée)…"></div>` : ""}</section>`;
   }
   /* one gallery for the whole page : every image, subtitle = its section (NQ, ES, NQ - NWOG & 1st…) */
-  function galleryHTML(bs) {
+  function galleryHTML(bs, ed) {
     const L = []; const walk = (arr, sec) => (arr || []).forEach((b) => { if (b.type === "image" && b.src) L.push({ b, sec }); else if (b.children && b.type !== "child_database") walk(b.children, b.type === "toggle" ? (b.rt || []).map((x) => x.t || "").join("").trim() : sec); });
     walk(bs, ""); if (!L.length) return "";
-    const cap = (x) => [x.sec, x.b.caption].filter(Boolean).join(" · ");
-    return `<section class="rv-car rv-gal" data-car data-gal="1"><div class="rv-car-h"><b class="rv-car-n">Image 1 / ${L.length}</b><span class="rv-car-cap">${esc(cap(L[0]))}</span><span class="rv-car-hint">← → pour défiler · clic pour agrandir</span></div>
-      <div class="rv-car-v">${L.length > 1 ? '<button class="rv-car-b" data-dir="-1" title="Précédente (←)">‹</button>' : ""}<div class="rv-car-t">${L.map((x) => `<figure class="rv-slide" data-cap="${esc(cap(x))}"><img src="${x.b.src}" alt="" loading="lazy"></figure>`).join("")}</div>${L.length > 1 ? '<button class="rv-car-b" data-dir="1" title="Suivante (→)">›</button>' : ""}</div>
-      ${L.length > 1 ? `<div class="rv-car-th">${L.map((x, i) => `<button class="rv-th${i ? "" : " on"}" data-slide="${i}" title="${esc(cap(x))}"><img src="${x.b.src}" alt=""><span>${esc(x.sec || "Page")}</span></button>`).join("")}</div>` : ""}</section>`;
+    const cap = (x) => [x.sec, x.b.caption].filter(Boolean).join(" · "), lab = (x) => x.b.caption || x.sec || "Page";
+    return `<section class="rv-car rv-gal" data-car data-gal="1"><div class="rv-car-h"><b class="rv-car-n">Image 1 / ${L.length}</b><span class="rv-car-cap">${esc(cap(L[0]))}</span><span class="rv-car-hint">← → pour défiler · clic pour agrandir</span>${ed ? '<span class="rv-gtools"><button data-gren title="Donner un nom à cette image (enregistré dans Notion)">✎ Renommer</button><button class="del" data-gdel title="Supprimer cette image de Notion">Supprimer</button></span>' : ""}</div>
+      <div class="rv-car-v">${L.length > 1 ? '<button class="rv-car-b" data-dir="-1" title="Précédente (←)">‹</button>' : ""}<div class="rv-car-t">${L.map((x) => `<figure class="rv-slide" data-cap="${esc(cap(x))}" data-id="${esc(x.b.id || "")}" data-name="${esc(x.b.caption || "")}" data-sec="${esc(x.sec || "")}"><img src="${x.b.src}" alt="" loading="lazy"></figure>`).join("")}</div>${L.length > 1 ? '<button class="rv-car-b" data-dir="1" title="Suivante (→)">›</button>' : ""}</div>
+      ${L.length > 1 ? `<div class="rv-car-th">${L.map((x, i) => `<button class="rv-th${i ? "" : " on"}" data-slide="${i}" title="${esc(cap(x))}"><img src="${x.b.src}" alt=""><span>${esc(lab(x))}</span></button>`).join("")}</div>` : ""}</section>`;
   }
   let carActive = null;
+  API.galleryGo = (bid) => { const car = document.querySelector(".rv-ov.show .rv-gal"); if (!car) return; const sl = [...car.querySelectorAll(".rv-slide")], i = sl.findIndex((x) => x.dataset.id === bid); if (i < 0) return;
+    car.scrollIntoView({ block: "nearest" }); const t = car.querySelector(".rv-car-t"); t.style.scrollBehavior = "auto"; t.scrollLeft = i * t.clientWidth; t.style.scrollBehavior = ""; carUpdate(car); };
+  API.galleryCur = () => { const car = document.querySelector(".rv-ov.show .rv-gal"); if (!car) return null; const sl = car.querySelectorAll(".rv-slide")[carIdx(car)]; return sl ? { id: sl.dataset.id, name: sl.dataset.name, sec: sl.dataset.sec, src: sl.querySelector("img").src } : null; };
   const carIdx = (car) => { const t = car.querySelector(".rv-car-t"); return t ? Math.round(t.scrollLeft / Math.max(1, t.clientWidth)) : 0; };
   function carUpdate(car) {
     const sl = car.querySelectorAll(".rv-slide"); if (!sl.length) return; const i = Math.min(sl.length - 1, carIdx(car));
@@ -2330,7 +2352,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     let blocks = await kget("page:" + id);
     API.curPage = id;
     const ed = API.canEdit && !!D;
-    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${galleryHTML(bs)}${blocksHTML(bs, { edit: ed, noImg: true }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
+    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${galleryHTML(bs, ed)}${blocksHTML(bs, { edit: ed, noImg: true }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
     API.refreshPage = async () => { if (!D) return; const res = await D.notionBlocks(id); if (!res.ok || API.curPage !== id || !ov.classList.contains("show")) return; await kset("page:" + id, res.data);
       const st = mb.scrollTop, pg = mb.querySelector(".rv-page"); if (pg) pg.outerHTML = '<div id="rvPg"></div>'; show(res.data); mb.scrollTop = st; };
     if (blocks) show(blocks);
@@ -2546,16 +2568,42 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const lines = text.split(/\n/); (res.data.ids || []).forEach((bid, i) => box.insertAdjacentHTML("beforebegin", `<p data-bid="${esc(bid)}">${esc(lines[i] || "") || "&nbsp;"}<button class="rv-bdel" data-del="${esc(bid)}" title="Supprimer ce bloc dans Notion">✕</button></p>`));
     box.textContent = ""; box.focus(); msg("Ajouté dans Notion ✓"); pageCache();
   }
-  async function sendImages(box, files) {
-    for (const f of files) {
-      const data = await fileToData(f); const fig = document.createElement("figure"); fig.className = "rv-img"; fig.style.opacity = ".5"; fig.innerHTML = `<img src="${data}" alt="">`;
-      box.before(fig); msg("Envoi de l'image dans Notion…");
-      const res = await D.notionAppend(box.dataset.parent, [{ type: "image", data, name: f.name && f.name !== "image.png" ? f.name : "" }]);
-      if (!res.ok) { fig.remove(); return msg(why(res), true); }
-      fig.style.opacity = ""; const bid = (res.data.ids || [])[0]; if (bid) { fig.dataset.bid = bid; fig.insertAdjacentHTML("afterbegin", `<button class="rv-bdel" data-del="${esc(bid)}" title="Supprimer ce bloc dans Notion">✕</button>`); }
-      msg("Image ajoutée dans Notion ✓"); if (box.closest("[data-car]") && R.refreshPage) R.refreshPage(); else pageCache();
-    }
+  /* name modal (before adding an image, or to rename one) */
+  function askName(src, def, sec, title) {
+    return new Promise((done) => {
+      const ov = document.createElement("div"); ov.className = "nm-ov";
+      const pre = sec && sec !== "Page" ? sec + " " : "", sug = ["H4", "H1", "m15", "m5", "m1", "Exécution théorique", "Vraie exécution"].map((x) => pre + x);
+      ov.innerHTML = `<div class="nm-box"><b>${esc(title || "Nom de l'image")}</b>${src ? `<img src="${src}" alt="">` : ""}<input value="${esc(def || "")}" placeholder="ex. NQ H1" maxlength="120">
+        <div class="nm-sug">${sug.map((x) => `<button data-s="${esc(x)}">${esc(x)}</button>`).join("")}</div>
+        <div class="nm-act"><button class="btn gray" data-x>Annuler</button><button class="btn" data-ok>Enregistrer</button></div></div>`;
+      document.body.append(ov); const inp = ov.querySelector("input"); inp.focus(); inp.select();
+      const end = (v) => { ov.remove(); done(v); };
+      ov.addEventListener("click", (e) => { if (e.target === ov || e.target.closest("[data-x]")) return end(null); const sg = e.target.closest("[data-s]"); if (sg) { inp.value = sg.dataset.s; inp.focus(); return; } if (e.target.closest("[data-ok]")) end(inp.value.trim()); });
+      inp.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") end(inp.value.trim()); if (e.key === "Escape") end(null); });
+    });
   }
+  const secOf = (box) => { const d = box.closest("details"); return d ? (d.querySelector("summary").childNodes[0] || {}).textContent.trim() : ""; };
+  async function sendImages(box, files) {
+    const sec = secOf(box); let last = null;
+    for (const f of files) {
+      const data = await fileToData(f);
+      const name = await askName(data, sec || "", sec, "Nom de l'image avant l'ajout"); if (name === null) { msg("Ajout annulé"); continue; }
+      msg("Envoi de l'image dans Notion…"); box.classList.add("busy");
+      const res = await D.notionAppend(box.dataset.parent, [{ type: "image", data, name: f.name && f.name !== "image.png" ? f.name : "", caption: name }]);
+      box.classList.remove("busy");
+      if (!res.ok) return msg(why(res), true);
+      last = (res.data.ids || [])[0] || last; msg("« " + (name || "Image") + " » ajoutée dans Notion ✓");
+    }
+    if (last && R.refreshPage) { await R.refreshPage(); R.galleryGo && R.galleryGo(last); }
+  }
+  document.addEventListener("click", async (e) => {
+    const rn = e.target.closest && e.target.closest("[data-gren]"), dl = e.target.closest && e.target.closest("[data-gdel]"); if (!rn && !dl) return; e.preventDefault(); e.stopPropagation();
+    const cur = R.galleryCur && R.galleryCur(); if (!cur || !cur.id) return;
+    if (rn) { const name = await askName(cur.src, cur.name || cur.sec, cur.sec, "Renommer l'image"); if (name === null) return;
+      const res = await D.notionCaption(cur.id, name); if (!res.ok) return msg(why(res), true); msg("Image renommée ✓"); await R.refreshPage(); R.galleryGo(cur.id); return; }
+    if (!dl.dataset.ok) { dl.dataset.ok = 1; dl.textContent = "Confirmer ?"; setTimeout(() => { if (dl.isConnected) { dl.dataset.ok = ""; dl.textContent = "Supprimer"; } }, 3000); return; }
+    const res = await D.notionDeleteBlock(cur.id); if (!res.ok) return msg(why(res), true); msg("Image supprimée de Notion ✓"); await R.refreshPage();
+  }, true);
   const imgs = (dt) => [...((dt && dt.files) || [])].filter((f) => /^image\//.test(f.type));
   document.addEventListener("keydown", (e) => { const box = e.target.closest && e.target.closest(".rv-addin"); if (!box) return;
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendText(box); } });
