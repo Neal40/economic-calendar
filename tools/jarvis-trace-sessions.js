@@ -4,7 +4,7 @@
  *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
  *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
- *   await JARVIS.macros()            -> 2 vertical lines per macro XX:50–XX:10 (grey) and mini macro XX:25–XX:35 (purple)
+ *   await JARVIS.macros()            -> only macros (XX:50–XX:10, grey) / mini macros (XX:25–XX:35, purple) holding a top/bottom: 2 vertical lines
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -309,23 +309,27 @@
         (f.depth ? ` · profondeur depuis ${f.depth.toFixed(2)}` : '') + ` → catch ${f.catchable ? 'POSSIBLE ✅' : 'non ❌'}`).join('\n')
         : 'Aucune donnée';
     },
-    // Macros XX:50–XX:10 and mini macros XX:25–XX:35 (02h50 → 16h10 New York): two vertical lines each (start with label, end)
+    // Only the macros (XX:50–XX:10) / mini macros (XX:25–XX:35) where a top/bottom of the day formed: two vertical lines each
     async macros() {
       const d = day(), out = [];
+      await J.tops({ draw: false });
+      const rows = J.data || [];
       for (let i = 0; i < api.chartsCount(); i++) {
-        const c = api.chart(i);
-        if (!root(c.symbol())) continue;
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
         clearGroup(i, 'macros');
-        const ids = [];
+        const ids = [], seen = new Set();
         const vl = async (t, text, color) => ids.push(await c.createShape({ time: t }, { shape: 'vertical_line', text, lock: false,
           overrides: { linecolor: color, linestyle: 2, linewidth: 1, showLabel: !!text, textcolor: color, horzLabelsAlign: 'right', vertLabelsAlign: 'bottom', textOrientation: 'vertical' } }));
-        for (let h = 3; h <= 16; h++) {
-          await vl(ny(d, h - 1, 50), `Macro ${h}h`, '#787b86');
-          await vl(ny(d, h, 10), '', '#787b86');
-          if (h < 16) { await vl(ny(d, h, 25), `Mini ${h}h30`, '#9c27b0'); await vl(ny(d, h, 35), '', '#9c27b0'); }
+        for (const r of rows.filter(r => r.actif === sym.slice(1) && r.macro !== 'hors macro')) {
+          if (seen.has(r.macro)) continue;
+          seen.add(r.macro);
+          const m = r.macro.match(/(\d+)h(30)?$/), H = +m[1];
+          if (m[2]) { await vl(ny(d, H, 25), r.macro, '#9c27b0'); await vl(ny(d, H, 35), '', '#9c27b0'); }
+          else { await vl(H === 0 ? ny(addDays(d, -1), 23, 50) : ny(d, H - 1, 50), r.macro, '#787b86'); await vl(ny(d, H, 10), '', '#787b86'); }
         }
         keep(i, 'macros', ids);
-        out.push(`${c.symbol()} : ${ids.length} lignes`);
+        out.push(`${c.symbol()} : ${[...seen].join(', ') || 'aucune macro utile'}`);
       }
       return out;
     },
