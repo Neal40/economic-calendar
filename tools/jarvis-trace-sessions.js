@@ -205,7 +205,7 @@
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'tops');
-        const ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 12 : 3), N = opts.pivot ?? 15;
+        const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 12 : 3), N = opts.pivot ?? 15;
         const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
         const sess = (await sessionData(sym, d)).filter(s => !s.missing && !s.partial && s.hi > s.lo);
         const ext = LV.filter(k => k > 1);
@@ -247,6 +247,9 @@
             }).filter(Boolean);
             if (!sw.length) continue;
             const liq = sw.sort((x, y) => (isH ? y.p - x.p : x.p - y.p))[0];
+            const lk = liq.side + liq.t + liq.p;
+            if (used.has(lk)) continue; // same liquidity already used by an earlier top
+            used.add(lk);
             found.push({ i, sym, isH, P, t: b.t, hits, liq });
             // drawing
             for (const h of hits) {
