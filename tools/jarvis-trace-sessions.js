@@ -3,6 +3,7 @@
  *   await JARVIS.status()            -> layout, charts, symbols, TSX Sessions present?
  *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
  *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
+ *   await JARVIS.tops()              -> tops/bottoms of the day: m15/H1 BSL/SSL sweep + zone of ≥2 STDV, depth Fib (NQ)
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -97,14 +98,33 @@
   }
   function keep(i, g, ids) { W.localStorage.setItem(keyOf(i, g), JSON.stringify(ids.filter(Boolean))); }
 
-  async function fib(c, p1, p2) {
-    const id = await c.createMultipointShape([p1, p2], { shape: 'fib_retracement', lock: false });
-    const props = { showCoeffs: true, showPrices: false, extendLines: false, extendLinesLeft: false, fillBackground: false, reverse: false,
-      horzLabelsAlign: 'left', coeffsAsPercents: false, trendline: { visible: false } };
-    for (let n = 1; n <= 24; n++) {
-      const c0 = LV[n - 1];
-      props['level' + n] = c0 === undefined ? { visible: false } : { coeff: c0, color: lvColor(c0), visible: true };
+  // Rudy's saved Fibonacci templates (TopstepX "Save drawing template"): GHAITH 2, Profondeur de marché…
+  const tpls = {};
+  async function tpl(name) {
+    if (name in tpls) return tpls[name];
+    try {
+      const h = { Authorization: 'Bearer ' + localStorage.getItem('token') };
+      const r = await fetch('https://userapi.topstepx.com/drawing-templates/content/LineToolFibRetracement/' + encodeURIComponent(name), { headers: h });
+      let j = await r.json();
+      if (typeof j.content === 'string') j = JSON.parse(j.content); else if (j.content) j = j.content;
+      tpls[name] = j && typeof j === 'object' && Object.keys(j).some(k => /^level\d+$/.test(k)) ? j : null;
+    } catch (e) { tpls[name] = null; }
+    return tpls[name];
+  }
+  // Fibonacci with level 0 at `base` and level 1 at `far` (extensions continue beyond `far`)
+  async function fib(c, tA, tB, base, far, tplName = 'GHAITH 2') {
+    let props = await tpl(tplName);
+    if (!props) {
+      props = { showCoeffs: true, showPrices: false, extendLines: false, extendLinesLeft: false, fillBackground: false, reverse: true,
+        horzLabelsAlign: 'left', coeffsAsPercents: false, trendline: { visible: false }, levelsStyle: { linewidth: 2, linestyle: 0 } };
+      for (let n = 1; n <= 24; n++) {
+        const c0 = LV[n - 1];
+        props['level' + n] = c0 === undefined ? { visible: false } : { coeff: c0, color: lvColor(c0), visible: true };
+      }
     }
+    // reverse=true: price(c) = p1 + (p2 - p1)·c ; reverse=false: price(c) = p2 + (p1 - p2)·c
+    const pts = props.reverse ? [{ time: tA, price: base }, { time: tB, price: far }] : [{ time: tA, price: far }, { time: tB, price: base }];
+    const id = await c.createMultipointShape(pts, { shape: 'fib_retracement', lock: false });
     try { c.getShapeById(id).setProperties(props); } catch (e) { /* keep default style */ }
     return id;
   }
@@ -131,8 +151,8 @@
           if (s.missing || s.hi === s.lo) continue;
           const tA = s.from, tB = Math.min(s.to, now());
           // low -> high : extensions below the low ; high -> low : extensions above the high
-          ids.push(await fib(c, { time: tA, price: s.lo }, { time: tB, price: s.hi }));
-          ids.push(await fib(c, { time: tA, price: s.hi }, { time: tB, price: s.lo }));
+          ids.push(await fib(c, tA, tB, s.hi, s.lo)); // extensions below the low
+          ids.push(await fib(c, tA, tB, s.lo, s.hi)); // extensions above the high
           done.push(`${c.symbol()} ${s.name}${s.partial ? ' (en cours)' : ''} H ${s.hi} / L ${s.lo}`);
         }
         keep(i, 'stdv', ids);
@@ -175,6 +195,81 @@
       }
       keep(i, 'lines', ids);
       return done;
+    },
+    // Tops / bottoms of the day that sweep a m15/H1 BSL (SSL) and hit a zone of ≥ 2 STDV levels from different sessions.
+    // Draws the STDV levels hit, the swept liquidity and the "Profondeur de marché" Fibonacci (NQ: base = round 10.00 under the BSL / above the SSL).
+    async tops(opts = {}) {
+      const d = day(), found = [];
+      const fmt = p => (Math.round(p * 4) / 4).toFixed(2);
+      for (let i = 0; i < api.chartsCount(); i++) {
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
+        clearGroup(i, 'tops');
+        const ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 6 : 1.5), N = opts.pivot ?? 15;
+        const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
+        const sess = (await sessionData(sym, d)).filter(s => !s.missing && !s.partial && s.hi > s.lo);
+        const ext = LV.filter(k => k > 1);
+        const lv = (s, up) => ext.map(k => ({ k, p: up ? s.hi + (k - 1) * (s.hi - s.lo) : s.lo - (k - 1) * (s.hi - s.lo) }));
+        const agg = min => {
+          const m = new Map();
+          for (const b of all) {
+            const k = Math.floor(b.t / (min * 60)) * min * 60, x = m.get(k);
+            if (!x) m.set(k, { t: k, h: b.h, l: b.l }); else { x.h = Math.max(x.h, b.h); x.l = Math.min(x.l, b.l); }
+          }
+          return [...m.values()].sort((a, b) => a.t - b.t);
+        };
+        const swings = [];
+        for (const [tf, min] of [['m15', 15], ['H1', 60]]) {
+          const a = agg(min);
+          for (let j = 1; j < a.length - 1; j++) {
+            if (a[j].h > a[j - 1].h && a[j].h > a[j + 1].h) swings.push({ tf, side: 'BSL', p: a[j].h, t: a[j].t, conf: a[j + 1].t + min * 60 });
+            if (a[j].l < a[j - 1].l && a[j].l < a[j + 1].l) swings.push({ tf, side: 'SSL', p: a[j].l, t: a[j].t, conf: a[j + 1].t + min * 60 });
+          }
+        }
+        const from = ny(d, 2, 0), to = Math.min(ny(d, 16, 0), now());
+        for (let j = 0; j < all.length; j++) {
+          const b = all[j];
+          if (b.t < from || b.t > to || j + N >= all.length) continue;
+          const win = all.slice(Math.max(0, j - N), j + N + 1);
+          for (const isH of [true, false]) {
+            const P = isH ? b.h : b.l;
+            if (win.some(x => (isH ? x.h > P : x.l < P))) continue;
+            if (win.find(x => (isH ? x.h : x.l) === P) !== b) continue;
+            const hits = [];
+            for (const s of sess.filter(s => s.to <= b.t)) {
+              const L = lv(s, isH).filter(x => Math.abs(x.p - P) <= tol).sort((x, y) => Math.abs(x.p - P) - Math.abs(y.p - P));
+              if (L.length) hits.push({ ...L[0], s });
+            }
+            if (hits.length < (opts.minStdv ?? 2)) continue;
+            const sw = swings.filter(w => w.side === (isH ? 'BSL' : 'SSL') && w.conf <= b.t && (isH ? w.p < P : w.p > P)).map(w => {
+              const tk = all.find(x => x.t >= w.conf && (isH ? x.h > w.p : x.l < w.p));
+              return tk && tk.t <= b.t && tk.t >= b.t - 90 * 60 ? { ...w, takenT: tk.t } : null;
+            }).filter(Boolean);
+            if (!sw.length) continue;
+            const liq = sw.sort((x, y) => (isH ? y.p - x.p : x.p - y.p))[0];
+            found.push({ i, sym, isH, P, t: b.t, hits, liq });
+            // drawing
+            for (const h of hits) {
+              ids.push(await c.createMultipointShape([{ time: b.t - 25 * 60, price: h.p }, { time: b.t + 35 * 60, price: h.p }], {
+                shape: 'trend_line', text: `${h.k} ${h.s.name} (${fmt(h.p)})`, lock: false,
+                overrides: { linecolor: lvColor(h.k), linewidth: 1, linestyle: 0, showLabel: true, textcolor: lvColor(h.k), horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
+            }
+            ids.push(await c.createMultipointShape([{ time: liq.t, price: liq.p }, { time: liq.takenT, price: liq.p }], {
+              shape: 'trend_line', text: `${liq.side} ${liq.tf}`, lock: false,
+              overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
+            if (isNQ) {
+              const base = isH ? Math.floor((liq.p - 1e-6) / 10) * 10 : Math.ceil((liq.p + 1e-6) / 10) * 10;
+              ids.push(await fib(c, liq.takenT - 4 * 60, liq.takenT, base, isH ? base + 10 : base - 10, 'Profondeur de marché'));
+              found[found.length - 1].depth = base;
+            }
+          }
+        }
+        keep(i, 'tops', ids);
+      }
+      return found.length ? found.map(f => `${f.sym.slice(1)} ${f.isH ? 'Top' : 'Bottom'} ${nyHM(f.t)} @ ${fmt(f.P)} : ` +
+        f.hits.map(h => `${h.k} ${h.s.name} (${fmt(h.p)})`).join(' + ') +
+        ` · ${f.liq.side} ${f.liq.tf} ${fmt(f.liq.p)} sweep ${nyHM(f.liq.takenT)}` + (f.depth ? ` · profondeur depuis ${f.depth.toFixed(2)}` : '')).join('\n')
+        : 'Aucun top/bottom avec sweep m15/H1 + zone ≥ 2 STDV aujourd\'hui';
     },
     async report() {
       const d = day(), lines = [`Jarvis 8H — ${d} (NY ${nyHM(now())})`];
