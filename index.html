@@ -88,7 +88,7 @@ h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing
 .modal h2{margin:0 0 14px;font-size:22px}
 .modal label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px;font-family:'Space Mono',monospace;letter-spacing:.06em}
 .modal input,.modal select,.modal textarea{width:100%;border:1px solid #c5c8d0;border-radius:8px;padding:7px 9px;background:#fff;font-size:14px}
-.row{display:grid;grid-template-columns:96px 104px 1fr 118px 32px;gap:6px;margin-bottom:6px;align-items:center}
+.row{display:grid;grid-template-columns:96px 122px 1fr 118px 32px;gap:6px;margin-bottom:6px;align-items:center}
 .row button{border:none;background:#e0e2e8;border-radius:8px;height:34px;cursor:pointer}
 .row button:hover{background:#f2c9ca}
 .two{display:grid;grid-template-columns:170px 1fr;gap:10px}
@@ -386,6 +386,36 @@ table.tbl:has(#subT){min-width:900px}
 @container main (max-width:1180px){.poster{min-width:0;padding:26px 22px 20px}.wrap{padding:16px 14px 30px}.poster h1{font-size:46px}.grid{grid-template-columns:100px repeat(5,minmax(0,1fr));gap:6px 7px}.ev{grid-template-columns:9px 1fr;font-size:11.5px;row-gap:1px}.ev>:nth-child(n+3){grid-column:1/-1;overflow-wrap:anywhere}.day{padding:8px 8px 9px}}
 @container main (max-width:860px){.poster{min-width:780px}}
 @container main (max-width:480px){.tsx-top,.kpis{grid-template-columns:1fr}}
+
+/* impact select : options colorées */
+#rows .ri option{font-weight:700;background:#fff}
+#rows .ri option[value="high"]{color:#e5484d}#rows .ri option[value="med"]{color:#f08c2a}#rows .ri option[value="low"]{color:#c99a06}
+#rows .ri option[value="high"]:checked{background:linear-gradient(#e5484d,#e5484d);color:#fff}
+#rows .ri option[value="med"]:checked{background:linear-gradient(#f08c2a,#f08c2a);color:#fff}
+#rows .ri option[value="low"]:checked{background:linear-gradient(#e6b422,#e6b422);color:#1a1405}
+/* carrousel d'images (pages Notion) */
+.rv-car{border:1px solid #24252c;background:#0f1013;border-radius:10px;padding:12px 14px 12px;margin:12px 0}
+.rv-car-h{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.rv-car-h b{font-size:16px;color:#fff}
+.rv-car-cap{color:#7d9bff;font-weight:700;font-size:14px}
+.rv-car-n{margin-left:auto;color:#8b8d98;font-size:12.5px;font-variant-numeric:tabular-nums}
+.rv-car-v{position:relative}
+.rv-car-t{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;border-radius:8px;background:#08090b;scrollbar-width:none}
+.rv-car-t::-webkit-scrollbar{display:none}
+.rv-slide{flex:0 0 100%;scroll-snap-align:center;margin:0;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative}
+.rv-slide img{max-width:100%;max-height:64vh;object-fit:contain;display:block;cursor:zoom-in}
+.rv-car-b{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:none;background:rgba(20,22,28,.78);color:#fff;font-size:24px;line-height:1;cursor:pointer;z-index:3;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.rv-car-b:hover{background:#2f54eb}
+.rv-car-b[data-dir="-1"]{left:10px}.rv-car-b[data-dir="1"]{right:10px}
+.rv-car-th{display:flex;gap:6px;margin-top:8px;overflow-x:auto}
+.rv-car-th img{width:64px;height:40px;object-fit:cover;border-radius:5px;border:2px solid transparent;opacity:.55;cursor:pointer;flex:none}
+.rv-car-th img.on{border-color:#4a6cf7;opacity:1}
+.rv-car-x{margin-top:8px}
+.rv-car .rv-addin{margin-top:10px}
+.rv-lb{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center}
+.rv-lb img{max-width:94vw;max-height:88vh;object-fit:contain}
+.rv-lb .rv-car-b{position:fixed}
+.rv-lb-t{position:fixed;top:16px;left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:15px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -1830,7 +1860,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
         case "heading_3": out += `<h4>${rt(b.rt)}</h4>`; break;
         case "quote": out += `<blockquote${st}>${rt(b.rt)}</blockquote>`; break;
         case "callout": out += `<div class="rv-callout"${st}>${b.icon ? `<span>${esc(b.icon)}</span>` : ""}<div>${rt(b.rt)}${b.children ? blocksHTML(b.children, ctx) : ""}</div></div>`; break;
-        case "toggle": out += `<details class="rv-tg"${ctx && ctx.open ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : ed ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Écrire (Entrée pour envoyer) ou coller une image…"></div>` : ""}</div></details>`; break;
+        case "toggle": if (ctx && ctx.carousel && ((b.children || []).some((k) => k.type === "image" && k.src) || ed)) { out += carHTML(b, ctx, ed); break; }
+          out += `<details class="rv-tg"${ctx && ctx.open ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : ed ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Écrire (Entrée pour envoyer) ou coller une image…"></div>` : ""}</div></details>`; break;
         case "to_do": out += `<p>${b.checked ? "☑" : "☐"} ${rt(b.rt)}</p>`; break;
         case "divider": out += "<hr>"; break;
         case "image": out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
@@ -1963,6 +1994,49 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       ${content}</div>`;
     if (V.type === "chart") drawChart(body.querySelector(".rv-cv"), V, vrows, m.schema);
   }
+
+  /* --- image carousel for toggles (NQ, ES, NQ - NWOG & 1st…) --- */
+  function carHTML(b, ctx, ed) {
+    const kids = b.children || [], imgs = kids.filter((k) => k.type === "image" && k.src), others = kids.filter((k) => !(k.type === "image" && k.src));
+    const del = (id) => (ed ? `<button class="rv-bdel" data-del="${esc(id)}" title="Supprimer cette image dans Notion">✕</button>` : "");
+    return `<section class="rv-car" data-car><div class="rv-car-h"><b>${rt(b.rt) || "&nbsp;"}</b><span class="rv-car-cap">${esc((imgs[0] && imgs[0].caption) || "")}</span><span class="rv-car-n">${imgs.length ? "1 / " + imgs.length : "Aucune image"}</span></div>
+      ${imgs.length ? `<div class="rv-car-v">${imgs.length > 1 ? '<button class="rv-car-b" data-dir="-1" title="Précédente (←)">‹</button>' : ""}<div class="rv-car-t">${imgs.map((im) => `<figure class="rv-slide"${ed ? ` data-bid="${esc(im.id)}"` : ""} data-cap="${esc(im.caption || "")}">${del(im.id)}<img src="${im.src}" alt="" loading="lazy"></figure>`).join("")}</div>${imgs.length > 1 ? '<button class="rv-car-b" data-dir="1" title="Suivante (→)">›</button>' : ""}</div>
+      ${imgs.length > 1 ? `<div class="rv-car-th">${imgs.map((im, i) => `<img src="${im.src}" data-slide="${i}" class="${i ? "" : "on"}" alt="">`).join("")}</div>` : ""}` : ""}
+      ${others.length ? `<div class="rv-car-x">${blocksHTML(others, ctx)}</div>` : ""}
+      ${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Coller une image (Ctrl+V) ou écrire du texte (Entrée)…"></div>` : ""}</section>`;
+  }
+  let carActive = null;
+  const carIdx = (car) => { const t = car.querySelector(".rv-car-t"); return t ? Math.round(t.scrollLeft / Math.max(1, t.clientWidth)) : 0; };
+  function carUpdate(car) {
+    const sl = car.querySelectorAll(".rv-slide"); if (!sl.length) return; const i = Math.min(sl.length - 1, carIdx(car));
+    car.querySelector(".rv-car-n").textContent = `${i + 1} / ${sl.length}`; car.querySelector(".rv-car-cap").textContent = sl[i].dataset.cap || "";
+    car.querySelectorAll(".rv-car-th img").forEach((im, k) => { im.classList.toggle("on", k === i); if (k === i) im.scrollIntoView({ block: "nearest", inline: "nearest" }); });
+    if (lb && lb.car === car) lbShow(i);
+  }
+  function carGo(car, i) { const t = car.querySelector(".rv-car-t"), n = car.querySelectorAll(".rv-slide").length; if (!t || !n) return; i = (i + n) % n; t.scrollTo({ left: i * t.clientWidth, behavior: lb ? "instant" : "smooth" }); if (lb && lb.car === car) lbShow(i); }
+  let lb = null;
+  function lbShow(i) { const sl = lb.car.querySelectorAll(".rv-slide")[i]; if (!sl) return; lb.el.querySelector("img").src = sl.querySelector("img").src;
+    lb.el.querySelector(".rv-lb-t").textContent = `${lb.car.querySelector(".rv-car-h b").textContent} ${sl.dataset.cap || ""} · ${i + 1} / ${lb.car.querySelectorAll(".rv-slide").length}`; }
+  function lbOpen(car, i) { lbClose(); const el = document.createElement("div"); el.className = "rv-lb";
+    el.innerHTML = `<div class="rv-lb-t"></div><button class="rv-car-b" data-lb="-1" style="left:20px">‹</button><img alt=""><button class="rv-car-b" data-lb="1" style="right:20px">›</button>`;
+    document.body.append(el); lb = { el, car }; lbShow(i);
+    el.addEventListener("click", (e) => { const b = e.target.closest("[data-lb]"); if (b) { carGo(car, carIdx(car) + +b.dataset.lb); return; } if (e.target === el) lbClose(); }); }
+  function lbClose() { if (lb) { lb.el.remove(); lb = null; } }
+  document.addEventListener("click", (e) => {
+    const car = e.target.closest && e.target.closest("[data-car]"); if (!car) return; carActive = car;
+    const b = e.target.closest(".rv-car-b"); if (b && b.dataset.dir) { carGo(car, carIdx(car) + +b.dataset.dir); return; }
+    const th = e.target.closest("[data-slide]"); if (th) { carGo(car, +th.dataset.slide); return; }
+    const im = e.target.closest(".rv-slide img"); if (im) lbOpen(car, [...car.querySelectorAll(".rv-slide")].indexOf(im.closest(".rv-slide")));
+  });
+  document.addEventListener("mouseover", (e) => { const car = e.target.closest && e.target.closest("[data-car]"); if (car) carActive = car; });
+  document.addEventListener("scroll", (e) => { const t = e.target; if (t && t.classList && t.classList.contains("rv-car-t")) { clearTimeout(t._tm); t._tm = setTimeout(() => carUpdate(t.closest("[data-car]")), 60); } }, true);
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "Escape") return;
+    const a = document.activeElement; if (a && (a.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(a.tagName))) return;
+    if (e.key === "Escape") { if (lb) { e.stopPropagation(); lbClose(); } return; }
+    const car = lb ? lb.car : carActive && carActive.isConnected && carActive.checkVisibility() ? carActive : null; if (!car || !car.querySelector(".rv-slide")) return;
+    e.preventDefault(); e.stopPropagation(); carGo(car, carIdx(car) + (e.key === "ArrowRight" ? 1 : -1));
+  }, true);
 
   /* --- Psychological bias detection (taken trades of the Journal de Neal, 10 minimum) --- */
   const BIAS_MIN = 10, TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"];
@@ -2145,7 +2219,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     let blocks = await kget("page:" + id);
     API.curPage = id;
     const ed = API.canEdit && !!D;
-    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs, { edit: ed }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
+    const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs, { edit: ed, carousel: true }) || (ed ? "" : '<p class="rv-mut">Page vide</p>')}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(id)}" data-ph="Ajouter du texte (Entrée) ou coller une image dans la page…"></div>` : ""}</div>`; };
+    API.refreshPage = async () => { if (!D) return; const res = await D.notionBlocks(id); if (!res.ok || API.curPage !== id || !ov.classList.contains("show")) return; await kset("page:" + id, res.data);
+      const st = mb.scrollTop, pg = mb.querySelector(".rv-page"); if (pg) pg.outerHTML = '<div id="rvPg"></div>'; show(res.data); mb.scrollTop = st; };
     if (blocks) show(blocks);
     if (D) { const res = await D.notionBlocks(id); if (res.ok) { await kset("page:" + id, res.data); if (ov.classList.contains("show")) { const pg = mb.querySelector(".rv-page"); if (pg) pg.remove(); mb.insertAdjacentHTML("beforeend", '<div id="rvPg"></div>'); show(res.data); } } else if (!blocks) show([]); }
     else if (!blocks) mb.querySelector("#rvPg").innerHTML = `<a href="${esc(r._url || "#")}" target="_blank" rel="noopener" style="color:#7d9bff">Ouvrir dans Notion ↗</a>`;
@@ -2366,7 +2442,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const res = await D.notionAppend(box.dataset.parent, [{ type: "image", data, name: f.name && f.name !== "image.png" ? f.name : "" }]);
       if (!res.ok) { fig.remove(); return msg(why(res), true); }
       fig.style.opacity = ""; const bid = (res.data.ids || [])[0]; if (bid) { fig.dataset.bid = bid; fig.insertAdjacentHTML("afterbegin", `<button class="rv-bdel" data-del="${esc(bid)}" title="Supprimer ce bloc dans Notion">✕</button>`); }
-      msg("Image ajoutée dans Notion ✓"); pageCache();
+      msg("Image ajoutée dans Notion ✓"); if (box.closest("[data-car]") && R.refreshPage) R.refreshPage(); else pageCache();
     }
   }
   const imgs = (dt) => [...((dt && dt.files) || [])].filter((f) => /^image\//.test(f.type));
