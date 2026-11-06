@@ -179,4 +179,22 @@ async function deleteBlock(token, fetchFn, id) { const { call } = client(token, 
 
 async function check(token, fetchFn) { const { call } = client(token, fetchFn); const me = await call("/users/me"); return { ok: true, bot: me.name || "integration" }; }
 
-module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage, appendBlocks, deleteBlock, setCaption };
+
+// Cheap change detection for the auto-sync: has anything been edited in these databases/pages since `since` (ISO)?
+async function changedSince(token, fetchFn, items, since) {
+  const { call } = client(token, fetchFn);
+  const t = since ? new Date(since).getTime() : 0;
+  for (const it of items || []) {
+    if (it.db) {
+      const r = await call(`/databases/${it.db}/query`, "POST", { page_size: 1, sorts: [{ timestamp: "last_edited_time", direction: "descending" }] });
+      const pg = r.results && r.results[0];
+      if (pg && new Date(pg.last_edited_time).getTime() > t) return { changed: true, what: it.db };
+    } else if (it.page) {
+      const pg = await call(`/pages/${it.page}`);
+      if (pg && new Date(pg.last_edited_time).getTime() > t) return { changed: true, what: it.page };
+    }
+  }
+  return { changed: false };
+}
+
+module.exports = { changedSince, queryDatabase, pageBlocks, check, createPage, updatePage, archivePage, appendBlocks, deleteBlock, setCaption };

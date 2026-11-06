@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("desktop", {
   notionStatus: () => ipcRenderer.invoke("notion:status"),
   notionSetToken: (t) => ipcRenderer.invoke("notion:setToken", t),
   notionDb: (id) => ipcRenderer.invoke("notion:db", id),
+  notionChanged: (items, since) => ipcRenderer.invoke("notion:changed", items, since),
   notionBlocks: (id) => ipcRenderer.invoke("notion:blocks", id),
   notionCreate: (db, props, tpl) => ipcRenderer.invoke("notion:create", db, props, tpl),
   notionUpdate: (db, id, props) => ipcRenderer.invoke("notion:update", db, id, props),
