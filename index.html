@@ -416,6 +416,17 @@ table.tbl:has(#subT){min-width:900px}
 .rv-lb img{max-width:94vw;max-height:88vh;object-fit:contain}
 .rv-lb .rv-car-b{position:fixed}
 .rv-lb-t{position:fixed;top:16px;left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:15px}
+
+#tsxWarn{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#3a2a06;border-bottom:1px solid #8a6414;color:#ffd77a;padding:10px 22px;font-size:13.5px;font-weight:600}
+#tsxWarn[hidden]{display:none}
+#tsxWarn b{color:#fff}
+#tsxWarn button{margin-left:auto;background:#e2b33d;color:#1b1405;border:none;border-radius:7px;padding:7px 12px;font:inherit;font-weight:800;cursor:pointer}
+#tsxWarn button+button{margin-left:0;background:transparent;color:#ffd77a;border:1px solid #8a6414}
+.jrec{position:absolute;right:0;top:calc(100% + 6px);z-index:50;width:330px;background:#16171c;border:1px solid #2c2d35;border-radius:10px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:8px}
+.jrec[hidden]{display:none}
+.jrec b{color:#fff;font-size:14px}.jrec p{margin:0;color:#9a9ca6;font-size:12.5px;line-height:1.4}
+.jrec input{background:#0d0e11;border:1px solid #2c2d35;border-radius:7px;color:#eef0f4;font:inherit;padding:8px 10px;outline:none}
+.jrec small{color:#9a9ca6;font-size:12px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -440,6 +451,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="sfoot"><button id="miniBtn" title="Réduire le menu"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button></div>
 </aside>
 <main class="main">
+<div id="tsxWarn" hidden></div>
 <section class="view" id="v-calendrier">
 
 <div class="bar">
@@ -531,6 +543,8 @@ table.tbl:has(#subT){min-width:900px}
       <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button></div>
       <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button>
       <button class="btn jt-tsx" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
+      <span class="jt-tsx" id="jRecWrap" hidden style="position:relative"><button class="btn gray" id="jRecBtn" title="Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)">＋ Récupérer un compte</button>
+        <div id="jRecPop" class="jrec" hidden><b>Récupérer un compte disparu</b><p>Identifiant(s) TopstepX, séparés par des virgules. Les comptes déjà dans l'app sont désormais archivés automatiquement.</p><input id="jRecIn" placeholder="ex. 29313272, 29315891" spellcheck="false"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn gray" id="jRecNo">Annuler</button><button class="btn" id="jRecGo">Récupérer</button></div><small id="jRecMsg"></small></div></span>
       <button class="jt-tsx btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
       <label class="jt-tsx btn gray jimp" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
       <label class="jt-tsx btn gray jimp" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
@@ -1449,7 +1463,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       document.getElementById("jroot").hidden = !has; document.getElementById("jEmpty").hidden = has;
       const last = has ? RAW.comptes.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() : null;
       document.getElementById("jSync").textContent = has ? `Stats TopstepX · ${RAW.comptes.length} comptes · ${(RAW.trades || []).length} trades` + (last ? ` · dernière synchro ${new Date(last).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "") : "Stats TopstepX par compte.";
-      dash.redraw(); setTimeout(() => { window.reviewRender && reviewRender(); const a = document.activeElement; if (window.renderBills && !(a && a.closest && a.closest("#billT"))) renderBills(); }, 0);
+      dash.redraw(); checkTarget(); setTimeout(() => { window.reviewRender && reviewRender(); const a = document.activeElement; if (window.renderBills && !(a && a.closest && a.closest("#billT"))) renderBills(); }, 0);
     },
   };
   /* ----- "All datas" : every account together (stats over all trades) ----- */
@@ -1516,7 +1530,19 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     document.getElementById("jLoginBtn").onclick = () => run(true);
     out.onclick = async () => { await D.journalLogout(); alertBox("Déconnecté de TopstepX. Les données locales restent affichées."); };
     D.journalGet().then((db) => { apply(db); if (!(db && db.comptes && db.comptes.length)) { document.getElementById("jEmpty").hidden = true; } run(false); });
-    setInterval(() => run(false), 5 * 60 * 1000);
+    /* auto-sync : every 5 min, every minute when an account is close to its target */
+    let lastRun = Date.now(); setInterval(() => { const near = nearTarget().length; if (Date.now() - lastRun >= (near ? 60 : 300) * 1000) { lastRun = Date.now(); run(false); } }, 15000);
+    const rw = document.getElementById("jRecWrap"), rp = document.getElementById("jRecPop"), rin = document.getElementById("jRecIn"), rmsg = document.getElementById("jRecMsg");
+    if (D.journalAddIds) { rw.hidden = false;
+      document.getElementById("jRecBtn").onclick = () => { rp.hidden = !rp.hidden; if (!rp.hidden) { rmsg.textContent = ""; rin.focus(); } };
+      document.getElementById("jRecNo").onclick = () => (rp.hidden = true);
+      const go = async () => { const ids = rin.value.split(/[\s,;]+/).map((x) => x.replace(/\D/g, "")).filter((x) => x.length >= 5); if (!ids.length) { rmsg.textContent = "Entre au moins un identifiant (chiffres)."; return; }
+        rmsg.textContent = "Récupération des trades chez TopstepX…"; const before = new Set((RAW.comptes || []).map((c) => String(c["ID TopstepX"])));
+        const r = await D.journalAddIds(ids); if (r && r.ok) { apply(r.db); const got = ids.filter((id) => (r.db.comptes || []).some((c) => String(c["ID TopstepX"]) === id && !before.has(id)));
+          rmsg.textContent = got.length ? `✓ ${got.length} compte(s) récupéré(s) et archivé(s).` : before.size && ids.every((id) => before.has(id)) ? "Ces comptes sont déjà dans l'app." : "Aucun trade trouvé pour cet identifiant."; if (got.length) { rin.value = ""; dash.setParams({ acct: got[0] }); } }
+        else rmsg.textContent = "Échec : " + ((r && r.reason) || "erreur") + (r && r.reason === "login" ? " — reconnecte-toi à TopstepX." : ""); };
+      document.getElementById("jRecGo").onclick = go; rin.addEventListener("keydown", (e) => { if (e.key === "Enter") go(); });
+    }
   }
   const imp = (id, key) => document.getElementById(id).addEventListener("change", async (e) => {
     const f = e.target.files[0]; if (!f) return;
@@ -1530,6 +1556,27 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     a.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: "application/json" })); a.download = "journal-tags-images.json"; document.body.append(a); a.click(); a.remove(); };
   document.getElementById("jMetaImp").onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { await jmeta.importMeta(JSON.parse(await f.text())); alertBox("Tags & images importés ✓"); } catch (err) { alertBox("Fichier invalide"); } e.target.value = ""; };
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(dash.redraw, 150); });
+
+  /* ----- warning : challenge account at ≥ 2/3 of the profit target (52k on a 50K) ----- */
+  const TGT = { 50000: 3000, 100000: 6000, 150000: 9000 };
+  function nearTarget() {
+    return (RAW.comptes || []).filter((c) => c.Statut === "Actif" && c.Type !== "Funded" && c.Type !== "Paper").map((c) => { const st = Number(c["Solde de départ"]) || 50000, tg = TGT[st] || Math.round(st * 0.06), bal = Number(c["Solde TopstepX"]) || 0;
+      return { c, st, bal, target: st + tg, warn: st + Math.round((tg * 2) / 3) }; }).filter((x) => x.bal >= x.warn);
+  }
+  const warnSeen = new Set();
+  function checkTarget() {
+    const el = document.getElementById("tsxWarn"); if (!el) return; const L = nearTarget();
+    try { const hid = JSON.parse(sessionStorage.getItem("econcal-warn-hide") || "[]"); L.splice(0, L.length, ...L.filter((x) => !hid.includes(String(x.c["ID TopstepX"]) + ":" + Math.floor(x.bal / 250)))); } catch (e) {}
+    if (!L.length) { el.hidden = true; return; }
+    const u = (v) => "$" + Math.round(v).toLocaleString("en-US");
+    el.innerHTML = `⚠ ${L.map((x) => `<b>${esc(x.c.Nom)}</b> est à <b>${u(x.bal)}</b>${x.bal >= x.target ? " — <b>target " + u(x.target) + " atteinte !</b>" : " (target " + u(x.target) + ")"}`).join(" · ")}. Synchronise TopstepX dès que tu touches la target pour garder toutes les datas du compte.<button data-w="sync">⟳ Synchroniser TopstepX</button><button data-w="hide">Masquer</button>`;
+    el.hidden = false;
+    el.onclick = (e) => { const b = e.target.closest("[data-w]"); if (!b) return; if (b.dataset.w === "sync") { const s = document.getElementById("jSyncBtn"); if (s && !s.hidden) s.click(); }
+      else { try { const hid = JSON.parse(sessionStorage.getItem("econcal-warn-hide") || "[]"); L.forEach((x) => hid.push(String(x.c["ID TopstepX"]) + ":" + Math.floor(x.bal / 250))); sessionStorage.setItem("econcal-warn-hide", JSON.stringify(hid)); } catch (err) {} el.hidden = true; } };
+    L.forEach((x) => { const k = String(x.c["ID TopstepX"]) + (x.bal >= x.target ? ":hit" : ":near"); if (warnSeen.has(k)) return; warnSeen.add(k);
+      try { if (window.Notification && Notification.permission !== "denied") { const n = () => new Notification(x.bal >= x.target ? "Target atteinte — synchronise TopstepX" : "Proche de la target — pense à synchroniser", { body: `${x.c.Nom} : ${u(x.bal)} / ${u(x.target)}` });
+        Notification.permission === "granted" ? n() : Notification.requestPermission().then((p) => p === "granted" && n()); } } catch (e) {} });
+  }
 
   /* ----- calcs ----- */
   dash.calc("compte_calc", { inputs: ["comptes"], fn: (comptes) => comptes.map((c) => {
@@ -1581,8 +1628,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* ----- account selector + KPIs ----- */
   dash.draw("acctsel", (sel) => {
     const d = dash.data("comptes"); if (d.status !== "ok") { sel.replaceChildren(new Option("—", "")); return; }
-    const rows = [...d.data].sort((a, b) => (b._all ? 1 : 0) - (a._all ? 1 : 0) || (a.Statut === "Actif" ? 0 : 1) - (b.Statut === "Actif" ? 0 : 1) || String(a.Nom).localeCompare(String(b.Nom)));
+    const RK = { Actif: 0, "Passé": 1, "Archivé": 2, "Cramé": 3 };
+    const rows = [...d.data].sort((a, b) => (b._all ? 1 : 0) - (a._all ? 1 : 0) || (RK[a.Statut] ?? 2) - (RK[b.Statut] ?? 2) || String(a.Nom).localeCompare(String(b.Nom)));
     const etat = (r) => { if (r._all) return { col: "#a077d6", pre: "◆ ", suf: "  ·  P&L " + F.usd(r["Total P&L"]) + "  ·  " + (d.data.length - 1) + " comptes" };
+      if (r.Statut === "Passé") return { col: "#e2b33d", pre: "★ ", suf: "  ·  challenge réussi (archivé)" };
+      if (r.Statut === "Archivé") return { col: "#8b93a1", pre: "▣ ", suf: "  ·  archivé" };
       if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
       const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0);
       if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#4ccf6a", pre: "● ", suf: "" }; };

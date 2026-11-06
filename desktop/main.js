@@ -10,7 +10,7 @@ let win = null, loginWin = null, syncing = null;
 
 /* ---------- local database (comptes + trades) ---------- */
 function readDb() { try { return JSON.parse(fs.readFileSync(DB(), "utf8")); } catch (e) { return { comptes: [], trades: [], syncedAt: null }; } }
-function writeDb(d) { const tmp = DB() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify(d)); fs.renameSync(tmp, DB()); }
+function writeDb(d) { try { if (fs.existsSync(DB())) fs.copyFileSync(DB(), DB().replace(/\.json$/, ".backup.json")); } catch (e) {} const tmp = DB() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify(d)); fs.renameSync(tmp, DB()); }
 
 /* ---------- TopstepX session token ---------- */
 function tsxWindow(show) {
@@ -46,15 +46,19 @@ async function doSync(interactive) {
       let token = await getToken(interactive);
       if (!token) return { ok: false, reason: "login", db: readDb() };
       let data;
-      try { data = await topstepx.sync(token, sfetch); }
+      const old = readDb() || {}, known = [...(old.comptes || []).map((c) => ({ id: c["ID TopstepX"], compte: c })), ...readExtra().map((id) => ({ id }))];
+      try { data = await topstepx.sync(token, sfetch, known); }
       catch (e) {
         if (e.code !== "AUTH") throw e;
         const w = tsxWindow(false); await w.webContents.executeJavaScript('localStorage.removeItem("token")', true).catch(() => {});
         if (!interactive) return { ok: false, reason: "login", db: readDb() };
         w.loadURL("https://www.topstepx.com/login"); token = await getToken(true);
         if (!token) return { ok: false, reason: "login", db: readDb() };
-        data = await topstepx.sync(token, sfetch);
+        data = await topstepx.sync(token, sfetch, known);
       }
+      if (data.keepIds && data.keepIds.length) data.trades.push(...(old.trades || []).filter((t) => data.keepIds.includes(String(t["ID TopstepX"]))));
+      delete data.keepIds;
+      if (!data.comptes.length && (old.comptes || []).length) throw new Error("TopstepX n'a renvoyé aucun compte — base locale conservée");
       writeDb(data);
       return { ok: true, db: data };
     } catch (e) { return { ok: false, reason: String(e.message || e), db: readDb() }; }
@@ -64,6 +68,13 @@ async function doSync(interactive) {
 }
 
 ipcMain.handle("journal:get", () => readDb());
+/* ids of accounts to recover by hand (accounts that vanished from TopstepX before being synced) */
+const XFILE = () => path.join(app.getPath("userData"), "tsx-extra-ids.json");
+function readExtra() { try { return JSON.parse(fs.readFileSync(XFILE(), "utf8")) || []; } catch (e) { return []; } }
+ipcMain.handle("journal:addIds", async (e, ids) => {
+  const L = new Set(readExtra().map(String)); (ids || []).map((x) => String(x).replace(/\D/g, "")).filter((x) => x.length >= 5).forEach((x) => L.add(x));
+  fs.writeFileSync(XFILE(), JSON.stringify([...L])); return doSync(true);
+});
 ipcMain.handle("journal:sync", (e, interactive) => doSync(!!interactive));
 ipcMain.handle("journal:logout", async () => {
   await session.fromPartition(PART).clearStorageData();

@@ -75,8 +75,14 @@ function buildAccount(a, rows, syncedAt) {
   };
 }
 
-/** Full sync with a TopstepX token. fetchFn = (url, opts) => Promise<Response>. */
-async function sync(token, fetchFn) {
+const TARGET = { 50000: 3000, 100000: 6000, 150000: 9000 };
+const targetOf = (start) => start + (TARGET[start] || Math.round(start * 0.06));
+const startGuess = (c) => Number(c["Solde de départ"]) || (/(\d+)K/i.exec(String(c.Nom || c["Nom TopstepX"] || "")) ? Number(/(\d+)K/i.exec(String(c.Nom || c["Nom TopstepX"]))[1]) * 1000 : 50000);
+
+/** Full sync with a TopstepX token. fetchFn = (url, opts) => Promise<Response>.
+ *  known = accounts already in the local database (+ ids added by hand): an account that TopstepX no longer lists
+ *  (challenge passed, funded account closed, blown…) is NEVER dropped — its trades are fetched by id and it is archived. */
+async function sync(token, fetchFn, known = []) {
   const H = { Authorization: "Bearer " + token, "Content-Type": "application/json", Accept: "application/json" };
   const ra = await fetchFn(API + "/TradingAccount", { headers: H });
   if (ra.status === 401 || ra.status === 403) { const e = new Error("auth"); e.code = "AUTH"; throw e; }
@@ -84,16 +90,36 @@ async function sync(token, fetchFn) {
   const accounts = await ra.json();
   const syncedAt = new Date().toISOString().replace(/\.\d+Z$/, "Z");
   const end = new Date(Date.now() + 2 * 864e5).toISOString();
-  const comptes = [], trades = [];
+  const comptes = [], trades = [], keepIds = [];
+  const range = async (id, start) => { const rt = await fetchFn(API + "/Trade/range", { method: "POST", headers: H, body: JSON.stringify({ tradingAccountId: id, start, end }) });
+    if (!rt.ok) { const e = new Error("Trade/range " + rt.status); e.status = rt.status; throw e; } return ((await rt.json()) || []).filter((t) => !t.voided && t.exitedAt).map(toRow); };
+  const seen = new Set();
   for (const a of accounts) {
+    seen.add(String(a.accountId));
     const start = new Date(new Date(a.startDate || Date.now() - 365 * 864e5).getTime() - 864e5).toISOString();
-    const rt = await fetchFn(API + "/Trade/range", { method: "POST", headers: H, body: JSON.stringify({ tradingAccountId: a.accountId, start, end }) });
-    if (!rt.ok) throw new Error("Trade/range " + rt.status);
-    const rows = ((await rt.json()) || []).filter((t) => !t.voided && t.exitedAt).map(toRow);
-    comptes.push(buildAccount(a, rows, syncedAt));
-    trades.push(...rows);
+    const rows = await range(a.accountId, start);
+    const acc = buildAccount(a, rows, syncedAt);
+    comptes.push(acc); trades.push(...rows);
   }
-  return { comptes, trades, syncedAt };
+  for (const k of known) {
+    const id = String(k.id || (k.compte && k.compte["ID TopstepX"]) || "").trim(); if (!id || seen.has(id) || id === "ALL") continue; seen.add(id);
+    const c = k.compte || {};
+    let rows = null;
+    try { rows = await range(Number(id), new Date(Date.now() - 400 * 864e5).toISOString()); } catch (e) { rows = null; }
+    if (!rows || (!rows.length && c.Nom)) { if (c.Nom) { comptes.push({ ...c, Statut: c.Statut === "Actif" ? "Archivé" : c.Statut, Archivé: true }); keepIds.push(id); } continue; }
+    if (!rows.length) continue; // unknown id with no trade: ignore
+    const st = startGuess(c); let bal = st, peak = st; rows.sort((x, y) => x.Entry.localeCompare(y.Entry)).forEach((t) => { bal += t["Net P&L"]; peak = Math.max(peak, bal); });
+    let nm = c["Nom TopstepX"] || "";
+    if (!nm) { try { const rn = await fetchFn(API + "/Statistics/getAccountName?tradingAccountId=" + encodeURIComponent(id), { headers: H }); if (rn.ok) { const v = await rn.json(); if (typeof v === "string" && !/unknown/i.test(v)) nm = v; } } catch (e) {} }
+    const a = { accountId: id, accountName: nm, startingBalance: st, balance: bal, highestBalance: peak, maximumLoss: c["Plancher MLL"] ?? null, dailyLoss: c.DLL ?? null, status: -1 };
+    const acc = buildAccount(a, rows, syncedAt);
+    if (c.Nom) acc.Nom = c.Nom; if (c.Type) acc.Type = c.Type;
+    acc.Archivé = true;
+    acc.Statut = c.Statut === "Cramé" ? "Cramé" : acc.Type !== "Funded" && acc.Type !== "Paper" && peak >= targetOf(st) ? "Passé" : "Archivé";
+    acc["Archivé le"] = c["Archivé le"] || syncedAt;
+    comptes.push(acc); trades.push(...rows);
+  }
+  return { comptes, trades, syncedAt, keepIds };
 }
 
-module.exports = { sync, toRow, buildAccount };
+module.exports = { sync, toRow, buildAccount, targetOf };
