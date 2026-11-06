@@ -213,7 +213,8 @@
       for (let i = 0; i < api.chartsCount(); i++) {
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
-        clearGroup(i, 'tops');
+        const draw = opts.draw !== false;
+        if (draw) clearGroup(i, 'tops');
         const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 12 : 3), N = opts.pivot ?? 15;
         const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
         if (!all.length) continue;
@@ -277,6 +278,7 @@
         res.sort((a, b) => a.t - b.t);
         for (const r of res) {
           const isH = r.isH;
+          if (!draw) { if (r.liq && isNQ) r.depth = isH ? Math.floor((r.liq.p - 1e-6) / 10) * 10 : Math.ceil((r.liq.p + 1e-6) / 10) * 10; found.push(r); continue; }
           for (const h of r.hits) {
             ids.push(await c.createMultipointShape([{ time: r.t - 25 * 60, price: h.p }, { time: r.t + 35 * 60, price: h.p }], {
               shape: 'trend_line', text: `${h.k} ${h.s.name} (${fmt(h.p)})`, lock: false,
@@ -294,7 +296,7 @@
           }
           found.push(r);
         }
-        keep(i, 'tops', ids);
+        if (draw) keep(i, 'tops', ids);
       }
       J.data = found.map(f => ({ date: d, actif: f.sym.slice(1), type: f.isH ? 'Top' : 'Bottom', extreme: f.dayExtreme || 'Swing', heure_ny: nyHM(f.t), prix: +fmt(f.P),
         macro: f.macro, stdv: f.hits.map(h => ({ niveau: h.k, session: h.s.name, prix: +fmt(h.p) })),
