@@ -215,7 +215,7 @@
         if (!sym) continue;
         const draw = opts.draw !== false;
         if (draw) clearGroup(i, 'tops');
-        const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 12 : 3), N = opts.pivot ?? 15;
+        const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 6 : 1.5), zone = opts.zone ?? (isNQ ? 30 : 7), N = opts.pivot ?? 15;
         const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
         if (!all.length) continue;
         const sess = (await sessionData(sym, d)).filter(s => !s.missing && !s.partial && s.hi > s.lo);
@@ -240,7 +240,8 @@
         const analyse = (b, isH) => {
           const P = isH ? b.h : b.l, hits = [];
           for (const s of sess.filter(s => s.to <= b.t)) {
-            const L = lv(s, isH).filter(x => Math.abs(x.p - P) <= tol).sort((x, y) => Math.abs(x.p - P) - Math.abs(y.p - P));
+            // zone: from `zone` pts inside the move up to `tol` beyond the extreme (price traded through the level)
+            const L = lv(s, isH).filter(x => (isH ? x.p <= P + tol && x.p >= P - zone : x.p >= P - tol && x.p <= P + zone)).sort((x, y) => Math.abs(x.p - P) - Math.abs(y.p - P));
             if (L.length) hits.push({ ...L[0], s });
           }
           const sw = swings.filter(w => w.side === (isH ? 'BSL' : 'SSL') && w.conf <= b.t && (isH ? w.p < P : w.p > P)).map(w => {
