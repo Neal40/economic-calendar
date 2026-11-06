@@ -280,12 +280,12 @@
           for (const h of r.hits) {
             ids.push(await c.createMultipointShape([{ time: r.t - 25 * 60, price: h.p }, { time: r.t + 35 * 60, price: h.p }], {
               shape: 'trend_line', text: `${h.k} ${h.s.name} (${fmt(h.p)})`, lock: false,
-              overrides: { linecolor: lvColor(h.k), linewidth: 1, linestyle: 0, showLabel: true, textcolor: lvColor(h.k), horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
+              overrides: { linecolor: lvColor(h.k), linewidth: 1, linestyle: 0, extendLeft: false, extendRight: false, showLabel: true, textcolor: lvColor(h.k), horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
           }
           if (r.liq) {
             ids.push(await c.createMultipointShape([{ time: r.liq.t, price: r.liq.p }, { time: r.liq.takenT, price: r.liq.p }], {
               shape: 'trend_line', text: `${r.liq.side} ${r.liq.tf}`, lock: false,
-              overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
+              overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, extendLeft: false, extendRight: false, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: isH ? 'top' : 'bottom', fontsize: 11 } }));
             if (isNQ) {
               const base = isH ? Math.floor((r.liq.p - 1e-6) / 10) * 10 : Math.ceil((r.liq.p + 1e-6) / 10) * 10;
               ids.push(await fib(c, r.liq.takenT - 4 * 60, r.liq.takenT, base, isH ? base + 10 : base - 10, 'Profondeur de marché'));
@@ -321,9 +321,11 @@
           const boxes = [[ny(d, h, 0) - 600, ny(d, h, 10), `Macro ${h}h`, 'rgba(120,120,120,0.10)'], [ny(d, h, 25), ny(d, h, 35), `Mini ${h}h30`, 'rgba(156,39,176,0.07)']];
           for (const [a, b, txt, bg] of boxes) {
             if (h === 16 && txt.startsWith('Mini')) continue;
-            ids.push(await c.createMultipointShape([{ time: a, price: hi + pad }, { time: b, price: lo - pad }], {
-              shape: 'rectangle', text: txt, lock: false,
-              overrides: { backgroundColor: bg, fillBackground: true, color: 'rgba(0,0,0,0)', linewidth: 0, showLabel: true, textColor: '#555555', fontSize: 10, horzLabelsAlign: 'center', vertLabelsAlign: 'top' } }));
+            const st = { backgroundColor: bg, fillBackground: true, transparency: 0, color: 'rgba(0,0,0,0)', linewidth: 1, extendLeft: false, extendRight: false,
+              showLabel: true, textColor: '#555555', fontSize: 10, horzLabelsAlign: 'center', vertLabelsAlign: 'top', middleLine: { showLine: false } };
+            const id = await c.createMultipointShape([{ time: a, price: hi + pad }, { time: b, price: lo - pad }], { shape: 'rectangle', text: txt, lock: false, overrides: st });
+            try { c.getShapeById(id).setProperties(st); } catch (e) { /* ignore */ }
+            ids.push(id);
           }
         }
         keep(i, 'macros', ids);
