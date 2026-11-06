@@ -391,11 +391,14 @@
           try { const sh = c.getShapeById(s.id), p = sh.getPoints(); return { id: s.id, sh, top: Math.max(p[0].price, p[1].price), bot: Math.min(p[0].price, p[1].price), t: Math.min(p[0].time, p[1].time) }; } catch (e) { return null; }
         }).filter(Boolean);
         const fibs = c.getAllShapes().filter(s => s.name === 'fib_retracement').map(s => { try { return c.getShapeById(s.id).getPoints().map(p => p.price).sort((a, b) => a - b); } catch (e) { return null; } }).filter(Boolean);
+        const usedR = new Set();
         const place = async (z, tplName, text, tA, tB) => {
           const props = (await tpl(tplName, 'LineToolRectangle')) || {};
           // same zone: exact bounds (gaps) or, for an FVG, a rectangle starting within 5 min that overlaps it (drawn by hand)
-          const ex = rects.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol) ||
-            (z.t1 ? rects.find(r => Math.abs(r.t - z.t1) <= 300 && r.bot < z.top && r.top > z.bot) : null);
+          const free = rects.filter(r => !usedR.has(r.id));
+          const ex = free.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol) ||
+            (z.t1 ? free.filter(r => Math.abs(r.t - z.t1) <= 300 && r.bot < z.top && r.top > z.bot).sort((a, b) => Math.abs(a.t - z.t1) - Math.abs(b.t - z.t1))[0] : null);
+          if (ex) usedR.add(ex.id);
           if (ex) { try { ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé'; }
           const id = await c.createMultipointShape([{ time: tA, price: z.top }, { time: tB, price: z.bot }], { shape: 'rectangle', text, lock: false });
           try { c.getShapeById(id).setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ }
