@@ -4,7 +4,7 @@ USD economic calendar — the month at a glance: news, NYSE holidays and key ear
 One self-contained page (`index.html`), no build step, no dependencies.
 
 ## Features
-- Sidebar menu: **Laboratoire** (Calendrier Économique, FinancialJuice live news, Journal de trading = Stats TopstepX, Review = Notion « What to focus on ? » + « Journal de Neal / Macro ») and **Paramètres** (Profil, Abonnement, Factures)
+- Sidebar menu: **Laboratoire** (Calendrier Économique, FinancialJuice live news, Journal de trading = Stats TopstepX, with 2 tabs: Stats TopstepX + Journal de Neal (Notion Macro, linked to the TopstepX trades taken at the same time); Review = Notion « What to focus on ? ») and **Paramètres** (Profil, Abonnement, Factures)
 - FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
 - Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). In the Windows app the data is synced automatically from TopstepX (sign in once; local database `journal-db.json` in the app data folder, auto-sync at launch and every 5 min). On the website: import `comptes.json` / `trades.json`. No account data in this repo
 - Journal: Hexagone de performance (Winrate, RR, DD, Positions, Risque — account vs average of your accounts), Tags popup (attributes of the Notion « Respect du plan » base), Images popup (NQ/ES H4 … Vraie Exécution, paste / drop), RR théorique column (from Entrée / Stop / TP théoriques). Tags & images stay local (export / import JSON)

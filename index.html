@@ -121,8 +121,7 @@ body{background:#060607}
 .items{padding:6px 0 2px 0}
 .nav{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px 9px 26px;border-radius:6px;color:#e3e4ea;font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:none;border:none;background:none;text-align:left;margin:2px 0}
 .nav .ic{width:15px;height:15px;opacity:.9}
-.nav.sub{padding-left:44px;font-size:13px;color:#c9cbd2}
-.app.mini .nav.sub{padding-left:9px}
+
 .nav:hover{background:#17171c}
 .nav.on{background:#2f54eb;color:#fff}
 .nav .ext{margin-left:auto;width:12px;height:12px;opacity:.5}
@@ -251,6 +250,7 @@ body{background:#060607}
 .rv-ci:hover{filter:brightness(1.18)}.rv-ci i{flex:none;width:8px;height:8px;border-radius:50%}
 .rv-ndl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .rv-cv{min-height:380px}
+body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
 .rv-tabs{display:flex;background:#121216;border:1px solid #23232a;border-radius:8px;padding:3px;gap:2px}
 .rv-tab{background:none;border:none;color:#9a9ca7;padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600}
 .rv-tab.on{background:#2f54eb;color:#fff}
@@ -403,17 +403,20 @@ body{background:#060607}
 </div></section>
 <section class="view" id="v-journal"><div class="page" style="max-width:none;padding:26px 28px 60px">
   <div class="jtop">
-    <div><h2>Journal de trading</h2><p class="lead" style="margin:0" id="jSync">Stats TopstepX par compte.</p></div>
+    <div><h2>Journal de trading</h2><p class="lead" style="margin:0"><span id="jSync" class="jt-tsx">Stats TopstepX par compte.</span><span class="jt-neal" id="rvStampJ"></span></p></div>
     <div class="acts">
-      <button class="btn" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
-      <button class="btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
-      <label class="btn gray jimp" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
-      <label class="btn gray jimp" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
-      <button class="btn gray" id="jMetaExp" title="Sauvegarder tags + images">Exporter tags & images</button>
-      <label class="btn gray" style="cursor:pointer" title="Restaurer tags + images">Importer tags & images<input type="file" id="jMetaImp" accept=".json" hidden></label>
-      <a class="btn gray" id="jNotion" href="#" target="_blank" rel="noopener" style="text-decoration:none">Journal Notion ↗</a>
+      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button></div>
+      <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button>
+      <button class="btn jt-tsx" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
+      <button class="jt-tsx btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
+      <label class="jt-tsx btn gray jimp" style="cursor:pointer">Importer comptes.json<input type="file" id="jImpC" accept=".json,application/json" hidden></label>
+      <label class="jt-tsx btn gray jimp" style="cursor:pointer">Importer trades.json<input type="file" id="jImpT" accept=".json,application/json" hidden></label>
+      <button class="jt-tsx btn gray" id="jMetaExp" title="Sauvegarder tags + images">Exporter tags & images</button>
+      <label class="jt-tsx btn gray" style="cursor:pointer" title="Restaurer tags + images">Importer tags & images<input type="file" id="jMetaImp" accept=".json" hidden></label>
+      <a class="jt-tsx btn gray" id="jNotion" href="#" target="_blank" rel="noopener" style="text-decoration:none">Journal Notion ↗</a>
     </div>
   </div>
+  <div id="jtTsx">
   <div class="jempty" id="jLogin" hidden><b>Connecte ton compte TopstepX</b>L'app récupère tes comptes et tes trades directement depuis TopstepX et les garde dans sa base locale.<div class="row2" style="justify-content:center"><button class="btn" id="jLoginBtn">Se connecter à TopstepX</button></div></div>
   <div class="jempty" id="jEmpty" hidden><b>Aucune donnée TopstepX</b>Importe tes fichiers <code>comptes.json</code> et <code>trades.json</code> (export du dashboard Stats TopstepX) avec les boutons ci-dessus.</div>
 <div class="tsx" id="jroot">
@@ -492,11 +495,13 @@ body{background:#060607}
     <div class="tsx-pager"><span>Rows per page:</span><select class="tsx-rpp" aria-label="Rows per page"><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select><span data-draw="range">—</span><button class="tsx-pg" data-step="-1" aria-label="Page précédente">‹</button><button class="tsx-pg" data-step="1" aria-label="Page suivante">›</button></div>
   </div>
 </div>
+  </div>
+  <div id="jtNeal" hidden><div id="rvBodyJ"></div></div>
 </div></section>
 <section class="view" id="v-review"><div class="page" style="max-width:none;padding:26px 28px 60px">
   <div class="jtop">
     <div><h2>Review</h2><p class="lead" style="margin:0"><span id="rvStamp"></span> <span id="rvStatus" style="color:#ff8a8a"></span></p></div>
-    <div class="acts"><div class="rv-tabs"><button class="rv-tab" data-t="wtf">📷 What to focus on ?</button><button class="rv-tab on" data-t="journal">Journal de Neal</button></div>
+    <div class="acts">
       <button class="btn" id="rvSync">⟳ Synchroniser Notion</button><button class="btn gray" id="rvSetupBtn" title="Connexion Notion">⚙</button></div>
   </div>
   <div class="panel" id="rvSetup" hidden style="margin-bottom:14px">
@@ -841,12 +846,18 @@ function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); con
 function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
+  if(v!=="journal") document.body.classList.remove("jt-neal-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); }
   if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
 document.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>go(x.dataset.go)));
 document.querySelectorAll("[data-grp]").forEach(x=>x.addEventListener("click",()=>{ $(x.dataset.grp).classList.toggle("closed"); }));
+function jtab(t){ document.body.classList.toggle("jt-neal-on", t==="neal"); $("jtTsx").hidden = t==="neal"; $("jtNeal").hidden = t!=="neal";
+  document.querySelectorAll(".jtab").forEach(b=>b.classList.toggle("on", b.dataset.jt===t)); try{localStorage.setItem("econcal-jtab",t)}catch(e){}
+  if(t==="tsx") setTimeout(()=>window.jdash&&jdash.redraw(),0); else setTimeout(()=>window.reviewRender&&reviewRender(),0); }
+document.querySelectorAll(".jtab").forEach(b=>b.onclick=()=>jtab(b.dataset.jt));
+try{ if(localStorage.getItem("econcal-jtab")==="neal") jtab("neal"); }catch(e){}
 $("miniBtn").onclick=()=>{ $("app").classList.toggle("mini"); try{localStorage.setItem("econcal-mini",$("app").classList.contains("mini")?"1":"")}catch(e){} };
 try{ if(localStorage.getItem("econcal-mini")) $("app").classList.add("mini") }catch(e){}
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
@@ -1228,7 +1239,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       document.getElementById("jroot").hidden = !has; document.getElementById("jEmpty").hidden = has;
       const last = has ? RAW.comptes.map((c) => c["Dernière synchro"]).filter(Boolean).sort().pop() : null;
       document.getElementById("jSync").textContent = has ? `Stats TopstepX · ${RAW.comptes.length} comptes · ${(RAW.trades || []).length} trades` + (last ? ` · dernière synchro ${new Date(last).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "") : "Stats TopstepX par compte.";
-      dash.redraw();
+      dash.redraw(); setTimeout(() => window.reviewRender && reviewRender(), 0);
     },
   };
   const KEY = "econcal-journal";
@@ -1596,7 +1607,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   async function sync() {
     if (!D) return;
-    const st = $("rvStatus"), btn = $("rvSync"); btn.disabled = true; btn.textContent = "⟳ Synchronisation…"; st.textContent = "";
+    const st = $("rvStatus"), btns = [$("rvSync"), $("rvSync2")].filter(Boolean); btns.forEach((b) => { b.disabled = true; b.textContent = "⟳ Synchronisation…"; }); st.textContent = "";
     const step = async (k, fn) => { const r = await fn(); if (!r.ok) throw r.reason; state[k] = r.data; await kset(k, r.data); };
     try {
       await step("macro", () => D.notionDb(ID.macro)); render();
@@ -1608,7 +1619,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       st.textContent = reason === "token" ? "Token Notion invalide ou manquant." : reason === "access" ? "L'intégration n'a pas accès à la page : ajoute-la dans Notion (••• → Connexions) sur « Mon temple »." : "Synchro Notion impossible : " + reason;
       if (reason === "token") showSetup(true);
     }
-    btn.disabled = false; btn.textContent = "⟳ Synchroniser Notion"; render();
+    btns.forEach((b) => { b.disabled = false; b.textContent = "⟳ Synchroniser Notion"; }); render(); if (st.textContent && $("rvStampJ")) $("rvStampJ").textContent = st.textContent;
   }
 
   /* --- analytics on Macro --- */
@@ -1630,8 +1641,18 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     return `<table class="rv-bt"><thead><tr><th>${esc(f)}</th><th>Setups</th><th>Winrate</th><th>RR moyen</th><th>Σ RR</th></tr></thead><tbody>` + arr.map((a) =>
       `<tr><td>${a.k === "(vide)" ? '<span class="rv-mut">(vide)</span>' : chips(schema, f, a.k)}</td><td><div class="rv-bar"><i style="width:${(a.n / maxN) * 100}%"></i><span>${a.n}</span></div></td><td class="${a.wr === null ? "" : a.wr >= 0.5 ? "up" : "dn"}">${pct(a.wr)}</td><td>${f2(a.rr)}</td><td class="${a.sum >= 0 ? "up" : "dn"}">${f2(a.sum)}</td></tr>`).join("") + "</tbody></table>";
   }
-  const COLS = ["Name", "Date", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
+  /* link a Notion setup to the TopstepX trades taken at the same time (entry within -2 / +3 min) */
+  function tsxMatch(r) {
+    if (!r["Entrée"] || !window.jdash) return null; const d = jdash.data("fills_calc"); if (d.status !== "ok") return null;
+    const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return null;
+    const hit = d.data.filter((t) => { const dt = new Date(t.Entry).getTime() - t0; return dt >= -120000 && dt <= 180000; });
+    return hit.length ? hit : null;
+  }
+  const COLS = ["Name", "Date", "TopstepX", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "MAE (R)", "MFE (R)", "PnL", "Règles respectées", "Raison hors plan", "Commentaire"];
   const cellOf = (r, c, schema) => {
+    if (c === "TopstepX") { const h = tsxMatch(r); if (!h) return '<span class="rv-mut">—</span>';
+      const net = Math.round(h.reduce((a, t) => a + t["Net P&L"], 0) * 100) / 100, accts = new Set(h.map((t) => t["ID TopstepX"])).size;
+      return `<span class="${net >= 0 ? "up" : "dn"}" title="${h.length} trade(s) TopstepX sur ${accts} compte(s)">${net >= 0 ? "+" : ""}${net.toFixed(2)} $</span> <span class="rv-mut">· ${h.length}</span>`; }
     const v = r[c], t = schema[c] ? schema[c].type : "";
     if (t === "multi_select" || t === "select") return chips(schema, c, v);
     if ((c === "Entrée" || c === "Sortie") && v) return new Date(v).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
@@ -1643,16 +1664,21 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   };
 
   /* --- rendering --- */
-  function render() {
+  function render() { renderWTF(); renderJournal(); }
+  window.reviewRender = render;
+  function renderWTF() {
     const body = $("rvBody"); if (!body) return;
-    document.querySelectorAll(".rv-tab").forEach((b) => b.classList.toggle("on", b.dataset.t === state.tab));
-    $("rvStamp").textContent = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
-    if (state.tab === "wtf") {
+    const stamp = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+    $("rvStamp").textContent = stamp; if ($("rvStampJ")) $("rvStampJ").textContent = stamp;
+    {
       if (!state.wtf) { body.innerHTML = emptyMsg("What to focus on ?"); return; }
       const hw = state.homework;
       body.innerHTML = `<div class="rv-page wide"><h1>📷 What to focus on ?</h1>` + blocksHTML(state.wtf, { db: (b) => hw ? `<h3 class="rv-dbt">${esc(b.title || "Homework")}</h3>` + calendar("hw", hw, (r) => colorOf(hw.schema, "Tags", (r.Tags || [])[0]), (r) => dotOf(hw.schema, "Tags", (r.Tags || [])[0])) : "" }) + "</div>";
       return;
     }
+  }
+  function renderJournal() {
+    const body = $("rvBodyJ"); if (!body) return;
     const m = state.macro;
     if (!m) { body.innerHTML = emptyMsg("Journal de Neal"); return; }
     const rows = filtered().sort((a, b) => String(b.Date || "").localeCompare(String(a.Date || ""))), s = stats(rows);
@@ -1671,7 +1697,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     else if (V.type === "calendar") content = calendar("macro", { schema: m.schema, rows: vrows }, (r) => colorOf(m.schema, "Status", (r.Status || [])[0]), (r) => dotOf(m.schema, "Status", (r.Status || [])[0]));
     else if (V.type === "table") content = `<div class="panel"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div>${dbTable({ schema: m.schema, rows: vrows }, V.cols, "macro")}</div>`;
     else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
-    body.innerHTML = `<div class="rv-page wide"><h1>Journal de Neal</h1>${note ? `<div class="rv-note">${note}</div>` : ""}
+    body.innerHTML = `<div class="rv-page wide">${note ? `<div class="rv-note">${note}</div>` : ""}
       <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}</div>
       <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
         <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
@@ -1686,7 +1712,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     { name: "Trades", icon: "▦", type: "calendar" },
     { name: "In", icon: "▦", type: "calendar", filter: ST("TP", "BE (SL)", "BE (TP)", "SL") },
     { name: "Review & Paper", icon: "▦", type: "calendar", filter: ST("Pas pris (TP)", "Pas pris (SL)", "Pas pris (BE ~ SL)", "Pas pris (BE ~ TP)") },
-    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Date", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
+    { name: "Statistiques", icon: "▤", type: "table", cols: ["Name", "Date", "TopstepX", "Actif", "Sens", "PD Array M1", "Time", "Prise de liquidité", "Status", "RR fait", "PnL", "Commentaire", "Durée (min)", "Entrée", "MAE (R)", "MFE (R)", "RR théorique", "Raison hors plan", "Règles respectées", "Sortie"] },
     { name: "Status", icon: "◔", type: "chart", chart: "donut", by: "Status", filter: ST("SL", "BE (TP)", "BE (SL)", "TP"), sort: "y-desc" },
     { name: "PD Array m1", icon: "◔", type: "chart", chart: "donut", by: "PD Array M1", hideEmpty: true },
     { name: "Prise de liquidité", icon: "▥", type: "chart", chart: "column", by: "Prise de liquidité", sort: "manual" },
@@ -1784,8 +1810,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     ov.querySelector(".rv-mh b").textContent = (r._icon ? r._icon + " " : "") + (r.Name || "Sans titre");
     const props = Object.keys(db.schema).filter((k) => k !== "Name" && r[k] !== null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length));
     const mb = ov.querySelector(".rv-mb");
-    const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${db.schema[k].options ? chips(db.schema, k, r[k]) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}</div>`;
-    mb.innerHTML = head + '<div class="rv-mut" id="rvPg">Chargement de la page…</div>';
+    const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${db.schema[k].options ? chips(db.schema, k, r[k]) : db.schema[k].type === "date" && String(r[k]).length > 10 ? esc(new Date(r[k]).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}</div>`;
+    const h = kind === "macro" ? tsxMatch(r) : null;
+    const tsx = h ? `<div class="panel" style="margin-bottom:16px"><div class="ptitle">Trades TopstepX liés · ${h.length}</div><table class="rv-bt"><thead><tr><th>Compte</th><th>Sens</th><th>Taille</th><th>Entrée</th><th>Sortie</th><th>Net</th></tr></thead><tbody>${h.map((t) => { const c = (jdash.data("comptes").data || []).find((x) => String(x["ID TopstepX"]) === t["ID TopstepX"]);
+      const f = (v) => new Date(v).toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      return `<tr><td>${esc(c ? c.Nom : t["ID TopstepX"])}</td><td>${esc(t.Direction)}</td><td>${t.Size} ${esc(t.Contract)}</td><td>${f(t.Entry)}</td><td>${f(t.Exit)}</td><td class="${t["Net P&L"] >= 0 ? "up" : "dn"}">${t["Net P&L"].toFixed(2)} $</td></tr>`; }).join("")}</tbody></table></div>` : "";
+    mb.innerHTML = head + tsx + '<div class="rv-mut" id="rvPg">Chargement de la page…</div>';
     ov.classList.add("show");
     let blocks = await kget("page:" + id);
     const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs) || '<p class="rv-mut">Page vide</p>'}</div>`; };
@@ -1829,15 +1859,15 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   window.addEventListener("DOMContentLoaded", () => {});
   (async () => {
     await loadCache();
-    if (!D) { $("rvSync").hidden = true; }
+    if (!D) { $("rvSync").hidden = true; $("rvSetupBtn").hidden = true; if ($("rvSync2")) $("rvSync2").style.visibility = "hidden"; }
     else {
-      $("rvSync").onclick = sync;
+      $("rvSync").onclick = sync; if ($("rvSync2")) $("rvSync2").onclick = sync;
       $("rvTokenSave").onclick = async () => { const r = await D.notionSetToken($("rvToken").value); $("rvTokenMsg").textContent = r.ok ? "Connecté ✓ (" + r.bot + ")" : "Token refusé"; if (r.ok) { showSetup(false); sync(); } };
       $("rvSetupBtn").onclick = () => showSetup($("rvSetup").hidden);
       const st = await D.notionStatus(); if (!st.ok) showSetup(true); else if (!state.synced || Date.now() - new Date(state.synced) > 30 * 60 * 1000) sync();
     }
-    document.querySelectorAll(".rv-tab").forEach((b) => (b.onclick = () => { state.tab = b.dataset.t; render(); }));
-    $("rvBody").addEventListener("click", (e) => {
+    [$("rvBody"), $("rvBodyJ")].filter(Boolean).forEach((root) => {
+    root.addEventListener("click", (e) => {
       const tr = e.target.closest("tr[data-id],.rv-ci[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
       const vb = e.target.closest(".rv-v"); if (vb) { state.view = vb.dataset.v; try { localStorage.setItem("econcal-review-view", state.view); } catch (err) {} render(); return; }
       const cb = e.target.closest("[data-cal]"); if (cb) { const k = cb.dataset.cal;
@@ -1847,10 +1877,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
         state.cal[k] = `${y}-${String(m).padStart(2, "0")}`; render(); return; }
       const fb = e.target.closest(".rv-f"); if (fb) { if (fb.dataset.clear) { state.filt = {}; render(); } else openFilter(fb); }
     });
-    $("rvBody").addEventListener("input", (e) => { if (e.target.classList.contains("rv-q")) { state.q = e.target.value; const pos = e.target.selectionStart; render(); const q = document.querySelector(".rv-q"); q.focus(); q.setSelectionRange(pos, pos); } });
-    $("rvBody").addEventListener("change", (e) => { if (e.target.id === "rvCsv" && e.target.files[0]) importCSV(e.target.files[0]); });
+    root.addEventListener("input", (e) => { if (e.target.classList.contains("rv-q")) { state.q = e.target.value; const pos = e.target.selectionStart; render(); const q = document.querySelector(".rv-q"); q.focus(); q.setSelectionRange(pos, pos); } });
+    root.addEventListener("change", (e) => { if (e.target.id === "rvCsv" && e.target.files[0]) importCSV(e.target.files[0]); });
+    });
     render();
-    let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (document.querySelector("#v-review.on .rv-chart")) render(); }, 200); });
+    let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (document.querySelector("#v-journal.on #jtNeal:not([hidden]) .rv-chart")) render(); }, 200); });
   })();
 })();
 </script>
