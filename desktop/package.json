@@ -16,6 +16,7 @@
       "preload.js",
       "topstepx.js",
       "notion.js",
+      "marketdata.js",
       "app/**/*"
     ],
     "win": {

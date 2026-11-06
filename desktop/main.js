@@ -1,4 +1,5 @@
-const { app, BrowserWindow, shell, ipcMain, session, net, safeStorage } = require("electron");
+const { app, BrowserWindow, shell, ipcMain, session, net, safeStorage, Notification, dialog } = require("electron");
+const marketdata = require("./marketdata");
 const path = require("path");
 const fs = require("fs");
 const topstepx = require("./topstepx");
@@ -126,6 +127,35 @@ function createWindow() {
   win.on("closed", () => { app.isQuitting = true; app.quit(); });
   win.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });
 }
-app.whenReady().then(createWindow);
+
+/* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
+let mdStore = null;
+const md = () => (mdStore = mdStore || marketdata.create(require("path").join(app.getPath("documents"), "EconomicCalendar", "data")));
+async function mdSync(interactive) {
+  const token = await getToken(!!interactive);
+  if (!token) return { ok: false, reason: "login" };
+  const r = await md().sync(token, sfetch, (p) => { try { win && win.webContents.send("data:progress", p); } catch (e) { /* window closed */ } });
+  try { win && win.webContents.send("data:done", r); } catch (e) { /* ignore */ }
+  return r;
+}
+function mdSchedule() {
+  const n = new Date(), t = new Date(n); t.setHours(23, 1, 0, 0); if (t <= n) t.setDate(t.getDate() + 1);
+  setTimeout(async () => {
+    const r = await mdSync(false);
+    try { if (Notification.isSupported()) new Notification({ title: "Données de marché", body: r.ok ? `Bougies NQ/ES enregistrées (${Object.entries(r.summary).map(([k, v]) => k + " +" + v.m1 + " m1").join(", ")})` : r.reason === "login" ? "Connecte-toi à TopstepX pour la synchro des bougies de 23h01." : "Synchro des bougies impossible : " + r.reason }).show(); } catch (e) { /* ignore */ }
+    mdSchedule();
+  }, t - n);
+}
+ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
+ipcMain.handle("data:sync", () => mdSync(true));
+ipcMain.handle("data:read", (e, sym, from, to, res) => { try { return { ok: true, data: md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("data:openDir", () => shell.openPath(md().dir));
+ipcMain.handle("data:import", async () => {
+  const r = await dialog.showOpenDialog(win, { title: "Importer un CSV de bougies", filters: [{ name: "CSV", extensions: ["csv", "txt"] }], properties: ["openFile"] });
+  if (r.canceled || !r.filePaths[0]) return { ok: false, reason: "cancel" };
+  try { return { ok: true, name: require("path").basename(r.filePaths[0]), data: marketdata.parseCsv(require("fs").readFileSync(r.filePaths[0], "utf8")) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
+});
+
+app.whenReady().then(() => { createWindow(); mdSchedule(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());
