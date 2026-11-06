@@ -392,13 +392,14 @@
         }).filter(Boolean);
         const fibs = c.getAllShapes().filter(s => s.name === 'fib_retracement').map(s => { try { return c.getShapeById(s.id).getPoints().map(p => p.price).sort((a, b) => a - b); } catch (e) { return null; } }).filter(Boolean);
         const usedR = new Set();
-        const place = async (z, tplName, text, tA, tB) => {
+        const place = async (z, tplName, text, tA, tB, win = 300, create = true) => {
           const props = (await tpl(tplName, 'LineToolRectangle')) || {};
           // same zone: exact bounds (gaps) or, for an FVG, a rectangle starting within 5 min that overlaps it (drawn by hand)
           const free = rects.filter(r => !usedR.has(r.id));
           const ex = free.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol) ||
-            (z.t1 ? free.filter(r => Math.abs(r.t - z.t1) <= 300 && r.bot < z.top && r.top > z.bot).sort((a, b) => Math.abs(a.t - z.t1) - Math.abs(b.t - z.t1))[0] : null);
+            (z.t1 ? free.filter(r => Math.abs(r.t - z.t1) <= win && r.bot < z.top && r.top > z.bot).sort((a, b) => Math.abs(a.t - z.t1) - Math.abs(b.t - z.t1))[0] : null);
           if (ex) usedR.add(ex.id);
+          if (!ex && !create) return null;
           if (ex) { try { ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé'; }
           const id = await c.createMultipointShape([{ time: tA, price: z.top }, { time: tB, price: z.bot }], { shape: 'rectangle', text, lock: false });
           try { c.getShapeById(id).setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ }
@@ -412,10 +413,12 @@
           out.push(`${c.symbol()} ${g.label} ${g.bot}–${g.top} : ${st}`);
         }
         const fd = await J.fvgData(sym, d);
-        for (const [k, name] of [['first', '9h30'], ['refl', 'Reflection'], ['sb', 'Silver Bullet']]) {
+        const kinds = [['first', '9h30'], ['refl', 'Reflection'], ['sb', 'Silver Bullet']], res = {};
+        for (const [k, name] of kinds) if (fd[k]) res[k] = await place(fd[k], rectTpl[k], `1st p.FVG ${name} ${dm}`, fd[k].t1, fd[k].t3, 60, false); // boxes starting on the same minute first
+        for (const [k, name] of kinds) {
           const z = fd[k];
           if (!z) { out.push(`${c.symbol()} 1st p.FVG ${name} : aucun`); continue; }
-          const st = await place(z, rectTpl[k], `1st p.FVG ${name} ${dm}`, z.t1, z.t3);
+          const st = res[k] || await place(z, rectTpl[k], `1st p.FVG ${name} ${dm}`, z.t1, z.t3);
           out.push(`${c.symbol()} 1st p.FVG ${name} ${dm} ${z.type} ${z.bot}–${z.top} (${nyHM(z.t1)}) : ${st}`);
         }
         keep(i, 'nwog', ids);
