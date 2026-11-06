@@ -492,7 +492,7 @@
     },
     // ---- H4 / H1 / m15 homework: dealing range (OTE fib "4. OTE"), unfilled FVGs of the TF, what the day touched ----
     async htfData(sym, tf = 'H4', d = day()) {
-      const cfg = { H4: ['240', 25], H1: ['60', 6], m15: ['15', 2] }[tf];
+      const cfg = { H4: ['240', 25], H1: ['60', 6], m15: ['15', 1] }[tf];
       const dayFrom = ny(addDays(d, -1), 18, 0), dayTo = Math.min(now(), ny(d, 17, 0));
       const hist = await barsRes(sym, cfg[0], dayFrom - cfg[1] * 86400, dayFrom - 1);
       const dayBars = await barsRes(sym, cfg[0], dayFrom, dayTo);
@@ -512,7 +512,8 @@
       const fv = fvgList(legBars).filter(f => f.type === (down ? 'SIBI' : 'BISI')).filter(f => {
         const after = hist.filter(b => b.t > f.t3);
         return !after.some(b => (down ? b.c > f.top : b.c < f.bot));
-      });
+      }).filter(f => (down ? f.bot <= E + 0.886 * R : f.top >= E + 0.886 * R)) // inside the retracement range
+        .sort((a, b) => (down ? a.bot - b.bot : b.top - a.top)).slice(0, 3); // the 3 closest to the leg end
       const fvr = fv.map(f => {
         const hit = dayBars.find(b => b.h >= f.bot && b.l <= f.top);
         const thru = dayBars.some(b => (down ? b.c > f.top : b.c < f.bot));
