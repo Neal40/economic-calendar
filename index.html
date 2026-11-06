@@ -251,6 +251,12 @@ body{background:#060607}
 .rv-ndl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .rv-cv{min-height:380px}
 body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
+.rv-new{background:#2f54eb!important;border:none!important;color:#fff!important;font-weight:600}
+.rv-add{float:left;visibility:hidden;background:#26262d;border:none;color:#e3e4ea;border-radius:4px;width:20px;height:20px;line-height:18px;cursor:pointer;font-size:15px;margin-right:4px}
+.rv-cd:hover .rv-add{visibility:visible}
+.rv-cn{display:flex;align-items:center;justify-content:flex-end;gap:2px;align-self:stretch}
+.rv-cn.today{align-self:flex-end}
+.rv-ed{display:flex;gap:8px;justify-content:flex-end;margin:-4px 0 14px}
 .rv-tabs{display:flex;background:#121216;border:1px solid #23232a;border-radius:8px;padding:3px;gap:2px}
 .rv-tab{background:none;border:none;color:#9a9ca7;padding:6px 12px;border-radius:6px;cursor:pointer;font:inherit;font-size:13px;font-weight:600}
 .rv-tab.on{background:#2f54eb;color:#fff}
@@ -1666,6 +1672,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* --- rendering --- */
   function render() { renderWTF(); renderJournal(); }
   window.reviewRender = render;
+  const API = window.reviewAPI = { ID, state, kset, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
   function renderWTF() {
     const body = $("rvBody"); if (!body) return;
     const stamp = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
@@ -1698,7 +1705,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     else if (V.type === "table") content = `<div class="panel"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div>${dbTable({ schema: m.schema, rows: vrows }, V.cols, "macro")}</div>`;
     else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
     body.innerHTML = `<div class="rv-page wide">${note ? `<div class="rv-note">${note}</div>` : ""}
-      <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}</div>
+      <div class="rv-views">${VIEWS.map((v) => `<button class="rv-v${v.name === V.name ? " on" : ""}" data-v="${esc(v.name)}"><span>${v.icon}</span>${esc(v.name)}</button>`).join("")}${API.canEdit ? '<button class="rv-new" data-new="macro" style="margin-left:auto">＋ Nouveau</button>' : ""}</div>
       <div class="rv-filters">${FILTERS.map((f) => `<button class="rv-f${(state.filt[f] || []).length ? " on" : ""}" data-f="${esc(f)}">${esc(f)}${(state.filt[f] || []).length ? " · " + state.filt[f].length : ""} ▾</button>`).join("")}
         <input class="rv-q" placeholder="Rechercher…" value="${esc(state.q || "")}">${Object.values(state.filt).some((v) => v && v.length) ? '<button class="rv-f" data-clear="1">✕ Réinitialiser</button>' : ""}</div>
       ${content}</div>`;
@@ -1786,11 +1793,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (let i = 0; i < weeks * 7; i++) {
       const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), k = iso(d), items = byDay.get(k) || [];
       const lab = d.getDate() === 1 ? d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : d.getDate();
-      cells += `<div class="rv-cd${d.getMonth() !== M - 1 ? " out" : ""}"><div class="rv-cn${k === today ? " today" : ""}">${lab}</div>` +
+      cells += `<div class="rv-cd${d.getMonth() !== M - 1 ? " out" : ""}"><div class="rv-cn${k === today ? " today" : ""}">${API.canEdit ? `<button class="rv-add" data-new="${kind}" data-date="${k}" title="Nouveau">+</button>` : ""}${lab}</div>` +
         items.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("") + "</div>";
     }
     const mlab = first.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-    return `<div class="rv-cal"><div class="rv-ch"><b>${mlab}</b><span>${nodate.length ? `<button class="rv-nd" data-cal="${kind}">Aucune date (${nodate.length})</button>` : ""}<button data-cal="${kind}" data-step="-1">‹</button><button data-cal="${kind}" data-step="0">Aujourd'hui</button><button data-cal="${kind}" data-step="1">›</button></span></div>
+    return `<div class="rv-cal"><div class="rv-ch"><b>${mlab}</b><span>${nodate.length ? `<button class="rv-nd" data-cal="${kind}">Aucune date (${nodate.length})</button>` : ""}${API.canEdit ? `<button class="rv-new" data-new="${kind}">＋ Nouveau</button>` : ""}<button data-cal="${kind}" data-step="-1">‹</button><button data-cal="${kind}" data-step="0">Aujourd'hui</button><button data-cal="${kind}" data-step="1">›</button></span></div>
       <div class="rv-cg">${["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."].map((d) => `<div class="rv-cw">${d}</div>`).join("")}${cells}</div>
       ${state.cal[key + ":nd"] && nodate.length ? `<div class="rv-ndl">${nodate.map((r) => `<div class="rv-ci" data-k="${kind}" data-id="${esc(r._id)}" style="background:${bg(r)}"><i style="background:${dot(r)}"></i>${esc(r.Name || "Sans titre")}</div>`).join("")}</div>` : ""}</div>`;
   }
@@ -1808,7 +1815,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   async function openRow(kind, id) {
     const db = kind === "hw" ? state.homework : state.macro; const r = db.rows.find((x) => x._id === id); if (!r) return;
     ov.querySelector(".rv-mh b").textContent = (r._icon ? r._icon + " " : "") + (r.Name || "Sans titre");
-    const props = Object.keys(db.schema).filter((k) => k !== "Name" && r[k] !== null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length));
+    const props = Object.keys(db.schema).filter((k) => k !== "Name" && r[k] != null && r[k] !== "" && !(Array.isArray(r[k]) && !r[k].length));
     const mb = ov.querySelector(".rv-mb");
     const head = `<div class="rv-props">${props.map((k) => `<div class="pl">${esc(k)}</div><div>${db.schema[k].options ? chips(db.schema, k, r[k]) : db.schema[k].type === "date" && String(r[k]).length > 10 ? esc(new Date(r[k]).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })) : esc(Array.isArray(r[k]) ? r[k].join(", ") : r[k])}</div>`).join("")}</div>`;
     const h = kind === "macro" ? tsxMatch(r) : null;
@@ -1816,6 +1823,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const f = (v) => new Date(v).toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit", second: "2-digit" });
       return `<tr><td>${esc(c ? c.Nom : t["ID TopstepX"])}</td><td>${esc(t.Direction)}</td><td>${t.Size} ${esc(t.Contract)}</td><td>${f(t.Entry)}</td><td>${f(t.Exit)}</td><td class="${t["Net P&L"] >= 0 ? "up" : "dn"}">${t["Net P&L"].toFixed(2)} $</td></tr>`; }).join("")}</tbody></table></div>` : "";
     mb.innerHTML = head + tsx + '<div class="rv-mut" id="rvPg">Chargement de la page…</div>';
+    if (API.onRowOpen) API.onRowOpen(kind, r, mb);
     ov.classList.add("show");
     let blocks = await kget("page:" + id);
     const show = (bs) => { const el = mb.querySelector("#rvPg"); if (el) el.outerHTML = `<div class="rv-page" style="padding:0">${blocksHTML(bs) || '<p class="rv-mut">Page vide</p>'}</div>`; };
@@ -1883,6 +1891,119 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     render();
     let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (document.querySelector("#v-journal.on #jtNeal:not([hidden]) .rv-chart")) render(); }, 200); });
   })();
+})();
+</script>
+<script>
+/* ---------- Review : add / edit / delete in Notion (desktop app) ---------- */
+(() => {
+  const D = window.desktop; if (!D || !D.notionCreate) return;
+  const R = window.reviewAPI; if (!R) return;
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const NC = () => window.NOTION_COLORS || {};
+  const TPL_HW = { "W": "40cd85a6400980c497bfd264fbb46ef8", "D": "40cd85a6400980b4b3d4d3d43d7689cb", "H4": "40cd85a6400980cf8da8c51fc8d67596", "H1": "40cd85a6400980e7a16eea898cfa0546", "m15": "40cd85a6400980678be5c00ef74574f0", "Premarket": "40cd85a6400980a5938dd12390138901", "First Hour of Trading": "40cd85a6400980aba981e9a45a37a438", "NWOG & 1st": "40cd85a6400980b391a6d585bbff0dc8", "RTH ORG": "40cd85a6400980e2aebbe3c295fed743", "STDV": "40cd85a6400980dda411fbf55ccaeb29", "Prediction": "40cd85a64009808eb688d83ef07e95ec" };
+  const TPL_MACRO = "40cd85a64009809e8404ca096ae69d4a";
+  const MACRO_FIELDS = ["Name", "Date", "Entrée", "Sortie", "Actif", "Sens", "Time", "PD Array M1", "Prise de liquidité", "Status", "RR théorique", "RR fait", "PnL", "MAE (R)", "MFE (R)", "Règles respectées", "Raison hors plan", "Commentaire"];
+  const HW_FIELDS = ["Name", "Date", "Tags"];
+  const DB = { macro: R.ID.macro, hw: R.ID.homework };
+  const dbOf = (kind) => (kind === "hw" ? R.state.homework : R.state.macro);
+  const msg = (t, bad) => { const el = document.getElementById(R.journalVisible() ? "rvStampJ" : "rvStatus") || document.getElementById("rvStatus"); if (el) { el.textContent = t; el.style.color = bad ? "#ff8a8a" : "#4ccf6a"; setTimeout(() => (el.style.color = ""), 4000); } };
+  const why = (r) => r.reason === "write" ? "L'intégration Notion n'a pas le droit d'écrire : dans notion.so/profile/integrations, coche « Insérer » et « Mettre à jour du contenu »." : r.reason === "token" ? "Token Notion manquant ou invalide." : r.reason === "access" ? "L'intégration n'a pas accès à cette base." : "Notion : " + r.reason;
+  const refreshSoon = (kind) => { setTimeout(() => refresh(kind), 1500); setTimeout(() => refresh(kind), 5000); };
+  async function refresh(kind) {
+    const r = await D.notionDb(DB[kind]); if (!r.ok) return msg(why(r), true);
+    if (kind === "hw") R.state.homework = r.data; else R.state.macro = r.data;
+    await R.kset(kind === "hw" ? "homework" : "macro", r.data); R.render();
+  }
+  const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+
+  /* --- Homework : new from a template (like Notion's "Nouveau ▾") --- */
+  let pop = null;
+  const closePop = () => { if (pop) { pop.remove(); pop = null; } };
+  document.addEventListener("mousedown", (e) => { if (pop && !pop.contains(e.target)) closePop(); }, true);
+  function templateMenu(anchor, date) {
+    closePop(); const hw = R.state.homework; const opts = (hw && hw.schema.Tags && hw.schema.Tags.options) || Object.keys(TPL_HW).map((n) => ({ n, c: "default" }));
+    pop = document.createElement("div"); pop.className = "npop";
+    pop.innerHTML = `<div class="npop-t">Nouveau ${date ? "le " + new Date(date + "T12:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "aujourd'hui"} · modèle</div><div class="npop-list">${opts.map((o) => `<div class="nopt" data-v="${esc(o.n)}"><span class="nchip" style="background:${NC()[o.c] || "#373737"}">${esc(o.n)}</span></div>`).join("")}</div>`;
+    document.body.append(pop); const r = anchor.getBoundingClientRect();
+    pop.style.left = Math.min(r.left, innerWidth - 340) + "px"; if (innerHeight - r.bottom > 320) pop.style.top = r.bottom + 4 + "px"; else pop.style.bottom = innerHeight - r.top + 4 + "px";
+    pop.onclick = async (e) => { const o = e.target.closest(".nopt"); if (!o) return; const tag = o.dataset.v; closePop();
+      msg("Création dans Notion…"); const res = await D.notionCreate(DB.hw, { Name: tag, Tags: [tag], Date: date || today() }, TPL_HW[tag]);
+      if (!res.ok) return msg(why(res), true); msg("« " + tag + " » ajouté dans Notion ✓"); R.state.homework.rows.push({ _id: res.data.id, _url: res.data.url, Name: tag, Tags: [tag], Date: date || today() }); R.render(); refreshSoon("hw"); };
+  }
+
+  /* --- property editor (Notion-like) --- */
+  const ov = document.createElement("div"); ov.className = "jm-ov"; ov.style.zIndex = 55;
+  ov.innerHTML = `<div class="jm"><div class="jm-h"><div><b></b><small></small></div><button class="jm-x" aria-label="Fermer">×</button></div><div class="jm-b"></div><div class="jm-f"></div></div>`;
+  document.body.append(ov);
+  const closeEd = () => { closePop(); ov.classList.remove("show"); };
+  ov.querySelector(".jm-x").onclick = closeEd; ov.addEventListener("mousedown", (e) => { if (e.target === ov) closeEd(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && ov.classList.contains("show")) closeEd(); });
+  const isDT = (n) => n === "Entrée" || n === "Sortie";
+  const toLocalInput = (v) => { if (!v) return ""; if (String(v).length <= 10) return v; const d = new Date(v); const p = (x) => String(x).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; };
+  function editor(kind, row, preset) {
+    const db = dbOf(kind); if (!db) return;
+    const fields = (kind === "hw" ? HW_FIELDS : MACRO_FIELDS).filter((f) => db.schema[f]);
+    const cur = {}; fields.forEach((f) => { const v = row ? row[f] : preset && preset[f]; if (v !== undefined && v !== null) cur[f] = Array.isArray(v) ? [...v] : v; });
+    ov.querySelector(".jm-h b").textContent = row ? "Modifier · " + (row.Name || "Sans titre") : kind === "hw" ? "Nouveau · Homework" : "Nouveau setup · Macro";
+    ov.querySelector(".jm-h small").textContent = "Enregistré directement dans Notion";
+    const body = ov.querySelector(".jm-b");
+    const chip = (f, v, x) => { const o = (db.schema[f].options || []).find((z) => z.n === v); return `<span class="nchip" style="background:${NC()[o ? o.c : "default"] || "#373737"}">${esc(v)}${x ? `<b data-rm="${esc(v)}">×</b>` : ""}</span>`; };
+    const val = (f) => { const t = db.schema[f].type, v = cur[f];
+      if (t === "select" || t === "multi_select") { const a = t === "multi_select" ? v || [] : v ? [v] : []; return a.length ? a.map((x) => chip(f, x)).join("") : '<span class="pe">Vide</span>'; }
+      if (t === "number") return `<input type="number" step="any" data-f="${esc(f)}" value="${v ?? ""}" placeholder="Vide">`;
+      if (t === "date") return `<input type="${isDT(f) ? "datetime-local" : "date"}" data-f="${esc(f)}" value="${esc(toLocalInput(v))}">`;
+      if (f === "Commentaire") return `<textarea data-f="${esc(f)}" placeholder="Vide">${esc(v || "")}</textarea>`;
+      return `<input type="text" data-f="${esc(f)}" value="${esc(v || "")}" placeholder="${t === "title" ? "Sans titre" : "Vide"}" style="width:100%">`; };
+    const ICON = { title: "Aa", rich_text: "≡", number: "#", select: "◉", multi_select: "☰", date: "▦" };
+    body.innerHTML = '<div class="jm-sec">' + fields.map((f) => { const t = db.schema[f].type; return `<div class="prow${t === "select" || t === "multi_select" ? " pick" : ""}" data-f="${esc(f)}"><div class="pl"><span class="pi">${ICON[t] || "·"}</span>${esc(f)}</div><div class="pv">${val(f)}</div></div>`; }).join("") + "</div>";
+    const rerow = (f) => { const el = body.querySelector(`.prow[data-f="${CSS.escape(f)}"] .pv`); if (el) el.innerHTML = val(f); };
+    body.onclick = (e) => {
+      const row = e.target.closest(".prow.pick"); if (!row) return; const f = row.dataset.f, t = db.schema[f].type, opts = db.schema[f].options || [];
+      closePop(); pop = document.createElement("div"); pop.className = "npop";
+      const draw = (q) => { const sel = t === "multi_select" ? cur[f] || [] : cur[f] ? [cur[f]] : [];
+        pop.querySelector(".npop-sel").innerHTML = sel.map((v) => chip(f, v, true)).join("");
+        pop.querySelector(".npop-list").innerHTML = opts.filter((o) => !q || o.n.toLowerCase().includes(q.toLowerCase())).map((o) => `<div class="nopt" data-v="${esc(o.n)}"><span class="grip">⋮⋮</span>${chip(f, o.n)}${sel.includes(o.n) ? '<span class="ck">✓</span>' : ""}</div>`).join("") || '<div class="nempty">Aucune option</div>'; };
+      pop.innerHTML = `<div class="npop-in"><div class="npop-sel"></div><input placeholder="Rechercher une option…"></div><div class="npop-t">${t === "multi_select" ? "Sélectionnez une ou plusieurs options" : "Sélectionnez une option"}</div><div class="npop-list"></div>`;
+      document.body.append(pop); const r = row.querySelector(".pv").getBoundingClientRect();
+      pop.style.left = Math.min(r.left, innerWidth - 340) + "px"; if (innerHeight - r.bottom > 300) pop.style.top = r.bottom + 4 + "px"; else pop.style.bottom = innerHeight - r.top + 4 + "px";
+      const inp = pop.querySelector("input"); draw(""); inp.focus(); inp.oninput = () => draw(inp.value);
+      const pick = (v) => { if (t === "select") { if (cur[f] === v) delete cur[f]; else cur[f] = v; rerow(f); closePop(); return; }
+        const a = cur[f] || []; const i = a.indexOf(v); i >= 0 ? a.splice(i, 1) : a.push(v); if (a.length) cur[f] = a; else delete cur[f]; rerow(f); draw(inp.value); };
+      pop.onclick = (ev) => { if (ev.target.dataset.rm !== undefined) return pick(ev.target.dataset.rm); const o = ev.target.closest(".nopt"); if (o) pick(o.dataset.v); };
+      inp.onkeydown = (ev) => { if (ev.key === "Enter") { const o = pop.querySelector(".nopt"); if (o) pick(o.dataset.v); } };
+    };
+    body.oninput = (e) => { const f = e.target.dataset.f; if (!f) return; const t = db.schema[f].type, v = e.target.value;
+      if (v === "") { delete cur[f]; return; }
+      if (t === "number") cur[f] = +v; else if (t === "date") cur[f] = isDT(f) ? new Date(v).toISOString() : v; else cur[f] = v; };
+    const foot = ov.querySelector(".jm-f");
+    foot.innerHTML = (row ? '<button class="jm-btn g" data-a="del" style="margin-right:auto;color:#ff8a8a">Supprimer</button>' : "") + '<button class="jm-btn g" data-a="cancel">Annuler</button><button class="jm-btn" data-a="save">' + (row ? "Enregistrer" : "Créer dans Notion") + "</button>";
+    foot.onclick = async (e) => { const a = e.target.dataset.a; if (!a) return;
+      if (a === "cancel") return closeEd();
+      if (a === "del") { if (!e.target.dataset.ok) { e.target.dataset.ok = 1; e.target.textContent = "Confirmer la suppression ?"; return; } return del(kind, row); }
+      e.target.disabled = true; e.target.textContent = "Envoi à Notion…";
+      const props = {}; fields.forEach((f) => (props[f] = cur[f] ?? null));
+      const res = row ? await D.notionUpdate(DB[kind], row._id, props) : await D.notionCreate(DB[kind], props, kind === "hw" ? TPL_HW[(cur.Tags || [])[0]] : TPL_MACRO);
+      if (!res.ok) { e.target.disabled = false; e.target.textContent = "Réessayer"; return msg(why(res), true); }
+      closeEd(); R.closeRow(); msg(row ? "Modifié dans Notion ✓" : "Ajouté dans Notion ✓"); if (row) Object.assign(row, props); else dbOf(kind).rows.push({ _id: res.data.id, _url: res.data.url, ...props }); R.render(); refreshSoon(kind);
+    };
+    ov.classList.add("show");
+  }
+  async function del(kind, row) {
+    const res = await D.notionArchive(row._id); if (!res.ok) return msg(why(res), true);
+    const db = dbOf(kind); db.rows = db.rows.filter((r) => r._id !== row._id); closeEd(); R.closeRow(); R.render(); msg("Supprimé de Notion ✓ (récupérable dans la corbeille Notion)"); refreshSoon(kind);
+  }
+
+  /* --- hooks into the Review UI --- */
+  R.onRowOpen = (kind, row, mb) => {
+    const bar = document.createElement("div"); bar.className = "rv-ed";
+    bar.innerHTML = '<button class="btn gray" data-a="edit">✎ Modifier</button><button class="btn gray" data-a="del" style="color:#ff8a8a">Supprimer</button>' + (row._url ? `<a class="btn gray" href="${esc(row._url)}" target="_blank" rel="noopener" style="text-decoration:none">Ouvrir dans Notion ↗</a>` : "");
+    mb.prepend(bar);
+    bar.onclick = (e) => { const a = e.target.dataset.a; if (a === "edit") editor(kind, row); if (a === "del") { if (!e.target.dataset.ok) { e.target.dataset.ok = 1; e.target.textContent = "Confirmer ?"; return; } del(kind, row); } };
+  };
+  document.addEventListener("click", (e) => {
+    const n = e.target.closest("[data-new]"); if (n) { const kind = n.dataset.new; if (kind === "hw") templateMenu(n, n.dataset.date); else editor("macro", null, { Date: n.dataset.date || today() }); return; }
+  });
+  R.canEdit = true; R.render();
 })();
 </script>
 </body>

@@ -84,6 +84,67 @@ async function pageBlocks(token, fetchFn, pageId, depth = 0, budget = { n: 0 }) 
   return out;
 }
 
+
+/* ---------- writing (create / update / archive) ---------- */
+function toNotionProps(schema, props) {
+  const out = {};
+  for (const [name, v] of Object.entries(props || {})) {
+    const p = schema[name]; if (!p) continue;
+    const empty = v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length);
+    switch (p.type) {
+      case "title": out[name] = { title: [{ text: { content: String(v || "") } }] }; break;
+      case "rich_text": out[name] = { rich_text: empty ? [] : [{ text: { content: String(v).slice(0, 2000) } }] }; break;
+      case "number": out[name] = { number: empty ? null : Number(v) }; break;
+      case "select": out[name] = { select: empty ? null : { name: String(v) } }; break;
+      case "multi_select": out[name] = { multi_select: empty ? [] : v.map((x) => ({ name: String(x) })) }; break;
+      case "date": out[name] = { date: empty ? null : { start: String(v) } }; break;
+      case "checkbox": out[name] = { checkbox: !!v }; break;
+      case "url": out[name] = { url: empty ? null : String(v) }; break;
+    }
+  }
+  return out;
+}
+const CREATABLE = ["paragraph", "heading_1", "heading_2", "heading_3", "quote", "callout", "toggle", "bulleted_list_item", "numbered_list_item", "to_do", "divider", "image"];
+/** Raw blocks of a template page, cleaned so they can be re-created (uploaded images become a placeholder line). */
+async function templateBlocks(call, id, depth = 0) {
+  const out = []; let cursor;
+  do {
+    const r = await call(`/blocks/${id}/children?page_size=100${cursor ? "&start_cursor=" + cursor : ""}`);
+    for (const b of r.results) {
+      if (!CREATABLE.includes(b.type)) continue;
+      const d = JSON.parse(JSON.stringify(b[b.type] || {}));
+      let blk;
+      if (b.type === "image") { if (d.type === "external") blk = { type: "image", image: { type: "external", external: d.external } }; else continue; }
+      else if (b.type === "divider") blk = { type: "divider", divider: {} };
+      else {
+        const clean = { rich_text: (d.rich_text || []).map((x) => ({ type: "text", text: { content: x.plain_text, link: x.href ? { url: x.href } : null }, annotations: x.annotations })) };
+        if (d.color) clean.color = d.color; if (b.type === "to_do") clean.checked = false; if (b.type === "callout" && d.icon && d.icon.type === "emoji") clean.icon = d.icon;
+        blk = { type: b.type, [b.type]: clean };
+      }
+      if (b.has_children && depth < 1 && ["toggle", "bulleted_list_item", "numbered_list_item", "callout", "quote", "to_do", "paragraph"].includes(b.type)) blk[b.type].children = await templateBlocks(call, b.id, depth + 1);
+      out.push(blk);
+    }
+    cursor = r.has_more ? r.next_cursor : null;
+  } while (cursor);
+  return out;
+}
+async function schemaOf(call, dbId) { const db = await call(`/databases/${dbId}`); const sc = {}; for (const [n, p] of Object.entries(db.properties)) sc[n] = { type: p.type }; return sc; }
+async function createPage(token, fetchFn, dbId, props, templateId) {
+  const { call } = client(token, fetchFn);
+  const schema = await schemaOf(call, dbId);
+  const body = { parent: { database_id: dbId }, properties: toNotionProps(schema, props) };
+  if (templateId) { try { const ch = await templateBlocks(call, templateId); if (ch.length) body.children = ch.slice(0, 100); } catch (e) {} }
+  const pg = await call("/pages", "POST", body);
+  return { id: pg.id, url: pg.url };
+}
+async function updatePage(token, fetchFn, dbId, pageId, props) {
+  const { call } = client(token, fetchFn);
+  const schema = await schemaOf(call, dbId);
+  await call(`/pages/${pageId}`, "PATCH", { properties: toNotionProps(schema, props) });
+  return { id: pageId };
+}
+async function archivePage(token, fetchFn, pageId) { const { call } = client(token, fetchFn); await call(`/pages/${pageId}`, "PATCH", { archived: true }); return { id: pageId }; }
+
 async function check(token, fetchFn) { const { call } = client(token, fetchFn); const me = await call("/users/me"); return { ok: true, bot: me.name || "integration" }; }
 
-module.exports = { queryDatabase, pageBlocks, check };
+module.exports = { queryDatabase, pageBlocks, check, createPage, updatePage, archivePage };
