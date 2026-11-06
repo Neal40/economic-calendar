@@ -6,6 +6,9 @@
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
  *   await JARVIS.macros()            -> only macros (XX:50–XX:10, grey) / mini macros (XX:25–XX:35, purple) holding a top/bottom: 2 vertical lines
  *   await JARVIS.nwog()              -> NWOG & 1st: last 5 NWOG + 5 NDOG (10. NWOG / 10. NDOG + 5. RTH Octant), 1st p.FVG 9h30 / Reflection / Silver Bullet (labels dd/mm)
+ *   await JARVIS.htf('H4'|'H1'|'m15') -> dealing range (4. OTE), unfilled FVGs of the TF, day reaction
+ *   await JARVIS.premarket()          -> 1st p.FVG 7h, 7h/8h/9h lines, Liq Pool (5h–7h)
+ *   await JARVIS.fhtData(sym)         -> First Hour of Trading range and which side is taken first
  *   await JARVIS.report()            -> text recap (STDV touched / next targets, opens, liquidity)
  *   await JARVIS.save()              -> save the layout on the server
  * Optional: JARVIS.day = 'YYYY-MM-DD' to work on another New York trading day.
@@ -68,6 +71,25 @@
     const t = (j.t || []).map(x => (x > 1e12 ? Math.floor(x / 1000) : x));
     const out = t.map((x, i) => ({ t: x, o: j.o[i], h: j.h[i], l: j.l[i], c: j.c[i] })).filter(b => b.t >= from && b.t <= to).sort((a, b) => a.t - b.t);
     return (cache[k] = out);
+  }
+  async function barsRes(sym, res, from, to) {
+    const h = { Authorization: 'Bearer ' + localStorage.getItem('token') };
+    const step = { '240': 14400, '60': 3600, '15': 900, '5': 300, '1': 60 }[res] || 60;
+    const cb = Math.min(5000, Math.ceil((to - from) / step) + 10);
+    const j = await (await fetch(`https://chartapi.topstepx.com/History?Symbol=${encodeURIComponent(sym)}&Resolution=${res}&Countback=${cb}&From=${from}&To=${to}`, { headers: h })).json();
+    return (j.t || []).map((x, i) => ({ t: x > 1e12 ? Math.floor(x / 1000) : x, o: j.o[i], h: j.h[i], l: j.l[i], c: j.c[i] })).filter(b => b.t >= from && b.t <= to).sort((a, b) => a.t - b.t);
+  }
+  // FVG list incl. Volume Imbalances (body edge when consecutive bodies don't overlap)
+  function fvgList(all) {
+    const bH = b => Math.max(b.o, b.c), bL = b => Math.min(b.o, b.c), fv = [];
+    for (let j = 2; j < all.length; j++) {
+      const c1 = all[j - 2], c2 = all[j - 1], c3 = all[j];
+      const bBot = bL(c2) > bH(c1) ? bH(c1) : c1.h, bTop = bL(c3) > bH(c2) ? bL(c3) : c3.l;
+      const sTop = bH(c2) < bL(c1) ? bL(c1) : c1.l, sBot = bL(c2) > bH(c3) ? bH(c3) : c3.h;
+      if (c2.c > c2.o && bTop > bBot) fv.push({ type: 'BISI', bot: bBot, top: bTop, t1: c1.t, t3: c3.t, vi: bBot !== c1.h || bTop !== c3.l });
+      else if (c2.c < c2.o && sTop > sBot) fv.push({ type: 'SIBI', bot: sBot, top: sTop, t1: c1.t, t3: c3.t, vi: sTop !== c1.l || sBot !== c3.h });
+    }
+    return fv;
   }
   const stats = bs => {
     if (!bs.length) return null;
@@ -467,6 +489,112 @@
         keep(i, 'nwog', ids);
       }
       return out;
+    },
+    // ---- H4 / H1 / m15 homework: dealing range (OTE fib "4. OTE"), unfilled FVGs of the TF, what the day touched ----
+    async htfData(sym, tf = 'H4', d = day()) {
+      const cfg = { H4: ['240', 25], H1: ['60', 6], m15: ['15', 2] }[tf];
+      const dayFrom = ny(addDays(d, -1), 18, 0), dayTo = Math.min(now(), ny(d, 17, 0));
+      const hist = await barsRes(sym, cfg[0], dayFrom - cfg[1] * 86400, dayFrom - 1);
+      const dayBars = await barsRes(sym, cfg[0], dayFrom, dayTo);
+      if (hist.length < 10 || !dayBars.length) return null;
+      let hi = 0, lo = 0; hist.forEach((b, i) => { if (b.h > hist[hi].h) hi = i; if (b.l < hist[lo].l) lo = i; });
+      const down = hi < lo, start = down ? hist[hi] : hist[lo], end = down ? hist[lo] : hist[hi];
+      const S = down ? start.h : start.l, E = down ? end.l : end.h, R = S - E;
+      const K = [0.5, 0.618, 0.705, 0.786, 0.886], lv = k => +(E + k * R).toFixed(2);
+      const dH = Math.max(...dayBars.map(b => b.h)), dL = Math.min(...dayBars.map(b => b.l)), close = dayBars[dayBars.length - 1].c;
+      const kMax = down ? (dH - E) / R : (E - dL) / (-R) * -1; // retracement reached by the day (0 = leg end, 1 = leg start)
+      const kReach = down ? (dH - E) / R : (dL - E) / R;
+      const kClose = +((close - E) / R).toFixed(3);
+      const touched = K.filter(k => kReach >= k);
+      const zone = kClose < 0 ? 'Au-delà du range' : kClose < 0.5 ? (down ? 'Discount' : 'Premium') : kClose < 0.618 ? (down ? 'Premium' : 'Discount') : kClose <= 0.786 ? 'OTE' : kClose <= 1 ? (down ? 'Premium profond' : 'Discount profond') : 'Range cassé';
+      // unfilled FVGs of the leg (retracement side) before the day
+      const legBars = hist.filter(b => b.t >= start.t && b.t <= end.t);
+      const fv = fvgList(legBars).filter(f => f.type === (down ? 'SIBI' : 'BISI')).filter(f => {
+        const after = hist.filter(b => b.t > f.t3);
+        return !after.some(b => (down ? b.c > f.top : b.c < f.bot));
+      });
+      const fvr = fv.map(f => {
+        const hit = dayBars.find(b => b.h >= f.bot && b.l <= f.top);
+        const thru = dayBars.some(b => (down ? b.c > f.top : b.c < f.bot));
+        return { ...f, hit: !!hit, hitT: hit ? hit.t : null, reaction: !hit ? 'Pas touché' : thru ? 'Traversé' : 'Rejet' };
+      });
+      const firstHit = fvr.filter(f => f.hit).sort((a, b) => a.hitT - b.hitT)[0];
+      return { tf, sym, down, S, E, tS: start.t, tE: end.t, levels: K.map(k => ({ k, p: lv(k) })), dH, dL, close, kReach: +kReach.toFixed(3), kClose, zone, touched,
+        fvgs: fvr, reaction: firstHit ? firstHit.reaction : (touched.length ? 'Niveaux touchés' : 'Pas touché') };
+    },
+    async htf(tf = 'H4', opts = {}) {
+      const d = day(), out = [];
+      for (let i = 0; i < api.chartsCount(); i++) {
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
+        clearGroup(i, 'htf' + tf);
+        const x = await J.htfData(sym, tf, d), ids = [];
+        if (!x) { out.push(`${c.symbol()} ${tf} : pas de données`); continue; }
+        ids.push(await fib(c, x.tS, x.tE + (x.tE - x.tS) * 0.6, x.E, x.S, '4. OTE'));
+        const props = (await tpl('4. FVG', 'LineToolRectangle')) || {};
+        for (const f of x.fvgs) {
+          const id = await c.createMultipointShape([{ time: f.t1, price: f.top }, { time: f.t3, price: f.bot }], { shape: 'rectangle', text: `${f.type} ${tf}`, lock: false });
+          try { c.getShapeById(id).setProperties({ ...props, text: `${f.type} ${tf}${f.vi ? ' (VI)' : ''}`, showLabel: true }); } catch (e) { /* ignore */ }
+          ids.push(id);
+        }
+        keep(i, 'htf' + tf, ids);
+        J['last' + tf + sym] = x;
+        out.push(`${c.symbol()} ${tf} : ${x.down ? 'leg baissier' : 'leg haussier'} ${x.S}→${x.E} · retracement max ${x.kReach} · clôture ${x.kClose} (${x.zone}) · niveaux ${x.touched.join(', ') || 'aucun'} · ${x.fvgs.length} FVG ${x.fvgs.map(f => f.reaction).join('/')}`);
+      }
+      return out;
+    },
+    // ---- Premarket (7h–9h30): 1st p.FVG 7h, 7h/8h/9h lines, liquidity pool (5h–7h high/low) ----
+    async pmData(sym, d = day()) {
+      const all = await bars(sym, ny(d, 5, 0), Math.min(now(), ny(d, 12, 0)));
+      const pre = all.filter(b => b.t < ny(d, 7, 0)), pm = all.filter(b => b.t >= ny(d, 7, 0) && b.t < ny(d, 9, 30));
+      const f = fvgList(pm)[0] || null;
+      if (f) {
+        const brk = all.find(b => b.t > f.t3 && (f.type === 'BISI' ? b.c < f.bot : b.c > f.top));
+        const back = all.find(b => b.t > f.t3 + 120 && b.h >= f.bot && b.l <= f.top);
+        f.life = brk ? Math.round((brk.t - f.t3) / 60) : null; f.retest = back ? back.t : null;
+        f.reaction = !back ? 'Pas revisité' : brk && brk.t <= back.t + 300 ? 'Traversé' : 'Respecté';
+      }
+      const pool = pre.length ? { hi: Math.max(...pre.map(b => b.h)), lo: Math.min(...pre.map(b => b.l)) } : null;
+      if (pool) {
+        const after = all.filter(b => b.t >= ny(d, 7, 0));
+        const th = after.find(b => b.h > pool.hi), tl = after.find(b => b.l < pool.lo);
+        pool.hiT = th ? th.t : null; pool.loT = tl ? tl.t : null;
+        pool.tHi = pre.find(b => b.h === pool.hi).t; pool.tLo = pre.find(b => b.l === pool.lo).t;
+      }
+      return { fvg: f, pool };
+    },
+    async premarket() {
+      const d = day(), dm = d.slice(8, 10) + '/' + d.slice(5, 7), out = [];
+      for (let i = 0; i < api.chartsCount(); i++) {
+        const c = api.chart(i), sym = root(c.symbol());
+        if (!sym) continue;
+        clearGroup(i, 'pm');
+        const x = await J.pmData(sym, d), ids = [];
+        for (const [h, m] of [[7, 0], [8, 0], [9, 0]]) ids.push(await c.createShape({ time: ny(d, h, m) }, { shape: 'vertical_line', lock: false, overrides: { linecolor: '#787b86', linestyle: 1, linewidth: 1, showLabel: false } }));
+        if (x.fvg) {
+          const props = (await tpl('7. 1st p.FVG 7h', 'LineToolRectangle')) || {};
+          const id = await c.createMultipointShape([{ time: x.fvg.t1, price: x.fvg.top }, { time: x.fvg.t3, price: x.fvg.bot }], { shape: 'rectangle', lock: false });
+          try { c.getShapeById(id).setProperties({ ...props, text: `1st p.FVG 7h ${dm}`, showLabel: true }); } catch (e) { /* ignore */ }
+          ids.push(id);
+        }
+        if (x.pool) for (const [p, t, side] of [[x.pool.hi, x.pool.tHi, 'High'], [x.pool.lo, x.pool.tLo, 'Low']]) {
+          ids.push(await c.createMultipointShape([{ time: t, price: p }, { time: ny(d, 11, 0), price: p }], { shape: 'trend_line', text: `Liq Pool ${side}`, lock: false,
+            overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, extendLeft: false, extendRight: false, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: side === 'High' ? 'top' : 'bottom' } }));
+        }
+        keep(i, 'pm', ids);
+        out.push(`${c.symbol()} Premarket : 1st p.FVG 7h ${x.fvg ? `${x.fvg.type} ${x.fvg.bot}–${x.fvg.top} (${nyHM(x.fvg.t1)}) ${x.fvg.reaction}` : 'aucun'} · Liq Pool H ${x.pool && x.pool.hi} ${x.pool && x.pool.hiT ? 'pris ' + nyHM(x.pool.hiT) : 'non pris'} / L ${x.pool && x.pool.lo} ${x.pool && x.pool.loT ? 'pris ' + nyHM(x.pool.loT) : 'non pris'}`);
+      }
+      return out;
+    },
+    // ---- First Hour of Trading (9:30–10:30) ----
+    async fhtData(sym, d = day()) {
+      const all = await bars(sym, ny(d, 9, 30), Math.min(now(), ny(d, 16, 0)));
+      const fh = all.filter(b => b.t < ny(d, 10, 30)), rest = all.filter(b => b.t >= ny(d, 10, 30));
+      if (!fh.length) return null;
+      const hi = Math.max(...fh.map(b => b.h)), lo = Math.min(...fh.map(b => b.l));
+      const th = rest.find(b => b.h > hi), tl = rest.find(b => b.l < lo);
+      const first = th && (!tl || th.t < tl.t) ? 'High' : tl ? 'Low' : 'Aucun';
+      return { hi, lo, tHi: fh.find(b => b.h === hi).t, tLo: fh.find(b => b.l === lo).t, open: fh[0].o, close: fh[fh.length - 1].c, first, tFirst: first === 'High' ? th.t : first === 'Low' ? tl.t : null };
     },
     async report() {
       const d = day(), lines = [`Jarvis 8H — ${d} (NY ${nyHM(now())})`];
