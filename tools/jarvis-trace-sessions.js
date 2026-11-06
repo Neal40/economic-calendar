@@ -393,7 +393,9 @@
         const fibs = c.getAllShapes().filter(s => s.name === 'fib_retracement').map(s => { try { return c.getShapeById(s.id).getPoints().map(p => p.price).sort((a, b) => a - b); } catch (e) { return null; } }).filter(Boolean);
         const place = async (z, tplName, text, tA, tB) => {
           const props = (await tpl(tplName, 'LineToolRectangle')) || {};
-          const ex = rects.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol);
+          // same zone: exact bounds (gaps) or, for an FVG, a rectangle starting within 5 min that overlaps it (drawn by hand)
+          const ex = rects.find(r => Math.abs(r.top - z.top) <= tickTol && Math.abs(r.bot - z.bot) <= tickTol) ||
+            (z.t1 ? rects.find(r => Math.abs(r.t - z.t1) <= 300 && r.bot < z.top && r.top > z.bot) : null);
           if (ex) { try { ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé'; }
           const id = await c.createMultipointShape([{ time: tA, price: z.top }, { time: tB, price: z.bot }], { shape: 'rectangle', text, lock: false });
           try { c.getShapeById(id).setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ }
