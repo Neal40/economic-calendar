@@ -16,8 +16,8 @@ let win = null, loginWin = null, syncing = null;
 /* ---------- local database (comptes + trades) ---------- */
 function readDb() { try { return JSON.parse(fs.readFileSync(DB(), "utf8")); } catch (e) { return { comptes: [], trades: [], syncedAt: null }; } }
 /* comptes.json / trades.json (format de l'export Stats TopstepX) : lus et fusionnés dans la base, puis réécrits à chaque synchro.
-   Dossier : Bureau\Inner Circle Trader\inner_circle_trader_main\data s'il existe (ignoré par git), sinon Bureau\Inner Circle Trader\data. */
-const JDIR = () => { const d = path.join(ICT(), "inner_circle_trader_main", "data"); return fs.existsSync(d) ? d : path.join(ICT(), "data"); };
+   Dossier : Bureau\Inner Circle Trader\data (hors du dépôt git, couvert par les sauvegardes quotidiennes). */
+const JDIR = () => path.join(ICT(), "data");
 function readFiles() {
   const rd = (k) => { try { const v = JSON.parse(fs.readFileSync(path.join(JDIR(), k + ".json"), "utf8")); const a = Array.isArray(v) ? v : v && (v[k] || v.rows || v.data || v.results); return Array.isArray(a) ? a.filter((r) => r && r["ID TopstepX"] != null) : []; } catch (e) { return []; } };
   return { comptes: rd("comptes"), trades: rd("trades").filter((t) => t.ID != null) };

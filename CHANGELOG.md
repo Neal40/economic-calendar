@@ -2,9 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.13.3] — 2026-11-07
+### Modifié
+- `comptes.json` et `trades.json` sont toujours dans `Bureau\Inner Circle Trader\data` (hors du dépôt, à côté des bougies) : copie lisible et sauvegarde de la base du journal, réécrite à chaque synchro.
+
 ## [1.13.2] — 2026-11-07
 ### Modifié
-- `comptes.json` et `trades.json` (dossier `inner_circle_trader_main\data`, sinon `Bureau\Inner Circle Trader\data`) sont lus et fusionnés dans la base au démarrage, puis réécrits à jour après chaque synchro TopstepX et chaque import : les comptes passés ou fermés sont toujours là, même sans synchro.
+- `comptes.json` et `trades.json` sont lus et fusionnés dans la base au démarrage, puis réécrits à jour après chaque synchro TopstepX et chaque import : les comptes passés ou fermés sont toujours là, même sans synchro.
 - `.gitignore` : ces deux fichiers de compte ne partent jamais dans le dépôt.
 
 ## [1.13.1] — 2026-11-07
