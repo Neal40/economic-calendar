@@ -523,6 +523,35 @@ table.tbl:has(#subT){min-width:900px}
 .tx-tools button.on{color:var(--tx-acc)}
 .tx-tools button.tg.on svg{background:var(--tx-acc);color:#0c0e12;border-radius:4px}
 .tx-tools i{display:block;height:1px;background:#434651;margin:6px 10px}
+.tx-tools .tx-sp{flex:1}
+.tx-grp{position:relative;display:flex}
+.tx-grp>button[data-tool],.tx-grp>button.tx-gmain{width:40px}
+.tx-tools .tx-exp{width:12px;color:#787b86;font-size:10px;opacity:0}
+.tx-grp:hover .tx-exp{opacity:1}
+.tx-tools .tx-exp:hover{color:#fff;background:#2a2e39}
+.tx-fly{position:fixed;z-index:60;min-width:260px;max-height:80vh;overflow:auto;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.5);padding:6px 0;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#d1d4dc}
+.tx-fly .fh{padding:10px 14px 4px;font-size:11px;letter-spacing:.06em;color:#787b86;text-transform:uppercase}
+.tx-fly .fh~.fh{border-top:1px solid #2a2e39;margin-top:6px}
+.tx-fly .fi{display:flex;align-items:center;gap:10px;height:34px;padding:0 10px 0 12px;cursor:pointer}
+.tx-fly .fi:hover{background:#2a2e39}
+.tx-fly .fi.on{color:var(--tx-acc)}
+.tx-fly .fi.soon{color:#5d606b;cursor:default}
+.tx-fly .fi.soon:hover{background:none}
+.tx-fly .fi svg{width:24px;height:24px;flex:none}
+.tx-fly .fdot{width:24px;flex:none;text-align:center;color:#434651}
+.tx-fly .fn{flex:1;white-space:nowrap}
+.tx-fly .fk{color:#787b86;font-size:11px;white-space:nowrap}
+.tx-fly .fs{width:22px;text-align:center;color:#787b86;font-size:15px;border-radius:4px}
+.tx-fly .fs:hover{background:#363a45}
+.tx-fly .fs.on{color:#f7b500}
+.tx-favbar{position:absolute;z-index:4;display:flex;align-items:center;gap:2px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;padding:3px 4px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.tx-favbar .grip{color:#787b86;padding:0 4px;cursor:grab}
+.tx-favbar button{background:none;border:none;color:#d1d4dc;width:30px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0}
+.tx-favbar button svg{width:24px;height:24px}
+.tx-favbar button:hover{background:#2a2e39}
+.tx-favbar button.on{color:var(--tx-acc)}
+.tx-favbar .empty{color:#787b86;font-size:12px;padding:0 8px}
+.tx-chartwrap.ordhover,.tx-chartwrap.ordhover *{cursor:ns-resize!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
 #btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
@@ -858,24 +887,19 @@ table.tbl:has(#subT){min-width:900px}
         </div>
         <div class="tx-mid">
           <div class="tx-tools" id="btTools">
-            <button data-tool="cross" class="on" title="Curseur (Échap)"><svg viewBox="0 0 28 28"><path fill="currentColor" d="M13.5 6h1v7.5H22v1h-7.5V22h-1v-7.5H6v-1h7.5z"/></svg></button>
-            <button data-tool="trend" title="Ligne de tendance (Alt+T)"><svg viewBox="0 0 28 28"><path stroke="currentColor" fill="none" d="M7.5 20.5l13-13"/><circle cx="7" cy="21" r="1.8" fill="none" stroke="currentColor"/><circle cx="21" cy="7" r="1.8" fill="none" stroke="currentColor"/></svg></button>
-            <button data-tool="hline" title="Ligne horizontale (Alt+H)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M4 14h20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/></svg></button>
-            <button data-tool="hray" title="Demi-droite horizontale (Alt+J)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M9 14h15"/><circle cx="7.5" cy="14" r="1.8" fill="none" stroke="currentColor"/></svg></button>
-            <button data-tool="vline" title="Ligne verticale (Alt+V)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M14 4v20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/></svg></button>
-            <button data-tool="fib" title="Retracement de Fibonacci (Alt+F)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M5 7.5h18M5 12.5h18M5 17h18M5 21.5h18"/><path stroke="currentColor" stroke-dasharray="2 2" d="M7 21l14-13"/></svg></button>
-            <button data-tool="rect" title="Rectangle (Alt+Shift+R)"><svg viewBox="0 0 28 28"><rect x="6.5" y="8.5" width="15" height="11" fill="none" stroke="currentColor"/><circle cx="6.5" cy="8.5" r="1.6" fill="#0c0e12" stroke="currentColor"/><circle cx="21.5" cy="19.5" r="1.6" fill="#0c0e12" stroke="currentColor"/></svg></button>
-            <button data-tool="text" title="Texte (Alt+X)"><svg viewBox="0 0 28 28"><path fill="currentColor" d="M8 7h12v3h-1V8h-4.5v12H17v1h-6v-1h2.5V8H9v2H8z"/></svg></button>
-            <button data-tool="measure" title="Mesure (Maj + clic)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 18.5l14-14 5 5-14 14zM9 14l2 2m1-5l2 2m1-5l2 2"/></svg></button>
+            <div id="btGroups"></div>
             <i></i>
             <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M8 6v8a6 6 0 0 0 12 0V6h-4v8a2 2 0 0 1-4 0V6zm0 4h4m4 0h4"/></svg></button>
             <button id="btLockAll" class="tg" title="Verrouiller tous les dessins"><svg viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 12.5V10a3.5 3.5 0 0 1 7 0v2.5"/></svg></button>
             <button id="btHideAll" class="tg" title="Masquer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6" fill="none" stroke="currentColor"/></svg></button>
             <i></i>
             <button id="btDelAll" title="Supprimer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M8.5 9.5h11l-1 13h-9zm-2 0h15M11.5 9.5v-2h5v2m-4 3v7m3-7v7"/></svg></button>
+            <span class="tx-sp"></span>
+            <button id="btFavBtn" class="tg" title="Barre de favoris"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button>
           </div>
           <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
+            <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
           <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets</div><div id="btTreeList"></div></div>
         </div>
@@ -3096,13 +3120,28 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (full || key !== lastKey || !S.lastLen || bars.length < S.lastLen) { cs.setData(c); vs.setData(v); if (key !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key; }
     else for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); }
     S.lastLen = bars.length;
-    plines.forEach((l) => cs.removePriceLine(l)); plines = [];
-    if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
-    A.orders.forEach((o) => plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}` })));
+    priceLines();
     const first = bars[0][0], lastT = S.raw[S.cur][0];
     const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
     mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
     $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} UTC-5 (NY)`; legend(null);
+  }
+  // P&L si l'ordre de sortie est touché (frais inclus) : affiché à côté du TP / SL
+  const exitPnl = (o) => { if (!A.pos || Math.sign(o.qty) === Math.sign(A.pos.qty)) return null; const c = CTR[A.pos.ctr], q = Math.min(Math.abs(o.qty), Math.abs(A.pos.qty)); return (o.px - A.pos.avg) * Math.sign(A.pos.qty) * q * c.pv - c.fee * q; };
+  function priceLines() {
+    plines.forEach((l) => cs.removePriceLine(l)); plines = [];
+    if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
+    A.orders.forEach((o) => { const pl = exitPnl(o);
+      plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: o === ordDrag ? 2 : 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : "  " + (pl >= 0 ? "+" : "") + usd(pl)}` })); });
+  }
+  // ordre sous le pointeur (ligne ou étiquette de prix) -> glisser-déposer
+  let ordDrag = null;
+  const orderAt = (y) => (chart && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 5; }) || null : null);
+  const marketable = (o, p) => (o.type === "Limit" ? (o.qty > 0 ? o.px >= p : o.px <= p) : (o.qty > 0 ? o.px <= p : o.px >= p));
+  function dropOrder(o) {
+    const p = last() == null ? null : rnd(last());
+    if (p != null && marketable(o, p) && S.raw.length) { A.orders = A.orders.filter((x) => x !== o); fill(o.ctr, o.qty, p, S.raw[S.cur][0], o.bracket || o.type); syncBrackets(); msg(`${o.bracket || o.type} déplacé au-delà du prix : exécuté au marché (${p.toFixed(2)}).`); }
+    saveAcc(); draw(); ui();
   }
   function step(k) {
     if (!S.raw.length) return;
@@ -3118,7 +3157,67 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
 
   /* ---------------- dessins ---------------- */
-  const TOOLS = { trend: "Ligne de tendance", hline: "Ligne horizontale", hray: "Demi-droite horizontale", vline: "Ligne verticale", rect: "Rectangle", fib: "Retracement de Fibonacci", text: "Texte" };
+  const TOOLS = { trend: "Ligne de tendance", ray: "Rayon", ext: "Ligne étendue", hline: "Ligne horizontale", hray: "Demi-droite horizontale", vline: "Ligne verticale", xline: "Ligne en croix", rect: "Rectangle", fib: "Retracement de Fibonacci", text: "Texte" };
+  /* barre d'outils façon FXReplay : groupes > sections > outils (impl = outil disponible, sinon « à venir ») */
+  const SV = (d) => `<svg viewBox="0 0 28 28">${d}</svg>`, PT = (cx, cy) => `<circle cx="${cx}" cy="${cy}" r="1.8" fill="none" stroke="currentColor"/>`;
+  const ICON = {
+    cross: SV('<path fill="currentColor" d="M13.5 6h1v7.5H22v1h-7.5V22h-1v-7.5H6v-1h7.5z"/>'),
+    trend: SV('<path stroke="currentColor" fill="none" d="M7.5 20.5l13-13"/>' + PT(7, 21) + PT(21, 7)),
+    ray: SV('<path stroke="currentColor" fill="none" d="M8.5 19.5L24 4"/>' + PT(7, 21) + PT(14, 14)),
+    ext: SV('<path stroke="currentColor" fill="none" d="M4 24L24 4"/>' + PT(10, 18) + PT(18, 10)),
+    hline: SV('<path stroke="currentColor" d="M4 14h20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/>'),
+    hray: SV('<path stroke="currentColor" d="M9 14h15"/>' + PT(7.5, 14)),
+    vline: SV('<path stroke="currentColor" d="M14 4v20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/>'),
+    xline: SV('<path stroke="currentColor" d="M14 4v20M4 14h20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/>'),
+    fib: SV('<path stroke="currentColor" d="M5 7.5h18M5 12.5h18M5 17h18M5 21.5h18"/><path stroke="currentColor" stroke-dasharray="2 2" d="M7 21l14-13"/>'),
+    rect: SV('<rect x="6.5" y="8.5" width="15" height="11" fill="none" stroke="currentColor"/><circle cx="6.5" cy="8.5" r="1.6" fill="#0c0e12" stroke="currentColor"/><circle cx="21.5" cy="19.5" r="1.6" fill="#0c0e12" stroke="currentColor"/>'),
+    text: SV('<path fill="currentColor" d="M8 7h12v3h-1V8h-4.5v12H17v1h-6v-1h2.5V8H9v2H8z"/>'),
+    measure: SV('<path fill="none" stroke="currentColor" d="M4.5 18.5l14-14 5 5-14 14zM9 14l2 2m1-5l2 2m1-5l2 2"/>'),
+    _pat: SV('<path fill="none" stroke="currentColor" d="M4 20l6-10 5 6 5-9 4 5"/>'),
+    _emo: SV('<circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 16a4.5 4.5 0 0 0 7 0"/><circle cx="11" cy="12" r="1" fill="currentColor"/><circle cx="17" cy="12" r="1" fill="currentColor"/>'),
+  };
+  const T = (id, name, key) => ({ id, name, key });
+  const GROUPS = [
+    { g: "cur", sec: [["Curseurs", [T("cross", "Croix", "Échap"), T("dot", "Point"), T("arrowc", "Flèche"), T("eraser", "Gomme")]]] },
+    { g: "lines", sec: [["Lignes", [T("trend", "Ligne de tendance", "Alt+T"), T("ray", "Rayon"), T("info", "Ligne d'info"), T("ext", "Ligne étendue"), T("angle", "Angle de tendance"), T("hline", "Ligne horizontale", "Alt+H"), T("hray", "Demi-droite horizontale", "Alt+J"), T("vline", "Ligne verticale", "Alt+V"), T("xline", "Ligne en croix", "Alt+C")]],
+      ["Canaux", [T("pchan", "Canal parallèle"), T("regr", "Tendance de régression")]], ["Pitchforks", [T("pitch", "Pitchfork"), T("ipitch", "Pitchfork intérieur")]]] },
+    { g: "fib", sec: [["Fibonacci", [T("fib", "Retracement de Fibonacci", "Alt+F"), T("fibext", "Extension de Fib (tendance)"), T("fibchan", "Canal de Fib"), T("fibtz", "Zones de temps de Fib"), T("fibfan", "Éventail de vitesse de Fib"), T("fibtime", "Temps de Fib (tendance)"), T("fibcirc", "Cercles de Fib"), T("fibspir", "Spirale de Fib"), T("fibarc", "Arcs de vitesse de Fib"), T("fibwedge", "Coin de Fib"), T("pitchfan", "Pitchfan")]],
+      ["Gann", [T("gbox", "Boîte de Gann"), T("gsqf", "Carré de Gann fixe"), T("gsq", "Carré de Gann"), T("gfan", "Éventail de Gann")]]] },
+    { g: "pat", icon: "_pat", sec: [["Figures chartistes", [T("xabcd", "Figure XABCD"), T("cypher", "Figure Cypher"), T("hs", "Tête et épaules"), T("abcd", "Figure ABCD"), T("tripat", "Triangle"), T("drives", "Trois poussées")]],
+      ["Vagues d'Elliott", [T("ew5", "Impulsion (1·2·3·4·5)"), T("ewabc", "Correction (A·B·C)"), T("ewtri", "Triangle (A·B·C·D·E)"), T("ewwxy", "Double combo (W·X·Y)"), T("ewwxyz", "Triple combo (W·X·Y·Z)")]],
+      ["Cycles", [T("cyc", "Lignes cycliques"), T("tcyc", "Cycles de temps")]]] },
+    { g: "proj", sec: [["Prévision", [T("long", "Position longue"), T("short", "Position courte"), T("pfc", "Prévision de position"), T("barpat", "Motif de barres"), T("ghost", "Ghost feed")]],
+      ["Volume", [T("avwap", "VWAP ancré"), T("frvp", "Profil de volume (plage fixe)"), T("avp", "Profil de volume ancré")]],
+      ["Mesures", [T("prange", "Plage de prix"), T("drange", "Plage de dates"), T("measure", "Plage de dates et de prix", "Maj+clic")]]] },
+    { g: "shp", sec: [["Pinceaux", [T("brush", "Pinceau"), T("hilite", "Surligneur")]], ["Flèches", [T("amark", "Marqueur flèche"), T("arrow", "Flèche"), T("aup", "Flèche haut"), T("adn", "Flèche bas"), T("alf", "Flèche gauche"), T("art", "Flèche droite")]],
+      ["Formes", [T("rect", "Rectangle", "Alt+Maj+R"), T("rrect", "Rectangle incliné"), T("path", "Chemin"), T("circle", "Cercle"), T("ellipse", "Ellipse"), T("poly", "Polyligne"), T("tri", "Triangle"), T("arc", "Arc"), T("curve", "Courbe"), T("dcurve", "Double courbe")]]] },
+    { g: "txt", sec: [["Texte et notes", [T("text", "Texte", "Alt+X"), T("note", "Note"), T("pnote", "Note de prix"), T("pin", "Épingle"), T("table", "Tableau"), T("callout", "Bulle"), T("comment", "Commentaire"), T("plabel", "Étiquette de prix"), T("sign", "Panneau"), T("flag", "Drapeau")]]] },
+    { g: "emo", icon: "_emo", sec: [["Emojis", [T("emoji", "Emojis")]]] },
+  ];
+  const IMPL = new Set(["cross", "measure", ...Object.keys(TOOLS)]);
+  const favs = () => LS.get("bt-favs", ["trend", "hray", "rect"]);
+  function groupMain(G) { const last = LS.get("bt-grp", {})[G.g], all = G.sec.flatMap((s) => s[1]).filter((t) => IMPL.has(t.id)); return all.find((t) => t.id === last) || all[0] || null; }
+  function buildTools() {
+    $("btGroups").innerHTML = GROUPS.map((G) => { const m = groupMain(G);
+      return `<div class="tx-grp" data-g="${G.g}">${m ? `<button data-tool="${m.id}" title="${esc(m.name)}${m.key ? " (" + m.key + ")" : ""}">${ICON[m.id]}</button>` : `<button class="tx-gmain" data-exp="${G.g}" title="${esc(G.sec[0][0])}">${ICON[G.icon]}</button>`}<button class="tx-exp" data-exp="${G.g}" title="Plus d'outils">›</button></div>`; }).join("");
+    setTool(tool);
+  }
+  function openFly(g, anchor) {
+    const f = $("btFly"), G = GROUPS.find((x) => x.g === g), fv = favs();
+    f.innerHTML = G.sec.map(([h, items]) => `<div class="fh">${esc(h)}</div>` + items.map((it) => { const ok = IMPL.has(it.id);
+      return `<div class="fi${ok ? "" : " soon"}${tool === it.id ? " on" : ""}" data-id="${it.id}" data-g="${g}" title="${ok ? "" : "À venir"}">${ICON[it.id] || '<span class="fdot">•</span>'}<span class="fn">${esc(it.name)}</span>${it.key ? `<span class="fk">${it.key}</span>` : ""}${ok ? `<span class="fs${fv.includes(it.id) ? " on" : ""}" data-star="${it.id}" title="Favori">${fv.includes(it.id) ? "★" : "☆"}</span>` : '<span class="fk">à venir</span>'}</div>`; }).join("")).join("");
+    f.dataset.g = g; f.hidden = false;
+    const r = anchor.getBoundingClientRect(); f.style.left = r.right + 6 + "px"; f.style.top = Math.max(8, Math.min(r.top - 6, innerHeight - f.offsetHeight - 8)) + "px";
+  }
+  const closeFly = () => { const f = $("btFly"); if (f) f.hidden = true; };
+  function pickTool(g, id) { const m = LS.get("bt-grp", {}); m[g] = id; LS.set("bt-grp", m); closeFly(); buildTools(); setTool(id); }
+  function favBar() {
+    const b = $("btFavBar"); if (!b) return; const on = LS.get("bt-favbar", true); b.hidden = !on; $("btFavBtn").classList.toggle("on", on); if (!on) return;
+    const fv = favs().filter((id) => IMPL.has(id)), nm = Object.fromEntries(GROUPS.flatMap((G) => G.sec.flatMap((s) => s[1])).map((t) => [t.id, t.name + (t.key ? " (" + t.key + ")" : "")]));
+    b.innerHTML = '<span class="grip" title="Déplacer">⠿</span>' + (fv.length ? fv.map((id) => `<button data-tool="${id}" title="${esc(nm[id] || id)}">${ICON[id]}</button>`).join("") : '<span class="empty">☆ Ajoute des favoris depuis les menus d\'outils</span>');
+    const p = LS.get("bt-favpos", null); if (p) { b.style.left = p.x + "px"; b.style.top = p.y + "px"; b.style.bottom = "auto"; b.style.transform = "none"; } else { b.style.left = "50%"; b.style.bottom = "40px"; b.style.top = "auto"; b.style.transform = "translateX(-50%)"; }
+    setTool(tool);
+  }
   const FIB = [[0, "#787b86"], [0.236, "#f23645"], [0.382, "#ff9800"], [0.5, "#4caf50"], [0.618, "#089981"], [0.705, "#00bcd4"], [0.786, "#2962ff"], [1, "#787b86"]];
   const defStyle = (type) => ({ color: type === "rect" ? "#9c27b0" : type === "fib" ? "#787b86" : "#2962ff", width: type === "rect" || type === "fib" ? 1 : 2, dash: 0, fill: "rgba(156,39,176,0.2)", extL: false, extR: false, textColor: "#131722", fontSize: 12, labels: true,
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
@@ -3163,15 +3262,20 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     g.restore();
   }
   function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
+  const LINE = { trend: 1, ray: 1, ext: 1 }; // ray = prolongé à droite, ext = des deux côtés
+  function lineEnds(s, a, b, W) {
+    let x1 = a.x, y1 = a.y, x2 = b.x, y2 = b.y; const dx = x2 - x1, dy = y2 - y1, st = s.style;
+    if ((st.extR || s.type !== "trend") && dx) { x2 = dx > 0 ? W : 0; y2 = a.y + dy * (x2 - a.x) / dx; }
+    if ((st.extL || s.type === "ext") && dx) { x1 = dx > 0 ? 0 : W; y1 = a.y + dy * (x1 - a.x) / dx; }
+    return [{ x: x1, y: y1 }, { x: x2, y: y2 }];
+  }
   function drawShape(g, s, W, H) {
     const st = s.style, pts = s.p.map((p) => ({ x: X(p.t), y: Y(p.price) })); if (pts.some((p) => p.x == null || p.y == null)) return;
     g.strokeStyle = st.color; g.lineWidth = st.width; setDash(g, st.dash); g.fillStyle = st.color; g.font = `${st.fontSize || 12}px Roboto,sans-serif`;
     const [a, b] = pts;
-    if (s.type === "trend" && b) {
-      let x1 = a.x, y1 = a.y, x2 = b.x, y2 = b.y; const dx = x2 - x1, dy = y2 - y1;
-      if (st.extR && dx) { x2 = dx > 0 ? W : 0; y2 = a.y + dy * (x2 - a.x) / dx; } if (st.extL && dx) { x1 = dx > 0 ? 0 : W; y1 = a.y + dy * (x1 - a.x) / dx; }
-      g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
-    } else if (s.type === "hline") { g.beginPath(); g.moveTo(0, a.y); g.lineTo(W, a.y); g.stroke(); if (st.labels || s.text) { g.fillStyle = st.textColor; const t = (st.labels ? s.p[0].price.toFixed(2) : "") + (s.text ? "  " + s.text : ""); g.fillText(t, W - 8 - g.measureText(t).width, a.y - 4); } }
+    if (LINE[s.type] && b) { const [p1, p2] = lineEnds(s, a, b, W); g.beginPath(); g.moveTo(p1.x, p1.y); g.lineTo(p2.x, p2.y); g.stroke(); }
+    else if (s.type === "xline") { g.beginPath(); g.moveTo(0, a.y); g.lineTo(W, a.y); g.moveTo(a.x, 0); g.lineTo(a.x, H); g.stroke(); }
+    else if (s.type === "hline") { g.beginPath(); g.moveTo(0, a.y); g.lineTo(W, a.y); g.stroke(); if (st.labels || s.text) { g.fillStyle = st.textColor; const t = (st.labels ? s.p[0].price.toFixed(2) : "") + (s.text ? "  " + s.text : ""); g.fillText(t, W - 8 - g.measureText(t).width, a.y - 4); } }
     else if (s.type === "hray") { g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(W, a.y); g.stroke(); if (s.text) { g.fillStyle = st.textColor; g.fillText(s.text, W - 8 - g.measureText(s.text).width, a.y - 4); } }
     else if (s.type === "vline") { g.beginPath(); g.moveTo(a.x, 0); g.lineTo(a.x, H); g.stroke(); if (s.text) { g.save(); g.translate(a.x - 4, H - 10); g.rotate(-Math.PI / 2); g.fillStyle = st.textColor; g.fillText(s.text, 0, 0); g.restore(); } }
     else if (s.type === "rect" && b) {
@@ -3211,7 +3315,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       if (s.type === "hline") near = Math.abs(y - a.y) < 6;
       else if (s.type === "hray") near = Math.abs(y - a.y) < 6 && x >= a.x - 6;
       else if (s.type === "vline") near = Math.abs(x - a.x) < 6;
-      else if (s.type === "trend" && b) near = segD(x, y, a, b) < 6;
+      else if (LINE[s.type] && b) { const [p1, p2] = lineEnds(s, a, b, W); near = segD(x, y, p1, p2) < 6; }
+      else if (s.type === "xline") near = Math.abs(y - a.y) < 6 || Math.abs(x - a.x) < 6;
       else if (s.type === "rect" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) + 5 && y >= Math.min(a.y, b.y) - 5 && y <= Math.max(a.y, b.y) + 5;
       else if (s.type === "fib" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) && s.style.levels.some((lv) => lv.on && Math.abs(Y(s.p[1].price + (s.p[0].price - s.p[1].price) * lv.k) - y) < 6);
       else if (s.type === "text") near = y <= a.y + 4 && y >= a.y - (s.style.fontSize || 12) - 4 && x >= a.x - 4 && x <= a.x + 8 * (s.text || "Texte").length;
@@ -3219,10 +3324,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     }
     return null;
   }
-  const NEED2 = { trend: 1, rect: 1, fib: 1 };
+  const NEED2 = { trend: 1, ray: 1, ext: 1, rect: 1, fib: 1 };
   function setTool(t) {
     tool = t; pending = null; if (t !== "measure") measure = null;
-    document.querySelectorAll("#btTools [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === t));
+    document.querySelectorAll("#btTools [data-tool], #btFavBar [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === t));
     $("btWrap").classList.toggle("drawing", t !== "cross");
   }
   function create(type, p) {
@@ -3244,8 +3349,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     c.addEventListener("mousemove", (e) => { const { x, y } = pos(e), q = at(x, y); if (!q) return; if (pending) pending.p[1] = q; if (measure && !measure.done) measure.b = q; });
     // mode curseur : sélection / déplacement des dessins avant le déplacement de la chart (phase de capture)
     wrap.addEventListener("mousedown", (e) => {
-      if (tool !== "cross" || e.button !== 0) return;
+      if (tool !== "cross" || e.button !== 0 || e.target.closest(".tx-favbar,.tx-float")) return;
       const { x, y } = pos(e);
+      const od = !e.shiftKey && orderAt(y); if (od) { ordDrag = od; e.stopPropagation(); e.preventDefault(); return; }
       if (e.shiftKey) { const q = at(x, y); if (q) { setTool("measure"); measure = { a: q, b: q, done: false }; e.stopPropagation(); e.preventDefault(); } return; }
       if (measure) measure = null;
       const h = hit(x, y); if (!h) { if (sel) { sel = null; tree(); } return; }
@@ -3254,12 +3360,14 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       drag = { s: h.s, h: h.h, start: at(x, y), orig: h.s.p.map((p) => ({ ...p })) };
     }, true);
     window.addEventListener("mousemove", (e) => {
+      if (ordDrag) { const p = cs.coordinateToPrice(pos(e).y); if (p != null) { ordDrag.px = rnd(p); priceLines(); } return; }
       if (!drag) return; const { x, y } = pos(e), q = at(x, y); if (!q || !drag.start) return;
       const dt = q.t - drag.start.t, dp = q.price - drag.start.price;
       if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
-    window.addEventListener("mouseup", () => { if (drag) { drag = null; saveDrawings(); } });
+    window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
+    wrap.addEventListener("mousemove", (e) => { wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
@@ -3378,7 +3486,27 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       draw(true);
     };
     $("btSym").onchange = () => { const s = $("btSym").value; if (s === "NQ" && !["NQ", "MNQ"].includes($("oCtr").value)) $("oCtr").value = "MNQ"; if (s === "ES" && !["ES", "MES"].includes($("oCtr").value)) $("oCtr").value = "MES"; ui(); };
-    $("btTools").onclick = (e) => { const b = e.target.closest("[data-tool]"); if (b) setTool(b.dataset.tool); };
+    if (!$("btFly")) { const f = document.createElement("div"); f.id = "btFly"; f.className = "tx-fly"; f.hidden = true; document.body.append(f); }
+    buildTools(); favBar();
+    $("btTools").onclick = (e) => {
+      const x = e.target.closest("[data-exp]"); if (x) { const f = $("btFly"); if (!f.hidden && f.dataset.g === x.dataset.exp) closeFly(); else openFly(x.dataset.exp, x.closest(".tx-grp")); return; }
+      const b = e.target.closest("[data-tool]"); if (b) { closeFly(); setTool(b.dataset.tool); }
+    };
+    $("btFly").onclick = (e) => {
+      const g = $("btFly").dataset.g, s = e.target.closest("[data-star]");
+      if (s) { const id = s.dataset.star, fv = favs(); LS.set("bt-favs", fv.includes(id) ? fv.filter((v) => v !== id) : [...fv, id]); openFly(g, document.querySelector(`.tx-grp[data-g="${g}"]`)); favBar(); return; }
+      const it = e.target.closest(".fi"); if (it && !it.classList.contains("soon")) pickTool(g, it.dataset.id);
+    };
+    document.addEventListener("mousedown", (e) => { const f = $("btFly"); if (f && !f.hidden && !f.contains(e.target) && !e.target.closest("[data-exp]")) closeFly(); }, true);
+    $("btFavBtn").onclick = () => { LS.set("bt-favbar", !LS.get("bt-favbar", true)); favBar(); };
+    $("btFavBar").onclick = (e) => { const b = e.target.closest("[data-tool]"); if (b) setTool(b.dataset.tool); };
+    $("btFavBar").addEventListener("mousedown", (e) => { // déplacer la barre de favoris par la poignée
+      if (!e.target.classList.contains("grip")) return; e.preventDefault(); e.stopPropagation();
+      const b = $("btFavBar"), w = $("btWrap").getBoundingClientRect(), r = b.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+      const mv = (ev) => { b.style.left = Math.max(0, Math.min(w.width - r.width, ev.clientX - w.left - ox)) + "px"; b.style.top = Math.max(0, Math.min(w.height - r.height, ev.clientY - w.top - oy)) + "px"; b.style.bottom = "auto"; b.style.transform = "none"; };
+      const up = () => { removeEventListener("mousemove", mv); removeEventListener("mouseup", up); LS.set("bt-favpos", { x: parseFloat(b.style.left), y: parseFloat(b.style.top) }); };
+      addEventListener("mousemove", mv); addEventListener("mouseup", up);
+    });
     $("btMagnet").onclick = () => { magnet = !magnet; $("btMagnet").classList.toggle("on", magnet); };
     $("btLockAll").onclick = () => { lockAll = !lockAll; $("btLockAll").classList.toggle("on", lockAll); };
     $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
@@ -3403,8 +3531,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     document.addEventListener("keydown", (e) => {
       const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
       const k = e.key.toLowerCase();
-      if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
-      if (k === "escape") { setTool("cross"); measure = null; sel = null; tree(); }
+      if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", c: "xline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
+      if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
       else if ((k === "delete" || k === "backspace") && sel) { e.preventDefault(); shapes = shapes.filter((x) => x !== sel); sel = null; saveDrawings(); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
       else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
@@ -3420,7 +3548,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
     bindDrawing(); bindSettings(); loadDrawings(); ui();
   }
-  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), show() { init(); status(); if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { init(); status(); if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
 })();
 </script>
