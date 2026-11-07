@@ -1,4 +1,4 @@
-# Economic Calendar · New York Time (ET)
+# Inner Circle Trader · New York Time (ET)
 
 USD economic calendar — the month at a glance: news, NYSE holidays and key earnings.
 One self-contained page (`index.html`), no build step, no dependencies.
@@ -41,7 +41,7 @@ All times are New York time (ET).
 Event format: `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
 
 ## Windows app (.exe)
-Download from **Releases → latest**: `EconomicCalendar-x.y.z-setup.exe` (installer) or `EconomicCalendar-x.y.z-portable.exe` (no install).
+Download from **Releases → latest**: `Inner Circle Trader Setup.exe` (installer) or `Inner Circle Trader.exe` (portable, no install).
 The `.exe` is built automatically by GitHub Actions (`.github/workflows/build-exe.yml`) on every change to `index.html` or `desktop/`.
 It is an Electron wrapper around the same `index.html`, with fonts bundled so it works offline.
 

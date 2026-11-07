@@ -22,7 +22,7 @@ const root = path.join(__dirname, "..");
     return days;
   });
   await b.close();
-  const json = { app: "Economic Calendar · @Neal_ICT", url: "https://neal40.github.io/economic-calendar/", timezone: "America/New_York", sources: ["Forex Factory", "NYSE", "Nasdaq"],
+  const json = { app: "Inner Circle Trader · @Neal_ICT", url: "https://neal40.github.io/economic-calendar/", timezone: "America/New_York", sources: ["Forex Factory", "NYSE", "Nasdaq"],
     generated_at: new Date().toISOString(), legend: { high: "rouge", medium: "orange", low: "jaune" }, days: out };
   fs.mkdirSync(path.join(root, "api"), { recursive: true });
   fs.writeFileSync(path.join(root, "api", "calendar.json"), JSON.stringify(json));

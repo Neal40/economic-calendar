@@ -5,6 +5,9 @@ const path = require("path");
 const fs = require("fs");
 const topstepx = require("./topstepx");
 const notion = require("./notion");
+const backup = require("./backup");
+app.setPath("userData", backup.migrate(path.join(app.getPath("appData"), "Economic Calendar"), path.join(app.getPath("appData"), "Inner Circle Trader")));
+const ICT = () => path.join(app.getPath("desktop"), "Inner Circle Trader"); // dossier de travail : data/ + backups/
 
 const PART = "persist:topstepx";              // TopstepX login session (kept between launches)
 const DB = () => path.join(app.getPath("userData"), "journal-db.json");
@@ -119,7 +122,7 @@ ipcMain.handle("store:set", (e, d) => { try { const tmp = STORE() + ".tmp"; fs.w
 function createWindow() {
   win = new BrowserWindow({
     width: 1320, height: 1000, minWidth: 900, minHeight: 600,
-    backgroundColor: "#060607", title: "Economic Calendar",
+    backgroundColor: "#060607", title: "Inner Circle Trader",
     icon: path.join(__dirname, "app", "icon.png"),
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, sandbox: true, preload: path.join(__dirname, "preload.js") }
@@ -131,7 +134,7 @@ function createWindow() {
 
 /* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
 let mdStore = null;
-const md = () => (mdStore = mdStore || marketdata.create(path.join(app.getPath("documents"), "EconomicCalendar", "data")));
+const md = () => (mdStore = mdStore || marketdata.create(path.join(ICT(), "data")));
 async function mdSync(interactive) {
   const token = await getToken(!!interactive);
   if (!token) return { ok: false, reason: "login" };
@@ -196,25 +199,29 @@ app.on("before-quit", (e) => {
 });
 
 
-/* ---------- Mise à jour automatique : dépose EconomicCalendar.update.exe à côté de l'exe -> l'app se ferme, remplace l'exe et se relance ---------- */
+/* ---------- Mise à jour automatique : dépose « Inner Circle Trader.update.exe » (ou l'ancien EconomicCalendar.update.exe) à côté de l'exe -> l'app se ferme, remplace l'exe et se relance ---------- */
 function updWatch() {
   if (process.platform !== "win32" || !app.isPackaged) return;
-  const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, upd = path.join(path.dirname(exe), "EconomicCalendar.update.exe");
-  let lastSize = -1, busy = false;
+  const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, dir = path.dirname(exe);
+  let lastSize = -1, busy = false, upd = "";
   setInterval(() => {
     if (busy) return;
+    upd = ["Inner Circle Trader.update.exe", "EconomicCalendar.update.exe"].map((n) => path.join(dir, n)).find((p) => fs.existsSync(p)) || "";
     let st; try { st = fs.statSync(upd); } catch (e) { lastSize = -1; return; }
     if (st.size < 1e7 || st.size !== lastSize) { lastSize = st.size; return; } // attendre que le fichier soit entièrement copié
-    if (copier && !copier.dry) { if (lastSize !== -2) { try { new Notification({ title: "Economic Calendar", body: "Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer." }).show(); } catch (e) { /* ignore */ } } lastSize = -2; return; }
+    if (copier && !copier.dry) { if (lastSize !== -2) { try { new Notification({ title: "Inner Circle Trader", body: "Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer." }).show(); } catch (e) { /* ignore */ } } lastSize = -2; return; }
     busy = true;
     const bat = path.join(app.getPath("temp"), "ec-update.cmd"), q = (x) => '"' + x + '"';
     fs.writeFileSync(bat, ["@echo off", "set n=0", ":retry", "ping -n 2 127.0.0.1 >nul", `move /Y ${q(upd)} ${q(exe)} >nul 2>&1`, "if not errorlevel 1 goto ok", "set /a n+=1", "if %n% lss 120 goto retry", "exit /b 1", ":ok", `start "" ${q(exe)}`, '(goto) 2>nul & del "%~f0"', ""].join("\r\n"));
-    try { new Notification({ title: "Economic Calendar", body: "Mise à jour reçue : redémarrage de l'app…" }).show(); } catch (e) { /* ignore */ }
+    try { new Notification({ title: "Inner Circle Trader", body: "Mise à jour reçue : redémarrage de l'app…" }).show(); } catch (e) { /* ignore */ }
     require("child_process").spawn("cmd.exe", ["/c", bat], { detached: true, stdio: "ignore", windowsHide: true }).unref();
     setTimeout(() => { app.isQuitting = true; app.quit(); setTimeout(() => app.exit(0), 5000); }, 800);
   }, 3000);
 }
 
-app.whenReady().then(() => { createWindow(); mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
+app.whenReady().then(() => {
+  try { backup.run({ userData: app.getPath("userData"), dataDir: md().dir, root: path.join(ICT(), "backups") }); } // avant la fenêtre : Local Storage / IndexedDB pas encore ouverts
+  catch (e) { try { new Notification({ title: "Inner Circle Trader", body: "Sauvegarde impossible : " + (e.message || e) }).show(); } catch (x) { /* ignore */ } }
+  createWindow(); mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());

@@ -1,4 +1,4 @@
-# CLAUDE.md — Economic Calendar (Neal_ICT)
+# CLAUDE.md — Inner Circle Trader (Neal_ICT)
 
 App perso de trading (futures NQ / ES, prop firm TopstepX) : calendrier économique USD,
 journal de trading, Review Notion, backtesteur et trade copier Tradovate.
@@ -55,11 +55,12 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 ## `desktop/` — app Electron
 | Fichier | Rôle |
 |---|---|
-| `main.js` | Fenêtre, handlers IPC (`journal:*`, `tsx:bars`, `notion:*`, `store:*`, `data:*`, `copier:*`), sync données de marché chaque soir à 23h01, mise à jour auto (`EconomicCalendar.update.exe` posé à côté de l'exe) |
+| `main.js` | Fenêtre, handlers IPC (`journal:*`, `tsx:bars`, `notion:*`, `store:*`, `data:*`, `copier:*`), sync données de marché chaque soir à 23h01, mise à jour auto (`Inner Circle Trader.update.exe` posé à côté de l'exe ; l'ancien nom est encore accepté). Nom produit / exe / titre : **Inner Circle Trader** ; `userData` = `%APPDATA%\Inner Circle Trader` (ancien dossier déplacé une fois par `backup.migrate`) |
+| `backup.js` | Au démarrage : sauvegarde du jour de userData (json, bin, Local Storage, IndexedDB) dans `Bureau\Inner Circle Trader\backups\AAAA-MM-JJ` (14 jours gardés) + miroir des bougies 1s dans `backups\bougies-1s` |
 | `preload.js` | Pont `window.desktop` (contextBridge) — **seule** API visible depuis `index.html` |
 | `topstepx.js` | Connexion + sync des trades/comptes TopstepX → `userData/journal-db.json` (au lancement + toutes les 5 min) |
 | `notion.js` | API Notion officielle (query, blocks, create, update, archive, append) |
-| `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Documents\EconomicCalendar\data` (colonnes `time_ny,ts,open,high,low,close,volume`) |
+| `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Bureau\Inner Circle Trader\data` (chargé d'office par le backtesteur) (colonnes `time_ny,ts,open,high,low,close,volume`) |
 | `copier.js` | Trade copier Tradovate leader → followers (voir ⚠️) |
 | `prepare.js` | Copie `../index.html` dans `desktop/app/`, remplace Google Fonts et d3 CDN par des fichiers locaux (offline) |
 

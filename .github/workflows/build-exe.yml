@@ -16,8 +16,8 @@ jobs:
       run:
         working-directory: desktop
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -30,18 +30,18 @@ jobs:
       - run: npm run dist
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
-          name: EconomicCalendar-windows
+          name: InnerCircleTrader-windows
           path: desktop/dist/*.exe
       - name: Publish release "latest"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
-          name: Economic Calendar (Windows)
+          name: Inner Circle Trader (Windows)
           body: "Latest Windows build. **Setup** = installer, **portable** = single .exe, no install."
           prerelease: false
           make_latest: true
           files: |
-            desktop/dist/EconomicCalendar-*-setup.exe
-            desktop/dist/EconomicCalendar-*-portable.exe
+            desktop/dist/Inner Circle Trader Setup.exe
+            desktop/dist/Inner Circle Trader.exe
