@@ -132,6 +132,19 @@
     W.localStorage.removeItem(k);
   }
   function keep(i, g, ids) { W.localStorage.setItem(keyOf(i, g), JSON.stringify(ids.filter(Boolean))); }
+  // TradingView only anchors a drawing on a bar it has loaded: a point older than the loaded history
+  // lands on a wrong bar. Scroll the chart back to `from` so it loads that history, then restore the view.
+  async function loadHistory(c, from) {
+    let prev = null;
+    try { prev = c.getVisibleRange(); } catch (e) { /* ignore */ }
+    for (let k = 0; k < 3; k++) {
+      try { await c.setVisibleRange({ from: from - 3600, to: from + 6 * 3600 }); } catch (e) { /* ignore */ }
+      await new Promise(r => setTimeout(r, 2500));
+      try { if (c.getVisibleRange().from <= from) break; } catch (e) { break; }
+    }
+    if (prev) { try { await c.setVisibleRange(prev); } catch (e) { /* ignore */ } }
+  }
+  const anchoredAt = (c, id) => { try { return Math.min(...c.getShapeById(id).getPoints().map(p => p.time)); } catch (e) { return null; } };
 
   // Rudy's saved Fibonacci templates (TopstepX "Save drawing template"): GHAITH 2, Profondeur de marché…
   const tpls = {};
@@ -480,13 +493,17 @@
             (z.t1 ? free.filter(r => Math.abs(r.t - z.t1) <= win && r.bot < z.top && r.top > z.bot).sort((a, b) => Math.abs(a.t - z.t1) - Math.abs(b.t - z.t1))[0] : null);
           if (ex) usedR.add(ex.id);
           if (!ex && !create) return null;
-          if (ex) { try { ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé'; }
-          const id = await c.createMultipointShape([{ time: tA, price: z.top }, { time: tB, price: z.bot }], { shape: 'rectangle', text, lock: false });
+          const pts = [{ time: tA, price: z.top }, { time: tB, price: z.bot }];
+          const off = id => { const t = anchoredAt(c, id); return t !== null && Math.abs(t - tA) > 120 ? ` (⚠️ ancré à ${nyHM(t)} au lieu de ${nyHM(tA)})` : ''; };
+          if (ex) { try { ex.sh.setPoints(pts); ex.sh.setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ } return 'corrigé' + off(ex.id); }
+          const id = await c.createMultipointShape(pts, { shape: 'rectangle', text, lock: false });
           try { c.getShapeById(id).setProperties({ ...props, text, showLabel: true }); } catch (e) { /* ignore */ }
           ids.push(id);
-          return 'ajouté';
+          return 'ajouté' + off(id);
         };
-        for (const g of await J.gapsData(sym, opts.n ?? 5)) {
+        const gaps = await J.gapsData(sym, opts.n ?? 5);
+        if (gaps.length) await loadHistory(c, Math.min(...gaps.map(g => g.t)));
+        for (const g of gaps) {
           const st = await place(g, rectTpl[g.kind], g.label, g.t, g.t + 3600);
           // octants (5. RTH Octant): NWOG of more than 100 points only, unless already drawn on the same bounds
           if (g.kind === 'NWOG' && g.top - g.bot > 100 && !fibs.some(f => Math.abs(f[0] - g.bot) <= tickTol && Math.abs(f[1] - g.top) <= tickTol)) ids.push(await fib(c, g.t, g.t + 3600, g.bot, g.top, '5. RTH Octant'));
@@ -551,6 +568,7 @@
         if (!tg.includes(i)) continue;
         const x = await J.htfData(sym, tf, d), ids = [];
         if (!x) { out.push(`${c.symbol()} ${tf} : pas de données`); continue; }
+        await loadHistory(c, x.tS);
         ids.push(await fib(c, x.tS, x.tE + (x.tE - x.tS) * 0.6, x.E, x.S, '4. OTE'));
         const props = (await tpl('4. FVG', 'LineToolRectangle')) || {};
         for (const f of x.fvgs) {
