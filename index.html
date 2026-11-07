@@ -266,6 +266,8 @@ body{background:#060607}
 .bt-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}.bt-table th,.bt-table td{border-bottom:1px solid #e3e5ea;padding:5px 8px;text-align:left}
 .nauto.on{background:#1f7a3a!important;color:#fff!important}.nauto:not(.on){opacity:.75}
 body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
+body.jt-bt-on .jt-tsx{display:none!important}
+.tx-jt{width:100%;border-collapse:collapse;font-size:14px}.tx-jt th{color:var(--mut);font-weight:400;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}.tx-jt td{padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}.tx-jt tr[data-id]:hover td{background:#10141a}
 .rv-new{background:#2f54eb!important;border:none!important;color:#fff!important;font-weight:600}
 .rv-add{float:left;visibility:hidden;background:#26262d;border:none;color:#e3e4ea;border-radius:4px;width:20px;height:20px;line-height:18px;cursor:pointer;font-size:15px;margin-right:4px}
 .rv-cd:hover .rv-add{visibility:visible}
@@ -606,8 +608,9 @@ table.tbl:has(#subT){min-width:900px}
 .tx-cw2{border-left:2px solid #2a2e39}
 .tx-tb.on{color:var(--tx-acc)}
 .tx-head{overflow-x:auto;scrollbar-width:thin}
-#btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
-.tx-chartwrap.drawing #btDraw{pointer-events:auto;cursor:crosshair}
+#btDraw,#btDraw2{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.tx-chartwrap.drawing #btDraw,.tx-chartwrap.drawing #btDraw2{pointer-events:auto;cursor:crosshair}
+.tx-chartwrap.act2::after{content:"";position:absolute;inset:0;border:1px solid var(--tx-acc,#2962ff);pointer-events:none;z-index:3}
 .tx-legend{position:absolute;left:8px;top:6px;z-index:3;pointer-events:none;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#131722;white-space:nowrap}
 .tx-legend b{font-weight:400}.tx-legend .v{margin-left:8px}.tx-legend .up{color:#089981}.tx-legend .dn{color:#f23645}
 .tx-float{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:2px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;padding:3px 4px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -784,7 +787,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="jtop">
     <div><h2>Journal de trading</h2><p class="lead" style="margin:0"><span id="jSync" class="jt-tsx">Stats TopstepX par compte.</span><span class="jt-neal" id="rvStampJ"></span></p></div>
     <div class="acts">
-      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button></div>
+      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button></div>
       <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button><button class="btn gray jt-neal nauto" id="rvAuto2" title="Synchro automatique app ⇄ Notion">Synchro Notion : On</button>
       <button class="btn jt-tsx" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
       <span class="jt-tsx" id="jRecWrap" hidden style="position:relative"><button class="btn gray" id="jRecBtn" title="Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)">＋ Récupérer un compte</button>
@@ -880,6 +883,7 @@ table.tbl:has(#subT){min-width:900px}
 </div>
   </div>
   <div id="jtNeal" hidden><div id="rvBodyJ"></div></div>
+  <div id="jtBt" hidden></div>
 </div></section>
 <section class="view" id="v-review"><div class="page" style="max-width:none;padding:26px 28px 60px">
   <div class="jtop">
@@ -900,13 +904,14 @@ table.tbl:has(#subT){min-width:900px}
 </div></section>
 <section class="view" id="v-backtest"><div class="tx">
   <div class="tx-top">
-    <button class="tx-acc" id="btAcc" title="Compte démo du backtesteur"><b>50K Démo Backtest</b><span></span><svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg></button>
+    <button class="tx-acc" id="btAcc" title="Type de compte du backtest (prop firm / classique)"><b>50K Démo Backtest</b><span></span><svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg></button>
     <div class="tx-kpi"><span>BAL:</span><b id="kBal">$50,000.00</b></div>
-    <div class="tx-kpi"><span>MLL:</span><b id="kMll">$48,000.00</b></div>
+    <div class="tx-kpi" id="kMllW"><span>MLL:</span><b id="kMll">$48,000.00</b></div>
     <div class="tx-kpi" id="kRpW"><span>RP&amp;L:</span><b id="kRp">$0.00</b></div>
     <div class="tx-kpi" id="kUpW"><span>UP&amp;L:</span><b id="kUp">$0.00</b></div>
-    <div class="tx-kpi"><span>DLL:</span><b id="kDl">$0.00</b><span class="tx-dll"><i id="kDlBar"></i></span><b>$1,000.00</b></div>
-    <button class="tx-kpi tx-lk" id="btAccReset" title="Remettre le compte démo à 50 000 $"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg></button>
+    <div class="tx-kpi" id="kDlW"><span>DLL:</span><b id="kDl">$0.00</b><span class="tx-dll"><i id="kDlBar"></i></span><b id="kDlMax">$1,000.00</b></div>
+    <button class="tx-kpi tx-lk" id="btAccReset" title="Remettre le compte démo à zéro"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg></button>
+    <button class="tx-kpi tx-lk" id="btAccEnd" title="Clôturer la session : récapitulatif dans le Journal backtest"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 3h1v18H5zm2 1h11l-2.5 4L18 12H7z" fill="currentColor"/></svg></button>
     <span class="tx-sp"></span>
     <span id="btData" class="tx-data"></span>
     <button class="tx-link" id="btSync" title="Télécharger les bougies TopstepX">Synchro données</button>
@@ -959,7 +964,7 @@ table.tbl:has(#subT){min-width:900px}
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
-          <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><div class="tx-legend" id="btLegend2"></div></div>
+          <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><canvas id="btDraw2"></canvas><div class="tx-legend" id="btLegend2"></div></div>
           <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets<button id="btNewF" title="Nouveau groupe (avec la sélection)">📁＋</button></div><div id="btTreeList"></div></div>
         </div>
         <div class="tx-foot"><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
@@ -1358,18 +1363,18 @@ function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); con
 function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
-  if(v!=="journal") document.body.classList.remove("jt-neal-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); }
+  if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); }
   if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
 document.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>go(x.dataset.go)));
 document.querySelectorAll("[data-grp]").forEach(x=>x.addEventListener("click",()=>{ $(x.dataset.grp).classList.toggle("closed"); }));
-function jtab(t){ document.body.classList.toggle("jt-neal-on", t==="neal"); $("jtTsx").hidden = t==="neal"; $("jtNeal").hidden = t!=="neal";
+function jtab(t){ document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); $("jtTsx").hidden = t!=="tsx"; $("jtNeal").hidden = t!=="neal"; $("jtBt").hidden = t!=="bt"; if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0);
   document.querySelectorAll(".jtab").forEach(b=>b.classList.toggle("on", b.dataset.jt===t)); try{localStorage.setItem("econcal-jtab",t)}catch(e){}
   if(t==="tsx") setTimeout(()=>window.jdash&&jdash.redraw(),0); else setTimeout(()=>window.reviewRender&&reviewRender(),0); }
 document.querySelectorAll(".jtab").forEach(b=>b.onclick=()=>jtab(b.dataset.jt));
-try{ if(localStorage.getItem("econcal-jtab")==="neal") jtab("neal"); }catch(e){}
+try{ const t=localStorage.getItem("econcal-jtab"); if(t==="neal"||t==="bt") jtab(t); }catch(e){}
 const NARROW=1100, isNarrow=()=>innerWidth<NARROW;
 const miniPref=()=>{ try{return !!localStorage.getItem("econcal-mini")}catch(e){return false} };
 $("miniBtn").onclick=()=>{ $("app").classList.toggle("mini"); if(!isNarrow()) try{localStorage.setItem("econcal-mini",$("app").classList.contains("mini")?"1":"")}catch(e){} };
@@ -3013,7 +3018,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const D = window.desktop, $ = (id) => document.getElementById(id);
   const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } } };
   const CTR = { MNQ: { pv: 2, und: "NQ", fee: 0.74, name: "MNQZ26" }, NQ: { pv: 20, und: "NQ", fee: 2.8, name: "NQZ26" }, MES: { pv: 5, und: "ES", fee: 0.74, name: "MESZ26" }, ES: { pv: 50, und: "ES", fee: 2.8, name: "ESZ26" } };
-  const TICK = 0.25, START = 50000, MLL_GAP = 2000, DLL = 1000;
+  const TICK = 0.25;
+  /* type de compte du backtest : prop firm (règles Topstep) ou classique (sans règles) */
+  const PROP = { 50000: { target: 3000, mll: 2000, dll: 1000 }, 100000: { target: 6000, mll: 3000, dll: 2000 }, 150000: { target: 9000, mll: 4500, dll: 3000 } };
+  const defCfg = (type = "prop", size = 50000) => ({ type, size, ...(PROP[size] || PROP[50000]), cons: 50, payDays: 5, payMin: 150 });
+  const fixAcc = (a) => { a.cfg = { ...defCfg(), ...(a.cfg || {}) }; return a; };
+  const isProp = () => A.cfg.type === "prop";
+  const accName = (c) => `${Math.round(c.size / 1000)}K ${c.type === "prop" ? "Prop firm" : "Classique"} · Backtest`;
   const usd = (x) => (x < 0 ? "-$" : "$") + Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const parts = (ms) => { const o = {}; new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(ms)).forEach((x) => (o[x.type] = x.value)); return o; };
   const ny = (d, h, m) => { const [Y, M, Dd] = d.split("-").map(Number), want = Date.UTC(Y, M - 1, Dd, h, m); let g = want; for (let i = 0; i < 3; i++) { const o = parts(g); g += want - Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute); } return Math.floor(g / 1000); };
@@ -3097,13 +3108,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const last = () => (S.raw[S.cur] ? S.raw[S.cur][4] : null);
 
   /* ---------------- compte démo 50K (règles Topstep : MLL 2 000 $ trailing fin de journée, DLL 1 000 $) ---------------- */
-  const freshAcc = () => ({ bal: START, mll: START - MLL_GAP, eodHigh: START, day: null, rpDay: 0, dllHit: false, blown: false, pos: null, orders: [], trades: [], seq: 1 });
-  let A = LS.get("bt-acc", null) || freshAcc();
+  const freshAcc = (cfg = A ? A.cfg : defCfg()) => ({ cfg: { ...cfg }, bal: cfg.size, mll: cfg.size - cfg.mll, eodHigh: cfg.size, day: null, rpDay: 0, dllHit: false, blown: false, pos: null, orders: [], trades: [], seq: 1 });
+  let A = null; A = fixAcc(LS.get("bt-acc", null) || freshAcc(defCfg()));
   const saveAcc = () => LS.set("bt-acc", A);
   const upl = () => { if (!A.pos) return 0; const p = last(); return p == null ? 0 : (p - A.pos.avg) * A.pos.qty * CTR[A.pos.ctr].pv; };
   function newDay(t) {
     const k = sessionKey(t); if (A.day === k) return;
-    if (A.day) { A.eodHigh = Math.max(A.eodHigh, A.bal); A.mll = Math.min(START, Math.max(A.mll, A.eodHigh - MLL_GAP)); }
+    if (A.day) { A.eodHigh = Math.max(A.eodHigh, A.bal); A.mll = Math.min(A.cfg.size, Math.max(A.mll, A.eodHigh - A.cfg.mll)); }
     A.day = k; A.rpDay = 0; A.dllHit = false;
   }
   let markers = [];
@@ -3148,8 +3159,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       fill(o.ctr, o.qty, o.px, t, o.bracket || o.type); syncBrackets();
     }
     const day = A.rpDay + upl();
+    if (!isProp()) return; // compte classique : pas de MLL / DLL
     if (A.pos && !A.blown && A.bal + upl() <= A.mll) { flatten("MLL"); A.blown = true; saveAcc(); msg("Compte démo cramé : Maximum Loss Limit atteinte. « Reset » pour recommencer.", true); }
-    else if (A.pos && !A.dllHit && day <= -DLL) { flatten("DLL"); A.dllHit = true; saveAcc(); msg("Daily Loss Limit atteinte : positions fermées, plus de trade jusqu'à la prochaine session.", true); }
+    else if (A.pos && !A.dllHit && day <= -A.cfg.dll) { flatten("DLL"); A.dllHit = true; saveAcc(); msg("Daily Loss Limit atteinte : positions fermées, plus de trade jusqu'à la prochaine session.", true); }
   }
   function flatten(why) { if (A.pos) fill(A.pos.ctr, -A.pos.qty, last(), S.raw[S.cur][0], why || "Flatten"); A.orders = []; saveAcc(); }
   function canTrade() { if (!S.raw.length) { msg("Charge d'abord une journée.", true); return false; } if (A.blown) { msg("Compte cramé (MLL) — Reset.", true); return false; } if (A.dllHit) { msg("DLL atteinte : attends la session suivante.", true); return false; } return true; }
@@ -3163,6 +3175,72 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     else { const px = rnd(+$("oPx").value || last()); A.orders.push({ id: A.seq++, ctr, type, qty, px }); saveAcc(); }
     draw(); ui();
   }
+
+  /* ---------------- v1.12 : type de compte + Journal backtest (récapitulatif de fin de session) ---------------- */
+  /* btStats:start — fonction pure, testée par tools/check.js */
+  function btStats(trades, cfg) { // trades : [{ day: "AAAA-MM-JJ" (session), pnl, dur (s) }] ; cfg : type de compte
+    const n = trades.length, W = trades.filter((t) => t.pnl > 0), L = trades.filter((t) => t.pnl < 0), sum = (a) => a.reduce((x, t) => x + t.pnl, 0);
+    const pnl = sum(trades), gw = sum(W), gl = -sum(L), avgW = W.length ? gw / W.length : 0, avgL = L.length ? gl / L.length : 0;
+    const byDay = {}; trades.forEach((t) => { byDay[t.day] = (byDay[t.day] || 0) + t.pnl; });
+    const days = Object.keys(byDay).sort(), dp = days.map((d) => byDay[d]), best = dp.length ? Math.max(...dp) : 0;
+    const out = { n, wins: W.length, losses: L.length, winRate: n ? W.length / n : 0, pnl, avgW, avgL, rr: avgL ? avgW / avgL : 0, pf: gl ? gw / gl : 0,
+      dur: n ? trades.reduce((x, t) => x + (t.dur || 0), 0) / n : 0, days: days.length, winDays: dp.filter((v) => v > 0).length, best, worst: dp.length ? Math.min(...dp) : 0,
+      bestPct: pnl > 0 ? best / pnl : 0, byDay: days.map((d) => [d, byDay[d]]), targetDay: null, payouts: [], consOk: false };
+    if (!cfg || cfg.type !== "prop") return out;
+    // objectif : 1er jour où le cumul atteint l'objectif avec la consistance (meilleur jour <= cons % du profit cumulé)
+    // payout : tous les payDays jours gagnants >= payMin, si le profit depuis le dernier payout est positif
+    let cum = 0, bestSoFar = -Infinity, qual = 0, since = 0;
+    days.forEach((d, i) => { cum += dp[i]; bestSoFar = Math.max(bestSoFar, dp[i]);
+      if (!out.targetDay && cum >= cfg.target && bestSoFar <= (cfg.cons / 100) * cum) out.targetDay = d;
+      since += dp[i]; if (dp[i] >= cfg.payMin) qual++;
+      if (qual >= cfg.payDays && since > 0) { out.payouts.push({ day: d, profit: since }); qual = 0; since = 0; } });
+    out.consOk = pnl > 0 && best <= (cfg.cons / 100) * pnl;
+    return out;
+  }
+  /* btStats:end */
+  function openAccount() {
+    const c = { ...A.cfg }, f = (k, l) => `<div class="r">${l}<input type="number" data-c="${k}" value="${c[k]}" style="width:90px"></div>`;
+    const m = modal("Type de compte du backtest", `<div class="r">Type<select data-c="type"><option value="prop" ${c.type === "prop" ? "selected" : ""}>Prop firm (MLL / DLL, objectif, payouts)</option><option value="classic" ${c.type !== "prop" ? "selected" : ""}>Classique (sans règles)</option></select></div>
+      <div class="r">Taille<select data-c="size">${[50000, 100000, 150000].map((v) => `<option value="${v}" ${c.size === v ? "selected" : ""}>${v / 1000}K</option>`).join("")}</select></div>
+      <div id="btAccProp" ${c.type === "prop" ? "" : "hidden"}>${f("target", "Objectif de profit ($)")}${f("mll", "Maximum Loss Limit trailing ($)")}${f("dll", "Daily Loss Limit ($)")}${f("cons", "Consistance : meilleur jour ≤ (% du profit)")}${f("payDays", "Payout : nombre de jours gagnants")}${f("payMin", "Payout : gain minimum par jour ($)")}</div>
+      <div class="tx-empty" style="text-align:left">Appliquer remet le compte à zéro avec ces règles. Clôture d'abord la session (drapeau) pour garder son récapitulatif dans le Journal backtest.</div>`,
+      `<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Appliquer</button>`);
+    m.oninput = (e) => { const k = e.target.dataset.c; if (!k) return;
+      if (k === "type") { c.type = e.target.value; $("btAccProp").hidden = c.type !== "prop"; }
+      else if (k === "size") { Object.assign(c, PROP[+e.target.value], { size: +e.target.value }); m.querySelectorAll("#btAccProp [data-c]").forEach((i) => (i.value = c[i.dataset.c])); }
+      else c[k] = Math.max(0, +e.target.value || 0); };
+    m.onclick = (e) => { const a = e.target.dataset.m; if (a === "x") closeModal(); else if (a === "ok") { if (A.trades.length && !confirm("Le compte actuel et ses trades seront remis à zéro. Continuer ?")) return; A = freshAcc(c); markers = []; saveAcc(); closeModal(); draw(); ui(); msg(`${accName(A.cfg)} prêt.`); } };
+  }
+  const journal = () => LS.get("bt-journal", []);
+  async function endSession() {
+    if (!A.trades.length && !A.pos) return msg("Aucun trade dans cette session.", true);
+    if (A.pos) { if (!confirm("Une position est ouverte : la clôturer au prix actuel ?")) return; flatten("Fin de session"); }
+    const T = A.trades.map((t) => ({ day: sessionKey(t.tOut), pnl: +t.pnl.toFixed(2), dur: t.tOut - t.tIn, side: t.side, ctr: t.ctr, qty: t.qty, entry: t.entry, exit: t.exit, tIn: t.tIn, tOut: t.tOut }));
+    const days = T.map((t) => t.day).sort(), name = await ask("Nom du récapitulatif", `${S.sym} ${days[0]}${days[days.length - 1] !== days[0] ? " → " + days[days.length - 1] : ""}`); if (!name) return;
+    const rec = { id: "j" + Date.now(), name, at: new Date().toISOString(), sym: S.sym, cfg: { ...A.cfg }, start: A.cfg.size, end: +A.bal.toFixed(2), blown: !!A.blown, trades: T };
+    if (!saveList("bt-journal", [rec, ...journal()])) return;
+    if (confirm(`Récapitulatif « ${name} » enregistré dans le Journal backtest. Remettre le compte à zéro pour une nouvelle session ?`)) { A = freshAcc(); markers = []; saveAcc(); draw(); }
+    ui(); msg(`Récapitulatif « ${name} » enregistré (Journal de trading › Journal backtest).`);
+  }
+  function renderJournal() {
+    const el = $("jtBt"); if (!el) return;
+    const L = journal(), pick = LS.get("bt-journal-sel", "all"), recs = pick === "all" ? L : L.filter((r) => r.id === pick);
+    if (!L.length) { el.innerHTML = '<div class="jempty"><b>Aucun backtest clôturé</b>Dans le backtesteur, le drapeau « Clôturer la session » enregistre ici le récapitulatif (P&amp;L, win rate, RR, durée, jours, payouts possibles).</div>'; return; }
+    const one = recs.length === 1 ? recs[0] : null, cfg = one ? one.cfg : null, st = btStats(recs.flatMap((r) => r.trades), cfg);
+    const pct = (x) => Math.round(x * 100) + "%", sg = (x) => `<span class="${x > 0 ? "up" : x < 0 ? "dn" : ""}">${usd(x)}</span>`, mn = (s) => (s >= 3600 ? (s / 3600).toFixed(1) + " h" : Math.round(s / 60) + " min");
+    const card = (lab, v, sub) => `<div class="tsx-card tsx-kpi"><div><div class="tsx-lab">${lab}</div><div class="tsx-big">${v}</div>${sub ? `<div class="tsx-sub" style="text-align:left">${sub}</div>` : ""}</div></div>`;
+    const rules = cfg && cfg.type === "prop" ? `<div class="tsx-g">${card("Objectif " + usd(cfg.target), st.targetDay ? `<span class="up">atteint le ${st.targetDay}</span>` : one.blown ? '<span class="dn">compte cramé (MLL)</span>' : `${usd(Math.max(0, cfg.target - st.pnl))} restants`)}${card(`Consistance (meilleur jour ≤ ${cfg.cons} %)`, st.pnl > 0 ? `<span class="${st.consOk ? "up" : "dn"}">${pct(st.bestPct)}</span>` : "—")}${card(`Payouts possibles (${cfg.payDays} j ≥ ${usd(cfg.payMin)})`, st.payouts.length, st.payouts.length ? st.payouts.map((p) => `${p.day} · profit ${usd(p.profit)}`).join("<br>") : `${st.byDay.filter(([, v]) => v >= cfg.payMin).length} / ${cfg.payDays} jours gagnants ≥ ${usd(cfg.payMin)}`)}</div>` : "";
+    const head = one ? `<span class="tsx-chip">Compte :<span class="v">${esc(accName(one.cfg))}</span></span><span class="tsx-chip">Solde :<span class="v">${usd(one.start)} → ${usd(one.end)}</span></span><span class="tsx-chip">Clôturé :<span class="v">${new Date(one.at).toLocaleString("fr-FR")}</span></span><button class="btn gray" id="btjDel">Supprimer</button>` : "";
+    const rows = one ? `<tr><th>Jour</th><th>Entrée</th><th>Sortie</th><th>Contrat</th><th>Sens</th><th>Qté</th><th>Prix</th><th>Durée</th><th>P&amp;L</th></tr>` + one.trades.map((t) => `<tr><td>${t.day}</td><td>${hm(t.tIn)}</td><td>${hm(t.tOut)}</td><td>${CTR[t.ctr] ? CTR[t.ctr].name : esc(t.ctr)}</td><td>${t.side}</td><td>${t.qty}</td><td>${t.entry} → ${t.exit}</td><td>${mn(t.dur)}</td><td>${sg(t.pnl)}</td></tr>`).join("")
+      : `<tr><th>Nom</th><th>Compte</th><th>Jours</th><th>Trades</th><th>Win %</th><th>RR</th><th>P&amp;L</th><th>Payouts</th></tr>` + L.map((r) => { const q = btStats(r.trades, r.cfg); return `<tr data-id="${r.id}" style="cursor:pointer"><td>${esc(r.name)}</td><td>${esc(accName(r.cfg))}</td><td>${q.days}</td><td>${q.n}</td><td>${pct(q.winRate)}</td><td>${q.rr.toFixed(2)}</td><td>${sg(q.pnl)}</td><td>${r.cfg.type === "prop" ? q.payouts.length : "—"}</td></tr>`; }).join("");
+    el.innerHTML = `<div class="tsx"><div class="tsx-bar"><select class="tsx-sel" id="btjSel"><option value="all">Tous les backtests (${L.length})</option>${L.map((r) => `<option value="${r.id}" ${r.id === pick ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>${head}</div>
+      <div class="tsx-g">${card("Total P&amp;L", sg(st.pnl))}${card("Trade Win %", pct(st.winRate), `${st.wins} gagnants · ${st.losses} perdants · ${st.n} trades`)}${card("Avg Win / Avg Loss (RR)", st.rr.toFixed(2), `<span class="up">${usd(st.avgW)}</span> / <span class="dn">${usd(-st.avgL)}</span>`)}${card("Profit Factor", st.pf.toFixed(2))}${card("Durée moyenne", mn(st.dur))}${card("Jours tradés", st.days, `${st.winDays} gagnants · meilleur ${usd(st.best)} · pire ${usd(st.worst)}`)}</div>${rules}
+      <div class="tsx-card"><div class="tsx-h">${one ? "Trades" : "Récapitulatifs"}</div><div style="overflow-x:auto"><table class="tx-jt">${rows}</table></div></div></div>`;
+    $("btjSel").onchange = (e) => { LS.set("bt-journal-sel", e.target.value); renderJournal(); };
+    el.querySelectorAll("tr[data-id]").forEach((tr) => (tr.onclick = () => { LS.set("bt-journal-sel", tr.dataset.id); renderJournal(); }));
+    if ($("btjDel")) $("btjDel").onclick = () => { if (!confirm(`Supprimer le récapitulatif « ${one.name} » ?`)) return; saveList("bt-journal", L.filter((r) => r.id !== one.id)); LS.set("bt-journal-sel", "all"); renderJournal(); };
+  }
+  window.btJournal = renderJournal;
 
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
   const PDEF = { body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
@@ -3200,11 +3278,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
   const sessions = () => LS.get("bt-sessions", []);
-  const snapshot = (name) => ({ id: "s" + Date.now(), name, savedAt: new Date().toISOString(), sym: S.sym, tf: S.tf, day: $("btDate").value, start: $("btStart").value, t: S.raw.length ? S.raw[S.cur][0] : null, acc: JSON.parse(JSON.stringify(A)), markers: JSON.parse(JSON.stringify(markers)), shapes: JSON.parse(JSON.stringify(shapes)), folders: JSON.parse(JSON.stringify(folders)) });
+  const snapshot = (name) => ({ id: "s" + Date.now(), name, savedAt: new Date().toISOString(), sym: S.sym, tf: S.tf, day: $("btDate").value, start: $("btStart").value, t: S.raw.length ? S.raw[S.cur][0] : null, acc: JSON.parse(JSON.stringify(A)), markers: JSON.parse(JSON.stringify(markers)), shapes: JSON.parse(JSON.stringify(shapes1().shapes)), folders: JSON.parse(JSON.stringify(shapes1().folders)) });
   const setTfBtns = () => document.querySelectorAll("#btTfs [data-tf]").forEach((b) => b.classList.toggle("on", +b.dataset.tf === S.tf));
   async function openSession(s) {
     play(false); $("btSym").value = s.sym; S.sym = s.sym; $("btDate").value = s.day; $("btStart").value = s.start || "09:30"; S.tf = s.tf || 1; setTfBtns();
-    A = JSON.parse(JSON.stringify(s.acc)); markers = s.markers || []; saveAcc(); LS.set(dkey(), s.shapes || []); LS.set(dkey() + "-f", s.folders || []);
+    A = fixAcc(JSON.parse(JSON.stringify(s.acc))); markers = s.markers || []; saveAcc(); LS.set(dkey(1), s.shapes || []); LS.set(dkey(1) + "-f", s.folders || []);
     await load(); if (s.t != null && S.raw.length) { const i = S.raw.findIndex((b) => b[0] >= s.t); if (i >= 0) { S.cur = S.done = i; } }
     draw(true); ui(); msg(`Session « ${s.name} » ouverte (${s.day} ${s.t != null ? hm(s.t) : ""}).`);
   }
@@ -3226,7 +3304,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const layouts = () => LS.get("bt-layouts", null) || LDEF.map(([name, sym], i) => ({ id: "l" + i, name, sym, tf: 1 }));
   let curLay = LS.get("bt-layout-cur", null);
   const layName = () => { const l = layouts().find((x) => x.id === curLay); if ($("btLayName")) $("btLayName").textContent = l ? l.name : "Mise en page"; };
-  const layoutSnap = (l) => ({ ...l, sym: S.sym, tf: S.tf, prefs: { ...P }, shapes: JSON.parse(JSON.stringify(shapes)), folders: JSON.parse(JSON.stringify(folders)), savedAt: new Date().toISOString() });
+  const layoutSnap = (l) => ({ ...l, sym: S.sym, tf: S.tf, prefs: { ...P }, shapes: JSON.parse(JSON.stringify(shapes1().shapes)), folders: JSON.parse(JSON.stringify(shapes1().folders)), savedAt: new Date().toISOString() });
   const setCur = (id) => { curLay = id; LS.set("bt-layout-cur", id); layName(); };
   async function saveLayout(asNew) {
     const L = layouts(), i = L.findIndex((x) => x.id === curLay);
@@ -3292,7 +3370,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
 
   /* ---------------- 2e chart côte à côte (NQ <-> ES), synchronisé sur l'heure du replay ---------------- */
-  let chart2 = null, cs2 = null, key2 = "", sync2 = false;
+  let chart2 = null, cs2 = null, key2 = "", sync2 = false, xsync = false;
   const sym2 = () => (S.sym === "NQ" ? "ES" : S.sym === "ES" ? "NQ" : null);
   async function loadSecond(from, to) { S.raw2 = []; key2 = ""; if (!P.split || !sym2() || !D || !D.dataRead) return; const r = await D.dataRead(sym2(), from, to, "m1"); S.raw2 = r && r.ok ? r.data : []; }
   function ensureChart2() {
@@ -3301,20 +3379,25 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     cs2 = chart2.addCandlestickSeries({ priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
     const link = (a, b) => a.timeScale().subscribeVisibleLogicalRangeChange(() => { if (sync2 || !P.split) return; const r = a.timeScale().getVisibleRange(); if (!r) return; sync2 = true; try { b.timeScale().setVisibleRange(r); } catch (e) { /* plage hors données */ } sync2 = false; });
     link(chart, chart2); link(chart2, chart); applyPrefs();
+    // réticule synchronisé : même heure sur l'autre chart, prix = clôture de sa bougie à cette heure
+    const barAtNY = (B, t) => { let lo = 0, hi = B.length - 1, r = null; while (lo <= hi) { const m = (lo + hi) >> 1; if (toNY(B[m][0]) <= t) { r = B[m]; lo = m + 1; } else hi = m - 1; } return r; };
+    const xh = (a, b, sb, bars) => a.subscribeCrosshairMove((p) => { if (xsync || !P.split) return; xsync = true; try { const bar = p && p.time ? barAtNY(bars(), p.time) : null; if (bar) b.setCrosshairPosition(bar[4], p.time, sb); else b.clearCrosshairPosition(); } finally { xsync = false; } });
+    xh(chart, chart2, cs2, () => S.B2 || []); xh(chart2, chart, cs, () => S.B);
   }
   function draw2() {
     const on = !!(P.split && sym2()), w = $("btWrap2"); if (w && w.hidden === on) w.hidden = !on; if ($("btSplitBtn")) $("btSplitBtn").classList.toggle("on", !!P.split);
     if (!on || !chart) return; ensureChart2();
     const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [], cb2 = tCur ? bucket(tCur) : 0;
-    if (S.htf2 && S.htf2.length) for (const b of S.htf2) { if (b[0] >= cb2) break; out.push(b.slice(0, 5)); }
-    for (const b of S.raw2 || []) { if (b[0] > tCur) break; if (S.htf2 && S.htf2.length && bucket(b[0]) < cb2) continue; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4]]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; } }
+    if (S.htf2 && S.htf2.length) for (const b of S.htf2) { if (b[0] >= cb2) break; out.push(b.slice(0, 6)); }
+    for (const b of S.raw2 || []) { if (b[0] > tCur) break; if (S.htf2 && S.htf2.length && bucket(b[0]) < cb2) continue; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5] || 0]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5] || 0; } }
+    S.B2 = out; // bougies du 2e chart : base des dessins de ce chart
     cs2.setData(out.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] })));
     const key = sym2() + S.tf + (S.raw2 && S.raw2[0] ? S.raw2[0][0] : 0); if (key !== key2) { key2 = key; const r = chart.timeScale().getVisibleRange(); try { if (r) chart2.timeScale().setVisibleRange(r); else chart2.timeScale().scrollToRealTime(); } catch (e) { chart2.timeScale().scrollToRealTime(); } }
     const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${sym2() === "ES" ? "ESZ26 · S&P 500" : "NQZ26 · Nasdaq"} · ${tfName(S.tf)}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
   }
   async function toggleSplit() {
     if (!sym2()) return msg("Les 2 charts côte à côte marchent avec NQ et ES (pas avec un CSV).", true);
-    P.split = !P.split; LS.set("bt-prefs", P);
+    P.split = !P.split; LS.set("bt-prefs", P); if (!P.split) setActive(1);
     if (P.split && S.raw.length && !(S.raw2 && S.raw2.length)) await loadSecond(S.raw[0][0], S.raw[S.raw.length - 1][0]);
     draw(true); msg(P.split ? `2 charts : ${S.sym} + ${sym2()} synchronisés sur le replay.` : "1 chart.");
   }
@@ -3371,7 +3454,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   // ordre sous le pointeur (ligne ou étiquette de prix) -> glisser-déposer
   let ordDrag = null;
-  const orderAt = (y) => (chart && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 5; }) || null : null);
+  const orderAt = (y) => (chart && pane === 1 && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 5; }) || null : null);
   const marketable = (o, p) => (o.type === "Limit" ? (o.qty > 0 ? o.px >= p : o.px <= p) : (o.qty > 0 ? o.px <= p : o.px >= p));
   function dropOrder(o) {
     const p = last() == null ? null : rnd(last());
@@ -3458,7 +3541,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const defStyle = (type) => ({ color: type === "rect" ? "#9c27b0" : type === "fib" ? "#787b86" : "#2962ff", width: type === "rect" || type === "fib" ? 1 : 2, dash: 0, fill: "rgba(156,39,176,0.2)", extL: false, extR: false, textColor: "#131722", fontSize: 12, labels: true,
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
-  const dkey = () => "bt-draw-" + (curLay ? curLay + "-" : "") + (S.sym || "NQ"); // chaque mise en page a ses propres dessins
+  // chaque mise en page a ses propres dessins ; le 2e chart a les siens (clé du symbole du 2e chart)
+  const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curLay ? curLay + "-" : "") + (n === 2 ? sym2() || "X" : S.sym || "NQ");
+  /* 2 charts : pane = chart dont les dessins sont dans shapes/folders/sel ; act = chart actif (dernier cliqué) ; other = état de l'autre chart */
+  let pane = 1, act = 1, other = { shapes: [], folders: [], sel: null, msel: new Set() };
+  function swapPane() { const cur = { shapes, folders, sel, msel }; ({ shapes, folders, sel, msel } = other); other = cur; pane = 3 - pane; }
+  function setActive(n) { if (n === act) return; pending = null; measure = null; drag = null; if (pane !== n) swapPane(); act = n; $("btWrap2").classList.toggle("act2", n === 2); tree(); }
+  const PC = () => (pane === 2 ? chart2 : chart), PS = () => (pane === 2 ? cs2 : cs), PB = () => (pane === 2 ? S.B2 || [] : S.B);
   /* groupes (dossiers) de l'arborescence, par symbole ; un dessin y appartient via s.folder */
   let folders = [], msel = new Set(), clip = null;
   const fkey = () => dkey() + "-f";
@@ -3466,23 +3555,24 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const fOf = (s) => (s.folder ? folders.find((f) => f.id === s.folder) || null : null);
   const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden;
   const lockedS = (s) => s.locked || lockAll || !!(fOf(s) || {}).locked;
-  const loadDrawings = () => { shapes = LS.get(dkey(), []); folders = LS.get(fkey(), []); sel = null; msel = new Set(); tree(); };
+  const loadDrawings = () => { setActive(1); shapes = LS.get(dkey(1), []); folders = LS.get(dkey(1) + "-f", []); sel = null; msel = new Set(); other = { shapes: LS.get(dkey(2), []), folders: LS.get(dkey(2) + "-f", []), sel: null, msel: new Set() }; tree(); };
+  const shapes1 = () => (pane === 1 ? { shapes, folders } : other); // dessins du chart principal (sessions / mises en page)
   const saveDrawings = () => { LS.set(dkey(), shapes); tree(); };
   const tpls = () => LS.get("bt-tpl", {});
   // temps <-> index logique sur les bougies agrégées (marche aussi au-delà de la dernière bougie)
-  function t2l(t) { const B = S.B, tf = S.tf * 60; if (!B.length) return null; if (t >= B[B.length - 1][0]) return B.length - 1 + (t - B[B.length - 1][0]) / tf; if (t <= B[0][0]) return (t - B[0][0]) / tf;
+  function t2l(t) { const B = PB(), tf = S.tf * 60; if (!B.length) return null; if (t >= B[B.length - 1][0]) return B.length - 1 + (t - B[B.length - 1][0]) / tf; if (t <= B[0][0]) return (t - B[0][0]) / tf;
     let lo = 0, hi = B.length - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (B[m][0] <= t) lo = m; else hi = m; } return lo + (t - B[lo][0]) / Math.max(1, B[hi][0] - B[lo][0]); }
-  function l2t(l) { const B = S.B, tf = S.tf * 60; if (!B.length) return 0; if (l >= B.length - 1) return B[B.length - 1][0] + (l - (B.length - 1)) * tf; if (l <= 0) return B[0][0] + l * tf; const i = Math.floor(l); return B[i][0] + (l - i) * (B[i + 1][0] - B[i][0]); }
-  const X = (t) => { const l = t2l(t); return l == null ? null : chart.timeScale().logicalToCoordinate(l); };
-  const Y = (p) => cs.priceToCoordinate(p);
+  function l2t(l) { const B = PB(), tf = S.tf * 60; if (!B.length) return 0; if (l >= B.length - 1) return B[B.length - 1][0] + (l - (B.length - 1)) * tf; if (l <= 0) return B[0][0] + l * tf; const i = Math.floor(l); return B[i][0] + (l - i) * (B[i + 1][0] - B[i][0]); }
+  const X = (t) => { const l = t2l(t); return l == null ? null : PC().timeScale().logicalToCoordinate(l); };
+  const Y = (p) => PS().priceToCoordinate(p);
   function at(x, y) { // coordonnées chart -> {t, price} (+ aimant OHLC)
-    if (!chart || !S.B.length) return null;
-    const l = chart.timeScale().coordinateToLogical(x); let p = cs.coordinateToPrice(y); if (l == null || p == null) return null;
+    if (!PC() || !PB().length) return null;
+    const l = PC().timeScale().coordinateToLogical(x); let p = PS().coordinateToPrice(y); if (l == null || p == null) return null;
     let t = l2t(l);
-    if (magnet) { const b = S.B[Math.round(l)]; if (b) { t = b[0]; p = [b[1], b[2], b[3], b[4]].reduce((a, v) => (Math.abs(v - p) < Math.abs(a - p) ? v : a), b[1]); } }
+    if (magnet) { const b = PB()[Math.round(l)]; if (b) { t = b[0]; p = [b[1], b[2], b[3], b[4]].reduce((a, v) => (Math.abs(v - p) < Math.abs(a - p) ? v : a), b[1]); } }
     return { t: Math.round(t), price: rnd(p) };
   }
-  const cv = () => $("btDraw");
+  const cv = () => $(pane === 2 ? "btDraw2" : "btDraw");
   function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) render(); }
   function floatBar() {
     const f = $("btFloat"); if (!f) return; const show = !!(sel && !hideAll && shapes.includes(sel) && !$("btSet").classList.contains("show"));
@@ -3490,19 +3580,20 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (show && f.dataset.id !== String(sel.id)) { f.dataset.id = sel.id; $("btFColor").value = /^#/.test(sel.style.color) ? sel.style.color : "#2962ff"; $("btFWidth").value = sel.style.width; $("btFLock").textContent = sel.locked ? "🔒" : "🔓"; }
     if (!show) f.dataset.id = "";
   }
-  function render() { floatBar();
-    const c = cv(); if (!c || !chart) return;
+  function render() { floatBar(); renderPane(); if (chart2 && !$("btWrap2").hidden) { swapPane(); try { renderPane(); } finally { swapPane(); } } }
+  function renderPane() { // dessine les objets du chart « pane » (en cours, mesure : seulement sur le chart actif ; news : chart principal)
+    const c = cv(), ch = PC(); if (!c || !ch) return;
     const W = c.clientWidth, H = c.clientHeight, dpr = window.devicePixelRatio || 1;
     if (c.width !== W * dpr || c.height !== H * dpr) { c.width = W * dpr; c.height = H * dpr; }
     const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
-    if (!S.B.length) return;
-    const plotW = W - (chart.priceScale("right").width() || 60), plotH = H - (chart.timeScale().height() || 26);
+    if (!PB().length) return;
+    const plotW = W - (ch.priceScale("right").width() || 60), plotH = H - (ch.timeScale().height() || 26);
     g.save(); g.beginPath(); g.rect(0, 0, plotW, plotH); g.clip();
     const list = hideAll ? [] : shapes.filter(visible);
-    if (pending) list.push(pending);
+    if (pending && pane === act) list.push(pending);
     for (const s of list) drawShape(g, s, plotW, plotH);
-    if (measure) drawMeasure(g, measure);
-    drawNews(g, plotW, plotH);
+    if (measure && pane === act) drawMeasure(g, measure);
+    if (pane === 1) drawNews(g, plotW, plotH);
     g.restore();
   }
   function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
@@ -3517,7 +3608,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const fillOf = (s) => s.style.fill || "rgba(41,98,255,.15)";
   const head = (g, a, b, sz) => { const an = Math.atan2(b.y - a.y, b.x - a.x); g.beginPath(); g.moveTo(b.x, b.y); g.lineTo(b.x - sz * Math.cos(an - 0.45), b.y - sz * Math.sin(an - 0.45)); g.lineTo(b.x - sz * Math.cos(an + 0.45), b.y - sz * Math.sin(an + 0.45)); g.closePath(); g.fill(); };
   const segDist = (px, py, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy; let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy)); };
-  const between = (t1, t2) => S.B.filter((b) => b[0] >= Math.min(t1, t2) && b[0] <= Math.max(t1, t2));
+  const between = (t1, t2) => PB().filter((b) => b[0] >= Math.min(t1, t2) && b[0] <= Math.max(t1, t2));
   const FC = ["#787b86", "#f23645", "#ff9800", "#4caf50", "#089981", "#2962ff", "#9c27b0"];
   const vline = (g, x, H, c, lbl) => { g.strokeStyle = c; ln(g, { x, y: 0 }, { x, y: H }); if (lbl != null) { g.fillStyle = c; g.fillText(lbl, x + 3, 12); } };
   const hLevels = (g, x1, x2, p0, r, ks) => ks.forEach((k, i) => { const pr = p0 + r * k, y = Y(pr); if (y == null) return; g.strokeStyle = FC[i % 7]; ln(g, { x: x1, y }, { x: x2, y }); g.fillStyle = FC[i % 7]; g.fillText(`${k} (${pr.toFixed(2)})`, x1 + 4, y - 3); });
@@ -3580,9 +3671,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     barpat: { n: 2, d: (g, s, P) => { const B = between(s.p[0].t, s.p[1].t); if (!B.length) return; const tf = S.tf * 60, dt = B[B.length - 1][0] - B[0][0] + tf, dp = s.p[1].price - B[0][1], w = Math.max(1, (X(B[0][0] + tf) - X(B[0][0])) * 0.6);
       g.save(); g.globalAlpha = 0.45; B.forEach((b) => { const x = X(b[0] + dt), o = Y(b[1] + dp), c = Y(b[4] + dp); if (x == null || o == null || c == null) return; ln(g, { x, y: Y(b[2] + dp) }, { x, y: Y(b[3] + dp) }); g.fillStyle = b[4] >= b[1] ? s.style.color : "#ffffff"; g.fillRect(x - w / 2, Math.min(o, c), w, Math.max(1, Math.abs(c - o))); }); g.restore(); g.save(); g.setLineDash([4, 3]); ln(g, P[0], P[1]); g.restore(); } },
     ghost: { n: 0, d: (g, s, P) => { for (let i = 1; i < P.length; i++) { const o = P[i - 1].y, c = P[i].y; g.fillStyle = c < o ? "rgba(76,175,80,.65)" : "rgba(0,0,0,.45)"; g.fillRect(P[i].x - 3, Math.min(o, c), 6, Math.max(1, Math.abs(c - o))); } } },
-    avwap: { n: 1, pad: 10, d: (g, s, P) => { let pv = 0, v = 0, on = false; g.beginPath(); S.B.forEach((b) => { if (b[0] < s.p[0].t) return; const vol = b[5] || 1; pv += ((b[2] + b[3] + b[4]) / 3) * vol; v += vol; const x = X(b[0]), y = Y(pv / v); if (x == null || y == null) return; on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; }); g.stroke(); tag(g, "VWAP", P[0].x, P[0].y + 16); } },
+    avwap: { n: 1, pad: 10, d: (g, s, P) => { let pv = 0, v = 0, on = false; g.beginPath(); PB().forEach((b) => { if (b[0] < s.p[0].t) return; const vol = b[5] || 1; pv += ((b[2] + b[3] + b[4]) / 3) * vol; v += vol; const x = X(b[0]), y = Y(pv / v); if (x == null || y == null) return; on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; }); g.stroke(); tag(g, "VWAP", P[0].x, P[0].y + 16); } },
     frvp: { n: 2, area: 1, d: (g, s, P) => { const x1 = Math.min(P[0].x, P[1].x), x2 = Math.max(P[0].x, P[1].x); profile(g, between(s.p[0].t, s.p[1].t), x1, x2); g.save(); g.setLineDash([4, 3]); g.strokeRect(x1, Math.min(P[0].y, P[1].y), x2 - x1, Math.abs(P[1].y - P[0].y)); g.restore(); } },
-    avp: { n: 1, pad: 10, d: (g, s, P, W) => { profile(g, S.B.filter((b) => b[0] >= s.p[0].t), P[0].x, W); g.save(); g.setLineDash([4, 3]); ln(g, { x: P[0].x, y: 0 }, { x: P[0].x, y: P[0].y + 40 }); g.restore(); } },
+    avp: { n: 1, pad: 10, d: (g, s, P, W) => { profile(g, PB().filter((b) => b[0] >= s.p[0].t), P[0].x, W); g.save(); g.setLineDash([4, 3]); ln(g, { x: P[0].x, y: 0 }, { x: P[0].x, y: P[0].y + 40 }); g.restore(); } },
     prange: { n: 2, area: 1, d: (g, s, P) => { const d = s.p[1].price - s.p[0].price, c = CTR[$("oCtr").value], tk = Math.round(d / TICK), xm = (P[0].x + P[1].x) / 2; rangeBox(g, P, d >= 0 ? "rgba(41,98,255,.15)" : "rgba(239,83,80,.15)"); ln(g, { x: xm, y: P[0].y }, { x: xm, y: P[1].y }); head(g, { x: xm, y: P[0].y }, { x: xm, y: P[1].y }, 8); tag(g, `${d.toFixed(2)} (${((d / s.p[0].price) * 100).toFixed(2)}%) · ${tk} ticks · ${usd(tk * TICK * c.pv)}`, xm, P[1].y + (d >= 0 ? -14 : 14), d >= 0 ? "#2962ff" : "#ef5350"); } },
     drange: { n: 2, area: 1, d: (g, s, P) => { const nb = Math.round(t2l(s.p[1].t) - t2l(s.p[0].t)), sec = Math.abs(s.p[1].t - s.p[0].t), ym = (P[0].y + P[1].y) / 2; rangeBox(g, P, "rgba(41,98,255,.15)"); ln(g, { x: P[0].x, y: ym }, { x: P[1].x, y: ym }); head(g, { x: P[0].x, y: ym }, { x: P[1].x, y: ym }, 8); tag(g, `${nb} barres · ${Math.floor(sec / 3600)}h${String(Math.round((sec % 3600) / 60)).padStart(2, "0")}`, (P[0].x + P[1].x) / 2, Math.max(P[0].y, P[1].y) + 14, "#2962ff"); } },
     brush: { free: 1, d: (g, s, P) => { g.lineJoin = g.lineCap = "round"; pl(g, P); } },
@@ -3665,7 +3756,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     g.fillStyle = up ? "#2962ff" : "#ef5350"; g.fillRect(bx, by, w, 20); g.fillStyle = "#fff"; g.fillText(txt, bx + 6, by + 14);
   }
   function hit(x, y) {
-    if (!chart || !S.B.length || hideAll) return null;
+    if (!PC() || !PB().length || hideAll) return null;
     const W = cv().clientWidth;
     const segD = (px, py, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy; let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy)); };
     for (let i = shapes.length - 1; i >= 0; i--) {
@@ -3691,12 +3782,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function setTool(t) {
     if (t === "cross" || t === "dot" || t === "arrowc") { // curseurs : croix, point, flèche (sans réticule)
       cursorMode = t; t = "cross"; $("btWrap").dataset.cur = cursorMode;
-      if (chart) chart.applyOptions({ crosshair: { vertLine: { visible: cursorMode === "cross" }, horzLine: { visible: cursorMode === "cross" } } });
+      [chart, chart2].forEach((c) => c && c.applyOptions({ crosshair: { vertLine: { visible: cursorMode === "cross" }, horzLine: { visible: cursorMode === "cross" } } }));
     }
     tool = t; pending = null; freeDraw = false; if (t !== "measure") measure = null;
     const shown = t === "cross" ? cursorMode : t;
     document.querySelectorAll("#btTools [data-tool], #btFavBar [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === shown));
-    $("btWrap").classList.toggle("drawing", t !== "cross");
+    $("btWrap").classList.toggle("drawing", t !== "cross"); $("btWrap2").classList.toggle("drawing", t !== "cross");
   }
   function finishPending() {
     const tt = pending.type, p = pending.p.filter((v, i, A) => !i || v.t !== A[i - 1].t || v.price !== A[i - 1].price); pending = null; freeDraw = false; setTool("cross");
@@ -3707,9 +3798,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     shapes.push(s); sel = s; saveDrawings();
     if (type === "text" || type in TEXTDEF) openSettings(s, "text");
   }
-  function pos(e) { const r = $("btWrap").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  function bindDrawing() {
-    const wrap = $("btWrap"), c = cv();
+  function pos(e) { const r = $(pane === 2 ? "btWrap2" : "btWrap").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function bindDrawing(n = 1) {
+    const wrap = $(n === 2 ? "btWrap2" : "btWrap"), c = $(n === 2 ? "btDraw2" : "btDraw");
+    wrap.addEventListener("mousedown", () => setActive(n), true); // le chart cliqué devient le chart actif (dessins, raccourcis, arborescence)
     // outils de dessin : le canvas superposé reçoit les clics
     c.addEventListener("mousedown", (e) => {
       if (e.button !== 0) return;
@@ -3743,15 +3835,15 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       if (lockedS(h.s)) return;
       drag = { s: h.s, h: h.h, start: at(x, y), orig: h.s.p.map((p) => ({ ...p })) };
     }, true);
-    window.addEventListener("mousemove", (e) => {
+    if (n === 1) window.addEventListener("mousemove", (e) => {
       if (ordDrag) { const p = cs.coordinateToPrice(pos(e).y); if (p != null) { ordDrag.px = rnd(p); priceLines(); } return; }
       if (!drag) return; const { x, y } = pos(e), q = at(x, y); if (!q || !drag.start) return;
       const dt = q.t - drag.start.t, dp = q.price - drag.start.price;
       if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
-    window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
-    wrap.addEventListener("mousemove", (e) => { const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
+    if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
+    wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
@@ -3865,7 +3957,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const u = upl(), rp = A.rpDay, dayLoss = Math.max(0, -(rp + u));
     $("kBal").textContent = usd(A.bal); $("kMll").textContent = usd(A.mll); $("kRp").textContent = usd(rp); $("kUp").textContent = usd(u); $("kDl").textContent = usd(-dayLoss);
     $("kRpW").className = "tx-kpi " + (rp > 0 ? "pos" : rp < 0 ? "neg" : ""); $("kUpW").className = "tx-kpi " + (u > 0 ? "pos" : u < 0 ? "neg" : "");
-    $("kDlBar").style.width = Math.min(100, (dayLoss / DLL) * 100) + "%";
+    $("kDlBar").style.width = Math.min(100, (dayLoss / A.cfg.dll) * 100) + "%"; $("kDlMax").textContent = usd(A.cfg.dll);
+    const pr = isProp(); $("kMllW").hidden = !pr; $("kDlW").hidden = !pr; $("btAcc").querySelector("b").textContent = accName(A.cfg);
     const p = last(); $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - TICK).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + TICK).toFixed(2) : "—"; $("oSpr").textContent = p != null ? (2 * TICK).toFixed(2) : "";
     $("oPos").textContent = A.pos ? `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name} @ ${A.pos.avg.toFixed(2)} · ${usd(u)}` : A.blown ? "Compte cramé (MLL)" : A.dllHit ? "DLL atteinte" : "No Active Position";
     const q = Math.max(1, parseInt($("oQty").value, 10) || 1), ty = $("oType").value.toUpperCase();
@@ -3979,7 +4072,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("oCancel").onclick = () => { A.orders = A.pos ? A.orders.filter((o) => o.bracket) : []; saveAcc(); draw(); ui(); };
     ["oType", "oQty", "oBr", "oCtr"].forEach((id) => $(id).addEventListener("input", () => { if (id === "oType" && $("oType").value !== "Market" && last() != null) $("oPx").value = last(); ui(); }));
     document.querySelector(".tx-qs").onclick = (e) => { const q = e.target.dataset.q; if (!q) return; const cur = parseInt($("oQty").value, 10) || 1; $("oQty").value = q === "+" ? cur + 1 : q === "-" ? Math.max(1, cur - 1) : q; ui(); };
-    $("btAccReset").onclick = () => { if (!confirm("Remettre le compte démo à 50 000 $ (trades effacés) ?")) return; A = freshAcc(); markers = []; saveAcc(); draw(); ui(); msg("Compte démo 50K réinitialisé."); };
+    $("btAccReset").onclick = () => { if (!confirm(`Remettre le compte à ${usd(A.cfg.size)} (trades effacés) ?`)) return; A = freshAcc(); markers = []; saveAcc(); draw(); ui(); msg(`${accName(A.cfg)} réinitialisé.`); };
+    $("btAcc").onclick = openAccount; $("btAccEnd").onclick = endSession;
     document.querySelector(".tx-tabs").onclick = (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; const box = document.querySelector(".tx-bottom"); if (b.dataset.tab === tab) { box.classList.toggle("min"); return; } box.classList.remove("min"); tab = b.dataset.tab; document.querySelectorAll(".tx-tabs [data-tab]").forEach((x) => x.classList.toggle("on", x === b)); ui(); };
     $("btBottom").onclick = (e) => { const x = e.target.dataset.x; if (x === "flat") { flatten("Close"); draw(); ui(); } if (x === "cxl") { A.orders = A.orders.filter((o) => String(o.id) !== e.target.dataset.id); saveAcc(); draw(); ui(); } };
     $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
@@ -4011,7 +4105,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btLog").onclick = () => { $("btLog").classList.toggle("on"); $("btPct").classList.remove("on"); scale(); };
     $("btPct").onclick = () => { $("btPct").classList.toggle("on"); $("btLog").classList.remove("on"); scale(); };
     $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
-    bindDrawing(); bindSettings(); loadDrawings(); ui();
+    bindDrawing(); bindDrawing(2); bindSettings(); loadDrawings(); ui();
   }
   window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { init(); status(); if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
