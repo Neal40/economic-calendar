@@ -146,8 +146,11 @@ ipcMain.handle("news:week", async () => {
 
 /* ---------- app data (abonnements + factures) : app-data.json ---------- */
 const STORE = () => path.join(app.getPath("userData"), "app-data.json");
-ipcMain.handle("store:get", () => { let data = null; try { data = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch (e) {} return { data, path: STORE() }; });
-ipcMain.handle("store:set", (e, d) => { try { const tmp = STORE() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify({ ...d, savedAt: new Date().toISOString() }, null, 1)); fs.renameSync(tmp, STORE()); return true; } catch (err) { return false; } });
+ipcMain.handle("store:get", () => { let data = null; try { data = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch (e) { if (fs.existsSync(STORE())) return null; } return { data, path: STORE() }; }); // fichier illisible : null -> l'app ne le réécrit pas
+ipcMain.handle("store:set", (e, d) => { try {
+  // moins de factures ou d'abonnements qu'avant : copie horodatée de l'ancien fichier (rien ne se perd, même une suppression par erreur)
+  try { const old = JSON.parse(fs.readFileSync(STORE(), "utf8")); const n = (x, k) => ((x && x[k]) || []).length;
+    if (n(d, "bills") < n(old, "bills") || n(d, "subs") < n(old, "subs")) fs.copyFileSync(STORE(), STORE().replace(/\.json$/, "-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json")); } catch (err) { /* pas encore de fichier */ } const tmp = STORE() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify({ ...d, savedAt: new Date().toISOString() }, null, 1)); fs.renameSync(tmp, STORE()); return true; } catch (err) { return false; } });
 
 /* ---------- main window ---------- */
 function createWindow() {
@@ -155,9 +158,10 @@ function createWindow() {
     width: 1320, height: 1000, minWidth: 900, minHeight: 600,
     backgroundColor: "#060607", title: "Inner Circle Trader",
     icon: path.join(__dirname, "app", "icon.png"),
-    autoHideMenuBar: true,
+    autoHideMenuBar: true, show: false,
     webPreferences: { contextIsolation: true, sandbox: true, preload: path.join(__dirname, "preload.js") }
   });
+  win.maximize(); win.show(); // toujours en plein écran (fenêtre agrandie) au lancement
   win.loadFile(path.join(__dirname, "app", "index.html"));
   win.on("closed", () => { app.isQuitting = true; app.quit(); });
   win.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });

@@ -1137,7 +1137,8 @@ window.calEvents=k=>(S.events[k]||[]); // utilisé par le backtesteur (news sous
 S.seedV=4; SEED.seedV=4;
 if(S.brand&&S.brand.name===undefined){S.brand.name="Neal";} if(S.brand&&!S.brand.notion) S.brand.notion=SEED.brand.notion; S.subs=S.subs||[]; S.bills=S.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 const DS=window.desktop;
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(DS&&DS.storeSet) DS.storeSet({subs:S.subs||[],bills:S.bills||[]});};
+let storeReady=false; // app Windows : on n'écrit app-data.json qu'après l'avoir relu (sinon des factures vides pourraient l'écraser)
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(DS&&DS.storeSet&&storeReady) DS.storeSet({subs:S.subs||[],bills:S.bills||[]});};
 
 /* ---------- date helpers ---------- */
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1489,7 +1490,7 @@ $("jReset").onclick=()=>{if($("jReset").dataset.c){S=JSON.parse(JSON.stringify(S
   else{$("jReset").dataset.c="1";$("jReset").textContent="Confirmer ?"}};
 
 if(DS&&DS.storeGet) DS.storeGet().then(r=>{ if(!r) return; if(r.path) $("storePath").textContent="Fichier des abonnements & factures : "+r.path;
-  const d=r.data; if(d&&(Array.isArray(d.subs)||Array.isArray(d.bills))){ S.subs=d.subs||[]; S.bills=d.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} renderSubs(); renderBills(); } else save(); }).catch(()=>{});
+  storeReady=true; const d=r.data; if(d&&(Array.isArray(d.subs)||Array.isArray(d.bills))){ S.subs=d.subs||[]; S.bills=d.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} renderSubs(); renderBills(); } else save(); }).catch(()=>{});
 render(); shell(); go(location.hash.slice(1)||"calendrier");
 
 /* ---------- Ctrl+F : recherche de texte dans la page ---------- */
@@ -1881,16 +1882,17 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   if (!D) setTimeout(() => dash.load((st && st.comptes) || seed.comptes || null, (st && st.trades) || seed.trades || null), 0);
   else {
     // Desktop app: local database + automatic TopstepX sync
-    if (!D.journalImport) document.querySelectorAll(".jimp").forEach((x) => (x.hidden = true)); // sinon : import fusionné dans la base locale
+    // app Windows : synchro et sauvegardes automatiques -> pas de boutons d'import / export / synchro manuelle (Bureau\Inner Circle Trader\data + backups)
+    [...document.querySelectorAll(".jimp"), document.getElementById("jMetaExp"), document.getElementById("jMetaImp").closest("label"), document.getElementById("jNotion")].forEach((x) => x && (x.style.display = "none"));
     const btn = document.getElementById("jSyncBtn"), out = document.getElementById("jLogout"), login = document.getElementById("jLogin");
-    btn.hidden = false; out.hidden = false;
+    out.hidden = false; // le bouton de synchro n'apparaît que si la session TopstepX a expiré (pour se reconnecter)
     const apply = (db) => { if (db && db.comptes && db.comptes.length) { login.hidden = true; dash.load(db.comptes, db.trades || []); } };
     const run = async (interactive) => {
       btn.disabled = true; btn.textContent = "⟳ Synchronisation…";
       const r = await D.journalSync(interactive);
-      btn.disabled = false; btn.textContent = "⟳ Synchroniser TopstepX";
+      btn.disabled = false; btn.textContent = "⟳ Se reconnecter à TopstepX"; btn.hidden = r.ok || r.reason !== "login";
       if (r.ok) apply(r.db);
-      else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else alertBox("Session TopstepX expirée — clique sur Synchroniser pour te reconnecter."); }
+      else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else alertBox("Session TopstepX expirée — clique sur « Se reconnecter à TopstepX »."); }
       else alertBox("Synchro impossible (" + r.reason + "). Données locales affichées.");
     };
     btn.onclick = () => run(true);
@@ -2303,9 +2305,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     syncing = true; try { await syncNow(); } finally { syncing = false; }
   }
   /* --- auto-sync app ⇄ Notion (On/Off). App edits already go to Notion instantly; this pulls Notion edits in. --- */
-  const autoOn = () => { try { return localStorage.getItem("notionAuto") !== "0"; } catch (e) { return true; } };
-  function paintAuto() { ["rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => { const on = autoOn(); b.classList.toggle("on", on); b.textContent = "Synchro Notion : " + (on ? "On" : "Off"); }); }
-  function toggleAuto() { try { localStorage.setItem("notionAuto", autoOn() ? "0" : "1"); } catch (e) { /* ignore */ } paintAuto(); if (autoOn()) autoTick(); }
+  const autoOn = () => true; // synchro Notion automatique toujours active (plus de bouton On/Off)
   async function autoTick() {
     if (!D || !autoOn() || syncing || document.hidden) return;
     const a = document.activeElement; // never refresh under the user's fingers
@@ -2750,8 +2750,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     await loadCache();
     if (!D) { ["rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.hidden = true)); $("rvSync").hidden = true; $("rvSetupBtn").hidden = true; if ($("rvSync2")) $("rvSync2").style.visibility = "hidden"; }
     else {
-      $("rvSync").onclick = sync; if ($("rvSync2")) $("rvSync2").onclick = sync;
-      ["rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.onclick = toggleAuto)); paintAuto(); setInterval(autoTick, 45000);
+      ["rvSync", "rvSync2", "rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.style.display = "none")); // synchro automatique : boutons inutiles
+      setInterval(autoTick, 45000);
       document.addEventListener("visibilitychange", () => { if (!document.hidden) autoTick(); });
       $("rvTokenSave").onclick = async () => { const r = await D.notionSetToken($("rvToken").value); $("rvTokenMsg").textContent = r.ok ? "Connecté ✓ (" + r.bot + ")" : "Token refusé"; if (r.ok) { showSetup(false); sync(); } };
       $("rvSetupBtn").onclick = () => showSetup($("rvSetup").hidden);
