@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.14.2] — 2026-11-07
+### Modifié
+- Review › Renommer une image : suggestions NQ / ES (H4, H1, m15, m1, NWOG & 1st m15 / m1, RTH ORG m15 / m1, STDV m1), Exécution théorique et Vraie Exécution ; H4 / H1 / m15 / m5 / m1 seuls retirés.
+
 ## [1.14.1] — 2026-11-07
 ### Modifié
 - Synchro Notion → app : vérification des changements toutes les 5 s (au lieu de 45 s), une seule à la fois.

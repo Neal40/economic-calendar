@@ -2928,7 +2928,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function askName(src, def, sec, title) {
     return new Promise((done) => {
       const ov = document.createElement("div"); ov.className = "nm-ov";
-      const pre = sec && sec !== "Page" ? sec + " " : "", sug = ["H4", "H1", "m15", "m5", "m1", "Exécution théorique", "Vraie exécution"].map((x) => pre + x);
+      const pre = sec && sec !== "Page" ? sec + " " : "", sug = ["NQ H4", "ES H4", "NQ H1", "ES H1", "NQ m15", "ES m15", "NQ m1", "ES m1", "NQ - NWOG & 1st m15", "ES - NWOG & 1st m15", "NQ - NWOG & 1st m1", "ES - NWOG & 1st m1", "NQ - RTH ORG m15", "ES - RTH ORG m15", "NQ - RTH ORG m1", "ES - RTH ORG m1", "NQ - STDV m1", "ES - STDV m1", "Exécution théorique", "Vraie Exécution"].map((x) => pre + x);
       ov.innerHTML = `<div class="nm-box"><b>${esc(title || "Nom de l'image")}</b>${src ? `<img src="${src}" alt="">` : ""}<input value="${esc(def || "")}" placeholder="ex. NQ H1" maxlength="120">
         <div class="nm-sug">${sug.map((x) => `<button data-s="${esc(x)}">${esc(x)}</button>`).join("")}</div>
         <div class="nm-act"><button class="btn gray" data-x>Annuler</button><button class="btn" data-ok>Enregistrer</button></div></div>`;
