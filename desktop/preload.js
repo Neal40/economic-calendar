@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld("desktop", {
   notionAppend: (parent, items) => ipcRenderer.invoke("notion:append", parent, items),
   notionCaption: (id, c) => ipcRenderer.invoke("notion:caption", id, c),
   notionDeleteBlock: (id) => ipcRenderer.invoke("notion:delblock", id),
+  newsWeek: () => ipcRenderer.invoke("news:week"),
   storeGet: () => ipcRenderer.invoke("store:get"),
   storeSet: (d) => ipcRenderer.invoke("store:set", d),
 });

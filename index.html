@@ -591,6 +591,14 @@ table.tbl:has(#subT){min-width:900px}
 .tx-li button{background:#2a2e39;border:none;color:#d1d4dc;border-radius:4px;height:28px;padding:0 9px;margin-left:4px;cursor:pointer}
 .tx-li button:hover{background:#363a45}
 .tx-empty{color:#787b86;padding:12px 0}
+.tx-week{display:flex;gap:6px;margin-bottom:8px}
+.tx-week button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:#131722;border:1px solid #2a2e39;color:#b2b5be;border-radius:6px;padding:6px 0;cursor:pointer;font:inherit}
+.tx-week button b{font-size:16px;color:#fff}
+.tx-week button.on{border-color:var(--tx-acc);background:#2a2e39}
+.tx-imp{display:inline-block;width:4px;height:12px;border-radius:2px;margin-right:8px;vertical-align:-1px}
+.tx-ntip{position:absolute;z-index:5;min-width:220px;max-width:320px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;padding:6px 10px;color:#d1d4dc;font:12px Roboto,sans-serif;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tx-ntip div{padding:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-ntip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .tx-chartwrap[data-cur=dot] *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27%3E%3Ccircle cx=%276%27 cy=%276%27 r=%273%27 fill=%27%23000%27 stroke=%27%23fff%27/%3E%3C/svg%3E") 6 6,crosshair!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
@@ -926,6 +934,7 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
           <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
           <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button>
+          <button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
           <button class="tx-hb" id="btTreeBtn" title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
         <div class="tx-mid">
@@ -1109,6 +1118,7 @@ if(!S.brand||S.brand.handle==="@ton_handle") S.brand={...SEED.brand};
 if((S.seedV||1)<4){ for(const k in LOW){ const cur=S.events[k]||[]; LOW[k].forEach(e=>{ if(!cur.some(c=>c.n===e.n&&c.i==="low")) cur.push(e) }); S.events[k]=cur; } }
 const tOrd=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;return (+m[1]%12+(m[3].toUpperCase()==="PM"?12:0))*60+ +m[2]};
 for(const k in S.events) S.events[k].sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||tOrd(a.t)-tOrd(b.t));
+window.calEvents=k=>(S.events[k]||[]); // utilisé par le backtesteur (news sous les bougies)
 S.seedV=4; SEED.seedV=4;
 if(S.brand&&S.brand.name===undefined){S.brand.name="Neal";} if(S.brand&&!S.brand.notion) S.brand.notion=SEED.brand.notion; S.subs=S.subs||[]; S.bills=S.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 const DS=window.desktop;
@@ -3215,6 +3225,44 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     };
   }
 
+  /* ---------------- v1.7 : news Forex Factory (données du calendrier, heure de New York) ---------------- */
+  const IMPC = { high: "#ef5350", med: "#ff9800", low: "#f7c948" }, IMPN = { high: "fort", med: "moyen", low: "faible" };
+  const dayOf = (t) => { const o = parts(t * 1000); return `${o.year}-${o.month}-${o.day}`; };
+  const evTime = (k, s) => { const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(s || ""); if (!m) return null; return ny(k, (+m[1] % 12) + (m[3].toUpperCase() === "PM" ? 12 : 0), +m[2]); };
+  const dayNews = (k) => (window.calEvents ? window.calEvents(k) : []).filter((e) => !e.k || e.k === "ev").map((e) => ({ ...e, ts: evTime(k, e.t), day: k }));
+  let newsC = { key: "", list: [] }, ffWeek = null;
+  function newsList() { // événements couvrant la journée chargée (passé + à venir)
+    if (!S.raw.length) return [];
+    const key = S.raw[0][0] + "|" + S.raw[S.raw.length - 1][0]; if (newsC.key === key) return newsC.list;
+    const out = []; for (let d = dayOf(S.raw[0][0]), end = dayOf(S.raw[S.raw.length - 1][0]), n = 0; d <= end && n < 400; d = addDays(d, 1), n++) dayNews(d).forEach((e) => { if (e.ts != null) out.push(e); });
+    newsC = { key, list: out.sort((a, b) => a.ts - b.ts) }; return out;
+  }
+  let newsHit = [];
+  function drawNews(g, W, H) {
+    newsHit = []; if (P.news === false) return;
+    const groups = []; newsList().filter((e) => e.i !== "low").forEach((e) => { const x = X(e.ts); if (x == null || x < 0 || x > W) return; const gr = groups.find((q) => Math.abs(q.x - x) < 9); if (gr) gr.ev.push(e); else groups.push({ x, ev: [e] }); });
+    g.save(); g.font = "bold 10px Roboto,sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    groups.forEach((gr) => { const hi = gr.ev.some((e) => e.i === "high"), y = H - 12; g.fillStyle = hi ? IMPC.high : IMPC.med; g.beginPath(); g.arc(gr.x, y, 8, 0, PI2); g.fill(); g.fillStyle = "#fff"; g.fillText(gr.ev.length > 1 ? String(gr.ev.length) : "US", gr.x, y + 0.5); newsHit.push({ x: gr.x, y, ev: gr.ev }); });
+    g.restore();
+  }
+  function newsTip(x, y) {
+    let tip = $("btNewsTip"); if (!tip) { tip = document.createElement("div"); tip.id = "btNewsTip"; tip.className = "tx-ntip"; $("btWrap").append(tip); }
+    const h = newsHit.find((q) => Math.abs(q.x - x) < 10 && Math.abs(q.y - y) < 12);
+    tip.hidden = !h; if (!h) return; tip.innerHTML = h.ev.map((e) => `<div><i style="background:${IMPC[e.i || "med"]}"></i>${hm(e.ts)} · ${esc(e.n)}</div>`).join(""); tip.style.left = Math.max(4, x - 110) + "px"; tip.style.bottom = "34px";
+  }
+  function gotoT(t) { const i = S.raw.findIndex((b) => b[0] >= t); if (i < 0) return msg("Cette news n'est pas dans la journée chargée.", true); if (i > S.cur) step(i - S.cur); else { S.cur = i; draw(); ui(); } }
+  function nextNews() { if (!S.raw.length) return; const t = S.raw[S.cur][0], e = newsList().find((x) => x.ts > t && x.i !== "low"); if (!e) return msg("Plus de news à venir dans la journée chargée."); gotoT(e.ts); msg(`News : ${hm(e.ts)} ${e.n}`); }
+  const ffMatch = (e) => (ffWeek || []).find((f) => { const d = new Date(f.date); return dayOf(d.getTime() / 1000) === e.day && Math.abs(d.getTime() / 1000 - e.ts) < 90 && (f.title || "").toLowerCase().split(/\W+/).filter((w) => w.length > 2).some((w) => e.n.toLowerCase().includes(w)); });
+  async function openNews(day) {
+    day = day || (S.raw.length ? dayOf(S.raw[S.cur][0]) : nyToday()); const wd = new Date(day + "T12:00:00Z").getUTCDay(), mon = addDays(day, wd === 0 ? -6 : 1 - wd);
+    if (!ffWeek && D && D.newsWeek) { const r = await D.newsWeek(); ffWeek = r && r.ok ? r.data : []; }
+    const days = [0, 1, 2, 3, 4].map((i) => addDays(mon, i)), J = ["Lun", "Mar", "Mer", "Jeu", "Ven"], evs = dayNews(day).sort((a, b) => (a.ts ?? -1) - (b.ts ?? -1));
+    const rows = evs.map((e) => { const f = ffMatch(e); return `<div class="tx-li"><div><b><i class="tx-imp" style="background:${IMPC[e.i || "med"]}"></i>${e.ts != null ? hm(e.ts) : esc(e.t || "—")} · ${esc(e.n)}</b><small>Impact ${IMPN[e.i || "med"]}${f ? ` · prévision ${esc(f.forecast || "—")} · précédent ${esc(f.previous || "—")}` : ""}</small></div>${e.ts != null ? `<span><button data-go="${e.ts}">Aller</button></span>` : ""}</div>`; }).join("") || '<div class="tx-empty">Aucune news USD ce jour-là (le calendrier couvre nov. 2026 → déc. 2027).</div>';
+    const m = modal("News · USD (heure de New York)", `<div class="tx-week">${days.map((d, i) => `<button data-day="${d}" class="${d === day ? "on" : ""}">${J[i]}<b>${d.slice(8)}</b></button>`).join("")}</div><div class="r">Afficher les news sous les bougies (Alt+Maj+E) <input type="checkbox" data-np="1" ${P.news !== false ? "checked" : ""}></div><div class="tx-list">${rows}</div>`, `<button data-m="next" class="ghost">News suivante (Maj+W)</button><span class="tx-sp"></span><button data-m="x">Fermer</button>`);
+    m.oninput = (e) => { if (e.target.dataset.np) { P.news = e.target.checked; LS.set("bt-prefs", P); } };
+    m.onclick = (e) => { const b = e.target.closest("[data-day],[data-go],[data-m]"); if (!b) return; if (b.dataset.day) openNews(b.dataset.day); else if (b.dataset.go) { closeModal(); gotoT(+b.dataset.go); } else if (b.dataset.m === "next") { closeModal(); nextNews(); } else if (b.dataset.m === "x") closeModal(); };
+  }
+
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
   let chart = null, cs = null, vs = null, lastKey = "", plines = [];
   function ensureChart() {
@@ -3398,6 +3446,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (pending) list.push(pending);
     for (const s of list) drawShape(g, s, plotW, plotH);
     if (measure) drawMeasure(g, measure);
+    drawNews(g, plotW, plotH);
     g.restore();
   }
   function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
@@ -3646,7 +3695,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
     window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
-    wrap.addEventListener("mousemove", (e) => { wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
+    wrap.addEventListener("mousemove", (e) => { const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
@@ -3835,7 +3884,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
     document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
     $("btNewF").onclick = () => groupSel();
-    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; layName();
+    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); layName();
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
       if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
@@ -3882,6 +3931,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     document.addEventListener("keydown", (e) => {
       const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
       const k = e.key.toLowerCase();
+      if (e.altKey && e.shiftKey && k === "e") { e.preventDefault(); P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); return; }
+      if (e.shiftKey && !e.altKey && !e.ctrlKey && k === "w") { e.preventDefault(); nextNews(); return; }
       if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", c: "xline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
       if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
       else if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }

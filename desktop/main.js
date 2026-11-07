@@ -113,6 +113,12 @@ ipcMain.handle("notion:append", (e, parent, items) => wrap((t) => notion.appendB
 ipcMain.handle("notion:caption", (e, id, c) => wrap((t) => notion.setCaption(t, nfetch, id, c)));
 ipcMain.handle("notion:delblock", (e, id) => wrap((t) => notion.deleteBlock(t, nfetch, id)));
 
+/* ---------- News Forex Factory de la semaine (flux officiel, USD uniquement) : prévision / précédent pour le backtesteur ---------- */
+ipcMain.handle("news:week", async () => {
+  try { const r = await net.fetch("https://nfs.faireconomy.media/ff_calendar_thisweek.json"); if (!r.ok) return { ok: false, reason: "HTTP " + r.status }; return { ok: true, data: (await r.json()).filter((e) => e.country === "USD") }; }
+  catch (e) { return { ok: false, reason: String(e.message || e) }; }
+});
+
 /* ---------- app data (abonnements + factures) : app-data.json ---------- */
 const STORE = () => path.join(app.getPath("userData"), "app-data.json");
 ipcMain.handle("store:get", () => { let data = null; try { data = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch (e) {} return { data, path: STORE() }; });
