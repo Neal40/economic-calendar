@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.14.3] — 2026-11-07
+### Corrigé
+- Synchro Notion : une ligne supprimée dans Notion (ex. un trade) disparaît de l'app en 30 s au plus (comparaison de la liste des lignes toutes les 30 s ; avant, une suppression n'était jamais détectée).
+### Ajouté
+- Tests de la détection des changements Notion (`desktop/notion.test.js`).
+
 ## [1.14.2] — 2026-11-07
 ### Modifié
 - Review › Renommer une image : suggestions NQ / ES (H4, H1, m15, m1, NWOG & 1st m15 / m1, RTH ORG m15 / m1, STDV m1), Exécution théorique et Vraie Exécution ; H4 / H1 / m15 / m5 / m1 seuls retirés.

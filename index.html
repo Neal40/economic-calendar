@@ -2306,14 +2306,17 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   /* --- auto-sync app ⇄ Notion (On/Off). App edits already go to Notion instantly; this pulls Notion edits in. --- */
   const autoOn = () => true; // synchro Notion automatique toujours active (plus de bouton On/Off)
-  let checking = false, lastAuto = 0; // une seule vérification à la fois (si Notion répond lentement)
+  let checking = false, lastAuto = 0, lastIds = 0; // une seule vérification à la fois (si Notion répond lentement)
   async function autoTick() {
     if (!D || !autoOn() || syncing || checking || document.hidden) return;
     const a = document.activeElement; // never refresh under the user's fingers
     if (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return;
     if (document.querySelector(".ov.show, dialog[open]")) return;
     try {
-      checking = true; const r = await D.notionChanged([{ db: ID.macro }, { db: ID.homework }, { page: ID.journal }, { page: ID.wtf }], state.synced); checking = false;
+      // toutes les 30 s : + liste des IDs des bases (détecte les lignes supprimées dans Notion)
+      const ids = Date.now() - lastIds >= 30000, withIds = (db, st) => (ids && st && st.rows && st.rows.every((x) => !String(x._id).startsWith("csv")) ? { db, ids: st.rows.map((x) => x._id) } : { db });
+      if (ids) lastIds = Date.now();
+      checking = true; const r = await D.notionChanged([withIds(ID.macro, state.macro), withIds(ID.homework, state.homework), { page: ID.journal }, { page: ID.wtf }], state.synced); checking = false;
       // au plus une synchro auto toutes les 20 s (les dates Notion à la minute redonnent « changé » pendant ~1 min après une modif)
       if (r && r.ok && r.data && r.data.changed && Date.now() - lastAuto >= 20000) { lastAuto = Date.now(); await sync(); }
     } catch (e) { /* offline: retry next tick */ } finally { checking = false; }

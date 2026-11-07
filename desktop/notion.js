@@ -191,6 +191,12 @@ async function changedSince(token, fetchFn, items, since) {
       const r = await call(`/databases/${it.db}/query`, "POST", { page_size: 1, sorts: [{ timestamp: "last_edited_time", direction: "descending" }] });
       const pg = r.results && r.results[0];
       if (pg && new Date(pg.last_edited_time).getTime() > t) return { changed: true, what: it.db };
+      // ligne supprimée dans Notion : invisible par la date -> comparaison avec la liste des IDs de l'app (it.ids)
+      if (Array.isArray(it.ids)) {
+        const now = []; let cursor;
+        do { const q = await call(`/databases/${it.db}/query?filter_properties=title`, "POST", { page_size: 100, start_cursor: cursor }); (q.results || []).forEach((p) => now.push(p.id)); cursor = q.has_more ? q.next_cursor : undefined; } while (cursor);
+        const had = new Set(it.ids); if (now.length !== had.size || now.some((id) => !had.has(id))) return { changed: true, what: it.db, list: true };
+      }
     } else if (it.page) {
       const pg = await call(`/pages/${it.page}`);
       if (pg && new Date(pg.last_edited_time).getTime() > t) return { changed: true, what: it.page };
