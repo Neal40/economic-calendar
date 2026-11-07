@@ -2,7 +2,7 @@
  * Paste in the topstepx.com/trade page (javascript_tool), then call:
  *   await JARVIS.status()            -> layout, charts, symbols, TSX Sessions present?
  *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
- *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, untaken Asia/London H/L
+ *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, Asian/London High-Low (red trendline 2px, stops where price crosses it)
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
  *   await JARVIS.macros()            -> only macros (XX:50–XX:10, grey) / mini macros (XX:25–XX:35, purple) holding a top/bottom: 2 vertical lines
  *   await JARVIS.nwog()              -> NWOG & 1st: last 5 NWOG + 5 NDOG (10. NWOG / 10. NDOG + 5. RTH Octant), 1st p.FVG 9h30 / Reflection / Silver Bullet (labels dd/mm)
@@ -219,13 +219,18 @@
       const at = t => all.find(b => b.t >= t && b.t < t + 60);
       const mo = at(ny(d, 0, 0)); if (mo) await ray(mo.t, mo.o, 'Midnight Open');
       const o830 = at(ny(d, 8, 30)); if (o830) await ray(o830.t, o830.o, '8H30 Open'); else done.push('8H30 Open : pas encore formé');
-      const t7 = ny(d, 7, 0);
-      for (const s of (await sessionData(sym, d)).filter(s => (s.key === 'asia' || s.key === 'london') && !s.missing)) {
-        const after = all.filter(b => b.t >= s.to && b.t < t7);
-        const name = s.key === 'asia' ? 'Asia' : 'London';
-        if (now() < s.to) continue;
-        if (!after.some(b => b.h > s.hi)) await ray(t7, s.hi, name + ' High', { width: 2, style: 0 });
-        if (!after.some(b => b.l < s.lo)) await ray(t7, s.lo, name + ' Low', { width: 2, style: 0, below: true });
+      // Asian / London High & Low : trendline rouge 2px, texte 12 gras, du point extrême jusqu'à la bougie qui le traverse (sinon jusqu'à maintenant)
+      const RED = '#ff0000', end = Math.min(now(), ny(d, 16, 0));
+      for (const s of (await sessionData(sym, d)).filter(s => (s.key === 'asia' || s.key === 'london') && !s.missing && !s.partial)) {
+        const name = s.key === 'asia' ? 'Asian' : 'London';
+        for (const [side, p, t0, broke] of [['High', s.hi, s.tHi, b => b.h > s.hi], ['Low', s.lo, s.tLo, b => b.l < s.lo]]) {
+          const hit = all.find(b => b.t >= s.to && b.t <= end && broke(b)), t1 = hit ? hit.t : end;
+          ids.push(await c.createMultipointShape([{ time: t0, price: p }, { time: t1, price: p }], {
+            shape: 'trend_line', text: `${name} ${side}`, lock: false,
+            overrides: { linecolor: RED, linewidth: 2, linestyle: 0, extendLeft: false, extendRight: false, showLabel: true, textcolor: RED,
+              fontsize: 12, bold: true, horzLabelsAlign: 'right', vertLabelsAlign: side === 'High' ? 'top' : 'bottom' } }));
+          done.push(`— ${name} ${side} ${p} ${hit ? '(traversé à ' + nyHM(hit.t) + ')' : '(non traversé)'}`);
+        }
       }
       keep(i, 'lines', ids);
       return done;
