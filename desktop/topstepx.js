@@ -123,6 +123,18 @@ async function sync(token, fetchFn, known = []) {
 }
 
 /** 1-minute bars (chart API) for MAE / MFE. sym = "/MNQ", "/MES"… ; from/to in seconds. */
+/** Base locale + résultat d'une synchro → nouvelle base. Rien n'est jamais perdu : un compte ou un trade déjà enregistré
+ *  reste, la synchro ne fait qu'ajouter / mettre à jour (même ID). Un compte que TopstepX ne renvoie plus est archivé. */
+function mergeDb(old, fresh) {
+  old = old || {}; const seen = new Set((fresh.comptes || []).map((c) => String(c["ID TopstepX"])));
+  const comptes = [...(fresh.comptes || [])];
+  for (const c of old.comptes || []) { const id = String(c["ID TopstepX"]); if (seen.has(id)) continue; seen.add(id);
+    comptes.push({ ...c, Archivé: true, Statut: c.Statut === "Actif" ? "Archivé" : c.Statut, "Archivé le": c["Archivé le"] || fresh.syncedAt || null }); }
+  const tk = (t) => String(t["ID TopstepX"]) + "|" + String(t.ID), have = new Set((fresh.trades || []).map(tk));
+  const trades = [...(fresh.trades || []), ...(old.trades || []).filter((t) => !have.has(tk(t)))];
+  return { ...old, ...fresh, comptes, trades };
+}
+
 async function bars(token, fetchFn, sym, from, to) {
   const n = Math.min(5000, Math.ceil((to - from) / 60) + 5);
   const u = "https://chartapi.topstepx.com/History?Symbol=" + encodeURIComponent(sym) + "&Resolution=1&Countback=" + n + "&From=" + from + "&To=" + to;
@@ -131,4 +143,4 @@ async function bars(token, fetchFn, sym, from, to) {
   if (!r.ok) throw new Error("History " + r.status);
   const j = await r.json(); return (j.t || []).map((t, i) => ({ t, h: j.h[i], l: j.l[i] })).filter((b) => b.t >= from - 60 && b.t <= to);
 }
-module.exports = { bars, sync, toRow, buildAccount, targetOf };
+module.exports = { bars, sync, toRow, buildAccount, targetOf, mergeDb };

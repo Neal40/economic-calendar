@@ -1881,7 +1881,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   if (!D) setTimeout(() => dash.load((st && st.comptes) || seed.comptes || null, (st && st.trades) || seed.trades || null), 0);
   else {
     // Desktop app: local database + automatic TopstepX sync
-    document.querySelectorAll(".jimp").forEach((x) => (x.hidden = true));
+    if (!D.journalImport) document.querySelectorAll(".jimp").forEach((x) => (x.hidden = true)); // sinon : import fusionné dans la base locale
     const btn = document.getElementById("jSyncBtn"), out = document.getElementById("jLogout"), login = document.getElementById("jLogin");
     btn.hidden = false; out.hidden = false;
     const apply = (db) => { if (db && db.comptes && db.comptes.length) { login.hidden = true; dash.load(db.comptes, db.trades || []); } };
@@ -1913,8 +1913,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   const imp = (id, key) => document.getElementById(id).addEventListener("change", async (e) => {
     const f = e.target.files[0]; if (!f) return;
-    try { let v = JSON.parse(await f.text()); if (!Array.isArray(v)) v = v.rows || v.data || v.results; if (!Array.isArray(v)) throw 0;
-      key === "comptes" ? dash.load(v, null) : dash.load(null, v); save(); } catch (err) { alertBox("Fichier JSON invalide"); }
+    try { let v = JSON.parse(await f.text()); if (!Array.isArray(v)) v = v.rows || v.data || v.results || v[key]; if (!Array.isArray(v)) throw 0;
+      const DK = window.desktop;
+      if (DK && DK.journalImport) { const r = await DK.journalImport(key, v); if (!r.ok) return alertBox("Import impossible : " + r.reason); dash.load(r.db.comptes, r.db.trades || []); alertBox(`Import fusionné dans la base locale : +${r.added.comptes} compte(s), +${r.added.trades} trade(s).`); }
+      else { key === "comptes" ? dash.load(v, null) : dash.load(null, v); save(); } } catch (err) { alertBox("Fichier JSON invalide"); }
     e.target.value = "";
   });
   const alertBox = (t) => { document.getElementById("jSync").textContent = t; };

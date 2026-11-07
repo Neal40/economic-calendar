@@ -61,9 +61,9 @@ async function doSync(interactive) {
         if (!token) return { ok: false, reason: "login", db: readDb() };
         data = await topstepx.sync(token, sfetch, known);
       }
-      if (data.keepIds && data.keepIds.length) data.trades.push(...(old.trades || []).filter((t) => data.keepIds.includes(String(t["ID TopstepX"]))));
       delete data.keepIds;
       if (!data.comptes.length && (old.comptes || []).length) throw new Error("TopstepX n'a renvoyé aucun compte — base locale conservée");
+      data = topstepx.mergeDb(old, data); // la synchro ajoute / met à jour, elle ne supprime jamais rien
       writeDb(data);
       return { ok: true, db: data };
     } catch (e) { return { ok: false, reason: String(e.message || e), db: readDb() }; }
@@ -82,6 +82,17 @@ ipcMain.handle("journal:addIds", async (e, ids) => {
   fs.writeFileSync(XFILE(), JSON.stringify([...L])); return doSync(true);
 });
 ipcMain.handle("journal:sync", (e, interactive) => doSync(!!interactive));
+/* import manuel de comptes.json / trades.json : fusionné dans la base locale (rien d'existant n'est remplacé ni supprimé) */
+ipcMain.handle("journal:import", async (e, kind, rows) => {
+  if (!["comptes", "trades"].includes(kind) || !Array.isArray(rows)) return { ok: false, reason: "format" };
+  rows = rows.filter((r) => r && typeof r === "object" && r["ID TopstepX"] != null && (kind === "comptes" || r.ID != null));
+  if (!rows.length) return { ok: false, reason: "aucune ligne avec « ID TopstepX »" + (kind === "trades" ? " et « ID »" : "") };
+  if (syncing) await syncing.catch(() => {});
+  const cur = readDb(), before = { c: (cur.comptes || []).length, t: (cur.trades || []).length };
+  const db = topstepx.mergeDb({ comptes: kind === "comptes" ? rows : [], trades: kind === "trades" ? rows : [] }, { syncedAt: cur.syncedAt || null, ...cur, comptes: cur.comptes || [], trades: cur.trades || [] });
+  writeDb(db);
+  return { ok: true, db, added: { comptes: db.comptes.length - before.c, trades: db.trades.length - before.t } };
+});
 ipcMain.handle("journal:logout", async () => {
   await session.fromPartition(PART).clearStorageData();
   if (loginWin && !loginWin.isDestroyed()) loginWin.loadURL("https://www.topstepx.com/login");
