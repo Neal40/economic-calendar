@@ -877,7 +877,7 @@ table.tbl:has(#subT){min-width:900px}
 
   <div class="tsx-card"><div class="tsx-h">Trades</div>
     <div class="tsx-tw"><table class="tsx-t">
-      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>RR parfait</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th><th style="text-align:center">Tags</th><th style="text-align:center">Images</th></tr></thead>
+      <thead><tr><th>ID</th><th>Contract</th><th>Size</th><th>Entry Time</th><th>Exit Time</th><th>Duration</th><th>Entry Price</th><th>Exit Price</th><th>P&amp;L</th><th>Commissions</th><th>Fees</th><th>Direction</th></tr></thead>
       <tbody data-draw="rows"></tbody>
       <tfoot data-draw="tfoot"></tfoot>
     </table></div>
@@ -2223,19 +2223,16 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (const t of [...T].sort((a, b) => String(b.Entry).localeCompare(String(a.Entry))).slice(pg * rpp, pg * rpp + rpp)) {
       const tr = document.createElement("tr"); const cell = (txt, cls) => { const td = document.createElement("td"); td.textContent = txt; if (cls) td.className = cls; tr.append(td); };
       cell(t.ID); cell(t.Contract); cell(String(t.Size)); cell(fts(t.Entry)); cell(fts(t.Exit)); cell(fdur(t["Duration (s)"])); cell(px2(t["Entry Price"])); cell(px2(t["Exit Price"]));
-      { const rr = window.jmeta ? jmeta.rrTheo(t.ID) : null; cell(rr === null ? "—" : rr.toFixed(2) + " R", rr === null ? "" : rr > 0 ? "up" : rr < 0 ? "dn" : ""); }
       cell(m2(t["P&L"]), t["P&L"] > 0 ? "up" : t["P&L"] < 0 ? "dn" : ""); cell(m2(-t.Commissions), "dn"); cell(m2(-t.Fees), "dn"); cell(t.Direction);
-      if (window.jmeta) { const tg = document.createElement("td"); tg.className = "tg"; tg.innerHTML = jmeta.pillHTML(t.ID); tg.title = "Tags"; tg.onclick = () => jmeta.openTags(t);
-        const im = document.createElement("td"); im.className = "im"; const n = jmeta.imgCount(t.ID); im.textContent = n ? "🖼 " + n : "-"; im.title = "Images"; im.onclick = () => jmeta.openImages(t); tr.append(tg, im); }
       tb.append(tr); }
   });
   dash.draw("tfoot", (tf) => {
     tf.replaceChildren(); const T = fills(); if (!T || !T.length) return;
     const sz = d3.sum(T, (t) => t.Size), pl = d3.sum(T, (t) => t["P&L"]), co = d3.sum(T, (t) => t.Commissions), fe = d3.sum(T, (t) => t.Fees);
     const tr = document.createElement("tr"); const cell = (txt, cls) => { const td = document.createElement("td"); td.textContent = txt; if (cls) td.className = cls; tr.append(td); };
-    cell("Total · " + T.length + " trades"); cell(""); cell(String(sz)); for (let i = 0; i < 6; i++) cell("");
+    cell("Total · " + T.length + " trades"); cell(""); cell(String(sz)); for (let i = 0; i < 5; i++) cell("");
     cell(m2(pl), pl > 0 ? "up" : pl < 0 ? "dn" : ""); cell(m2(-co), "dn"); cell(m2(-fe), "dn");
-    const net = Math.round((pl - co - fe) * 100) / 100; cell("Net " + usd(net), net >= 0 ? "up" : "dn"); cell(""); cell("");
+    const net = Math.round((pl - co - fe) * 100) / 100; cell("Net " + usd(net), net >= 0 ? "up" : "dn");
     tf.append(tr);
   });
   dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
