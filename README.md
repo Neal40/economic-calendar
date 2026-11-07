@@ -1,51 +1,62 @@
-# Inner Circle Trader · New York Time (ET)
+# Inner Circle Trader
 
-USD economic calendar — the month at a glance: news, NYSE holidays and key earnings.
-One self-contained page (`index.html`), no build step, no dependencies.
+Application de trading personnelle pour les futures **NQ / ES** (prop firm TopstepX) : calendrier économique USD en heure de New York, journal de trading, review Notion, **backtesteur façon TopstepX / FXReplay** et trade copier Tradovate — en site web et en application Windows.
 
-## Features
-- Sidebar menu: **Laboratoire** (Calendrier Économique, FinancialJuice live news, Journal de trading = Stats TopstepX, with 2 tabs: Stats TopstepX + Journal de Neal (Notion Macro, linked to the TopstepX trades taken at the same time); Review = Notion « What to focus on ? ») and **Paramètres** (Profil, Abonnement, Factures)
-- FinancialJuice: official headlines widget (live). Works on GitHub Pages and in the .exe
-- Journal de trading: TopstepX stats per account (KPIs, balance vs MLL, daily P&L, duration / win-rate analysis, P&L calendar, trades table). In the Windows app the data is synced automatically from TopstepX (sign in once; local database `journal-db.json` in the app data folder, auto-sync at launch and every 5 min). On the website: import `comptes.json` / `trades.json`. No account data in this repo
-- Journal: Hexagone de performance (Winrate, RR, DD, Positions, Risque — account vs average of your accounts), Tags popup (attributes of the Notion « Respect du plan » base), Images popup (NQ/ES H4 … Vraie Exécution, paste / drop), RR théorique column (from Entrée / Stop / TP théoriques). Tags & images stay local (export / import JSON)
-- Review: synced from Notion in the Windows app (official API, your own integration secret, read-only, stored encrypted). Notion views reproduced (Trades, In, Review & Paper calendars, Statistiques table, Status / PD Array / Time donuts, Prise de liquidité, RR /Month, MAE, MFE columns) + Analyse: winrate / RR by Time, PD Array M1, liquidity, Status, filters, page view with images. Add / edit / delete Homework items (from the Notion templates) and Macro setups, written back to Notion (integration needs Read + Update + Insert capabilities). Web: import the Notion CSV export
-- Abonnement: recurring costs (monthly / yearly, € and $), next due date
-- Factures: expenses by year, category, currency
-- Monthly Mon–Fri grid with week labels (auto-generated or editable)
-- High / medium / low impact news (low = yellow, Forex Factory), earnings (☾ after close, ✳ pre-market, ◌ time TBD)
-- NYSE holidays computed for any year: **CLOSED**, **EARLY CLOSE**, **BANK HOLIDAY** with footnotes
-- Click a day to add / edit / delete events; click a week label to rename it
-- Filters (High / Medium / Earnings), custom handle and logo
-- Changes saved in the browser (localStorage) + JSON export / import
+![Backtesteur](docs/backtesteur.png)
 
-## Data coverage
-| Period | Sources |
-|---|---|
-| Nov – Dec 2026 | Forex Factory (USD high & medium impact), Nasdaq earnings, NYSE |
-| Jan – Dec 2027 | Federal Reserve (FOMC), BLS (NFP, CPI, PPI, ECI), BEA (GDP, Core PCE), Census (Retail Sales), NYSE |
+## Fonctionnalités
 
-Notes for 2027:
-- Unemployment Claims: every Thursday (Wednesday when Thursday is a market holiday).
-- ISM PMIs are marked **(est.)**: computed with the usual rule (Manufacturing = 1st business day, Services = 3rd).
-- FOMC Minutes: 3 weeks after each decision, 2:00 PM ET.
-- JOLTS, UoM and 2027 earnings are not included yet (not published at the time of writing).
+- **Calendrier économique USD** — news à impact fort / moyen / faible, résultats d'entreprises, jours fériés NYSE, tout en heure de New York (ET).
+- **Backtesteur** — replay minute par minute de NQ / ES (données TopstepX depuis juillet 2023), compte démo 50K avec règles MLL / DLL, ordres marché / limite / stop, TP/SL glissables avec P&L affiché.
+  - ~85 outils de dessin (Fibonacci, Gann, figures harmoniques, Elliott, positions long/short, profils de volume…), favoris et barre de favoris, raccourcis FXReplay.
+  - Arborescence des objets (groupes, renommer, glisser-déposer, multi-sélection, clic droit).
+  - Préférences du chart, **sessions de backtest enregistrées**, **mises en page** avec dessins propres et sauvegarde automatique.
+  - News Forex Factory sous les bougies, 2 charts côte à côte (NQ + ES).
+  - Une unité de temps = son propre CSV (`NQ_m15.csv`, `NQ_H1.csv`…).
+- **Journal de trading** — statistiques TopstepX par compte, calendrier P&L, graphiques, images et tags.
+- **Review Notion** — lecture et écriture dans tes bases Notion (journal, homework).
+- **Trade copier Tradovate** — copie leader → followers (mode simulation par défaut).
+- **Sauvegardes automatiques** quotidiennes de toutes les données (14 jours gardés).
 
-All times are New York time (ET).
+## Technologies
 
-## Files
-- `index.html` — the app (data embedded)
-- `data/events.json` — the same events as plain JSON (`YYYY-MM-DD` → list of events)
-- `desktop/` — Electron project for the Windows .exe (`topstepx.js` = TopstepX sync + stats)
-- `scripts/generate_2027.py` — script that builds the 2027 events from the official release dates
+- HTML / CSS / JavaScript sans framework ni bundler (un seul `index.html`)
+- [Lightweight Charts](https://github.com/tradingview/lightweight-charts) (TradingView) et [d3](https://d3js.org)
+- [Electron](https://www.electronjs.org) + electron-builder pour l'application Windows
+- Node.js 22 (tests avec `node --test`), Python pour les scripts de données
+- GitHub Actions (build de l'exe et release) + GitHub Pages (site)
 
-Event format: `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
+## Installation et lancement
 
-## Windows app (.exe)
-Download from **Releases → latest**: `Inner Circle Trader Setup.exe` (installer) or `Inner Circle Trader.exe` (portable, no install).
-The `.exe` is built automatically by GitHub Actions (`.github/workflows/build-exe.yml`) on every change to `index.html` or `desktop/`.
-It is an Electron wrapper around the same `index.html`, with fonts bundled so it works offline.
+**Utiliser l'app :** télécharger `Inner.Circle.Trader.exe` dans les [Releases](https://github.com/Neal40/economic-calendar/releases/latest), le renommer `Inner Circle Trader.exe` et le lancer (portable, pas d'installation). La version web est sur [GitHub Pages](https://neal40.github.io/economic-calendar/).
 
-Build locally on Windows: `cd desktop && npm ci && npm run dist` → `desktop/dist/`.
+**Développer :**
 
-## Run
-Open `index.html` in a browser. To host it, enable **GitHub Pages** (Settings → Pages → Deploy from branch `main`, folder `/`).
+```bash
+git clone https://github.com/Neal40/economic-calendar.git
+cd economic-calendar/desktop
+npm ci
+npm run ict              # build rapide de l'exe, copié sur le Bureau (Inner Circle Trader)
+npm run dist             # build compressé, comme la release
+node --test              # tests (copier, données de marché, sauvegardes)
+node ../tools/check.js   # vérification syntaxe + contrat IPC
+```
+
+La version web s'ouvre directement : `index.html` dans un navigateur (aucune installation).
+
+## Origine des données
+
+| Donnée | Source | Clé nécessaire |
+|---|---|---|
+| Calendrier économique | Forex Factory (événements embarqués) + dates officielles Fed / BLS / BEA / Census (`scripts/generate_2027.py`) | non |
+| Prévision / précédent de la semaine | Flux officiel Forex Factory (`nfs.faireconomy.media`) | non |
+| Bougies m1 / 1 s | TopstepX, avec ta propre session (connexion dans l'app) | non (session TopstepX) |
+| Journal de trading | TopstepX (ta session) | non |
+| Review | API Notion officielle | **oui** : token d'intégration Notion, saisi dans l'app, chiffré (`safeStorage`) |
+| Trade copier | API Tradovate | identifiants Tradovate saisis dans l'app, chiffrés |
+
+Aucune donnée de compte n'est stockée dans ce dépôt.
+
+## Versions
+
+Le projet suit le [versionnage sémantique](https://semver.org/lang/fr/) (`MAJEUR.MINEUR.CORRECTIF`). La version est celle de `desktop/package.json`, chaque version publiée est marquée par un tag `vX.Y.Z`, et l'historique est dans le [CHANGELOG](CHANGELOG.md). Chaque push sur `main` reconstruit l'exe et met à jour la release `latest`.

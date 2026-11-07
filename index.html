@@ -605,6 +605,7 @@ table.tbl:has(#subT){min-width:900px}
 #btChart2{position:absolute;inset:0;z-index:0}
 .tx-cw2{border-left:2px solid #2a2e39}
 .tx-tb.on{color:var(--tx-acc)}
+.tx-head{overflow-x:auto;scrollbar-width:thin}
 #btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .tx-chartwrap.drawing #btDraw{pointer-events:auto;cursor:crosshair}
 .tx-legend{position:absolute;left:8px;top:6px;z-index:3;pointer-events:none;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#131722;white-space:nowrap}
@@ -951,6 +952,7 @@ table.tbl:has(#subT){min-width:900px}
             <i></i>
             <button id="btDelAll" title="Supprimer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M8.5 9.5h11l-1 13h-9zm-2 0h15M11.5 9.5v-2h5v2m-4 3v7m3-7v7"/></svg></button>
             <span class="tx-sp"></span>
+            <button id="btTreeBtn2" title="Arborescence des objets"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
             <button id="btFavBtn" class="tg" title="Barre de favoris"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button>
           </div>
           <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
@@ -3202,7 +3204,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const setTfBtns = () => document.querySelectorAll("#btTfs [data-tf]").forEach((b) => b.classList.toggle("on", +b.dataset.tf === S.tf));
   async function openSession(s) {
     play(false); $("btSym").value = s.sym; S.sym = s.sym; $("btDate").value = s.day; $("btStart").value = s.start || "09:30"; S.tf = s.tf || 1; setTfBtns();
-    A = JSON.parse(JSON.stringify(s.acc)); markers = s.markers || []; saveAcc(); LS.set("bt-draw-" + s.sym, s.shapes || []); LS.set("bt-draw-" + s.sym + "-f", s.folders || []);
+    A = JSON.parse(JSON.stringify(s.acc)); markers = s.markers || []; saveAcc(); LS.set(dkey(), s.shapes || []); LS.set(dkey() + "-f", s.folders || []);
     await load(); if (s.t != null && S.raw.length) { const i = S.raw.findIndex((b) => b[0] >= s.t); if (i >= 0) { S.cur = S.done = i; } }
     draw(true); ui(); msg(`Session « ${s.name} » ouverte (${s.day} ${s.t != null ? hm(s.t) : ""}).`);
   }
@@ -3233,7 +3235,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   async function applyLayout(l) {
     setCur(l.id); if (l.prefs) { P = { ...PDEF, ...l.prefs }; LS.set("bt-prefs", P); applyPrefs(); }
-    $("btSym").value = l.sym; S.tf = l.tf || 1; setTfBtns(); if (l.shapes) { LS.set("bt-draw-" + l.sym, l.shapes); LS.set("bt-draw-" + l.sym + "-f", l.folders || []); }
+    $("btSym").value = l.sym; S.tf = l.tf || 1; setTfBtns(); const lk = "bt-draw-" + l.id + "-" + l.sym; if (l.shapes && localStorage.getItem(lk) == null) { LS.set(lk, l.shapes); LS.set(lk + "-f", l.folders || []); }
     if (D && D.dataRead) await load(); else { S.sym = l.sym; loadDrawings(); draw(true); } msg(`Mise en page « ${l.name} » ouverte.`);
   }
   function openLayouts() {
@@ -3456,7 +3458,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const defStyle = (type) => ({ color: type === "rect" ? "#9c27b0" : type === "fib" ? "#787b86" : "#2962ff", width: type === "rect" || type === "fib" ? 1 : 2, dash: 0, fill: "rgba(156,39,176,0.2)", extL: false, extR: false, textColor: "#131722", fontSize: 12, labels: true,
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
-  const dkey = () => "bt-draw-" + (S.sym || "NQ");
+  const dkey = () => "bt-draw-" + (curLay ? curLay + "-" : "") + (S.sym || "NQ"); // chaque mise en page a ses propres dessins
   /* groupes (dossiers) de l'arborescence, par symbole ; un dessin y appartient via s.folder */
   let folders = [], msel = new Set(), clip = null;
   const fkey = () => dkey() + "-f";
@@ -3939,7 +3941,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
     document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
     $("btNewF").onclick = () => groupSel();
-    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName();
+    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName(); $("btTreeBtn2").onclick = () => $("btTreeBtn").click();
+    setInterval(() => { if (!curLay) return; const L = layouts(), i = L.findIndex((x) => x.id === curLay); if (i >= 0) { L[i] = layoutSnap(L[i]); saveList("bt-layouts", L); } }, 5000); // sauvegarde auto de la mise en page
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
       if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
