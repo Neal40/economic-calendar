@@ -17,6 +17,7 @@
       "topstepx.js",
       "notion.js",
       "marketdata.js",
+      "copier.js",
       "app/**/*"
     ],
     "win": {

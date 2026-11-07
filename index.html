@@ -255,6 +255,12 @@ body{background:#060607}
 .bt-bar select,.bt-bar input,.bt-trade input{background:#fff;border:1px solid #c5c8d0;border-radius:6px;padding:5px 7px;font-size:13px}
 .bt-play{display:flex;gap:4px}.bt-clock{font-family:'Space Mono',monospace;font-size:13px;margin-left:auto}
 .bt-msg{font-size:12.5px;color:var(--muted);min-height:18px}.bt-canvas{width:100%;height:min(62vh,600px);border-radius:10px;display:block;background:#0e1116}
+.cp-state{font-family:'Space Mono',monospace;font-size:12.5px;align-self:center;color:var(--muted)}.cp-state.sim{color:#f0b90b}.cp-state.live{color:#26a69a}
+.cp-warn{background:#2a2110;border:1px solid #5c4515;color:#f0d9a0;border-radius:8px;padding:10px 12px;font-size:13px;margin:10px 0}
+.cp-opts{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:13px;margin:8px 0}.cp-opts input,.cp-opts select,.cp-t input,.cp-t select{background:var(--card);color:var(--fg,inherit);border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-size:13px}.cp-t input::placeholder{color:var(--mut)}
+.cp-t input{width:100%}.cp-h{font-size:15px;margin:20px 0 6px}.cp-h small{font-weight:400;color:var(--muted);font-size:12px}
+.cp-pos{font-size:13px;line-height:1.7}.cp-log{background:#0e1116;color:#c9ccd3;font-family:'Space Mono',monospace;font-size:12px;border-radius:8px;padding:10px;height:260px;overflow:auto}
+.cp-warn b{color:#fff}.cp-l.cp-warn{color:#f0b90b;background:none;border:none;padding:0;margin:0}.cp-error{color:#ff8a8a}
 .bt-tools{display:flex;gap:8px;align-items:center;margin:6px 0}.bt-tools .on{background:#f0b90b!important;color:#111!important}.bt-hint{font-size:12px;color:var(--muted)}
 .bt-buy{background:#1f8f5f!important;color:#fff!important}.bt-sell{background:#c0392b!important;color:#fff!important}.bt-pnl{font-size:13px}
 .bt-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}.bt-table th,.bt-table td{border-bottom:1px solid #e3e5ea;padding:5px 8px;text-align:left}
@@ -470,6 +476,48 @@ table.tbl:has(#subT){min-width:900px}
 .rv-gtools{display:flex;gap:6px}
 .rv-gtools button{background:#23242b;border:1px solid #2f3038;color:#d9dae0;border-radius:7px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
 .rv-gtools button.del{color:#ff8a8a}
+#v-backtest .tx{display:flex;flex-direction:column;height:100vh;background:#0b0d10;color:#d6d8de;font-family:Roboto,'Segoe UI',sans-serif;font-size:12.5px}
+.tx-top,.tx-bar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid #1f232b;flex-wrap:wrap}
+.tx-top{background:#0b0d10}.tx-bar{background:#0f1115}
+.tx-acc select,.tx-sym,.tx-in{background:#14171d;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:5px 8px;font-size:12.5px;font-weight:600}
+.tx-kpi{background:#14171d;border:1px solid #23272f;border-radius:4px;padding:6px 10px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tx-kpi.pos{background:#1f6f43;border-color:#1f6f43}.tx-kpi.neg{background:#7a2323;border-color:#7a2323}
+.tx-dll{display:inline-block;width:90px;height:6px;background:#2a2e39;border-radius:3px;overflow:hidden}.tx-dll i{display:block;height:100%;width:0;background:#e0a106}
+.tx-mini{background:#14171d;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:5px 9px;cursor:pointer;font-size:12px}.tx-mini.on{background:#2962ff;border-color:#2962ff;color:#fff}
+.tx-sp{flex:1}.tx-sep{width:1px;height:20px;background:#2a2e39;margin:0 4px}.tx-data{font-size:11px;color:#8a8f98;max-width:430px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-tfs button{background:none;border:none;color:#d6d8de;padding:5px 7px;cursor:pointer;font-size:12.5px;border-radius:4px}.tx-tfs button.on{color:#f0b90b}.tx-tfs button:hover{background:#1c2028}
+.tx-ic{background:none;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:4px 8px;cursor:pointer}.tx-play{background:#2962ff;border-color:#2962ff;color:#fff}
+.tx-clock{font-family:'Space Mono',monospace;font-size:12.5px}.tx-msg{font-size:11.5px;color:#8a8f98;padding:3px 12px;min-height:18px}
+.tx-body{flex:1;display:flex;min-height:0}
+.tx-tools{width:46px;background:#0f1115;border-right:1px solid #1f232b;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0}
+.tx-tools button{width:36px;height:34px;background:none;border:none;color:#d6d8de;font-size:16px;border-radius:5px;cursor:pointer}
+.tx-tools button:hover{background:#1c2028}.tx-tools button.on{background:#e0a106;color:#111}.tx-tools i{width:28px;height:1px;background:#2a2e39;margin:6px 0}
+.tx-chartwrap{flex:1;position:relative;min-width:0}#btChart{position:absolute;inset:0;z-index:0}#btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.tx-chartwrap.drawing #btDraw{pointer-events:auto;cursor:crosshair}
+.tx-tree{width:220px;background:#0f1115;border-left:1px solid #1f232b;overflow:auto}.tx-th{padding:8px 10px;font-weight:700;border-bottom:1px solid #1f232b}
+.tx-tree .row{display:flex;align-items:center;gap:6px;padding:5px 10px;cursor:pointer;border-bottom:1px solid #15181e}.tx-tree .row.sel{background:#1c2a4a}
+.tx-tree .row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tx-tree .row button{background:none;border:none;color:#9aa0aa;cursor:pointer;padding:0 2px}
+.tx-order{width:200px;background:#0f1115;border-left:1px solid #1f232b;padding:8px;display:flex;flex-direction:column;gap:7px;overflow:auto}
+.tx-oh{font-weight:700;border-bottom:2px solid #e0a106;padding-bottom:5px;width:max-content}
+.tx-f{display:flex;flex-direction:column;gap:2px;font-size:10px;color:#9aa0aa}.tx-f select,.tx-f input,.tx-brk input{background:#0b0d10;border:1px solid #3a3f4b;color:#fff;border-radius:4px;padding:7px 8px;font-size:14px;font-weight:600;width:100%}
+.tx-ba{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #2a2e39;border-radius:4px;text-align:center;font-size:10.5px}
+.tx-ba div{padding:6px 2px;display:flex;flex-direction:column}.tx-ba div:nth-child(2){border-left:1px solid #2a2e39;border-right:1px solid #2a2e39;justify-content:center;font-size:12px}
+.tx-posl{text-align:center;font-weight:700;font-size:11px;padding:4px 0}
+.tx-qs{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.tx-qs button{min-width:26px;height:24px;border-radius:12px;border:none;background:#3a3f4b;color:#fff;font-size:11px;cursor:pointer}
+.tx-brk{display:flex;gap:6px}.tx-brk label{font-size:10px;color:#9aa0aa;display:flex;flex-direction:column;gap:2px}
+.tx-buy,.tx-sell,.tx-2 button{border:none;border-radius:4px;padding:9px 4px;font-weight:700;font-size:11px;cursor:pointer;color:#fff}
+.tx-buy{background:#2e9e5b}.tx-sell{background:#d63b3b}.tx-2{display:flex;gap:4px}.tx-2 button{flex:1;background:#3a3f4b}
+.tx-bottom{height:160px;border-top:1px solid #1f232b;background:#0f1115;display:flex;flex-direction:column}
+.tx-tabs{display:flex;gap:2px;padding:4px 8px;border-bottom:1px solid #1f232b}.tx-tabs button{background:none;border:none;color:#9aa0aa;padding:4px 10px;cursor:pointer;font-weight:600}.tx-tabs button.on{color:#fff;border-bottom:2px solid #e0a106}
+.tx-tbl{flex:1;overflow:auto}.tx-tbl table{width:100%;border-collapse:collapse;font-size:12px}.tx-tbl th,.tx-tbl td{padding:4px 10px;border-bottom:1px solid #1a1d24;text-align:left}.tx-tbl th{color:#8a8f98;font-weight:600}
+.tx-tbl button{background:#3a3f4b;border:none;color:#fff;border-radius:3px;padding:2px 7px;cursor:pointer}
+.tx-set{background:#14171d!important;color:#e3e5ea;width:min(460px,100%)!important}.tx-set h2{font-size:17px}
+.tx-st{display:flex;gap:4px;border-bottom:1px solid #2a2e39;margin-bottom:10px}.tx-st button{background:none;border:none;color:#9aa0aa;padding:6px 10px;cursor:pointer}.tx-st button.on{color:#fff;border-bottom:2px solid #2962ff}
+.tx-set .r{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 0;font-size:13px}.tx-set input,.tx-set select,.tx-set textarea{background:#0b0d10!important;color:#fff!important;border:1px solid #3a3f4b!important;width:auto!important}
+.tx-set .lv{display:grid;grid-template-columns:20px 70px 40px;gap:6px;align-items:center;margin:3px 0}.tx-set .lvs{max-height:220px;overflow:auto}
+.tx-set .actions{display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px}.tx-set .ghost{background:#2a2e39;color:#fff;border:none;border-radius:6px;padding:7px 10px;cursor:pointer}.tx-set .primary{background:#2962ff;color:#fff;border:none;border-radius:6px;padding:7px 14px;cursor:pointer}
+#v-backtest .page{padding:0}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -485,6 +533,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav" data-go="journal"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal de trading</span></button>
       <button class="nav sub" data-go="review"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Review</span></button>
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
+      <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
     </div></div>
   <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
@@ -698,30 +747,94 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div id="rvBody"></div>
 </div></section>
-<section class="view" id="v-backtest"><div class="page" style="max-width:none;padding:26px 28px 60px">
-  <div class="jtop"><div><h2>Backtesteur</h2><p class="lead" style="margin:0"><span id="btData"></span></p></div>
-    <div class="bt-actions"><button class="btn" id="btSync">⟳ Synchroniser les données</button><button class="btn gray" id="btImport">Importer un CSV</button><button class="btn gray" id="btDir">📂 Dossier</button><input type="file" id="btFile" accept=".csv,.txt" hidden></div></div>
-  <div class="bt-bar">
-    <label>Actif <select id="btSym"><option value="NQ">NQ (NQZ26)</option><option value="ES">ES (ESZ26)</option><option value="CSV">CSV importé</option></select></label>
-    <label>Date <input type="date" id="btDate"></label>
-    <label>Départ (NY) <input type="time" id="btStart" value="09:30"></label>
-    <button class="btn" id="btLoad">Charger</button>
-    <label>UT <select id="btTf"><option value="1">1m</option><option value="5">5m</option><option value="15">15m</option><option value="60">1h</option></select></label>
-    <span class="bt-play"><button class="btn gray" id="btReset" title="Recommencer">⏮</button><button class="btn gray" id="btPrev" title="Bougie précédente (←)">◀</button><button class="btn" id="btPlay" title="Lecture / pause (espace)">▶</button><button class="btn gray" id="btNext" title="Bougie suivante (→)">▶|</button></span>
-    <label>Vitesse <select id="btSpeed"><option value="1">1 bougie/s</option><option value="2" selected>2/s</option><option value="5">5/s</option><option value="10">10/s</option><option value="30">30/s</option></select></label>
-    <span id="btClock" class="bt-clock"></span>
+<section class="view" id="v-backtest"><div class="tx">
+  <div class="tx-top">
+    <div class="tx-acc"><select id="btAcc"><option>50K Démo · Backtest</option></select></div>
+    <div class="tx-kpi">BAL: <b id="kBal">$50,000.00</b></div><div class="tx-kpi">MLL: <b id="kMll">$48,000.00</b></div>
+    <div class="tx-kpi" id="kRpW">RP&amp;L: <b id="kRp">$0.00</b></div><div class="tx-kpi" id="kUpW">UP&amp;L: <b id="kUp">$0.00</b></div>
+    <div class="tx-kpi">DLL: <b id="kDl">$0.00</b><span class="tx-dll"><i id="kDlBar"></i></span><b>$1,000.00</b></div>
+    <button class="tx-mini" id="btAccReset" title="Remettre le compte démo à 50 000 $">Reset</button>
+    <span class="tx-sp"></span>
+    <span id="btData" class="tx-data"></span>
+    <button class="tx-mini" id="btSync" title="Télécharger les bougies TopstepX">⟳ Données</button><button class="tx-mini" id="btImport">Importer CSV</button><button class="tx-mini" id="btDir">📂</button><input type="file" id="btFile" accept=".csv,.txt" hidden>
   </div>
-  <div id="btMsg" class="bt-msg"></div>
-  <div class="bt-tools"><button class="btn gray" id="btLine" title="Clique ensuite sur la chart pour poser une ligne horizontale">— Ligne horizontale</button><button class="btn gray" id="btClear">Effacer les lignes</button><button class="btn gray" id="btFit">Tout afficher</button><span class="bt-hint">Glisser = déplacer · molette = zoom · double-clic sur l’axe des prix = échelle auto</span></div>
-  <div id="btChart" class="bt-canvas"></div>
-  <div class="bt-trade">
-    <label>Contrats <input type="number" id="btQty" value="1" min="1" style="width:64px"></label>
-    <label>$ / point <input type="number" id="btPv" value="20" style="width:70px"></label>
-    <button class="btn bt-buy" id="btBuy">Buy (b)</button><button class="btn bt-sell" id="btSell">Sell (s)</button><button class="btn gray" id="btFlat">Clôturer (f)</button>
-    <span id="btPnl" class="bt-pnl"></span>
+  <div class="tx-bar">
+    <select id="btSym" class="tx-sym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV importé</option></select>
+    <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">D</button></span>
+    <span class="tx-sep"></span>
+    <input type="date" id="btDate" class="tx-in"><input type="time" id="btStart" value="09:30" class="tx-in" title="Heure de départ (New York)">
+    <button class="tx-mini on" id="btLoad">Charger</button>
+    <span class="tx-sep"></span>
+    <button class="tx-ic" id="btReset" title="Recommencer">⏮</button><button class="tx-ic" id="btPrev" title="Bougie précédente (←)">◀</button><button class="tx-ic tx-play" id="btPlay" title="Lecture / pause (Espace)">▶</button><button class="tx-ic" id="btNext" title="Bougie suivante (→)">▶|</button>
+    <select id="btSpeed" class="tx-in"><option value="1">1×</option><option value="2" selected>2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
+    <span class="tx-sp"></span><span id="btClock" class="tx-clock"></span>
+    <button class="tx-ic" id="btTreeBtn" title="Arborescence des objets">☰</button>
   </div>
-  <table class="bt-table"><thead><tr><th>#</th><th>Sens</th><th>Qté</th><th>Entrée</th><th>Prix</th><th>Sortie</th><th>Prix</th><th>Points</th></tr></thead><tbody id="btTrades"></tbody></table>
+  <div id="btMsg" class="tx-msg"></div>
+  <div class="tx-body">
+    <div class="tx-tools" id="btTools">
+      <button data-tool="cross" class="on" title="Curseur (Échap)">✛</button>
+      <button data-tool="trend" title="Ligne de tendance (Alt+T)">╱</button>
+      <button data-tool="hline" title="Ligne horizontale (Alt+H)">―</button>
+      <button data-tool="hray" title="Demi-droite horizontale (Alt+J)">⟶</button>
+      <button data-tool="vline" title="Ligne verticale (Alt+V)">│</button>
+      <button data-tool="rect" title="Rectangle (Alt+Shift+R)">▭</button>
+      <button data-tool="fib" title="Retracement de Fibonacci (Alt+F)">𝔽</button>
+      <button data-tool="text" title="Texte (Alt+X)">T</button>
+      <button data-tool="measure" title="Mesure (Maj + clic)">📏</button>
+      <i></i>
+      <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)">🧲</button>
+      <button id="btLockAll" class="tg" title="Verrouiller tous les dessins">🔒</button>
+      <button id="btHideAll" class="tg" title="Masquer tous les dessins">👁</button>
+      <button id="btDelAll" title="Supprimer tous les dessins">🗑</button>
+    </div>
+    <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas></div>
+    <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets</div><div id="btTreeList"></div></div>
+    <div class="tx-order">
+      <div class="tx-oh">Order</div>
+      <label class="tx-f"><span>Contract</span><select id="oCtr"><option value="MNQ">MNQZ26</option><option value="NQ">NQZ26</option><option value="MES">MESZ26</option><option value="ES">ESZ26</option></select></label>
+      <label class="tx-f"><span>Order Type</span><select id="oType"><option>Market</option><option>Limit</option><option>Stop</option></select></label>
+      <label class="tx-f" id="oPxW" hidden><span>Price</span><input type="number" id="oPx" step="0.25"></label>
+      <label class="tx-f"><span># of Contracts</span><input type="number" id="oQty" value="1" min="1"></label>
+      <div class="tx-ba"><div><small>Bid:</small><b id="oBid">—</b></div><div><b id="oLast">—</b></div><div><small>Ask:</small><b id="oAsk">—</b></div></div>
+      <div class="tx-posl" id="oPos">No Active Position</div>
+      <div class="tx-qs"><button data-q="-">−</button><button data-q="1">1</button><button data-q="3">3</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button><button data-q="20">20</button><button data-q="+">+</button></div>
+      <label class="tx-f"><span>Position Bracket</span><select id="oBr"><option value="1">Enabled</option><option value="0">Disabled</option></select></label>
+      <div class="tx-brk" id="oBrk"><label>SL (ticks)<input type="number" id="oSl" value="40" min="1"></label><label>TP (ticks)<input type="number" id="oTp" value="80" min="1"></label></div>
+      <button class="tx-buy" id="oBuy">BUY +1 @ MARKET</button>
+      <button class="tx-sell" id="oSell">SELL -1 @ MARKET</button>
+      <div class="tx-2"><button id="oFlat">FLATTEN ALL</button><button id="oCancel">CANCEL ALL</button></div>
+    </div>
+  </div>
+  <div class="tx-bottom">
+    <div class="tx-tabs"><button data-tab="pos" class="on">Positions</button><button data-tab="ord">Ordres</button><button data-tab="trd">Trades</button></div>
+    <div id="btBottom" class="tx-tbl"></div>
+  </div>
+  <div class="ov" id="btSet"><div class="modal tx-set">
+    <h2 id="btSetT">Paramètres</h2>
+    <div class="tx-st"><button data-st="style" class="on">Style</button><button data-st="coords">Coordonnées</button><button data-st="text">Texte</button></div>
+    <div id="btSetBody"></div>
+    <div class="actions"><span style="display:flex;gap:6px;align-items:center"><select id="btTpl"><option value="">Modèle…</option></select><button class="ghost" id="btTplSave">Enregistrer le modèle</button><button class="ghost" id="btTplDel" title="Supprimer le modèle">✕</button></span><span style="display:flex;gap:8px"><button class="ghost" id="btSetCancel">Annuler</button><button class="primary" id="btSetOk">Ok</button></span></div>
+  </div></div>
 </div></section>
+
+<section class="view" id="v-copier"><div class="page" style="max-width:1300px;padding:26px 28px 60px"><div id="cpRoot">
+  <div class="jtop"><div><h2>Trade copier</h2><p class="lead" style="margin:0">Copie les positions d'un compte Tradovate <b>leader</b> vers des comptes <b>followers</b> (position follower = position leader × multiplicateur, même sens).</p></div>
+    <div class="bt-actions"><span id="cpState" class="cp-state">○ Arrêté</span><button class="btn gray" id="cpSave">Enregistrer</button><button class="btn bt-buy" id="cpStart">Démarrer</button><button class="btn bt-sell" id="cpStop" disabled>Arrêter</button></div></div>
+  <div id="cpMsg" class="bt-msg"></div>
+  <div class="cp-warn">⚠ Les followers n'ont pas de stop à eux : quand ton stop est touché sur le leader, le copieur les ferme au marché <b>seulement s'il tourne</b>. Commence toujours en simulation. Copie uniquement entre tes propres comptes, depuis ton PC (pas de VPS chez Topstep) — relis la politique de chaque prop firm.</div>
+  <div class="cp-opts"><label><input type="checkbox" id="cpDry" checked> Simulation (dry run) — aucun ordre envoyé</label><label><input type="checkbox" id="cpFlat"> Fermer les positions des followers à l'arrêt</label><label>Vérification toutes les <input type="number" id="cpSec" min="1" value="2" style="width:56px"> s</label></div>
+  <h3 class="cp-h">Identifiants Tradovate <small>(clé API : Application Settings → API Access → cid + sec)</small></h3>
+  <table class="bt-table cp-t"><thead><tr><th>Nom</th><th>Identifiant</th><th>Mot de passe</th><th>cid</th><th>sec</th><th>Env.</th><th></th></tr></thead><tbody id="cpLogins"></tbody></table>
+  <button class="btn gray" id="cpAddLogin" style="margin-top:6px">＋ Identifiant</button>
+  <h3 class="cp-h">Leader</h3>
+  <div class="cp-opts"><label>Identifiant <select id="cpLeaderLogin"></select></label><label>Compte <input id="cpLeaderAcc" placeholder="nom exact du compte (vide = le seul compte)"></label></div>
+  <h3 class="cp-h">Followers</h3>
+  <table class="bt-table cp-t"><thead><tr><th>Actif</th><th>Identifiant</th><th>Compte</th><th>Multiplicateur</th><th>Max contrats</th><th>Mapping</th><th></th></tr></thead><tbody id="cpFollowers"></tbody></table>
+  <button class="btn gray" id="cpAddF" style="margin-top:6px">＋ Follower</button>
+  <h3 class="cp-h">Positions</h3><div id="cpPos" class="cp-pos"></div>
+  <h3 class="cp-h">Journal</h3><div id="cpLog" class="cp-log"></div>
+</div></div></section>
 </main></div>
 
 <!-- day editor -->
@@ -1053,7 +1166,7 @@ $("bSave").onclick=()=>{S.brand={name:$("bName").value.trim(),handle:$("bHandle"
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","journal","review","backtest","profil","abonnement","factures"];
+const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","profil","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -1067,7 +1180,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); }
-  if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0);
+  if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -2719,19 +2832,34 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 
 </script>
 <script>
-/* ---------- Backtesteur : replay des bougies m1 (CSV TopstepX enregistrés chaque soir à 23h01) ---------- */
+/* ---------- Backtesteur style TopstepX : replay m1, compte démo 50K, ordres, dessins (outils, raccourcis, arborescence, modèles) ---------- */
 (function () {
   const D = window.desktop, $ = (id) => document.getElementById(id);
-  const PV = { NQ: 20, ES: 50 }; // $ per point (mini) — editable in the panel
-  const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, pos: null, trades: [], loadedKey: "" };
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } } };
+  const CTR = { MNQ: { pv: 2, und: "NQ", fee: 0.74, name: "MNQZ26" }, NQ: { pv: 20, und: "NQ", fee: 2.8, name: "NQZ26" }, MES: { pv: 5, und: "ES", fee: 0.74, name: "MESZ26" }, ES: { pv: 50, und: "ES", fee: 2.8, name: "ESZ26" } };
+  const TICK = 0.25, START = 50000, MLL_GAP = 2000, DLL = 1000;
+  const usd = (x) => (x < 0 ? "-$" : "$") + Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const parts = (ms) => { const o = {}; new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(ms)).forEach((x) => (o[x.type] = x.value)); return o; };
   const ny = (d, h, m) => { const [Y, M, Dd] = d.split("-").map(Number), want = Date.UTC(Y, M - 1, Dd, h, m); let g = want; for (let i = 0; i < 3; i++) { const o = parts(g); g += want - Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute); } return Math.floor(g / 1000); };
   const hm = (t) => { const o = parts(t * 1000); return `${o.hour}:${o.minute}`; };
   const dstr = (t) => { const o = parts(t * 1000); return `${o.day}/${o.month}`; };
   const addDays = (d, n) => { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
   const lastTradingDay = () => { let d = new Date().toISOString().slice(0, 10); for (let i = 0; i < 7; i++) { const wd = new Date(d + "T12:00:00Z").getUTCDay(); if (wd >= 1 && wd <= 5) return d; d = addDays(d, -1); } return d; };
+  const sessionKey = (t) => { const o = parts((t + 6 * 3600) * 1000); return `${o.year}-${o.month}-${o.day}`; }; // la session commence à 18:00 NY
   const msg = (t, bad) => { const el = $("btMsg"); if (el) { el.textContent = t || ""; el.style.color = bad ? "#ff8a8a" : ""; } };
+  const rnd = (p) => Math.round(p / TICK) * TICK;
+  const off = (t) => { const o = parts(t * 1000); return Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute) / 1000 - Math.floor(t / 60) * 60; };
+  const toNY = (t) => t + off(t);
 
+  /* ---------------- données / replay ---------------- */
+  const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0 };
+  function bucket(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, D = session)
+    const tf = S.tf * 60;
+    if (S.tf >= 1440) return ny(sessionKey(t), 0, 0);
+    if (S.tf >= 60) { const o = off(t), tn = t + o, a = (18 * 3600) % tf; return Math.floor((tn - a) / tf) * tf + a - o; }
+    return Math.floor(t / tf) * tf;
+  }
   function parseCsvText(text) {
     const lines = text.split(/\r?\n/).filter(Boolean); if (!lines.length) return [];
     const head = lines[0].toLowerCase().split(/[;,]/).map((s) => s.trim()), idx = (n) => head.findIndex((h) => n.includes(h));
@@ -2740,159 +2868,502 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     for (let i = 1; i < lines.length; i++) { const a = lines[i].split(/[;,]/); let t = a[it]; t = /^\d+(\.\d+)?$/.test(t) ? +t : Date.parse(t) / 1000; if (t > 1e12) t = Math.floor(t / 1000); if (isFinite(t)) out.push([t, +a[io], +a[ih], +a[il], +a[ic], iv >= 0 ? +a[iv] : 0]); }
     return out.sort((x, y) => x[0] - y[0]);
   }
-
   async function status() {
-    if (!D || !D.dataStatus) { $("btData").textContent = "Version web : importe un CSV de bougies (l'enregistrement automatique des bougies se fait dans l'app Windows)."; return; }
+    if (!D || !D.dataStatus) { $("btData").textContent = "Version web : importe un CSV (les bougies TopstepX sont enregistrées par l'app Windows)."; return; }
     const r = await D.dataStatus(); if (!r.ok) return;
-    const s = r.data, f = (k) => s[k].m1Last ? `${k} jusqu'au ${s[k].m1Last.slice(0, 16)} (${s[k].mb} Mo)` : `${k} : pas encore téléchargé`;
-    $("btData").textContent = `${f("NQ")} · ${f("ES")} · synchro auto chaque soir à 23h01` + (s.lastSync ? ` · dernière ${new Date(s.lastSync).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "");
+    const s = r.data, f = (k) => (s[k] && s[k].m1Last ? `${k} → ${s[k].m1Last.slice(0, 16)}` : `${k} : à télécharger`);
+    $("btData").textContent = `Données ${f("NQ")} · ${f("ES")} · auto 23h01`;
   }
-
   async function load() {
-    const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value;
-    S.sym = sym; S.pos = null; S.trades = []; renderTrades();
-    const from = ny(addDays(d, -3), 18, 0), to = ny(d, 17, 0);
+    play(false);
+    const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym;
+    const days = S.tf >= 1440 ? 60 : S.tf >= 240 ? 25 : S.tf >= 60 ? 10 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
     if (sym === "CSV") { if (!S.csv) return msg("Importe d'abord un CSV.", true); S.raw = S.csv.filter((b) => b[0] >= from && b[0] <= to); }
     else {
-      if (!D || !D.dataRead) return msg("Les bougies TopstepX sont disponibles dans l'app Windows — ou importe un CSV.", true);
-      msg("Chargement…"); const r = await D.dataRead(sym, from, to, "m1");
-      if (!r.ok) return msg("Lecture impossible : " + r.reason, true);
-      S.raw = r.data;
+      if (!D || !D.dataRead) return msg("Les bougies TopstepX sont lues par l'app Windows — ou importe un CSV.", true);
+      msg("Chargement…"); const r = await D.dataRead(sym, from, to, "m1"); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data;
     }
-    if (!S.raw.length) { msg("Aucune bougie pour cette date — lance « Synchroniser les données » ou choisis un autre jour.", true); draw(true); return; }
+    if (!S.raw.length) { msg("Aucune bougie pour cette date — « ⟳ Données » ou une autre date.", true); S.B = []; draw(true); return; }
     const [h, m] = ($("btStart").value || "09:30").split(":").map(Number), t0 = ny(d, h, m);
-    S.cur = Math.max(0, S.raw.findIndex((b) => b[0] >= t0)); if (S.cur < 0) S.cur = S.raw.length - 1;
-    msg(`${S.raw.length} bougies m1 chargées · ${sym === "CSV" ? "CSV importé" : sym} · départ ${hm(S.raw[S.cur][0])} · molette = zoom, glisser = déplacer la chart`);
-    lastKey = ""; draw(true);
+    S.cur = S.raw.findIndex((b) => b[0] >= t0); if (S.cur < 0) S.cur = S.raw.length - 1; S.done = S.cur;
+    loadDrawings(); msg(`${S.raw.length} bougies m1 · départ ${hm(S.raw[S.cur][0])} · Espace = lecture · ←/→ = bougie · glisser = déplacer · molette = zoom · Shift+clic = mesurer`);
+    lastKey = ""; draw(true); ui();
   }
-
-  // bars visible at the cursor, aggregated to the chosen timeframe (the last bar is built only from the minutes already played)
-  function visible() {
-    const tf = S.tf * 60, out = [];
+  function aggregate() {
+    const out = [];
     for (let i = 0; i <= S.cur && i < S.raw.length; i++) {
-      const b = S.raw[i], k = Math.floor(b[0] / tf) * tf, last = out[out.length - 1];
-      if (!last || last[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5]]);
-      else { last[2] = Math.max(last[2], b[2]); last[3] = Math.min(last[3], b[3]); last[4] = b[4]; last[5] += b[5]; }
+      const b = S.raw[i], k = bucket(b[0]), l = out[out.length - 1];
+      if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5]]);
+      else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5]; }
     }
     return out;
   }
+  const last = () => (S.raw[S.cur] ? S.raw[S.cur][4] : null);
 
-  /* --- TradingView chart (Lightweight Charts): pan with the mouse, zoom with the wheel, crosshair, volume --- */
-  let chart = null, cs = null, vs = null, entryLine = null, lines = [], lineMode = false, lastKey = "";
-  const off = (t) => { const o = parts(t * 1000); return Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute) / 1000 - Math.floor(t / 60) * 60; }; // NY offset (s)
-  const toNY = (t) => t + off(t);
+  /* ---------------- compte démo 50K (règles Topstep : MLL 2 000 $ trailing fin de journée, DLL 1 000 $) ---------------- */
+  const freshAcc = () => ({ bal: START, mll: START - MLL_GAP, eodHigh: START, day: null, rpDay: 0, dllHit: false, blown: false, pos: null, orders: [], trades: [], seq: 1 });
+  let A = LS.get("bt-acc", null) || freshAcc();
+  const saveAcc = () => LS.set("bt-acc", A);
+  const upl = () => { if (!A.pos) return 0; const p = last(); return p == null ? 0 : (p - A.pos.avg) * A.pos.qty * CTR[A.pos.ctr].pv; };
+  function newDay(t) {
+    const k = sessionKey(t); if (A.day === k) return;
+    if (A.day) { A.eodHigh = Math.max(A.eodHigh, A.bal); A.mll = Math.min(START, Math.max(A.mll, A.eodHigh - MLL_GAP)); }
+    A.day = k; A.rpDay = 0; A.dllHit = false;
+  }
+  let markers = [];
+  function mark(t, kind, px, up, pnl) {
+    markers.push({ t, position: up ? "belowBar" : "aboveBar", color: kind === "X" ? "#b2b5be" : up ? "#26a69a" : "#ef5350", shape: kind === "X" ? "circle" : up ? "arrowUp" : "arrowDown", text: kind === "X" ? (pnl >= 0 ? "+" : "") + pnl.toFixed(0) + "$" : `${kind} ${px}` });
+  }
+  function fill(ctr, qty, px, t, why) { // qty signée
+    const c = CTR[ctr]; px = rnd(px);
+    if (A.pos && A.pos.ctr !== ctr) { msg(`Position ouverte sur ${CTR[A.pos.ctr].name} : clôture-la avant de trader ${c.name}.`, true); return; }
+    const p = A.pos;
+    if (!p) { A.pos = { ctr, qty, avg: px, t }; mark(t, qty > 0 ? "B" : "S", px, qty > 0); }
+    else if (Math.sign(p.qty) === Math.sign(qty)) { p.avg = (p.avg * Math.abs(p.qty) + px * Math.abs(qty)) / (Math.abs(p.qty) + Math.abs(qty)); p.qty += qty; mark(t, qty > 0 ? "B" : "S", px, qty > 0); }
+    else {
+      const closeQ = Math.min(Math.abs(qty), Math.abs(p.qty)), pnl = (px - p.avg) * Math.sign(p.qty) * closeQ * c.pv - c.fee * closeQ;
+      A.bal += pnl; A.rpDay += pnl;
+      A.trades.push({ id: A.seq++, ctr, side: p.qty > 0 ? "Long" : "Short", qty: closeQ, entry: +p.avg.toFixed(2), exit: px, tIn: p.t, tOut: t, pnl, why: why || "" });
+      const rest = p.qty + qty;
+      if (rest === 0) { A.pos = null; A.orders = A.orders.filter((o) => !o.bracket); }
+      else if (Math.sign(rest) === Math.sign(p.qty)) p.qty = rest;
+      else A.pos = { ctr, qty: rest, avg: px, t };
+      mark(t, "X", px, qty > 0, pnl);
+    }
+    if (A.pos && $("oBr").value === "1" && !A.orders.some((o) => o.bracket)) addBrackets();
+    saveAcc();
+  }
+  function addBrackets() {
+    const p = A.pos, sl = +$("oSl").value || 40, tp = +$("oTp").value || 80, dir = Math.sign(p.qty);
+    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Stop", qty: -p.qty, px: rnd(p.avg - dir * sl * TICK), bracket: "SL" });
+    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Limit", qty: -p.qty, px: rnd(p.avg + dir * tp * TICK), bracket: "TP" });
+  }
+  function syncBrackets() { if (A.pos) A.orders.forEach((o) => { if (o.bracket) o.qty = -A.pos.qty; }); }
+  function processBar(b) {
+    newDay(b[0]);
+    const [t, , h, l] = b;
+    // ordres en attente (SL avant TP si les deux sont touchés dans la même minute = prudent)
+    const ords = [...A.orders].sort((x, y) => (y.bracket === "SL") - (x.bracket === "SL"));
+    for (const o of ords) {
+      if (!A.orders.includes(o)) continue;
+      const buy = o.qty > 0, hit = o.type === "Limit" ? (buy ? l <= o.px : h >= o.px) : (buy ? h >= o.px : l <= o.px);
+      if (!hit) continue;
+      A.orders = A.orders.filter((x) => x !== o);
+      fill(o.ctr, o.qty, o.px, t, o.bracket || o.type); syncBrackets();
+    }
+    const day = A.rpDay + upl();
+    if (A.pos && !A.blown && A.bal + upl() <= A.mll) { flatten("MLL"); A.blown = true; saveAcc(); msg("Compte démo cramé : Maximum Loss Limit atteinte. « Reset » pour recommencer.", true); }
+    else if (A.pos && !A.dllHit && day <= -DLL) { flatten("DLL"); A.dllHit = true; saveAcc(); msg("Daily Loss Limit atteinte : positions fermées, plus de trade jusqu'à la prochaine session.", true); }
+  }
+  function flatten(why) { if (A.pos) fill(A.pos.ctr, -A.pos.qty, last(), S.raw[S.cur][0], why || "Flatten"); A.orders = []; saveAcc(); }
+  function canTrade() { if (!S.raw.length) { msg("Charge d'abord une journée.", true); return false; } if (A.blown) { msg("Compte cramé (MLL) — Reset.", true); return false; } if (A.dllHit) { msg("DLL atteinte : attends la session suivante.", true); return false; } return true; }
+  function order(side) {
+    if (!canTrade()) return;
+    const ctr = $("oCtr").value, c = CTR[ctr];
+    if (S.sym !== "CSV" && c.und !== S.sym) return msg(`${c.name} ne correspond pas à la chart ${S.sym} : choisis un contrat ${S.sym}.`, true);
+    const qty = Math.max(1, parseInt($("oQty").value, 10) || 1) * side, type = $("oType").value, t = S.raw[S.cur][0];
+    newDay(t);
+    if (type === "Market") { fill(ctr, qty, last() + side * TICK, t, "Market"); syncBrackets(); } // exécution au ask / bid
+    else { const px = rnd(+$("oPx").value || last()); A.orders.push({ id: A.seq++, ctr, type, qty, px }); saveAcc(); }
+    draw(); ui();
+  }
+
+  /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
+  let chart = null, cs = null, vs = null, lastKey = "", plines = [];
   function ensureChart() {
     if (chart) return;
     chart = LightweightCharts.createChart($("btChart"), {
-      autoSize: true,
-      layout: { background: { type: "solid", color: "#0e1116" }, textColor: "#b2b5be", fontFamily: "'Space Mono',monospace" },
-      grid: { vertLines: { color: "#1c2028" }, horzLines: { color: "#1c2028" } },
-      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-      rightPriceScale: { borderColor: "#2a2e39" },
-      timeScale: { borderColor: "#2a2e39", timeVisible: true, secondsVisible: false, rightOffset: 12, barSpacing: 8 },
+      autoSize: true, layout: { background: { type: "solid", color: "#0b0d10" }, textColor: "#b2b5be", fontFamily: "Roboto,'Segoe UI',sans-serif" },
+      grid: { vertLines: { color: "#161a21" }, horzLines: { color: "#161a21" } }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      rightPriceScale: { borderColor: "#2a2e39" }, timeScale: { borderColor: "#2a2e39", timeVisible: true, secondsVisible: false, rightOffset: 15, barSpacing: 7 },
       localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) },
     });
     cs = chart.addCandlestickSeries({ upColor: "#26a69a", downColor: "#ef5350", borderVisible: false, wickUpColor: "#26a69a", wickDownColor: "#ef5350", priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
-    vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, color: "rgba(120,123,134,.35)" });
-    chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-    chart.subscribeClick((p) => {
-      if (!lineMode || !p.point) return;
-      const price = cs.coordinateToPrice(p.point.y); if (price == null) return;
-      lines.push(cs.createPriceLine({ price: Math.round(price * 4) / 4, color: "#f0b90b", lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: "" }));
-      lineMode = false; $("btLine").classList.remove("on");
-    });
+    vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false });
+    chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+    loop();
   }
   function draw(full) {
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
     ensureChart();
-    const bars = visible(), key = S.sym + S.tf + (S.raw[0] ? S.raw[0][0] : 0);
-    if (!bars.length) { cs.setData([]); vs.setData([]); $("btClock").textContent = ""; S.lastLen = 0; return; }
+    const bars = (S.B = aggregate()), key = S.sym + S.tf + (S.raw[0] ? S.raw[0][0] : 0);
+    if (!bars.length) { cs.setData([]); vs.setData([]); cs.setMarkers([]); return; }
     const c = bars.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] }));
-    const v = bars.map((b) => ({ time: toNY(b[0]), value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.35)" : "rgba(239,83,80,.35)" }));
+    const v = bars.map((b) => ({ time: toNY(b[0]), value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }));
     if (full || key !== lastKey || !S.lastLen || bars.length < S.lastLen) { cs.setData(c); vs.setData(v); if (key !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key; }
-    else { for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); } }
+    else for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); }
     S.lastLen = bars.length;
-    if (entryLine) { cs.removePriceLine(entryLine); entryLine = null; }
-    if (S.pos) entryLine = cs.createPriceLine({ price: S.pos.entry, color: S.pos.side > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Solid, axisLabelVisible: true, title: (S.pos.side > 0 ? "Long " : "Short ") + S.pos.qty });
-    const tf = S.tf * 60, mk = [];
-    S.trades.forEach((t) => {
-      mk.push({ time: toNY(Math.floor(t.tIn / tf) * tf), position: t.side > 0 ? "belowBar" : "aboveBar", color: t.side > 0 ? "#26a69a" : "#ef5350", shape: t.side > 0 ? "arrowUp" : "arrowDown", text: (t.side > 0 ? "B " : "S ") + t.entry });
-      mk.push({ time: toNY(Math.floor(t.tOut / tf) * tf), position: t.side > 0 ? "aboveBar" : "belowBar", color: "#b2b5be", shape: "circle", text: (t.pts >= 0 ? "+" : "") + (t.pts * t.qty).toFixed(2) });
-    });
-    if (S.pos) mk.push({ time: toNY(Math.floor(S.pos.t / tf) * tf), position: S.pos.side > 0 ? "belowBar" : "aboveBar", color: S.pos.side > 0 ? "#26a69a" : "#ef5350", shape: S.pos.side > 0 ? "arrowUp" : "arrowDown", text: (S.pos.side > 0 ? "B " : "S ") + S.pos.entry });
+    plines.forEach((l) => cs.removePriceLine(l)); plines = [];
+    if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
+    A.orders.forEach((o) => plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}` })));
+    const first = bars[0][0], lastT = S.raw[S.cur][0];
+    const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
     mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
-    const b0 = S.raw[S.cur]; $("btClock").textContent = b0 ? `${dstr(b0[0])} ${hm(b0[0])} NY` : "";
-    pnl();
+    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} NY`;
+  }
+  function step(k) {
+    if (!S.raw.length) return;
+    const to = Math.max(0, Math.min(S.raw.length - 1, S.cur + k));
+    for (let i = S.done + 1; i <= to; i++) { S.cur = i; processBar(S.raw[i]); }
+    S.done = Math.max(S.done, to); S.cur = to; draw(); ui();
+    if (S.cur >= S.raw.length - 1) play(false);
+  }
+  function back() { if (!S.raw.length) return; S.cur = Math.max(0, S.cur - 1); draw(); ui(); }
+  function play(on) {
+    if (on === undefined) on = !S.playing; clearInterval(S.playing); S.playing = null; if ($("btPlay")) $("btPlay").textContent = on ? "⏸" : "▶";
+    if (on) S.playing = setInterval(() => step(1), 1000 / (+$("btSpeed").value || 2));
   }
 
-  const price = () => (S.raw[S.cur] ? S.raw[S.cur][4] : null);
-  const pv = () => +$("btPv").value || PV[S.sym] || 20;
-  function pnl() {
-    const closed = S.trades.reduce((a, t) => a + t.pts * t.qty, 0), open = S.pos ? (price() - S.pos.entry) * S.pos.side * S.pos.qty : 0;
-    $("btPnl").innerHTML = `Position : <b>${S.pos ? (S.pos.side > 0 ? "Long " : "Short ") + S.pos.qty + " @ " + S.pos.entry : "aucune"}</b> · Latent : <b>${open.toFixed(2)} pts (${(open * pv()).toFixed(0)} $)</b> · Réalisé : <b>${closed.toFixed(2)} pts (${(closed * pv()).toFixed(0)} $)</b>`;
+  /* ---------------- dessins ---------------- */
+  const TOOLS = { trend: "Ligne de tendance", hline: "Ligne horizontale", hray: "Demi-droite horizontale", vline: "Ligne verticale", rect: "Rectangle", fib: "Retracement de Fibonacci", text: "Texte" };
+  const FIB = [[0, "#787b86"], [0.236, "#f23645"], [0.382, "#ff9800"], [0.5, "#4caf50"], [0.618, "#089981"], [0.705, "#00bcd4"], [0.786, "#2962ff"], [1, "#787b86"]];
+  const defStyle = (type) => ({ color: type === "rect" ? "#2962ff" : type === "fib" ? "#787b86" : "#e0a106", width: type === "hline" || type === "hray" ? 1 : 2, dash: 0, fill: "rgba(41,98,255,0.15)", extL: false, extR: type === "fib", textColor: "#e3e5ea", fontSize: 12, labels: true,
+    levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
+  let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
+  const dkey = () => "bt-draw-" + (S.sym || "NQ");
+  const loadDrawings = () => { shapes = LS.get(dkey(), []); sel = null; tree(); };
+  const saveDrawings = () => { LS.set(dkey(), shapes); tree(); };
+  const tpls = () => LS.get("bt-tpl", {});
+  // temps <-> index logique sur les bougies agrégées (marche aussi au-delà de la dernière bougie)
+  function t2l(t) { const B = S.B, tf = S.tf * 60; if (!B.length) return null; if (t >= B[B.length - 1][0]) return B.length - 1 + (t - B[B.length - 1][0]) / tf; if (t <= B[0][0]) return (t - B[0][0]) / tf;
+    let lo = 0, hi = B.length - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (B[m][0] <= t) lo = m; else hi = m; } return lo + (t - B[lo][0]) / Math.max(1, B[hi][0] - B[lo][0]); }
+  function l2t(l) { const B = S.B, tf = S.tf * 60; if (!B.length) return 0; if (l >= B.length - 1) return B[B.length - 1][0] + (l - (B.length - 1)) * tf; if (l <= 0) return B[0][0] + l * tf; const i = Math.floor(l); return B[i][0] + (l - i) * (B[i + 1][0] - B[i][0]); }
+  const X = (t) => { const l = t2l(t); return l == null ? null : chart.timeScale().logicalToCoordinate(l); };
+  const Y = (p) => cs.priceToCoordinate(p);
+  function at(x, y) { // coordonnées chart -> {t, price} (+ aimant OHLC)
+    if (!chart || !S.B.length) return null;
+    const l = chart.timeScale().coordinateToLogical(x); let p = cs.coordinateToPrice(y); if (l == null || p == null) return null;
+    let t = l2t(l);
+    if (magnet) { const b = S.B[Math.round(l)]; if (b) { t = b[0]; p = [b[1], b[2], b[3], b[4]].reduce((a, v) => (Math.abs(v - p) < Math.abs(a - p) ? v : a), b[1]); } }
+    return { t: Math.round(t), price: rnd(p) };
   }
-  function renderTrades() {
-    const el = $("btTrades"); if (!el) return;
-    el.innerHTML = S.trades.length ? S.trades.map((t, i) => `<tr><td>${i + 1}</td><td>${t.side > 0 ? "Long" : "Short"}</td><td>${t.qty}</td><td>${hm(t.tIn)}</td><td>${t.entry}</td><td>${hm(t.tOut)}</td><td>${t.exit}</td><td style="color:${t.pts >= 0 ? "#26a69a" : "#ef5350"}">${(t.pts * t.qty).toFixed(2)}</td></tr>`).join("") : `<tr><td colspan="8" style="color:#8a8f98">Aucun trade</td></tr>`;
+  const cv = () => $("btDraw");
+  function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) render(); }
+  function render() {
+    const c = cv(); if (!c || !chart) return;
+    const W = c.clientWidth, H = c.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (c.width !== W * dpr || c.height !== H * dpr) { c.width = W * dpr; c.height = H * dpr; }
+    const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    if (!S.B.length) return;
+    const plotW = W - (chart.priceScale("right").width() || 60), plotH = H - (chart.timeScale().height() || 26);
+    g.save(); g.beginPath(); g.rect(0, 0, plotW, plotH); g.clip();
+    const list = hideAll ? [] : shapes.filter((s) => !s.hidden);
+    if (pending) list.push(pending);
+    for (const s of list) drawShape(g, s, plotW, plotH);
+    if (measure) drawMeasure(g, measure);
+    g.restore();
   }
-  function trade(side) {
-    const p = price(); if (p == null) return; const qty = Math.max(1, +$("btQty").value || 1), t = S.raw[S.cur][0];
-    if (S.pos && S.pos.side !== side) close();
-    if (!S.pos) S.pos = { side, entry: p, qty, t };
-    draw();
+  function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
+  function drawShape(g, s, W, H) {
+    const st = s.style, pts = s.p.map((p) => ({ x: X(p.t), y: Y(p.price) })); if (pts.some((p) => p.x == null || p.y == null)) return;
+    g.strokeStyle = st.color; g.lineWidth = st.width; setDash(g, st.dash); g.fillStyle = st.color; g.font = `${st.fontSize || 12}px Roboto,sans-serif`;
+    const [a, b] = pts;
+    if (s.type === "trend" && b) {
+      let x1 = a.x, y1 = a.y, x2 = b.x, y2 = b.y; const dx = x2 - x1, dy = y2 - y1;
+      if (st.extR && dx) { x2 = dx > 0 ? W : 0; y2 = a.y + dy * (x2 - a.x) / dx; } if (st.extL && dx) { x1 = dx > 0 ? 0 : W; y1 = a.y + dy * (x1 - a.x) / dx; }
+      g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+    } else if (s.type === "hline") { g.beginPath(); g.moveTo(0, a.y); g.lineTo(W, a.y); g.stroke(); if (st.labels || s.text) { g.fillStyle = st.textColor; const t = (st.labels ? s.p[0].price.toFixed(2) : "") + (s.text ? "  " + s.text : ""); g.fillText(t, W - 8 - g.measureText(t).width, a.y - 4); } }
+    else if (s.type === "hray") { g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(W, a.y); g.stroke(); if (s.text) { g.fillStyle = st.textColor; g.fillText(s.text, W - 8 - g.measureText(s.text).width, a.y - 4); } }
+    else if (s.type === "vline") { g.beginPath(); g.moveTo(a.x, 0); g.lineTo(a.x, H); g.stroke(); if (s.text) { g.save(); g.translate(a.x - 4, H - 10); g.rotate(-Math.PI / 2); g.fillStyle = st.textColor; g.fillText(s.text, 0, 0); g.restore(); } }
+    else if (s.type === "rect" && b) {
+      const x1 = st.extL ? 0 : Math.min(a.x, b.x), x2 = st.extR ? W : Math.max(a.x, b.x), y1 = Math.min(a.y, b.y), y2 = Math.max(a.y, b.y);
+      g.fillStyle = st.fill; g.fillRect(x1, y1, x2 - x1, y2 - y1); g.strokeRect(x1, y1, x2 - x1, y2 - y1);
+      if (s.text) { g.fillStyle = st.textColor; g.fillText(s.text, x2 - 6 - g.measureText(s.text).width, (y1 + y2) / 2 + 4); }
+    } else if (s.type === "fib" && b) {
+      const x1 = st.extL ? 0 : Math.min(a.x, b.x), x2 = st.extR ? W : Math.max(a.x, b.x);
+      setDash(g, 0); g.lineWidth = 1;
+      for (const lv of st.levels.filter((x) => x.on)) {
+        const pr = s.p[1].price + (s.p[0].price - s.p[1].price) * lv.k, y = Y(pr); if (y == null) continue;
+        g.strokeStyle = lv.c; g.beginPath(); g.moveTo(x1, y); g.lineTo(x2, y); g.stroke();
+        if (st.labels) { g.fillStyle = lv.c; g.fillText(`${lv.k} (${pr.toFixed(2)})`, x1 + 4, y - 3); }
+      }
+      g.strokeStyle = "rgba(160,160,160,.5)"; setDash(g, 1); g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
+    } else if (s.type === "text") { g.fillStyle = st.textColor; g.fillText(s.text || "Texte", a.x, a.y); }
+    setDash(g, 0);
+    if (s === sel) { g.fillStyle = "#fff"; g.strokeStyle = "#2962ff"; g.lineWidth = 1; pts.forEach((p) => { g.fillRect(p.x - 4, p.y - 4, 8, 8); g.strokeRect(p.x - 4, p.y - 4, 8, 8); }); }
   }
-  function close() {
-    if (!S.pos) return; const p = price();
-    S.trades.push({ side: S.pos.side, qty: S.pos.qty, entry: S.pos.entry, exit: p, tIn: S.pos.t, tOut: S.raw[S.cur][0], pts: (p - S.pos.entry) * S.pos.side });
-    S.pos = null; renderTrades(); draw();
+  function drawMeasure(g, m) {
+    const a = { x: X(m.a.t), y: Y(m.a.price) }, b = { x: X(m.b.t), y: Y(m.b.price) }; if ([a.x, a.y, b.x, b.y].some((v) => v == null)) return;
+    const d = m.b.price - m.a.price, up = d >= 0, ticks = Math.round(d / TICK), nb = Math.round(t2l(m.b.t) - t2l(m.a.t)), ctr = CTR[$("oCtr").value];
+    g.fillStyle = up ? "rgba(41,98,255,.18)" : "rgba(239,83,80,.18)"; g.fillRect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+    const txt = `${d.toFixed(2)} (${(d / m.a.price * 100).toFixed(2)}%) · ${ticks} ticks · ${nb} barres · ${usd(ticks * TICK * ctr.pv)}/${ctr.name}`;
+    g.font = "12px Roboto,sans-serif"; const w = g.measureText(txt).width + 12, bx = (a.x + b.x) / 2 - w / 2, by = up ? Math.min(a.y, b.y) - 26 : Math.max(a.y, b.y) + 6;
+    g.fillStyle = up ? "#2962ff" : "#ef5350"; g.fillRect(bx, by, w, 20); g.fillStyle = "#fff"; g.fillText(txt, bx + 6, by + 14);
   }
-  function step(k) { if (!S.raw.length) return; S.cur = Math.max(0, Math.min(S.raw.length - 1, S.cur + k)); draw(); if (S.cur >= S.raw.length - 1) play(false); }
-  function play(on) {
-    if (on === undefined) on = !S.playing;
-    clearInterval(S.playing); S.playing = null; $("btPlay").textContent = on ? "⏸" : "▶";
-    if (on) S.playing = setInterval(() => step(1), 1000 / (+$("btSpeed").value || 2));
+  function hit(x, y) {
+    if (!chart || !S.B.length || hideAll) return null;
+    const W = cv().clientWidth;
+    const segD = (px, py, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy; let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy)); };
+    for (let i = shapes.length - 1; i >= 0; i--) {
+      const s = shapes[i]; if (s.hidden) continue;
+      const pts = s.p.map((p) => ({ x: X(p.t), y: Y(p.price) })); if (pts.some((p) => p.x == null || p.y == null)) continue;
+      const hh = pts.findIndex((p) => Math.abs(p.x - x) < 7 && Math.abs(p.y - y) < 7); if (hh >= 0 && s === sel) return { s, h: hh };
+      const [a, b] = pts; let near = false;
+      if (s.type === "hline") near = Math.abs(y - a.y) < 6;
+      else if (s.type === "hray") near = Math.abs(y - a.y) < 6 && x >= a.x - 6;
+      else if (s.type === "vline") near = Math.abs(x - a.x) < 6;
+      else if (s.type === "trend" && b) near = segD(x, y, a, b) < 6;
+      else if (s.type === "rect" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) + 5 && y >= Math.min(a.y, b.y) - 5 && y <= Math.max(a.y, b.y) + 5;
+      else if (s.type === "fib" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) && s.style.levels.some((lv) => lv.on && Math.abs(Y(s.p[1].price + (s.p[0].price - s.p[1].price) * lv.k) - y) < 6);
+      else if (s.type === "text") near = y <= a.y + 4 && y >= a.y - (s.style.fontSize || 12) - 4 && x >= a.x - 4 && x <= a.x + 8 * (s.text || "Texte").length;
+      if (near) return { s, h: -1 };
+    }
+    return null;
+  }
+  const NEED2 = { trend: 1, rect: 1, fib: 1 };
+  function setTool(t) {
+    tool = t; pending = null; if (t !== "measure") measure = null;
+    document.querySelectorAll("#btTools [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === t));
+    $("btWrap").classList.toggle("drawing", t !== "cross");
+  }
+  function create(type, p) {
+    const def = LS.get("bt-tpl-default", {})[type], s = { id: String(Date.now()) + Math.floor(Math.random() * 1e4), type, name: TOOLS[type], p, style: def ? JSON.parse(JSON.stringify(def)) : defStyle(type), text: type === "text" ? "Texte" : "", hidden: false, locked: false };
+    shapes.push(s); sel = s; saveDrawings();
+    if (type === "text") openSettings(s, "text");
+  }
+  function pos(e) { const r = $("btWrap").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function bindDrawing() {
+    const wrap = $("btWrap"), c = cv();
+    // outils de dessin : le canvas superposé reçoit les clics
+    c.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      const { x, y } = pos(e), q = at(x, y); if (!q) return;
+      if (tool === "measure") { if (measure && !measure.done) { measure.b = q; measure.done = true; setTool("cross"); measure = { ...measure }; } else measure = { a: q, b: q, done: false }; return; }
+      if (NEED2[tool]) { if (!pending) pending = { type: tool, p: [q, { ...q }], style: defStyle(tool), text: "" }; else { const p = pending.p; pending = null; const tt = tool; setTool("cross"); create(tt, [p[0], q]); } }
+      else if (TOOLS[tool]) { const tt = tool; setTool("cross"); create(tt, [q]); }
+    });
+    c.addEventListener("mousemove", (e) => { const { x, y } = pos(e), q = at(x, y); if (!q) return; if (pending) pending.p[1] = q; if (measure && !measure.done) measure.b = q; });
+    // mode curseur : sélection / déplacement des dessins avant le déplacement de la chart (phase de capture)
+    wrap.addEventListener("mousedown", (e) => {
+      if (tool !== "cross" || e.button !== 0) return;
+      const { x, y } = pos(e);
+      if (e.shiftKey) { const q = at(x, y); if (q) { setTool("measure"); measure = { a: q, b: q, done: false }; e.stopPropagation(); e.preventDefault(); } return; }
+      if (measure) measure = null;
+      const h = hit(x, y); if (!h) { if (sel) { sel = null; tree(); } return; }
+      sel = h.s; tree(); e.stopPropagation(); e.preventDefault();
+      if (h.s.locked || lockAll) return;
+      drag = { s: h.s, h: h.h, start: at(x, y), orig: h.s.p.map((p) => ({ ...p })) };
+    }, true);
+    window.addEventListener("mousemove", (e) => {
+      if (!drag) return; const { x, y } = pos(e), q = at(x, y); if (!q || !drag.start) return;
+      const dt = q.t - drag.start.t, dp = q.price - drag.start.price;
+      if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
+      else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
+    });
+    window.addEventListener("mouseup", () => { if (drag) { drag = null; saveDrawings(); } });
+    wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
+  }
+  function tree() {
+    const el = $("btTreeList"); if (!el) return;
+    el.innerHTML = shapes.length ? [...shapes].reverse().map((s) => `<div class="row ${s === sel ? "sel" : ""}" data-id="${s.id}"><span>${esc(s.name)}${s.text ? " · " + esc(s.text) : ""}</span><button data-a="eye" title="Afficher / masquer">${s.hidden ? "◌" : "👁"}</button><button data-a="lock" title="Verrouiller">${s.locked ? "🔒" : "🔓"}</button><button data-a="del" title="Supprimer">🗑</button></div>`).join("") : `<div class="row" style="color:#8a8f98">Aucun dessin</div>`;
+  }
+
+  /* ---------------- fenêtre de paramètres + modèles de dessin ---------------- */
+  let edit = null, editCopy = null, editTab = "style";
+  function openSettings(s, tab) {
+    edit = s; editCopy = JSON.parse(JSON.stringify({ style: s.style, text: s.text, p: s.p })); editTab = tab || "style";
+    $("btSetT").textContent = s.name; fillTpl(); setBody(); $("btSet").classList.add("show");
+  }
+  function fillTpl() { const t = tpls()[edit.type] || {}; $("btTpl").innerHTML = `<option value="">Modèle…</option>` + Object.keys(t).map((n) => `<option value="${esc(n)}">${esc(n)}</option>`).join("") + `<option value="__def">Enregistrer comme style par défaut</option>`; }
+  function setBody() {
+    const s = edit, st = s.style;
+    document.querySelectorAll(".tx-st button").forEach((b) => b.classList.toggle("on", b.dataset.st === editTab));
+    let h = "";
+    if (editTab === "style") {
+      h += `<div class="r">Couleur <input type="color" data-k="color" value="${st.color}"></div><div class="r">Épaisseur <select data-k="width">${[1, 2, 3, 4].map((w) => `<option ${w == st.width ? "selected" : ""}>${w}</option>`).join("")}</select></div>`;
+      h += `<div class="r">Style de ligne <select data-k="dash"><option value="0" ${st.dash == 0 ? "selected" : ""}>Continu</option><option value="1" ${st.dash == 1 ? "selected" : ""}>Tirets</option><option value="2" ${st.dash == 2 ? "selected" : ""}>Pointillés</option></select></div>`;
+      if (s.type === "rect") h += `<div class="r">Fond <span><input type="color" data-k="fillc" value="${rgbHex(st.fill)}"> opacité <input type="number" data-k="filla" min="0" max="100" value="${Math.round(alpha(st.fill) * 100)}" style="width:60px">%</span></div>`;
+      if (["trend", "rect", "fib"].includes(s.type)) h += `<div class="r">Prolonger à gauche <input type="checkbox" data-k="extL" ${st.extL ? "checked" : ""}></div><div class="r">Prolonger à droite <input type="checkbox" data-k="extR" ${st.extR ? "checked" : ""}></div>`;
+      if (s.type === "fib" || s.type === "hline") h += `<div class="r">Afficher les prix <input type="checkbox" data-k="labels" ${st.labels ? "checked" : ""}></div>`;
+      if (s.type === "fib") h += `<div class="lvs">${st.levels.map((lv, i) => `<div class="lv"><input type="checkbox" data-lv="${i}" data-f="on" ${lv.on ? "checked" : ""}><input type="number" step="0.001" data-lv="${i}" data-f="k" value="${lv.k}"><input type="color" data-lv="${i}" data-f="c" value="${lv.c}"></div>`).join("")}</div><button class="ghost" id="btLvAdd" style="margin-top:6px">＋ Niveau</button>`;
+    } else if (editTab === "coords") {
+      h += s.p.map((p, i) => `<div class="r">Point ${i + 1} <span>prix <input type="number" step="0.25" data-pt="${i}" value="${p.price}" style="width:110px"> <small>${dstr(p.t)} ${hm(p.t)}</small></span></div>`).join("");
+    } else {
+      h += `<div class="r">Texte <input type="text" data-k="text" value="${esc(s.text)}" style="width:220px"></div><div class="r">Couleur du texte <input type="color" data-k="textColor" value="${st.textColor}"></div><div class="r">Taille <select data-k="fontSize">${[10, 11, 12, 14, 16, 20, 24].map((f) => `<option ${f == st.fontSize ? "selected" : ""}>${f}</option>`).join("")}</select></div>`;
+    }
+    $("btSetBody").innerHTML = h;
+    if ($("btLvAdd")) $("btLvAdd").onclick = () => { st.levels.push({ k: 1.272, c: "#9c27b0", on: true }); setBody(); };
+  }
+  const alpha = (c) => { const m = /rgba\([^)]*,\s*([\d.]+)\)/.exec(c || ""); return m ? +m[1] : 1; };
+  const rgbHex = (c) => { const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c || ""); return m ? "#" + [m[1], m[2], m[3]].map((x) => (+x).toString(16).padStart(2, "0")).join("") : c && c[0] === "#" ? c : "#2962ff"; };
+  const hexRgba = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
+  function bindSettings() {
+    const onEdit = (e) => {
+      const el = e.target, s = edit; if (!s) return; const st = s.style, k = el.dataset.k;
+      if (el.dataset.lv !== undefined) { const lv = st.levels[+el.dataset.lv], f = el.dataset.f; lv[f] = f === "on" ? el.checked : f === "k" ? +el.value : el.value; return; }
+      if (el.dataset.pt !== undefined) { s.p[+el.dataset.pt].price = +el.value; return; }
+      if (k === "text") s.text = el.value;
+      else if (k === "fillc" || k === "filla") { const b = $("btSetBody"); st.fill = hexRgba(b.querySelector('[data-k="fillc"]').value, (+b.querySelector('[data-k="filla"]').value || 0) / 100); }
+      else if (el.type === "checkbox") st[k] = el.checked; else if (["width", "dash", "fontSize"].includes(k)) st[k] = +el.value; else if (k) st[k] = el.value;
+    };
+    $("btSetBody").addEventListener("input", onEdit); $("btSetBody").addEventListener("change", onEdit);
+    document.querySelectorAll(".tx-st button").forEach((b) => (b.onclick = () => { editTab = b.dataset.st; setBody(); }));
+    const close = () => { $("btSet").classList.remove("show"); const n = $("btTplName"); if (n) n.remove(); edit = null; };
+    $("btSetOk").onclick = () => { saveDrawings(); close(); };
+    $("btSetCancel").onclick = () => { if (edit) Object.assign(edit, JSON.parse(JSON.stringify(editCopy))); close(); };
+    $("btSet").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.id !== "btTplName" && e.target.tagName !== "TEXTAREA") $("btSetOk").click(); if (e.key === "Escape") $("btSetCancel").click(); });
+    $("btTpl").onchange = () => {
+      const n = $("btTpl").value; if (!n) return;
+      if (n === "__def") { const d = LS.get("bt-tpl-default", {}); d[edit.type] = JSON.parse(JSON.stringify(edit.style)); LS.set("bt-tpl-default", d); msg(`Style par défaut enregistré pour « ${edit.name} ».`); $("btTpl").value = ""; return; }
+      const t = tpls()[edit.type]; if (t && t[n]) { edit.style = JSON.parse(JSON.stringify(t[n])); setBody(); }
+    };
+    // prompt() n'existe pas dans Electron : champ de nom en ligne
+    $("btTplSave").onclick = () => {
+      let inp = $("btTplName");
+      if (!inp) { inp = document.createElement("input"); inp.id = "btTplName"; inp.placeholder = "Nom du modèle"; inp.style.width = "130px"; $("btTplSave").before(inp); inp.focus();
+        inp.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); $("btTplSave").click(); } }; return; }
+      const n = inp.value.trim(); if (!n) return inp.focus();
+      const t = tpls(); t[edit.type] = t[edit.type] || {}; t[edit.type][n] = JSON.parse(JSON.stringify(edit.style)); LS.set("bt-tpl", t); inp.remove(); fillTpl(); $("btTpl").value = n; msg(`Modèle « ${n} » enregistré (${edit.name}).`);
+    };
+    $("btTplDel").onclick = () => { const n = $("btTpl").value; if (!n || n === "__def") return; const t = tpls(); delete (t[edit.type] || {})[n]; LS.set("bt-tpl", t); fillTpl(); };
+  }
+
+  /* ---------------- UI : KPI, panneau d'ordres, tableaux du bas ---------------- */
+  let tab = "pos";
+  function ui() {
+    if (!$("kBal")) return;
+    const u = upl(), rp = A.rpDay, dayLoss = Math.max(0, -(rp + u));
+    $("kBal").textContent = usd(A.bal); $("kMll").textContent = usd(A.mll); $("kRp").textContent = usd(rp); $("kUp").textContent = usd(u); $("kDl").textContent = usd(-dayLoss);
+    $("kRpW").className = "tx-kpi " + (rp > 0 ? "pos" : rp < 0 ? "neg" : ""); $("kUpW").className = "tx-kpi " + (u > 0 ? "pos" : u < 0 ? "neg" : "");
+    $("kDlBar").style.width = Math.min(100, (dayLoss / DLL) * 100) + "%";
+    const p = last(); $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - TICK).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + TICK).toFixed(2) : "—";
+    $("oPos").textContent = A.pos ? `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name} @ ${A.pos.avg.toFixed(2)} · ${usd(u)}` : A.blown ? "Compte cramé (MLL)" : A.dllHit ? "DLL atteinte" : "No Active Position";
+    const q = Math.max(1, parseInt($("oQty").value, 10) || 1), ty = $("oType").value.toUpperCase();
+    $("oBuy").textContent = `BUY +${q} @ ${ty}`; $("oSell").textContent = `SELL -${q} @ ${ty}`;
+    $("oPxW").hidden = $("oType").value === "Market"; $("oBrk").style.display = $("oBr").value === "1" ? "" : "none";
+    const t = (rows, head) => `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("") || `<tr><td colspan="${head.length}" style="color:#8a8f98">Rien</td></tr>`}</tbody></table>`;
+    if (tab === "pos") $("btBottom").innerHTML = t(A.pos ? [`<tr><td>${CTR[A.pos.ctr].name}</td><td>${A.pos.qty}</td><td>${A.pos.avg.toFixed(2)}</td><td>${p != null ? p.toFixed(2) : ""}</td><td style="color:${u >= 0 ? "#26a69a" : "#ef5350"}">${usd(u)}</td><td><button data-x="flat">Close</button></td></tr>`] : [], ["Contrat", "Qté", "Prix moyen", "Dernier", "UP&L", ""]);
+    if (tab === "ord") $("btBottom").innerHTML = t(A.orders.map((o) => `<tr><td>${CTR[o.ctr].name}</td><td>${o.bracket || o.type}</td><td>${o.qty > 0 ? "Buy" : "Sell"}</td><td>${Math.abs(o.qty)}</td><td>${o.px.toFixed(2)}</td><td><button data-x="cxl" data-id="${o.id}">Cancel</button></td></tr>`), ["Contrat", "Type", "Sens", "Qté", "Prix", ""]);
+    if (tab === "trd") { const tot = A.trades.reduce((a, x) => a + x.pnl, 0), wins = A.trades.filter((x) => x.pnl > 0).length;
+      $("btBottom").innerHTML = `<div style="padding:4px 10px;color:#9aa0aa">${A.trades.length} trades · win rate ${A.trades.length ? Math.round(wins / A.trades.length * 100) : 0}% · total ${usd(tot)}</div>` + t([...A.trades].reverse().map((x) => `<tr><td>${dstr(x.tIn)} ${hm(x.tIn)}</td><td>${hm(x.tOut)}</td><td>${CTR[x.ctr].name}</td><td>${x.side}</td><td>${x.qty}</td><td>${x.entry}</td><td>${x.exit}</td><td>${esc(x.why)}</td><td style="color:${x.pnl >= 0 ? "#26a69a" : "#ef5350"}">${usd(x.pnl)}</td></tr>`), ["Entrée", "Sortie", "Contrat", "Sens", "Qté", "Prix in", "Prix out", "Sortie par", "P&L (frais inclus)"]); }
   }
 
   async function importCsv() {
     if (D && D.dataImport) { const r = await D.dataImport(); if (!r.ok) { if (r.reason !== "cancel") msg("Import impossible : " + r.reason, true); return; } S.csv = r.data; msg(`${r.name} : ${r.data.length} bougies importées`); }
-    else { const f = $("btFile").files[0]; if (!f) return $("btFile").click(); S.csv = parseCsvText(await f.text()); msg(`${f.name} : ${S.csv.length} bougies importées`); }
-    $("btSym").value = "CSV"; if (S.csv.length) { const o = parts(S.csv[S.csv.length - 1][0] * 1000); $("btDate").value = `${o.year}-${o.month}-${o.day}`; } load();
+    else { const f = $("btFile").files[0]; if (!f) return $("btFile").click(); S.csv = parseCsvText(await f.text()); $("btFile").value = ""; msg(`${f.name} : ${S.csv.length} bougies importées`); }
+    if (!S.csv.length) return;
+    $("btSym").value = "CSV"; const o = parts(S.csv[S.csv.length - 1][0] * 1000); $("btDate").value = `${o.year}-${o.month}-${o.day}`; load();
   }
   async function syncData() {
     if (!D || !D.dataSync) return msg("La synchro des bougies se fait dans l'app Windows.", true);
-    $("btSync").disabled = true; msg("Synchronisation des bougies TopstepX… (le premier téléchargement depuis 2023 prend quelques minutes)");
-    const r = await D.dataSync(); $("btSync").disabled = false;
-    msg(r.ok ? "Bougies à jour : " + Object.entries(r.summary).map(([k, v]) => `${k} +${v.m1} m1 / +${v.s1} 1s`).join(" · ") : r.reason === "login" ? "Connecte-toi à TopstepX (fenêtre ouverte) puis relance." : "Synchro impossible : " + r.reason, !r.ok);
-    status();
+    $("btSync").disabled = true; msg("Synchronisation des bougies TopstepX…"); const r = await D.dataSync(); $("btSync").disabled = false;
+    msg(r.ok ? "Bougies à jour : " + Object.entries(r.summary).map(([k, v]) => `${k} +${v.m1} m1 / +${v.s1} 1s`).join(" · ") : r.reason === "login" ? "Connecte-toi à TopstepX (fenêtre ouverte) puis relance." : "Synchro impossible : " + r.reason, !r.ok); status();
   }
 
   let ready = false;
   function init() {
-    if (ready) return; ready = true;
+    if (ready || !$("btLoad")) return; ready = true;
     $("btDate").value = lastTradingDay();
-    $("btLoad").onclick = load; $("btPlay").onclick = () => play(); $("btNext").onclick = () => step(1); $("btPrev").onclick = () => step(-1);
+    $("btLoad").onclick = load; $("btPlay").onclick = () => play(); $("btNext").onclick = () => step(1); $("btPrev").onclick = back;
     $("btReset").onclick = () => { play(false); load(); };
-    $("btTf").onchange = () => { S.tf = +$("btTf").value; draw(true); };
-    $("btLine").onclick = () => { lineMode = !lineMode; $("btLine").classList.toggle("on", lineMode); };
-    $("btClear").onclick = () => { lines.forEach((l) => cs && cs.removePriceLine(l)); lines = []; };
-    $("btFit").onclick = () => chart && chart.timeScale().fitContent();
     $("btSpeed").onchange = () => { if (S.playing) play(true); };
-    $("btSym").onchange = () => { $("btPv").value = PV[$("btSym").value] || $("btPv").value; };
-    $("btBuy").onclick = () => trade(1); $("btSell").onclick = () => trade(-1); $("btFlat").onclick = close;
-    $("btImport").onclick = importCsv; if ($("btFile")) $("btFile").onchange = importCsv;
-    $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
+    $("btTfs").onclick = (e) => {
+      const b = e.target.closest("[data-tf]"); if (!b) return;
+      const old = S.tf; S.tf = +b.dataset.tf; document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
+      const span = (tf) => (tf >= 1440 ? 3 : tf >= 240 ? 2 : tf >= 60 ? 1 : 0);
+      if (S.raw.length && span(S.tf) > span(old)) { // plus d'historique nécessaire : on recharge en gardant l'heure du replay
+        const cur = S.raw[S.cur][0];
+        load().then(() => { const i = S.raw.findIndex((x) => x[0] >= cur); if (i >= 0) { S.cur = i; S.done = Math.max(S.done, i); } draw(true); ui(); });
+        return;
+      }
+      draw(true);
+    };
+    $("btSym").onchange = () => { const s = $("btSym").value; if (s === "NQ" && !["NQ", "MNQ"].includes($("oCtr").value)) $("oCtr").value = "MNQ"; if (s === "ES" && !["ES", "MES"].includes($("oCtr").value)) $("oCtr").value = "MES"; ui(); };
+    $("btTools").onclick = (e) => { const b = e.target.closest("[data-tool]"); if (b) setTool(b.dataset.tool); };
+    $("btMagnet").onclick = () => { magnet = !magnet; $("btMagnet").classList.toggle("on", magnet); };
+    $("btLockAll").onclick = () => { lockAll = !lockAll; $("btLockAll").classList.toggle("on", lockAll); };
+    $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
+    $("btDelAll").onclick = () => { if (shapes.length && confirm("Supprimer tous les dessins de cette chart ?")) { shapes = []; sel = null; saveDrawings(); } };
+    $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; tree(); };
+    $("btTreeList").onclick = (e) => { const row = e.target.closest("[data-id]"); if (!row) return; const s = shapes.find((x) => String(x.id) === row.dataset.id); if (!s) return; const a = e.target.dataset.a;
+      if (a === "eye") s.hidden = !s.hidden; else if (a === "lock") s.locked = !s.locked; else if (a === "del") { shapes = shapes.filter((x) => x !== s); if (sel === s) sel = null; } else sel = s; saveDrawings(); };
+    $("btTreeList").ondblclick = (e) => { const row = e.target.closest("[data-id]"); const s = row && shapes.find((x) => String(x.id) === row.dataset.id); if (s) openSettings(s); };
+    // panneau d'ordres (simulé, uniquement sur le compte démo du backtesteur)
+    $("oBuy").onclick = () => order(1); $("oSell").onclick = () => order(-1);
+    $("oFlat").onclick = () => { if (S.raw.length) { flatten("Flatten"); draw(); ui(); } };
+    $("oCancel").onclick = () => { A.orders = A.pos ? A.orders.filter((o) => o.bracket) : []; saveAcc(); draw(); ui(); };
+    ["oType", "oQty", "oBr", "oCtr"].forEach((id) => $(id).addEventListener("input", () => { if (id === "oType" && $("oType").value !== "Market" && last() != null) $("oPx").value = last(); ui(); }));
+    document.querySelector(".tx-qs").onclick = (e) => { const q = e.target.dataset.q; if (!q) return; const cur = parseInt($("oQty").value, 10) || 1; $("oQty").value = q === "+" ? cur + 1 : q === "-" ? Math.max(1, cur - 1) : q; ui(); };
+    $("btAccReset").onclick = () => { if (!confirm("Remettre le compte démo à 50 000 $ (trades effacés) ?")) return; A = freshAcc(); markers = []; saveAcc(); draw(); ui(); msg("Compte démo 50K réinitialisé."); };
+    document.querySelector(".tx-tabs").onclick = (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; tab = b.dataset.tab; document.querySelectorAll(".tx-tabs [data-tab]").forEach((x) => x.classList.toggle("on", x === b)); ui(); };
+    $("btBottom").onclick = (e) => { const x = e.target.dataset.x; if (x === "flat") { flatten("Close"); draw(); ui(); } if (x === "cxl") { A.orders = A.orders.filter((o) => String(o.id) !== e.target.dataset.id); saveAcc(); draw(); ui(); } };
+    $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
     if (!D || !D.dataSync) { $("btSync").hidden = true; $("btDir").hidden = true; }
     if (D && D.onData) D.onData((k, p) => { if (k === "progress") msg(`Synchro ${p.sym} ${p.kind} : jusqu'au ${p.upTo} (+${p.added})`); if (k === "done") status(); });
+    // raccourcis clavier (TradingView / TopstepX)
     document.addEventListener("keydown", (e) => {
-      if (!$("v-backtest").classList.contains("on") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
-      if (e.key === " ") { e.preventDefault(); play(); } else if (e.key === "ArrowRight") step(1); else if (e.key === "ArrowLeft") step(-1);
-      else if (e.key === "b") trade(1); else if (e.key === "s") trade(-1); else if (e.key === "f") close();
+      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      const k = e.key.toLowerCase();
+      if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
+      if (k === "escape") { setTool("cross"); measure = null; sel = null; tree(); }
+      else if ((k === "delete" || k === "backspace") && sel) { e.preventDefault(); shapes = shapes.filter((x) => x !== sel); sel = null; saveDrawings(); }
+      else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
+      else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
     });
-    
-    renderTrades();
+    bindDrawing(); bindSettings(); loadDrawings(); ui();
   }
-  window.bt = { show() { init(); status(); setTimeout(draw, 0); } };
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), show() { init(); status(); setTimeout(() => { draw(); ui(); }, 0); } };
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
+})();
+</script>
+<script>
+/* ---------- Trade copier Tradovate (leader -> followers) ---------- */
+(function () {
+  const D = window.desktop, $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  let cfg = null, timer = null;
+  const blank = () => ({ dry_run: true, flatten_followers_on_exit: false, reconcile_seconds: 2, logins: { compte1: { username: "", password: "", cid: 0, sec: "", environment: "demo" } }, leader: { login: "compte1", account: "" }, followers: [{ login: "compte1", account: "", multiplier: 1, max_contracts: 1, symbol_map: {}, enabled: true }] });
+  const mapTxt = (m) => Object.entries(m || {}).map(([a, b]) => `${a}→${b}`).join(", ");
+  const parseMap = (t) => { const o = {}; String(t || "").split(/[,;]/).forEach((p) => { const m = p.split(/→|->|=|:/).map((x) => x.trim().toUpperCase()); if (m[0] && m[1]) o[m[0]] = m[1]; }); return o; };
+
+  function render() {
+    const keys = Object.keys(cfg.logins), opt = (sel) => keys.map((k) => `<option ${k === sel ? "selected" : ""}>${esc(k)}</option>`).join("");
+    $("cpLogins").innerHTML = keys.map((k) => { const l = cfg.logins[k]; return `<tr data-k="${esc(k)}">
+      <td><input data-f="key" value="${esc(k)}" style="width:90px"></td><td><input data-f="username" value="${esc(l.username)}"></td>
+      <td><input data-f="password" type="password" value="${esc(l.password)}"></td><td><input data-f="cid" type="number" value="${esc(l.cid)}" style="width:80px"></td>
+      <td><input data-f="sec" type="password" value="${esc(l.sec)}"></td>
+      <td><select data-f="environment"><option ${l.environment !== "live" ? "selected" : ""}>demo</option><option ${l.environment === "live" ? "selected" : ""}>live</option></select></td>
+      <td><button class="btn gray" data-del-login="${esc(k)}">✕</button></td></tr>`; }).join("");
+    $("cpLeaderLogin").innerHTML = opt(cfg.leader.login); $("cpLeaderAcc").value = cfg.leader.account || "";
+    $("cpFollowers").innerHTML = cfg.followers.map((f, i) => `<tr data-i="${i}">
+      <td><input type="checkbox" data-f="enabled" ${f.enabled !== false ? "checked" : ""}></td><td><select data-f="login">${opt(f.login)}</select></td>
+      <td><input data-f="account" value="${esc(f.account)}"></td><td><input data-f="multiplier" type="number" step="0.1" min="0.1" value="${esc(f.multiplier)}" style="width:70px"></td>
+      <td><input data-f="max_contracts" type="number" min="1" value="${esc(f.max_contracts)}" style="width:70px"></td>
+      <td><input data-f="symbol_map" value="${esc(mapTxt(f.symbol_map))}" placeholder="NQ→MNQ, ES→MES"></td>
+      <td><button class="btn gray" data-del-f="${i}">✕</button></td></tr>`).join("");
+    $("cpDry").checked = cfg.dry_run !== false; $("cpFlat").checked = !!cfg.flatten_followers_on_exit; $("cpSec").value = cfg.reconcile_seconds || 2;
+  }
+  function collect() {
+    const logins = {};
+    document.querySelectorAll("#cpLogins tr").forEach((tr) => { const g = (f) => tr.querySelector(`[data-f="${f}"]`).value; const k = g("key").trim() || "compte"; logins[k] = { username: g("username").trim(), password: g("password"), cid: +g("cid") || 0, sec: g("sec").trim(), environment: g("environment") }; });
+    const followers = [...document.querySelectorAll("#cpFollowers tr")].map((tr) => { const g = (f) => tr.querySelector(`[data-f="${f}"]`); return { login: g("login").value, account: g("account").value.trim(), multiplier: +g("multiplier").value || 1, max_contracts: parseInt(g("max_contracts").value, 10) || 1, symbol_map: parseMap(g("symbol_map").value), enabled: g("enabled").checked }; });
+    cfg = { ...cfg, dry_run: $("cpDry").checked, flatten_followers_on_exit: $("cpFlat").checked, reconcile_seconds: +$("cpSec").value || 2, logins, leader: { login: $("cpLeaderLogin").value, account: $("cpLeaderAcc").value.trim() }, followers };
+    return cfg;
+  }
+  const say = (t, bad) => { $("cpMsg").textContent = t; $("cpMsg").style.color = bad ? "#ff8a8a" : ""; };
+  function log(l) { const el = $("cpLog"); const d = document.createElement("div"); d.className = "cp-l cp-" + l.level; d.textContent = l.line; el.appendChild(d); while (el.children.length > 400) el.firstChild.remove(); el.scrollTop = el.scrollHeight; }
+  async function refresh() {
+    const r = await D.copierStatus(); const on = r.running;
+    $("cpState").textContent = on ? (r.data && r.data.dry ? "● Actif — SIMULATION" : "● Actif — RÉEL") : "○ Arrêté"; $("cpState").className = "cp-state " + (on ? (r.data && r.data.dry ? "sim" : "live") : "");
+    $("cpStart").disabled = on; $("cpStop").disabled = !on;
+    const s = r.data; const pos = (o) => Object.entries(o || {}).filter(([, n]) => n).map(([k, n]) => `${k} ${n > 0 ? "+" : ""}${n}`).join(", ") || "flat";
+    $("cpPos").innerHTML = s && s.leader ? `<div><b>Leader</b> ${esc(s.leader.label)} : ${esc(pos(s.leader.positions))}${s.leader.synced ? "" : " (flux coupé)"}</div>` + s.followers.map((f) => `<div><b>Follower</b> ${esc(f.label)} x${f.multiplier} (max ${f.max}) : ${esc(pos(f.positions))}${f.synced ? "" : " (flux coupé)"}</div>`).join("") : "";
+  }
+  let ready = false;
+  async function init() {
+    if (ready) return; ready = true;
+    if (!D || !D.copierGetConfig) { $("cpRoot").innerHTML = `<div class="jempty"><b>Trade copier</b>Disponible dans l'app Windows uniquement (il se connecte à Tradovate depuis ton PC).</div>`; return; }
+    const r = await D.copierGetConfig(); cfg = (r.ok && r.data) || blank(); render();
+    $("cpAddLogin").onclick = () => { collect(); let n = 1; while (cfg.logins["compte" + n]) n++; cfg.logins["compte" + n] = { username: "", password: "", cid: 0, sec: "", environment: "demo" }; render(); };
+    $("cpAddF").onclick = () => { collect(); cfg.followers.push({ login: Object.keys(cfg.logins)[0], account: "", multiplier: 1, max_contracts: 1, symbol_map: {}, enabled: true }); render(); };
+    $("cpRoot").addEventListener("click", (e) => { const a = e.target.dataset; if (a.delLogin) { collect(); delete cfg.logins[a.delLogin]; if (!Object.keys(cfg.logins).length) cfg.logins.compte1 = blank().logins.compte1; render(); } if (a.delF !== undefined) { collect(); cfg.followers.splice(+a.delF, 1); render(); } });
+    $("cpSave").onclick = async () => { const r = await D.copierSaveConfig(collect()); say(r.ok ? "Config enregistrée (chiffrée sur ton PC)." : "Erreur : " + r.reason, !r.ok); };
+    $("cpStart").onclick = async () => { await D.copierSaveConfig(collect()); if (!cfg.dry_run && !confirm("MODE RÉEL : des ordres seront envoyés sur les followers. Continuer ?")) return; say("Connexion à Tradovate…"); $("cpStart").disabled = true; const r = await D.copierStart(); say(r.ok ? "Copieur lancé." : "Erreur : " + r.reason, !r.ok); refresh(); };
+    $("cpStop").onclick = async () => { await D.copierStop(); say("Copieur arrêté."); refresh(); };
+    D.onCopierLog(log); refresh(); timer = setInterval(() => { if ($("v-copier").classList.contains("on")) refresh(); }, 2000);
+  }
+  window.copierUI = { show: init };
+  if ($("v-copier") && $("v-copier").classList.contains("on")) init();
 })();
 </script>
 </body>

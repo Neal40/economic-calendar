@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell, ipcMain, session, net, safeStorage, Notification, dialog } = require("electron");
 const marketdata = require("./marketdata");
+const copierLib = require("./copier");
 const path = require("path");
 const fs = require("fs");
 const topstepx = require("./topstepx");
@@ -155,6 +156,38 @@ ipcMain.handle("data:import", async () => {
   if (r.canceled || !r.filePaths[0]) return { ok: false, reason: "cancel" };
   try { return { ok: true, name: require("path").basename(r.filePaths[0]), data: marketdata.parseCsv(require("fs").readFileSync(r.filePaths[0], "utf8")) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
 });
+
+/* ---------- Trade copier Tradovate (leader -> followers) ---------- */
+let copier = null;
+const CPFILE = () => require("path").join(app.getPath("userData"), "copier-config.bin");
+const CPLOG = () => require("path").join(app.getPath("userData"), "copier.log");
+function cpRead() {
+  const fs = require("fs"); try { const b = fs.readFileSync(CPFILE()); return JSON.parse(safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8")); } catch (e) { return null; }
+}
+function cpWrite(cfg) {
+  const fs = require("fs"), txt = JSON.stringify(cfg);
+  fs.writeFileSync(CPFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(txt) : Buffer.from(txt, "utf8"));
+}
+function cpLog(level, text) {
+  const line = `${new Date().toLocaleTimeString("fr-FR")}  ${level.toUpperCase().padEnd(5)} ${text}`;
+  try { require("fs").appendFileSync(CPLOG(), new Date().toISOString() + " " + level + " " + text + "\n"); } catch (e) { /* ignore */ }
+  try { win && win.webContents.send("copier:log", { level, line }); } catch (e) { /* ignore */ }
+}
+ipcMain.handle("copier:getConfig", () => ({ ok: true, data: cpRead() }));
+ipcMain.handle("copier:saveConfig", (e, cfg) => { try { const old = cpRead() || {}; cfg.device_id = old.device_id || cfg.device_id || copierLib.newDeviceId(); cpWrite(cfg); return { ok: true }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("copier:start", async () => {
+  if (copier) return { ok: false, reason: "déjà lancé" };
+  const cfg = cpRead(); if (!cfg) return { ok: false, reason: "config vide" };
+  if (!cfg.device_id) { cfg.device_id = copierLib.newDeviceId(); cpWrite(cfg); }
+  try {
+    copier = new copierLib.Copier(cfg, cfg.device_id, cpLog);
+    await copier.start(async (lines) => (await dialog.showMessageBox(win, { type: "warning", buttons: ["Aligner maintenant", "Annuler"], defaultId: 1, cancelId: 1, title: "Trade copier", message: "Écarts entre leader et followers au démarrage", detail: lines.join("\n") })).response === 0);
+    return { ok: true };
+  } catch (err) { cpLog("error", "Erreur : " + (err.message || err)); try { copier && (await copier.stop()); } catch (e) { /* ignore */ } copier = null; return { ok: false, reason: String(err.message || err) }; }
+});
+ipcMain.handle("copier:stop", async () => { if (copier) { await copier.stop(); copier = null; } return { ok: true }; });
+ipcMain.handle("copier:status", () => ({ ok: true, running: !!copier, data: copier ? copier.snapshot() : null }));
+app.on("before-quit", () => { if (copier) { try { copier.stop(); } catch (e) { /* ignore */ } } });
 
 app.whenReady().then(() => { createWindow(); mdSchedule(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
