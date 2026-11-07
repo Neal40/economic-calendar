@@ -602,6 +602,9 @@ table.tbl:has(#subT){min-width:900px}
 .tx-chartwrap[data-cur=dot] *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27%3E%3Ccircle cx=%276%27 cy=%276%27 r=%273%27 fill=%27%23000%27 stroke=%27%23fff%27/%3E%3C/svg%3E") 6 6,crosshair!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
+#btChart2{position:absolute;inset:0;z-index:0}
+.tx-cw2{border-left:2px solid #2a2e39}
+.tx-tb.on{color:var(--tx-acc)}
 #btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .tx-chartwrap.drawing #btDraw{pointer-events:auto;cursor:crosshair}
 .tx-legend{position:absolute;left:8px;top:6px;z-index:3;pointer-events:none;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#131722;white-space:nowrap}
@@ -935,6 +938,7 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
           <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button>
           <button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
+          <button class="tx-tb" id="btSplitBtn" title="2 charts côte à côte : NQ + ES synchronisés sur le replay">◫ NQ+ES</button>
           <button class="tx-hb" id="btTreeBtn" title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
         <div class="tx-mid">
@@ -953,6 +957,7 @@ table.tbl:has(#subT){min-width:900px}
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
+          <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><div class="tx-legend" id="btLegend2"></div></div>
           <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets<button id="btNewF" title="Nouveau groupe (avec la sélection)">📁＋</button></div><div id="btTreeList"></div></div>
         </div>
         <div class="tx-foot"><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
@@ -3051,7 +3056,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (sym === "CSV") { if (!S.csv) return msg("Importe d'abord un CSV.", true); S.raw = S.csv.filter((b) => b[0] >= from && b[0] <= to); }
     else {
       if (!D || !D.dataRead) return msg("Les bougies TopstepX sont lues par l'app Windows — ou importe un CSV.", true);
-      msg("Chargement…"); const r = await D.dataRead(sym, from, to, "m1"); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data;
+      msg("Chargement…"); const r = await D.dataRead(sym, from, to, "m1"); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data; await loadSecond(from, to);
     }
     if (!S.raw.length) { msg("Aucune bougie pour cette date — « ⟳ Données » ou une autre date.", true); S.B = []; draw(true); return; }
     const [h, m] = ($("btStart").value || "09:30").split(":").map(Number), t0 = ny(d, h, m);
@@ -3145,6 +3150,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
   function applyPrefs() {
     if (!chart) return; const gv = (d) => P.grid === "both" || P.grid === d;
+    [chart2].forEach((c) => c && c.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } }));
+    if (cs2) cs2.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn });
     chart.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
       crosshair: { vertLine: { color: P.cross, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } });
     cs.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
@@ -3263,6 +3270,33 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     m.onclick = (e) => { const b = e.target.closest("[data-day],[data-go],[data-m]"); if (!b) return; if (b.dataset.day) openNews(b.dataset.day); else if (b.dataset.go) { closeModal(); gotoT(+b.dataset.go); } else if (b.dataset.m === "next") { closeModal(); nextNews(); } else if (b.dataset.m === "x") closeModal(); };
   }
 
+  /* ---------------- 2e chart côte à côte (NQ <-> ES), synchronisé sur l'heure du replay ---------------- */
+  let chart2 = null, cs2 = null, key2 = "", sync2 = false;
+  const sym2 = () => (S.sym === "NQ" ? "ES" : S.sym === "ES" ? "NQ" : null);
+  async function loadSecond(from, to) { S.raw2 = []; key2 = ""; if (!P.split || !sym2() || !D || !D.dataRead) return; const r = await D.dataRead(sym2(), from, to, "m1"); S.raw2 = r && r.ok ? r.data : []; }
+  function ensureChart2() {
+    if (chart2) return;
+    chart2 = LightweightCharts.createChart($("btChart2"), { autoSize: true, layout: { attributionLogo: false }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#000000" }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, barSpacing: 7 }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) } });
+    cs2 = chart2.addCandlestickSeries({ priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
+    const link = (a, b) => a.timeScale().subscribeVisibleLogicalRangeChange(() => { if (sync2 || !P.split) return; const r = a.timeScale().getVisibleRange(); if (!r) return; sync2 = true; try { b.timeScale().setVisibleRange(r); } catch (e) { /* plage hors données */ } sync2 = false; });
+    link(chart, chart2); link(chart2, chart); applyPrefs();
+  }
+  function draw2() {
+    const on = !!(P.split && sym2()), w = $("btWrap2"); if (w && w.hidden === on) w.hidden = !on; if ($("btSplitBtn")) $("btSplitBtn").classList.toggle("on", !!P.split);
+    if (!on || !chart) return; ensureChart2();
+    const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [];
+    for (const b of S.raw2 || []) { if (b[0] > tCur) break; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4]]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; } }
+    cs2.setData(out.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] })));
+    const key = sym2() + S.tf + (S.raw2 && S.raw2[0] ? S.raw2[0][0] : 0); if (key !== key2) { key2 = key; const r = chart.timeScale().getVisibleRange(); try { if (r) chart2.timeScale().setVisibleRange(r); else chart2.timeScale().scrollToRealTime(); } catch (e) { chart2.timeScale().scrollToRealTime(); } }
+    const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${sym2() === "ES" ? "ESZ26 · S&P 500" : "NQZ26 · Nasdaq"} · ${tfName(S.tf)}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
+  }
+  async function toggleSplit() {
+    if (!sym2()) return msg("Les 2 charts côte à côte marchent avec NQ et ES (pas avec un CSV).", true);
+    P.split = !P.split; LS.set("bt-prefs", P);
+    if (P.split && S.raw.length && !(S.raw2 && S.raw2.length)) await loadSecond(S.raw[0][0], S.raw[S.raw.length - 1][0]);
+    draw(true); msg(P.split ? `2 charts : ${S.sym} + ${sym2()} synchronisés sur le replay.` : "1 chart.");
+  }
+
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
   let chart = null, cs = null, vs = null, lastKey = "", plines = [];
   function ensureChart() {
@@ -3303,7 +3337,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const first = bars[0][0], lastT = S.raw[S.cur][0];
     const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
     mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
-    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} UTC-5 (NY)`; legend(null);
+    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} UTC-5 (NY)`; legend(null); draw2();
   }
   // P&L si l'ordre de sortie est touché (frais inclus) : affiché à côté du TP / SL
   const exitPnl = (o) => { if (!A.pos || Math.sign(o.qty) === Math.sign(A.pos.qty)) return null; const c = CTR[A.pos.ctr], q = Math.min(Math.abs(o.qty), Math.abs(A.pos.qty)); return (o.px - A.pos.avg) * Math.sign(A.pos.qty) * q * c.pv - c.fee * q; };
@@ -3884,7 +3918,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
     document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
     $("btNewF").onclick = () => groupSel();
-    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); layName();
+    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName();
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
       if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
