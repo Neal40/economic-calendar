@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Economic Calendar · New York Time</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&family=Roboto+Condensed:wght@100;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#d2d5dd; --card:#e6e8ed; --card-b:#b8bbc5; --ink:#141518; --muted:#6c707b; --faint:#9a9ea8;
@@ -476,47 +476,117 @@ table.tbl:has(#subT){min-width:900px}
 .rv-gtools{display:flex;gap:6px}
 .rv-gtools button{background:#23242b;border:1px solid #2f3038;color:#d9dae0;border-radius:7px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
 .rv-gtools button.del{color:#ff8a8a}
-#v-backtest .tx{display:flex;flex-direction:column;height:100vh;background:#0b0d10;color:#d6d8de;font-family:Roboto,'Segoe UI',sans-serif;font-size:12.5px}
-.tx-top,.tx-bar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid #1f232b;flex-wrap:wrap}
-.tx-top{background:#0b0d10}.tx-bar{background:#0f1115}
-.tx-acc select,.tx-sym,.tx-in{background:#14171d;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:5px 8px;font-size:12.5px;font-weight:600}
-.tx-kpi{background:#14171d;border:1px solid #23272f;border-radius:4px;padding:6px 10px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:6px}
-.tx-kpi.pos{background:#1f6f43;border-color:#1f6f43}.tx-kpi.neg{background:#7a2323;border-color:#7a2323}
-.tx-dll{display:inline-block;width:90px;height:6px;background:#2a2e39;border-radius:3px;overflow:hidden}.tx-dll i{display:block;height:100%;width:0;background:#e0a106}
-.tx-mini{background:#14171d;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:5px 9px;cursor:pointer;font-size:12px}.tx-mini.on{background:#2962ff;border-color:#2962ff;color:#fff}
-.tx-sp{flex:1}.tx-sep{width:1px;height:20px;background:#2a2e39;margin:0 4px}.tx-data{font-size:11px;color:#8a8f98;max-width:430px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-tfs button{background:none;border:none;color:#d6d8de;padding:5px 7px;cursor:pointer;font-size:12.5px;border-radius:4px}.tx-tfs button.on{color:#f0b90b}.tx-tfs button:hover{background:#1c2028}
-.tx-ic{background:none;border:1px solid #2a2e39;color:#e3e5ea;border-radius:4px;padding:4px 8px;cursor:pointer}.tx-play{background:#2962ff;border-color:#2962ff;color:#fff}
-.tx-clock{font-family:'Space Mono',monospace;font-size:12.5px}.tx-msg{font-size:11.5px;color:#8a8f98;padding:3px 12px;min-height:18px}
-.tx-body{flex:1;display:flex;min-height:0}
-.tx-tools{width:46px;background:#0f1115;border-right:1px solid #1f232b;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0}
-.tx-tools button{width:36px;height:34px;background:none;border:none;color:#d6d8de;font-size:16px;border-radius:5px;cursor:pointer}
-.tx-tools button:hover{background:#1c2028}.tx-tools button.on{background:#e0a106;color:#111}.tx-tools i{width:28px;height:1px;background:#2a2e39;margin:6px 0}
-.tx-chartwrap{flex:1;position:relative;min-width:0}#btChart{position:absolute;inset:0;z-index:0}#btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
+/*TX-START*/
+#v-backtest .tx{--tx-bg:#1c1e23;--tx-panel:rgba(0,0,0,.4);--tx-pb:#2a292f;--tx-fg:#e6e8ef;--tx-tv:#0c0e12;--tx-tvfg:#e0e0e0;--tx-acc:#df981c;--tx-grey:#565656;--tx-notch:#111215;
+  display:flex;flex-direction:column;height:100vh;background:var(--tx-bg);color:var(--tx-fg);font-family:"Roboto Condensed","Arial Narrow",sans-serif;font-size:10.8px;padding:0 5.4px 5px;gap:0;overflow:hidden}
+#v-backtest .tx button{font-family:inherit;cursor:pointer}
+.tx-top{display:flex;align-items:center;gap:4px;padding:4px 0;height:42px;flex:none;min-width:0;overflow:hidden}
+.tx-acc{display:flex;align-items:center;height:34px;width:219px;padding:0 8px 0 14px;background:rgba(12,14,18,.7);border:1px solid var(--tx-fg);border-radius:4px;color:var(--tx-fg);font-size:14px;white-space:nowrap;flex:none}
+.tx-acc b{color:#fff;font-weight:700}.tx-acc span{flex:1;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.tx-kpi{display:flex;align-items:center;gap:4px;height:34px;padding:0 8px;background:rgba(12,14,18,.7);border:1px solid #22262f;border-radius:4px;font-size:14px;font-weight:800;white-space:nowrap;color:var(--tx-fg);flex:none}
+.tx-kpi b{font-weight:800}.tx-kpi.pos{background:rgba(67,152,77,.85);border-color:rgba(67,152,77,.85)}.tx-kpi.neg{background:rgba(189,63,59,.85);border-color:rgba(189,63,59,.85)}
+.tx-dll{display:inline-block;width:110px;height:8px;border-radius:4px;background:#3a3d44;overflow:hidden;margin:0 6px}.tx-dll i{display:block;height:100%;width:0;background:#e6e8ef}
+.tx-lk{width:34px;justify-content:center;padding:0}
+.tx-sp{flex:1}
+.tx-data{font-size:10px;color:#9e9e9e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tx-link{background:none;border:none;color:var(--tx-fg);font-size:12px;padding:4px 6px;border-radius:4px;white-space:nowrap}.tx-link:hover{background:rgba(255,255,255,.08)}
+.tx-dock{flex:1;display:flex;gap:8px;min-height:0}
+.tx-panel{background:var(--tx-panel);border:1px solid var(--tx-pb);display:flex;flex-direction:column;min-width:0;min-height:0}
+.tx-chartp{flex:1}.tx-orderp{width:201px;flex:none}
+.tx-dbar{height:31px;flex:none;display:flex;align-items:flex-end;border-bottom:1px solid var(--tx-grey);padding:0 8px;gap:10px}
+.tx-dtab{height:30px;display:flex;align-items:center;gap:6px;padding:3.5px 15.4px 3.5px 1.4px;font-size:14px;font-weight:500;color:var(--tx-fg);background:none;border:none;border-bottom:1px solid transparent;position:relative}
+.tx-dtab.on{border-bottom-color:var(--tx-pb)}.tx-dtab:not(.on){color:#8b8d93}
+.tx-dtab i{font-style:normal;color:#8b8d93;font-size:13px;position:absolute;right:2px}
+.tx-dot{width:10px;height:10px;border-radius:50%;background:#2f80ed;display:inline-block}
+.tx-tv{flex:1;display:flex;flex-direction:column;min-height:0;background:#22262f;gap:3px}
+.tx-head,.tx-foot{height:38px;flex:none;background:var(--tx-tv);color:var(--tx-tvfg);display:flex;align-items:center;gap:2px;padding:0 6px;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif;overflow:hidden;white-space:nowrap}
+.tx-foot{height:34px;font-size:13px}
+.tx-vs{width:1px;height:22px;background:#434651;margin:0 6px;flex:none}
+.tx-symb{display:flex;align-items:center;gap:6px;padding:0 6px;height:30px;border-radius:4px}.tx-symb:hover{background:#2a2e39}
+.tx-symb select{background:transparent;border:none;color:var(--tx-tvfg);font:600 14px inherit;font-family:inherit;appearance:none;cursor:pointer;padding:0;text-transform:uppercase}
+.tx-symb select option,.tx-hin option{background:#1e222d}
+.tx-tfs{display:flex;gap:1px}.tx-tfs button,.tx-fb{background:none;border:none;color:var(--tx-tvfg);font-size:14px;height:30px;min-width:30px;padding:0 6px;border-radius:4px}
+.tx-tfs button:hover,.tx-fb:hover,.tx-hb:hover{background:#2a2e39}
+.tx-tfs button.on,.tx-fb.on{color:var(--tx-acc)}
+.tx-fb{font-size:13px;height:26px}
+.tx-hb{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:4px;background:none;border:none;color:var(--tx-tvfg);font-size:14px;flex:none}
+.tx-hb.tx-on,.tx-hb.on{color:var(--tx-acc)}
+.tx-hl{font-size:13px;color:#b2b5be;margin:0 4px}
+.tx-hin{background:#0c0e12;border:1px solid #363a45;color:var(--tx-tvfg);border-radius:4px;height:28px;padding:0 6px;font-size:13px;font-family:inherit;color-scheme:dark;margin:0 2px}
+.tx-hbtn{height:28px;padding:0 12px;border-radius:4px;border:none;background:var(--tx-acc);color:#000;font-size:13px;font-weight:600;margin:0 2px}
+.tx-play{color:var(--tx-acc)!important;font-size:16px}
+.tx-mid{flex:1;display:flex;gap:3px;min-height:0}
+.tx-tools{width:52px;flex:none;background:var(--tx-tv);display:flex;flex-direction:column;align-items:stretch;padding-top:6px;overflow:auto}
+.tx-tools button{height:38px;width:52px;background:none;border:none;color:var(--tx-tvfg);display:flex;align-items:center;justify-content:center;padding:0}
+.tx-tools button svg{width:28px;height:28px}
+.tx-tools button:hover{color:#fff}.tx-tools button:hover svg{background:#2a2e39;border-radius:4px}
+.tx-tools button.on{color:var(--tx-acc)}
+.tx-tools button.tg.on svg{background:var(--tx-acc);color:#0c0e12;border-radius:4px}
+.tx-tools i{display:block;height:1px;background:#434651;margin:6px 10px}
+.tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
+#btChart{position:absolute;inset:0;z-index:0}
+#btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .tx-chartwrap.drawing #btDraw{pointer-events:auto;cursor:crosshair}
-.tx-tree{width:220px;background:#0f1115;border-left:1px solid #1f232b;overflow:auto}.tx-th{padding:8px 10px;font-weight:700;border-bottom:1px solid #1f232b}
-.tx-tree .row{display:flex;align-items:center;gap:6px;padding:5px 10px;cursor:pointer;border-bottom:1px solid #15181e}.tx-tree .row.sel{background:#1c2a4a}
-.tx-tree .row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tx-tree .row button{background:none;border:none;color:#9aa0aa;cursor:pointer;padding:0 2px}
-.tx-order{width:200px;background:#0f1115;border-left:1px solid #1f232b;padding:8px;display:flex;flex-direction:column;gap:7px;overflow:auto}
-.tx-oh{font-weight:700;border-bottom:2px solid #e0a106;padding-bottom:5px;width:max-content}
-.tx-f{display:flex;flex-direction:column;gap:2px;font-size:10px;color:#9aa0aa}.tx-f select,.tx-f input,.tx-brk input{background:#0b0d10;border:1px solid #3a3f4b;color:#fff;border-radius:4px;padding:7px 8px;font-size:14px;font-weight:600;width:100%}
-.tx-ba{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #2a2e39;border-radius:4px;text-align:center;font-size:10.5px}
-.tx-ba div{padding:6px 2px;display:flex;flex-direction:column}.tx-ba div:nth-child(2){border-left:1px solid #2a2e39;border-right:1px solid #2a2e39;justify-content:center;font-size:12px}
-.tx-posl{text-align:center;font-weight:700;font-size:11px;padding:4px 0}
-.tx-qs{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.tx-qs button{min-width:26px;height:24px;border-radius:12px;border:none;background:#3a3f4b;color:#fff;font-size:11px;cursor:pointer}
-.tx-brk{display:flex;gap:6px}.tx-brk label{font-size:10px;color:#9aa0aa;display:flex;flex-direction:column;gap:2px}
-.tx-buy,.tx-sell,.tx-2 button{border:none;border-radius:4px;padding:9px 4px;font-weight:700;font-size:11px;cursor:pointer;color:#fff}
-.tx-buy{background:#2e9e5b}.tx-sell{background:#d63b3b}.tx-2{display:flex;gap:4px}.tx-2 button{flex:1;background:#3a3f4b}
-.tx-bottom{height:160px;border-top:1px solid #1f232b;background:#0f1115;display:flex;flex-direction:column}
-.tx-tabs{display:flex;gap:2px;padding:4px 8px;border-bottom:1px solid #1f232b}.tx-tabs button{background:none;border:none;color:#9aa0aa;padding:4px 10px;cursor:pointer;font-weight:600}.tx-tabs button.on{color:#fff;border-bottom:2px solid #e0a106}
-.tx-tbl{flex:1;overflow:auto}.tx-tbl table{width:100%;border-collapse:collapse;font-size:12px}.tx-tbl th,.tx-tbl td{padding:4px 10px;border-bottom:1px solid #1a1d24;text-align:left}.tx-tbl th{color:#8a8f98;font-weight:600}
-.tx-tbl button{background:#3a3f4b;border:none;color:#fff;border-radius:3px;padding:2px 7px;cursor:pointer}
-.tx-set{background:#14171d!important;color:#e3e5ea;width:min(460px,100%)!important}.tx-set h2{font-size:17px}
-.tx-st{display:flex;gap:4px;border-bottom:1px solid #2a2e39;margin-bottom:10px}.tx-st button{background:none;border:none;color:#9aa0aa;padding:6px 10px;cursor:pointer}.tx-st button.on{color:#fff;border-bottom:2px solid #2962ff}
-.tx-set .r{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 0;font-size:13px}.tx-set input,.tx-set select,.tx-set textarea{background:#0b0d10!important;color:#fff!important;border:1px solid #3a3f4b!important;width:auto!important}
-.tx-set .lv{display:grid;grid-template-columns:20px 70px 40px;gap:6px;align-items:center;margin:3px 0}.tx-set .lvs{max-height:220px;overflow:auto}
-.tx-set .actions{display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px}.tx-set .ghost{background:#2a2e39;color:#fff;border:none;border-radius:6px;padding:7px 10px;cursor:pointer}.tx-set .primary{background:#2962ff;color:#fff;border:none;border-radius:6px;padding:7px 14px;cursor:pointer}
-#v-backtest .page{padding:0}
+.tx-legend{position:absolute;left:8px;top:6px;z-index:3;pointer-events:none;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#131722;white-space:nowrap}
+.tx-legend b{font-weight:400}.tx-legend .v{margin-left:8px}.tx-legend .up{color:#089981}.tx-legend .dn{color:#f23645}
+.tx-float{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:2px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;padding:3px 4px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.tx-float .grip{color:#787b86;padding:0 4px;cursor:default}
+.tx-float button,.tx-float select{background:none;border:none;color:#d1d4dc;height:28px;min-width:28px;border-radius:4px;font-size:14px}
+.tx-float select{font-size:12px;appearance:none;padding:0 6px;font-family:inherit}.tx-float select option{background:#1e222d}
+.tx-float button:hover,.tx-float select:hover{background:#2a2e39}
+.tx-float label{display:flex;align-items:center;width:28px;height:28px;justify-content:center;border-radius:4px}.tx-float label:hover{background:#2a2e39}
+.tx-float input[type=color]{width:18px;height:18px;border:none;padding:0;background:none;cursor:pointer}
+.tx-tree{width:230px;flex:none;background:var(--tx-tv);color:var(--tx-tvfg);overflow:auto;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif}
+.tx-th{font-size:14px;font-weight:600;padding:10px 12px;border-bottom:1px solid #2a2e39}
+.tx-tree .row{display:flex;align-items:center;gap:2px;padding:0 6px 0 12px;height:34px;font-size:13px;cursor:pointer}.tx-tree .row:hover{background:#1e222d}.tx-tree .row.sel{background:#142e61}
+.tx-tree .row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-tree .row button{background:none;border:none;color:#b2b5be;width:26px;height:26px;border-radius:4px;font-size:12px}.tx-tree .row button:hover{background:#2a2e39}
+.tx-msg{font-size:12px;color:#b2b5be;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tx-clock{font-size:13px;color:var(--tx-tvfg);font-variant-numeric:tabular-nums}
+/* order card */
+.tx-order{padding:7px 5.4px;display:flex;flex-direction:column;gap:11px;overflow:auto;flex:1}
+.mf{position:relative;height:40px;border:1px solid var(--tx-fg);border-radius:4px;flex:none}
+.mf .ml{position:absolute;top:-8px;left:9px;padding:0 5px;background:var(--tx-notch);font-size:9px;line-height:15px;color:var(--tx-fg);pointer-events:none}
+.mf select,.mf input{width:100%;height:100%;background:transparent;border:none;color:var(--tx-fg);font:400 16px "Roboto Condensed",sans-serif;padding:0 14px;outline:none;appearance:none;-moz-appearance:textfield;color-scheme:dark}
+.mf select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23e6e8ef'/%3E%3C/svg%3E") no-repeat right 7px center;padding-right:32px;cursor:pointer}
+.mf select option{background:#1c1e23;font-size:14px}
+.mf input::-webkit-inner-spin-button{opacity:.6}
+.mf:focus-within{border-color:#90caf9}.mf:focus-within .ml{color:#90caf9}
+.mf-g{height:34px;border-color:#9e9e9e}.mf-g .ml{color:#9e9e9e}.mf-g select{font-size:12px;color:#9e9e9e;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%239e9e9e'/%3E%3C/svg%3E")}
+.mf-s{height:32px;flex:1}.mf-s input{font-size:13px;padding:0 8px}
+.tx-brk{display:flex;gap:6px}
+.tx-ba{display:grid;grid-template-columns:1fr 1fr 1fr;height:42px;flex:none;font-size:10px;font-weight:100;text-align:center}
+.tx-ba>div{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:5px;gap:1px}
+.tx-ba .b{border:1px solid rgba(62,135,70,.8);border-radius:10px 0 0 10px}.tx-ba .a{border:1px solid rgba(189,63,59,.8);border-radius:0 10px 10px 0}
+.tx-ba .m{border-top:1px solid #3a3d44;border-bottom:1px solid #3a3d44}
+.tx-ba b{font-weight:400;font-size:10px;font-variant-numeric:tabular-nums}.tx-ba small{font-size:10px}
+.tx-posl{text-align:center;font-size:10px;margin:-2px 0}
+.tx-qs{display:flex;align-items:center;justify-content:space-between;padding:0 2px}
+.tx-qs span{display:flex;flex-wrap:wrap;justify-content:center;width:84px;gap:0}
+.tx-qs button{width:21px;height:21px;border-radius:52.5px;border:none;background:var(--tx-grey);color:var(--tx-fg);font-size:10.5px;font-weight:500;margin:0 2.6px 0;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.tx-qs span button{margin:0 2.6px 2px}.tx-qs button:hover{background:#6b6b6b}
+.tx-buy,.tx-sell{height:26px;border:none;border-radius:4px;color:#fff;font-size:11.25px;font-weight:500;text-transform:uppercase;letter-spacing:.3px;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14),0 1px 5px rgba(0,0,0,.12);margin:0 2px}
+.tx-buy{background:#43984d}.tx-sell{background:#bd3f3b;margin-top:-6px}
+.tx-buy:hover{background:#3a8743}.tx-sell:hover{background:#a83733}
+.tx-2{display:flex;gap:5px;margin:-6px 2px 0}.tx-2 button{flex:1;height:23px;border:none;border-radius:4px;background:var(--tx-grey);color:var(--tx-fg);font-size:9.75px;font-weight:500;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px rgba(0,0,0,.14)}
+.tx-2 button:hover{background:#666}
+/* bottom */
+.tx-bottom{height:160px;flex:none;margin-top:8px}.tx-bottom.min{height:33px}.tx-bottom.min .tx-tbl{display:none}
+.tx-tbl{flex:1;overflow:auto;font-size:12px}
+.tx-tbl table{width:100%;border-collapse:collapse}.tx-tbl th{position:sticky;top:0;background:#141519;text-align:left;font-weight:500;color:#9e9e9e;padding:6px 10px;border-bottom:1px solid var(--tx-pb)}
+.tx-tbl td{padding:6px 10px;border-bottom:1px solid #1f2026;font-variant-numeric:tabular-nums}
+.tx-tbl button{background:var(--tx-grey);border:none;color:var(--tx-fg);border-radius:4px;font-size:10px;padding:3px 8px}
+/* dialog (TradingView-like) */
+.tx-set{background:#1e222d!important;color:#d1d4dc;width:min(460px,100%)!important;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;border-radius:6px!important}
+.tx-set h2{font-size:20px;font-weight:600;margin:0 0 10px}
+.tx-st{display:flex;gap:18px;border-bottom:1px solid #434651;margin-bottom:10px}.tx-st button{background:none;border:none;color:#b2b5be;padding:8px 0;font-size:14px;border-bottom:2px solid transparent}.tx-st button.on{color:#fff;border-bottom-color:#2962ff}
+.tx-set .r{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:14px}
+.tx-set input,.tx-set select,.tx-set textarea{background:#131722!important;color:#d1d4dc!important;border:1px solid #434651!important;border-radius:4px;padding:4px 6px;width:auto!important}
+.tx-set input[type=checkbox]{accent-color:#2962ff}
+.tx-set .lv{display:grid;grid-template-columns:20px 80px 40px;gap:6px;align-items:center;margin:3px 0}.tx-set .lvs{max-height:220px;overflow:auto;display:grid;grid-template-columns:1fr 1fr}
+.tx-set .actions{display:flex;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:8px;border-top:1px solid #434651;padding-top:12px}
+.tx-set .ghost{background:transparent;color:#d1d4dc;border:1px solid #434651;border-radius:4px;padding:7px 12px;cursor:pointer}.tx-set .primary{background:#2962ff;color:#fff;border:none;border-radius:4px;padding:7px 18px;cursor:pointer}
+/*TX-END*/
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -749,65 +819,89 @@ table.tbl:has(#subT){min-width:900px}
 </div></section>
 <section class="view" id="v-backtest"><div class="tx">
   <div class="tx-top">
-    <div class="tx-acc"><select id="btAcc"><option>50K Démo · Backtest</option></select></div>
-    <div class="tx-kpi">BAL: <b id="kBal">$50,000.00</b></div><div class="tx-kpi">MLL: <b id="kMll">$48,000.00</b></div>
-    <div class="tx-kpi" id="kRpW">RP&amp;L: <b id="kRp">$0.00</b></div><div class="tx-kpi" id="kUpW">UP&amp;L: <b id="kUp">$0.00</b></div>
-    <div class="tx-kpi">DLL: <b id="kDl">$0.00</b><span class="tx-dll"><i id="kDlBar"></i></span><b>$1,000.00</b></div>
-    <button class="tx-mini" id="btAccReset" title="Remettre le compte démo à 50 000 $">Reset</button>
+    <button class="tx-acc" id="btAcc" title="Compte démo du backtesteur"><b>50K Démo Backtest</b><span></span><svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg></button>
+    <div class="tx-kpi"><span>BAL:</span><b id="kBal">$50,000.00</b></div>
+    <div class="tx-kpi"><span>MLL:</span><b id="kMll">$48,000.00</b></div>
+    <div class="tx-kpi" id="kRpW"><span>RP&amp;L:</span><b id="kRp">$0.00</b></div>
+    <div class="tx-kpi" id="kUpW"><span>UP&amp;L:</span><b id="kUp">$0.00</b></div>
+    <div class="tx-kpi"><span>DLL:</span><b id="kDl">$0.00</b><span class="tx-dll"><i id="kDlBar"></i></span><b>$1,000.00</b></div>
+    <button class="tx-kpi tx-lk" id="btAccReset" title="Remettre le compte démo à 50 000 $"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg></button>
     <span class="tx-sp"></span>
     <span id="btData" class="tx-data"></span>
-    <button class="tx-mini" id="btSync" title="Télécharger les bougies TopstepX">⟳ Données</button><button class="tx-mini" id="btImport">Importer CSV</button><button class="tx-mini" id="btDir">📂</button><input type="file" id="btFile" accept=".csv,.txt" hidden>
+    <button class="tx-link" id="btSync" title="Télécharger les bougies TopstepX">Synchro données</button>
+    <button class="tx-link" id="btImport">Importer CSV</button>
+    <button class="tx-link" id="btDir" title="Ouvrir le dossier des données">Dossier</button>
+    <input type="file" id="btFile" accept=".csv,.txt" hidden>
   </div>
-  <div class="tx-bar">
-    <select id="btSym" class="tx-sym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV importé</option></select>
-    <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">D</button></span>
-    <span class="tx-sep"></span>
-    <input type="date" id="btDate" class="tx-in"><input type="time" id="btStart" value="09:30" class="tx-in" title="Heure de départ (New York)">
-    <button class="tx-mini on" id="btLoad">Charger</button>
-    <span class="tx-sep"></span>
-    <button class="tx-ic" id="btReset" title="Recommencer">⏮</button><button class="tx-ic" id="btPrev" title="Bougie précédente (←)">◀</button><button class="tx-ic tx-play" id="btPlay" title="Lecture / pause (Espace)">▶</button><button class="tx-ic" id="btNext" title="Bougie suivante (→)">▶|</button>
-    <select id="btSpeed" class="tx-in"><option value="1">1×</option><option value="2" selected>2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
-    <span class="tx-sp"></span><span id="btClock" class="tx-clock"></span>
-    <button class="tx-ic" id="btTreeBtn" title="Arborescence des objets">☰</button>
-  </div>
-  <div id="btMsg" class="tx-msg"></div>
-  <div class="tx-body">
-    <div class="tx-tools" id="btTools">
-      <button data-tool="cross" class="on" title="Curseur (Échap)">✛</button>
-      <button data-tool="trend" title="Ligne de tendance (Alt+T)">╱</button>
-      <button data-tool="hline" title="Ligne horizontale (Alt+H)">―</button>
-      <button data-tool="hray" title="Demi-droite horizontale (Alt+J)">⟶</button>
-      <button data-tool="vline" title="Ligne verticale (Alt+V)">│</button>
-      <button data-tool="rect" title="Rectangle (Alt+Shift+R)">▭</button>
-      <button data-tool="fib" title="Retracement de Fibonacci (Alt+F)">𝔽</button>
-      <button data-tool="text" title="Texte (Alt+X)">T</button>
-      <button data-tool="measure" title="Mesure (Maj + clic)">📏</button>
-      <i></i>
-      <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)">🧲</button>
-      <button id="btLockAll" class="tg" title="Verrouiller tous les dessins">🔒</button>
-      <button id="btHideAll" class="tg" title="Masquer tous les dessins">👁</button>
-      <button id="btDelAll" title="Supprimer tous les dessins">🗑</button>
+  <div class="tx-dock">
+    <div class="tx-panel tx-chartp">
+      <div class="tx-dbar"><div class="tx-dtab on">Chart<i>×</i></div></div>
+      <div class="tx-tv">
+        <div class="tx-head">
+          <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV</option></select></label>
+          <i class="tx-vs"></i>
+          <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">D</button></span>
+          <i class="tx-vs"></i>
+          <span class="tx-hb tx-on" title="Chandeliers"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg></span>
+          <i class="tx-vs"></i>
+          <span class="tx-hl">Replay</span>
+          <input type="date" id="btDate" class="tx-hin"><input type="time" id="btStart" value="09:30" class="tx-hin" title="Heure de départ (New York)">
+          <button class="tx-hbtn" id="btLoad">Charger</button>
+          <i class="tx-vs"></i>
+          <button class="tx-hb" id="btReset" title="Recommencer la journée"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M8 8h2v12H8zM21 8v12l-9-6z"/></svg></button>
+          <button class="tx-hb" id="btPrev" title="Bougie précédente (←)"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M18 8v12l-9-6z"/></svg></button>
+          <button class="tx-hb tx-play" id="btPlay" title="Lecture / pause (Espace)">▶</button>
+          <button class="tx-hb" id="btNext" title="Bougie suivante (→)"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M8 8v12l9-6zM18 8h2v12h-2z"/></svg></button>
+          <select id="btSpeed" class="tx-hin"><option value="1">1×</option><option value="2" selected>2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
+          <span class="tx-sp"></span>
+          <button class="tx-hb" id="btTreeBtn" title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
+        </div>
+        <div class="tx-mid">
+          <div class="tx-tools" id="btTools">
+            <button data-tool="cross" class="on" title="Curseur (Échap)"><svg viewBox="0 0 28 28"><path fill="currentColor" d="M13.5 6h1v7.5H22v1h-7.5V22h-1v-7.5H6v-1h7.5z"/></svg></button>
+            <button data-tool="trend" title="Ligne de tendance (Alt+T)"><svg viewBox="0 0 28 28"><path stroke="currentColor" fill="none" d="M7.5 20.5l13-13"/><circle cx="7" cy="21" r="1.8" fill="none" stroke="currentColor"/><circle cx="21" cy="7" r="1.8" fill="none" stroke="currentColor"/></svg></button>
+            <button data-tool="hline" title="Ligne horizontale (Alt+H)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M4 14h20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/></svg></button>
+            <button data-tool="hray" title="Demi-droite horizontale (Alt+J)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M9 14h15"/><circle cx="7.5" cy="14" r="1.8" fill="none" stroke="currentColor"/></svg></button>
+            <button data-tool="vline" title="Ligne verticale (Alt+V)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M14 4v20"/><circle cx="14" cy="14" r="1.8" fill="#0c0e12" stroke="currentColor"/></svg></button>
+            <button data-tool="fib" title="Retracement de Fibonacci (Alt+F)"><svg viewBox="0 0 28 28"><path stroke="currentColor" d="M5 7.5h18M5 12.5h18M5 17h18M5 21.5h18"/><path stroke="currentColor" stroke-dasharray="2 2" d="M7 21l14-13"/></svg></button>
+            <button data-tool="rect" title="Rectangle (Alt+Shift+R)"><svg viewBox="0 0 28 28"><rect x="6.5" y="8.5" width="15" height="11" fill="none" stroke="currentColor"/><circle cx="6.5" cy="8.5" r="1.6" fill="#0c0e12" stroke="currentColor"/><circle cx="21.5" cy="19.5" r="1.6" fill="#0c0e12" stroke="currentColor"/></svg></button>
+            <button data-tool="text" title="Texte (Alt+X)"><svg viewBox="0 0 28 28"><path fill="currentColor" d="M8 7h12v3h-1V8h-4.5v12H17v1h-6v-1h2.5V8H9v2H8z"/></svg></button>
+            <button data-tool="measure" title="Mesure (Maj + clic)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 18.5l14-14 5 5-14 14zM9 14l2 2m1-5l2 2m1-5l2 2"/></svg></button>
+            <i></i>
+            <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M8 6v8a6 6 0 0 0 12 0V6h-4v8a2 2 0 0 1-4 0V6zm0 4h4m4 0h4"/></svg></button>
+            <button id="btLockAll" class="tg" title="Verrouiller tous les dessins"><svg viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 12.5V10a3.5 3.5 0 0 1 7 0v2.5"/></svg></button>
+            <button id="btHideAll" class="tg" title="Masquer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6" fill="none" stroke="currentColor"/></svg></button>
+            <i></i>
+            <button id="btDelAll" title="Supprimer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M8.5 9.5h11l-1 13h-9zm-2 0h15M11.5 9.5v-2h5v2m-4 3v7m3-7v7"/></svg></button>
+          </div>
+          <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
+            <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
+          </div>
+          <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets</div><div id="btTreeList"></div></div>
+        </div>
+        <div class="tx-foot"><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
+      </div>
     </div>
-    <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas></div>
-    <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets</div><div id="btTreeList"></div></div>
-    <div class="tx-order">
-      <div class="tx-oh">Order</div>
-      <label class="tx-f"><span>Contract</span><select id="oCtr"><option value="MNQ">MNQZ26</option><option value="NQ">NQZ26</option><option value="MES">MESZ26</option><option value="ES">ESZ26</option></select></label>
-      <label class="tx-f"><span>Order Type</span><select id="oType"><option>Market</option><option>Limit</option><option>Stop</option></select></label>
-      <label class="tx-f" id="oPxW" hidden><span>Price</span><input type="number" id="oPx" step="0.25"></label>
-      <label class="tx-f"><span># of Contracts</span><input type="number" id="oQty" value="1" min="1"></label>
-      <div class="tx-ba"><div><small>Bid:</small><b id="oBid">—</b></div><div><b id="oLast">—</b></div><div><small>Ask:</small><b id="oAsk">—</b></div></div>
-      <div class="tx-posl" id="oPos">No Active Position</div>
-      <div class="tx-qs"><button data-q="-">−</button><button data-q="1">1</button><button data-q="3">3</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button><button data-q="20">20</button><button data-q="+">+</button></div>
-      <label class="tx-f"><span>Position Bracket</span><select id="oBr"><option value="1">Enabled</option><option value="0">Disabled</option></select></label>
-      <div class="tx-brk" id="oBrk"><label>SL (ticks)<input type="number" id="oSl" value="40" min="1"></label><label>TP (ticks)<input type="number" id="oTp" value="80" min="1"></label></div>
-      <button class="tx-buy" id="oBuy">BUY +1 @ MARKET</button>
-      <button class="tx-sell" id="oSell">SELL -1 @ MARKET</button>
-      <div class="tx-2"><button id="oFlat">FLATTEN ALL</button><button id="oCancel">CANCEL ALL</button></div>
+    <div class="tx-panel tx-orderp">
+      <div class="tx-dbar"><div class="tx-dtab on"><span class="tx-dot"></span>Order<i>×</i></div></div>
+      <div class="tx-order">
+        <div class="mf"><span class="ml">Contract</span><select id="oCtr"><option value="MNQ">MNQZ26</option><option value="NQ">NQZ26</option><option value="MES">MESZ26</option><option value="ES">ESZ26</option></select></div>
+        <div class="mf"><span class="ml">Order Type</span><select id="oType"><option>Market</option><option>Limit</option><option>Stop</option></select></div>
+        <div class="mf" id="oPxW" hidden><span class="ml">Price</span><input type="number" id="oPx" step="0.25"></div>
+        <div class="mf"><span class="ml"># of Contracts</span><input type="number" id="oQty" value="1" min="1"></div>
+        <div class="tx-ba"><div class="b"><small>Bid:</small><b id="oBid">—</b></div><div class="m"><b id="oLast">—</b><small id="oSpr"></small></div><div class="a"><small>Ask:</small><b id="oAsk">—</b></div></div>
+        <div class="tx-posl" id="oPos">No Active Position</div>
+        <div class="tx-qs"><button data-q="-">−</button><span><button data-q="1">1</button><button data-q="3">3</button><button data-q="5">5</button><button data-q="10">10</button><button data-q="15">15</button><button data-q="20">20</button></span><button data-q="+">+</button></div>
+        <div class="mf mf-g"><span class="ml">Position Bracket</span><select id="oBr"><option value="1">Enabled</option><option value="0">Disabled</option></select></div>
+        <div class="tx-brk" id="oBrk"><div class="mf mf-s"><span class="ml">SL (ticks)</span><input type="number" id="oSl" value="40" min="1"></div><div class="mf mf-s"><span class="ml">TP (ticks)</span><input type="number" id="oTp" value="80" min="1"></div></div>
+        <button class="tx-buy" id="oBuy">BUY +1 @ MARKET</button>
+        <button class="tx-sell" id="oSell">SELL -1 @ MARKET</button>
+        <div class="tx-2"><button id="oFlat">FLATTEN ALL</button><button id="oCancel">CANCEL ALL</button></div>
+      </div>
     </div>
   </div>
-  <div class="tx-bottom">
-    <div class="tx-tabs"><button data-tab="pos" class="on">Positions</button><button data-tab="ord">Ordres</button><button data-tab="trd">Trades</button></div>
+  <div class="tx-panel tx-bottom">
+    <div class="tx-dbar tx-tabs"><button class="tx-dtab on" data-tab="pos">Positions</button><button class="tx-dtab" data-tab="ord">Orders</button><button class="tx-dtab" data-tab="trd">Trades</button></div>
     <div id="btBottom" class="tx-tbl"></div>
   </div>
   <div class="ov" id="btSet"><div class="modal tx-set">
@@ -2973,15 +3067,25 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function ensureChart() {
     if (chart) return;
     chart = LightweightCharts.createChart($("btChart"), {
-      autoSize: true, layout: { background: { type: "solid", color: "#0b0d10" }, textColor: "#b2b5be", fontFamily: "Roboto,'Segoe UI',sans-serif" },
-      grid: { vertLines: { color: "#161a21" }, horzLines: { color: "#161a21" } }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-      rightPriceScale: { borderColor: "#2a2e39" }, timeScale: { borderColor: "#2a2e39", timeVisible: true, secondsVisible: false, rightOffset: 15, barSpacing: 7 },
+      autoSize: true, layout: { background: { type: "solid", color: "#e8e3d1" }, textColor: "#000000", fontSize: 12, fontFamily: "-apple-system,BlinkMacSystemFont,'Trebuchet MS',Roboto,Ubuntu,sans-serif", attributionLogo: true },
+      grid: { vertLines: { color: "rgba(240,243,250,0.06)" }, horzLines: { color: "rgba(240,243,250,0.06)" } },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal, vertLine: { color: "#000000", style: 3, width: 1, labelBackgroundColor: "#000000" }, horzLine: { color: "#000000", style: 3, width: 1, labelBackgroundColor: "#000000" } },
+      rightPriceScale: { borderColor: "#000000", scaleMargins: { top: 0.08, bottom: 0.08 } }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, rightOffset: 15, barSpacing: 7 },
       localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) },
     });
-    cs = chart.addCandlestickSeries({ upColor: "#26a69a", downColor: "#ef5350", borderVisible: false, wickUpColor: "#26a69a", wickDownColor: "#ef5350", priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
-    vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false });
+    cs = chart.addCandlestickSeries({ upColor: "#4caf50", downColor: "#000000", borderVisible: true, borderUpColor: "#000000", borderDownColor: "#000000", wickUpColor: "#000000", wickDownColor: "#000000", priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
+    vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+    chart.subscribeCrosshairMove((p) => legend(p && p.time ? p.seriesData.get(cs) : null));
     loop();
+  }
+  function legend(d) {
+    const el = $("btLegend"); if (!el) return;
+    const b = S.B[S.B.length - 1], o = d || (b && { open: b[1], high: b[2], low: b[3], close: b[4] });
+    const tfn = S.tf >= 1440 ? "1D" : S.tf >= 60 ? S.tf / 60 + "h" : S.tf + "m", nm = S.sym === "ES" ? "ESZ26 · S&P 500" : S.sym === "CSV" ? "CSV" : "NQZ26 · Nasdaq";
+    if (!o) { el.innerHTML = `<b>${nm} · ${tfn}</b>`; return; }
+    const cl = o.close >= o.open ? "up" : "dn", ch = o.close - o.open;
+    el.innerHTML = `<b>${nm} · ${tfn}</b><span class="v">O<span class="${cl}">${o.open.toFixed(2)}</span></span><span class="v">H<span class="${cl}">${o.high.toFixed(2)}</span></span><span class="v">L<span class="${cl}">${o.low.toFixed(2)}</span></span><span class="v">C<span class="${cl}">${o.close.toFixed(2)}</span></span><span class="v ${cl}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}</span>`;
   }
   function draw(full) {
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
@@ -2999,7 +3103,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const first = bars[0][0], lastT = S.raw[S.cur][0];
     const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
     mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
-    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} NY`;
+    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)} UTC-5 (NY)`; legend(null);
   }
   function step(k) {
     if (!S.raw.length) return;
@@ -3017,7 +3121,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* ---------------- dessins ---------------- */
   const TOOLS = { trend: "Ligne de tendance", hline: "Ligne horizontale", hray: "Demi-droite horizontale", vline: "Ligne verticale", rect: "Rectangle", fib: "Retracement de Fibonacci", text: "Texte" };
   const FIB = [[0, "#787b86"], [0.236, "#f23645"], [0.382, "#ff9800"], [0.5, "#4caf50"], [0.618, "#089981"], [0.705, "#00bcd4"], [0.786, "#2962ff"], [1, "#787b86"]];
-  const defStyle = (type) => ({ color: type === "rect" ? "#2962ff" : type === "fib" ? "#787b86" : "#e0a106", width: type === "hline" || type === "hray" ? 1 : 2, dash: 0, fill: "rgba(41,98,255,0.15)", extL: false, extR: type === "fib", textColor: "#e3e5ea", fontSize: 12, labels: true,
+  const defStyle = (type) => ({ color: type === "rect" ? "#9c27b0" : type === "fib" ? "#787b86" : "#2962ff", width: type === "rect" || type === "fib" ? 1 : 2, dash: 0, fill: "rgba(156,39,176,0.2)", extL: false, extR: false, textColor: "#131722", fontSize: 12, labels: true,
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
   const dkey = () => "bt-draw-" + (S.sym || "NQ");
@@ -3039,7 +3143,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   const cv = () => $("btDraw");
   function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) render(); }
-  function render() {
+  function floatBar() {
+    const f = $("btFloat"); if (!f) return; const show = !!(sel && !hideAll && shapes.includes(sel) && !$("btSet").classList.contains("show"));
+    if (f.hidden === show) f.hidden = !show;
+    if (show && f.dataset.id !== String(sel.id)) { f.dataset.id = sel.id; $("btFColor").value = /^#/.test(sel.style.color) ? sel.style.color : "#2962ff"; $("btFWidth").value = sel.style.width; $("btFLock").textContent = sel.locked ? "🔒" : "🔓"; }
+    if (!show) f.dataset.id = "";
+  }
+  function render() { floatBar();
     const c = cv(); if (!c || !chart) return;
     const W = c.clientWidth, H = c.clientHeight, dpr = window.devicePixelRatio || 1;
     if (c.width !== W * dpr || c.height !== H * dpr) { c.width = W * dpr; c.height = H * dpr; }
@@ -3226,7 +3336,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("kBal").textContent = usd(A.bal); $("kMll").textContent = usd(A.mll); $("kRp").textContent = usd(rp); $("kUp").textContent = usd(u); $("kDl").textContent = usd(-dayLoss);
     $("kRpW").className = "tx-kpi " + (rp > 0 ? "pos" : rp < 0 ? "neg" : ""); $("kUpW").className = "tx-kpi " + (u > 0 ? "pos" : u < 0 ? "neg" : "");
     $("kDlBar").style.width = Math.min(100, (dayLoss / DLL) * 100) + "%";
-    const p = last(); $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - TICK).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + TICK).toFixed(2) : "—";
+    const p = last(); $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - TICK).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + TICK).toFixed(2) : "—"; $("oSpr").textContent = p != null ? (2 * TICK).toFixed(2) : "";
     $("oPos").textContent = A.pos ? `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name} @ ${A.pos.avg.toFixed(2)} · ${usd(u)}` : A.blown ? "Compte cramé (MLL)" : A.dllHit ? "DLL atteinte" : "No Active Position";
     const q = Math.max(1, parseInt($("oQty").value, 10) || 1), ty = $("oType").value.toUpperCase();
     $("oBuy").textContent = `BUY +${q} @ ${ty}`; $("oSell").textContent = `SELL -${q} @ ${ty}`;
@@ -3274,7 +3384,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btLockAll").onclick = () => { lockAll = !lockAll; $("btLockAll").classList.toggle("on", lockAll); };
     $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
     $("btDelAll").onclick = () => { if (shapes.length && confirm("Supprimer tous les dessins de cette chart ?")) { shapes = []; sel = null; saveDrawings(); } };
-    $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; tree(); };
+    $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; $("btTreeBtn").classList.toggle("on", !$("btTree").hidden); tree(); };
     $("btTreeList").onclick = (e) => { const row = e.target.closest("[data-id]"); if (!row) return; const s = shapes.find((x) => String(x.id) === row.dataset.id); if (!s) return; const a = e.target.dataset.a;
       if (a === "eye") s.hidden = !s.hidden; else if (a === "lock") s.locked = !s.locked; else if (a === "del") { shapes = shapes.filter((x) => x !== s); if (sel === s) sel = null; } else sel = s; saveDrawings(); };
     $("btTreeList").ondblclick = (e) => { const row = e.target.closest("[data-id]"); const s = row && shapes.find((x) => String(x.id) === row.dataset.id); if (s) openSettings(s); };
@@ -3285,7 +3395,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     ["oType", "oQty", "oBr", "oCtr"].forEach((id) => $(id).addEventListener("input", () => { if (id === "oType" && $("oType").value !== "Market" && last() != null) $("oPx").value = last(); ui(); }));
     document.querySelector(".tx-qs").onclick = (e) => { const q = e.target.dataset.q; if (!q) return; const cur = parseInt($("oQty").value, 10) || 1; $("oQty").value = q === "+" ? cur + 1 : q === "-" ? Math.max(1, cur - 1) : q; ui(); };
     $("btAccReset").onclick = () => { if (!confirm("Remettre le compte démo à 50 000 $ (trades effacés) ?")) return; A = freshAcc(); markers = []; saveAcc(); draw(); ui(); msg("Compte démo 50K réinitialisé."); };
-    document.querySelector(".tx-tabs").onclick = (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; tab = b.dataset.tab; document.querySelectorAll(".tx-tabs [data-tab]").forEach((x) => x.classList.toggle("on", x === b)); ui(); };
+    document.querySelector(".tx-tabs").onclick = (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; const box = document.querySelector(".tx-bottom"); if (b.dataset.tab === tab) { box.classList.toggle("min"); return; } box.classList.remove("min"); tab = b.dataset.tab; document.querySelectorAll(".tx-tabs [data-tab]").forEach((x) => x.classList.toggle("on", x === b)); ui(); };
     $("btBottom").onclick = (e) => { const x = e.target.dataset.x; if (x === "flat") { flatten("Close"); draw(); ui(); } if (x === "cxl") { A.orders = A.orders.filter((o) => String(o.id) !== e.target.dataset.id); saveAcc(); draw(); ui(); } };
     $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
     if (!D || !D.dataSync) { $("btSync").hidden = true; $("btDir").hidden = true; }
@@ -3300,6 +3410,15 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
       else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
     });
+    $("btFColor").oninput = () => { if (sel) { sel.style.color = $("btFColor").value; saveDrawings(); } };
+    $("btFWidth").onchange = () => { if (sel) { sel.style.width = +$("btFWidth").value; saveDrawings(); } };
+    $("btFSet").onclick = () => sel && openSettings(sel);
+    $("btFLock").onclick = () => { if (sel) { sel.locked = !sel.locked; $("btFLock").textContent = sel.locked ? "🔒" : "🔓"; saveDrawings(); } };
+    $("btFDel").onclick = () => { if (sel) { shapes = shapes.filter((x) => x !== sel); sel = null; saveDrawings(); } };
+    const scale = () => { if (!chart) return; const m = $("btLog").classList.contains("on") ? 1 : $("btPct").classList.contains("on") ? 2 : 0; chart.priceScale("right").applyOptions({ mode: m, autoScale: $("btAuto").classList.contains("on") }); };
+    $("btLog").onclick = () => { $("btLog").classList.toggle("on"); $("btPct").classList.remove("on"); scale(); };
+    $("btPct").onclick = () => { $("btPct").classList.toggle("on"); $("btLog").classList.remove("on"); scale(); };
+    $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
     bindDrawing(); bindSettings(); loadDrawings(); ui();
   }
   window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), show() { init(); status(); setTimeout(() => { draw(); ui(); }, 0); } };
