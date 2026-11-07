@@ -64,6 +64,14 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 | `copier.js` | Trade copier Tradovate leader → followers (voir ⚠️) |
 | `prepare.js` | Copie `../index.html` dans `desktop/app/`, remplace Google Fonts et d3 CDN par des fichiers locaux (offline) |
 
+## Dossier ICT (= Inner Circle Trader) sur le Bureau
+`C:\Users\rudyd\Desktop\Inner Circle Trader\` contient tout :
+- `Inner Circle Trader.exe` — l'app portable (toujours ce nom, jamais dans Téléchargements)
+- `data\` — bougies CSV · `backups\` — sauvegardes quotidiennes
+- `inner_circle_trader_main\` — ce dépôt (clone git de `Neal40/economic-calendar`)
+
+**Mettre à jour l'app locale** (à faire après chaque push dont le build est vert) : fermer l'app, télécharger l'asset `Inner.Circle.Trader.exe` de la release `latest` vers `Bureau\Inner Circle Trader\Inner Circle Trader.exe` (vérifier la taille annoncée par l'API), relancer. Version affichée dans la release = `version` de `desktop/package.json` (monter la version à chaque évolution notable ; v1.0 = anciens fichiers `EconomicCalendar-1.0.0-*`).
+
 ## Commandes
 - **Web** : ouvrir `index.html` dans un navigateur (aucune install).
 - **Exe local** (Windows) : `cd desktop && npm ci && npm run dist` → `desktop/dist/`.

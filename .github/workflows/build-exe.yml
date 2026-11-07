@@ -34,12 +34,16 @@ jobs:
         with:
           name: InnerCircleTrader-windows
           path: desktop/dist/*.exe
+      - name: Version
+        id: v
+        shell: bash
+        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
       - name: Publish release "latest"
         uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
-          name: Inner Circle Trader (Windows)
-          body: "Latest Windows build. **Setup** = installer, **portable** = single .exe, no install."
+          name: Inner Circle Trader v${{ steps.v.outputs.v }} (Windows)
+          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** — `Inner.Circle.Trader.exe` = portable (à renommer « Inner Circle Trader.exe »), `Inner.Circle.Trader.Setup.exe` = installeur. Les fichiers `EconomicCalendar-1.0.0-*` sont l'ancienne version **v1.0** (Economic Calendar)."
           prerelease: false
           make_latest: true
           files: |
