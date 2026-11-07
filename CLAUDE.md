@@ -1,0 +1,79 @@
+# CLAUDE.md — Economic Calendar (Neal_ICT)
+
+App perso de trading (futures NQ / ES, prop firm TopstepX) : calendrier économique USD,
+journal de trading, Review Notion, backtesteur et trade copier Tradovate.
+Deux cibles à partir du **même `index.html`** : site statique (GitHub Pages) et app Windows (Electron).
+
+## Règles du projet
+- **Langue** : interface et messages utilisateur en **français**. Commits en français ou anglais, une ligne descriptive (ex. `Backtesteur: …`, `Jarvis: …`, `App: …`).
+- **Heure** : tout est en **heure de New York (ET, `America/New_York`)**. Toujours passer par `Intl.DateTimeFormat` avec `timeZone`, jamais l'heure locale du PC.
+- **Pas d'étape de build pour le web** : `index.html` est autonome (CSS + JS + données embarquées). Pas de framework, pas de bundler. d3 vient du CDN cdnjs (remplacé par une copie locale dans l'exe).
+- **Aucune donnée de compte dans le dépôt** (trades, identifiants, tokens). Les données utilisateur vivent dans localStorage / IndexedDB (web) ou le dossier `userData` (Electron).
+- **Web et desktop doivent marcher tous les deux** : le code de `index.html` teste `window.desktop` (exposé par `preload.js`). Sans lui → fallback web (import JSON / CSV manuel).
+
+## ⚠️ Zones dangereuses
+- **`desktop/copier.js` passe de VRAIS ordres** (Tradovate, `environment: "live"`). Toute modif : garder `demo` par défaut, ne jamais tester en `live`, ne jamais logguer de mot de passe / `sec` / token.
+- **Secrets** (token Notion, config copier) : chiffrés avec `safeStorage` dans `userData` (`notion-token.bin`, `copier-config.bin`). Ne pas les déplacer en clair ni les exposer au renderer au-delà de ce que fait déjà `preload.js`.
+- Electron : garder `contextIsolation: true` et `sandbox: true`. Nouvelle capacité = nouveau `ipcMain.handle` dans `main.js` + entrée dans `preload.js`, jamais `nodeIntegration`.
+- **`tools/jarvis-trace-sessions.js`** ne doit **jamais** toucher aux ordres / positions : lecture du chart + dessins seulement, et suppression uniquement de ses propres shapes (`localStorage "jarvis:*"`).
+- Pas de conseil d'investissement : le code calcule et affiche, il ne décide pas de trades.
+
+## Lire `index.html` (≈ 550 Ko) sans se noyer
+Ne jamais lire le fichier en entier. Chercher les marqueurs de section puis lire la plage utile :
+`grep -n "/\* ----------" index.html`
+
+**Lignes à ne jamais lire ni réécrire** (énormes, une seule ligne) :
+- `const LOGO="data:image/jpeg;base64,…` — logo en base64
+- `const EXTRA={…}` (événements 2027) et `const LOW={…}` (impact faible) — données
+- `!function(){"use strict";const t={upColor:…` — **Lightweight Charts minifié, inliné** (≈ 160 Ko). Ne pas modifier.
+
+Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edit de la ligne entière.
+
+### Carte des sections (dans l'ordre du fichier)
+| Marqueur `/* ---------- … */` | Rôle |
+|---|---|
+| `app shell`, `Journal de trading (Stats TopstepX)`, `responsive` | CSS (dans `<style>`) |
+| `<!-- day editor -->`, `<!-- week editor -->` | Modales HTML du calendrier |
+| `seed data` | `SEED` (nov.–déc. 2026), `EXTRA`, `LOW`, clé de stockage `KEY="econcal-v1"`, objet d'état `S`, `save()` |
+| `date helpers`, `state`, `interactions` | Grille mensuelle, jours fériés NYSE calculés, labels de semaine auto (`autoWeek`), filtres |
+| `shell / routing` | Menu latéral, navigation par hash (`#calendrier`, …) |
+| `abonnements`, `factures` | Paramètres → Abonnement / Factures |
+| `Ctrl+F` | Recherche dans la page |
+| `Journal : Tags, Images, RR théorique, Hexagone` | Tags (localStorage), images (IndexedDB), modales |
+| `Journal de trading : Stats TopstepX` | KPIs, comptes, graphiques d3, calendrier P&L, table des trades |
+| `Review : What to focus on ? + Journal de Neal (Notion)` | Lecture Notion, cache IndexedDB, auto-sync On/Off, vues Notion reproduites, biais psychologiques, import CSV web |
+| `Review : add / edit / delete in Notion` | Écriture vers Notion (desktop uniquement), drag & drop calendrier, remplissage MAE/MFE depuis TopstepX |
+| `Backtesteur style TopstepX` | Replay m1, compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles |
+| `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
+
+Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-review-type`, `econcal-review-view`, `notionAuto`.
+
+### Format d'un événement
+`{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
+Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôture (☾), `pre` = avant ouverture (✳), `tbd` = heure inconnue (◌).
+
+## `desktop/` — app Electron
+| Fichier | Rôle |
+|---|---|
+| `main.js` | Fenêtre, handlers IPC (`journal:*`, `tsx:bars`, `notion:*`, `store:*`, `data:*`, `copier:*`), sync données de marché chaque soir à 23h01, mise à jour auto (`EconomicCalendar.update.exe` posé à côté de l'exe) |
+| `preload.js` | Pont `window.desktop` (contextBridge) — **seule** API visible depuis `index.html` |
+| `topstepx.js` | Connexion + sync des trades/comptes TopstepX → `userData/journal-db.json` (au lancement + toutes les 5 min) |
+| `notion.js` | API Notion officielle (query, blocks, create, update, archive, append) |
+| `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Documents\EconomicCalendar\data` (colonnes `time_ny,ts,open,high,low,close,volume`) |
+| `copier.js` | Trade copier Tradovate leader → followers (voir ⚠️) |
+| `prepare.js` | Copie `../index.html` dans `desktop/app/`, remplace Google Fonts et d3 CDN par des fichiers locaux (offline) |
+
+## Commandes
+- **Web** : ouvrir `index.html` dans un navigateur (aucune install).
+- **Exe local** (Windows) : `cd desktop && npm ci && npm run dist` → `desktop/dist/`.
+- **CI** : `.github/workflows/build-exe.yml` construit l'exe à chaque push sur `main` touchant `index.html` ou `desktop/**`, et publie la release `latest`. Un push = une release : ne pas pousser du code cassé.
+- **Export API** : `node tools/export-api.js` → `api/calendar.json` (besoin de playwright + d3 depuis `desktop/node_modules`).
+- **Données 2027** : `python scripts/generate_2027.py` (dates officielles Fed / BLS / BEA / Census, jours fériés NYSE).
+- **Jarvis** : coller `tools/jarvis-trace-sessions.js` dans la page topstepx.com/trade, puis `await JARVIS.status()` (voir l'en-tête du fichier pour toutes les commandes).
+
+## Vérifier un changement
+Il n'y a **pas encore de tests**. Avant de dire « c'est fait » :
+1. Ouvrir `index.html` dans le navigateur, aller sur la vue modifiée, vérifier la console (aucune erreur).
+2. Si le changement touche `desktop/` ou `window.desktop` : vérifier aussi le chemin web (fallback sans `window.desktop`).
+3. Si le changement touche le copier : vérifier en `demo` uniquement, et le dire explicitement.
+4. Pour la logique pure (détection FVG / NWOG, calculs de stats, règles MLL/DLL) : préférer extraire une fonction testable plutôt que vérifier à l'œil.
