@@ -70,11 +70,13 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 - `data\` — bougies CSV · `backups\` — sauvegardes quotidiennes
 - `inner_circle_trader_main\` — ce dépôt (clone git de `Neal40/economic-calendar`)
 
+**Tester un changement dans l'exe sans attendre GitHub** (≈ 30 s) : fermer l'app, puis `cd desktop && npm run ict` (build portable sans compression, ~360 Mo, copié directement en `Bureau\Inner Circle Trader\Inner Circle Trader.exe`), relancer. `desktop/node_modules` est déjà installé (`npm ci` sinon). La release GitHub reste en compression normale (~106 Mo, build CI ≈ 4 min).
+
 **Mettre à jour l'app locale** (à faire après chaque push dont le build est vert) : fermer l'app, télécharger l'asset `Inner.Circle.Trader.exe` de la release `latest` vers `Bureau\Inner Circle Trader\Inner Circle Trader.exe` (vérifier la taille annoncée par l'API), relancer. Version affichée dans la release = `version` de `desktop/package.json` (monter la version à chaque évolution notable ; v1.0 = anciens fichiers `EconomicCalendar-1.0.0-*`).
 
 ## Commandes
 - **Web** : ouvrir `index.html` dans un navigateur (aucune install).
-- **Exe local** (Windows) : `cd desktop && npm ci && npm run dist` → `desktop/dist/`.
+- **Exe local** (Windows) : `cd desktop && npm ci && npm run dist` → `desktop/dist/` (portable seul, plus d'installeur) ; `npm run ict` = build rapide + copie dans le dossier ICT.
 - **CI** : `.github/workflows/build-exe.yml` construit l'exe à chaque push sur `main` touchant `index.html` ou `desktop/**`, et publie la release `latest`. Un push = une release : ne pas pousser du code cassé.
 - **Export API** : `node tools/export-api.js` → `api/calendar.json` (besoin de playwright + d3 depuis `desktop/node_modules`).
 - **Données 2027** : `python scripts/generate_2027.py` (dates officielles Fed / BLS / BEA / Census, jours fériés NYSE).

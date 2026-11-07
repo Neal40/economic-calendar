@@ -43,9 +43,8 @@ jobs:
         with:
           tag_name: latest
           name: Inner Circle Trader v${{ steps.v.outputs.v }} (Windows)
-          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** — `Inner.Circle.Trader.exe` = portable (à renommer « Inner Circle Trader.exe »), `Inner.Circle.Trader.Setup.exe` = installeur. Les fichiers `EconomicCalendar-1.0.0-*` sont l'ancienne version **v1.0** (Economic Calendar)."
+          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** — `Inner.Circle.Trader.exe` = app portable (à renommer « Inner Circle Trader.exe »). Anciens fichiers à ignorer : `Inner.Circle.Trader.Setup.exe` (installeur v1.2, plus fabriqué) et `EconomicCalendar-1.0.0-*` (version **v1.0**, Economic Calendar)."
           prerelease: false
           make_latest: true
           files: |
-            desktop/dist/Inner Circle Trader Setup.exe
             desktop/dist/Inner Circle Trader.exe

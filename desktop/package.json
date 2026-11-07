@@ -7,7 +7,8 @@
   "main": "main.js",
   "scripts": {
     "prepare-app": "node prepare.js ../index.html",
-    "dist": "npm run prepare-app && electron-builder --win portable nsis --x64"
+    "dist": "npm run prepare-app && electron-builder --win portable --x64",
+    "ict": "npm run prepare-app && electron-builder --win portable --x64 --config.compression=store && node -e \"require('fs').copyFileSync('dist/Inner Circle Trader.exe', require('path').join(require('os').homedir(), 'Desktop', 'Inner Circle Trader', 'Inner Circle Trader.exe')); console.log('-> Bureau/Inner Circle Trader/Inner Circle Trader.exe')\""
   },
   "build": {
     "appId": "com.nealict.economiccalendar",
@@ -27,11 +28,6 @@
     },
     "portable": {
       "artifactName": "Inner Circle Trader.exe"
-    },
-    "nsis": {
-      "artifactName": "Inner Circle Trader Setup.exe",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
     },
     "directories": {
       "output": "dist"
