@@ -15,7 +15,7 @@ Deux cibles à partir du **même `index.html`** : site statique (GitHub Pages) e
 - **`desktop/copier.js` passe de VRAIS ordres** (Tradovate, `environment: "live"`). Toute modif : garder `demo` par défaut, ne jamais tester en `live`, ne jamais logguer de mot de passe / `sec` / token.
 - **Secrets** (token Notion, config copier) : chiffrés avec `safeStorage` dans `userData` (`notion-token.bin`, `copier-config.bin`). Ne pas les déplacer en clair ni les exposer au renderer au-delà de ce que fait déjà `preload.js`.
 - Electron : garder `contextIsolation: true` et `sandbox: true`. Nouvelle capacité = nouveau `ipcMain.handle` dans `main.js` + entrée dans `preload.js`, jamais `nodeIntegration`.
-- **`tools/jarvis-trace-sessions.js`** ne doit **jamais** toucher aux ordres / positions : lecture du chart + dessins seulement, et suppression uniquement de ses propres shapes (`localStorage "jarvis:*"`).
+- **`tools/jarvis-analyseur.js`** ne doit **jamais** toucher aux ordres / positions : lecture du chart + dessins seulement, et suppression uniquement de ses propres shapes (`localStorage "jarvis:*"`).
 - Pas de conseil d'investissement : le code calcule et affiche, il ne décide pas de trades.
 
 ## Lire `index.html` (≈ 550 Ko) sans se noyer
@@ -80,7 +80,7 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 - **CI** : `.github/workflows/build-exe.yml` construit l'exe à chaque push sur `main` touchant `index.html` ou `desktop/**`, et publie la release `latest`. Un push = une release : ne pas pousser du code cassé.
 - **Export API** : `node tools/export-api.js` → `api/calendar.json` (besoin de playwright + d3 depuis `desktop/node_modules`).
 - **Données 2027** : `python scripts/generate_2027.py` (dates officielles Fed / BLS / BEA / Census, jours fériés NYSE).
-- **Jarvis** : coller `tools/jarvis-trace-sessions.js` dans la page topstepx.com/trade, puis `await JARVIS.status()` (voir l'en-tête du fichier pour toutes les commandes).
+- **Jarvis** : coller `tools/jarvis-analyseur.js` dans la page topstepx.com/trade, puis `await JARVIS.status()` (voir l'en-tête du fichier pour toutes les commandes).
 
 ## Vérifier un changement
 Il n'y a **pas encore de tests**. Avant de dire « c'est fait » :

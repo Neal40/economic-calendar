@@ -1,11 +1,13 @@
-/* jarvis-trace-sessions.js — Jarvis 8H (TopstepX, NQ/ES, New York time)
+/* jarvis-analyseur.js — Jarvis Analyseur (TopstepX, NQ/ES, New York time) — suit le « Protocole » de Rudy
  * Paste in the topstepx.com/trade page (javascript_tool), then call:
  *   await JARVIS.status()            -> layout, charts, symbols, TSX Sessions present?
- *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart
- *   await JARVIS.lines()             -> NQ chart: vertical lines, Midnight/8H30 opens, Asian/London High-Low (red trendline 2px, stops where price crosses it)
+ *   await JARVIS.layout('STDV Matrix') -> load a saved layout by name (e.g. 'Test STDV', 'Test NWOG & 1st') and wait for it
+ *   await JARVIS.stdv()              -> STDV fibs (both directions) for Asian, Pre-London, London, Premarket on every chart (finished sessions only)
+ *   await JARVIS.lines()             -> NQ + ES charts: vertical lines, Midnight/8H30 opens, Asia/London/Premarket High-Low (red trendline 2px, stops where price crosses it)
  *   await JARVIS.tops()              -> High/Low of the day (+ qualifying swings): STDV hit by session, macro, H1/m15 sweep, depth Fib (NQ), catchable? -> JARVIS.data
  *   await JARVIS.macros()            -> only macros (XX:50–XX:10, grey) / mini macros (XX:25–XX:35, purple) holding a top/bottom: 2 vertical lines
- *   await JARVIS.nwog()              -> NWOG & 1st: last 5 NWOG + 5 NDOG (10. NWOG / 10. NDOG + 5. RTH Octant), 1st p.FVG 9h30 / Reflection / Silver Bullet (labels dd/mm)
+ *   await JARVIS.nwog()              -> NWOG & 1st: last 5 NWOG + 5 NDOG (10. NWOG / 10. NDOG ; 5. RTH Octant on NWOG > 100 pts only), 1st p.FVG 9h30 / Reflection / Silver Bullet (labels dd/mm)
+ *   await JARVIS.nwogStats('/NQ')    -> data for the Notion « NWOG & 1st » page: FVG lifetimes (+ average), NWOG/NDOG levels touched in RTH, reaction, first level
  *   await JARVIS.htf('H4'|'H1'|'m15') -> dealing range (4. OTE), unfilled FVGs of the TF, day reaction
  *   await JARVIS.premarket()          -> 1st p.FVG 7h, 7h/8h/9h lines, Liq Pool (5h–7h)
  *   await JARVIS.fhtData(sym)         -> First Hour of Trading range and which side is taken first
@@ -174,6 +176,13 @@
       }
       return { url: location.href, layout: api.layoutName(), split: api.layout(), day: day(), nowNY: nyHM(now()), charts };
     },
+    async layout(name, wait = 7000) {
+      const list = await new Promise(r => api.getSavedCharts(r));
+      const it = list.find(x => x.name === name);
+      if (!it) return { ok: false, error: `Mise en page « ${name} » introuvable`, available: list.map(x => x.name) };
+      if (api.layoutName() !== name) { api.loadChartFromServer(it); await new Promise(r => setTimeout(r, wait)); }
+      return { ok: api.layoutName() === name, layout: api.layoutName(), charts: api.chartsCount() };
+    },
     async stdv() {
       const d = day(), done = [];
       for (let i = 0; i < api.chartsCount(); i++) {
@@ -183,23 +192,25 @@
         const ids = [];
         for (const s of await sessionData(sym, d)) {
           if (s.missing || s.hi === s.lo) continue;
-          const tA = s.from, tB = Math.min(s.to, now());
+          if (s.partial) { done.push(`${c.symbol()} ${s.name} en cours : pas tracée (le range bouge encore)`); continue; }
+          const tA = s.from, tB = s.to - 60; // 1re → dernière bougie de la session
           // low -> high : extensions below the low ; high -> low : extensions above the high
           ids.push(await fib(c, tA, tB, s.hi, s.lo)); // extensions below the low
           ids.push(await fib(c, tA, tB, s.lo, s.hi)); // extensions above the high
-          done.push(`${c.symbol()} ${s.name}${s.partial ? ' (en cours)' : ''} H ${s.hi} / L ${s.lo}`);
+          done.push(`${c.symbol()} ${s.name} H ${s.hi} / L ${s.lo}`);
         }
         keep(i, 'stdv', ids);
       }
       return done;
     },
     async lines() {
-      const d = day(), n = api.chartsCount();
-      let i = 0;
-      for (let k = 0; k < n; k++) if (root(api.chart(k).symbol()) === '/NQ') { i = k; break; }
+      const d = day(), done = [];
+      for (let i = 0; i < api.chartsCount(); i++) {
       const c = api.chart(i), sym = root(c.symbol());
+      if (!sym) continue;
       clearGroup(i, 'lines');
-      const ids = [], done = [];
+      const ids = [];
+      done.push(`${c.symbol()} :`);
       const vline = async (h, m, text) => {
         ids.push(await c.createShape({ time: ny(d, h, m) }, { shape: 'vertical_line', text, lock: false,
           overrides: { linecolor: BLACK, linestyle: 1, linewidth: 1, showLabel: true, textcolor: BLACK, horzLabelsAlign: 'right', vertLabelsAlign: 'top', textOrientation: 'vertical' } }));
@@ -219,10 +230,10 @@
       const at = t => all.find(b => b.t >= t && b.t < t + 60);
       const mo = at(ny(d, 0, 0)); if (mo) await ray(mo.t, mo.o, 'Midnight Open');
       const o830 = at(ny(d, 8, 30)); if (o830) await ray(o830.t, o830.o, '8H30 Open'); else done.push('8H30 Open : pas encore formé');
-      // Asian / London High & Low : trendline rouge 2px, texte 12 gras, du point extrême jusqu'à la bougie qui le traverse (sinon jusqu'à maintenant)
-      const RED = '#ff0000', end = Math.min(now(), ny(d, 16, 0));
-      for (const s of (await sessionData(sym, d)).filter(s => (s.key === 'asia' || s.key === 'london') && !s.missing && !s.partial)) {
-        const name = s.key === 'asia' ? 'Asian' : 'London';
+      // Asia / London / Premarket High & Low : trendline rouge 2px, texte 12 gras à droite, du point extrême jusqu'à la bougie qui le traverse (sinon jusqu'à maintenant, au plus tard 16h)
+      const RED = '#ff0000', end = Math.min(now(), ny(d, 16, 0)), NAMES = { asia: 'Asia', london: 'London', pm: 'Premarket' };
+      for (const s of (await sessionData(sym, d)).filter(s => NAMES[s.key] && !s.missing && !s.partial)) {
+        const name = NAMES[s.key];
         for (const [side, p, t0, broke] of [['High', s.hi, s.tHi, b => b.h > s.hi], ['Low', s.lo, s.tLo, b => b.l < s.lo]]) {
           const hit = all.find(b => b.t >= s.to && b.t <= end && broke(b)), t1 = hit ? hit.t : end;
           ids.push(await c.createMultipointShape([{ time: t0, price: p }, { time: t1, price: p }], {
@@ -233,6 +244,7 @@
         }
       }
       keep(i, 'lines', ids);
+      }
       return done;
     },
     // Top and bottom of the day (+ intermediate swings that qualify): was the move catchable?
@@ -476,8 +488,8 @@
         };
         for (const g of await J.gapsData(sym, opts.n ?? 5)) {
           const st = await place(g, rectTpl[g.kind], g.label, g.t, g.t + 3600);
-          // octants of the gap (5. RTH Octant), unless already drawn on the same bounds
-          if (!fibs.some(f => Math.abs(f[0] - g.bot) <= tickTol && Math.abs(f[1] - g.top) <= tickTol)) ids.push(await fib(c, g.t, g.t + 3600, g.bot, g.top, '5. RTH Octant'));
+          // octants (5. RTH Octant): NWOG of more than 100 points only, unless already drawn on the same bounds
+          if (g.kind === 'NWOG' && g.top - g.bot > 100 && !fibs.some(f => Math.abs(f[0] - g.bot) <= tickTol && Math.abs(f[1] - g.top) <= tickTol)) ids.push(await fib(c, g.t, g.t + 3600, g.bot, g.top, '5. RTH Octant'));
           out.push(`${c.symbol()} ${g.label} ${g.bot}–${g.top} : ${st}`);
         }
         // 1st p.FVG 9h30 / Reflection / Silver Bullet for the last n trading days
