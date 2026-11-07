@@ -144,6 +144,15 @@
     }
     if (prev) { try { await c.setVisibleRange(prev); } catch (e) { /* ignore */ } }
   }
+  // Drawings anchored on m1 times must be created while the chart shows 1-minute bars (on H1/D/W they snap to that bar).
+  // Switch the chart to 1m for the drawing, then put back the timeframe it was on.
+  async function toMinute(c) {
+    const res0 = c.resolution();
+    if (res0 === '1') return async () => {};
+    await new Promise(r => { try { c.setResolution('1', r); } catch (e) { r(); } setTimeout(r, 8000); });
+    await new Promise(r => setTimeout(r, 2500));
+    return async () => { await new Promise(r => { try { c.setResolution(res0, r); } catch (e) { r(); } setTimeout(r, 8000); }); };
+  }
   const anchoredAt = (c, id) => { try { return Math.min(...c.getShapeById(id).getPoints().map(p => p.time)); } catch (e) { return null; } };
 
   // Rudy's saved Fibonacci templates (TopstepX "Save drawing template"): GHAITH 2, Profondeur de marché…
@@ -202,6 +211,7 @@
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'stdv');
+        const back = await toMinute(c);
         const ids = [];
         for (const s of await sessionData(sym, d)) {
           if (s.missing || s.hi === s.lo) continue;
@@ -212,7 +222,7 @@
           ids.push(await fib(c, tA, tB, s.lo, s.hi)); // extensions above the high
           done.push(`${c.symbol()} ${s.name} H ${s.hi} / L ${s.lo}`);
         }
-        keep(i, 'stdv', ids);
+        await back(); keep(i, 'stdv', ids);
       }
       return done;
     },
@@ -222,6 +232,7 @@
       const c = api.chart(i), sym = root(c.symbol());
       if (!sym) continue;
       clearGroup(i, 'lines');
+      const back = await toMinute(c);
       const ids = [];
       done.push(`${c.symbol()} :`);
       const vline = async (h, m, text) => {
@@ -256,7 +267,7 @@
           done.push(`— ${name} ${side} ${p} ${hit ? '(traversé à ' + nyHM(hit.t) + ')' : '(non traversé)'}`);
         }
       }
-      keep(i, 'lines', ids);
+      await back(); keep(i, 'lines', ids);
       }
       return done;
     },
@@ -271,9 +282,10 @@
         if (!sym) continue;
         const draw = opts.draw !== false;
         if (draw) clearGroup(i, 'tops');
+        const back = draw ? await toMinute(c) : async () => {};
         const used = new Set(), ids = [], isNQ = sym === '/NQ', tol = opts.tol ?? (isNQ ? 6 : 1.5), zone = opts.zone ?? (isNQ ? 30 : 7), N = opts.pivot ?? 15;
         const all = await bars(sym, ny(addDays(d, -1), 18, 0), now());
-        if (!all.length) continue;
+        if (!all.length) { await back(); continue; }
         const sess = (await sessionData(sym, d)).filter(s => !s.missing && !s.partial && s.hi > s.lo);
         const ext = LV.filter(k => k > 1);
         const lv = (s, up) => ext.map(k => ({ k, p: up ? s.hi + (k - 1) * (s.hi - s.lo) : s.lo - (k - 1) * (s.hi - s.lo) }));
@@ -313,7 +325,7 @@
         };
         const from = ny(d, 2, 0), to = Math.min(ny(d, 16, 0), now());
         const day = all.filter(b => b.t >= ny(d, 0, 0) && b.t <= to); // day = Midnight Open → 16h (STDV levels exist)
-        if (!day.length) continue;
+        if (!day.length) { await back(); continue; }
         const hiB = day.reduce((a, b) => (b.h > a.h ? b : a)), loB = day.reduce((a, b) => (b.l < a.l ? b : a));
         const res = [{ ...analyse(hiB, true), dayExtreme: 'High du jour' }, { ...analyse(loB, false), dayExtreme: 'Low du jour' }];
         res.forEach(r => r.liq && used.add(r.liq.side + r.liq.t + r.liq.p));
@@ -353,7 +365,7 @@
           }
           found.push(r);
         }
-        if (draw) keep(i, 'tops', ids);
+        await back(); if (draw) keep(i, 'tops', ids);
       }
       J.data = found.map(f => ({ date: d, actif: f.sym.slice(1), type: f.isH ? 'Top' : 'Bottom', extreme: f.dayExtreme || 'Swing', heure_ny: nyHM(f.t), prix: +fmt(f.P),
         macro: f.macro, stdv: f.hits.map(h => ({ niveau: h.k, session: h.s.name, prix: +fmt(h.p) })),
@@ -374,6 +386,7 @@
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'macros');
+        const back = await toMinute(c);
         const ids = [], seen = new Set();
         const vl = async (t, text, color) => ids.push(await c.createShape({ time: t }, { shape: 'vertical_line', text, lock: false,
           overrides: { linecolor: color, linestyle: 2, linewidth: 1, showLabel: !!text, textcolor: color, horzLabelsAlign: 'right', vertLabelsAlign: 'bottom', textOrientation: 'vertical' } }));
@@ -384,7 +397,7 @@
           if (m[2]) { await vl(ny(d, H, 25), r.macro, '#9c27b0'); await vl(ny(d, H, 35), '', '#9c27b0'); }
           else { await vl(H === 0 ? ny(addDays(d, -1), 23, 50) : ny(d, H - 1, 50), r.macro, '#787b86'); await vl(ny(d, H, 10), '', '#787b86'); }
         }
-        keep(i, 'macros', ids);
+        await back(); keep(i, 'macros', ids);
         out.push(`${c.symbol()} : ${[...seen].join(', ') || 'aucune macro utile'}`);
       }
       return out;
@@ -478,6 +491,7 @@
         const c = api.chart(i), sym = root(c.symbol());
         if (!sym) continue;
         clearGroup(i, 'nwog');
+        const back = await toMinute(c);
         const ids = [], tickTol = sym === '/NQ' ? 0.5 : 0.25;
         // existing rectangles (Rudy's or older) to verify / fix instead of duplicating
         const rects = c.getAllShapes().filter(s => s.name === 'rectangle').map(s => {
@@ -522,7 +536,7 @@
             out.push(`${c.symbol()} 1st p.FVG ${name} ${dmx} ${z.type} ${z.bot}–${z.top} (${nyHM(z.t1)}) : ${st}`);
           }
         }
-        keep(i, 'nwog', ids);
+        await back(); keep(i, 'nwog', ids);
       }
       return out;
     },
@@ -609,6 +623,7 @@
         if (!sym) continue;
         clearGroup(i, 'pm');
         if (!tg.includes(i)) continue;
+        const back = await toMinute(c);
         const x = await J.pmData(sym, d), ids = [];
         for (const [h, m] of [[7, 0], [8, 0], [9, 0]]) ids.push(await c.createShape({ time: ny(d, h, m) }, { shape: 'vertical_line', lock: false, overrides: { linecolor: '#787b86', linestyle: 1, linewidth: 1, showLabel: false } }));
         if (x.fvg) {
@@ -621,7 +636,7 @@
           ids.push(await c.createMultipointShape([{ time: t, price: p }, { time: ny(d, 11, 0), price: p }], { shape: 'trend_line', text: `Liq Pool ${side}`, lock: false,
             overrides: { linecolor: '#f23645', linewidth: 1, linestyle: 0, extendLeft: false, extendRight: false, showLabel: true, textcolor: '#f23645', horzLabelsAlign: 'right', vertLabelsAlign: side === 'High' ? 'top' : 'bottom' } }));
         }
-        keep(i, 'pm', ids);
+        await back(); keep(i, 'pm', ids);
         out.push(`${c.symbol()} Premarket : 1st p.FVG 7h ${x.fvg ? `${x.fvg.type} ${x.fvg.bot}–${x.fvg.top} (${nyHM(x.fvg.t1)}) ${x.fvg.reaction}` : 'aucun'} · Liq Pool H ${x.pool && x.pool.hi} ${x.pool && x.pool.hiT ? 'pris ' + nyHM(x.pool.hiT) : 'non pris'} / L ${x.pool && x.pool.lo} ${x.pool && x.pool.loT ? 'pris ' + nyHM(x.pool.loT) : 'non pris'}`);
       }
       return out;
