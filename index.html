@@ -552,6 +552,8 @@ table.tbl:has(#subT){min-width:900px}
 .tx-favbar button.on{color:var(--tx-acc)}
 .tx-favbar .empty{color:#787b86;font-size:12px;padding:0 8px}
 .tx-chartwrap.ordhover,.tx-chartwrap.ordhover *{cursor:ns-resize!important}
+.tx-chartwrap[data-cur=arrowc] *{cursor:default!important}
+.tx-chartwrap[data-cur=dot] *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27%3E%3Ccircle cx=%276%27 cy=%276%27 r=%273%27 fill=%27%23000%27 stroke=%27%23fff%27/%3E%3C/svg%3E") 6 6,crosshair!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
 #btDraw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
@@ -3176,6 +3178,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     _pat: SV('<path fill="none" stroke="currentColor" d="M4 20l6-10 5 6 5-9 4 5"/>'),
     _emo: SV('<circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 16a4.5 4.5 0 0 0 7 0"/><circle cx="11" cy="12" r="1" fill="currentColor"/><circle cx="17" cy="12" r="1" fill="currentColor"/>'),
   };
+  const icon = (id) => ICON[id] || SV('<path fill="none" stroke="currentColor" d="M6.5 21.5l3-1 11-11-2-2-11 11zM17.5 8.5l2 2"/>'); // icône par défaut des outils sans dessin dédié
   const T = (id, name, key) => ({ id, name, key });
   const GROUPS = [
     { g: "cur", sec: [["Curseurs", [T("cross", "Croix", "Échap"), T("dot", "Point"), T("arrowc", "Flèche"), T("eraser", "Gomme")]]] },
@@ -3199,13 +3202,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function groupMain(G) { const last = LS.get("bt-grp", {})[G.g], all = G.sec.flatMap((s) => s[1]).filter((t) => IMPL.has(t.id)); return all.find((t) => t.id === last) || all[0] || null; }
   function buildTools() {
     $("btGroups").innerHTML = GROUPS.map((G) => { const m = groupMain(G);
-      return `<div class="tx-grp" data-g="${G.g}">${m ? `<button data-tool="${m.id}" title="${esc(m.name)}${m.key ? " (" + m.key + ")" : ""}">${ICON[m.id]}</button>` : `<button class="tx-gmain" data-exp="${G.g}" title="${esc(G.sec[0][0])}">${ICON[G.icon]}</button>`}<button class="tx-exp" data-exp="${G.g}" title="Plus d'outils">›</button></div>`; }).join("");
+      return `<div class="tx-grp" data-g="${G.g}">${m ? `<button data-tool="${m.id}" title="${esc(m.name)}${m.key ? " (" + m.key + ")" : ""}">${icon(m.id)}</button>` : `<button class="tx-gmain" data-exp="${G.g}" title="${esc(G.sec[0][0])}">${ICON[G.icon]}</button>`}<button class="tx-exp" data-exp="${G.g}" title="Plus d'outils">›</button></div>`; }).join("");
     setTool(tool);
   }
   function openFly(g, anchor) {
     const f = $("btFly"), G = GROUPS.find((x) => x.g === g), fv = favs();
     f.innerHTML = G.sec.map(([h, items]) => `<div class="fh">${esc(h)}</div>` + items.map((it) => { const ok = IMPL.has(it.id);
-      return `<div class="fi${ok ? "" : " soon"}${tool === it.id ? " on" : ""}" data-id="${it.id}" data-g="${g}" title="${ok ? "" : "À venir"}">${ICON[it.id] || '<span class="fdot">•</span>'}<span class="fn">${esc(it.name)}</span>${it.key ? `<span class="fk">${it.key}</span>` : ""}${ok ? `<span class="fs${fv.includes(it.id) ? " on" : ""}" data-star="${it.id}" title="Favori">${fv.includes(it.id) ? "★" : "☆"}</span>` : '<span class="fk">à venir</span>'}</div>`; }).join("")).join("");
+      return `<div class="fi${ok ? "" : " soon"}${tool === it.id ? " on" : ""}" data-id="${it.id}" data-g="${g}" title="${ok ? "" : "À venir"}">${icon(it.id)}<span class="fn">${esc(it.name)}</span>${it.key ? `<span class="fk">${it.key}</span>` : ""}${ok ? `<span class="fs${fv.includes(it.id) ? " on" : ""}" data-star="${it.id}" title="Favori">${fv.includes(it.id) ? "★" : "☆"}</span>` : '<span class="fk">à venir</span>'}</div>`; }).join("")).join("");
     f.dataset.g = g; f.hidden = false;
     const r = anchor.getBoundingClientRect(); f.style.left = r.right + 6 + "px"; f.style.top = Math.max(8, Math.min(r.top - 6, innerHeight - f.offsetHeight - 8)) + "px";
   }
@@ -3214,7 +3217,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function favBar() {
     const b = $("btFavBar"); if (!b) return; const on = LS.get("bt-favbar", true); b.hidden = !on; $("btFavBtn").classList.toggle("on", on); if (!on) return;
     const fv = favs().filter((id) => IMPL.has(id)), nm = Object.fromEntries(GROUPS.flatMap((G) => G.sec.flatMap((s) => s[1])).map((t) => [t.id, t.name + (t.key ? " (" + t.key + ")" : "")]));
-    b.innerHTML = '<span class="grip" title="Déplacer">⠿</span>' + (fv.length ? fv.map((id) => `<button data-tool="${id}" title="${esc(nm[id] || id)}">${ICON[id]}</button>`).join("") : '<span class="empty">☆ Ajoute des favoris depuis les menus d\'outils</span>');
+    b.innerHTML = '<span class="grip" title="Déplacer">⠿</span>' + (fv.length ? fv.map((id) => `<button data-tool="${id}" title="${esc(nm[id] || id)}">${icon(id)}</button>`).join("") : '<span class="empty">☆ Ajoute des favoris depuis les menus d\'outils</span>');
     const p = LS.get("bt-favpos", null); if (p) { b.style.left = p.x + "px"; b.style.top = p.y + "px"; b.style.bottom = "auto"; b.style.transform = "none"; } else { b.style.left = "50%"; b.style.bottom = "40px"; b.style.top = "auto"; b.style.transform = "translateX(-50%)"; }
     setTool(tool);
   }
@@ -3262,6 +3265,122 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     g.restore();
   }
   function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
+  /* ---------- moteur générique des outils (v1.4) : n = clics (0 = libre, fin par double-clic / Entrée), free = main levée ---------- */
+  const PI2 = Math.PI * 2;
+  const ln = (g, a, b) => { g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke(); };
+  const pl = (g, P, close) => { if (P.length < 2) return; g.beginPath(); g.moveTo(P[0].x, P[0].y); for (let i = 1; i < P.length; i++) g.lineTo(P[i].x, P[i].y); if (close) g.closePath(); g.stroke(); };
+  const fillPoly = (g, P, c) => { g.save(); g.fillStyle = c; g.beginPath(); g.moveTo(P[0].x, P[0].y); for (let i = 1; i < P.length; i++) g.lineTo(P[i].x, P[i].y); g.closePath(); g.fill(); g.restore(); };
+  const tag = (g, txt, x, y, bg, fg) => { g.save(); g.font = "11px Roboto,sans-serif"; const w = g.measureText(txt).width + 10; g.fillStyle = bg || "rgba(19,23,34,.85)"; g.fillRect(x - w / 2, y - 9, w, 18); g.fillStyle = fg || "#fff"; g.textAlign = "center"; g.fillText(txt, x, y + 4); g.restore(); };
+  const ray = (a, b, W, H) => { const dx = b.x - a.x, dy = b.y - a.y, k = (Math.max(W, H) * 4) / (Math.hypot(dx, dy) || 1); return { x: a.x + dx * k, y: a.y + dy * k }; };
+  const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+  const fillOf = (s) => s.style.fill || "rgba(41,98,255,.15)";
+  const head = (g, a, b, sz) => { const an = Math.atan2(b.y - a.y, b.x - a.x); g.beginPath(); g.moveTo(b.x, b.y); g.lineTo(b.x - sz * Math.cos(an - 0.45), b.y - sz * Math.sin(an - 0.45)); g.lineTo(b.x - sz * Math.cos(an + 0.45), b.y - sz * Math.sin(an + 0.45)); g.closePath(); g.fill(); };
+  const segDist = (px, py, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy; let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy)); };
+  const between = (t1, t2) => S.B.filter((b) => b[0] >= Math.min(t1, t2) && b[0] <= Math.max(t1, t2));
+  const FC = ["#787b86", "#f23645", "#ff9800", "#4caf50", "#089981", "#2962ff", "#9c27b0"];
+  const vline = (g, x, H, c, lbl) => { g.strokeStyle = c; ln(g, { x, y: 0 }, { x, y: H }); if (lbl != null) { g.fillStyle = c; g.fillText(lbl, x + 3, 12); } };
+  const hLevels = (g, x1, x2, p0, r, ks) => ks.forEach((k, i) => { const pr = p0 + r * k, y = Y(pr); if (y == null) return; g.strokeStyle = FC[i % 7]; ln(g, { x: x1, y }, { x: x2, y }); g.fillStyle = FC[i % 7]; g.fillText(`${k} (${pr.toFixed(2)})`, x1 + 4, y - 3); });
+  const wave = (L) => ({ n: L.length, d: (g, s, P) => { pl(g, P); g.save(); g.fillStyle = s.style.color; g.font = "bold 12px Roboto,sans-serif"; g.textAlign = "center"; P.forEach((p, i) => { const nb = P[i ? i - 1 : 1]; if (L[i]) g.fillText(L[i], p.x, nb && nb.y > p.y ? p.y - 8 : p.y + 16); }); g.restore(); } });
+  const harm = (L) => ({ n: L.length, d: (g, s, P) => {
+    for (let i = 0; i + 2 < P.length; i += 2) fillPoly(g, [P[i], P[i + 1], P[i + 2]], fillOf(s));
+    g.save(); g.setLineDash([4, 3]); for (let i = 0; i + 2 < P.length; i++) ln(g, P[i], P[i + 2]); g.restore();
+    wave(L).d(g, s, P);
+    for (let i = 2; i < s.p.length; i++) { const r = Math.abs((s.p[i].price - s.p[i - 1].price) / (s.p[i - 1].price - s.p[i - 2].price || 1)), m = mid(P[i - 2], P[i]); tag(g, r.toFixed(3), m.x, m.y); }
+  } });
+  const glyph = (ch, size) => ({ n: 1, pad: 14, d: (g, s, P) => { g.save(); g.font = `${size || 22}px Roboto,"Segoe UI Emoji",sans-serif`; g.fillStyle = s.style.color; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(ch || s.text || "😀", P[0].x, P[0].y); g.restore(); } });
+  const tbox = (g, s, x, y, txt, bg, ptr) => { // boîte de texte (multi-lignes avec « \n »), coin bas-gauche en (x, y)
+    g.save(); const fs = s.style.fontSize || 12; g.font = `${fs}px Roboto,sans-serif`; const L = String(txt || "").split("\\n"), w = Math.max(30, ...L.map((l) => g.measureText(l).width)) + 14, h = L.length * (fs + 4) + 8;
+    g.fillStyle = bg || "#fff"; g.strokeStyle = s.style.color; g.lineWidth = 1; g.fillRect(x, y - h, w, h); g.strokeRect(x, y - h, w, h);
+    if (ptr) { g.beginPath(); g.moveTo(x + 8, y); g.lineTo(ptr.x, ptr.y); g.lineTo(x + 22, y); g.fill(); g.stroke(); }
+    g.fillStyle = s.style.textColor || "#131722"; L.forEach((l, i) => g.fillText(l, x + 7, y - h + 4 + (i + 1) * (fs + 4) - 3)); g.restore();
+  };
+  const pitchfork = (org) => ({ n: 3, area: 1, d: (g, s, P, W, H) => { const [a, b, c] = P, o = org(a, b), m = mid(b, c), dir = { x: m.x - o.x, y: m.y - o.y }, far = (p) => ray(p, { x: p.x + dir.x, y: p.y + dir.y }, W, H); fillPoly(g, [b, far(b), far(c), c], fillOf(s)); ln(g, o, far(o)); ln(g, b, far(b)); ln(g, c, far(c)); ln(g, b, c); if (o !== a) ln(g, a, o); } });
+  const gsqD = (g, s, P) => { const [a, b] = P, x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x), y1 = Math.min(a.y, b.y), y2 = Math.max(a.y, b.y); g.strokeRect(x1, y1, x2 - x1, y2 - y1); for (let k = 1; k < 4; k++) { ln(g, { x: x1 + ((x2 - x1) * k) / 4, y: y1 }, { x: x1 + ((x2 - x1) * k) / 4, y: y2 }); ln(g, { x: x1, y: y1 + ((y2 - y1) * k) / 4 }, { x: x2, y: y1 + ((y2 - y1) * k) / 4 }); } ln(g, { x: x1, y: y1 }, { x: x2, y: y2 }); ln(g, { x: x1, y: y2 }, { x: x2, y: y1 }); g.beginPath(); g.ellipse((x1 + x2) / 2, (y1 + y2) / 2, (x2 - x1) / 2, (y2 - y1) / 2, 0, 0, PI2); g.stroke(); };
+  const profile = (g, B, x1, x2) => { if (!B.length || x2 <= x1) return; const hi = Math.max(...B.map((b) => b[2])), lo = Math.min(...B.map((b) => b[3])), N = 24, st = (hi - lo) / N || TICK, bins = new Array(N).fill(0);
+    B.forEach((b) => { bins[Math.min(N - 1, Math.max(0, Math.floor(((b[2] + b[3]) / 2 - lo) / st)))] += b[5] || 1; }); const mx = Math.max(...bins), poc = bins.indexOf(mx), wm = (x2 - x1) * 0.9;
+    bins.forEach((v, i) => { const y1 = Y(lo + st * (i + 1)), y2 = Y(lo + st * i); if (y1 == null || y2 == null) return; g.fillStyle = i === poc ? "rgba(255,152,0,.65)" : "rgba(41,98,255,.35)"; g.fillRect(x1, y1, (wm * v) / mx, Math.max(1, y2 - y1 - 1)); }); };
+  const posTool = (dir) => ({ n: 1, area: 1,
+    init: (q) => { const sl = (+$("oSl").value || 40) * TICK, tp = (+$("oTp").value || 80) * TICK, w = 30 * S.tf * 60; return [q, { t: q.t + w, price: rnd(q.price + dir * tp) }, { t: q.t + w, price: rnd(q.price - dir * sl) }]; },
+    d: (g, s, P) => { const [e, t, st] = s.p, x1 = P[0].x, x2 = P[1].x, ye = P[0].y, yt = P[1].y, ys = P[2].y;
+      g.fillStyle = "rgba(38,166,154,.22)"; g.fillRect(x1, Math.min(ye, yt), x2 - x1, Math.abs(yt - ye)); g.fillStyle = "rgba(239,83,80,.22)"; g.fillRect(x1, Math.min(ye, ys), x2 - x1, Math.abs(ys - ye)); g.strokeStyle = "#787b86"; ln(g, { x: x1, y: ye }, { x: x2, y: ye });
+      const c = CTR[$("oCtr").value], q = Math.max(1, parseInt($("oQty").value, 10) || 1), tk = (v) => Math.round(Math.abs(v - e.price) / TICK), cash = (v) => usd(Math.abs(v - e.price) * c.pv * q), rr = Math.abs(t.price - e.price) / (Math.abs(st.price - e.price) || 1), xm = (x1 + x2) / 2;
+      tag(g, `Cible : ${t.price.toFixed(2)} · ${tk(t.price)} ticks · ${cash(t.price)}`, xm, yt + (yt < ye ? -12 : 12), "#26a69a"); tag(g, `Stop : ${st.price.toFixed(2)} · ${tk(st.price)} ticks · ${cash(st.price)}`, xm, ys + (ys > ye ? 12 : -12), "#ef5350"); tag(g, `R:R ${rr.toFixed(2)} · ${q} ${c.name}`, xm, ye + (yt < ye ? 12 : -12)); } });
+  const rangeBox = (g, P, c) => { g.fillStyle = c; g.fillRect(Math.min(P[0].x, P[1].x), Math.min(P[0].y, P[1].y), Math.abs(P[1].x - P[0].x), Math.abs(P[1].y - P[0].y)); };
+  const SPEC = {
+    info: { n: 2, d: (g, s, P) => { ln(g, P[0], P[1]); const [a, b] = s.p, d = b.price - a.price, nb = Math.round(t2l(b.t) - t2l(a.t)), an = (Math.atan2(P[0].y - P[1].y, P[1].x - P[0].x) * 180) / Math.PI; tag(g, `${d >= 0 ? "+" : ""}${d.toFixed(2)} (${((d / a.price) * 100).toFixed(2)}%) · ${nb} barres · ${an.toFixed(1)}°`, P[1].x, P[1].y - 16); } },
+    angle: { n: 2, d: (g, s, P) => { ln(g, P[0], P[1]); g.save(); g.setLineDash([4, 3]); ln(g, P[0], { x: P[0].x + 60, y: P[0].y }); g.restore(); const an = Math.atan2(P[0].y - P[1].y, P[1].x - P[0].x); g.beginPath(); g.arc(P[0].x, P[0].y, 30, -an, 0, an < 0); g.stroke(); tag(g, ((an * 180) / Math.PI).toFixed(1) + "°", P[0].x + 48, P[0].y - 10); } },
+    pchan: { n: 3, area: 1, d: (g, s, P) => { const [a, b, c] = P, oy = c.y - (a.y + ((b.y - a.y) * (c.x - a.x)) / (b.x - a.x || 1)), a2 = { x: a.x, y: a.y + oy }, b2 = { x: b.x, y: b.y + oy }; fillPoly(g, [a, b, b2, a2], fillOf(s)); ln(g, a, b); ln(g, a2, b2); g.save(); g.setLineDash([4, 3]); ln(g, mid(a, a2), mid(b, b2)); g.restore(); } },
+    regr: { n: 2, area: 1, d: (g, s) => { const B = between(s.p[0].t, s.p[1].t), n = B.length; if (n < 2) return; const ys = B.map((b) => b[4]), mx = (n - 1) / 2, my = ys.reduce((a, v) => a + v, 0) / n; let sxy = 0, sxx = 0; ys.forEach((v, i) => { sxy += (i - mx) * (v - my); sxx += (i - mx) ** 2; }); const k = sxy / sxx, c0 = my - k * mx, sd = Math.sqrt(ys.reduce((a, v, i) => a + (v - (c0 + k * i)) ** 2, 0) / n), p = (i, o) => ({ x: X(B[i][0]), y: Y(c0 + k * i + o) }), L = n - 1;
+      fillPoly(g, [p(0, 2 * sd), p(L, 2 * sd), p(L, -2 * sd), p(0, -2 * sd)], fillOf(s)); ln(g, p(0, 0), p(L, 0)); g.save(); g.setLineDash([5, 4]); ln(g, p(0, 2 * sd), p(L, 2 * sd)); ln(g, p(0, -2 * sd), p(L, -2 * sd)); g.restore(); } },
+    pitch: pitchfork((a) => a), ipitch: pitchfork((a, b) => mid(a, b)),
+    fibext: { n: 3, d: (g, s, P) => { pl(g, P); const [a, b, c] = s.p; hLevels(g, Math.min(P[1].x, P[2].x), Math.max(P[1].x, P[2].x) + 90, c.price, b.price - a.price, [0, 0.618, 1, 1.272, 1.618, 2, 2.618]); } },
+    fibchan: { n: 3, d: (g, s, P) => { const [a, b, c] = P, oy = c.y - (a.y + ((b.y - a.y) * (c.x - a.x)) / (b.x - a.x || 1)); [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618].forEach((k, i) => { g.strokeStyle = FC[i % 7]; ln(g, { x: a.x, y: a.y + oy * k }, { x: b.x, y: b.y + oy * k }); }); } },
+    fibtz: { n: 2, vert: 1, d: (g, s, P, W, H) => { const dt = s.p[1].t - s.p[0].t; if (dt) [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89].forEach((k, i) => { const x = X(s.p[0].t + dt * k); if (x != null && x <= W) vline(g, x, H, FC[i % 7], String(k)); }); } },
+    fibtime: { n: 3, d: (g, s, P, W, H) => { pl(g, P); const dt = s.p[1].t - s.p[0].t; if (dt) [0, 0.382, 0.5, 0.618, 1, 1.382, 1.618, 2, 2.618].forEach((k, i) => { const x = X(s.p[2].t + dt * k); if (x != null && x <= W) vline(g, x, H, FC[i % 7], String(k)); }); } },
+    fibfan: { n: 2, d: (g, s, P, W, H) => { const [a, b] = P; [0.236, 0.382, 0.5, 0.618, 0.786, 1].forEach((k, i) => { g.strokeStyle = FC[(i + 1) % 7]; ln(g, a, ray(a, { x: b.x, y: b.y + (a.y - b.y) * k }, W, H)); }); g.strokeStyle = s.style.color; g.strokeRect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(b.x - a.x), Math.abs(b.y - a.y)); } },
+    fibcirc: { n: 2, d: (g, s, P) => { const [a, b] = P, R = Math.hypot(b.x - a.x, b.y - a.y); ln(g, a, b); [0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618].forEach((k, i) => { g.strokeStyle = FC[i % 7]; g.beginPath(); g.arc(a.x, a.y, R * k, 0, PI2); g.stroke(); }); } },
+    fibspir: { n: 2, d: (g, s, P) => { const [a, b] = P, R = Math.hypot(b.x - a.x, b.y - a.y), a0 = Math.atan2(b.y - a.y, b.x - a.x); ln(g, a, b); g.beginPath(); for (let th = 0; th < 6 * Math.PI; th += 0.05) { const r = (R / 160) * Math.pow(1.618, th / (Math.PI / 2)), x = a.x + r * Math.cos(a0 + th), y = a.y + r * Math.sin(a0 + th); th ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); } },
+    fibarc: { n: 2, d: (g, s, P) => { const [a, b] = P, R = Math.hypot(b.x - a.x, b.y - a.y), up = a.y < b.y; ln(g, a, b); [0.382, 0.5, 0.618, 1].forEach((k, i) => { g.strokeStyle = FC[(i + 2) % 7]; g.beginPath(); g.arc(b.x, b.y, R * k, up ? Math.PI : 0, up ? PI2 : Math.PI); g.stroke(); }); } },
+    fibwedge: { n: 3, d: (g, s, P) => { const [a, b, c] = P, R = Math.hypot(b.x - a.x, b.y - a.y), t1 = Math.atan2(b.y - a.y, b.x - a.x), t2 = Math.atan2(c.y - a.y, c.x - a.x), ccw = (t2 - t1 + PI2) % PI2 > Math.PI; ln(g, a, b); ln(g, a, { x: a.x + R * Math.cos(t2), y: a.y + R * Math.sin(t2) }); [0.236, 0.382, 0.5, 0.618, 0.786, 1].forEach((k, i) => { g.strokeStyle = FC[i % 7]; g.beginPath(); g.arc(a.x, a.y, R * k, t1, t2, ccw); g.stroke(); }); } },
+    pitchfan: { n: 3, d: (g, s, P, W, H) => { const [a, b, c] = P; ln(g, b, c); [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1].forEach((k, i) => { g.strokeStyle = FC[i % 7]; ln(g, a, ray(a, { x: b.x + (c.x - b.x) * k, y: b.y + (c.y - b.y) * k }, W, H)); }); } },
+    gbox: { n: 2, area: 1, d: (g, s, P) => { const [a, b] = P, x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x), y1 = Math.min(a.y, b.y), y2 = Math.max(a.y, b.y); g.fillStyle = fillOf(s); g.fillRect(x1, y1, x2 - x1, y2 - y1); [0, 0.25, 0.382, 0.5, 0.618, 0.75, 1].forEach((k, i) => { g.strokeStyle = FC[i % 7]; ln(g, { x: x1 + (x2 - x1) * k, y: y1 }, { x: x1 + (x2 - x1) * k, y: y2 }); ln(g, { x: x1, y: y1 + (y2 - y1) * k }, { x: x2, y: y1 + (y2 - y1) * k }); }); g.strokeStyle = s.style.color; g.save(); g.setLineDash([4, 3]); ln(g, { x: x1, y: y1 }, { x: x2, y: y2 }); ln(g, { x: x1, y: y2 }, { x: x2, y: y1 }); g.restore(); } },
+    gsq: { n: 2, area: 1, d: gsqD },
+    gsqf: { n: 1, area: 1, init: (q) => [q, { t: q.t + 40 * S.tf * 60, price: rnd(q.price + 160 * TICK) }], d: gsqD },
+    gfan: { n: 2, d: (g, s, P, W, H) => { const [a, b] = P, dx = b.x - a.x, dy = b.y - a.y; [[8, "1x8"], [4, "1x4"], [3, "1x3"], [2, "1x2"], [1, "1x1"], [1 / 2, "2x1"], [1 / 3, "3x1"], [1 / 4, "4x1"], [1 / 8, "8x1"]].forEach(([r, l], i) => { const t = { x: a.x + dx, y: a.y + dy * r }, e = ray(a, t, W, H); g.strokeStyle = FC[i % 7]; ln(g, a, e); g.fillStyle = FC[i % 7]; g.fillText(l, t.x + 4, t.y); }); } },
+    xabcd: harm(["X", "A", "B", "C", "D"]), cypher: harm(["X", "A", "B", "C", "D"]), abcd: harm(["A", "B", "C", "D"]),
+    hs: { n: 7, d: (g, s, P) => { wave(["", "Épaule G", "", "Tête", "", "Épaule D", ""]).d(g, s, P); g.save(); g.setLineDash([5, 4]); ln(g, P[2], P[4]); g.restore(); } },
+    tripat: { n: 4, d: (g, s, P, W, H) => { wave(["A", "B", "C", "D"]).d(g, s, P); g.save(); g.setLineDash([5, 4]); ln(g, P[0], ray(P[0], P[2], W, H)); ln(g, P[1], ray(P[1], P[3], W, H)); g.restore(); } },
+    drives: wave(["", "1", "", "2", "", "3", ""]),
+    ew5: wave(["(0)", "(1)", "(2)", "(3)", "(4)", "(5)"]), ewabc: wave(["(0)", "(A)", "(B)", "(C)"]), ewtri: wave(["(0)", "(A)", "(B)", "(C)", "(D)", "(E)"]), ewwxy: wave(["(0)", "(W)", "(X)", "(Y)"]), ewwxyz: wave(["(0)", "(W)", "(X)", "(Y)", "(X)", "(Z)"]),
+    cyc: { n: 2, vert: 1, d: (g, s, P, W, H) => { const dt = s.p[1].t - s.p[0].t; if (dt > 0) for (let i = 0; i < 80; i++) { const x = X(s.p[0].t + dt * i); if (x == null || x > W) break; vline(g, x, H, s.style.color); } } },
+    tcyc: { n: 2, d: (g, s, P, W) => { const dt = s.p[1].t - s.p[0].t; if (dt > 0) for (let i = 0; i < 80; i++) { const x1 = X(s.p[0].t + dt * i), x2 = X(s.p[0].t + dt * (i + 1)); if (x1 == null || x2 == null || x1 > W) break; g.beginPath(); g.ellipse((x1 + x2) / 2, P[0].y, Math.abs(x2 - x1) / 2, Math.abs(x2 - x1) / 2, 0, Math.PI, PI2); g.stroke(); } } },
+    long: posTool(1), short: posTool(-1),
+    pfc: { n: 2, d: (g, s, P) => { ln(g, P[0], P[1]); head(g, P[0], P[1], 10); const d = s.p[1].price - s.p[0].price; tag(g, `${d >= 0 ? "+" : ""}${d.toFixed(2)} (${((d / s.p[0].price) * 100).toFixed(2)}%)`, P[1].x, P[1].y + (d >= 0 ? -16 : 16), d >= 0 ? "#2962ff" : "#ef5350"); } },
+    barpat: { n: 2, d: (g, s, P) => { const B = between(s.p[0].t, s.p[1].t); if (!B.length) return; const tf = S.tf * 60, dt = B[B.length - 1][0] - B[0][0] + tf, dp = s.p[1].price - B[0][1], w = Math.max(1, (X(B[0][0] + tf) - X(B[0][0])) * 0.6);
+      g.save(); g.globalAlpha = 0.45; B.forEach((b) => { const x = X(b[0] + dt), o = Y(b[1] + dp), c = Y(b[4] + dp); if (x == null || o == null || c == null) return; ln(g, { x, y: Y(b[2] + dp) }, { x, y: Y(b[3] + dp) }); g.fillStyle = b[4] >= b[1] ? s.style.color : "#ffffff"; g.fillRect(x - w / 2, Math.min(o, c), w, Math.max(1, Math.abs(c - o))); }); g.restore(); g.save(); g.setLineDash([4, 3]); ln(g, P[0], P[1]); g.restore(); } },
+    ghost: { n: 0, d: (g, s, P) => { for (let i = 1; i < P.length; i++) { const o = P[i - 1].y, c = P[i].y; g.fillStyle = c < o ? "rgba(76,175,80,.65)" : "rgba(0,0,0,.45)"; g.fillRect(P[i].x - 3, Math.min(o, c), 6, Math.max(1, Math.abs(c - o))); } } },
+    avwap: { n: 1, pad: 10, d: (g, s, P) => { let pv = 0, v = 0, on = false; g.beginPath(); S.B.forEach((b) => { if (b[0] < s.p[0].t) return; const vol = b[5] || 1; pv += ((b[2] + b[3] + b[4]) / 3) * vol; v += vol; const x = X(b[0]), y = Y(pv / v); if (x == null || y == null) return; on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; }); g.stroke(); tag(g, "VWAP", P[0].x, P[0].y + 16); } },
+    frvp: { n: 2, area: 1, d: (g, s, P) => { const x1 = Math.min(P[0].x, P[1].x), x2 = Math.max(P[0].x, P[1].x); profile(g, between(s.p[0].t, s.p[1].t), x1, x2); g.save(); g.setLineDash([4, 3]); g.strokeRect(x1, Math.min(P[0].y, P[1].y), x2 - x1, Math.abs(P[1].y - P[0].y)); g.restore(); } },
+    avp: { n: 1, pad: 10, d: (g, s, P, W) => { profile(g, S.B.filter((b) => b[0] >= s.p[0].t), P[0].x, W); g.save(); g.setLineDash([4, 3]); ln(g, { x: P[0].x, y: 0 }, { x: P[0].x, y: P[0].y + 40 }); g.restore(); } },
+    prange: { n: 2, area: 1, d: (g, s, P) => { const d = s.p[1].price - s.p[0].price, c = CTR[$("oCtr").value], tk = Math.round(d / TICK), xm = (P[0].x + P[1].x) / 2; rangeBox(g, P, d >= 0 ? "rgba(41,98,255,.15)" : "rgba(239,83,80,.15)"); ln(g, { x: xm, y: P[0].y }, { x: xm, y: P[1].y }); head(g, { x: xm, y: P[0].y }, { x: xm, y: P[1].y }, 8); tag(g, `${d.toFixed(2)} (${((d / s.p[0].price) * 100).toFixed(2)}%) · ${tk} ticks · ${usd(tk * TICK * c.pv)}`, xm, P[1].y + (d >= 0 ? -14 : 14), d >= 0 ? "#2962ff" : "#ef5350"); } },
+    drange: { n: 2, area: 1, d: (g, s, P) => { const nb = Math.round(t2l(s.p[1].t) - t2l(s.p[0].t)), sec = Math.abs(s.p[1].t - s.p[0].t), ym = (P[0].y + P[1].y) / 2; rangeBox(g, P, "rgba(41,98,255,.15)"); ln(g, { x: P[0].x, y: ym }, { x: P[1].x, y: ym }); head(g, { x: P[0].x, y: ym }, { x: P[1].x, y: ym }, 8); tag(g, `${nb} barres · ${Math.floor(sec / 3600)}h${String(Math.round((sec % 3600) / 60)).padStart(2, "0")}`, (P[0].x + P[1].x) / 2, Math.max(P[0].y, P[1].y) + 14, "#2962ff"); } },
+    brush: { free: 1, d: (g, s, P) => { g.lineJoin = g.lineCap = "round"; pl(g, P); } },
+    hilite: { free: 1, d: (g, s, P) => { g.save(); g.globalAlpha = 0.35; g.lineWidth = Math.max(10, s.style.width * 6); g.lineJoin = g.lineCap = "round"; pl(g, P); g.restore(); } },
+    amark: { n: 2, d: (g, s, P) => { g.save(); g.lineWidth = Math.max(4, s.style.width * 3); ln(g, P[0], P[1]); g.restore(); head(g, P[0], P[1], 18); } },
+    arrow: { n: 2, d: (g, s, P) => { ln(g, P[0], P[1]); head(g, P[0], P[1], 10); } },
+    aup: glyph("▲"), adn: glyph("▼"), alf: glyph("◀"), art: glyph("▶"),
+    rrect: { n: 3, area: 1, d: (g, s, P) => { const [a, b, c] = P, dx = b.x - a.x, dy = b.y - a.y, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, h = (c.x - a.x) * nx + (c.y - a.y) * ny, Q = [a, b, { x: b.x + nx * h, y: b.y + ny * h }, { x: a.x + nx * h, y: a.y + ny * h }]; fillPoly(g, Q, fillOf(s)); pl(g, Q, true); } },
+    path: { n: 0, d: (g, s, P) => { pl(g, P); if (P.length > 1) head(g, P[P.length - 2], P[P.length - 1], 10); } },
+    circle: { n: 2, hit: (P, x, y) => Math.hypot(x - P[0].x, y - P[0].y) <= Math.hypot(P[1].x - P[0].x, P[1].y - P[0].y) + 5, d: (g, s, P) => { g.beginPath(); g.arc(P[0].x, P[0].y, Math.hypot(P[1].x - P[0].x, P[1].y - P[0].y), 0, PI2); g.fillStyle = fillOf(s); g.fill(); g.stroke(); } },
+    ellipse: { n: 2, area: 1, d: (g, s, P) => { g.beginPath(); g.ellipse((P[0].x + P[1].x) / 2, (P[0].y + P[1].y) / 2, Math.abs(P[1].x - P[0].x) / 2, Math.abs(P[1].y - P[0].y) / 2, 0, 0, PI2); g.fillStyle = fillOf(s); g.fill(); g.stroke(); } },
+    poly: { n: 0, d: (g, s, P) => pl(g, P) },
+    tri: { n: 3, area: 1, d: (g, s, P) => { fillPoly(g, P, fillOf(s)); pl(g, P, true); } },
+    arc: { n: 3, area: 1, d: (g, s, P) => { g.beginPath(); g.moveTo(P[0].x, P[0].y); g.quadraticCurveTo(2 * P[2].x - (P[0].x + P[1].x) / 2, 2 * P[2].y - (P[0].y + P[1].y) / 2, P[1].x, P[1].y); g.fillStyle = fillOf(s); g.fill(); g.stroke(); } },
+    curve: { n: 3, d: (g, s, P) => { g.beginPath(); g.moveTo(P[0].x, P[0].y); g.quadraticCurveTo(2 * P[2].x - (P[0].x + P[1].x) / 2, 2 * P[2].y - (P[0].y + P[1].y) / 2, P[1].x, P[1].y); g.stroke(); } },
+    dcurve: { n: 4, d: (g, s, P) => { g.beginPath(); g.moveTo(P[0].x, P[0].y); g.bezierCurveTo(P[2].x, P[2].y, P[3].x, P[3].y, P[1].x, P[1].y); g.stroke(); } },
+    note: { n: 1, box: 1, d: (g, s, P) => { glyph("📝", 16).d(g, s, P); tbox(g, s, P[0].x + 12, P[0].y - 4, s.text, "#fff8c4"); } },
+    pnote: { n: 2, box: 1, d: (g, s, P) => { ln(g, P[0], P[1]); g.beginPath(); g.arc(P[0].x, P[0].y, 3, 0, PI2); g.fill(); tbox(g, s, P[1].x, P[1].y, (s.text ? s.text + "  " : "") + s.p[0].price.toFixed(2), "#fff"); } },
+    pin: { n: 1, box: 1, d: (g, s, P) => { glyph("📌", 18).d(g, s, P); if (s.text) tbox(g, s, P[0].x + 12, P[0].y - 10, s.text, "#fff"); } },
+    table: { n: 1, box: 1, d: (g, s, P) => { const R = String(s.text || "").split(";").map((r) => r.split("|")), cols = Math.max(...R.map((r) => r.length)), fs = s.style.fontSize || 12; g.save(); g.font = `${fs}px Roboto,sans-serif`; const cw = Math.max(40, ...R.flat().map((c) => g.measureText(c).width + 12)), rh = fs + 10; R.forEach((r, i) => { for (let j = 0; j < cols; j++) { const x = P[0].x + j * cw, y = P[0].y + i * rh; g.fillStyle = i ? "#ffffff" : "#e0e3eb"; g.fillRect(x, y, cw, rh); g.strokeStyle = s.style.color; g.strokeRect(x, y, cw, rh); g.fillStyle = s.style.textColor || "#131722"; g.fillText(r[j] || "", x + 6, y + rh - 6); } }); g.restore(); } },
+    callout: { n: 2, box: 1, d: (g, s, P) => tbox(g, s, P[1].x, P[1].y, s.text, "#e3effd", P[0]) },
+    comment: { n: 1, box: 1, d: (g, s, P) => tbox(g, s, P[0].x - 10, P[0].y - 10, s.text, "#ffffff", P[0]) },
+    plabel: { n: 1, box: 1, d: (g, s, P) => { const t = (s.text ? s.text + " " : "") + s.p[0].price.toFixed(2); g.save(); g.font = "12px Roboto,sans-serif"; const w = g.measureText(t).width + 14; g.fillStyle = s.style.color; g.beginPath(); g.moveTo(P[0].x, P[0].y); g.lineTo(P[0].x + 8, P[0].y - 10); g.lineTo(P[0].x + 8 + w, P[0].y - 10); g.lineTo(P[0].x + 8 + w, P[0].y + 10); g.lineTo(P[0].x + 8, P[0].y + 10); g.closePath(); g.fill(); g.fillStyle = "#fff"; g.fillText(t, P[0].x + 14, P[0].y + 4); g.restore(); } },
+    sign: { n: 1, box: 1, d: (g, s, P) => { ln(g, P[0], { x: P[0].x, y: P[0].y - 34 }); tbox(g, s, P[0].x - 4, P[0].y - 34, s.text, "#ffffff"); } },
+    flag: glyph("🚩", 20), emoji: glyph(null, 26),
+  };
+  const TEXTDEF = { note: "Note", pin: "Épingle", table: "Niveau|Prix;PDH|;PDL|", callout: "Bulle", comment: "Commentaire", sign: "Panneau", emoji: "😀", pnote: "" };
+  GROUPS.forEach((G) => G.sec.forEach(([, items]) => items.forEach((it) => { if (SPEC[it.id]) { TOOLS[it.id] = it.name; IMPL.add(it.id); } })));
+  ["dot", "arrowc", "eraser"].forEach((id) => IMPL.add(id));
+  function specHit(s, P, x, y) {
+    const sp = SPEC[s.type];
+    if (sp.hit) return sp.hit(P, x, y);
+    if (sp.box) return P.some((p) => x >= p.x - 12 && x <= p.x + 160 && y >= p.y - 60 && y <= p.y + 40);
+    if (sp.pad || P.length === 1) return P.some((p) => Math.abs(p.x - x) < (sp.pad || 14) && Math.abs(p.y - y) < (sp.pad || 14));
+    if (sp.vert && P.some((p) => Math.abs(p.x - x) < 6)) return true;
+    if (sp.area) { const xs = P.map((p) => p.x), ys = P.map((p) => p.y); return x >= Math.min(...xs) - 5 && x <= Math.max(...xs) + 5 && y >= Math.min(...ys) - 5 && y <= Math.max(...ys) + 5; }
+    for (let i = 1; i < P.length; i++) if (segDist(x, y, P[i - 1], P[i]) < 6) return true;
+    return false;
+  }
   const LINE = { trend: 1, ray: 1, ext: 1 }; // ray = prolongé à droite, ext = des deux côtés
   function lineEnds(s, a, b, W) {
     let x1 = a.x, y1 = a.y, x2 = b.x, y2 = b.y; const dx = x2 - x1, dy = y2 - y1, st = s.style;
@@ -3292,6 +3411,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       }
       g.strokeStyle = "rgba(160,160,160,.5)"; setDash(g, 1); g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
     } else if (s.type === "text") { g.fillStyle = st.textColor; g.fillText(s.text || "Texte", a.x, a.y); }
+    else if (SPEC[s.type]) { g.save(); SPEC[s.type].d(g, s, pts, W, H); g.restore(); }
     setDash(g, 0);
     if (s === sel) { g.fillStyle = "#fff"; g.strokeStyle = "#2962ff"; g.lineWidth = 1; pts.forEach((p) => { g.fillRect(p.x - 4, p.y - 4, 8, 8); g.strokeRect(p.x - 4, p.y - 4, 8, 8); }); }
   }
@@ -3320,20 +3440,31 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       else if (s.type === "rect" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) + 5 && y >= Math.min(a.y, b.y) - 5 && y <= Math.max(a.y, b.y) + 5;
       else if (s.type === "fib" && b) near = x >= (s.style.extL ? 0 : Math.min(a.x, b.x)) - 5 && x <= (s.style.extR ? W : Math.max(a.x, b.x)) && s.style.levels.some((lv) => lv.on && Math.abs(Y(s.p[1].price + (s.p[0].price - s.p[1].price) * lv.k) - y) < 6);
       else if (s.type === "text") near = y <= a.y + 4 && y >= a.y - (s.style.fontSize || 12) - 4 && x >= a.x - 4 && x <= a.x + 8 * (s.text || "Texte").length;
+      else if (SPEC[s.type]) near = specHit(s, pts, x, y);
       if (near) return { s, h: -1 };
     }
     return null;
   }
   const NEED2 = { trend: 1, ray: 1, ext: 1, rect: 1, fib: 1 };
+  let cursorMode = "cross", freeDraw = false;
   function setTool(t) {
-    tool = t; pending = null; if (t !== "measure") measure = null;
-    document.querySelectorAll("#btTools [data-tool], #btFavBar [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === t));
+    if (t === "cross" || t === "dot" || t === "arrowc") { // curseurs : croix, point, flèche (sans réticule)
+      cursorMode = t; t = "cross"; $("btWrap").dataset.cur = cursorMode;
+      if (chart) chart.applyOptions({ crosshair: { vertLine: { visible: cursorMode === "cross" }, horzLine: { visible: cursorMode === "cross" } } });
+    }
+    tool = t; pending = null; freeDraw = false; if (t !== "measure") measure = null;
+    const shown = t === "cross" ? cursorMode : t;
+    document.querySelectorAll("#btTools [data-tool], #btFavBar [data-tool]").forEach((b) => b.classList.toggle("on", b.dataset.tool === shown));
     $("btWrap").classList.toggle("drawing", t !== "cross");
   }
+  function finishPending() {
+    const tt = pending.type, p = pending.p.filter((v, i, A) => !i || v.t !== A[i - 1].t || v.price !== A[i - 1].price); pending = null; freeDraw = false; setTool("cross");
+    if (p.length >= (SPEC[tt] && (SPEC[tt].n === 0 || SPEC[tt].free) ? 2 : 1)) create(tt, p);
+  }
   function create(type, p) {
-    const def = LS.get("bt-tpl-default", {})[type], s = { id: String(Date.now()) + Math.floor(Math.random() * 1e4), type, name: TOOLS[type], p, style: def ? JSON.parse(JSON.stringify(def)) : defStyle(type), text: type === "text" ? "Texte" : "", hidden: false, locked: false };
+    const def = LS.get("bt-tpl-default", {})[type], s = { id: String(Date.now()) + Math.floor(Math.random() * 1e4), type, name: TOOLS[type], p, style: def ? JSON.parse(JSON.stringify(def)) : defStyle(type), text: type === "text" ? "Texte" : TEXTDEF[type] || "", hidden: false, locked: false };
     shapes.push(s); sel = s; saveDrawings();
-    if (type === "text") openSettings(s, "text");
+    if (type === "text" || type in TEXTDEF) openSettings(s, "text");
   }
   function pos(e) { const r = $("btWrap").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   function bindDrawing() {
@@ -3343,10 +3474,22 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       if (e.button !== 0) return;
       const { x, y } = pos(e), q = at(x, y); if (!q) return;
       if (tool === "measure") { if (measure && !measure.done) { measure.b = q; measure.done = true; setTool("cross"); measure = { ...measure }; } else measure = { a: q, b: q, done: false }; return; }
-      if (NEED2[tool]) { if (!pending) pending = { type: tool, p: [q, { ...q }], style: defStyle(tool), text: "" }; else { const p = pending.p; pending = null; const tt = tool; setTool("cross"); create(tt, [p[0], q]); } }
-      else if (TOOLS[tool]) { const tt = tool; setTool("cross"); create(tt, [q]); }
+      if (tool === "eraser") { const h = hit(x, y); if (h) { shapes = shapes.filter((v) => v !== h.s); if (sel === h.s) sel = null; saveDrawings(); } return; }
+      const sp = SPEC[tool], n = NEED2[tool] ? 2 : sp ? sp.n : 1;
+      if (sp && sp.free) { pending = { type: tool, p: [q], style: defStyle(tool), text: "" }; freeDraw = true; return; }
+      if (sp && sp.init) { const tt = tool; setTool("cross"); create(tt, sp.init(q)); return; }
+      if (n === 1) { if (TOOLS[tool]) { const tt = tool; setTool("cross"); create(tt, [q]); } return; }
+      if (!pending) { pending = { type: tool, p: [q, { ...q }], style: defStyle(tool), text: TEXTDEF[tool] || "" }; return; }
+      pending.p[pending.p.length - 1] = q;
+      if (n && pending.p.length >= n) finishPending(); else pending.p.push({ ...q });
     });
-    c.addEventListener("mousemove", (e) => { const { x, y } = pos(e), q = at(x, y); if (!q) return; if (pending) pending.p[1] = q; if (measure && !measure.done) measure.b = q; });
+    c.addEventListener("mousemove", (e) => {
+      const { x, y } = pos(e), q = at(x, y); if (!q) return;
+      if (pending) { if (!freeDraw) pending.p[pending.p.length - 1] = q; else if (e.buttons & 1) { const l = pending.p[pending.p.length - 1]; if (l.t !== q.t || l.price !== q.price) pending.p.push(q); } }
+      if (measure && !measure.done) measure.b = q;
+    });
+    c.addEventListener("mouseup", () => { if (freeDraw && pending) finishPending(); });
+    c.addEventListener("dblclick", (e) => { if (pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); } }); // fin d'un chemin / polyligne / ghost feed
     // mode curseur : sélection / déplacement des dessins avant le déplacement de la chart (phase de capture)
     wrap.addEventListener("mousedown", (e) => {
       if (tool !== "cross" || e.button !== 0 || e.target.closest(".tx-favbar,.tx-float")) return;
@@ -3389,7 +3532,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (editTab === "style") {
       h += `<div class="r">Couleur <input type="color" data-k="color" value="${st.color}"></div><div class="r">Épaisseur <select data-k="width">${[1, 2, 3, 4].map((w) => `<option ${w == st.width ? "selected" : ""}>${w}</option>`).join("")}</select></div>`;
       h += `<div class="r">Style de ligne <select data-k="dash"><option value="0" ${st.dash == 0 ? "selected" : ""}>Continu</option><option value="1" ${st.dash == 1 ? "selected" : ""}>Tirets</option><option value="2" ${st.dash == 2 ? "selected" : ""}>Pointillés</option></select></div>`;
-      if (s.type === "rect") h += `<div class="r">Fond <span><input type="color" data-k="fillc" value="${rgbHex(st.fill)}"> opacité <input type="number" data-k="filla" min="0" max="100" value="${Math.round(alpha(st.fill) * 100)}" style="width:60px">%</span></div>`;
+      if (s.type === "rect" || (SPEC[s.type] && (SPEC[s.type].area || SPEC[s.type].hit))) h += `<div class="r">Fond <span><input type="color" data-k="fillc" value="${rgbHex(st.fill)}"> opacité <input type="number" data-k="filla" min="0" max="100" value="${Math.round(alpha(st.fill) * 100)}" style="width:60px">%</span></div>`;
       if (["trend", "rect", "fib"].includes(s.type)) h += `<div class="r">Prolonger à gauche <input type="checkbox" data-k="extL" ${st.extL ? "checked" : ""}></div><div class="r">Prolonger à droite <input type="checkbox" data-k="extR" ${st.extR ? "checked" : ""}></div>`;
       if (s.type === "fib" || s.type === "hline") h += `<div class="r">Afficher les prix <input type="checkbox" data-k="labels" ${st.labels ? "checked" : ""}></div>`;
       if (s.type === "fib") h += `<div class="lvs">${st.levels.map((lv, i) => `<div class="lv"><input type="checkbox" data-lv="${i}" data-f="on" ${lv.on ? "checked" : ""}><input type="number" step="0.001" data-lv="${i}" data-f="k" value="${lv.k}"><input type="color" data-lv="${i}" data-f="c" value="${lv.c}"></div>`).join("")}</div><button class="ghost" id="btLvAdd" style="margin-top:6px">＋ Niveau</button>`;
@@ -3533,6 +3676,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const k = e.key.toLowerCase();
       if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", c: "xline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
       if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
+      else if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
       else if ((k === "delete" || k === "backspace") && sel) { e.preventDefault(); shapes = shapes.filter((x) => x !== sel); sel = null; saveDrawings(); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
       else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
