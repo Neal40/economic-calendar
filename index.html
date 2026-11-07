@@ -3409,6 +3409,33 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     draw(true); msg(P.split ? `2 charts : ${S.sym} + ${sym2()} synchronisés sur le replay.` : "1 chart.");
   }
 
+  // Historique à gauche : quand on fait défiler jusqu'au bord gauche, on ajoute 5 jours de bougies m1 plus anciennes
+  // (dossier data / CSV importé) devant celles du replay, sans bouger la vue ni la position du replay.
+  let olderBusy = false;
+  async function loadOlder() {
+    if (olderBusy || !S.raw.length || S.htf || S.noOlder === S.raw[0][0]) return; // unités > m1 : l'historique vient déjà des fichiers *_all_tf
+    olderBusy = true;
+    try {
+      const first = S.raw[0][0];
+      let add = [], from = first;
+      for (let k = 0; k < 3 && !add.length; k++) { // 3 essais de 5 jours (week-ends, jours fériés)
+        const to = from - 1; from -= 5 * 86400;
+        if (S.sym === "CSV") add = (S.csv || []).filter((b) => b[0] >= from && b[0] < first);
+        else if (D && D.dataRead) { const r = await D.dataRead(S.sym, from, to, "m1"); add = r && r.ok ? r.data.filter((b) => b[0] < first) : []; }
+      }
+      if (!add.length) { S.noOlder = first; return; }
+      const vr = chart.timeScale().getVisibleRange();
+      S.raw = add.concat(S.raw); S.cur += add.length; S.done += add.length;
+      if (P.split && sym2() && S.raw2 && S.raw2.length && D && D.dataRead) {
+        const r2 = await D.dataRead(sym2(), add[0][0], S.raw2[0][0] - 1, "m1");
+        if (r2 && r2.ok) S.raw2 = r2.data.filter((b) => b[0] < S.raw2[0][0]).concat(S.raw2);
+      }
+      draw(true);
+      if (vr) try { chart.timeScale().setVisibleRange(vr); } catch (e) { /* vue hors données */ }
+      msg(`Historique chargé jusqu'au ${dstr(S.raw[0][0])} (${S.raw.length} bougies m1).`);
+    } finally { olderBusy = false; }
+  }
+
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
   let chart = null, cs = null, vs = null, lastKey = "", plines = [];
   function ensureChart() {
@@ -3424,6 +3451,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
     chart.subscribeCrosshairMove((p) => legend(p && p.time ? p.seriesData.get(cs) : null));
+    chart.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && r.from < 30 && !olderBusy) setTimeout(loadOlder, 0); }); // hors du rendu du chart // bord gauche atteint -> historique plus ancien
     applyPrefs(); loop();
   }
   function legend(d) {
