@@ -183,7 +183,9 @@ async function check(token, fetchFn) { const { call } = client(token, fetchFn); 
 // Cheap change detection for the auto-sync: has anything been edited in these databases/pages since `since` (ISO)?
 async function changedSince(token, fetchFn, items, since) {
   const { call } = client(token, fetchFn);
-  const t = since ? new Date(since).getTime() : 0;
+  // last_edited_time de Notion est arrondi à la minute : une modif faite dans la minute de la dernière synchro
+  // a un last_edited_time <= since ; on la considère donc changée tant que since < last_edited_time + 60 s
+  const t = since ? new Date(since).getTime() - 60000 : 0;
   for (const it of items || []) {
     if (it.db) {
       const r = await call(`/databases/${it.db}/query`, "POST", { page_size: 1, sorts: [{ timestamp: "last_edited_time", direction: "descending" }] });
