@@ -61,4 +61,4 @@ def order(e):
 for k in ev: ev[k].sort(key=order)
 # merge claims on same day as GDP etc into one? keep separate
 print(len(ev))
-json.dump(ev,open("seed2027.json","w")  # merged into index.html (EXTRA),ensure_ascii=False,separators=(",",":"))
+json.dump(ev,open("seed2027.json","w",encoding="utf-8"),ensure_ascii=False,separators=(",",":"))  # merged into index.html (EXTRA)
