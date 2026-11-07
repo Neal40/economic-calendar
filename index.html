@@ -3409,8 +3409,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     draw(true); msg(P.split ? `2 charts : ${S.sym} + ${sym2()} synchronisés sur le replay.` : "1 chart.");
   }
 
-  // Historique à gauche : quand on fait défiler jusqu'au bord gauche, on ajoute 5 jours de bougies m1 plus anciennes
-  // (dossier data / CSV importé) devant celles du replay, sans bouger la vue ni la position du replay.
+  // Historique à gauche : quand on fait défiler jusqu'au bord gauche, on ajoute 1 mois de bougies m1 plus anciennes
+  // (dossier data / CSV importé) devant celles du replay, sans bouger la vue ni la position du replay. 1 mois à la fois.
   let olderBusy = false;
   async function loadOlder() {
     if (olderBusy || !S.raw.length || S.htf || S.noOlder === S.raw[0][0]) return; // unités > m1 : l'historique vient déjà des fichiers *_all_tf
@@ -3418,8 +3418,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     try {
       const first = S.raw[0][0];
       let add = [], from = first;
-      for (let k = 0; k < 3 && !add.length; k++) { // 3 essais de 5 jours (week-ends, jours fériés)
-        const to = from - 1; from -= 5 * 86400;
+      for (let k = 0; k < 2 && !add.length; k++) { // 2 essais d'1 mois (trou dans les données)
+        const to = from - 1; from -= 30 * 86400;
         if (S.sym === "CSV") add = (S.csv || []).filter((b) => b[0] >= from && b[0] < first);
         else if (D && D.dataRead) { const r = await D.dataRead(S.sym, from, to, "m1"); add = r && r.ok ? r.data.filter((b) => b[0] < first) : []; }
       }
