@@ -920,7 +920,7 @@ table.tbl:has(#subT){min-width:900px}
         <div class="tx-head">
           <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV</option></select></label>
           <i class="tx-vs"></i>
-          <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">D</button></span>
+          <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">D</button><button data-tf="10080">W</button><button data-tf="43200">M</button></span>
           <i class="tx-vs"></i>
           <span class="tx-hb tx-on" title="Chandeliers"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg></span>
           <i class="tx-vs"></i>
@@ -3027,8 +3027,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 
   /* ---------------- données / replay ---------------- */
   const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0 };
-  function bucket(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, D = session)
+  const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M" };
+  const mondayOf = (d) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };
+  function bucket(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, D = session, W = lundi, M = 1er du mois)
     const tf = S.tf * 60;
+    if (S.tf >= 43200) return ny(sessionKey(t).slice(0, 8) + "01", 0, 0);
+    if (S.tf >= 10080) return ny(mondayOf(sessionKey(t)), 0, 0);
     if (S.tf >= 1440) return ny(sessionKey(t), 0, 0);
     if (S.tf >= 60) { const o = off(t), tn = t + o, a = (18 * 3600) % tf; return Math.floor((tn - a) / tf) * tf + a - o; }
     return Math.floor(t / tf) * tf;
@@ -3047,12 +3051,21 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (!D || !D.dataStatus) { $("btData").textContent = "Version web : importe un CSV (les bougies TopstepX sont enregistrées par l'app Windows)."; return; }
     const r = await D.dataStatus(); if (!r.ok) return;
     const s = r.data, f = (k) => (s[k] && s[k].m1Last ? `${k} → ${s[k].m1Last.slice(0, 16)}` : `${k} : à télécharger`);
-    $("btData").textContent = `Données ${f("NQ")} · ${f("ES")} · auto 23h01`;
+    $("btData").textContent = `Données ${f("NQ")} · ${f("ES")} · toutes UT ${s.allTf ? s.allTf.slice(0, 10) : "à générer"} · auto 23h01`;
   }
   async function load() {
     play(false);
     const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym;
-    const days = S.tf >= 1440 ? 60 : S.tf >= 240 ? 25 : S.tf >= 60 ? 10 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
+    const days = S.tf >= 43200 ? 35 : S.tf >= 10080 ? 9 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
+    // historique de l'unité de temps (fichiers NQ_all_tf / ES_all_tf générés par l'app) : contexte complet à gauche du replay
+    S.htf = null; S.htf2 = null;
+    if (sym !== "CSV" && S.tf > 1 && D && D.dataReadTf) {
+      const back = { 2: 20, 3: 30, 5: 45, 15: 120, 60: 400, 240: 1500 }[S.tf] || 99999, hf = S.tf >= 1440 ? 0 : to - back * 86400;
+      const r = await D.dataReadTf(sym, TFKEY[S.tf], hf, to);
+      if (r.ok) S.htf = r.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]);
+      else if (r.reason === "missing") msg("Historique des unités de temps absent : « Synchro données » (ou importe NQ_all_tf.csv / ES_all_tf.csv).", true);
+      if (P.split && sym2()) { const r2 = await D.dataReadTf(sym2(), TFKEY[S.tf], hf, to); if (r2.ok) S.htf2 = r2.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]); }
+    }
     if (sym === "CSV") { if (!S.csv) return msg("Importe d'abord un CSV.", true); S.raw = S.csv.filter((b) => b[0] >= from && b[0] <= to); }
     else {
       if (!D || !D.dataRead) return msg("Les bougies TopstepX sont lues par l'app Windows — ou importe un CSV.", true);
@@ -3066,7 +3079,13 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   function aggregate() {
     const out = [];
-    for (let i = 0; i <= S.cur && i < S.raw.length; i++) {
+    let i0 = 0;
+    if (S.htf && S.htf.length && S.raw[S.cur]) { // bougies terminées = fichier de l'unité de temps, bougie en cours = m1 du replay
+      const cb = bucket(S.raw[S.cur][0]);
+      for (const b of S.htf) { if (b[0] >= cb) break; out.push(b.slice()); }
+      while (i0 < S.cur && bucket(S.raw[i0][0]) < cb) i0++;
+    }
+    for (let i = i0; i <= S.cur && i < S.raw.length; i++) {
       const b = S.raw[i], k = bucket(b[0]), l = out[out.length - 1];
       if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5]]);
       else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5]; }
@@ -3146,7 +3165,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
   const PDEF = { body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
   let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
-  const tfName = (tf) => (tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
+  const tfName = (tf) => (tf >= 43200 ? "1M" : tf >= 10080 ? "1W" : tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
   const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
   function applyPrefs() {
     if (!chart) return; const gv = (d) => P.grid === "both" || P.grid === d;
@@ -3284,8 +3303,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function draw2() {
     const on = !!(P.split && sym2()), w = $("btWrap2"); if (w && w.hidden === on) w.hidden = !on; if ($("btSplitBtn")) $("btSplitBtn").classList.toggle("on", !!P.split);
     if (!on || !chart) return; ensureChart2();
-    const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [];
-    for (const b of S.raw2 || []) { if (b[0] > tCur) break; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4]]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; } }
+    const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [], cb2 = tCur ? bucket(tCur) : 0;
+    if (S.htf2 && S.htf2.length) for (const b of S.htf2) { if (b[0] >= cb2) break; out.push(b.slice(0, 5)); }
+    for (const b of S.raw2 || []) { if (b[0] > tCur) break; if (S.htf2 && S.htf2.length && bucket(b[0]) < cb2) continue; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4]]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; } }
     cs2.setData(out.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] })));
     const key = sym2() + S.tf + (S.raw2 && S.raw2[0] ? S.raw2[0][0] : 0); if (key !== key2) { key2 = key; const r = chart.timeScale().getVisibleRange(); try { if (r) chart2.timeScale().setVisibleRange(r); else chart2.timeScale().scrollToRealTime(); } catch (e) { chart2.timeScale().scrollToRealTime(); } }
     const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${sym2() === "ES" ? "ESZ26 · S&P 500" : "NQZ26 · Nasdaq"} · ${tfName(S.tf)}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
@@ -3317,7 +3337,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function legend(d) {
     const el = $("btLegend"); if (!el) return;
     const b = S.B[S.B.length - 1], o = d || (b && { open: b[1], high: b[2], low: b[3], close: b[4] });
-    const tfn = S.tf >= 1440 ? "1D" : S.tf >= 60 ? S.tf / 60 + "h" : S.tf + "m", nm = S.sym === "ES" ? "ESZ26 · S&P 500" : S.sym === "CSV" ? "CSV" : "NQZ26 · Nasdaq";
+    const tfn = tfName(S.tf), nm = S.sym === "ES" ? "ESZ26 · S&P 500" : S.sym === "CSV" ? "CSV" : "NQZ26 · Nasdaq";
     const ttl = P.title ? `<b>${nm} · ${tfn}</b>` : "";
     if (!o) { el.innerHTML = ttl; return; }
     const cl = o.close >= o.open ? "up" : "dn", ch = o.close - o.open;
@@ -3857,7 +3877,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
 
   async function importCsv() {
-    if (D && D.dataImport) { const r = await D.dataImport(); if (!r.ok) { if (r.reason !== "cancel") msg("Import impossible : " + r.reason, true); return; } S.csv = r.data; msg(`${r.name} : ${r.data.length} bougies importées`); }
+    if (D && D.dataImport) { const r = await D.dataImport(); if (!r.ok) { if (r.reason !== "cancel") msg("Import impossible : " + r.reason, true); return; }
+      if (r.allTf) { msg(`${r.name} importé pour ${r.allTf.sym} : ` + Object.entries(r.allTf.counts).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(" · ")); $("btSym").value = r.allTf.sym; status(); if (S.raw.length) load(); return; }
+      S.csv = r.data; msg(`${r.name} : ${r.data.length} bougies importées`); }
     else { const f = $("btFile").files[0]; if (!f) return $("btFile").click(); S.csv = parseCsvText(await f.text()); $("btFile").value = ""; msg(`${f.name} : ${S.csv.length} bougies importées`); }
     if (!S.csv.length) return;
     $("btSym").value = "CSV"; const o = parts(S.csv[S.csv.length - 1][0] * 1000); $("btDate").value = `${o.year}-${o.month}-${o.day}`; load();
@@ -3865,7 +3887,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   async function syncData() {
     if (!D || !D.dataSync) return msg("La synchro des bougies se fait dans l'app Windows.", true);
     $("btSync").disabled = true; msg("Synchronisation des bougies TopstepX…"); const r = await D.dataSync(); $("btSync").disabled = false;
-    msg(r.ok ? "Bougies à jour : " + Object.entries(r.summary).map(([k, v]) => `${k} +${v.m1} m1 / +${v.s1} 1s`).join(" · ") : r.reason === "login" ? "Connecte-toi à TopstepX (fenêtre ouverte) puis relance." : "Synchro impossible : " + r.reason, !r.ok); status();
+    msg(r.ok ? "Bougies à jour : " + Object.entries(r.summary).filter(([k]) => k !== "allTf").map(([k, v]) => `${k} +${v.m1} m1 / +${v.s1} 1s`).join(" · ") + (r.summary.allTf ? " · fichiers toutes UT régénérés" : "") : r.reason === "login" ? "Connecte-toi à TopstepX (fenêtre ouverte) puis relance." : "Synchro impossible : " + r.reason, !r.ok); status();
   }
 
   let ready = false;
@@ -3878,8 +3900,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btTfs").onclick = (e) => {
       const b = e.target.closest("[data-tf]"); if (!b) return;
       const old = S.tf; S.tf = +b.dataset.tf; document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
-      const span = (tf) => (tf >= 1440 ? 3 : tf >= 240 ? 2 : tf >= 60 ? 1 : 0);
-      if (S.raw.length && span(S.tf) > span(old)) { // plus d'historique nécessaire : on recharge en gardant l'heure du replay
+      if (S.raw.length) { // historique de la nouvelle unité de temps : on recharge en gardant l'heure du replay
         const cur = S.raw[S.cur][0];
         load().then(() => { const i = S.raw.findIndex((x) => x[0] >= cur); if (i >= 0) { S.cur = i; S.done = Math.max(S.done, i); } draw(true); ui(); });
         return;

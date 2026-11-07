@@ -159,11 +159,14 @@ function mdSchedule() {
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
 ipcMain.handle("data:read", (e, sym, from, to, res) => { try { return { ok: true, data: md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("data:readTf", (e, sym, tf, from, to) => { try { const d = md().readTf(sym, tf, from, to); return d ? { ok: true, data: d } : { ok: false, reason: "missing" }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 ipcMain.handle("data:openDir", () => shell.openPath(md().dir));
 ipcMain.handle("data:import", async () => {
   const r = await dialog.showOpenDialog(win, { title: "Importer un CSV de bougies", filters: [{ name: "CSV", extensions: ["csv", "txt"] }], properties: ["openFile"] });
   if (r.canceled || !r.filePaths[0]) return { ok: false, reason: "cancel" };
-  try { return { ok: true, name: path.basename(r.filePaths[0]), data: marketdata.parseCsv(fs.readFileSync(r.filePaths[0], "utf8")) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
+  try { const name = path.basename(r.filePaths[0]), text = fs.readFileSync(r.filePaths[0], "utf8");
+    if (/^\s*tf,/i.test(text.slice(0, 20))) return { ok: true, name, allTf: md().importAllTf(text, name) };
+    return { ok: true, name, data: marketdata.parseCsv(text) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
 });
 
 /* ---------- Trade copier Tradovate (leader -> followers) ---------- */

@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld("desktop", {
   onCopierLog: (cb) => ipcRenderer.on("copier:log", (e, l) => cb(l)),
   dataSync: () => ipcRenderer.invoke("data:sync"),
   dataRead: (sym, from, to, res) => ipcRenderer.invoke("data:read", sym, from, to, res),
+  dataReadTf: (sym, tf, from, to) => ipcRenderer.invoke("data:readTf", sym, tf, from, to),
   dataOpenDir: () => ipcRenderer.invoke("data:openDir"),
   dataImport: () => ipcRenderer.invoke("data:import"),
   onData: (cb) => { ipcRenderer.on("data:progress", (e, p) => cb("progress", p)); ipcRenderer.on("data:done", (e, r) => cb("done", r)); },

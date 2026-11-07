@@ -74,6 +74,7 @@ function create(baseDir) {
         summary[sym] = { m1: added, s1: addedS, m1Last: st[sym].m1Last ? fmtNY(st[sym].m1Last) : null };
       }
       st.lastSync = new Date().toISOString(); writeState(st);
+      summary.allTf = await buildAllTf(token, fetchFn, onProgress);
       return { ok: true, summary, dir };
     } catch (e) {
       return { ok: false, reason: e.code === "AUTH" ? "login" : String(e.message || e), summary };
@@ -81,7 +82,7 @@ function create(baseDir) {
   }
 
   function status() {
-    const st = readState(), out = { dir, running, lastSync: st.lastSync || null };
+    const st = readState(), out = { dir, running, lastSync: st.lastSync || null, allTf: st.allTf || null };
     for (const sym of SYMS) {
       const files = fs.readdirSync(dir).filter((f) => f.startsWith(sym + "_") && f.endsWith(".csv"));
       out[sym] = { m1Last: st[sym] && st[sym].m1Last ? fmtNY(st[sym].m1Last) : null, s1Last: st[sym] && st[sym].s1Last ? fmtNY(st[sym].s1Last) : null,
@@ -109,7 +110,76 @@ function create(baseDir) {
     }
     return out;
   }
-  return { sync, status, read, dir, isRunning: () => running };
+
+  /* ---------- toutes les unités de temps (m2 … 12M) : NQ_all_tf.csv / ES_all_tf.csv + un CSV par unité ---------- */
+  const TFS = ["m2", "m3", "m5", "m15", "H1", "H4", "D", "W", "M", "3M", "6M", "12M"];
+  const NATIVE = { m2: "2", m3: "3", m5: "5", m15: "15", H1: "60", H4: "240", D: "1D" };
+  const fileTf = (sym, tf) => path.join(dir, `${sym}_${tf}.csv`);
+  const dateNY = (ts) => fmtNY(ts).slice(0, 10);
+  const monday = (d) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };
+  function agg(rows, keyf) {
+    const out = []; let cur = null, k = null;
+    for (const b of rows) { const kk = keyf(b); if (kk !== k) { if (cur) out.push(cur); k = kk; cur = b.slice(); } else { cur[2] = Math.max(cur[2], b[2]); cur[3] = Math.min(cur[3], b[3]); cur[4] = b[4]; cur[5] += b[5]; } }
+    if (cur) out.push(cur); return out;
+  }
+  async function native(token, fetchFn, sym, res) {
+    const map = new Map(); let to = Math.floor(Date.now() / 1000);
+    for (let page = 0; page < 200; page++) {
+      const u = `https://chartapi.topstepx.com/History?Symbol=${encodeURIComponent("/" + sym)}&Resolution=${res}&Countback=25000&From=0&To=${to}`;
+      const r = await fetchFn(u, { headers: { Authorization: "Bearer " + token, Accept: "application/json" } });
+      if (r.status === 401 || r.status === 403) { const e = new Error("auth"); e.code = "AUTH"; throw e; }
+      if (!r.ok) throw new Error("History " + r.status);
+      const j = await r.json(), t = j.t || []; if (!t.length) break;
+      let added = 0; t.forEach((x, i) => { if (!map.has(x)) { map.set(x, [x, j.o[i], j.h[i], j.l[i], j.c[i], j.v ? j.v[i] : 0]); added++; } });
+      if (!added || t[0] >= to || t.length < 1000) break; to = t[0] - 1;
+    }
+    return [...map.values()].sort((a, b) => a[0] - b[0]);
+  }
+  const line = (b) => `${fmtNY(b[0])},${b[0]},${b[1]},${b[2]},${b[3]},${b[4]},${b[5]}`;
+  function writeAll(sym, T) {
+    const all = [];
+    for (const tf of TFS) { const rows = T[tf] || []; fs.writeFileSync(fileTf(sym, tf), HEADER + rows.map(line).join("\n") + "\n"); rows.forEach((b) => all.push(tf + "," + line(b))); }
+    fs.writeFileSync(path.join(dir, `${sym}_all_tf.csv`), "tf," + HEADER + all.join("\n") + "\n");
+    tfCache.clear();
+  }
+  async function buildAllTf(token, fetchFn, onProgress = () => {}) {
+    const out = {};
+    for (const sym of SYMS) {
+      const T = {};
+      for (const [tf, res] of Object.entries(NATIVE)) { T[tf] = await native(token, fetchFn, sym, res); onProgress({ sym, kind: tf, upTo: T[tf].length ? dateNY(T[tf][0][0]) : "-", added: T[tf].length }); }
+      if (T.H1.length && T.m15.length) { const f = T.H1[0][0]; T.H1 = agg(T.m15.filter((b) => b[0] < f), (b) => Math.floor(b[0] / 3600)).map((b) => [Math.floor(b[0] / 3600) * 3600, ...b.slice(1)]).concat(T.H1); }
+      T.W = agg(T.D, (b) => monday(dateNY(b[0])));
+      T.M = agg(T.D, (b) => dateNY(b[0]).slice(0, 7));
+      T["3M"] = agg(T.D, (b) => { const d = dateNY(b[0]); return d.slice(0, 4) + "Q" + Math.floor((+d.slice(5, 7) - 1) / 3); });
+      T["6M"] = agg(T.D, (b) => { const d = dateNY(b[0]); return d.slice(0, 4) + "H" + Math.floor((+d.slice(5, 7) - 1) / 6); });
+      T["12M"] = agg(T.D, (b) => dateNY(b[0]).slice(0, 4));
+      writeAll(sym, T);
+      out[sym] = Object.fromEntries(TFS.map((tf) => [tf, T[tf].length]));
+    }
+    const st = readState(); st.allTf = new Date().toISOString(); writeState(st);
+    return out;
+  }
+  // un fichier *_all_tf.csv importé à la main -> découpé en un CSV par unité
+  function importAllTf(text, name) {
+    const sym = /ES/i.test(name) && !/NQ/i.test(name) ? "ES" : "NQ", T = {};
+    const lines = text.split(/\r?\n/);
+    for (let i = 1; i < lines.length; i++) { const a = lines[i].split(","); if (a.length < 8 || !TFS.includes(a[0])) continue; (T[a[0]] = T[a[0]] || []).push([+a[2], +a[3], +a[4], +a[5], +a[6], +a[7]]); }
+    Object.values(T).forEach((r) => r.sort((x, y) => x[0] - y[0]));
+    writeAll(sym, T);
+    return { sym, counts: Object.fromEntries(TFS.map((tf) => [tf, (T[tf] || []).length])) };
+  }
+  const tfCache = new Map();
+  function readTf(sym, tf, from, to) {
+    const p = fileTf(sym, tf); if (!fs.existsSync(p)) return null;
+    const m = fs.statSync(p).mtimeMs, k = sym + tf; let c = tfCache.get(k);
+    if (!c || c.m !== m) {
+      const rows = [], lines = fs.readFileSync(p, "utf8").split("\n");
+      for (let i = 1; i < lines.length; i++) { const a = lines[i].split(","); if (a.length >= 7) rows.push([+a[1], +a[2], +a[3], +a[4], +a[5], +a[6]]); }
+      c = { m, rows }; tfCache.set(k, c);
+    }
+    return c.rows.filter((b) => b[0] >= from && b[0] <= to);
+  }
+  return { sync, status, read, readTf, buildAllTf, importAllTf, TFS, dir, isRunning: () => running };
 }
 
 // parse a CSV chosen by the user (time_ny,ts,open,high,low,close,volume or any CSV with ts/open/high/low/close[/volume])
