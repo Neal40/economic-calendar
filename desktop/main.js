@@ -189,6 +189,26 @@ ipcMain.handle("copier:stop", async () => { if (copier) { await copier.stop(); c
 ipcMain.handle("copier:status", () => ({ ok: true, running: !!copier, data: copier ? copier.snapshot() : null }));
 app.on("before-quit", () => { if (copier) { try { copier.stop(); } catch (e) { /* ignore */ } } });
 
-app.whenReady().then(() => { createWindow(); mdSchedule(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
+
+/* ---------- Mise à jour automatique : dépose EconomicCalendar.update.exe à côté de l'exe -> l'app se ferme, remplace l'exe et se relance ---------- */
+function updWatch() {
+  if (process.platform !== "win32" || !app.isPackaged) return;
+  const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, upd = path.join(path.dirname(exe), "EconomicCalendar.update.exe");
+  let lastSize = -1, busy = false;
+  setInterval(() => {
+    if (busy) return;
+    let st; try { st = fs.statSync(upd); } catch (e) { lastSize = -1; return; }
+    if (st.size < 1e7 || st.size !== lastSize) { lastSize = st.size; return; } // attendre que le fichier soit entièrement copié
+    if (copier && !copier.dry) { if (lastSize !== -2) { try { new Notification({ title: "Economic Calendar", body: "Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer." }).show(); } catch (e) { /* ignore */ } } lastSize = -2; return; }
+    busy = true;
+    const bat = path.join(app.getPath("temp"), "ec-update.cmd"), q = (x) => '"' + x + '"';
+    fs.writeFileSync(bat, ["@echo off", "set n=0", ":retry", "ping -n 2 127.0.0.1 >nul", `move /Y ${q(upd)} ${q(exe)} >nul 2>&1`, "if not errorlevel 1 goto ok", "set /a n+=1", "if %n% lss 120 goto retry", "exit /b 1", ":ok", `start "" ${q(exe)}`, '(goto) 2>nul & del "%~f0"', ""].join("\r\n"));
+    try { new Notification({ title: "Economic Calendar", body: "Mise à jour reçue : redémarrage de l'app…" }).show(); } catch (e) { /* ignore */ }
+    require("child_process").spawn("cmd.exe", ["/c", bat], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+    setTimeout(() => { app.isQuitting = true; app.quit(); setTimeout(() => app.exit(0), 5000); }, 800);
+  }, 3000);
+}
+
+app.whenReady().then(() => { createWindow(); mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());
