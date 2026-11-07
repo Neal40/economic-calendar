@@ -22,6 +22,10 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
+      - name: Vérifier syntaxe + contrat IPC
+        run: node ../tools/check.js
+      - name: Tests (copier, données de marché)
+        run: node --test
       - run: npm ci
       - run: npm run dist
         env:

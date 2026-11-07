@@ -1096,6 +1096,7 @@ function dayInfo(d){
 let cur=(()=>{const t=new Date();return D(t.getFullYear(),t.getMonth(),1)})();
 const filt={high:true,med:true,low:true,earn:true};
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date()); // YYYY-MM-DD, jour de New York
 const isoToday=iso(new Date());
 
 function autoWeek(days,m){
@@ -1587,7 +1588,6 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const close = () => { pop && pop.remove(); pop = null; ov.classList.remove("show"); window.removeEventListener("paste", onPaste); };
   ov.querySelector(".jm-x").onclick = close; ov.addEventListener("mousedown", (e) => { if (e.target === ov) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (lb.classList.contains("show")) lb.classList.remove("show"); else if (ov.classList.contains("show")) close(); } });
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const head = (t) => { const fmt = (v) => new Date(v).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
     return `${t.Direction} ${t.Size} ${t.Contract} · ${fmt(t.Entry)} → ${fmt(t.Exit)} · ${(t["Net P&L"] >= 0 ? "+" : "") + t["Net P&L"].toFixed(2)} $ net · trade ${t.ID}`; };
 
@@ -2107,7 +2107,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const [Y, M] = month(T).split("-").map(Number);
     const by = new Map(d3.rollups(T, (v) => ({ p: d3.sum(v, (t) => t.pnl), n: d3.sum(v, (t) => t.n) }), (t) => t.day));
     const first = new Date(Date.UTC(Y, M - 1, 1)), last = new Date(Date.UTC(Y, M, 0)), cur = new Date(first);
-    cur.setUTCDate(1 - ((first.getUTCDay() + 6) % 7)); const today = new Date().toISOString().slice(0, 10); let wk = 1;
+    cur.setUTCDate(1 - ((first.getUTCDay() + 6) % 7)); const today = nyToday(); let wk = 1;
     do { let wp = 0, wn = 0;
       for (let i = 0; i < 7; i++) { const key = cur.toISOString().slice(0, 10), inM = cur.getUTCMonth() === M - 1, o = by.get(key);
         const cell = mk("tsx-cell" + (inM ? "" : " out") + (o ? (o.p >= 0 ? " win" : " loss") : "") + (key === today ? " today" : ""));
@@ -2154,7 +2154,6 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const ID = { wtf: "3e6d85a64009805d8752e587433b54f1", homework: "e3ed85a6400982c5a181815ee98dedad", journal: "2e0d85a640098042b2b6f4e457a34e42", macro: "40cd85a6400980279ba4fffc1f12d785" };
   const D = window.desktop, NC = () => window.NOTION_COLORS || {};
   const $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   /* --- tiny IndexedDB cache (pages contain images) --- */
   let dbp = null;
   const idb = () => dbp || (dbp = new Promise((ok) => { try { const r = indexedDB.open("econcal-review", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); } catch (e) { ok(null); } }));
@@ -2190,7 +2189,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
           out += `<details class="rv-tg"${ctx && ctx.open ? " open" : ""}><summary>${rt(b.rt) || "&nbsp;"}</summary><div>${b.children ? blocksHTML(b.children, ctx) : ed ? "" : '<p class="rv-mut">Vide</p>'}${ed ? `<div class="rv-addin" contenteditable="true" data-parent="${esc(b.id)}" data-ph="Écrire (Entrée pour envoyer) ou coller une image…"></div>` : ""}</div></details>`; break;
         case "to_do": out += `<p>${b.checked ? "☑" : "☐"} ${rt(b.rt)}</p>`; break;
         case "divider": out += "<hr>"; break;
-        case "image": if (ctx && ctx.noImg && b.src) break; out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${b.src}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
+        case "image": if (ctx && ctx.noImg && b.src) break; out += b.src ? `<figure class="rv-img"${bid}>${del}<img src="${esc(b.src)}" alt="${esc(b.caption || "")}" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}</figure>` : `<p class="rv-mut">[image indisponible]</p>`; break;
         case "child_database": out += ctx && ctx.db ? ctx.db(b) : `<p class="rv-mut">Base « ${esc(b.title)} »</p>`; break;
         case "child_page": out += `<p>📄 ${esc(b.title)}</p>`; break;
         default: if (b.rt) out += `<p>${rt(b.rt)}</p>`;
@@ -2693,7 +2692,6 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 (() => {
   const D = window.desktop; if (!D || !D.notionCreate) return;
   const R = window.reviewAPI; if (!R) return;
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const NC = () => window.NOTION_COLORS || {};
   const TPL_HW = { "W": "40cd85a6400980c497bfd264fbb46ef8", "D": "40cd85a6400980b4b3d4d3d43d7689cb", "H4": "40cd85a6400980cf8da8c51fc8d67596", "H1": "40cd85a6400980e7a16eea898cfa0546", "m15": "40cd85a6400980678be5c00ef74574f0", "Premarket": "40cd85a6400980a5938dd12390138901", "First Hour of Trading": "40cd85a6400980aba981e9a45a37a438", "NWOG & 1st": "40cd85a6400980b391a6d585bbff0dc8", "RTH ORG": "40cd85a6400980e2aebbe3c295fed743", "STDV": "40cd85a6400980dda411fbf55ccaeb29", "Prediction": "40cd85a64009808eb688d83ef07e95ec" };
   const TPL_MACRO = "40cd85a64009809e8404ca096ae69d4a";
@@ -2709,7 +2707,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (kind === "hw") R.state.homework = r.data; else R.state.macro = r.data;
     await R.kset(kind === "hw" ? "homework" : "macro", r.data); R.render();
   }
-  const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+  const today = nyToday;
 
   /* --- Homework : new from a template (like Notion's "Nouveau ▾") --- */
   let pop = null;
@@ -2929,7 +2927,6 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 /* ---------- Backtesteur style TopstepX : replay m1, compte démo 50K, ordres, dessins (outils, raccourcis, arborescence, modèles) ---------- */
 (function () {
   const D = window.desktop, $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } } };
   const CTR = { MNQ: { pv: 2, und: "NQ", fee: 0.74, name: "MNQZ26" }, NQ: { pv: 20, und: "NQ", fee: 2.8, name: "NQZ26" }, MES: { pv: 5, und: "ES", fee: 0.74, name: "MESZ26" }, ES: { pv: 50, und: "ES", fee: 2.8, name: "ESZ26" } };
   const TICK = 0.25, START = 50000, MLL_GAP = 2000, DLL = 1000;
@@ -2939,7 +2936,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const hm = (t) => { const o = parts(t * 1000); return `${o.hour}:${o.minute}`; };
   const dstr = (t) => { const o = parts(t * 1000); return `${o.day}/${o.month}`; };
   const addDays = (d, n) => { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
-  const lastTradingDay = () => { let d = new Date().toISOString().slice(0, 10); for (let i = 0; i < 7; i++) { const wd = new Date(d + "T12:00:00Z").getUTCDay(); if (wd >= 1 && wd <= 5) return d; d = addDays(d, -1); } return d; };
+  const lastTradingDay = () => { let d = nyToday(); for (let i = 0; i < 7; i++) { const wd = new Date(d + "T12:00:00Z").getUTCDay(); if (wd >= 1 && wd <= 5) return d; d = addDays(d, -1); } return d; };
   const sessionKey = (t) => { const o = parts((t + 6 * 3600) * 1000); return `${o.year}-${o.month}-${o.day}`; }; // la session commence à 18:00 NY
   const msg = (t, bad) => { const el = $("btMsg"); if (el) { el.textContent = t || ""; el.style.color = bad ? "#ff8a8a" : ""; } };
   const rnd = (p) => Math.round(p / TICK) * TICK;
@@ -2959,8 +2956,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const head = lines[0].toLowerCase().split(/[;,]/).map((s) => s.trim()), idx = (n) => head.findIndex((h) => n.includes(h));
     const it = idx(["ts", "timestamp", "unix", "time"]), io = idx(["open", "o"]), ih = idx(["high", "h"]), il = idx(["low", "l"]), ic = idx(["close", "c"]), iv = idx(["volume", "vol", "v"]);
     const out = [];
-    for (let i = 1; i < lines.length; i++) { const a = lines[i].split(/[;,]/); let t = a[it]; t = /^\d+(\.\d+)?$/.test(t) ? +t : Date.parse(t) / 1000; if (t > 1e12) t = Math.floor(t / 1000); if (isFinite(t)) out.push([t, +a[io], +a[ih], +a[il], +a[ic], iv >= 0 ? +a[iv] : 0]); }
-    return out.sort((x, y) => x[0] - y[0]);
+    for (let i = 1; i < lines.length; i++) { const a = lines[i].split(/[;,]/); let t = (a[it] || "").trim(), m = /^(\d{4}-\d\d-\d\d)[ T](\d\d):(\d\d)(?::(\d\d))?$/.exec(t);
+      t = /^\d+(\.\d+)?$/.test(t) ? +t : m ? ny(m[1], +m[2], +m[3]) + +(m[4] || 0) : Date.parse(t) / 1000; // date sans fuseau = heure de New York
+      if (t > 1e12) t = Math.floor(t / 1000); if (isFinite(t)) out.push([t, +a[io], +a[ih], +a[il], +a[ic], iv >= 0 ? +a[iv] : 0]); }
+    return out.sort((x, y) => x[0] - y[0]).filter((b, i, A) => !i || b[0] > A[i - 1][0]); // sans doublons
   }
   async function status() {
     if (!D || !D.dataStatus) { $("btData").textContent = "Version web : importe un CSV (les bougies TopstepX sont enregistrées par l'app Windows)."; return; }
@@ -3421,7 +3420,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
     bindDrawing(); bindSettings(); loadDrawings(); ui();
   }
-  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), show() { init(); status(); setTimeout(() => { draw(); ui(); }, 0); } };
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), show() { init(); status(); if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
 })();
 </script>
@@ -3429,7 +3428,6 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 /* ---------- Trade copier Tradovate (leader -> followers) ---------- */
 (function () {
   const D = window.desktop, $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   let cfg = null, timer = null;
   const blank = () => ({ dry_run: true, flatten_followers_on_exit: false, reconcile_seconds: 2, logins: { compte1: { username: "", password: "", cid: 0, sec: "", environment: "demo" } }, leader: { login: "compte1", account: "" }, followers: [{ login: "compte1", account: "", multiplier: 1, max_contracts: 1, symbol_map: {}, enabled: true }] });
   const mapTxt = (m) => Object.entries(m || {}).map(([a, b]) => `${a}→${b}`).join(", ");

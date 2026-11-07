@@ -131,7 +131,7 @@ function createWindow() {
 
 /* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
 let mdStore = null;
-const md = () => (mdStore = mdStore || marketdata.create(require("path").join(app.getPath("documents"), "EconomicCalendar", "data")));
+const md = () => (mdStore = mdStore || marketdata.create(path.join(app.getPath("documents"), "EconomicCalendar", "data")));
 async function mdSync(interactive) {
   const token = await getToken(!!interactive);
   if (!token) return { ok: false, reason: "login" };
@@ -154,23 +154,23 @@ ipcMain.handle("data:openDir", () => shell.openPath(md().dir));
 ipcMain.handle("data:import", async () => {
   const r = await dialog.showOpenDialog(win, { title: "Importer un CSV de bougies", filters: [{ name: "CSV", extensions: ["csv", "txt"] }], properties: ["openFile"] });
   if (r.canceled || !r.filePaths[0]) return { ok: false, reason: "cancel" };
-  try { return { ok: true, name: require("path").basename(r.filePaths[0]), data: marketdata.parseCsv(require("fs").readFileSync(r.filePaths[0], "utf8")) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
+  try { return { ok: true, name: path.basename(r.filePaths[0]), data: marketdata.parseCsv(fs.readFileSync(r.filePaths[0], "utf8")) }; } catch (e) { return { ok: false, reason: String(e.message || e) }; }
 });
 
 /* ---------- Trade copier Tradovate (leader -> followers) ---------- */
 let copier = null;
-const CPFILE = () => require("path").join(app.getPath("userData"), "copier-config.bin");
-const CPLOG = () => require("path").join(app.getPath("userData"), "copier.log");
+const CPFILE = () => path.join(app.getPath("userData"), "copier-config.bin");
+const CPLOG = () => path.join(app.getPath("userData"), "copier.log");
 function cpRead() {
-  const fs = require("fs"); try { const b = fs.readFileSync(CPFILE()); return JSON.parse(safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8")); } catch (e) { return null; }
+  try { const b = fs.readFileSync(CPFILE()); return JSON.parse(safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8")); } catch (e) { return null; }
 }
 function cpWrite(cfg) {
-  const fs = require("fs"), txt = JSON.stringify(cfg);
+  const txt = JSON.stringify(cfg);
   fs.writeFileSync(CPFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(txt) : Buffer.from(txt, "utf8"));
 }
 function cpLog(level, text) {
   const line = `${new Date().toLocaleTimeString("fr-FR")}  ${level.toUpperCase().padEnd(5)} ${text}`;
-  try { require("fs").appendFileSync(CPLOG(), new Date().toISOString() + " " + level + " " + text + "\n"); } catch (e) { /* ignore */ }
+  try { fs.appendFileSync(CPLOG(), new Date().toISOString() + " " + level + " " + text + "\n"); } catch (e) { /* ignore */ }
   try { win && win.webContents.send("copier:log", { level, line }); } catch (e) { /* ignore */ }
 }
 ipcMain.handle("copier:getConfig", () => ({ ok: true, data: cpRead() }));
@@ -187,7 +187,13 @@ ipcMain.handle("copier:start", async () => {
 });
 ipcMain.handle("copier:stop", async () => { if (copier) { await copier.stop(); copier = null; } return { ok: true }; });
 ipcMain.handle("copier:status", () => ({ ok: true, running: !!copier, data: copier ? copier.snapshot() : null }));
-app.on("before-quit", () => { if (copier) { try { copier.stop(); } catch (e) { /* ignore */ } } });
+app.on("before-quit", (e) => {
+  if (!copier) return;
+  e.preventDefault(); // attendre les ordres de clôture (flatten_followers_on_exit) avant de quitter
+  const c = copier; copier = null;
+  setTimeout(() => app.exit(0), 15000); // réseau bloqué : on quitte quand même
+  c.stop().catch((err) => cpLog("error", "Arrêt : " + (err.message || err))).finally(() => app.quit());
+});
 
 
 /* ---------- Mise à jour automatique : dépose EconomicCalendar.update.exe à côté de l'exe -> l'app se ferme, remplace l'exe et se relance ---------- */

@@ -103,7 +103,7 @@ function create(baseDir) {
       for (let i = 1; i < lines.length; i++) {
         const L = lines[i]; if (!L) continue;
         const a = L.split(","), t = +a[1];
-        if (t < from || t > to) continue;
+        if (t < from || t > to || (out.length && t <= out[out.length - 1][0])) continue; // doublons laissés par une synchro interrompue
         out.push([t, +a[2], +a[3], +a[4], +a[5], +a[6]]);
       }
     }
@@ -122,11 +122,21 @@ function parseCsv(text) {
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const a = lines[i].split(/[;,]/);
-    let t = a[it]; t = /^\d+(\.\d+)?$/.test(t) ? +t : Date.parse(t) / 1000; if (t > 1e12) t = Math.floor(t / 1000);
+    let t = (a[it] || "").trim(); t = /^\d+(\.\d+)?$/.test(t) ? +t : parseNY(t); if (t > 1e12) t = Math.floor(t / 1000);
     if (!isFinite(t)) continue;
     out.push([t, +a[io], +a[ih], +a[il], +a[ic], iv >= 0 ? +a[iv] : 0]);
   }
-  return out.sort((x, y) => x[0] - y[0]);
+  return out.sort((x, y) => x[0] - y[0]).filter((b, i, A) => !i || b[0] > A[i - 1][0]);
 }
 
-module.exports = { create, parseCsv, SYMS };
+// "2026-11-05 09:30:00" (sans fuseau) = heure de New York ; une date avec Z ou ±hh:mm garde son fuseau
+function parseNY(s) {
+  if (/(Z|[+-]\d\d:?\d\d)$/i.test(s) && /\d[T ]\d/.test(s)) return Date.parse(s) / 1000;
+  const want = Date.parse(s.replace(" ", "T") + "Z") / 1000;
+  if (!isFinite(want)) return NaN;
+  let g = want;
+  for (let i = 0; i < 2; i++) g += want - Date.parse(fmtNY(g).replace(" ", "T") + "Z") / 1000; // corrige l'écart NY (heure d'été comprise)
+  return g;
+}
+
+module.exports = { create, parseCsv, parseNY, SYMS };
