@@ -74,7 +74,6 @@ function create(baseDir) {
         summary[sym] = { m1: added, s1: addedS, m1Last: st[sym].m1Last ? fmtNY(st[sym].m1Last) : null };
       }
       st.lastSync = new Date().toISOString(); writeState(st);
-      summary.allTf = await buildAllTf(token, fetchFn, onProgress);
       return { ok: true, summary, dir };
     } catch (e) {
       return { ok: false, reason: e.code === "AUTH" ? "login" : String(e.message || e), summary };
@@ -173,9 +172,7 @@ function create(baseDir) {
     const p = fileTf(sym, tf); if (!fs.existsSync(p)) return null;
     const m = fs.statSync(p).mtimeMs, k = sym + tf; let c = tfCache.get(k);
     if (!c || c.m !== m) {
-      const rows = [], lines = fs.readFileSync(p, "utf8").split("\n");
-      for (let i = 1; i < lines.length; i++) { const a = lines[i].split(","); if (a.length >= 7) rows.push([+a[1], +a[2], +a[3], +a[4], +a[5], +a[6]]); }
-      c = { m, rows }; tfCache.set(k, c);
+      c = { m, rows: parseCsv(fs.readFileSync(p, "utf8")) }; tfCache.set(k, c); // CSV téléchargé par Neal : colonnes reconnues (ts / time / timestamp, open, high…), heure NY, triées sans doublons
     }
     return c.rows.filter((b) => b[0] >= from && b[0] <= to);
   }

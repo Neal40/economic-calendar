@@ -1,7 +1,7 @@
 {
   "name": "economic-calendar",
   "productName": "Inner Circle Trader",
-  "version": "1.9.0",
+  "version": "1.9.2",
   "description": "USD economic calendar (New York time)",
   "author": "Neal_ICT",
   "main": "main.js",

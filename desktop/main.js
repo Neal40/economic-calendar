@@ -212,10 +212,13 @@ app.on("before-quit", (e) => {
 function updWatch() {
   if (process.platform !== "win32" || !app.isPackaged) return;
   const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, dir = path.dirname(exe);
+  // lancée depuis le fichier de mise à jour lui-même : ne jamais s'auto-« installer » (boucle de relance infinie)
+  if (/\.update\.exe$/i.test(exe)) return;
+  const same = (p) => path.resolve(p).toLowerCase() === path.resolve(exe).toLowerCase();
   let lastSize = -1, busy = false, upd = "";
   setInterval(() => {
     if (busy) return;
-    upd = ["Inner Circle Trader.update.exe", "EconomicCalendar.update.exe"].map((n) => path.join(dir, n)).find((p) => fs.existsSync(p)) || "";
+    upd = ["Inner Circle Trader.update.exe", "EconomicCalendar.update.exe"].map((n) => path.join(dir, n)).find((p) => !same(p) && fs.existsSync(p)) || "";
     let st; try { st = fs.statSync(upd); } catch (e) { lastSize = -1; return; }
     if (st.size < 1e7 || st.size !== lastSize) { lastSize = st.size; return; } // attendre que le fichier soit entièrement copié
     if (copier && !copier.dry) { if (lastSize !== -2) { try { new Notification({ title: "Inner Circle Trader", body: "Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer." }).show(); } catch (e) { /* ignore */ } } lastSize = -2; return; }
