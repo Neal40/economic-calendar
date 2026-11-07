@@ -553,6 +553,18 @@ table.tbl:has(#subT){min-width:900px}
 .tx-favbar .empty{color:#787b86;font-size:12px;padding:0 8px}
 .tx-chartwrap.ordhover,.tx-chartwrap.ordhover *{cursor:ns-resize!important}
 .tx-chartwrap[data-cur=arrowc] *{cursor:default!important}
+.tx-th button{float:right;background:none;border:none;color:#b2b5be;border-radius:4px;padding:0 6px;height:24px;cursor:pointer}
+.tx-th button:hover{background:#2a2e39}
+.tx-tree .row.fold{font-weight:600}
+.tx-tree .row .tw{width:14px;flex:none;color:#787b86;cursor:pointer}
+.tx-tree .row.drop{box-shadow:inset 0 2px 0 var(--tx-acc)}
+.tx-tree .row small{color:#787b86;font-weight:400}
+.tx-ren{flex:1;min-width:0;background:#131722;border:1px solid var(--tx-acc);border-radius:3px;color:#fff;font:inherit;padding:2px 5px}
+.tx-ctx{position:fixed;z-index:61;min-width:230px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.5);padding:4px 0;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#d1d4dc}
+.tx-ctx .ci{display:flex;justify-content:space-between;gap:16px;padding:7px 14px;cursor:pointer}
+.tx-ctx .ci:hover{background:#2a2e39}
+.tx-ctx .ci span{color:#787b86;font-size:11px}
+.tx-ctx i{display:block;height:1px;background:#2a2e39;margin:4px 0}
 .tx-chartwrap[data-cur=dot] *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27%3E%3Ccircle cx=%276%27 cy=%276%27 r=%273%27 fill=%27%23000%27 stroke=%27%23fff%27/%3E%3C/svg%3E") 6 6,crosshair!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
@@ -903,7 +915,7 @@ table.tbl:has(#subT){min-width:900px}
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
-          <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets</div><div id="btTreeList"></div></div>
+          <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets<button id="btNewF" title="Nouveau groupe (avec la sélection)">📁＋</button></div><div id="btTreeList"></div></div>
         </div>
         <div class="tx-foot"><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
       </div>
@@ -3226,7 +3238,14 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
   const dkey = () => "bt-draw-" + (S.sym || "NQ");
-  const loadDrawings = () => { shapes = LS.get(dkey(), []); sel = null; tree(); };
+  /* groupes (dossiers) de l'arborescence, par symbole ; un dessin y appartient via s.folder */
+  let folders = [], msel = new Set(), clip = null;
+  const fkey = () => dkey() + "-f";
+  const saveFolders = () => LS.set(fkey(), folders);
+  const fOf = (s) => (s.folder ? folders.find((f) => f.id === s.folder) || null : null);
+  const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden;
+  const lockedS = (s) => s.locked || lockAll || !!(fOf(s) || {}).locked;
+  const loadDrawings = () => { shapes = LS.get(dkey(), []); folders = LS.get(fkey(), []); sel = null; msel = new Set(); tree(); };
   const saveDrawings = () => { LS.set(dkey(), shapes); tree(); };
   const tpls = () => LS.get("bt-tpl", {});
   // temps <-> index logique sur les bougies agrégées (marche aussi au-delà de la dernière bougie)
@@ -3258,7 +3277,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (!S.B.length) return;
     const plotW = W - (chart.priceScale("right").width() || 60), plotH = H - (chart.timeScale().height() || 26);
     g.save(); g.beginPath(); g.rect(0, 0, plotW, plotH); g.clip();
-    const list = hideAll ? [] : shapes.filter((s) => !s.hidden);
+    const list = hideAll ? [] : shapes.filter(visible);
     if (pending) list.push(pending);
     for (const s of list) drawShape(g, s, plotW, plotH);
     if (measure) drawMeasure(g, measure);
@@ -3428,7 +3447,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const W = cv().clientWidth;
     const segD = (px, py, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy; let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy)); };
     for (let i = shapes.length - 1; i >= 0; i--) {
-      const s = shapes[i]; if (s.hidden) continue;
+      const s = shapes[i]; if (!visible(s)) continue;
       const pts = s.p.map((p) => ({ x: X(p.t), y: Y(p.price) })); if (pts.some((p) => p.x == null || p.y == null)) continue;
       const hh = pts.findIndex((p) => Math.abs(p.x - x) < 7 && Math.abs(p.y - y) < 7); if (hh >= 0 && s === sel) return { s, h: hh };
       const [a, b] = pts; let near = false;
@@ -3497,9 +3516,9 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const od = !e.shiftKey && orderAt(y); if (od) { ordDrag = od; e.stopPropagation(); e.preventDefault(); return; }
       if (e.shiftKey) { const q = at(x, y); if (q) { setTool("measure"); measure = { a: q, b: q, done: false }; e.stopPropagation(); e.preventDefault(); } return; }
       if (measure) measure = null;
-      const h = hit(x, y); if (!h) { if (sel) { sel = null; tree(); } return; }
-      sel = h.s; tree(); e.stopPropagation(); e.preventDefault();
-      if (h.s.locked || lockAll) return;
+      const h = hit(x, y); if (!h) { if (sel || msel.size) { sel = null; msel = new Set(); tree(); } return; }
+      sel = h.s; msel = new Set(); tree(); e.stopPropagation(); e.preventDefault();
+      if (lockedS(h.s)) return;
       drag = { s: h.s, h: h.h, start: at(x, y), orig: h.s.p.map((p) => ({ ...p })) };
     }, true);
     window.addEventListener("mousemove", (e) => {
@@ -3515,7 +3534,46 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   function tree() {
     const el = $("btTreeList"); if (!el) return;
-    el.innerHTML = shapes.length ? [...shapes].reverse().map((s) => `<div class="row ${s === sel ? "sel" : ""}" data-id="${s.id}"><span>${esc(s.name)}${s.text ? " · " + esc(s.text) : ""}</span><button data-a="eye" title="Afficher / masquer">${s.hidden ? "◌" : "👁"}</button><button data-a="lock" title="Verrouiller">${s.locked ? "🔒" : "🔓"}</button><button data-a="del" title="Supprimer">🗑</button></div>`).join("") : `<div class="row" style="color:#8a8f98">Aucun dessin</div>`;
+    const btns = (o, del) => `<button data-a="eye" title="Afficher / masquer">${o.hidden ? "◌" : "👁"}</button><button data-a="lock" title="Verrouiller">${o.locked ? "🔒" : "🔓"}</button><button data-a="del" title="${del}">🗑</button>`;
+    const row = (s, ind) => `<div class="row ${s === sel || msel.has(s.id) ? "sel" : ""}" draggable="true" data-id="${s.id}" style="padding-left:${12 + ind}px"><span class="nm">${esc(s.name)}${s.text && s.type !== "text" ? " · " + esc(s.text) : ""}</span>${btns(s, "Supprimer")}</div>`;
+    const top = [...shapes].reverse(); // le plus récent (dessiné au-dessus) en haut
+    const h = folders.map((f) => { const kids = top.filter((s) => s.folder === f.id);
+      return `<div class="row fold" draggable="true" data-fid="${f.id}"><span class="tw" data-a="tog">${f.open === false ? "▸" : "▾"}</span><span class="nm">📁 ${esc(f.name)} <small>(${kids.length})</small></span>${btns(f, "Supprimer le groupe")}</div>` + (f.open === false ? "" : kids.map((s) => row(s, 22)).join("")); }).join("")
+      + top.filter((s) => !fOf(s)).map((s) => row(s, 0)).join("");
+    el.innerHTML = h || `<div class="row" style="color:#8a8f98">Aucun dessin</div>`;
+  }
+  const selShapes = () => shapes.filter((s) => msel.has(s.id) || (!msel.size && s === sel));
+  function clone(list, dt) { // copie décalée de dt secondes ; la copie devient la sélection
+    const out = (list || []).map((s) => ({ ...JSON.parse(JSON.stringify(s)), id: String(Date.now()) + Math.floor(Math.random() * 1e6), p: s.p.map((p) => ({ t: p.t + (dt || 0), price: p.price })) }));
+    if (!out.length) return; shapes.push(...out); msel = new Set(out.map((s) => s.id)); sel = out[out.length - 1]; saveDrawings();
+  }
+  function groupSel() { const L = selShapes(), f = { id: "f" + Date.now(), name: "Groupe " + (folders.length + 1), open: true }; folders.unshift(f); L.forEach((s) => (s.folder = f.id)); saveFolders(); saveDrawings(); }
+  function delFolder(f) {
+    const kids = shapes.filter((s) => s.folder === f.id); if (kids.length && !confirm(`Supprimer le groupe « ${f.name} » et ses ${kids.length} dessin(s) ?`)) return;
+    shapes = shapes.filter((s) => s.folder !== f.id); folders = folders.filter((x) => x !== f); if (sel && !shapes.includes(sel)) sel = null; saveFolders(); saveDrawings();
+  }
+  function rename(r) {
+    const nm = r && r.querySelector(".nm"), f = r && r.dataset.fid && folders.find((x) => x.id === r.dataset.fid), s = r && !f && shapes.find((x) => x.id === r.dataset.id), o = f || s; if (!nm || !o) return;
+    const inp = document.createElement("input"); inp.className = "tx-ren"; inp.value = o.name; nm.replaceWith(inp); inp.focus(); inp.select(); let done = false;
+    const end = (ok) => { if (done) return; done = true; if (ok && inp.value.trim()) o.name = inp.value.trim(); saveFolders(); saveDrawings(); };
+    inp.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") end(true); if (e.key === "Escape") end(false); }; inp.onblur = () => end(true); inp.onmousedown = (e) => e.stopPropagation();
+  }
+  function ctxMenu(x, y, fid) {
+    const m = $("btCtx"), L = selShapes(), f = fid && folders.find((v) => v.id === fid), it = (a, t, k) => `<div class="ci" data-c="${a}">${t}${k ? `<span>${k}</span>` : ""}</div>`;
+    m.innerHTML = f ? it("ren", "Renommer") + it("ungroup", "Dégrouper") + it("fhide", f.hidden ? "Afficher" : "Masquer") + it("flock", f.locked ? "Déverrouiller" : "Verrouiller") + "<i></i>" + it("fdel", "Supprimer le groupe")
+      : it("group", "Créer un groupe de dessins") + it("clone", "Cloner", "Ctrl+D") + it("copy", "Copier", "Ctrl+C") + (clip ? it("paste", "Coller", "Ctrl+V") : "") + "<i></i>" + it("front", "Premier plan") + it("back", "Arrière-plan") + "<i></i>" + it("lock", "Verrouiller / déverrouiller") + it("hide", "Masquer / afficher") + it("del", "Supprimer", "Suppr") + (L.length === 1 ? "<i></i>" + it("ren1", "Renommer") + it("set", "Paramètres…") : "");
+    m.dataset.fid = fid || ""; m.hidden = false; m.style.left = Math.min(x, innerWidth - 240) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px";
+  }
+  function ctxDo(a) {
+    const f = folders.find((v) => v.id === $("btCtx").dataset.fid), L = selShapes(), dt = S.tf * 60 * 5; $("btCtx").hidden = true;
+    if (a === "ren" && f) rename(document.querySelector(`#btTreeList .row[data-fid="${f.id}"]`));
+    else if (a === "ren1" && L[0]) { if ($("btTree").hidden) $("btTreeBtn").click(); rename(document.querySelector(`#btTreeList .row[data-id="${L[0].id}"]`)); }
+    else if (a === "ungroup" && f) { shapes.forEach((s) => { if (s.folder === f.id) delete s.folder; }); folders = folders.filter((v) => v !== f); saveFolders(); saveDrawings(); }
+    else if (a === "fhide" && f) { f.hidden = !f.hidden; saveFolders(); tree(); } else if (a === "flock" && f) { f.locked = !f.locked; saveFolders(); tree(); } else if (a === "fdel" && f) delFolder(f);
+    else if (a === "group") groupSel(); else if (a === "clone") clone(L, dt); else if (a === "copy") clip = JSON.parse(JSON.stringify(L)); else if (a === "paste") clone(clip, dt);
+    else if (a === "front" || a === "back") { shapes = shapes.filter((s) => !L.includes(s)); if (a === "front") shapes.push(...L); else shapes.unshift(...L); saveDrawings(); }
+    else if (a === "lock") { L.forEach((s) => (s.locked = !s.locked)); saveDrawings(); } else if (a === "hide") { L.forEach((s) => (s.hidden = !s.hidden)); saveDrawings(); }
+    else if (a === "del") { shapes = shapes.filter((s) => !L.includes(s)); if (L.includes(sel)) sel = null; msel = new Set(); saveDrawings(); } else if (a === "set" && L[0]) openSettings(L[0]);
   }
 
   /* ---------------- fenêtre de paramètres + modèles de dessin ---------------- */
@@ -3655,9 +3713,41 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
     $("btDelAll").onclick = () => { if (shapes.length && confirm("Supprimer tous les dessins de cette chart ?")) { shapes = []; sel = null; saveDrawings(); } };
     $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; $("btTreeBtn").classList.toggle("on", !$("btTree").hidden); tree(); };
-    $("btTreeList").onclick = (e) => { const row = e.target.closest("[data-id]"); if (!row) return; const s = shapes.find((x) => String(x.id) === row.dataset.id); if (!s) return; const a = e.target.dataset.a;
-      if (a === "eye") s.hidden = !s.hidden; else if (a === "lock") s.locked = !s.locked; else if (a === "del") { shapes = shapes.filter((x) => x !== s); if (sel === s) sel = null; } else sel = s; saveDrawings(); };
-    $("btTreeList").ondblclick = (e) => { const row = e.target.closest("[data-id]"); const s = row && shapes.find((x) => String(x.id) === row.dataset.id); if (s) openSettings(s); };
+    const TL = $("btTreeList");
+    if (!$("btCtx")) { const m = document.createElement("div"); m.id = "btCtx"; m.className = "tx-ctx"; m.hidden = true; document.body.append(m); }
+    $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
+    document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
+    $("btNewF").onclick = () => groupSel();
+    TL.onclick = (e) => {
+      const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
+      if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
+        if (a === "tog") f.open = f.open === false; else if (a === "eye") f.hidden = !f.hidden; else if (a === "lock") f.locked = !f.locked; else if (a === "del") return delFolder(f); else msel = new Set(shapes.filter((s) => s.folder === f.id).map((s) => s.id));
+        saveFolders(); tree(); return; }
+      const s = shapes.find((x) => x.id === r.dataset.id); if (!s) return;
+      if (a === "eye") s.hidden = !s.hidden; else if (a === "lock") s.locked = !s.locked; else if (a === "del") { shapes = shapes.filter((x) => x !== s); if (sel === s) sel = null; msel.delete(s.id); }
+      else if (e.ctrlKey || e.metaKey) { if (msel.has(s.id)) msel.delete(s.id); else { if (sel && !msel.size) msel.add(sel.id); msel.add(s.id); } }
+      else if (e.shiftKey && sel) { const ids = [...TL.querySelectorAll(".row[data-id]")].map((x) => x.dataset.id), i1 = ids.indexOf(sel.id), i2 = ids.indexOf(s.id); ids.slice(Math.min(i1, i2), Math.max(i1, i2) + 1).forEach((id) => msel.add(id)); }
+      else { msel = new Set([s.id]); sel = s; }
+      saveDrawings();
+    };
+    TL.ondblclick = (e) => { if (e.target.closest(".nm")) rename(e.target.closest(".row")); };
+    TL.oncontextmenu = (e) => { const r = e.target.closest(".row"); if (!r || (!r.dataset.id && !r.dataset.fid)) return; e.preventDefault();
+      if (r.dataset.id && !msel.has(r.dataset.id)) { msel = new Set([r.dataset.id]); sel = shapes.find((x) => x.id === r.dataset.id) || sel; tree(); } ctxMenu(e.clientX, e.clientY, r.dataset.fid); };
+    let dragIds = null, dragF = null; // glisser-déposer : dessins vers un groupe / avant un dessin / à la racine, groupes entre eux
+    const clearDrop = () => TL.querySelectorAll(".drop").forEach((x) => x.classList.remove("drop"));
+    TL.ondragstart = (e) => { const r = e.target.closest(".row"); if (!r) return; if (r.dataset.fid) dragF = r.dataset.fid; else dragIds = msel.has(r.dataset.id) ? [...msel] : [r.dataset.id]; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", "ict"); };
+    TL.ondragover = (e) => { e.preventDefault(); clearDrop(); const r = e.target.closest(".row"); if (r) r.classList.add("drop"); };
+    TL.ondragend = () => { clearDrop(); dragIds = dragF = null; };
+    TL.ondrop = (e) => {
+      e.preventDefault(); clearDrop(); const r = e.target.closest(".row");
+      if (dragF) { if (r && r.dataset.fid && r.dataset.fid !== dragF) { const f = folders.splice(folders.findIndex((x) => x.id === dragF), 1)[0]; folders.splice(folders.findIndex((x) => x.id === r.dataset.fid), 0, f); saveFolders(); } }
+      else if (dragIds) { const mv = shapes.filter((s) => dragIds.includes(s.id)); shapes = shapes.filter((s) => !dragIds.includes(s.id));
+        if (r && r.dataset.fid) { mv.forEach((s) => (s.folder = r.dataset.fid)); shapes.push(...mv); }
+        else if (r && r.dataset.id) { const tg = shapes.find((s) => s.id === r.dataset.id); mv.forEach((s) => { if (tg && tg.folder) s.folder = tg.folder; else delete s.folder; }); shapes.splice(tg ? shapes.indexOf(tg) + 1 : shapes.length, 0, ...mv); } // affichage inversé : « au-dessus » = juste après dans le tableau
+        else { mv.forEach((s) => delete s.folder); shapes.push(...mv); } }
+      dragIds = dragF = null; saveDrawings();
+    };
+    $("btWrap").addEventListener("contextmenu", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (!h) return; e.preventDefault(); e.stopPropagation(); sel = h.s; msel = new Set([h.s.id]); tree(); ctxMenu(e.clientX, e.clientY); }, true);
     // panneau d'ordres (simulé, uniquement sur le compte démo du backtesteur)
     $("oBuy").onclick = () => order(1); $("oSell").onclick = () => order(-1);
     $("oFlat").onclick = () => { if (S.raw.length) { flatten("Flatten"); draw(); ui(); } };
@@ -3677,7 +3767,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", c: "xline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
       if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
       else if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
-      else if ((k === "delete" || k === "backspace") && sel) { e.preventDefault(); shapes = shapes.filter((x) => x !== sel); sel = null; saveDrawings(); }
+      else if ((k === "delete" || k === "backspace") && selShapes().length) { e.preventDefault(); ctxDo("del"); }
+      else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
+      else if ((e.ctrlKey || e.metaKey) && k === "c" && selShapes().length) { clip = JSON.parse(JSON.stringify(selShapes())); }
+      else if ((e.ctrlKey || e.metaKey) && k === "v" && clip) { e.preventDefault(); ctxDo("paste"); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
       else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
     });
