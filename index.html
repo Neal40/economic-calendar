@@ -765,6 +765,9 @@ table.tbl:has(#subT){min-width:900px}
   <div class="panel"><div class="ptitle">Données</div>
     <div class="hintd" style="margin:0 0 10px">Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.</div><div class="hintd" id="storePath" style="margin:0 0 10px"></div>
     <button class="btn gray" id="dataBtn2">Sauvegarde / Import</button></div>
+  <div class="panel"><div class="ptitle">Langue / Language</div>
+    <div class="hintd" style="margin:0 0 10px">Langue de l'interface (français par défaut).</div>
+    <select id="langSel" class="btn gray" style="min-width:180px"><option value="fr">Français</option><option value="en">English</option></select></div>
 </div></section>
 
 <section class="view" id="v-abonnement"><div class="page">
@@ -4168,6 +4171,111 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   }
   window.copierUI = { show: init };
   if ($("v-copier") && $("v-copier").classList.contains("on")) init();
+})();
+</script>
+<script>
+/* ---------- Langue : français (défaut) / anglais ---------- */
+// Les textes restent écrits en français dans le code ; en anglais, chaque texte visible (nœuds texte, title, placeholder)
+// est remplacé via le dictionnaire EN (correspondance exacte) ou les motifs RX, et l'original est gardé pour revenir au français.
+// shortcut: couvre l'interface visible (menu, profil, journal, Journal backtest, backtesteur, calendrier) ; ajouter les autres textes à EN au besoin.
+(() => {
+  const EN = {
+    // menu, profil
+    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Abonnement": "Subscription", "Factures": "Invoices", "Réduire le menu": "Collapse menu",
+    "Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.": "Your name, handle and logo, shown in the menu and on the calendar.", "Nom affiché": "Display name", "Retirer": "Remove", "Texte du logo (sans image)": "Logo text (no image)", "Lien Notion (bouton du journal)": "Notion link (journal button)",
+    "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
+    "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
+    // calendrier
+    "Aujourd'hui": "Today", "Mois précédent": "Previous month", "Mois suivant": "Next month", "News en direct (headlines FinancialJuice). Les lignes en rouge sont les news à fort impact.": "Live news (FinancialJuice headlines). Red lines are high-impact news.", "Rien ne s'affiche ? Ouvre": "Nothing showing? Open",
+    "(l'aperçu Claude bloque les contenus externes ; le site GitHub Pages et l'app .exe l'affichent).": "(the Claude preview blocks external content; the GitHub Pages site and the .exe app show it).", "+ Ajouter une facture": "+ Add an invoice",
+    // journal
+    "Stats TopstepX par compte.": "TopstepX stats per account.", "Journal de Neal": "Neal's journal", "Journal backtest": "Backtest journal", "⟳ Synchroniser Notion": "⟳ Sync Notion", "Synchro Notion : On": "Notion sync: On", "Synchro Notion : Off": "Notion sync: Off", "⟳ Synchroniser TopstepX": "⟳ Sync TopstepX",
+    "＋ Récupérer un compte": "＋ Recover an account", "Récupérer un compte disparu": "Recover a missing account", "Récupérer": "Recover", "Déconnecter TopstepX": "Disconnect TopstepX", "Importer comptes.json": "Import comptes.json", "Importer trades.json": "Import trades.json", "Exporter tags & images": "Export tags & images", "Importer tags & images": "Import tags & images",
+    "Synchro automatique app ⇄ Notion": "Automatic app ⇄ Notion sync", "Sauvegarder tags + images": "Back up tags + images", "Restaurer tags + images": "Restore tags + images", "Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)": "Recover an account that disappeared from TopstepX (passed challenge, closed account…)",
+    "Identifiant(s) TopstepX, séparés par des virgules. Les comptes déjà dans l'app sont désormais archivés automatiquement.": "TopstepX ID(s), comma-separated. Accounts already in the app are now archived automatically.",
+    // Journal backtest
+    "Aucun backtest clôturé": "No closed backtest", "Supprimer": "Delete", "Compte :": "Account:", "Solde :": "Balance:", "Clôturé :": "Closed:", "Durée moyenne": "Average duration", "Jours tradés": "Days traded", "Trades": "Trades", "Récapitulatifs": "Summaries",
+    "Jour": "Day", "Entrée": "Entry", "Sortie": "Exit", "Contrat": "Contract", "Sens": "Side", "Qté": "Qty", "Prix": "Price", "Durée": "Duration", "Nom": "Name", "Compte": "Account", "Jours": "Days", "compte cramé (MLL)": "account blown (MLL)",
+    "Dans le backtesteur, le drapeau « Clôturer la session » enregistre ici le récapitulatif (P&L, win rate, RR, durée, jours, payouts possibles).": "In the backtester, the « Close session » flag saves the summary here (P&L, win rate, RR, duration, days, possible payouts).",
+    // backtesteur : barre du haut, chart, outils
+    "Synchro données": "Sync data", "Importer CSV": "Import CSV", "Dossier": "Folder", "Charger": "Load", "Mise en page": "Layout", "💾 Sessions": "💾 Sessions", "⚙ Préférences": "⚙ Preferences", "Arborescence des objets": "Object tree",
+    "Type de compte du backtest (prop firm / classique)": "Backtest account type (prop firm / classic)", "Remettre le compte démo à zéro": "Reset the demo account", "Clôturer la session : récapitulatif dans le Journal backtest": "Close session: summary in the Backtest journal", "Télécharger les bougies TopstepX": "Download TopstepX candles", "Ouvrir le dossier des données": "Open the data folder",
+    "Chandeliers": "Candles", "Heure de départ (New York)": "Start time (New York)", "Recommencer la journée": "Restart the day", "Bougie précédente (←)": "Previous candle (←)", "Lecture / pause (Espace)": "Play / pause (Space)", "Bougie suivante (→)": "Next candle (→)", "Mises en page (Ctrl+S = enregistrer)": "Layouts (Ctrl+S = save)",
+    "Sessions de backtest enregistrées": "Saved backtest sessions", "Préférences du chart": "Chart preferences", "News USD (Maj+W = news suivante)": "USD news (Shift+W = next news)", "2 charts côte à côte : NQ + ES synchronisés sur le replay": "2 charts side by side: NQ + ES synced on the replay",
+    "Aimant (accroche OHLC)": "Magnet (snap to OHLC)", "Verrouiller tous les dessins": "Lock all drawings", "Masquer tous les dessins": "Hide all drawings", "Supprimer tous les dessins": "Remove all drawings", "Barre de favoris": "Favorites bar", "Couleur": "Color", "Épaisseur": "Width", "Verrouiller": "Lock",
+    "Nouveau groupe (avec la sélection)": "New group (with selection)", "Supprimer le modèle": "Delete template", "Style": "Style", "Coordonnées": "Coordinates", "Texte": "Text", "Modèle…": "Template…", "Enregistrer le modèle": "Save template", "Plus d'outils": "More tools", "Favori": "Favorite", "à venir": "coming soon", "À venir": "Coming soon",
+    "Déplacer": "Move", "Paramètres de l'objet": "Object settings", "Afficher / masquer": "Show / hide", "Renommer": "Rename", "Ouvrir": "Open", "Fermer": "Close", "Aller": "Go", "OK": "OK", "Par défaut": "Default", "Rechercher…": "Search…", "Enregistrer sous…": "Save as…", "Écraser avec l'état actuel": "Overwrite with current state",
+    "Aucune session enregistrée": "No saved session", "Aucune mise en page": "No layout", "Nom de la session": "Session name", "Enregistrer la session actuelle": "Save current session",
+    // fenêtres
+    "Type de compte du backtest": "Backtest account type", "Type": "Type", "Taille": "Size", "Prop firm (MLL / DLL, objectif, payouts)": "Prop firm (MLL / DLL, target, payouts)", "Classique (sans règles)": "Classic (no rules)", "Appliquer": "Apply",
+    "Objectif de profit ($)": "Profit target ($)", "Maximum Loss Limit trailing ($)": "Trailing Maximum Loss Limit ($)", "Daily Loss Limit ($)": "Daily Loss Limit ($)", "Consistance : meilleur jour ≤ (% du profit)": "Consistency: best day ≤ (% of profit)", "Payout : nombre de jours gagnants": "Payout: number of winning days", "Payout : gain minimum par jour ($)": "Payout: minimum gain per day ($)",
+    "Appliquer remet le compte à zéro avec ces règles. Clôture d'abord la session (drapeau) pour garder son récapitulatif dans le Journal backtest.": "Apply resets the account with these rules. Close the session first (flag) to keep its summary in the Backtest journal.",
+    "Préférences": "Preferences", "Symbole": "Symbol", "Ligne d'état": "Status line", "Échelles et lignes": "Scales and lines", "Canevas": "Canvas", "Corps des bougies": "Candle bodies", "Corps haussier": "Up body", "Corps baissier": "Down body", "Bordures": "Borders", "Bordure haussière": "Up border", "Bordure baissière": "Down border",
+    "Mèches": "Wicks", "Mèche haussière": "Up wick", "Mèche baissière": "Down wick", "Titre (symbole · intervalle)": "Title (symbol · interval)", "Valeurs OHLC": "OHLC values", "Variation de la bougie": "Candle change", "Étiquette du dernier prix": "Last price label", "Ligne du dernier prix": "Last price line",
+    "Couleur du texte des échelles": "Scale text color", "Taille du texte": "Text size", "Marge droite (barres)": "Right margin (bars)", "Fond": "Background", "Grille": "Grid", "Couleur de la grille": "Grid color", "Réticule": "Crosshair", "Marge haute (%)": "Top margin (%)", "Marge basse (%)": "Bottom margin (%)",
+    "Aucune": "None", "Horizontale + verticale": "Horizontal + vertical", "Horizontale": "Horizontal", "Verticale": "Vertical", "Sessions de backtest": "Backtest sessions", "Mises en page": "Layouts", "News · USD (heure de New York)": "News · USD (New York time)", "News suivante (Maj+W)": "Next news (Shift+W)",
+    "Afficher les news sous les bougies (Alt+Maj+E)": "Show news under candles (Alt+Shift+E)", "Lun": "Mon", "Mar": "Tue", "Mer": "Wed", "Jeu": "Thu", "Ven": "Fri", "Nom du récapitulatif": "Summary name", "Renommer la session": "Rename session", "Nom de la mise en page": "Layout name", "Renommer la mise en page": "Rename layout",
+    // groupes et outils de dessin
+    "Curseurs": "Cursors", "Croix": "Cross", "Point": "Dot", "Flèche": "Arrow", "Gomme": "Eraser", "Lignes": "Lines", "Ligne de tendance": "Trend line", "Rayon": "Ray", "Ligne d'info": "Info line", "Ligne étendue": "Extended line", "Angle de tendance": "Trend angle", "Ligne horizontale": "Horizontal line", "Demi-droite horizontale": "Horizontal ray",
+    "Ligne verticale": "Vertical line", "Ligne en croix": "Cross line", "Canaux": "Channels", "Canal parallèle": "Parallel channel", "Tendance de régression": "Regression trend", "Pitchfork intérieur": "Inside pitchfork", "Retracement de Fibonacci": "Fib retracement", "Extension de Fib (tendance)": "Trend-based fib extension", "Canal de Fib": "Fib channel",
+    "Zones de temps de Fib": "Fib time zone", "Éventail de vitesse de Fib": "Fib speed resistance fan", "Temps de Fib (tendance)": "Trend-based fib time", "Cercles de Fib": "Fib circles", "Spirale de Fib": "Fib spiral", "Arcs de vitesse de Fib": "Fib speed resistance arcs", "Coin de Fib": "Fib wedge",
+    "Boîte de Gann": "Gann box", "Carré de Gann fixe": "Gann square fixed", "Carré de Gann": "Gann square", "Éventail de Gann": "Gann fan", "Figures chartistes": "Chart patterns", "Figure XABCD": "XABCD pattern", "Figure Cypher": "Cypher pattern", "Tête et épaules": "Head and shoulders", "Figure ABCD": "ABCD pattern", "Trois poussées": "Three drives",
+    "Vagues d'Elliott": "Elliott waves", "Impulsion (1·2·3·4·5)": "Impulse (1·2·3·4·5)", "Lignes cycliques": "Cyclic lines", "Cycles de temps": "Time cycles", "Prévision": "Forecasting", "Position longue": "Long position", "Position courte": "Short position", "Prévision de position": "Position forecast", "Motif de barres": "Bars pattern",
+    "VWAP ancré": "Anchored VWAP", "Profil de volume (plage fixe)": "Fixed range volume profile", "Profil de volume ancré": "Anchored volume profile", "Mesures": "Measures", "Plage de prix": "Price range", "Plage de dates": "Date range", "Plage de dates et de prix": "Date and price range", "Pinceaux": "Brushes", "Pinceau": "Brush", "Surligneur": "Highlighter",
+    "Flèches": "Arrows", "Marqueur flèche": "Arrow marker", "Flèche haut": "Arrow up", "Flèche bas": "Arrow down", "Flèche gauche": "Arrow left", "Flèche droite": "Arrow right", "Formes": "Shapes", "Rectangle incliné": "Rotated rectangle", "Chemin": "Path", "Cercle": "Circle", "Polyligne": "Polyline", "Courbe": "Curve", "Double courbe": "Double curve",
+    "Texte et notes": "Text and notes", "Note de prix": "Price note", "Épingle": "Pin", "Tableau": "Table", "Bulle": "Callout", "Commentaire": "Comment", "Étiquette de prix": "Price label", "Panneau": "Signpost", "Drapeau": "Flag mark",
+    // messages
+    "Chargement…": "Loading…", "Importe d'abord un CSV.": "Import a CSV first.", "Charge d'abord une journée.": "Load a day first.", "Aucun trade dans cette session.": "No trade in this session.", "Préférences enregistrées.": "Preferences saved.", "1 chart.": "1 chart.",
+    "Compte cramé (MLL) — Reset.": "Account blown (MLL) — Reset.", "DLL atteinte : attends la session suivante.": "DLL reached: wait for the next session.", "Cette news n'est pas dans la journée chargée.": "This news is not in the loaded day.", "Plus de news à venir dans la journée chargée.": "No more upcoming news in the loaded day.",
+    "Les 2 charts côte à côte marchent avec NQ et ES (pas avec un CSV).": "Side-by-side charts work with NQ and ES (not with a CSV).", "Stockage plein : supprime d'anciennes sessions ou mises en page.": "Storage full: delete old sessions or layouts.", "Les bougies TopstepX sont lues par l'app Windows — ou importe un CSV.": "TopstepX candles are read by the Windows app — or import a CSV.",
+    "Compte démo cramé : Maximum Loss Limit atteinte. « Reset » pour recommencer.": "Demo account blown: Maximum Loss Limit reached. « Reset » to start again.", "Daily Loss Limit atteinte : positions fermées, plus de trade jusqu'à la prochaine session.": "Daily Loss Limit reached: positions closed, no trading until the next session.",
+    "Aucune bougie pour cette date — « ⟳ Données » ou une autre date.": "No candles for this date — « ⟳ Data » or another date.", "Version web : importe un CSV (les bougies TopstepX sont enregistrées par l'app Windows).": "Web version: import a CSV (TopstepX candles are saved by the Windows app).",
+    "Le compte actuel et ses trades seront remis à zéro. Continuer ?": "The current account and its trades will be reset. Continue?", "Une position est ouverte : la clôturer au prix actuel ?": "A position is open: close it at the current price?", "Compte cramé (MLL)": "Account blown (MLL)", "DLL atteinte": "DLL reached", "Rien": "Nothing",
+  };
+  const RX = [
+    [/^(\d+)K Prop firm · Backtest$/, "$1K Prop firm · Backtest"], [/^(\d+)K Classique · Backtest$/, "$1K Classic · Backtest"], [/^(.+) prêt\.$/, "$1 ready."],
+    [/^Objectif (.+)$/, "Target $1"], [/^atteint le (.+)$/, "reached on $1"], [/^(.+) restants$/, "$1 left"], [/^Consistance \(meilleur jour ≤ (\d+) %\)$/, "Consistency (best day ≤ $1 %)"], [/^Payouts possibles \((\d+) j ≥ (.+)\)$/, "Possible payouts ($1 d ≥ $2)"],
+    [/^(\d+) \/ (\d+) jours gagnants ≥ (.+)$/, "$1 / $2 winning days ≥ $3"], [/^(\d+) gagnants · (\d+) perdants · (\d+) trades$/, "$1 winners · $2 losers · $3 trades"], [/^(\d+) gagnants · meilleur (.+) · pire (.+)$/, "$1 winning · best $2 · worst $3"], [/^Tous les backtests \((\d+)\)$/, "All backtests ($1)"],
+    [/^(.+) · profit (.+)$/, "$1 · profit $2"], [/^(\d+) trades · win rate (\d+)% · total (.+)$/, "$1 trades · win rate $2% · total $3"],
+    [/^Récapitulatif « (.+) » enregistré \(Journal de trading › Journal backtest\)\.$/, "Summary « $1 » saved (Trading journal › Backtest journal)."], [/^Récapitulatif « (.+) » enregistré dans le Journal backtest\. Remettre le compte à zéro pour une nouvelle session \?$/, "Summary « $1 » saved in the Backtest journal. Reset the account for a new session?"],
+    [/^Supprimer le récapitulatif « (.+) » \?$/, "Delete the summary « $1 »?"], [/^Remettre le compte à (.+) \(trades effacés\) \?$/, "Reset the account to $1 (trades erased)?"], [/^(.+) réinitialisé\.$/, "$1 reset."],
+    [/^(\d+) bougies m1 · départ (\S+) · Espace = lecture · ←\/→ = bougie · glisser = déplacer · molette = zoom · Shift\+clic = mesurer$/, "$1 m1 candles · start $2 · Space = play · ←/→ = candle · drag = pan · wheel = zoom · Shift+click = measure"],
+    [/^2 charts : (\w+) \+ (\w+) synchronisés sur le replay\.$/, "2 charts: $1 + $2 synced on the replay."], [/^Session « (.+) » ouverte (.*)$/, "Session « $1 » opened $2"], [/^Mise en page « (.+) » (enregistrée|ouverte)\.$/, (m, a, b) => `Layout « ${a} » ${b === "ouverte" ? "opened" : "saved"}.`],
+    [/^Supprimer la (session|mise en page) « (.+) » \?$/, (m, a, b) => `Delete the ${a === "session" ? "session" : "layout"} « ${b} »?`], [/^Écraser « (.+) » avec l'état actuel \?$/, "Overwrite « $1 » with the current state?"],
+    [/^Ouvrir « (.+) » \? Le compte démo et les dessins (\w+) actuels seront remplacés\.$/, "Open « $1 »? The current demo account and $2 drawings will be replaced."], [/^Enregistrer « (.+) » \(Ctrl\+S\)$/, "Save « $1 » (Ctrl+S)"],
+    [/^Impact (fort|moyen|faible)(.*)$/, (m, a, b) => "Impact " + { fort: "high", moyen: "medium", faible: "low" }[a] + b.replace(" · prévision ", " · forecast ").replace(" · précédent ", " · previous ")],
+    [/^(\d+) trade\(s\) · (\d+) dessin\(s\)$/, "$1 trade(s) · $2 drawing(s)"], [/^Données (.+) · auto 23h01$/, (m, a) => "Data " + a.replace(/à télécharger/g, "to download").replace("toutes UT", "all TF").replace("à générer", "to generate") + " · auto 11:01 pm"],
+  ];
+  const KEY = "econcal-lang";
+  let lang = "fr"; try { lang = localStorage.getItem(KEY) || "fr"; } catch (e) { /* ignore */ }
+  const tr = (s) => { const k = (s || "").trim(); if (!k) return null; let v = EN[k];
+    if (v == null) for (const [r, o] of RX) if (r.test(k)) { v = k.replace(r, o); break; }
+    return v == null || v === k ? null : s.replace(k, v); };
+  window.tr = (s) => (lang === "en" ? tr(s) || s : s); // pour les messages hors DOM
+  const oT = new WeakMap(), oA = new WeakMap(), ATTR = ["title", "placeholder", "aria-label"], SKIP = /^(SCRIPT|STYLE|TEXTAREA|CODE)$/;
+  function doText(n) {
+    if (!n.parentNode || SKIP.test(n.parentNode.nodeName) || (n.parentNode.closest && n.parentNode.closest("[contenteditable],.rv-md"))) return;
+    if (oT.has(n)) { const o = oT.get(n); if (n.nodeValue !== tr(o)) oT.delete(n); else if (lang === "fr") { n.nodeValue = o; oT.delete(n); return; } else return; } // texte changé par l'app : nouvel original
+    if (lang !== "en") return; const v = tr(n.nodeValue); if (v != null) { oT.set(n, n.nodeValue); n.nodeValue = v; }
+  }
+  function doAttr(el) {
+    let m = oA.get(el);
+    for (const a of ATTR) { if (!el.hasAttribute(a)) continue; const cur = el.getAttribute(a);
+      if (m && a in m) { if (cur !== tr(m[a])) delete m[a]; else { if (lang === "fr") { el.setAttribute(a, m[a]); delete m[a]; } continue; } }
+      if (lang !== "en") continue; const v = tr(cur); if (v != null) { if (!m) oA.set(el, (m = {})); m[a] = cur; el.setAttribute(a, v); } }
+  }
+  function walk(root) {
+    if (root.nodeType === 3) return doText(root); if (root.nodeType !== 1 || SKIP.test(root.nodeName)) return;
+    doAttr(root); root.querySelectorAll("[title],[placeholder],[aria-label]").forEach(doAttr);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) doText(n);
+  }
+  new MutationObserver((recs) => { if (lang !== "en") return; for (const r of recs) { if (r.type === "childList") r.addedNodes.forEach(walk); else if (r.type === "characterData") doText(r.target); else doAttr(r.target); } })
+    .observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTR });
+  const oc = window.confirm.bind(window); window.confirm = (m) => oc(window.tr(m)); // boîtes de confirmation natives
+  function setLang(l) { lang = l === "en" ? "en" : "fr"; try { localStorage.setItem(KEY, lang); } catch (e) { /* ignore */ } document.documentElement.lang = lang; walk(document.body); const s = document.getElementById("langSel"); if (s) s.value = lang; }
+  window.setLang = setLang; window.i18nTr = tr;
+  const sel = document.getElementById("langSel"); if (sel) sel.onchange = () => setLang(sel.value);
+  setLang(lang);
 })();
 </script>
 </body>
