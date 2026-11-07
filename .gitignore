@@ -1,0 +1,3 @@
+# données de compte (jamais dans le dépôt) : écrites par l app à chaque synchro TopstepX
+data/comptes.json
+data/trades.json

@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.13.2] — 2026-11-07
+### Modifié
+- `comptes.json` et `trades.json` (dossier `inner_circle_trader_main\data`, sinon `Bureau\Inner Circle Trader\data`) sont lus et fusionnés dans la base au démarrage, puis réécrits à jour après chaque synchro TopstepX et chaque import : les comptes passés ou fermés sont toujours là, même sans synchro.
+- `.gitignore` : ces deux fichiers de compte ne partent jamais dans le dépôt.
+
 ## [1.13.1] — 2026-11-07
 ### Corrigé
 - Journal TopstepX : une synchro ne supprime plus jamais un compte ni un trade déjà enregistré dans `journal-db.json` ; elle ajoute et met à jour (fusion par ID). Un compte que TopstepX ne renvoie plus (challenge passé, compte fermé) est archivé avec ses trades.

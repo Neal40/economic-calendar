@@ -15,6 +15,20 @@ let win = null, loginWin = null, syncing = null;
 
 /* ---------- local database (comptes + trades) ---------- */
 function readDb() { try { return JSON.parse(fs.readFileSync(DB(), "utf8")); } catch (e) { return { comptes: [], trades: [], syncedAt: null }; } }
+/* comptes.json / trades.json (format de l'export Stats TopstepX) : lus et fusionnés dans la base, puis réécrits à chaque synchro.
+   Dossier : Bureau\Inner Circle Trader\inner_circle_trader_main\data s'il existe (ignoré par git), sinon Bureau\Inner Circle Trader\data. */
+const JDIR = () => { const d = path.join(ICT(), "inner_circle_trader_main", "data"); return fs.existsSync(d) ? d : path.join(ICT(), "data"); };
+function readFiles() {
+  const rd = (k) => { try { const v = JSON.parse(fs.readFileSync(path.join(JDIR(), k + ".json"), "utf8")); const a = Array.isArray(v) ? v : v && (v[k] || v.rows || v.data || v.results); return Array.isArray(a) ? a.filter((r) => r && r["ID TopstepX"] != null) : []; } catch (e) { return []; } };
+  return { comptes: rd("comptes"), trades: rd("trades").filter((t) => t.ID != null) };
+}
+function exportFiles(d) {
+  try { const dir = JDIR(); fs.mkdirSync(dir, { recursive: true });
+    for (const k of ["comptes", "trades"]) { const f = path.join(dir, k + ".json"); fs.writeFileSync(f + ".tmp", JSON.stringify(d[k] || [], null, 2)); fs.renameSync(f + ".tmp", f); } } catch (e) { console.error("export comptes/trades", e.message); }
+}
+// base locale + fichiers : rien de ce qui est dans l'un ou l'autre n'est perdu (la base est prioritaire sur les fichiers)
+function loadDb() { const db = readDb(), m = topstepx.mergeDb(readFiles(), { comptes: [], trades: [], ...db });
+  if (m.comptes.length > (db.comptes || []).length || m.trades.length > (db.trades || []).length) { writeDb(m); exportFiles(m); } return m; }
 function writeDb(d) { try { if (fs.existsSync(DB())) fs.copyFileSync(DB(), DB().replace(/\.json$/, ".backup.json")); } catch (e) {} const tmp = DB() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify(d)); fs.renameSync(tmp, DB()); }
 
 /* ---------- TopstepX session token ---------- */
@@ -51,7 +65,7 @@ async function doSync(interactive) {
       let token = await getToken(interactive);
       if (!token) return { ok: false, reason: "login", db: readDb() };
       let data;
-      const old = readDb() || {}, known = [...(old.comptes || []).map((c) => ({ id: c["ID TopstepX"], compte: c })), ...readExtra().map((id) => ({ id }))];
+      const old = loadDb(), known = [...(old.comptes || []).map((c) => ({ id: c["ID TopstepX"], compte: c })), ...readExtra().map((id) => ({ id }))];
       try { data = await topstepx.sync(token, sfetch, known); }
       catch (e) {
         if (e.code !== "AUTH") throw e;
@@ -64,7 +78,7 @@ async function doSync(interactive) {
       delete data.keepIds;
       if (!data.comptes.length && (old.comptes || []).length) throw new Error("TopstepX n'a renvoyé aucun compte — base locale conservée");
       data = topstepx.mergeDb(old, data); // la synchro ajoute / met à jour, elle ne supprime jamais rien
-      writeDb(data);
+      writeDb(data); exportFiles(data);
       return { ok: true, db: data };
     } catch (e) { return { ok: false, reason: String(e.message || e), db: readDb() }; }
     finally { syncing = null; }
@@ -72,7 +86,7 @@ async function doSync(interactive) {
   return syncing;
 }
 
-ipcMain.handle("journal:get", () => readDb());
+ipcMain.handle("journal:get", () => loadDb());
 ipcMain.handle("tsx:bars", async (e, sym, from, to) => { try { const t = await getToken(false); if (!t) return { ok: false, reason: "login" }; return { ok: true, data: await topstepx.bars(t, sfetch, sym, from, to) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 /* ids of accounts to recover by hand (accounts that vanished from TopstepX before being synced) */
 const XFILE = () => path.join(app.getPath("userData"), "tsx-extra-ids.json");
@@ -88,9 +102,9 @@ ipcMain.handle("journal:import", async (e, kind, rows) => {
   rows = rows.filter((r) => r && typeof r === "object" && r["ID TopstepX"] != null && (kind === "comptes" || r.ID != null));
   if (!rows.length) return { ok: false, reason: "aucune ligne avec « ID TopstepX »" + (kind === "trades" ? " et « ID »" : "") };
   if (syncing) await syncing.catch(() => {});
-  const cur = readDb(), before = { c: (cur.comptes || []).length, t: (cur.trades || []).length };
+  const cur = loadDb(), before = { c: (cur.comptes || []).length, t: (cur.trades || []).length };
   const db = topstepx.mergeDb({ comptes: kind === "comptes" ? rows : [], trades: kind === "trades" ? rows : [] }, { syncedAt: cur.syncedAt || null, ...cur, comptes: cur.comptes || [], trades: cur.trades || [] });
-  writeDb(db);
+  writeDb(db); exportFiles(db);
   return { ok: true, db, added: { comptes: db.comptes.length - before.c, trades: db.trades.length - before.t } };
 });
 ipcMain.handle("journal:logout", async () => {
