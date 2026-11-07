@@ -565,6 +565,32 @@ table.tbl:has(#subT){min-width:900px}
 .tx-ctx .ci:hover{background:#2a2e39}
 .tx-ctx .ci span{color:#787b86;font-size:11px}
 .tx-ctx i{display:block;height:1px;background:#2a2e39;margin:4px 0}
+.tx-tb{background:none;border:none;color:var(--tx-tvfg);height:28px;padding:0 8px;border-radius:4px;font-size:13px;cursor:pointer;white-space:nowrap}
+.tx-tb:hover{background:#2a2e39;color:#fff}
+.tx-mod{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
+.tx-mod[hidden]{display:none}
+.tx-mbox{width:600px;max-width:94vw;max-height:84vh;display:flex;flex-direction:column;background:#1e222d;border:1px solid #2a2e39;border-radius:8px;color:#d1d4dc;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.tx-mh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;font-size:18px;font-weight:600;border-bottom:1px solid #2a2e39}
+.tx-mh button{background:none;border:none;color:#b2b5be;font-size:24px;cursor:pointer;line-height:1}
+.tx-mb{padding:14px 20px;overflow:auto}
+.tx-mf{display:flex;gap:8px;padding:12px 20px;border-top:1px solid #2a2e39}
+.tx-mf .tx-sp{flex:1}
+.tx-mf button,.tx-row button{background:#2962ff;border:1px solid #2962ff;color:#fff;border-radius:4px;height:32px;padding:0 14px;cursor:pointer;white-space:nowrap}
+.tx-mbox button.ghost{background:none;border:1px solid #434651;color:#d1d4dc}
+.tx-ptabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid #2a2e39;padding-bottom:8px}
+.tx-ptabs button{background:none;border:none;color:#b2b5be;padding:7px 12px;border-radius:4px;cursor:pointer}
+.tx-ptabs button.on{background:#2a2e39;color:#fff}
+.tx-mb .r{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.tx-mb input[type=number],.tx-mb select,.tx-row input{background:#131722;border:1px solid #434651;color:#fff;border-radius:4px;padding:5px 8px;font:inherit}
+.tx-row{display:flex;gap:8px;margin-bottom:12px}
+.tx-row input{flex:1}
+.tx-li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 10px;border-radius:4px}
+.tx-li:hover{background:#2a2e39}
+.tx-li small{display:block;color:#787b86;margin-top:3px}
+.tx-li.cur b{color:var(--tx-acc)}
+.tx-li button{background:#2a2e39;border:none;color:#d1d4dc;border-radius:4px;height:28px;padding:0 9px;margin-left:4px;cursor:pointer}
+.tx-li button:hover{background:#363a45}
+.tx-empty{color:#787b86;padding:12px 0}
 .tx-chartwrap[data-cur=dot] *{cursor:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27%3E%3Ccircle cx=%276%27 cy=%276%27 r=%273%27 fill=%27%23000%27 stroke=%27%23fff%27/%3E%3C/svg%3E") 6 6,crosshair!important}
 .tx-chartwrap{flex:1;position:relative;min-width:0;background:#e8e3d1;overflow:hidden}
 #btChart{position:absolute;inset:0;z-index:0}
@@ -897,6 +923,9 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-hb" id="btNext" title="Bougie suivante (→)"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M8 8v12l9-6zM18 8h2v12h-2z"/></svg></button>
           <select id="btSpeed" class="tx-hin"><option value="1">1×</option><option value="2" selected>2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
           <span class="tx-sp"></span>
+          <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
+          <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
+          <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button>
           <button class="tx-hb" id="btTreeBtn" title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
         <div class="tx-mid">
@@ -3099,6 +3128,93 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     draw(); ui();
   }
 
+  /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
+  const PDEF = { body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
+  let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
+  const tfName = (tf) => (tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
+  const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
+  function applyPrefs() {
+    if (!chart) return; const gv = (d) => P.grid === "both" || P.grid === d;
+    chart.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
+      crosshair: { vertLine: { color: P.cross, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } });
+    cs.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
+    legend(null);
+  }
+  function modal(title, body, foot) {
+    let m = $("btModal"); if (!m) { m = document.createElement("div"); m.id = "btModal"; m.className = "tx-mod"; document.body.append(m); m.addEventListener("mousedown", (e) => { if (e.target === m) m.querySelector('[data-m="x"]').click(); }); }
+    m.innerHTML = `<div class="tx-mbox"><div class="tx-mh">${title}<button data-m="x" title="Fermer">×</button></div><div class="tx-mb">${body}</div>${foot ? `<div class="tx-mf">${foot}</div>` : ""}</div>`; m.hidden = false; m.oninput = null; return m;
+  }
+  const closeModal = () => { const m = $("btModal"); if (m) m.hidden = true; };
+  // saisie de texte (prompt() n'existe pas dans Electron)
+  const ask = (label, val) => new Promise((ok) => { const o = document.createElement("div"); o.className = "tx-mod"; o.style.zIndex = 80; o.innerHTML = `<div class="tx-mbox" style="width:420px"><div class="tx-mh">${esc(label)}</div><div class="tx-mb"><div class="tx-row" style="margin:0"><input value="${esc(val || "")}"></div></div><div class="tx-mf"><span class="tx-sp"></span><button class="ghost" data-k="0">Annuler</button><button data-k="1">OK</button></div></div>`; document.body.append(o); const i = o.querySelector("input"), end = (v) => { o.remove(); ok(v); }; i.focus(); i.select(); i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") end(i.value.trim() || null); if (e.key === "Escape") end(null); }; o.onclick = (e) => { if (e.target.dataset.k) end(e.target.dataset.k === "1" ? i.value.trim() || null : null); }; });
+  const PTABS = {
+    sym: ["Symbole", [["body", "Corps des bougies", "cb"], ["up", "Corps haussier", "color"], ["down", "Corps baissier", "color"], ["border", "Bordures", "cb"], ["bUp", "Bordure haussière", "color"], ["bDn", "Bordure baissière", "color"], ["wick", "Mèches", "cb"], ["wUp", "Mèche haussière", "color"], ["wDn", "Mèche baissière", "color"]]],
+    status: ["Ligne d'état", [["title", "Titre (symbole · intervalle)", "cb"], ["ohlc", "Valeurs OHLC", "cb"], ["chg", "Variation de la bougie", "cb"]]],
+    scales: ["Échelles et lignes", [["lastLbl", "Étiquette du dernier prix", "cb"], ["lastLine", "Ligne du dernier prix", "cb"], ["txt", "Couleur du texte des échelles", "color"], ["fs", "Taille du texte", "num"], ["right", "Marge droite (barres)", "num"]]],
+    canvas: ["Canevas", [["bg", "Fond", "color"], ["grid", "Grille", "grid"], ["gridC", "Couleur de la grille", "color"], ["cross", "Réticule", "color"], ["mTop", "Marge haute (%)", "num"], ["mBot", "Marge basse (%)", "num"]]],
+  };
+  function openPrefs(tab, snap) {
+    tab = tab || "sym"; snap = snap || { ...P };
+    const field = ([k, l, t]) => `<div class="r">${l}${t === "cb" ? `<input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>` : t === "color" ? `<input type="color" data-p="${k}" value="${P[k]}">` : t === "grid" ? `<select data-p="${k}">${[["none", "Aucune"], ["both", "Horizontale + verticale"], ["horz", "Horizontale"], ["vert", "Verticale"]].map(([v, n]) => `<option value="${v}" ${P[k] === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : `<input type="number" data-p="${k}" value="${P[k]}" style="width:70px">`}</div>`;
+    const m = modal("Préférences", `<div class="tx-ptabs">${Object.entries(PTABS).map(([k, [n]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}</button>`).join("")}</div><div class="tx-pbody">${PTABS[tab][1].map(field).join("")}</div>`, `<button data-m="def" class="ghost">Par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
+    m.oninput = (e) => { const k = e.target.dataset.p; if (!k) return; P[k] = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" ? +e.target.value : e.target.value; applyPrefs(); };
+    m.onclick = (e) => { const t = e.target.dataset.tab, a = e.target.dataset.m; if (t) return openPrefs(t, snap); if (a === "def") { P = { ...PDEF }; applyPrefs(); openPrefs(tab, snap); } else if (a === "x") { P = snap; applyPrefs(); closeModal(); } else if (a === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Préférences enregistrées."); } };
+  }
+  // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
+  const sessions = () => LS.get("bt-sessions", []);
+  const snapshot = (name) => ({ id: "s" + Date.now(), name, savedAt: new Date().toISOString(), sym: S.sym, tf: S.tf, day: $("btDate").value, start: $("btStart").value, t: S.raw.length ? S.raw[S.cur][0] : null, acc: JSON.parse(JSON.stringify(A)), markers: JSON.parse(JSON.stringify(markers)), shapes: JSON.parse(JSON.stringify(shapes)), folders: JSON.parse(JSON.stringify(folders)) });
+  const setTfBtns = () => document.querySelectorAll("#btTfs [data-tf]").forEach((b) => b.classList.toggle("on", +b.dataset.tf === S.tf));
+  async function openSession(s) {
+    play(false); $("btSym").value = s.sym; S.sym = s.sym; $("btDate").value = s.day; $("btStart").value = s.start || "09:30"; S.tf = s.tf || 1; setTfBtns();
+    A = JSON.parse(JSON.stringify(s.acc)); markers = s.markers || []; saveAcc(); LS.set("bt-draw-" + s.sym, s.shapes || []); LS.set("bt-draw-" + s.sym + "-f", s.folders || []);
+    await load(); if (s.t != null && S.raw.length) { const i = S.raw.findIndex((b) => b[0] >= s.t); if (i >= 0) { S.cur = S.done = i; } }
+    draw(true); ui(); msg(`Session « ${s.name} » ouverte (${s.day} ${s.t != null ? hm(s.t) : ""}).`);
+  }
+  function openSessions() {
+    const L = sessions(), row = (s) => `<div class="tx-li" data-id="${s.id}"><div><b>${esc(s.name)}</b><small>${s.sym} · ${tfName(s.tf)} · ${s.day}${s.t != null ? " " + hm(s.t) : ""} · solde ${usd(s.acc.bal)} · ${s.acc.trades.length} trade(s) · ${(s.shapes || []).length} dessin(s) · ${new Date(s.savedAt).toLocaleString("fr-FR")}</small></div><span><button data-a="open">Ouvrir</button><button data-a="save" title="Écraser avec l'état actuel">💾</button><button data-a="ren" title="Renommer">✎</button><button data-a="del" title="Supprimer">🗑</button></span></div>`;
+    const m = modal("Sessions de backtest", `<div class="tx-row"><input id="btSessName" placeholder="Nom de la session" value="${esc(S.sym + " " + ($("btDate").value || ""))}"><button data-m="new">Enregistrer la session actuelle</button></div><div class="tx-list">${L.map(row).join("") || '<div class="tx-empty">Aucune session enregistrée</div>'}</div>`);
+    m.onclick = async (e) => {
+      const mm = e.target.dataset.m, a = e.target.dataset.a; if (mm === "x") return closeModal();
+      if (mm === "new") { if (!S.raw.length) return msg("Charge d'abord une journée.", true); if (saveList("bt-sessions", [snapshot($("btSessName").value.trim() || "Session " + (L.length + 1)), ...sessions()])) openSessions(); return; }
+      const r = e.target.closest(".tx-li"); if (!r || !a) return; const all = sessions(), s = all.find((x) => x.id === r.dataset.id); if (!s) return;
+      if (a === "open") { if (!confirm(`Ouvrir « ${s.name} » ? Le compte démo et les dessins ${s.sym} actuels seront remplacés.`)) return; closeModal(); await openSession(s); }
+      else if (a === "save") { if (!confirm(`Écraser « ${s.name} » avec l'état actuel ?`)) return; const n = snapshot(s.name); n.id = s.id; if (saveList("bt-sessions", all.map((x) => (x.id === s.id ? n : x)))) openSessions(); }
+      else if (a === "ren") { const n = await ask("Renommer la session", s.name); if (n) { s.name = n; saveList("bt-sessions", all); openSessions(); } }
+      else if (a === "del" && confirm(`Supprimer la session « ${s.name} » ?`)) { saveList("bt-sessions", all.filter((x) => x !== s)); openSessions(); }
+    };
+  }
+  // mises en page : symbole, intervalle, préférences, dessins et groupes ; 5 modèles vides au départ
+  const LDEF = [["NWOG & 1st Matrix", "NQ"], ["NQ", "NQ"], ["ES", "ES"], ["RTH ORG Matrix", "NQ"], ["STDV Matrix", "NQ"]];
+  const layouts = () => LS.get("bt-layouts", null) || LDEF.map(([name, sym], i) => ({ id: "l" + i, name, sym, tf: 1 }));
+  let curLay = LS.get("bt-layout-cur", null);
+  const layName = () => { const l = layouts().find((x) => x.id === curLay); if ($("btLayName")) $("btLayName").textContent = l ? l.name : "Mise en page"; };
+  const layoutSnap = (l) => ({ ...l, sym: S.sym, tf: S.tf, prefs: { ...P }, shapes: JSON.parse(JSON.stringify(shapes)), folders: JSON.parse(JSON.stringify(folders)), savedAt: new Date().toISOString() });
+  const setCur = (id) => { curLay = id; LS.set("bt-layout-cur", id); layName(); };
+  async function saveLayout(asNew) {
+    const L = layouts(), i = L.findIndex((x) => x.id === curLay);
+    if (asNew || i < 0) { const n = await ask("Nom de la mise en page", i < 0 ? "Nouvelle mise en page" : L[i].name + " (copie)"); if (!n) return false; const l = layoutSnap({ id: "l" + Date.now(), name: n }); if (saveList("bt-layouts", [...L, l])) setCur(l.id); return true; }
+    L[i] = layoutSnap(L[i]); if (saveList("bt-layouts", L)) msg(`Mise en page « ${L[i].name} » enregistrée.`); return true;
+  }
+  async function applyLayout(l) {
+    setCur(l.id); if (l.prefs) { P = { ...PDEF, ...l.prefs }; LS.set("bt-prefs", P); applyPrefs(); }
+    $("btSym").value = l.sym; S.tf = l.tf || 1; setTfBtns(); if (l.shapes) { LS.set("bt-draw-" + l.sym, l.shapes); LS.set("bt-draw-" + l.sym + "-f", l.folders || []); }
+    if (D && D.dataRead) await load(); else { S.sym = l.sym; loadDrawings(); draw(true); } msg(`Mise en page « ${l.name} » ouverte.`);
+  }
+  function openLayouts() {
+    const all = layouts(), cur = all.find((x) => x.id === curLay);
+    const list = (f) => all.filter((l) => l.name.toLowerCase().includes(f.toLowerCase())).map((l) => `<div class="tx-li ${l.id === curLay ? "cur" : ""}" data-id="${l.id}"><div><b>${esc(l.name)}</b><small>${l.sym} · ${tfName(l.tf || 1)}${l.savedAt ? ` · ${(l.shapes || []).length} dessin(s) · ${new Date(l.savedAt).toLocaleString("fr-FR")}` : " · vide (ouvre-la puis enregistre)"}</small></div><span><button data-a="open">Ouvrir</button><button data-a="ren" title="Renommer">✎</button><button data-a="del" title="Supprimer">🗑</button></span></div>`).join("") || '<div class="tx-empty">Aucune mise en page</div>';
+    const m = modal("Mises en page", `<div class="tx-row"><input id="btLaySearch" placeholder="Rechercher…"></div><div class="tx-row"><button data-m="save">Enregistrer${cur ? " « " + esc(cur.name) + " »" : ""} (Ctrl+S)</button><button data-m="saveas" class="ghost">Enregistrer sous…</button></div><div class="tx-list" id="btLayList">${list("")}</div>`);
+    $("btLaySearch").oninput = (e) => { $("btLayList").innerHTML = list(e.target.value); };
+    m.onclick = async (e) => {
+      const mm = e.target.dataset.m, a = e.target.dataset.a; if (mm === "x") return closeModal();
+      if (mm === "save" || mm === "saveas") { if (await saveLayout(mm === "saveas")) openLayouts(); return; }
+      const r = e.target.closest(".tx-li"); if (!r || !a) return; const L = layouts(), l = L.find((x) => x.id === r.dataset.id); if (!l) return;
+      if (a === "open") { closeModal(); await applyLayout(l); }
+      else if (a === "ren") { const n = await ask("Renommer la mise en page", l.name); if (n) { l.name = n; saveList("bt-layouts", L); layName(); openLayouts(); } }
+      else if (a === "del" && confirm(`Supprimer la mise en page « ${l.name} » ?`)) { saveList("bt-layouts", L.filter((x) => x !== l)); if (curLay === l.id) setCur(null); openLayouts(); }
+    };
+  }
+
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
   let chart = null, cs = null, vs = null, lastKey = "", plines = [];
   function ensureChart() {
@@ -3114,15 +3230,16 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
     chart.subscribeCrosshairMove((p) => legend(p && p.time ? p.seriesData.get(cs) : null));
-    loop();
+    applyPrefs(); loop();
   }
   function legend(d) {
     const el = $("btLegend"); if (!el) return;
     const b = S.B[S.B.length - 1], o = d || (b && { open: b[1], high: b[2], low: b[3], close: b[4] });
     const tfn = S.tf >= 1440 ? "1D" : S.tf >= 60 ? S.tf / 60 + "h" : S.tf + "m", nm = S.sym === "ES" ? "ESZ26 · S&P 500" : S.sym === "CSV" ? "CSV" : "NQZ26 · Nasdaq";
-    if (!o) { el.innerHTML = `<b>${nm} · ${tfn}</b>`; return; }
+    const ttl = P.title ? `<b>${nm} · ${tfn}</b>` : "";
+    if (!o) { el.innerHTML = ttl; return; }
     const cl = o.close >= o.open ? "up" : "dn", ch = o.close - o.open;
-    el.innerHTML = `<b>${nm} · ${tfn}</b><span class="v">O<span class="${cl}">${o.open.toFixed(2)}</span></span><span class="v">H<span class="${cl}">${o.high.toFixed(2)}</span></span><span class="v">L<span class="${cl}">${o.low.toFixed(2)}</span></span><span class="v">C<span class="${cl}">${o.close.toFixed(2)}</span></span><span class="v ${cl}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}</span>`;
+    el.innerHTML = ttl + (!P.ohlc ? "" : `<span class="v">O<span class="${cl}">${o.open.toFixed(2)}</span></span><span class="v">H<span class="${cl}">${o.high.toFixed(2)}</span></span><span class="v">L<span class="${cl}">${o.low.toFixed(2)}</span></span><span class="v">C<span class="${cl}">${o.close.toFixed(2)}</span></span>`) + (P.chg ? `<span class="v ${cl}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}</span>` : "");
   }
   function draw(full) {
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
@@ -3718,6 +3835,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
     document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
     $("btNewF").onclick = () => groupSel();
+    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; layName();
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
       if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
@@ -3771,6 +3889,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
       else if ((e.ctrlKey || e.metaKey) && k === "c" && selShapes().length) { clip = JSON.parse(JSON.stringify(selShapes())); }
       else if ((e.ctrlKey || e.metaKey) && k === "v" && clip) { e.preventDefault(); ctxDo("paste"); }
+      else if ((e.ctrlKey || e.metaKey) && k === "s") { e.preventDefault(); saveLayout(false); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
       else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
     });
