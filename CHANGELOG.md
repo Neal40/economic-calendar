@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.16.0] — 2026-11-09
+### Ajouté
+- Calendrier : bascule « Par mois / Par semaine ». La vue semaine affiche une ligne par jour (Day · News (ET) · My plan), le bandeau « This week » et les flèches passent de semaine en semaine.
+- Statut du jour : « Key day » (badge vert) et « Low probability » (badge rouge), plus un champ « Mon plan » (détail affiché dans la vue semaine).
+### Modifié
+- Bank holiday : même style que Closed (fond hachuré) avec le badge en gris au lieu du rouge.
+
 ## [1.14.3] — 2026-11-07
 ### Corrigé
 - Synchro Notion : une ligne supprimée dans Notion (ex. un trade) disparaît de l'app en 30 s au plus (comparaison de la liste des lignes toutes les 30 s ; avant, une suppression n'était jamais détectée).

@@ -55,12 +55,14 @@ h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing
 .day.out{background:transparent;border:1.5px dashed #b3b7c0;cursor:default}
 .day.out:hover{box-shadow:none}
 .day.out .num{color:#a9adb6}
-.day.closed{background-image:repeating-linear-gradient(135deg,transparent 0 9px,rgba(120,126,140,.22) 9px 10.5px)}
+.day.closed,.day.bank,.wrow.closed,.wrow.bank{background-image:repeating-linear-gradient(135deg,transparent 0 9px,rgba(120,126,140,.22) 9px 10.5px)}
 .day.today{box-shadow:0 0 0 2px var(--teal)}
 .num{font-size:21px;font-weight:600;line-height:1;margin-bottom:9px}
 .badge{position:absolute;top:10px;right:10px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;
   border:1.3px solid #7d818b;color:#555963;border-radius:20px;padding:2px 7px;background:var(--card)}
 .badge.red{border-color:var(--hand);color:var(--hand)}
+.badge.gray{border-color:#7d818b;color:#555963}
+.badge.teal{border-color:var(--teal);color:var(--teal)}
 .ev{display:grid;grid-template-columns:10px 64px 1fr;align-items:start;margin-bottom:6px;font-size:12.5px;line-height:1.22}
 .ev .dot{margin-top:4px}
 .ev .t{font-family:'Space Mono',monospace;font-size:11.2px;margin-top:1px;white-space:nowrap}
@@ -73,6 +75,42 @@ h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing
 .none{font-size:12.5px;color:#7b7f89}
 .note{font-family:'Caveat',cursive;color:var(--hand);font-size:17px;line-height:1.08;font-weight:600}
 .hidden-ev{display:none}
+
+/* week view (Par semaine) */
+.bar .seg{display:inline-flex;border:1px solid #3d4048;border-radius:8px;overflow:hidden}
+.bar .seg button{border:none;border-radius:0;background:#1f2025;color:#a9adb6}
+.bar .seg button.on{background:#e9eaee;color:#141518;font-weight:600}
+.grid.wkview{grid-template-columns:1fr;gap:9px;margin-top:20px}
+.tw{display:flex;align-items:baseline;gap:16px;border-top:1px solid #a9adb6;border-bottom:1px solid #a9adb6;padding:13px 0 12px;cursor:pointer;flex-wrap:wrap}
+.tw .k{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.16em;color:#555963;font-weight:700}
+.tw b{font-size:25px;font-weight:700;letter-spacing:-.01em;line-height:1}
+.tw .s{font-size:16px;color:#2e3036;border-left:1.5px solid #8f949f;padding-left:16px;font-weight:500}
+.wcols{display:grid;grid-template-columns:128px 1fr 1.3fr;font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.14em;color:#555963;font-weight:700;padding:6px 0 0}
+.wcols span{padding-left:18px}
+.wrow{display:grid;grid-template-columns:128px 1fr 1.3fr;min-height:92px;background-color:var(--card);border:1px solid var(--card-b);border-radius:12px;cursor:pointer;transition:box-shadow .15s}
+.wrow:hover{box-shadow:0 0 0 2px #8f949f}
+.wrow.today{box-shadow:0 0 0 2px var(--teal)}
+.wrow>div{padding:13px 18px 13px}
+.wrow .wd{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.wrow .wd .dw{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.16em;color:#555963;font-weight:700}
+.wrow .wd .wnum{color:var(--ink);font-size:36px;font-weight:600;line-height:.95}
+.wrow .wd .wnum small{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;color:#555963;font-weight:700;margin-left:5px}
+.wrow .badge{position:static;font-size:8.5px;white-space:nowrap}
+.wrow .wn{border-left:1px solid var(--card-b);display:flex;flex-direction:column;justify-content:center}
+.wrow .wn .ev{grid-template-columns:14px 82px 1fr;font-size:14.5px;margin-bottom:5px}
+.wrow .wn .ev .t{font-size:12.5px;font-weight:700;margin-top:2px}
+.wrow .wn .ev .dot{margin-top:6px}
+.wrow .wn .ev.earn{grid-template-columns:20px 1fr}
+.wrow .wn .ev.lowi{font-size:13px}
+.wrow .wn .ev.lowi .t{font-size:11.5px}
+.wrow .wn .none{font-size:14.5px}
+.dot.hol{background:#8f949f}
+.wrow .wp{border-left:1px solid var(--card-b);display:flex;flex-direction:column;justify-content:center;gap:3px}
+.wrow .wp .note{font-size:25px;line-height:1.05}
+.wrow .wp .plan{font-family:'Caveat',cursive;font-size:20px;line-height:1.12;color:#22242a;font-weight:500;white-space:pre-line}
+.wrow .wp .empty{font-size:13px;color:#9a9ea8}
+.legend .holi{display:none}
+.poster.wkmode .legend .holi{display:inline-flex}
 
 .foot{margin-top:20px;font-size:12.5px;color:#3d4048;line-height:1.6}
 .foot .star{color:var(--red);font-weight:700}
@@ -706,6 +744,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="month" id="mlabel"></div>
   <button id="next" title="Mois suivant">→</button>
   <button id="today">Aujourd'hui</button>
+  <span class="seg"><button id="vMonth" class="on">Par mois</button><button id="vWeek">Par semaine</button></span>
   <span class="sep"></span>
   <button class="chip" data-f="high"><span class="dot high"></span>High</button>
   <button class="chip" data-f="med"><span class="dot med"></span>Medium</button>
@@ -720,7 +759,7 @@ table.tbl:has(#subT){min-width:900px}
     <div>
       <div class="kicker"><span class="usd">USD</span>INNER CIRCLE TRADER · NEW YORK TIME (ET)</div>
       <h1 id="title"></h1>
-      <p class="sub">The month at a glance: news, holidays and key earnings.</p>
+      <p class="sub" id="subT">The month at a glance: news, holidays and key earnings.</p>
     </div>
     <div class="brand" id="brandBox" data-go="profil" title="Modifier le profil">
       <div class="logo" id="logo"></div>
@@ -737,6 +776,7 @@ table.tbl:has(#subT){min-width:900px}
       <span>☾ After close</span>
       <span>✳ Pre-market</span>
       <span>◌ Time TBD</span>
+      <span class="holi"><span class="dot hol"></span>Holiday</span>
     </div>
     <div class="src" id="src">Sources: Forex Factory, NYSE, Nasdaq</div>
   </div>
@@ -1036,9 +1076,12 @@ table.tbl:has(#subT){min-width:900px}
         <option value="bank">Bank holiday</option>
         <option value="closed">Closed</option>
         <option value="early">Early close</option>
+        <option value="key">Key day</option>
+        <option value="low">Low probability</option>
       </select></div>
     <div><label>NOTE MANUSCRITE (rouge)</label><input id="dNote" placeholder="Laisser vide = note auto"></div>
   </div>
+  <label>MON PLAN (détail, vue « Par semaine »)</label><textarea id="dPlan" rows="2" placeholder="Ex. Waller speaks at 4:00 AM, during London: no impact on the AM session."></textarea>
   <div class="actions">
     <button class="ghost" id="dCancel">Annuler</button>
     <button class="primary" id="dSave">Enregistrer</button>
@@ -1178,11 +1221,14 @@ function holidays(y){
 const autoNote=h=>h.st==="closed"?`${h.name}*. Bank holiday. NYSE closed.`:
   h.st==="early"?`Early close* at 1:00 PM ET.`:`${h.name}. Banks closed. NYSE open: lower volume and liquidity.`;
 
+const HOLST=st=>st==="closed"||st==="early"||st==="bank"; // statuts « jour férié » (key / low = statuts de plan, sans note auto)
+const ST_BADGE={bank:["BANK HOLIDAY","gray"],closed:["CLOSED","red"],early:["EARLY CLOSE","red"],key:["KEY DAY","teal"],low:["LOW PROBABILITY","red"]};
+const stBadge=st=>ST_BADGE[st]?`<span class="badge ${ST_BADGE[st][1]}">${ST_BADGE[st][0]}</span>`:"";
 function dayInfo(d){
   const k=iso(d), o=S.days[k]||{}, h=holidays(d.getFullYear())[k];
   let st = (o.st===undefined||o.st==="auto") ? (h?h.st:"") : o.st;
-  let note = o.note || (st ? (h&&h.st===st ? autoNote(h) : autoNote({st,name:h?h.name:"Holiday"})) : "");
-  return {k,st,note,h};
+  let note = o.note || (HOLST(st) ? (h&&h.st===st ? autoNote(h) : autoNote({st,name:h?h.name:"Holiday"})) : "");
+  return {k,st,note,h,plan:o.plan||""};
 }
 
 /* ---------- state ---------- */
@@ -1191,9 +1237,13 @@ const filt={high:true,med:true,low:true,earn:true};
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date()); // YYYY-MM-DD, jour de New York
 const isoToday=iso(new Date());
+let calView="month"; try{ if(localStorage.getItem("econcal-calview")==="week") calView="week" }catch(e){}
+const mondayOf=d=>{const w=d.getDay(); return addD(d, w===6?2:w===0?1:1-w)}; // sam./dim. -> lundi suivant
+const nyDate=()=>{const [Y,M,Dd]=nyToday().split("-").map(Number);return D(Y,M-1,Dd)};
+let wcur=mondayOf(nyDate());
 
 function autoWeek(days,m){
-  const inM=days.filter(d=>d.getMonth()===m);
+  const inM=m==null?days:days.filter(d=>d.getMonth()===m); if(m==null) m=days[0].getMonth();
   const evs=inM.flatMap(d=>(S.events[iso(d)]||[]).map(e=>({...e,d})));
   const has=re=>evs.find(e=>re.test(e.n));
   let l="";
@@ -1209,20 +1259,86 @@ function autoWeek(days,m){
   if(!l && inM.length && inM[inM.length-1].getDate()===new Date(inM[0].getFullYear(),m+1,0).getDate()) l="Month end";
   if(!l) l=inM.length?`${MONTHS[m].slice(0,3)} ${inM[0].getDate()}–${inM[inM.length-1].getDate()}`:"";
   const subs=[];
-  inM.forEach(d=>{const i=dayInfo(d); if(i.st&&i.h) subs.push(`${i.h.name.replace(/ Day$/,"")} ${SH[d.getDay()]}`)});
+  inM.forEach(d=>{const i=dayInfo(d); if(HOLST(i.st)&&i.h) subs.push(`${i.h.name.replace(/ Day$/,"")} ${SH[d.getDay()]}`)});
   evs.filter(e=>e.i==="high").slice(0,2).forEach(e=>{ if(!subs.length||subs.length<2) subs.push(`${e.n.split(" · ")[0].replace(/ &.*$/,"")} ${SH[e.d.getDay()]}`)});
   return {l,s:subs.slice(0,2).join(" · ")};
 }
 
+function evHTML(e){
+  if(e.k==="ev"){
+    const show=filt[e.i==="high"?"high":e.i==="low"?"low":"med"];
+    return `<div class="ev${e.i==="low"?" lowi":""}${show?"":" hidden-ev"}"><span class="dot ${e.i||"low"}"></span><span class="t">${esc(e.t)}</span><span class="n">${esc(e.n)}</span></div>`;
+  }
+  const ic=e.k==="after"?"☾":e.k==="pre"?"✳":"◌";
+  return `<div class="ev earn${filt.earn?"":" hidden-ev"}"><span class="ic">${ic}</span><span>${esc(e.n)}</span></div>`;
+}
+function footHTML(footNotes){
+  const fmt=d=>`${DOW[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  const lines=[]; const used=new Set();
+  footNotes.forEach(({d,info},i)=>{
+    if(used.has(i)) return;
+    if(info.st==="closed"){
+      let s=`<span class="star">*</span> ${esc(info.h.name)}: NYSE closed on ${fmt(d)}.`;
+      const j=footNotes.findIndex((f,x)=>x>i&&f.info.st==="early"&&(f.d-d)<4*864e5);
+      if(j>-1){used.add(j);s+=` Early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(footNotes[j].d)}.`}
+      lines.push(s);
+    } else if(info.st==="early"){
+      lines.push(`<span class="star">*</span> ${esc(info.h.name)}: early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(d)}.`);
+    } else if(info.st==="bank"){
+      lines.push("~"+`${esc(info.h.name)} (${fmt(d)}): bank holiday. NYSE stays open, but expect lower volume and liquidity.`);
+    }
+  });
+  lines.sort((a,b)=>(a[0]==="~")-(b[0]==="~"));
+  return lines.map(x=>x.replace(/^~/,"")).join("<br>");
+}
+/* vue « Par semaine » : une ligne par jour (Day · News · My plan) */
+function renderWeek(){
+  const days=[0,1,2,3,4].map(i=>addD(wcur,i)), a=days[0], b=days[4], today=nyToday();
+  const m3=d=>MONTHS[d.getMonth()].slice(0,3);
+  document.getElementById("title").textContent=`Week of ${m3(a)} ${a.getDate()}–${a.getMonth()===b.getMonth()?"":m3(b)+" "}${b.getDate()}`;
+  document.getElementById("subT").textContent="My plan for each day before the New York open.";
+  document.getElementById("src").textContent = (a.getFullYear()>2026) ? "Sources: Fed, BLS, BEA, Census, NYSE" : "Sources: Forex Factory, NYSE, Nasdaq";
+  const mf=d=>["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."][d.getMonth()];
+  document.getElementById("mlabel").textContent=`${a.getDate()}${a.getMonth()===b.getMonth()?"":" "+mf(a)} – ${b.getDate()} ${mf(b)} ${b.getFullYear()}`;
+  const wk=iso(a), ov=S.weeks[wk]||S.weeks[wk+"@"+b.getMonth()]||{}, au=autoWeek(days,null);
+  const sub=ov.s!==undefined&&ov.s!==""?ov.s:au.s;
+  let h=`<div class="tw" data-w="${wk}" title="Modifier le libellé"><span class="k">THIS WEEK</span><b>${esc(ov.l||au.l)}</b>${sub?`<span class="s">${esc(sub)}</span>`:""}</div>`;
+  h+=`<div class="wcols"><span>DAY</span><span>NEWS (ET)</span><span>MY PLAN</span></div>`;
+  const footNotes=[];
+  days.forEach(d=>{
+    const info=dayInfo(d), evs=S.events[info.k]||[];
+    let news=evs.map(evHTML).join("");
+    if(HOLST(info.st)&&info.h&&!evs.some(e=>/holiday|closed|early close/i.test(e.n))){
+      const lab=info.st==="bank"?`Bank Holiday (${info.h.name})`:info.st==="closed"?`NYSE closed (${info.h.name})`:`Early close (${info.h.name})`;
+      news=`<div class="ev"><span class="dot hol"></span><span class="t">${info.st==="early"?"1:00 PM":"All day"}</span><span class="n">${esc(lab)}</span></div>`+news;
+    }
+    if(!news) news=`<div class="none">No news</div>`;
+    let plan=(info.note?`<div class="note">${esc(info.note)}</div>`:"")+(info.plan?`<div class="plan">${esc(info.plan)}</div>`:"");
+    if(!plan) plan=`<div class="empty">Cliquer pour écrire ton plan</div>`;
+    const cls="wrow"+(info.st==="closed"?" closed":info.st==="bank"?" bank":"")+(info.k===today?" today":"");
+    h+=`<div class="${cls}" data-d="${info.k}"><div class="wd"><span class="dw">${SH[d.getDay()].toUpperCase()}</span><span class="wnum">${d.getDate()}<small>${m3(d).toUpperCase()}</small></span>${stBadge(info.st)}</div><div class="wn">${news}</div><div class="wp">${plan}</div></div>`;
+    if(HOLST(info.st)&&info.h) footNotes.push({d,info});
+  });
+  const g=document.getElementById("grid"); g.classList.add("wkview"); g.innerHTML=h;
+  document.getElementById("foot").innerHTML=footHTML(footNotes);
+}
+
 function render(){
   const y=cur.getFullYear(), m=cur.getMonth();
+  const wkm=calView==="week";
+  document.getElementById("vMonth").classList.toggle("on",!wkm); document.getElementById("vWeek").classList.toggle("on",wkm);
+  document.getElementById("poster").classList.toggle("wkmode",wkm);
+  document.getElementById("prev").title=wkm?"Semaine précédente":"Mois précédent"; document.getElementById("next").title=wkm?"Semaine suivante":"Mois suivant";
+  { const lg=document.getElementById("logo");
+    if(S.brand.img){ lg.innerHTML=`<img src="${S.brand.img}" alt="">`; } else lg.textContent=S.brand.logo||"";
+    document.getElementById("handle").textContent=S.brand.handle||"";
+    document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("off",!filt[c.dataset.f])); }
+  if(wkm){ renderWeek(); return; }
+  document.getElementById("grid").classList.remove("wkview");
+  document.getElementById("subT").textContent="The month at a glance: news, holidays and key earnings.";
   document.getElementById("title").textContent=`${MONTHS[m]} ${y}`;
   document.getElementById("src").textContent = (y>2026) ? "Sources: Fed, BLS, BEA, Census, NYSE" : "Sources: Forex Factory, NYSE, Nasdaq";
   document.getElementById("mlabel").textContent=`${MFR[m]} ${y}`;
-  const lg=document.getElementById("logo");
-  if(S.brand.img){ lg.innerHTML=`<img src="${S.brand.img}" alt="">`; } else lg.textContent=S.brand.logo||"";
-  document.getElementById("handle").textContent=S.brand.handle||"";
-  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("off",!filt[c.dataset.f]));
 
   // weeks whose Mon–Fri touch this month
   let mon=D(y,m,1); mon=addD(mon,-((mon.getDay()+6)%7));
@@ -1241,44 +1357,18 @@ function render(){
     days.forEach(d=>{
       if(d.getMonth()!==m){h+=`<div class="day out"><div class="num">${d.getDate()}</div></div>`;return}
       const info=dayInfo(d), evs=S.events[info.k]||[];
-      let cls="day"+(info.st==="closed"?" closed":"")+(info.k===isoToday?" today":"");
-      let badge = info.st==="bank"?`<span class="badge">BANK HOLIDAY</span>`:info.st==="closed"?`<span class="badge red">CLOSED</span>`:info.st==="early"?`<span class="badge red">EARLY CLOSE</span>`:"";
-      let body="";
-      evs.forEach(e=>{
-        if(e.k==="ev"){
-          const show=filt[e.i==="high"?"high":e.i==="low"?"low":"med"];
-          body+=`<div class="ev${e.i==="low"?" lowi":""}${show?"":" hidden-ev"}"><span class="dot ${e.i||"low"}"></span><span class="t">${esc(e.t)}</span><span class="n">${esc(e.n)}</span></div>`;
-        } else {
-          const ic=e.k==="after"?"☾":e.k==="pre"?"✳":"◌";
-          body+=`<div class="ev earn${filt.earn?"":" hidden-ev"}"><span class="ic">${ic}</span><span>${esc(e.n)}</span></div>`;
-        }
-      });
+      let cls="day"+(info.st==="closed"?" closed":info.st==="bank"?" bank":"")+(info.k===isoToday?" today":"");
+      let badge = stBadge(info.st);
+      let body=evs.map(evHTML).join("");
       if(info.note) body+=`<div class="note">${esc(info.note)}</div>`;
       if(!evs.length&&!info.note) body=`<div class="none">No news</div>`;
       h+=`<div class="${cls}" data-d="${info.k}">${badge}<div class="num">${d.getDate()}</div>${body}</div>`;
-      if(info.st&&info.h) footNotes.push({d,info});
+      if(HOLST(info.st)&&info.h) footNotes.push({d,info});
     });
   });
   document.getElementById("grid").innerHTML=h;
 
-  // footer
-  const fmt=d=>`${DOW[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
-  const lines=[]; const used=new Set();
-  footNotes.forEach(({d,info},i)=>{
-    if(used.has(i)) return;
-    if(info.st==="closed"){
-      let s=`<span class="star">*</span> ${esc(info.h.name)}: NYSE closed on ${fmt(d)}.`;
-      const j=footNotes.findIndex((f,x)=>x>i&&f.info.st==="early"&&(f.d-d)<4*864e5);
-      if(j>-1){used.add(j);s+=` Early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(footNotes[j].d)}.`}
-      lines.push(s);
-    } else if(info.st==="early"){
-      lines.push(`<span class="star">*</span> ${esc(info.h.name)}: early close at 1:00 PM ET (1:15 PM for eligible options) on ${fmt(d)}.`);
-    } else if(info.st==="bank"){
-      lines.push("~"+`${esc(info.h.name)} (${fmt(d)}): bank holiday. NYSE stays open, but expect lower volume and liquidity.`);
-    }
-  });
-  lines.sort((a,b)=>(a[0]==="~")-(b[0]==="~"));
-  document.getElementById("foot").innerHTML=lines.map(x=>x.replace(/^~/,"")).join("<br>");
+  document.getElementById("foot").innerHTML=footHTML(footNotes);
 }
 
 /* ---------- interactions ---------- */
@@ -1288,9 +1378,16 @@ document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".ov.show").forEach(o=>o.classList.remove("show"));
   if(!document.querySelector(".ov.show")&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
     if(e.key==="ArrowLeft") $("prev").click(); if(e.key==="ArrowRight") $("next").click(); }});
-$("prev").onclick=()=>{cur=D(cur.getFullYear(),cur.getMonth()-1,1);render()};
-$("next").onclick=()=>{cur=D(cur.getFullYear(),cur.getMonth()+1,1);render()};
-$("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1);render()};
+const stepCal=n=>{ if(calView==="week"){ wcur=addD(wcur,7*n); cur=D(wcur.getFullYear(),wcur.getMonth(),1); } else cur=D(cur.getFullYear(),cur.getMonth()+n,1); render(); };
+$("prev").onclick=()=>stepCal(-1);
+$("next").onclick=()=>stepCal(1);
+$("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1);wcur=mondayOf(nyDate());render()};
+function setCalView(v){ if(v===calView) return; calView=v; try{localStorage.setItem("econcal-calview",v)}catch(e){}
+  if(v==="week"){ const t=mondayOf(nyDate()), inCur=d=>d.getMonth()===cur.getMonth()&&d.getFullYear()===cur.getFullYear();
+    if(inCur(t)||inCur(addD(t,4))) wcur=t; else { let f=D(cur.getFullYear(),cur.getMonth(),1); while(f.getDay()===0||f.getDay()===6) f=addD(f,1); wcur=addD(f,1-f.getDay()); } }
+  else cur=D(wcur.getFullYear(),wcur.getMonth(),1);
+  render(); }
+$("vMonth").onclick=()=>setCalView("month"); $("vWeek").onclick=()=>setCalView("week");
 document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f];render()});
 
 let editDay=null, editWeek=null;
@@ -1317,13 +1414,13 @@ $("rows").addEventListener("change",e=>{ const r=e.target.closest(".row"); if(!r
 $("rows").addEventListener("click",e=>{ if(e.target.tagName==="BUTTON") e.target.parentElement.remove(); });
 $("addRow").onclick=()=>{$("rows").insertAdjacentHTML("beforeend",rowHTML()); const r=$("rows").lastElementChild; paintImp(r);};
 $("grid").addEventListener("click",e=>{
-  const w=e.target.closest(".wk");
+  const w=e.target.closest(".wk,.tw");
   if(w){editWeek=w.dataset.w;const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
-  const d=e.target.closest(".day[data-d]"); if(!d) return;
+  const d=e.target.closest(".day[data-d],.wrow[data-d]"); if(!d) return;
   editDay=d.dataset.d; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
   $("dTitle").textContent=`${DOW[dt.getDay()]} ${Dd} ${MONTHS[M-1]} ${Y}`;
   $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join(""); $("rows").querySelectorAll(".row").forEach(paintImp);
-  const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||"";
+  const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||""; $("dPlan").value=o.plan||"";
   open("ovDay");
 });
 $("dCancel").onclick=()=>close("ovDay");
@@ -1333,8 +1430,8 @@ $("dSave").onclick=()=>{
   const order=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);return h*60+ +m[2]};
   evs.sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||order(a.t)-order(b.t));
   if(evs.length) S.events[editDay]=evs; else delete S.events[editDay];
-  const st=$("dStatus").value, note=$("dNote").value.trim();
-  if(st==="auto"&&!note) delete S.days[editDay]; else S.days[editDay]={st:st==="auto"?undefined:st,note};
+  const st=$("dStatus").value, note=$("dNote").value.trim(), plan=$("dPlan").value.trim();
+  if(st==="auto"&&!note&&!plan) delete S.days[editDay]; else { S.days[editDay]={st:st==="auto"?undefined:st,note}; if(plan) S.days[editDay].plan=plan; }
   save();close("ovDay");render();
 };
 $("wCancel").onclick=()=>close("ovWeek");
@@ -4218,7 +4315,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
     "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
     // calendrier
-    "Aujourd'hui": "Today", "Mois précédent": "Previous month", "Mois suivant": "Next month", "News en direct (headlines FinancialJuice). Les lignes en rouge sont les news à fort impact.": "Live news (FinancialJuice headlines). Red lines are high-impact news.", "Rien ne s'affiche ? Ouvre": "Nothing showing? Open",
+    "Aujourd'hui": "Today", "Mois précédent": "Previous month", "Mois suivant": "Next month", "Semaine précédente": "Previous week", "Semaine suivante": "Next week", "Par mois": "By month", "Par semaine": "By week", "Cliquer pour écrire ton plan": "Click to write your plan", "News en direct (headlines FinancialJuice). Les lignes en rouge sont les news à fort impact.": "Live news (FinancialJuice headlines). Red lines are high-impact news.", "Rien ne s'affiche ? Ouvre": "Nothing showing? Open",
     "(l'aperçu Claude bloque les contenus externes ; le site GitHub Pages et l'app .exe l'affichent).": "(the Claude preview blocks external content; the GitHub Pages site and the .exe app show it).", "+ Ajouter une facture": "+ Add an invoice",
     // journal
     "Stats TopstepX par compte.": "TopstepX stats per account.", "Journal de Neal": "Neal's journal", "Journal backtest": "Backtest journal", "⟳ Synchroniser Notion": "⟳ Sync Notion", "Synchro Notion : On": "Notion sync: On", "Synchro Notion : Off": "Notion sync: Off", "⟳ Synchroniser TopstepX": "⟳ Sync TopstepX",

@@ -46,7 +46,7 @@ Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edi
 | `Backtesteur style TopstepX` | Replay m1, compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles |
 | `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
 
-Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-review-type`, `econcal-review-view`, `notionAuto`.
+Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.
 
 ### Format d'un événement
 `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
