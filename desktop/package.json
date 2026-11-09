@@ -8,7 +8,8 @@
   "scripts": {
     "prepare-app": "node prepare.js ../index.html",
     "dist": "npm run prepare-app && electron-builder --win portable --x64",
-    "ict": "npm run prepare-app && electron-builder --win portable --x64 --config.compression=store && node -e \"require('fs').copyFileSync('dist/Inner Circle Trader.exe', require('path').join(require('os').homedir(), 'Desktop', 'Inner Circle Trader', 'Inner Circle Trader.exe')); console.log('-> Bureau/Inner Circle Trader/Inner Circle Trader.exe')\""
+    "ict": "npm run prepare-app && electron-builder --win portable --x64 --config.compression=store && node -e \"require('fs').copyFileSync('dist/Inner Circle Trader.exe', require('path').join(require('os').homedir(), 'Desktop', 'Inner Circle Trader', 'Inner Circle Trader.exe')); console.log('-> Bureau/Inner Circle Trader/Inner Circle Trader.exe')\"",
+    "dist:mac": "npm run prepare-app && electron-builder --mac dmg zip --universal"
   },
   "build": {
     "appId": "com.nealict.economiccalendar",
@@ -31,6 +32,17 @@
     },
     "directories": {
       "output": "dist"
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "category": "public.app-category.finance",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "Inner-Circle-Trader-mac.${ext}"
+    },
+    "dmg": {
+      "artifactName": "Inner-Circle-Trader-mac.${ext}"
     }
   },
   "devDependencies": {
