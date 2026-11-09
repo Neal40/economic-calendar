@@ -1,0 +1,58 @@
+name: Build macOS app
+
+on:
+  push:
+    branches: [main]
+    paths: ["index.html", "desktop/**", ".github/workflows/build-mac.yml"]
+  pull_request:
+    paths: ["index.html", "desktop/**", ".github/workflows/build-mac.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Vérifier syntaxe + contrat IPC
+        run: node ../tools/check.js
+      - name: Tests (copier, données de marché)
+        run: node --test
+      - run: npm ci
+      # Build universel (Apple Silicon + Intel), signature ad-hoc (identity "-") : pas de compte Apple Developer nécessaire
+      - run: npm run dist:mac
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v6
+        with:
+          name: InnerCircleTrader-mac
+          path: |
+            desktop/dist/*.dmg
+            desktop/dist/*.zip
+      - name: Version
+        if: github.event_name != 'pull_request'
+        id: v
+        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      # Release séparée « latest-mac » : ne touche pas à la release Windows « latest »
+      - name: Publish release "latest-mac"
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest-mac
+          name: Inner Circle Trader v${{ steps.v.outputs.v }} (macOS)
+          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** pour Mac (universel : Apple Silicon + Intel). Ouvrir le `.dmg` et glisser l'app dans Applications. App non notarisée par Apple : au premier lancement, faire clic droit → Ouvrir, ou lancer `xattr -cr \"/Applications/Inner Circle Trader.app\"` dans le Terminal."
+          prerelease: false
+          make_latest: false
+          files: |
+            desktop/dist/Inner-Circle-Trader-mac.dmg
+            desktop/dist/Inner-Circle-Trader-mac.zip
