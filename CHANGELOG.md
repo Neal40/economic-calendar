@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.22.3] — 2026-11-10
+### Modifié
+- App Mac : icône style Liquid Glass (bulle de verre avec une courbe, dégradé vert / bleu / violet).
+
 ## [1.22.2] — 2026-11-10
 ### Modifié
 - App Mac : icône plein cadre plus épurée (courbe verte sur fond bleu).
