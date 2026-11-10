@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.22.1] — 2026-11-10
+### Modifié
+- App Mac : nouvelle icône (fenêtre façon macOS avec une courbe de prix sur fond bleu).
+
 ## [1.22.0] — 2026-11-10
 ### Ajouté
 - Calendrier : bouton « 📈 Earnings tracker » : résultats d'entreprises des 30 prochains jours, avec pour chaque société sa capitalisation et l'évolution de son cours sur 3 mois (widgets TradingView en direct, à l'ouverture de la ligne) et son impact : NQ + ES, NQ seul, ES seul ou faible (hors des deux indices).
