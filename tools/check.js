@@ -27,6 +27,41 @@ try {
   if (btStats([], { type: "classic" }).n !== 0) errors.push("btStats : liste vide");
 } catch (e) { errors.push("btStats : " + e.message); }
 
+// cœur du replay (btCore : horloge, buffer, exécution des ordres), extrait d'index.html
+try {
+  const src = /\/\* btCore:start[^\n]*\n([\s\S]*?)\/\* btCore:end \*\//.exec(html)[1], C = new Function(src + "; return btCore;")();
+  const eq = (name, got, want) => { if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`btCore.${name} : ${JSON.stringify(got)} au lieu de ${JSON.stringify(want)}`); };
+  const bar = (t, o, h, l, c) => [t, o, h, l, c, 0], T = 0.25;
+  // limites et stops touchés par le high / low
+  eq("trigger limit achat", C.trigger({ type: "Limit", qty: 1, px: 100 }, bar(60, 102, 103, 99.5, 101), T), 100);
+  eq("trigger limit achat pas touché", C.trigger({ type: "Limit", qty: 1, px: 100 }, bar(60, 102, 103, 100.25, 101), T), null);
+  eq("trigger limit vente", C.trigger({ type: "Limit", qty: -1, px: 105 }, bar(60, 102, 105, 101, 104), T), 105);
+  eq("trigger stop achat", C.trigger({ type: "Stop", qty: 1, px: 103 }, bar(60, 102, 103.5, 101, 103), T), 103);
+  eq("trigger stop vente", C.trigger({ type: "Stop", qty: -1, px: 100 }, bar(60, 102, 103, 99, 100), T), 100);
+  // gaps : limite exécutée à l'ouverture (meilleur prix), stop à l'ouverture (pire prix)
+  eq("gap limit achat", C.trigger({ type: "Limit", qty: 1, px: 100 }, bar(60, 98, 99, 97, 98), T), 98);
+  eq("gap stop vente", C.trigger({ type: "Stop", qty: -1, px: 100 }, bar(60, 97, 98, 96, 97), T), 97);
+  eq("slippage stop achat", C.trigger({ type: "Stop", qty: 1, px: 103, slip: 2 }, bar(60, 102, 104, 101, 103), T), 103.5);
+  // anti-lookahead : jamais sur la bougie de pose
+  eq("anti-lookahead bougie de pose", C.trigger({ type: "Stop", qty: -1, px: 100, at: 60 }, bar(60, 102, 103, 99, 100), T), null);
+  eq("anti-lookahead bougie suivante", C.trigger({ type: "Stop", qty: -1, px: 100, at: 60 }, bar(61, 102, 103, 99, 100), T), 100);
+  // SL avant TP dans la même bougie
+  eq("evalOrder SL d'abord", C.evalOrder([{ id: 1, bracket: "TP" }, { id: 2 }, { id: 3, bracket: "SL" }]).map((o) => o.id), [3, 1, 2]);
+  // horloge : 1× = 60 s de marché par seconde, saut des fermetures
+  eq("clockAdvance 1×", C.clockAdvance(1000, 1, 100, 1100), 1006);
+  eq("clockAdvance 10×", C.clockAdvance(1000, 10, 1000, 1650), 1600);
+  eq("clockAdvance marché fermé", C.clockAdvance(1000, 1, 100, 90000), 90000);
+  const raw = [bar(0), bar(60), bar(120), bar(180)];
+  eq("cursorAt", C.cursorAt(raw, 0, 130), 2);
+  eq("needsMore", [C.needsMore(raw, 0, 100), C.needsMore(raw, 0, 200)], [false, true]);
+  // buffer : ajout sur place des seules bougies plus récentes
+  const buf = [bar(0), bar(60)]; eq("append", [C.append(buf, [bar(60), bar(120), bar(90), bar(180)]), buf.map((b) => b[0])], [2, [0, 60, 120, 180]]);
+  const s1 = Array.from({ length: 120 }, (_, i) => bar(120 + i)); eq("merge1s", C.merge1s([bar(0), bar(60), bar(120)], s1).length, 2 + 120);
+  eq("merge1s trop court", C.merge1s([bar(0)], [bar(1)]).length, 1);
+  // bus d'événements
+  const B = C.bus(), seen = []; const off = B.on("bar", (b) => seen.push(b)); B.emit("bar", 1); off(); B.emit("bar", 2); eq("bus", seen, [1]);
+} catch (e) { errors.push("btCore : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);

@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.23.0] — 2026-11-10
+### Modifié
+- Backtesteur : nouveau cœur du replay façon FX Replay (`btCore`) — horloge du marché mesurée sur le temps réel, bus d'événements (bougie jouée → ordres, règles du compte, alertes → affichage).
+- Backtesteur : buffer continu — la séance suivante est chargée 2 h avant la fin de la séance en cours, le replay enchaîne les jours (week-ends et jours fériés sautés) au lieu de s'arrêter à 17:00 ; message « Fin des données » quand il n'y a plus rien.
+- Backtesteur : exécution des ordres plus réaliste — gap à l'ouverture (limite au meilleur prix, stop au pire), anti-lookahead (un ordre / SL / TP ne s'exécute jamais sur la bougie où il a été posé), SL avant TP dans la même bougie.
+### Ajouté
+- Backtesteur : guide « Comment dessiner » (bouton ? de la barre d'outils) avec les raccourcis réellement configurés.
+- `tools/check.js` : tests du cœur du replay (déclenchement des ordres, gaps, anti-lookahead, horloge, buffer).
+
 ## [1.22.3] — 2026-11-10
 ### Modifié
 - App Mac : icône style Liquid Glass (bulle de verre avec une courbe, dégradé vert / bleu / violet).
