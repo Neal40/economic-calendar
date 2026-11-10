@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.25.0] — 2026-11-11
+### Modifié
+- Backtesteur : doublons retirés — plus de Buy / Sell / quantité ni de solde dans la barre de replay (panneau Order et BAL suffisent), plus de barre d'icônes à droite (Order, Watchlist, Alertes, Jarvis, News, Sessions, Préférences reviennent en boutons dans la barre du haut).
+- Backtesteur : panneau Order sans champs SL / TP en ticks — le bracket pose le SL / TP à 40 / 80 ticks, ils se règlent en glissant leurs lignes sur le chart.
+- Backtesteur : barre de dessin façon FX Replay — une vraie icône par groupe (plus de crayons), règle, zoom (cadre à glisser), mode « rester en dessin », bouton pour replier la barre.
+### Ajouté
+- Backtesteur : SL / TP déplaçables à la souris (zone de prise plus large) ; sans bracket, glisser la ligne de la position crée le SL (côté perte) ou le TP (côté gain).
+- Guide « Comment dessiner » : zoom, rester en dessin, SL / TP à glisser.
+
 ## [1.24.0] — 2026-11-10
 ### Modifié
 - Backtesteur : mise en page façon FX Replay. On garde la barre de compte (BAL / MLL / RP&L / UP&L / DLL) et le panneau Order de TopstepX ; le reste est réorganisé :
