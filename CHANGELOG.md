@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.19.0] — 2026-11-10
+### Ajouté
+- Backtesteur (app desktop) : la bougie M1 se forme seconde par seconde avec les données 1 s du jour du replay (Préférences › Replay pour le désactiver) ; horloge à la seconde ; vitesses « Temps réel » et ¼× en plus.
+- Backtesteur : toutes les unités de temps sont pré-chargées en arrière-plan après « Charger » ; changer d'UT ne relit plus les fichiers.
+### Modifié
+- → / L et ← / J avancent / reculent d'une bougie de l'unité de temps affichée.
+- Lecture pilotée par l'horloge du marché (1× = 1 minute par seconde, les nuits et week-ends sont sautés).
+- Replay environ 200 fois plus rapide à calculer (heures de New York mises en cache, agrégation incrémentale).
+
 ## [1.18.0] — 2026-11-10
 ### Ajouté
 - Backtesteur : mode ETH / RTH (Alt+Maj+E : séance 9:30 - 16:00 NY, H1 / H4 alignées sur 9:30), graphique en ligne (Alt+Maj+L), échelle inversée (Alt+I), verrou de l'échelle des prix (clic droit sur l'axe), recherche d'outil (/), 2e chart NQ + ES par Alt+clic ou +, Tab / Maj+Tab entre les charts, Alt+Entrée pour agrandir le chart actif, premier plan / arrière-plan (Ctrl+Maj+↑ / ↓), curseurs Ctrl+Alt+C / A / D / E, fenêtre News (Alt+D).
