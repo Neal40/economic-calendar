@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.18.0] — 2026-11-10
+### Ajouté
+- Backtesteur : mode ETH / RTH (Alt+Maj+E : séance 9:30 - 16:00 NY, H1 / H4 alignées sur 9:30), graphique en ligne (Alt+Maj+L), échelle inversée (Alt+I), verrou de l'échelle des prix (clic droit sur l'axe), recherche d'outil (/), 2e chart NQ + ES par Alt+clic ou +, Tab / Maj+Tab entre les charts, Alt+Entrée pour agrandir le chart actif, premier plan / arrière-plan (Ctrl+Maj+↑ / ↓), curseurs Ctrl+Alt+C / A / D / E, fenêtre News (Alt+D).
+- Échap : désélectionne, sinon annule le dernier ordre en attente.
+- Préférences : « Enregistrer comme modèle par défaut » (le bouton « Par défaut » remet ensuite ces réglages).
+### Modifié
+- Afficher / masquer les news : Alt+Maj+N (Alt+Maj+E sert désormais à ETH / RTH).
+
 ## [1.17.0] — 2026-11-10
 ### Ajouté
 - Backtesteur : bouton « ⌨ » (Raccourcis) pour personnaliser chaque raccourci clavier, avec les raccourcis FXReplay / TradingView par défaut (recentrer Alt+R, ordres Maj+B / Maj+S / Alt+B / Alt+S, Flatten Ctrl+Maj+C, rectangle Alt+E, vitesse ↑ / ↓, L / J, Go To Ctrl+G, plein écran, captures Ctrl+Alt+S / Alt+Maj+S…). Timeframe au clavier : 1, 5, 15, 60, 240, D, W ou M puis Entrée.

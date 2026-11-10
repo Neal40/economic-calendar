@@ -3168,8 +3168,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0 };
   const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M" };
   const mondayOf = (d) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };
-  function bucket(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, D = session, W = lundi, M = 1er du mois)
+  const offC = new Map(), offF = (t) => { const h = Math.floor(t / 3600); let v = offC.get(h); if (v === undefined) { v = off(t); offC.set(h, v); } return v; };
+  const rthOn = () => !!P.rth && S.tf < 1440;
+  const inRth = (t) => { const m = (((t + offF(t)) % 86400) + 86400) % 86400 / 60; return m >= 570 && m < 960; }; // 9:30 - 16:00 NY
+  function bucket(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, ou 9:30 en mode RTH, D = session, W = lundi, M = 1er du mois)
     const tf = S.tf * 60;
+    if (rthOn() && S.tf >= 60) { const o = offF(t), tn = t + o, a = 34200 % tf; return Math.floor((tn - a) / tf) * tf + a - o; }
     if (S.tf >= 43200) return ny(sessionKey(t).slice(0, 8) + "01", 0, 0);
     if (S.tf >= 10080) return ny(mondayOf(sessionKey(t)), 0, 0);
     if (S.tf >= 1440) return ny(sessionKey(t), 0, 0);
@@ -3219,12 +3223,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function aggregate() {
     const out = [];
     let i0 = 0;
-    if (S.htf && S.htf.length && S.raw[S.cur]) { // bougies terminées = fichier de l'unité de temps, bougie en cours = m1 du replay
+    const R = rthOn();
+    if (!R && S.htf && S.htf.length && S.raw[S.cur]) { // bougies terminées = fichier de l'unité de temps, bougie en cours = m1 du replay
       const cb = bucket(S.raw[S.cur][0]);
       for (const b of S.htf) { if (b[0] >= cb) break; out.push(b.slice()); }
       while (i0 < S.cur && bucket(S.raw[i0][0]) < cb) i0++;
     }
     for (let i = i0; i <= S.cur && i < S.raw.length; i++) {
+      if (R && !inRth(S.raw[i][0])) continue;
       const b = S.raw[i], k = bucket(b[0]), l = out[out.length - 1];
       if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5]]);
       else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5]; }
@@ -3379,7 +3385,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (cs2) cs2.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn });
     chart.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
       crosshair: { vertLine: { color: P.cross, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } });
-    cs.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
+    const L = !!P.line, T0 = "rgba(0,0,0,0)";
+    cs.applyOptions({ upColor: !L && P.body ? P.up : T0, downColor: !L && P.body ? P.down : T0, borderVisible: !L && !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !L && !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
+    if (ls) ls.applyOptions({ visible: L });
+    chart.priceScale("right").applyOptions({ invertScale: !!P.invert });
     legend(null);
   }
   function modal(title, body, foot) {
@@ -3398,9 +3407,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function openPrefs(tab, snap) {
     tab = tab || "sym"; snap = snap || { ...P };
     const field = ([k, l, t]) => `<div class="r">${l}${t === "cb" ? `<input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>` : t === "color" ? `<input type="color" data-p="${k}" value="${P[k]}">` : t === "grid" ? `<select data-p="${k}">${[["none", "Aucune"], ["both", "Horizontale + verticale"], ["horz", "Horizontale"], ["vert", "Verticale"]].map(([v, n]) => `<option value="${v}" ${P[k] === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : `<input type="number" data-p="${k}" value="${P[k]}" style="width:70px">`}</div>`;
-    const m = modal("Préférences", `<div class="tx-ptabs">${Object.entries(PTABS).map(([k, [n]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}</button>`).join("")}</div><div class="tx-pbody">${PTABS[tab][1].map(field).join("")}</div>`, `<button data-m="def" class="ghost">Par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
+    const m = modal("Préférences", `<div class="tx-ptabs">${Object.entries(PTABS).map(([k, [n]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}</button>`).join("")}</div><div class="tx-pbody">${PTABS[tab][1].map(field).join("")}</div>`, `<button data-m="def" class="ghost" title="Remettre le modèle par défaut">Par défaut</button><button data-m="savedef" class="ghost" title="Les réglages actuels deviennent le modèle « Par défaut »">Enregistrer comme modèle par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
     m.oninput = (e) => { const k = e.target.dataset.p; if (!k) return; P[k] = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" ? +e.target.value : e.target.value; applyPrefs(); };
-    m.onclick = (e) => { const t = e.target.dataset.tab, a = e.target.dataset.m; if (t) return openPrefs(t, snap); if (a === "def") { P = { ...PDEF }; applyPrefs(); openPrefs(tab, snap); } else if (a === "x") { P = snap; applyPrefs(); closeModal(); } else if (a === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Préférences enregistrées."); } };
+    m.onclick = (e) => { const t = e.target.dataset.tab, a = e.target.dataset.m; if (t) return openPrefs(t, snap); if (a === "def") { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; applyPrefs(); openPrefs(tab, snap); } else if (a === "savedef") { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); msg("Modèle par défaut enregistré : « Par défaut » remet désormais ces réglages."); } else if (a === "x") { P = snap; applyPrefs(); closeModal(); } else if (a === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Préférences enregistrées."); } };
   }
   // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
   const sessions = () => LS.get("bt-sessions", []);
@@ -3557,7 +3566,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   }
 
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
-  let chart = null, cs = null, vs = null, lastKey = "", plines = [];
+  let chart = null, cs = null, vs = null, ls = null, lastKey = "", plines = [];
   function ensureChart() {
     if (chart) return;
     chart = LightweightCharts.createChart($("btChart"), {
@@ -3568,6 +3577,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) },
     });
     cs = chart.addCandlestickSeries({ upColor: "#4caf50", downColor: "#000000", borderVisible: true, borderUpColor: "#000000", borderDownColor: "#000000", wickUpColor: "#000000", wickDownColor: "#000000", priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
+    ls = chart.addLineSeries({ color: "#2962ff", lineWidth: 2, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: true, visible: false });
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
     chart.subscribeCrosshairMove((p) => legend(p && p.time ? p.seriesData.get(cs) : null));
@@ -3587,11 +3597,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
     ensureChart();
     const bars = (S.B = aggregate()), key = S.sym + S.tf + (S.raw[0] ? S.raw[0][0] : 0);
-    if (!bars.length) { cs.setData([]); vs.setData([]); cs.setMarkers([]); return; }
+    if (!bars.length) { cs.setData([]); vs.setData([]); ls.setData([]); cs.setMarkers([]); return; }
     const c = bars.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] }));
     const v = bars.map((b) => ({ time: toNY(b[0]), value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }));
-    if (full || key !== lastKey || !S.lastLen || bars.length < S.lastLen) { cs.setData(c); vs.setData(v); if (key !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key; }
-    else for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); }
+    const key2r = key + (P.rth ? "r" : "");
+    if (full || key2r !== lastKey || !S.lastLen || bars.length < S.lastLen) { cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
+    else for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); }
     S.lastLen = bars.length;
     priceLines();
     const first = bars[0][0], lastT = S.raw[S.cur][0];
@@ -4245,13 +4256,44 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const shot = async (copy) => { if (!chart) return; const c = chart.takeScreenshot(), d = $("btDraw"), out = document.createElement("canvas"); out.width = c.width; out.height = c.height; const g = out.getContext("2d"); g.drawImage(c, 0, 0); if (d && d.width) g.drawImage(d, 0, 0, c.width, c.height);
       if (copy) { try { const blob = await new Promise((r) => out.toBlob(r, "image/png")); await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]); msg("Capture copiée dans le presse-papier."); } catch (err) { msg("Copie impossible : " + (err.message || err), true); } return; }
       const a = document.createElement("a"); a.href = out.toDataURL("image/png"); a.download = `${S.sym} ${$("btDate").value} ${S.raw.length ? hm(S.raw[S.cur][0]).replace(":", "h") : ""}.png`; a.click(); msg("Capture enregistrée."); };
+    const escape = () => {
+      const busy = pending || measure || sel || tool !== "cross" || ($("btFly") && !$("btFly").hidden);
+      if (busy || !A.orders.some((o) => !o.bracket)) { closeFly(); setTool("cross"); measure = null; sel = null; tree(); return; }
+      const o = A.orders.filter((x) => !x.bracket).sort((a, b) => (+String(b.id).replace(/\D/g, "") || 0) - (+String(a.id).replace(/\D/g, "") || 0))[0];
+      A.orders = A.orders.filter((x) => x !== o); saveAcc(); draw(); ui(); msg(`Ordre ${o.type} ${o.qty > 0 ? "+" : ""}${o.qty} @ ${(+o.px).toFixed(2)} annulé.`); };
+    let scaleLocked = false;
+    const lockScale = () => { scaleLocked = !scaleLocked; [chart, chart2].filter(Boolean).forEach((c) => { c.applyOptions({ handleScale: { axisPressedMouseMove: { price: !scaleLocked, time: true } } }); c.priceScale("right").applyOptions({ autoScale: !scaleLocked }); }); $("btAuto").classList.toggle("on", !scaleLocked); msg(scaleLocked ? "Échelle des prix verrouillée (clic droit sur l'axe pour déverrouiller)." : "Échelle des prix déverrouillée."); };
+    let maxed = false;
+    const maxChart = () => { if (!P.split) return; maxed = !maxed; $("btWrap").hidden = maxed && act === 2; $("btWrap2").hidden = maxed && act === 1; if (!maxed) { $("btWrap").hidden = false; $("btWrap2").hidden = !P.split; } };
+    const zorder = (d) => { const L = selShapes(); if (!L.length) return msg("Sélectionne d'abord un dessin."); L.forEach((x) => { const i = shapes.indexOf(x); if (i < 0) return; shapes.splice(i, 1); if (d > 0) shapes.push(x); else shapes.unshift(x); }); saveDrawings(); msg(d > 0 ? "Dessin au premier plan." : "Dessin à l'arrière-plan."); };
+    function toolSearch() {
+      const all = []; GROUPS.forEach((g) => g.sec.forEach(([, L]) => L.forEach((t) => (IMPL.has(t.id) || (typeof SPEC !== "undefined" && SPEC[t.id])) && all.push({ g: g.g, ...t }))));
+      const m = modal("Rechercher un outil", `<input id="btTS" placeholder="Nom de l'outil (ex. fib, rectangle, ligne…)" style="width:100%;height:34px;background:#131722;border:1px solid #434651;color:#d1d4dc;border-radius:4px;padding:0 10px" autocomplete="off"><div id="btTSL" style="margin-top:10px;max-height:46vh;overflow:auto"></div>`);
+      const nrm = (x) => x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""), list = () => { const q = nrm($("btTS").value); $("btTSL").innerHTML = all.filter((t) => !q || nrm(t.name).includes(q)).slice(0, 40).map((t, i) => `<div class="tx-kr" data-g="${t.g}" data-id="${t.id}" style="cursor:pointer${i ? "" : ";color:#fff"}"><span>${esc(t.name)}</span><span class="rv-mut">${esc(t.key || "")}</span></div>`).join("") || '<div class="rv-mut">Aucun outil.</div>'; };
+      list(); $("btTS").focus(); $("btTS").oninput = list;
+      $("btTS").onkeydown = (e) => { e.stopPropagation(); if (e.key === "Escape") closeModal(); if (e.key === "Enter") { const f = $("btTSL").querySelector("[data-id]"); if (f) f.click(); } };
+      m.onclick = (e) => { const r = e.target.closest("[data-id]"); if (r) { closeModal(); pickTool(r.dataset.g, r.dataset.id); } else if (e.target.dataset.m === "x") closeModal(); };
+    }
+    // Alt+clic sur le chart = 2e chart (NQ + ES) ; clic droit sur l'axe des prix = verrouiller l'échelle
+    ["btWrap", "btWrap2"].forEach((w) => {
+      $(w).addEventListener("mousedown", (e) => { if (e.altKey && e.button === 0) { e.preventDefault(); e.stopPropagation(); $("btSplitBtn").click(); } }, true);
+      $(w).addEventListener("contextmenu", (e) => { const c = w === "btWrap" ? chart : chart2; if (!c) return; const r = $(w).getBoundingClientRect(); if (e.clientX - r.left > c.paneSize().width) { e.preventDefault(); e.stopPropagation(); lockScale(); } }, true);
+    });
     const fullscreen = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
     const KEYS = [
       ["Navigation & chart", [
         ["recenter", "Recentrer le graphique", ["Alt+R"], recenter],
         ["zoomIn", "Zoom avant", ["Ctrl+↑"], () => zoom(1.25)], ["zoomOut", "Zoom arrière", ["Ctrl+↓"], () => zoom(0.8)],
-        ["split", "Afficher / masquer le 2e chart (NQ + ES)", [], () => $("btSplitBtn").click()],
-        ["news", "Afficher / masquer les news", ["Alt+Shift+E"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
+        ["split", "Afficher / masquer le 2e chart (NQ + ES) — aussi Alt+clic", ["+", "Shift++"], () => $("btSplitBtn").click()],
+        ["nextChart", "Chart suivant (en NQ + ES)", ["Tab"], () => P.split && setActive(act === 1 ? 2 : 1)], ["prevChart", "Chart précédent (en NQ + ES)", ["Shift+Tab"], () => P.split && setActive(act === 1 ? 2 : 1)],
+        ["maxChart", "Agrandir / restaurer le chart actif (en NQ + ES)", ["Alt+Entrée"], () => maxChart()],
+        ["search", "Rechercher un outil de dessin", ["/", "Shift+/"], () => toolSearch()],
+        ["rth", "Mode ETH / RTH (9:30 - 16:00 NY)", ["Alt+Shift+E"], () => { P.rth = !P.rth; LS.set("bt-prefs", P); offC.clear(); draw(true); msg(P.rth ? "RTH : séance 9:30 - 16:00 NY uniquement." : "ETH : séance complète."); }],
+        ["line", "Graphique en ligne / chandeliers", ["Alt+Shift+L"], () => { P.line = !P.line; LS.set("bt-prefs", P); applyPrefs(); }],
+        ["invert", "Inverser l'échelle des prix", ["Alt+I"], () => { P.invert = !P.invert; LS.set("bt-prefs", P); applyPrefs(); msg(P.invert ? "Échelle inversée." : "Échelle normale."); }],
+        ["lockScale", "Verrouiller / déverrouiller l'échelle des prix", [], () => lockScale()],
+        ["news", "Afficher / masquer les news", ["Alt+Shift+N"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
+        ["details", "Fenêtre News / détails", ["Alt+D"], () => $("btNewsBtn").click()],
         ["nextNews", "Aller à la news suivante", ["Shift+W"], () => { nextNews(); }],
         ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
       ["Replay", [
@@ -4261,6 +4303,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       ["Ordres", [
         ["buyMkt", "Achat au marché", ["Shift+B"], () => ORD("Market", "buy")], ["sellMkt", "Vente au marché", ["Shift+S"], () => ORD("Market", "sell")],
         ["buyLmt", "Ordre limite achat", ["Alt+B"], () => ORD("Limit", "buy")], ["sellLmt", "Ordre limite vente", ["Alt+S"], () => ORD("Limit", "sell")],
+        ["escape", "Échap : désélectionner, sinon annuler le dernier ordre", ["Échap"], () => escape()],
         ["flatten", "Fermer toutes les positions (Flatten)", ["Ctrl+Shift+C"], () => $("oFlat").click()], ["cancelAll", "Annuler tous les ordres", [], () => $("oCancel").click()]]],
       ["Dessins", [
         ["rect", "Rectangle", ["Alt+E", "Alt+Shift+R"], () => setTool("rect")], ["trend", "Ligne de tendance", ["Alt+T"], () => setTool("trend")],
@@ -4269,7 +4312,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         ["fib", "Fibonacci", ["Alt+F"], () => setTool("fib")], ["text", "Texte", ["Alt+X"], () => setTool("text")], ["measure", "Règle (mesurer)", ["Shift+M"], () => setTool("measure")],
         ["magnet", "Aimant (accroche OHLC)", ["Alt+M"], () => $("btMagnet").click()], ["lockAll", "Verrouiller tous les dessins", ["Alt+L"], () => $("btLockAll").click()],
         ["hideAll", "Masquer tous les dessins", ["Ctrl+Alt+H"], () => $("btHideAll").click()], ["tree", "Arborescence des objets", ["Alt+O"], () => $("btTreeBtn2").click()],
-        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()]]],
+        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()],
+        ["front", "Dessin au premier plan", ["Ctrl+Shift+↑"], () => zorder(1)], ["backZ", "Dessin à l'arrière-plan", ["Ctrl+Shift+↓"], () => zorder(-1)],
+        ["curCross", "Curseur : croix", ["Ctrl+Alt+C"], () => setTool("cross")], ["curArrow", "Curseur : flèche", ["Ctrl+Alt+A"], () => setTool("arrowc")],
+        ["curDot", "Curseur : point", ["Ctrl+Alt+D"], () => setTool("dot")], ["curEraser", "Curseur : gomme", ["Ctrl+Alt+E"], () => setTool("eraser")]]],
       ["Interface", [
         ["full", "Plein écran", ["F11", "Shift+F"], fullscreen], ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout(false)],
         ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Alt+Shift+S"], () => shot(true)]]]];
@@ -4288,8 +4334,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       // changement de timeframe au clavier : 1, 5, 15, 60, 240, D, W, M puis Entrée
       if (!e.ctrlKey && !e.metaKey && !e.altKey && /^([0-9]|D|W|M)$/.test(combo)) { tfBuf = /\d/.test(combo) && /^\d*$/.test(tfBuf) ? tfBuf + combo : combo; clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 2500); msg("Timeframe : " + tfBuf + " (Entrée)"); return; }
       if (k === "enter" && tfBuf) { e.preventDefault(); const tf = { D: 1440, W: 10080, M: 43200 }[tfBuf] || +tfBuf, b = document.querySelector(`#btTfs [data-tf="${tf}"]`); tfBuf = ""; if (b) b.click(); else msg("Timeframe non disponible : " + tf, true); return; }
-      if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
-      else if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
+      if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
       else if ((k === "delete" || k === "backspace") && selShapes().length) { e.preventDefault(); ctxDo("del"); }
       else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
       else if ((e.ctrlKey || e.metaKey) && k === "c" && selShapes().length) { clip = JSON.parse(JSON.stringify(selShapes())); }
