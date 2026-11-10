@@ -714,20 +714,13 @@ table.tbl:has(#subT){min-width:900px}
 .tx-rbar{height:54px;flex:none;background:var(--tx-tv);color:var(--tx-tvfg);display:flex;align-items:center;gap:10px;padding:0 10px;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif}
 .tx-rbar .rb-l,.tx-rbar .rb-r{flex:1;display:flex;align-items:center;gap:8px;min-width:0}.tx-rbar .rb-r{justify-content:flex-end}
 .tx-rbar .rb-c{display:flex;align-items:center;gap:4px;position:relative}
-.rb-buy,.rb-sell{display:inline-flex;align-items:center;gap:4px;height:36px;padding:0 16px 0 10px;border:0;border-radius:9px;color:#fff;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
-.rb-buy{background:#2962ff}.rb-sell{background:#e2675f}.rb-buy:hover{background:#3d72ff}.rb-sell:hover{background:#ec7a72}
-.rb-buy svg,.rb-sell svg{width:20px;height:20px}
-#btQQty{width:64px;height:36px;border-radius:9px;border:1px solid #2a2e39;background:#161a22;color:#fff;padding:0 10px;font:inherit;font-size:14px}
 #btProg{width:150px;accent-color:#2962ff;cursor:pointer}
 .rb-sp{height:30px;border-radius:7px;border:0;background:#161a22;color:#fff;font:inherit;font-size:13px;font-weight:600;padding:0 6px;cursor:pointer}
 .tx-rbar .tx-play{font-size:18px;width:38px;height:38px;border-radius:50%;background:#1d222c}
 .rb-go{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:8px 10px;background:#1d222c;border:1px solid #2a2e39;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);white-space:nowrap;z-index:20;font-size:13px}.rb-go[hidden]{display:none}
-.rb-bal{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;border-radius:17px;background:#1d222c;font-size:14px}.rb-bal b{font-weight:700;color:#fff}
 #btPosT.on{color:var(--tx-acc)}
 .tx-bottom.hid{display:none}
-.tx-icons{width:64px;flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:6px 4px;background:var(--tx-tv);border-radius:6px}
-.tx-icons button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0;background:none;border:0;border-radius:8px;color:var(--tx-tvfg);font:inherit;font-size:10.5px;cursor:pointer}
-.tx-icons button:hover{background:#2a2e39;color:#fff}.tx-icons button.on{background:#2a2e39;color:#fff}.tx-icons button.on svg{color:var(--tx-acc)}
+.tx-tools.min{width:18px}.tx-tools.min>*:not(#btToolsMin){display:none!important}.tx-tools .tx-tmin{height:26px;color:#787b86;font-size:16px}.tx-tools.min .tx-tmin{width:18px;margin-top:auto}
 .tx-bottom{height:160px;flex:none;margin-top:8px}.tx-bottom.min{height:33px}.tx-bottom.min .tx-tbl{display:none}
 .tx-tbl{flex:1;overflow:auto;font-size:12px}
 .tx-tbl table{width:100%;border-collapse:collapse}.tx-tbl th{position:sticky;top:0;background:#141519;text-align:left;font-weight:500;color:#9e9e9e;padding:6px 10px;border-bottom:1px solid var(--tx-pb)}
@@ -1011,9 +1004,9 @@ table.tbl:has(#subT){min-width:900px}
           <span class="tx-hb tx-on" title="Chandeliers"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg></span>
           <span class="tx-sp"></span>
           <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
-          <button class="tx-tb" id="btSessBtn" hidden title="Sessions de backtest enregistrées">💾 Sessions</button>
-          <button class="tx-tb" id="btPrefBtn" hidden title="Préférences du chart">⚙ Préférences</button><button class="tx-tb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)">⌨</button>
-          <button class="tx-tb" id="btJarvisBtn" hidden title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)">🤖 Jarvis</button><button class="tx-tb" id="btNewsBtn" hidden title="News USD (Maj+W = news suivante)">📰 News</button>
+          <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
+          <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button><button class="tx-tb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)">⌨</button>
+          <button class="tx-tb" id="btOrdTgl" title="Afficher / masquer le panneau d'ordres">Order</button><button class="tx-tb" id="btWLBtn" title="Watchlist NQ / ES (Alt+W)">Watchlist</button><button class="tx-tb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)">Alertes</button><button class="tx-tb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)">🤖 Jarvis</button><button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
           <button class="tx-tb" id="btSplitBtn" title="2 charts côte à côte : NQ + ES synchronisés sur le replay">◫ NQ+ES</button>
           <button class="tx-hb" id="btTreeBtn" hidden title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
@@ -1021,7 +1014,11 @@ table.tbl:has(#subT){min-width:900px}
           <div class="tx-tools" id="btTools">
             <div id="btGroups"></div>
             <i></i>
+            <button data-tool="measure" title="Règle : mesurer prix, % et durée (Maj+clic)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M5.5 18.5l13-13 4 4-13 13zM9 15l2 2m1-5l2 2m1-5l2 2"/></svg></button>
+            <button data-tool="zoom" id="btZoomT" title="Zoom : glisser un cadre sur la période à agrandir"></button>
+            <i></i>
             <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M8 6v8a6 6 0 0 0 12 0V6h-4v8a2 2 0 0 1-4 0V6zm0 4h4m4 0h4"/></svg></button>
+            <button id="btStay" class="tg" title="Rester en mode dessin : l'outil reste actif après chaque tracé"></button>
             <button id="btLockAll" class="tg" title="Verrouiller tous les dessins"><svg viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 12.5V10a3.5 3.5 0 0 1 7 0v2.5"/></svg></button>
             <button id="btHideAll" class="tg" title="Masquer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6" fill="none" stroke="currentColor"/></svg></button>
             <i></i>
@@ -1030,6 +1027,7 @@ table.tbl:has(#subT){min-width:900px}
             <button id="btTreeBtn2" title="Arborescence des objets"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
             <button id="btFavBtn" class="tg" title="Barre de favoris"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button>
             <button id="btHowBtn" title="Comment dessiner (guide des outils)"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M11.3 11.6a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6"/><circle cx="14" cy="19.3" r=".9" fill="currentColor"/></svg></button>
+            <button id="btToolsMin" class="tx-tmin" title="Replier / déplier la barre d'outils">‹</button>
           </div>
           <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
@@ -1040,7 +1038,7 @@ table.tbl:has(#subT){min-width:900px}
         </div>
         <div class="tx-foot"><span class="tx-rng" id="btRng" title="Plage affichée"><button data-r="1">1D</button><button data-r="5">5D</button><button data-r="30">1M</button><button data-r="91">3M</button><button data-r="182">6M</button><button data-r="365">1Y</button><button data-r="0">Tout</button></span><i class="tx-vs"></i><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
       <div class="tx-rbar">
-        <div class="rb-l"><button class="rb-buy" id="btQBuy" title="Achat au marché (Maj+B)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="2" d="M9 19L19 9m-8 0h8v8"/></svg>Buy</button><button class="rb-sell" id="btQSell" title="Vente au marché (Maj+S)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="2" d="M9 9l10 10m0-8v8h-8"/></svg>Sell</button><input type="number" id="btQQty" min="1" value="1" title="Nombre de contrats (même valeur que le panneau Order)"></div>
+        <div class="rb-l"></div>
         <div class="rb-c">
           <button class="tx-hb" id="btReset" title="Recommencer au départ"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="currentColor" d="M8 8h2v12H8zM21 8v12l-9-6z"/></svg></button>
           <input type="range" id="btProg" min="0" max="1000" value="0" title="Position du replay dans les séances chargées (glisser pour avancer / revoir)">
@@ -1051,7 +1049,7 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-hb" id="btGoBtn" title="Aller à une date (Ctrl+G)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 17a8 8 0 0 1 14-5.3M20 6v6h-6"/></svg></button>
           <div class="rb-go" id="btGo" hidden><span>Aller au</span><input type="date" id="btDate" class="tx-hin"><input type="time" id="btStart" value="09:30" class="tx-hin" title="Heure de départ (New York)"><button class="tx-hbtn" id="btLoad">Charger</button></div>
         </div>
-        <div class="rb-r"><button class="tx-fb" id="btPosT" title="Positions, ordres et trades">Positions</button><span class="rb-bal" title="Solde du compte"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M4 7h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4zm0 0l11-3v3m1 6h2"/></svg><b id="btRBal">$50,000.00</b></span></div>
+        <div class="rb-r"><button class="tx-fb" id="btPosT" title="Positions, ordres et trades">Positions</button></div>
       </div>
       </div>
     </div>
@@ -1071,18 +1069,6 @@ table.tbl:has(#subT){min-width:900px}
         <button class="tx-sell" id="oSell">SELL -1 @ MARKET</button>
         <div class="tx-2"><button id="oFlat">FLATTEN ALL</button><button id="oCancel">CANCEL ALL</button></div>
       </div>
-    </div>
-    <div class="tx-icons" id="btSide">
-      <button data-s="order" title="Panneau d'ordres"><svg viewBox="0 0 28 28" width="26" height="26"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path stroke="currentColor" stroke-width="1.5" d="M14 9.5v9M9.5 14h9"/></svg><span>Order</span></button>
-      <button data-s="tree" title="Arborescence des objets (Alt+O)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg><span>Objets</span></button>
-      <button data-s="watchlist" title="Watchlist NQ / ES (Alt+W)"><svg viewBox="0 0 28 28" width="26" height="26"><path stroke="currentColor" stroke-width="1.5" d="M7 9h14M7 14h14M7 19h14"/></svg><span>Watchlist</span></button>
-      <button data-s="alerts" title="Alertes de prix (Alt+Maj+A)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M9 18V13a5 5 0 0 1 10 0v5l1.5 2h-13zM12.5 22h3"/></svg><span>Alertes</span></button>
-      <button data-s="details" title="News USD (Alt+D)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7 6.5h12v15H7zM10 10h6M10 13.5h6M10 17h4"/></svg><span>News</span></button>
-      <button data-s="jarvis" title="Jarvis (Alt+Maj+J)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M8 21L19 10m-3-3l1-2 1 2 2 1-2 1-1 2-1-2-2-1zM9 8l.5-1 .5 1 1 .5-1 .5-.5 1-.5-1-1-.5z"/></svg><span>Jarvis</span></button>
-      <button data-s="sessions" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7 6.5h11l3 3v12H7zM10 6.5v5h7v-5M10 21.5v-6h8v6"/></svg><span>Sessions</span></button>
-      <span class="tx-sp"></span>
-      <button data-s="how" title="Comment dessiner"><svg viewBox="0 0 28 28" width="26" height="26"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M11.3 11.6a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6"/><circle cx="14" cy="19.3" r=".9" fill="currentColor"/></svg><span>Guide</span></button>
-      <button data-s="prefs" title="Préférences du chart"><svg viewBox="0 0 28 28" width="26" height="26"><circle cx="14" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M14 5v3m0 12v3M5 14h3m12 0h3M7.6 7.6l2.1 2.1m8.6 8.6l2.1 2.1m0-12.8l-2.1 2.1m-8.6 8.6l-2.1 2.1"/></svg></button>
     </div>
   </div>
   <div class="tx-panel tx-bottom">
@@ -3819,12 +3805,15 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function priceLines() {
     plines.forEach((l) => cs.removePriceLine(l)); plines = [];
     if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
-    A.orders.forEach((o) => { const pl = exitPnl(o);
+    [...A.orders, ...(ordDrag && ordDrag.temp ? [ordDrag] : [])].forEach((o) => { const pl = exitPnl(o);
       plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: o === ordDrag ? 2 : 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : "  " + (pl >= 0 ? "+" : "") + usd(pl)}` })); });
   }
   // ordre sous le pointeur (ligne ou étiquette de prix) -> glisser-déposer
   let ordDrag = null;
-  const orderAt = (y) => (chart && pane === 1 && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 5; }) || null : null);
+  const orderAt = (y) => (chart && pane === 1 && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 7; }) || null : null);
+  // ligne de la position : la glisser crée le SL (côté perte) ou le TP (côté gain), comme sur FX Replay
+  const posAt = (y) => { if (!chart || pane !== 1 || !A.pos) return false; const py = Y(A.pos.avg); return py != null && Math.abs(py - y) < 7; };
+  const posDragOrder = (px) => { const p = A.pos, long = p.qty > 0, sl = long ? px < p.avg : px > p.avg; return { id: "tmp", temp: true, ctr: p.ctr, type: sl ? "Stop" : "Limit", qty: -p.qty, px, bracket: sl ? "SL" : "TP", at: S.raw[S.cur] ? S.raw[S.cur][0] : null }; };
   const marketable = (o, p) => (o.type === "Limit" ? (o.qty > 0 ? o.px >= p : o.px <= p) : (o.qty > 0 ? o.px <= p : o.px >= p));
   function dropOrder(o) {
     const p = last() == null ? null : rnd(last());
@@ -3903,7 +3892,29 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     _pat: SV('<path fill="none" stroke="currentColor" d="M4 20l6-10 5 6 5-9 4 5"/>'),
     _emo: SV('<circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 16a4.5 4.5 0 0 0 7 0"/><circle cx="11" cy="12" r="1" fill="currentColor"/><circle cx="17" cy="12" r="1" fill="currentColor"/>'),
   };
-  const icon = (id) => ICON[id] || SV('<path fill="none" stroke="currentColor" d="M6.5 21.5l3-1 11-11-2-2-11 11zM17.5 8.5l2 2"/>'); // icône par défaut des outils sans dessin dédié
+
+  // icônes des outils sans dessin dédié + icône de groupe par défaut (plus de crayons partout)
+  Object.assign(ICON, {
+    dot: SV('<circle cx="14" cy="14" r="2.5" fill="currentColor"/>'),
+    arrowc: SV('<path fill="none" stroke="currentColor" d="M9 6.5v14l4-4 3 6.5 2-1-3-6.5h5.5z"/>'),
+    eraser: SV('<path fill="none" stroke="currentColor" d="M6.5 17.5l8-8 6 6-5 5h-6zM12 12l6 6M11 22.5h11"/>'),
+    long: SV('<path fill="none" stroke="currentColor" d="M6.5 6.5h15v15h-15zM6.5 15.5h15"/><path fill="currentColor" opacity=".35" d="M7 7h14v8H7z"/>'),
+    short: SV('<path fill="none" stroke="currentColor" d="M6.5 6.5h15v15h-15zM6.5 12.5h15"/><path fill="currentColor" opacity=".35" d="M7 13h14v8H7z"/>'),
+    brush: SV('<path fill="none" stroke="currentColor" d="M20.5 6.5l-8 8m-1 0a3 3 0 0 0-3 3c0 2-1.5 3.5-2 4 3 0 6.5-.5 7.5-2.5a3 3 0 0 0-2.5-4.5zM15 12l1.5 1.5"/>'),
+    hilite: SV('<path fill="none" stroke="currentColor" d="M17 6.5l4.5 4.5-8 8H9v-4.5zM7 21.5h14"/>'),
+    circle: SV('<circle cx="14" cy="14" r="7.5" fill="none" stroke="currentColor"/>'),
+    ellipse: SV('<ellipse cx="14" cy="14" rx="9" ry="5.5" fill="none" stroke="currentColor"/>'),
+    arrow: SV('<path fill="none" stroke="currentColor" d="M7 21l13-13m-6 0h6v6"/>'),
+    pchan: SV('<path fill="none" stroke="currentColor" d="M5 15l12-9M11 22l12-9"/>'),
+    pitch: SV('<path fill="none" stroke="currentColor" d="M5 21l8-7m0 0l9-4m-9 4l9 0m-9 0l9 4"/>'),
+    note: SV('<path fill="none" stroke="currentColor" d="M7.5 6.5h13v10l-5 5h-8zM15.5 21.5v-5h5M10 10.5h8M10 13.5h5"/>'),
+    emoji: SV('<circle cx="14" cy="14" r="8" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 16a4 4 0 0 0 7 0"/><circle cx="11.5" cy="12" r="1" fill="currentColor"/><circle cx="16.5" cy="12" r="1" fill="currentColor"/>'),
+    zoom: SV('<circle cx="12.5" cy="12.5" r="6" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M17 17l5 5M10 12.5h5M12.5 10v5"/>'),
+    stay: SV('<path fill="none" stroke="currentColor" d="M6.5 21.5l1-4 9-9 3 3-9 9zM14.5 10.5l3 3"/><rect x="17.5" y="17.5" width="5" height="4" rx=".8" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M18.5 17.5v-1a1.5 1.5 0 0 1 3 0v1"/>'),
+  });
+  ["prange", "drange"].forEach((k) => { ICON[k] = ICON.measure; });
+  const GICON = { cur: "cross", lines: "trend", fib: "fib", pat: "_pat", proj: "long", shp: "brush", txt: "text", emo: "emoji" };
+  const icon = (id) => ICON[id] || (ICON[GICON[(typeof GROUPS !== "undefined" && (GROUPS.find((G) => G.sec.some((x) => x[1].some((t) => t.id === id))) || {}).g) || ""]]) || SV('<path fill="none" stroke="currentColor" d="M6.5 21.5l3-1 11-11-2-2-11 11zM17.5 8.5l2 2"/>'); // icône par défaut des outils sans dessin dédié
   const T = (id, name, key) => ({ id, name, key });
   const GROUPS = [
     { g: "cur", sec: [["Curseurs", [T("cross", "Croix", "Échap"), T("dot", "Point"), T("arrowc", "Flèche"), T("eraser", "Gomme")]]] },
@@ -4002,6 +4013,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (pending && pane === act) list.push(pending);
     for (const s of list) drawShape(g, s, plotW, plotH);
     if (measure && pane === act) drawMeasure(g, measure);
+    if (zoomSel && pane === act) { g.save(); g.fillStyle = "rgba(41,98,255,.12)"; g.strokeStyle = "#2962ff"; g.setLineDash([4, 3]); const zx = Math.min(zoomSel.x0, zoomSel.x1), zy = Math.min(zoomSel.y0, zoomSel.y1), zw = Math.abs(zoomSel.x1 - zoomSel.x0), zh = Math.abs(zoomSel.y1 - zoomSel.y0); g.fillRect(zx, zy, zw, zh); g.strokeRect(zx, zy, zw, zh); g.restore(); }
     if (pane === 1) drawNews(g, plotW, plotH);
     g.restore();
   }
@@ -4111,7 +4123,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   };
   const TEXTDEF = { note: "Note", pin: "Épingle", table: "Niveau|Prix;PDH|;PDL|", callout: "Bulle", comment: "Commentaire", sign: "Panneau", emoji: "😀", pnote: "" };
   GROUPS.forEach((G) => G.sec.forEach(([, items]) => items.forEach((it) => { if (SPEC[it.id]) { TOOLS[it.id] = it.name; IMPL.add(it.id); } })));
-  ["dot", "arrowc", "eraser"].forEach((id) => IMPL.add(id));
+  ["dot", "arrowc", "eraser", "zoom"].forEach((id) => IMPL.add(id));
+  let stay = LS.get("bt-stay", false), zoomSel = null; // stay = l'outil reste actif après un tracé (comme le crayon-cadenas)
+  const afterDraw = () => { if (!stay) setTool("cross"); };
   function specHit(s, P, x, y) {
     const sp = SPEC[s.type];
     if (sp.hit) return sp.hit(P, x, y);
@@ -4199,7 +4213,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btWrap").classList.toggle("drawing", t !== "cross"); $("btWrap2").classList.toggle("drawing", t !== "cross");
   }
   function finishPending() {
-    const tt = pending.type, p = pending.p.filter((v, i, A) => !i || v.t !== A[i - 1].t || v.price !== A[i - 1].price); pending = null; freeDraw = false; setTool("cross");
+    const tt = pending.type, p = pending.p.filter((v, i, A) => !i || v.t !== A[i - 1].t || v.price !== A[i - 1].price); pending = null; freeDraw = false; afterDraw();
     if (p.length >= (SPEC[tt] && (SPEC[tt].n === 0 || SPEC[tt].free) ? 2 : 1)) create(tt, p);
   }
   function create(type, p) {
@@ -4216,11 +4230,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (e.button !== 0) return;
       const { x, y } = pos(e), q = at(x, y); if (!q) return;
       if (tool === "measure") { if (measure && !measure.done) { measure.b = q; measure.done = true; setTool("cross"); measure = { ...measure }; } else measure = { a: q, b: q, done: false }; return; }
+      if (tool === "zoom") { zoomSel = { x0: x, x1: x, y0: y, y1: y }; return; }
       if (tool === "eraser") { const h = hit(x, y); if (h) { shapes = shapes.filter((v) => v !== h.s); if (sel === h.s) sel = null; saveDrawings(); } return; }
       const sp = SPEC[tool], n = NEED2[tool] ? 2 : sp ? sp.n : 1;
       if (sp && sp.free) { pending = { type: tool, p: [q], style: defStyle(tool), text: "" }; freeDraw = true; return; }
-      if (sp && sp.init) { const tt = tool; setTool("cross"); create(tt, sp.init(q)); return; }
-      if (n === 1) { if (TOOLS[tool]) { const tt = tool; setTool("cross"); create(tt, [q]); } return; }
+      if (sp && sp.init) { const tt = tool; afterDraw(); create(tt, sp.init(q)); return; }
+      if (n === 1) { if (TOOLS[tool]) { const tt = tool; afterDraw(); create(tt, [q]); } return; }
       if (!pending) { pending = { type: tool, p: [q, { ...q }], style: defStyle(tool), text: TEXTDEF[tool] || "" }; return; }
       pending.p[pending.p.length - 1] = q;
       if (n && pending.p.length >= n) finishPending(); else pending.p.push({ ...q });
@@ -4229,14 +4244,17 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const { x, y } = pos(e), q = at(x, y); if (!q) return;
       if (pending) { if (!freeDraw) pending.p[pending.p.length - 1] = q; else if (e.buttons & 1) { const l = pending.p[pending.p.length - 1]; if (l.t !== q.t || l.price !== q.price) pending.p.push(q); } }
       if (measure && !measure.done) measure.b = q;
+      if (zoomSel) { zoomSel.x1 = x; zoomSel.y1 = y; }
     });
-    c.addEventListener("mouseup", () => { if (freeDraw && pending) finishPending(); });
+    c.addEventListener("mouseup", () => { if (freeDraw && pending) finishPending();
+      if (zoomSel) { const z = zoomSel, ts = PC().timeScale(); zoomSel = null; if (Math.abs(z.x1 - z.x0) > 8) { const a = ts.coordinateToLogical(Math.min(z.x0, z.x1)), b = ts.coordinateToLogical(Math.max(z.x0, z.x1)); if (a != null && b != null) ts.setVisibleLogicalRange({ from: a, to: b }); } if (!stay) setTool("cross"); } });
     c.addEventListener("dblclick", (e) => { if (pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); } }); // fin d'un chemin / polyligne / ghost feed
     // mode curseur : sélection / déplacement des dessins avant le déplacement de la chart (phase de capture)
     wrap.addEventListener("mousedown", (e) => {
       if (tool !== "cross" || e.button !== 0 || e.target.closest(".tx-favbar,.tx-float")) return;
       const { x, y } = pos(e);
       const od = !e.shiftKey && orderAt(y); if (od) { ordDrag = od; e.stopPropagation(); e.preventDefault(); return; }
+      if (!e.shiftKey && posAt(y)) { ordDrag = posDragOrder(A.pos.avg); e.stopPropagation(); e.preventDefault(); msg("Glisse vers la perte pour poser le SL, vers le gain pour le TP."); return; }
       if (e.shiftKey) { const q = at(x, y); if (q) { setTool("measure"); measure = { a: q, b: q, done: false }; e.stopPropagation(); e.preventDefault(); } return; }
       if (measure) measure = null;
       const h = hit(x, y); if (!h) { if (sel || msel.size) { sel = null; msel = new Set(); tree(); } return; }
@@ -4245,14 +4263,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       drag = { s: h.s, h: h.h, start: at(x, y), orig: h.s.p.map((p) => ({ ...p })) };
     }, true);
     if (n === 1) window.addEventListener("mousemove", (e) => {
-      if (ordDrag) { const p = cs.coordinateToPrice(pos(e).y); if (p != null) { ordDrag.px = rnd(p); priceLines(); } return; }
+      if (ordDrag) { const p = cs.coordinateToPrice(pos(e).y); if (p != null) { if (ordDrag.temp) Object.assign(ordDrag, posDragOrder(rnd(p))); else ordDrag.px = rnd(p); priceLines(); } return; }
       if (!drag) return; const { x, y } = pos(e), q = at(x, y); if (!q || !drag.start) return;
       const dt = q.t - drag.start.t, dp = q.price - drag.start.price;
       if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
-    if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
-    wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && !!orderAt(pos(e).y))); });
+    if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; if (o.temp) { if (!A.pos || o.px === rnd(A.pos.avg)) { priceLines(); return; } A.orders = A.orders.filter((x) => x.bracket !== o.bracket); delete o.temp; o.id = A.seq++; A.orders.push(o); msg(`${o.bracket} posé à ${o.px.toFixed(2)} (glisse la ligne pour l'ajuster).`); } dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
+    wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && (!!orderAt(pos(e).y) || posAt(pos(e).y)))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
@@ -4372,7 +4390,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("oPos").textContent = A.pos ? `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name} @ ${A.pos.avg.toFixed(2)} · ${usd(u)}` : A.blown ? "Compte cramé (MLL)" : A.dllHit ? "DLL atteinte" : "No Active Position";
     const q = Math.max(1, parseInt($("oQty").value, 10) || 1), ty = $("oType").value.toUpperCase();
     $("oBuy").textContent = `BUY +${q} @ ${ty}`; $("oSell").textContent = `SELL -${q} @ ${ty}`;
-    $("oPxW").hidden = $("oType").value === "Market"; $("oBrk").style.display = $("oBr").value === "1" ? "" : "none";
+    $("oPxW").hidden = $("oType").value === "Market"; $("oBrk").style.display = "none"; // SL / TP : posés à 40 / 80 ticks par le bracket, puis ajustés en glissant leurs lignes sur le chart
     const t = (rows, head) => `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("") || `<tr><td colspan="${head.length}" style="color:#8a8f98">Rien</td></tr>`}</tbody></table>`;
     if (tab === "pos") $("btBottom").innerHTML = t(A.pos ? [`<tr><td>${CTR[A.pos.ctr].name}</td><td>${A.pos.qty}</td><td>${A.pos.avg.toFixed(2)}</td><td>${p != null ? p.toFixed(2) : ""}</td><td style="color:${u >= 0 ? "#26a69a" : "#ef5350"}">${usd(u)}</td><td><button data-x="flat">Close</button></td></tr>`] : [], ["Contrat", "Qté", "Prix moyen", "Dernier", "UP&L", ""]);
     if (tab === "ord") $("btBottom").innerHTML = t(A.orders.map((o) => `<tr><td>${CTR[o.ctr].name}</td><td>${o.bracket || o.type}</td><td>${o.qty > 0 ? "Buy" : "Sell"}</td><td>${Math.abs(o.qty)}</td><td>${o.px.toFixed(2)}</td><td><button data-x="cxl" data-id="${o.id}">Cancel</button></td></tr>`), ["Contrat", "Type", "Sens", "Qté", "Prix", ""]);
@@ -4416,6 +4434,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btSym").onchange = () => { const s = $("btSym").value; if (s === "NQ" && !["NQ", "MNQ"].includes($("oCtr").value)) $("oCtr").value = "MNQ"; if (s === "ES" && !["ES", "MES"].includes($("oCtr").value)) $("oCtr").value = "MES"; ui(); };
     if (!$("btFly")) { const f = document.createElement("div"); f.id = "btFly"; f.className = "tx-fly"; f.hidden = true; document.body.append(f); }
     buildTools(); favBar();
+    $("btZoomT").innerHTML = ICON.zoom; $("btStay").innerHTML = ICON.stay; $("btStay").classList.toggle("on", stay);
+    $("btStay").onclick = () => { stay = !stay; LS.set("bt-stay", stay); $("btStay").classList.toggle("on", stay); msg(stay ? "Mode dessin maintenu : l'outil reste actif (Échap pour revenir au curseur)." : "L'outil revient au curseur après chaque tracé."); };
+    const toolsMin = (on) => { $("btTools").classList.toggle("min", on); $("btToolsMin").textContent = on ? "›" : "‹"; LS.set("bt-toolsmin", on); if (chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0); };
+    $("btToolsMin").onclick = (e) => { e.stopPropagation(); toolsMin(!$("btTools").classList.contains("min")); }; toolsMin(LS.get("bt-toolsmin", false));
     $("btTools").onclick = (e) => {
       const x = e.target.closest("[data-exp]"); if (x) { const f = $("btFly"); if (!f.hidden && f.dataset.g === x.dataset.exp) closeFly(); else openFly(x.dataset.exp, x.closest(".tx-grp")); return; }
       const b = e.target.closest("[data-tool]"); if (b) { closeFly(); setTool(b.dataset.tool); }
@@ -4625,12 +4647,16 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         ${row("Chemin / polyligne : un clic par point, puis double-clic ou Entrée pour finir. Pinceau : maintenir le clic.", "Double-clic / Entrée")}
         ${row("Aimant : accroche les points à l'open / high / low / close de la bougie la plus proche.", k("magnet"))}
         ${row("Après le tracé, le curseur revient en croix. Échap annule un tracé en cours.", "<kbd>Échap</kbd>")}
+        ${row("Crayon-cadenas (Rester en mode dessin) : l'outil reste actif pour enchaîner plusieurs tracés.", "Bouton")}
+        ${row("Loupe (Zoom) : glisse un cadre sur la période à agrandir. ‹ en bas replie la barre d'outils.", "Glisser")}
         <div class="tx-kg">3. Modifier</div>
         ${row("Clic sur un dessin = sélection (barre flottante : couleur, épaisseur, verrou).", "Clic")}
         ${row("Glisser une poignée = déplacer un point ; glisser le dessin = le déplacer en entier.", "Glisser")}
         ${row("Double-clic = paramètres complets (style, niveaux Fibonacci, texte, modèles enregistrés).", "Double-clic")}
         ${row("Clic droit = menu (cloner, copier, groupe, premier plan / arrière-plan, supprimer).", "Clic droit")}
         ${row("Supprimer · Dupliquer · Copier / Coller · Annuler le dernier dessin", "<kbd>Suppr</kbd> · <kbd>Ctrl+D</kbd> · <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd> · <kbd>Ctrl+Z</kbd>")}
+        <div class="tx-kg">SL / TP</div>
+        ${row("Glisse la ligne SL ou TP sur le chart pour la déplacer. Sans bracket : glisse la ligne de la position vers la perte (SL) ou vers le gain (TP).", "Glisser")}
         <div class="tx-kg">4. Mesurer et organiser</div>
         ${row("Mesurer un mouvement (points, %, barres) : Maj + clic-glisser, ou la règle.", "<kbd>Maj</kbd>+clic · " + k("measure"))}
         ${row("Arborescence des objets (groupes, masquer, verrouiller, renommer)", k("tree"))}
@@ -4641,16 +4667,11 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     }
     $("btHowBtn").onclick = openHow;
     /* ---------- mise en page façon FX Replay : barre de replay, plages de temps, barre d'icônes ---------- */
-    const syncQty = (from, to) => { $(to).value = $(from).value; };
-    $("btQQty").oninput = () => { syncQty("btQQty", "oQty"); $("oQty").dispatchEvent(new Event("input")); ui(); };
-    $("oQty").addEventListener("input", () => syncQty("oQty", "btQQty")); $("oQty").addEventListener("change", () => syncQty("oQty", "btQQty"));
-    const quick = (btn) => { syncQty("btQQty", "oQty"); const t = $("oType"), was = t.value; t.value = "Market"; $(btn).click(); if (was !== "Market") { t.value = was; t.dispatchEvent(new Event("change")); } };
-    $("btQBuy").onclick = () => quick("oBuy"); $("btQSell").onclick = () => quick("oSell");
     $("btGoBtn").onclick = (e) => { e.stopPropagation(); const g = $("btGo"); g.hidden = !g.hidden; if (!g.hidden && !$("btDate").value) $("btDate").value = S.raw.length ? sessionKey(S.raw[S.cur][0]) : lastTradingDay(); };
     $("btLoad").addEventListener("click", () => { $("btGo").hidden = true; });
     document.addEventListener("mousedown", (e) => { const g = $("btGo"); if (g && !g.hidden && !g.contains(e.target) && !e.target.closest("#btGoBtn")) g.hidden = true; }, true);
     // curseur de progression : position du replay dans les séances chargées (avancer = rejouer les bougies, reculer = revoir)
-    const prog = () => { const n = S.raw.length, p = $("btProg"); if (p && document.activeElement !== p) p.value = n > 1 ? Math.round((S.cur / (n - 1)) * 1000) : 0; $("btRBal").textContent = $("kBal").textContent; $("btPosT").textContent = A.pos || A.orders.length ? `Positions (${(A.pos ? 1 : 0) + A.orders.length})` : "Positions"; };
+    const prog = () => { const n = S.raw.length, p = $("btProg"); if (p && document.activeElement !== p) p.value = n > 1 ? Math.round((S.cur / (n - 1)) * 1000) : 0; $("btPosT").textContent = A.pos || A.orders.length ? `Positions (${(A.pos ? 1 : 0) + A.orders.length})` : "Positions"; };
     BUS.on("tick", prog); BUS.on("buffer", prog); setInterval(() => { if ($("v-backtest").classList.contains("on")) prog(); }, 400); // aussi après un chargement, un ordre, un reset
     $("btProg").oninput = () => { const n = S.raw.length; if (n < 2) return; const i = Math.round(($("btProg").value / 1000) * (n - 1)); if (i > S.cur) { play(false); step(i - S.cur); } else if (i < S.cur) { S.cur = i; draw(); ui(); } };
     $("btProg").onchange = () => $("btProg").blur();
@@ -4662,14 +4683,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     // panneau Positions / Orders / Trades : replié par défaut, comme le tiroir des positions
     const bottom = (show) => { document.querySelector(".tx-bottom").classList.toggle("hid", !show); $("btPosT").classList.toggle("on", show); LS.set("bt-bottom", show); if (chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0); };
     $("btPosT").onclick = () => bottom(document.querySelector(".tx-bottom").classList.contains("hid")); bottom(LS.get("bt-bottom", false));
-    // barre d'icônes de droite
-    const sideOn = () => { const b = document.querySelector('#btSide [data-s="order"]'); if (b) b.classList.toggle("on", !document.querySelector(".tx-orderp").classList.contains("off")); const t = document.querySelector('#btSide [data-s="tree"]'); if (t) t.classList.toggle("on", !$("btTree").hidden); };
-    $("btSide").onclick = (e) => { const b = e.target.closest("[data-s]"); if (!b) return; const s = b.dataset.s;
-      if (s === "order") { if (document.querySelector(".tx-orderp").classList.contains("off")) $("btOrdShow").click(); else $("oDot").click(); }
-      else if (s === "sessions") $("btSessBtn").click(); else if (s === "how") $("btHowBtn").click(); else if (s === "prefs") $("btPrefBtn").click();
-      else if (KRUN[s]) KRUN[s]();
-      sideOn(); };
-    $("oDot").addEventListener("click", sideOn); sideOn(); prog();
+    // boutons de la barre du haut (ex-barre d'icônes)
+    $("btOrdTgl").onclick = () => { if (document.querySelector(".tx-orderp").classList.contains("off")) $("btOrdShow").click(); else $("oDot").click(); };
+    $("btWLBtn").onclick = () => KRUN.watchlist(); $("btALBtn").onclick = () => KRUN.alerts();
+    prog();
 
     // Watchlist (Alt+W) et Alertes de prix (Alt+Shift+A) : petits volets en haut à droite du chart
     const panel = (id, title) => { let p = $(id); if (!p) { p = document.createElement("div"); p.id = id; p.className = "tx-side"; p.hidden = true; $("btWrap").append(p); } p.dataset.title = title; return p; };
