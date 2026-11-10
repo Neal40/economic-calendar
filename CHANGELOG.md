@@ -2,6 +2,16 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.17.0] — 2026-11-10
+### Ajouté
+- Backtesteur : bouton « ⌨ » (Raccourcis) pour personnaliser chaque raccourci clavier, avec les raccourcis FXReplay / TradingView par défaut (recentrer Alt+R, ordres Maj+B / Maj+S / Alt+B / Alt+S, Flatten Ctrl+Maj+C, rectangle Alt+E, vitesse ↑ / ↓, L / J, Go To Ctrl+G, plein écran, captures Ctrl+Alt+S / Alt+Maj+S…). Timeframe au clavier : 1, 5, 15, 60, 240, D, W ou M puis Entrée.
+- Backtesteur : clic sur le rond bleu du menu Order = menu masqué ; « ● Order » passe à droite du bandeau du chart pour le réafficher (mémorisé).
+- App Mac : build automatique (release `latest-mac`), journal « Journal de Woods » branché sur le Notion de Woods, icône propre.
+- Journal de trading : bouton « ⟳ Synchroniser Notion » dans l'onglet du journal.
+### Modifié
+- Calendrier : les filtres High / Medium / Low / Earnings sont mémorisés à la fermeture ; les notes, le plan et le statut d'un jour (et le texte d'une semaine) sont enregistrés pendant la saisie (Annuler restaure l'état d'ouverture).
+- Backtesteur : vitesse du replay ×1 par défaut ; clic sur une news = recentrage automatique (Alt+R) ; arborescence des objets uniquement dans le bandeau vertical.
+
 ## [1.16.0] — 2026-11-09
 ### Ajouté
 - Calendrier : bascule « Par mois / Par semaine ». La vue semaine affiche une ligne par jour (Day · News (ET) · My plan), le bandeau « This week » et les flèches passent de semaine en semaine.

@@ -537,7 +537,7 @@ table.tbl:has(#subT){min-width:900px}
 .tx-dtab{height:30px;display:flex;align-items:center;gap:6px;padding:3.5px 15.4px 3.5px 1.4px;font-size:14px;font-weight:500;color:var(--tx-fg);background:none;border:none;border-bottom:1px solid transparent;position:relative}
 .tx-dtab.on{border-bottom-color:var(--tx-pb)}.tx-dtab:not(.on){color:#8b8d93}
 .tx-dtab i{font-style:normal;color:#8b8d93;font-size:13px;position:absolute;right:2px}
-.tx-dot{width:10px;height:10px;border-radius:50%;background:#2f80ed;display:inline-block}
+.tx-dot{width:10px;height:10px;border-radius:50%;background:#2f80ed;display:inline-block}#oDot{cursor:pointer}#btTreeBtn[hidden],#btOrdShow[hidden]{display:none!important}#btOrdShow{margin-left:auto;cursor:pointer;background:none;border:0;color:inherit;font:inherit;display:flex;align-items:center;gap:6px}.tx-orderp.off{display:none}
 .tx-tv{flex:1;display:flex;flex-direction:column;min-height:0;background:#22262f;gap:3px}
 .tx-head,.tx-foot{height:38px;flex:none;background:var(--tx-tv);color:var(--tx-tvfg);display:flex;align-items:center;gap:2px;padding:0 6px;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif;overflow:hidden;white-space:nowrap}
 .tx-foot{height:34px;font-size:13px}
@@ -615,6 +615,7 @@ table.tbl:has(#subT){min-width:900px}
 .tx-mb{padding:14px 20px;overflow:auto}
 .tx-mf{display:flex;gap:8px;padding:12px 20px;border-top:1px solid #2a2e39}
 .tx-mf .tx-sp{flex:1}
+.tx-keys{max-height:60vh;overflow:auto}.tx-kg{margin:14px 0 6px;font-weight:600;color:#fff}.tx-kg:first-child{margin-top:0}.tx-kr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #2a2e39}.tx-kv{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.tx-kc{background:#2a2e39;border-radius:4px;padding:3px 8px;font:12px ui-monospace,monospace;white-space:nowrap}.tx-kc b{margin-left:6px;cursor:pointer;opacity:.6}.tx-kc b:hover{opacity:1;color:#f23645}.tx-kv button{height:24px!important;padding:0 8px!important;font-size:12px}.tx-kv button.on{border-color:#2962ff!important;color:#fff}
 .tx-mf button,.tx-row button{background:#2962ff;border:1px solid #2962ff;color:#fff;border-radius:4px;height:32px;padding:0 14px;cursor:pointer;white-space:nowrap}
 .tx-mbox button.ghost{background:none;border:1px solid #434651;color:#d1d4dc}
 .tx-ptabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid #2a2e39;padding-bottom:8px}
@@ -964,7 +965,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div class="tx-dock">
     <div class="tx-panel tx-chartp">
-      <div class="tx-dbar"><div class="tx-dtab on">Chart<i>×</i></div></div>
+      <div class="tx-dbar"><div class="tx-dtab on">Chart<i>×</i></div><button class="tx-dtab" id="btOrdShow" hidden title="Afficher le menu des ordres"><span class="tx-dot"></span>Order</button></div>
       <div class="tx-tv">
         <div class="tx-head">
           <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV</option></select></label>
@@ -981,14 +982,14 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-hb" id="btPrev" title="Bougie précédente (←)"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M18 8v12l-9-6z"/></svg></button>
           <button class="tx-hb tx-play" id="btPlay" title="Lecture / pause (Espace)">▶</button>
           <button class="tx-hb" id="btNext" title="Bougie suivante (→)"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M8 8v12l9-6zM18 8h2v12h-2z"/></svg></button>
-          <select id="btSpeed" class="tx-hin"><option value="1">1×</option><option value="2" selected>2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
+          <select id="btSpeed" class="tx-hin"><option value="1" selected>1×</option><option value="2">2×</option><option value="5">5×</option><option value="10">10×</option><option value="30">30×</option><option value="100">100×</option></select>
           <span class="tx-sp"></span>
           <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
           <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
-          <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button>
+          <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button><button class="tx-tb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)">⌨</button>
           <button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
           <button class="tx-tb" id="btSplitBtn" title="2 charts côte à côte : NQ + ES synchronisés sur le replay">◫ NQ+ES</button>
-          <button class="tx-hb" id="btTreeBtn" title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
+          <button class="tx-hb" id="btTreeBtn" hidden title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
         <div class="tx-mid">
           <div class="tx-tools" id="btTools">
@@ -1014,7 +1015,7 @@ table.tbl:has(#subT){min-width:900px}
       </div>
     </div>
     <div class="tx-panel tx-orderp">
-      <div class="tx-dbar"><div class="tx-dtab on"><span class="tx-dot"></span>Order<i>×</i></div></div>
+      <div class="tx-dbar"><div class="tx-dtab on"><span class="tx-dot" id="oDot" title="Masquer le menu des ordres"></span>Order<i>×</i></div></div>
       <div class="tx-order">
         <div class="mf"><span class="ml">Contract</span><select id="oCtr"><option value="MNQ">MNQZ26</option><option value="NQ">NQZ26</option><option value="MES">MESZ26</option><option value="ES">ESZ26</option></select></div>
         <div class="mf"><span class="ml">Order Type</span><select id="oType"><option>Market</option><option>Limit</option><option>Stop</option></select></div>
@@ -1233,7 +1234,7 @@ function dayInfo(d){
 
 /* ---------- state ---------- */
 let cur=(()=>{const t=new Date();return D(t.getFullYear(),t.getMonth(),1)})();
-const filt={high:true,med:true,low:true,earn:true};
+const filt={high:true,med:true,low:true,earn:true}; try{ Object.assign(filt, JSON.parse(localStorage.getItem("econcal-filt")||"{}")) }catch(e){} // filtres High / Medium / Low / Earnings mémorisés
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date()); // YYYY-MM-DD, jour de New York
 const isoToday=iso(new Date());
@@ -1388,7 +1389,7 @@ function setCalView(v){ if(v===calView) return; calView=v; try{localStorage.setI
   else cur=D(wcur.getFullYear(),wcur.getMonth(),1);
   render(); }
 $("vMonth").onclick=()=>setCalView("month"); $("vWeek").onclick=()=>setCalView("week");
-document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f];render()});
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f]; try{localStorage.setItem("econcal-filt",JSON.stringify(filt))}catch(e){} render()});
 
 let editDay=null, editWeek=null;
 /* list of every news known in the calendar, by impact (or earnings) */
@@ -1415,16 +1416,18 @@ $("rows").addEventListener("click",e=>{ if(e.target.tagName==="BUTTON") e.target
 $("addRow").onclick=()=>{$("rows").insertAdjacentHTML("beforeend",rowHTML()); const r=$("rows").lastElementChild; paintImp(r);};
 $("grid").addEventListener("click",e=>{
   const w=e.target.closest(".wk,.tw");
-  if(w){editWeek=w.dataset.w;const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
+  if(w){editWeek=w.dataset.w;weekSnap={w:editWeek,v:S.weeks[editWeek]};const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
   const d=e.target.closest(".day[data-d],.wrow[data-d]"); if(!d) return;
   editDay=d.dataset.d; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
   $("dTitle").textContent=`${DOW[dt.getDay()]} ${Dd} ${MONTHS[M-1]} ${Y}`;
   $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join(""); $("rows").querySelectorAll(".row").forEach(paintImp);
   const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||""; $("dPlan").value=o.plan||"";
+  daySnap={d:editDay, ev:S.events[editDay], day:S.days[editDay]};
   open("ovDay");
 });
-$("dCancel").onclick=()=>close("ovDay");
-$("dSave").onclick=()=>{
+let daySnap=null, dayTimer=null;
+$("dCancel").onclick=()=>{ clearTimeout(dayTimer); if(daySnap){ const {d,ev,day}=daySnap; if(ev) S.events[d]=ev; else delete S.events[d]; if(day) S.days[d]=day; else delete S.days[d]; save(); render(); } daySnap=null; close("ovDay"); };
+function commitDay(){
   const evs=[...$("rows").querySelectorAll(".row")].map(r=>({t:r.querySelector(".rt").value.trim(),n:(r.querySelector(".rn").value||"").replace("__custom","").trim(),
     i:r.querySelector(".ri").value,k:r.querySelector(".rk").value})).filter(e=>e.n);
   const order=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);return h*60+ +m[2]};
@@ -1432,11 +1435,19 @@ $("dSave").onclick=()=>{
   if(evs.length) S.events[editDay]=evs; else delete S.events[editDay];
   const st=$("dStatus").value, note=$("dNote").value.trim(), plan=$("dPlan").value.trim();
   if(st==="auto"&&!note&&!plan) delete S.days[editDay]; else { S.days[editDay]={st:st==="auto"?undefined:st,note}; if(plan) S.days[editDay].plan=plan; }
-  save();close("ovDay");render();
-};
-$("wCancel").onclick=()=>close("ovWeek");
-$("wSave").onclick=()=>{const l=$("wLabel").value.trim(),s=$("wSub").value.trim();
-  if(!l&&!s) delete S.weeks[editWeek]; else S.weeks[editWeek]={l,s}; save();close("ovWeek");render()};
+  save();
+}
+$("dSave").onclick=()=>{ clearTimeout(dayTimer); commitDay(); daySnap=null; close("ovDay"); render(); };
+// sauvegarde automatique pendant la saisie (notes, plan, statut, news) : rien n'est perdu si l'app est fermée
+const dayAuto=()=>{ if(!editDay||!$("ovDay").classList.contains("show")) return; clearTimeout(dayTimer); dayTimer=setTimeout(()=>{commitDay();render()},400); };
+["input","change"].forEach(t=>$("ovDay").addEventListener(t,dayAuto)); $("rows").addEventListener("click",dayAuto);
+window.addEventListener("beforeunload",()=>{ if(editDay&&$("ovDay").classList.contains("show")) commitDay(); if(editWeek&&$("ovWeek").classList.contains("show")) commitWeek(); });
+let weekSnap=null;
+$("wCancel").onclick=()=>{ if(weekSnap){ if(weekSnap.v) S.weeks[weekSnap.w]=weekSnap.v; else delete S.weeks[weekSnap.w]; save(); render(); } weekSnap=null; close("ovWeek"); };
+function commitWeek(){const l=$("wLabel").value.trim(),s=$("wSub").value.trim();
+  if(!l&&!s) delete S.weeks[editWeek]; else S.weeks[editWeek]={l,s}; save();}
+$("wSave").onclick=()=>{commitWeek();close("ovWeek");render()};
+$("ovWeek").addEventListener("input",()=>{ if(editWeek&&$("ovWeek").classList.contains("show")) commitWeek(); });
 let bImg=null;
 const prevBrand=()=>{$("bPrev").innerHTML=bImg?`<img src="${bImg}" alt="">`:esc($("bLogo").value.toUpperCase())};
 function loadProfile(){ $("bName").value=S.brand.name||""; $("bHandle").value=S.brand.handle||""; $("bLogo").value=S.brand.logo||""; $("bNotion").value=S.brand.notion||"";
@@ -3471,7 +3482,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const h = newsHit.find((q) => Math.abs(q.x - x) < 10 && Math.abs(q.y - y) < 12);
     tip.hidden = !h; if (!h) return; tip.innerHTML = h.ev.map((e) => `<div><i style="background:${IMPC[e.i || "med"]}"></i>${hm(e.ts)} · ${esc(e.n)}</div>`).join(""); tip.style.left = Math.max(4, x - 110) + "px"; tip.style.bottom = "34px";
   }
-  function gotoT(t) { const i = S.raw.findIndex((b) => b[0] >= t); if (i < 0) return msg("Cette news n'est pas dans la journée chargée.", true); if (i > S.cur) step(i - S.cur); else { S.cur = i; draw(); ui(); } }
+  function recenter() { [chart, chart2].filter(Boolean).forEach((c) => { c.timeScale().scrollToRealTime(); c.priceScale("right").applyOptions({ autoScale: true }); }); if ($("btAuto") && !$("btAuto").classList.contains("on")) $("btAuto").classList.add("on"); }
+  function gotoT(t) { const i = S.raw.findIndex((b) => b[0] >= t); if (i < 0) return msg("Cette news n'est pas dans la journée chargée.", true); if (i > S.cur) step(i - S.cur); else { S.cur = i; draw(); ui(); } recenter(); }
   function nextNews() { if (!S.raw.length) return; const t = S.raw[S.cur][0], e = newsList().find((x) => x.ts > t && x.i !== "low"); if (!e) return msg("Plus de news à venir dans la journée chargée."); gotoT(e.ts); msg(`News : ${hm(e.ts)} ${e.n}`); }
   const ffMatch = (e) => (ffWeek || []).find((f) => { const d = new Date(f.date); return dayOf(d.getTime() / 1000) === e.day && Math.abs(d.getTime() / 1000 - e.ts) < 90 && (f.title || "").toLowerCase().split(/\W+/).filter((w) => w.length > 2).some((w) => e.n.toLowerCase().includes(w)); });
   async function openNews(day) {
@@ -3614,7 +3626,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function back() { if (!S.raw.length) return; S.cur = Math.max(0, S.cur - 1); draw(); ui(); }
   function play(on) {
     if (on === undefined) on = !S.playing; clearInterval(S.playing); S.playing = null; if ($("btPlay")) $("btPlay").textContent = on ? "⏸" : "▶";
-    if (on) S.playing = setInterval(() => step(1), 1000 / (+$("btSpeed").value || 2));
+    if (on) S.playing = setInterval(() => step(1), 1000 / (+$("btSpeed").value || 1));
   }
 
   /* ---------------- dessins ---------------- */
@@ -4135,6 +4147,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btLoad").onclick = load; $("btPlay").onclick = () => play(); $("btNext").onclick = () => step(1); $("btPrev").onclick = back;
     $("btReset").onclick = () => { play(false); load(); };
     $("btSpeed").onchange = () => { if (S.playing) play(true); };
+    const ordPanel = (show) => { document.querySelector(".tx-orderp").classList.toggle("off", !show); $("btOrdShow").hidden = show; LS.set("bt-ordpanel", show); if (chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0); };
+    $("oDot").onclick = () => ordPanel(false); $("btOrdShow").onclick = () => ordPanel(true); if (LS.get("bt-ordpanel", true) === false) ordPanel(false);
     $("btTfs").onclick = (e) => {
       const b = e.target.closest("[data-tf]"); if (!b) return;
       const old = S.tf; S.tf = +b.dataset.tf; document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
@@ -4171,7 +4185,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btLockAll").onclick = () => { lockAll = !lockAll; $("btLockAll").classList.toggle("on", lockAll); };
     $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
     $("btDelAll").onclick = () => { if (shapes.length && confirm("Supprimer tous les dessins de cette chart ?")) { shapes = []; sel = null; saveDrawings(); } };
-    $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; $("btTreeBtn").classList.toggle("on", !$("btTree").hidden); tree(); };
+    $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; $("btTreeBtn").classList.toggle("on", !$("btTree").hidden); $("btTreeBtn2").classList.toggle("on", !$("btTree").hidden); tree(); };
     const TL = $("btTreeList");
     if (!$("btCtx")) { const m = document.createElement("div"); m.id = "btCtx"; m.className = "tx-ctx"; m.hidden = true; document.body.append(m); }
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
@@ -4222,23 +4236,84 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
     if (!D || !D.dataSync) { $("btSync").hidden = true; $("btDir").hidden = true; }
     if (D && D.onData) D.onData((k, p) => { if (k === "progress") msg(`Synchro ${p.sym} ${p.kind} : jusqu'au ${p.upTo} (+${p.added})`); if (k === "done") status(); });
-    // raccourcis clavier (TradingView / TopstepX)
+    // raccourcis clavier personnalisables (défauts FXReplay / TradingView) : bouton « ⌨ Raccourcis », enregistrés dans localStorage "bt-keys"
+    const ORD = (type, side) => { const t = $("oType"); t.value = type; t.dispatchEvent(new Event("change", { bubbles: true }));
+      if (type === "Market") { $(side === "buy" ? "oBuy" : "oSell").click(); return; }
+      const last = parseFloat(String($("oLast").textContent).replace(/[^0-9.\-]/g, "")); if (isFinite(last)) $("oPx").value = last; $("oPx").focus(); $("oPx").select(); msg(`Ordre limite ${side === "buy" ? "achat" : "vente"} : ajuste le prix puis clique ${side === "buy" ? "BUY" : "SELL"}.`); };
+    const speed = (d) => { const s = $("btSpeed"), i = Math.max(0, Math.min(s.options.length - 1, s.selectedIndex + d)); if (i === s.selectedIndex) return; s.selectedIndex = i; s.dispatchEvent(new Event("change")); msg("Vitesse du replay : " + s.options[i].text); };
+    const zoom = (f) => [chart, chart2].filter(Boolean).forEach((c) => { const ts = c.timeScale(), sp = ts.options().barSpacing || 6; ts.applyOptions({ barSpacing: Math.max(0.5, Math.min(60, sp * f)) }); });
+    const shot = async (copy) => { if (!chart) return; const c = chart.takeScreenshot(), d = $("btDraw"), out = document.createElement("canvas"); out.width = c.width; out.height = c.height; const g = out.getContext("2d"); g.drawImage(c, 0, 0); if (d && d.width) g.drawImage(d, 0, 0, c.width, c.height);
+      if (copy) { try { const blob = await new Promise((r) => out.toBlob(r, "image/png")); await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]); msg("Capture copiée dans le presse-papier."); } catch (err) { msg("Copie impossible : " + (err.message || err), true); } return; }
+      const a = document.createElement("a"); a.href = out.toDataURL("image/png"); a.download = `${S.sym} ${$("btDate").value} ${S.raw.length ? hm(S.raw[S.cur][0]).replace(":", "h") : ""}.png`; a.click(); msg("Capture enregistrée."); };
+    const fullscreen = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
+    const KEYS = [
+      ["Navigation & chart", [
+        ["recenter", "Recentrer le graphique", ["Alt+R"], recenter],
+        ["zoomIn", "Zoom avant", ["Ctrl+↑"], () => zoom(1.25)], ["zoomOut", "Zoom arrière", ["Ctrl+↓"], () => zoom(0.8)],
+        ["split", "Afficher / masquer le 2e chart (NQ + ES)", [], () => $("btSplitBtn").click()],
+        ["news", "Afficher / masquer les news", ["Alt+Shift+E"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
+        ["nextNews", "Aller à la news suivante", ["Shift+W"], () => { nextNews(); }],
+        ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
+      ["Replay", [
+        ["play", "Lecture / pause", ["Espace"], () => play()], ["stepF", "Bougie suivante", ["→", "L"], () => step(1)], ["stepB", "Bougie précédente", ["←", "J"], () => back()],
+        ["faster", "Accélérer le replay", ["↑"], () => speed(1)], ["slower", "Ralentir le replay", ["↓"], () => speed(-1)],
+        ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }]]],
+      ["Ordres", [
+        ["buyMkt", "Achat au marché", ["Shift+B"], () => ORD("Market", "buy")], ["sellMkt", "Vente au marché", ["Shift+S"], () => ORD("Market", "sell")],
+        ["buyLmt", "Ordre limite achat", ["Alt+B"], () => ORD("Limit", "buy")], ["sellLmt", "Ordre limite vente", ["Alt+S"], () => ORD("Limit", "sell")],
+        ["flatten", "Fermer toutes les positions (Flatten)", ["Ctrl+Shift+C"], () => $("oFlat").click()], ["cancelAll", "Annuler tous les ordres", [], () => $("oCancel").click()]]],
+      ["Dessins", [
+        ["rect", "Rectangle", ["Alt+E", "Alt+Shift+R"], () => setTool("rect")], ["trend", "Ligne de tendance", ["Alt+T"], () => setTool("trend")],
+        ["hline", "Ligne horizontale", ["Alt+H"], () => setTool("hline")], ["hray", "Rayon horizontal", ["Alt+J"], () => setTool("hray")],
+        ["vline", "Ligne verticale", ["Alt+V"], () => setTool("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => setTool("xline")],
+        ["fib", "Fibonacci", ["Alt+F"], () => setTool("fib")], ["text", "Texte", ["Alt+X"], () => setTool("text")], ["measure", "Règle (mesurer)", ["Shift+M"], () => setTool("measure")],
+        ["magnet", "Aimant (accroche OHLC)", ["Alt+M"], () => $("btMagnet").click()], ["lockAll", "Verrouiller tous les dessins", ["Alt+L"], () => $("btLockAll").click()],
+        ["hideAll", "Masquer tous les dessins", ["Ctrl+Alt+H"], () => $("btHideAll").click()], ["tree", "Arborescence des objets", ["Alt+O"], () => $("btTreeBtn2").click()],
+        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()]]],
+      ["Interface", [
+        ["full", "Plein écran", ["F11", "Shift+F"], fullscreen], ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout(false)],
+        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Alt+Shift+S"], () => shot(true)]]]];
+    const KDEF = {}, KRUN = {}; KEYS.forEach(([, L]) => L.forEach(([id, , d, fn]) => { KDEF[id] = d; KRUN[id] = fn; }));
+    let KMAP = { ...KDEF, ...LS.get("bt-keys", {}) };
+    const KNAME = { " ": "Espace", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Échap", Enter: "Entrée", Tab: "Tab", Backspace: "Retour", Delete: "Suppr" };
+    const comboOf = (e) => { let k = /^Key[A-Z]$/.test(e.code) ? e.code.slice(3) : /^Digit\d$/.test(e.code) ? e.code.slice(5) : KNAME[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
+      if (["Control", "Alt", "Shift", "Meta"].includes(e.key)) return null; return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && "Shift", k].filter(Boolean).join("+"); };
+    const label = (c) => /Mac/.test(navigator.platform) ? c.replace("Ctrl", "⌘").replace("Alt", "⌥").replace("Shift", "⇧") : c;
+    let tfBuf = "", tfTimer = null;
     document.addEventListener("keydown", (e) => {
-      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
-      const k = e.key.toLowerCase();
-      if (e.altKey && e.shiftKey && k === "e") { e.preventDefault(); P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); return; }
-      if (e.shiftKey && !e.altKey && !e.ctrlKey && k === "w") { e.preventDefault(); nextNews(); return; }
-      if (e.altKey) { const m = e.shiftKey ? (k === "r" ? "rect" : null) : { t: "trend", h: "hline", j: "hray", v: "vline", c: "xline", f: "fib", x: "text" }[k]; if (m) { e.preventDefault(); setTool(m); } return; }
+      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || ($("btModal") && !$("btModal").hidden) || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      const k = e.key.toLowerCase(), combo = comboOf(e); if (!combo) return;
+      const id = Object.keys(KMAP).find((a) => (KMAP[a] || []).includes(combo));
+      if (id) { e.preventDefault(); tfBuf = ""; KRUN[id](); return; }
+      // changement de timeframe au clavier : 1, 5, 15, 60, 240, D, W, M puis Entrée
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && /^([0-9]|D|W|M)$/.test(combo)) { tfBuf = /\d/.test(combo) && /^\d*$/.test(tfBuf) ? tfBuf + combo : combo; clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 2500); msg("Timeframe : " + tfBuf + " (Entrée)"); return; }
+      if (k === "enter" && tfBuf) { e.preventDefault(); const tf = { D: 1440, W: 10080, M: 43200 }[tfBuf] || +tfBuf, b = document.querySelector(`#btTfs [data-tf="${tf}"]`); tfBuf = ""; if (b) b.click(); else msg("Timeframe non disponible : " + tf, true); return; }
       if (k === "escape") { closeFly(); setTool("cross"); measure = null; sel = null; tree(); }
       else if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
       else if ((k === "delete" || k === "backspace") && selShapes().length) { e.preventDefault(); ctxDo("del"); }
       else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
       else if ((e.ctrlKey || e.metaKey) && k === "c" && selShapes().length) { clip = JSON.parse(JSON.stringify(selShapes())); }
       else if ((e.ctrlKey || e.metaKey) && k === "v" && clip) { e.preventDefault(); ctxDo("paste"); }
-      else if ((e.ctrlKey || e.metaKey) && k === "s") { e.preventDefault(); saveLayout(false); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
-      else if (k === " ") { e.preventDefault(); play(); } else if (k === "arrowright") { e.preventDefault(); step(1); } else if (k === "arrowleft") { e.preventDefault(); back(); }
     });
+    function openKeys(draft) {
+      draft = draft || JSON.parse(JSON.stringify(KMAP)); let cap = null;
+      const chip = (id, i, c) => `<span class="tx-kc">${esc(label(c))}<b data-k="del" data-id="${id}" data-i="${i}" title="Retirer">×</b></span>`;
+      const m = modal("Raccourcis clavier", `<div class="tx-keys">${KEYS.map(([g, L]) => `<div class="tx-kg">${g}</div>` + L.map(([id, n]) => `<div class="tx-kr"><span>${n}</span><span class="tx-kv">${(draft[id] || []).map((c, i) => chip(id, i, c)).join("")}<button data-k="add" data-id="${id}" class="ghost" title="Ajouter un raccourci">＋</button></span></div>`).join("")).join("")}
+        <div class="tx-kg">Fixes</div><div class="tx-kr rv-mut"><span>Échap : annuler / outil curseur · Suppr : effacer la sélection · Ctrl+D / C / V / Z : dupliquer, copier, coller, annuler · Tape 1, 5, 15, 60, 240, D, W ou M puis Entrée : timeframe</span></div></div>`,
+        `<button data-m="def" class="ghost">Par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
+      m.onclick = (e) => { const t = e.target, a = t.dataset.m, ka = t.dataset.k;
+        if (ka === "del") { draft[t.dataset.id].splice(+t.dataset.i, 1); return openKeys(draft); }
+        if (ka === "add") { cap = t.dataset.id; t.textContent = "Appuie sur les touches…"; t.classList.add("on"); return; }
+        if (a === "def") return openKeys(JSON.parse(JSON.stringify(KDEF)));
+        if (a === "x") { closeModal(); document.removeEventListener("keydown", grab, true); }
+        if (a === "ok") { KMAP = draft; LS.set("bt-keys", KMAP); closeModal(); document.removeEventListener("keydown", grab, true); msg("Raccourcis enregistrés."); } };
+      const grab = (e) => { if (!cap || $("btModal").hidden) return; e.preventDefault(); e.stopPropagation(); if (e.key === "Escape") { cap = null; return openKeys(draft); } const c = comboOf(e); if (!c) return;
+        Object.keys(draft).forEach((id) => (draft[id] = (draft[id] || []).filter((x) => x !== c))); // un raccourci = une seule action
+        (draft[cap] = draft[cap] || []).push(c); cap = null; document.removeEventListener("keydown", grab, true); openKeys(draft); };
+      document.addEventListener("keydown", grab, true);
+    }
+    $("btKeysBtn").onclick = () => openKeys();
     $("btFColor").oninput = () => { if (sel) { sel.style.color = $("btFColor").value; saveDrawings(); } };
     $("btFWidth").onchange = () => { if (sel) { sel.style.width = +$("btFWidth").value; saveDrawings(); } };
     $("btFSet").onclick = () => sel && openSettings(sel);
