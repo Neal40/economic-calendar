@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.22.2] — 2026-11-10
+### Modifié
+- App Mac : icône plein cadre plus épurée (courbe verte sur fond bleu).
+
 ## [1.22.1] — 2026-11-10
 ### Modifié
 - App Mac : nouvelle icône (fenêtre façon macOS avec une courbe de prix sur fond bleu).

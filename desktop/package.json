@@ -1,7 +1,7 @@
 {
   "name": "economic-calendar",
   "productName": "Inner Circle Trader",
-  "version": "1.22.1",
+  "version": "1.22.2",
   "description": "Inner Circle Trader",
   "author": "Neal_ICT",
   "main": "main.js",

@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
-<linearGradient id="a2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a7bfd"/><stop offset="1" stop-color="#1b3fb8"/></linearGradient>
-<linearGradient id="w2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1f27"/><stop offset="1" stop-color="#0e1016"/></linearGradient>
-<linearGradient id="l2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4be38f"/><stop offset="1" stop-color="#9dffcb"/></linearGradient>
-<linearGradient id="f2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4be38f" stop-opacity=".45"/><stop offset="1" stop-color="#4be38f" stop-opacity="0"/></linearGradient></defs>
-<rect x="100" y="100" width="824" height="824" rx="185" fill="url(#a2)"/>
-<rect x="190" y="230" width="644" height="560" rx="54" fill="url(#w2)"/>
-<circle cx="250" cy="290" r="18" fill="#ff5f57"/><circle cx="305" cy="290" r="18" fill="#febc2e"/><circle cx="360" cy="290" r="18" fill="#28c840"/>
-<path d="M230 690 L330 640 L410 668 L500 560 L580 600 L670 460 L790 390 L790 760 L230 760 Z" fill="url(#f2)"/>
-<path d="M230 690 L330 640 L410 668 L500 560 L580 600 L670 460 L790 390" fill="none" stroke="url(#l2)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="790" cy="390" r="24" fill="#9dffcb"/></svg>
+<linearGradient id="b3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3f86ff"/><stop offset="1" stop-color="#1a3cc0"/></linearGradient>
+<linearGradient id="f3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4be38f" stop-opacity=".55"/><stop offset="1" stop-color="#4be38f" stop-opacity="0"/></linearGradient>
+<clipPath id="c3"><rect width="1024" height="1024" rx="230"/></clipPath></defs>
+<g clip-path="url(#c3)"><rect width="1024" height="1024" fill="url(#b3)"/>
+<path d="M-10 820 L170 680 L320 740 L490 500 L640 580 L1034 160 L1034 1034 L-10 1034 Z" fill="url(#f3)"/>
+<path d="M-10 820 L170 680 L320 740 L490 500 L640 580 L1034 160" fill="none" stroke="#7dffb6" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
