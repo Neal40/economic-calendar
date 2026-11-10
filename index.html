@@ -210,6 +210,11 @@ body{background:#060607}
 .bar{border-bottom:1px solid #1d1d22}
 @media (max-width:1099px){.app:not(.mini) .side{position:absolute;z-index:30;height:100vh;box-shadow:12px 0 40px rgba(0,0,0,.6)}}
 
+/* ---------- Stats InnerDiscipline (calendrier) ---------- */
+.idstats{max-width:1200px;margin:18px auto 40px;background:#15171c;border:1px solid #2a2e39;border-radius:10px;padding:0 18px;color:#d1d4dc}
+.idstats summary{cursor:pointer;padding:14px 0;font-weight:700;font-size:16px;color:#fff}.idstats summary small{font-weight:400;color:#8a8f98;margin-left:8px;font-size:12px}
+.idstats h4{margin:14px 0 8px;color:#fff}.idstats table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}.idstats th,.idstats td{border:1px solid #2a2e39;padding:6px 8px;text-align:left;vertical-align:top}.idstats th{background:#1e222d}
+.idstats .g{color:#26a69a;font-weight:600}.idstats .r{color:#ef5350;font-weight:600}.idstats .o{color:#f0a030;font-weight:600}.idstats .bar{display:inline-block;height:8px;background:#2962ff;border-radius:2px;margin-right:6px;vertical-align:middle}
 /* ---------- Journal de trading (Stats TopstepX) ---------- */
 .tsx{--bg:#06080b;--card:#0c0f13;--line:#1f242b;--fg:#eef1f5;--mut:#8d95a0;--up:#4ccf6a;--dn:#e5534b;--grid:#1a1f26;position:relative;background:var(--bg);color:var(--fg);font-family:"Roboto Condensed","Arial Narrow",sans-serif;border-radius:14px;padding:clamp(12px,2.5vw,28px);font-variant-numeric:tabular-nums}
 .tsx *{box-sizing:border-box}
@@ -782,6 +787,7 @@ table.tbl:has(#subT){min-width:900px}
     <div class="src" id="src">Sources: Forex Factory, NYSE, Nasdaq</div>
   </div>
 </div></div>
+<div class="wrap"><details class="idstats" id="idStats"><summary>📊 Stats — ce à quoi s'attendre chaque jour <small id="idBase"></small></summary><div id="idBody"></div></details></div>
 </section>
 
 <section class="view" id="v-financialjuice"><div class="page" style="max-width:1300px">
@@ -1229,7 +1235,9 @@ function dayInfo(d){
   const k=iso(d), o=S.days[k]||{}, h=holidays(d.getFullYear())[k];
   let st = (o.st===undefined||o.st==="auto") ? (h?h.st:"") : o.st;
   let note = o.note || (HOLST(st) ? (h&&h.st===st ? autoNote(h) : autoNote({st,name:h?h.name:"Holiday"})) : "");
-  return {k,st,note,h,plan:o.plan||""};
+  const idr = typeof idRow==="function" ? idRow(k) : null; // notes InnerDiscipline (Weekly Economic Calendar Notion), si pas de note perso
+  if(idr && !o.note && !HOLST(st)){ note = idNote(idr); if((o.st===undefined||o.st==="auto") && !st && (idr.tags.has("LOW")||idr.tags.has("AVOID"))) st="low"; }
+  return {k,st,note,h,plan:o.plan||"",id:idr};
 }
 
 /* ---------- state ---------- */
@@ -2347,6 +2355,57 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   });
   dash.draw("range", (el) => { const T = fills(); if (!T) { el.textContent = "—"; return; } const { rpp, pg } = page(T.length);
     el.textContent = T.length ? `${pg * rpp + 1}–${Math.min(T.length, (pg + 1) * rpp)} of ${T.length}` : "0 of 0"; });
+})();
+</script>
+<script>
+/* ---------- InnerDiscipline : notes de la semaine + stats « ce à quoi s'attendre chaque jour » (données : page Notion « Données stats InnerDiscipline (auto) », copiée dans data/innerdiscipline.txt chaque dimanche) ---------- */
+const ID_SNAP = "year=2026\n02-02|Mon|RED|NFPWK|SB\n02-02|Tue|RED||SB\n02-02|Wed|RED||PM,SB\n02-02|Thu|ORG|VNFP|LOW,PM,SB\n02-02|Fri|NFP||WAIT,SB\n03-23|Mon|NONE||PM,CH,MAC,LD,AVOID\n03-23|Tue|RED||SB\n03-23|Wed|NONE||PM,CH,MAC,LD\n03-23|Thu|RED||SB\n03-23|Fri|ORG||PM,CH\n04-20|Mon|NONE||PM,CH,LD\n04-20|Tue|RED||PM,CH\n04-20|Wed|NONE||PM,CH,LD,WHL\n04-20|Thu|ORG||SB\n04-20|Fri|ORG||SB\n04-27|Mon|NONE||PM,CH,LD\n04-27|Tue|ORG|VHI|SB,CH\n04-27|Wed|FOMC||PM,CH,2ST,M315\n04-27|Thu|RED||PM,SB\n04-27|Fri|ORG||PM,CH\n05-04|Mon|NONE|NFPWK|CH\n05-04|Tue|RED||SB,LRD\n05-04|Wed|ORG||PM,SB,T11\n05-04|Thu|ORG|VNFP|LOW,AVOID,SB\n05-04|Fri|NFP||WAIT,SB\n05-11|Mon|NONE|VHI|LOW,PM,CH\n05-11|Tue|CPI||WAIT,SB\n05-11|Wed|PPI||WAIT,SB\n05-11|Thu|RED||SB\n05-11|Fri|NONE||PM,CH,LD\n05-18|Mon|NONE||PM,CH,LD\n05-18|Tue|ORG||SB\n05-18|Wed|MIN||PM,WHL\n05-18|Thu|ORG||SB\n05-18|Fri|ORG||SB\n05-25|Mon|HOL||\n05-25|Tue|ORG||PM,SB\n05-25|Wed|NONE||PM,CH,LD\n05-25|Thu|RED||SB\n05-25|Fri|NONE||PM,CH,LD\n06-08|Mon|NONE||PM,CH,LD\n06-08|Tue|NONE|VHI|LOW,PM,CH\n06-08|Wed|CPI||WAIT,SB\n06-08|Thu|PPI||WAIT,SB\n06-08|Fri|ORG||PM,SB\n06-15|Mon|NONE||PM,CH,LD\n06-15|Tue|NONE|VHI|PM,CH,LD\n06-15|Wed|FOMC||PM,SB,CH,2ST,M315\n06-15|Thu|ORG||PM,SB,MAC\n06-15|Fri|HOL||LOW\n06-22|Mon|NONE|POSTHOL|PM,SB,CH,LD\n06-22|Tue|ORG||PM,SB,MAC\n06-22|Wed|NONE||PM,SB,CH,LD\n06-22|Thu|RED||SB\n06-22|Fri|ORG||PM,SB\n06-29|Mon|NONE|NFPWK|PM,SB,LD\n06-29|Tue|ORG||SB,LD\n06-29|Wed|RED|VNFP|SB,T11\n06-29|Thu|NFP||PM,SB,AVOID\n06-29|Fri|HOL||\n07-06|Mon|RED|POSTHOL|PM,CH\n07-06|Tue|NONE||PM,CH,LD\n07-06|Wed|MIN||PM,SB,WHL\n07-06|Thu|ORG||PM,SB\n07-06|Fri|NONE||PM,CH,LD\n07-13|Mon|NONE|VHI|LOW,PM,LD\n07-13|Tue|CPI||WAIT,SB\n07-13|Wed|PPI||WAIT,SB\n07-13|Thu|ORG||PM,SB\n07-13|Fri|ORG||SB\n07-20|Mon|NONE||PM,CH,MAC,LD\n07-20|Tue|ORG||PM,CH,LD\n07-20|Wed|NONE||PM,CH,MAC,LD,WHL\n07-20|Thu|ORG||PM,SB\n07-20|Fri|ORG||SB\n07-27|Mon|NONE||PM,CH,LD\n07-27|Tue|ORG|VHI|PM,LOW,CH\n07-27|Wed|FOMC||PM,CH,2ST,M315\n07-27|Thu|RED||PM,SB\n07-27|Fri|ORG||PM,SB\n08-03|Mon|RED|NFPWK|SB,LD\n08-03|Tue|ORG||PM,SB,LD\n08-03|Wed|ORG||PM,SB,T11\n08-03|Thu|ORG|VNFP|LOW,PM,CH\n08-03|Fri|NFP||WAIT,SB\n08-10|Mon|NONE||PM,LD\n08-10|Tue|NONE|VHI|LOW,PM\n08-10|Wed|CPI||WAIT,SB\n08-10|Thu|PPI||WAIT,SB\n08-10|Fri|ORG||SB\n08-17|Mon|NONE||AVOID,PM,LD\n08-17|Tue|NONE||PM,SB\n08-17|Wed|MIN||PM,CH,WHL\n08-17|Thu|ORG||PM,SB\n08-17|Fri|NONE||PM,LD\n08-24|Mon|ORG||PM,CH\n08-24|Tue|ORG||SB\n08-24|Wed|RED||PM,SB\n08-24|Thu|ORG||PM,CH\n08-24|Fri|RED||PM,SB\n08-31|Mon|NONE|NFPWK|SB,LD,LRD\n08-31|Tue|RED||SB\n08-31|Wed|ORG||PM,CH,MAC,T11\n08-31|Thu|ORG|VNFP|AVOID,PM,SB\n08-31|Fri|NFP||WAIT,SB\n09-07|Mon|HOL||\n09-07|Tue|NONE|POSTHOL|PM,CH,MAC\n09-07|Wed|NONE|VHI|LOW,PM\n09-07|Thu|PPI||WAIT,SB\n09-07|Fri|CPI||WAIT,SB\n09-14|Mon|NONE||PM,CH,LD\n09-14|Tue|NONE|VHI|PM,CH\n09-14|Wed|FOMC||PM,CH,2ST,M315\n09-14|Thu|ORG||PM,SB\n09-14|Fri|NONE||PM,CH,LD\n09-21|Mon|NONE||LOW,PM,CH,LD\n09-21|Tue|NONE||PM,CH\n09-21|Wed|NONE||PM,CH\n09-21|Thu|ORG||SB\n09-21|Fri|ORG||SB\n09-28|Mon|NONE|NFPWK|PM,SB,LD\n09-28|Tue|ORG||SB,LD\n09-28|Wed|RED||PM,SB,T11\n09-28|Thu|ORG|VNFP|LOW,PM,SB\n09-28|Fri|NFP||WAIT,SB\n10-05|Mon|ORG||LOW,PM,LD\n10-05|Tue|NONE||PM,CH\n10-05|Wed|MIN||PM,SB,WHL\n10-05|Thu|ORG||PM,SB\n10-05|Fri|ORG||PM,SB,LD\n10-12|Mon|HOL||PM,CH\n10-12|Tue|NONE|VHI|LOW,PM,CH,LD\n10-12|Wed|CPI||WAIT,SB\n10-12|Thu|PPI||WAIT,SB\n10-12|Fri|NONE||PM,SB,LD\n10-19|Mon|NONE||LOW,AVOID,MAC,PM,CH,LD\n10-19|Tue|NONE||MAC,PM,CH,LD\n10-19|Wed|NONE||MAC,PM,CH,LD\n10-19|Thu|ORG||PM,SB,LD\n10-19|Fri|ORG||SB\n10-26|Mon|NONE||PM,CH,LD\n10-26|Tue|ORG|VHI|LOW,SB\n10-26|Wed|FOMC||PM,CH,2ST,M315\n10-26|Thu|RED||PM,SB\n10-26|Fri|ORG||PM,SB\n11-02|Mon|ORG|NFPWK|SB,LD\n11-02|Tue|RED||SB,MAC\n11-02|Wed|ORG||SB,T11\n11-02|Thu|ORG|VNFP|AVOID,PM,CH\n11-02|Fri|NFP||WAIT,SB,LRD\n11-09|Mon|NONE|VHI|LOW,PM,CH,LD\n11-09|Tue|CPI||WAIT,SB\n11-09|Wed|HOL||AVOID,PM,SB\n11-09|Thu|ORG|VHI|PM,CH,LD\n11-09|Fri|PPI||WAIT,SB";
+const ID_URL = "https://raw.githubusercontent.com/Neal40/economic-calendar/main/data/innerdiscipline.txt";
+const ID_TAG = { PM:"Pre-Market", SB:"AM Silver Bullet", CH:"AM choppy / HRLR", LD:"Last Ditch Macro", MAC:"Macros high probability", WAIT:"Attendre 15-30 min après la news", LOW:"Low probability", AVOID:"Débutants : éviter (tape read)", T11:"Trader jusqu'à 11h", "2ST":"FOMC en 2 temps (14h00 fake / 14h30 real)", M315:"Macro 15h15-15h45", WHL:"Mercredi = high / low de la semaine", LRD:"Large range day" };
+const ID_TYPE = { CPI:"CPI", PPI:"PPI", NFP:"NFP", FOMC:"FOMC", MIN:"FOMC Minutes", RED:"Autre news rouge", ORG:"News orange seulement", NONE:"Aucune news", HOL:"Férié / clôture 13h" };
+const ID_DAYS = { Mon:["Lundi",0], Tue:["Mardi",1], Wed:["Mercredi",2], Thu:["Jeudi",3], Fri:["Vendredi",4] };
+let ID_ROWS = [], ID_MAP = {};
+function idParse(txt){
+  let year = new Date().getFullYear(); const rows=[];
+  for(const L of String(txt).split(/\r?\n/)){ const l=L.trim(); if(!l||l.startsWith("#")) continue; const y=/^year=(\d{4})$/.exec(l); if(y){year=+y[1];continue}
+    const [w,d,c,m,t]=l.split("|"); if(!ID_DAYS[d]||!/^\d\d-\d\d$/.test(w)) continue;
+    const [M,Dd]=w.split("-").map(Number), dt=new Date(Date.UTC(year,M-1,Dd+ID_DAYS[d][1],12));
+    rows.push({w,d,type:c,ctx:m||"",tags:new Set(t?t.split(","):[]),k:dt.toISOString().slice(0,10)}); }
+  return rows;
+}
+function idLoad(txt){ const r=idParse(txt); if(r.length<20) return false; ID_ROWS=r; ID_MAP={}; r.forEach(x=>ID_MAP[x.k]=x); return true; }
+function idRow(k){ return ID_MAP[k]||null; }
+function idNote(r){ const t=[...r.tags].map(x=>ID_TAG[x]||x); return t.length?t.join(" · "):(r.type==="HOL"?"Férié":""); }
+function idStats(){
+  const R=ID_ROWS, box=document.getElementById("idBody"); if(!box||!R.length) return;
+  const by=t=>R.filter(r=>r.type===t), pc=(g,t)=>g.length?Math.round(100*g.filter(r=>r.tags.has(t)).length/g.length)+" %":"—", fr=(g,f)=>g.filter(f).length+"/"+g.length;
+  const weeks=new Set(R.map(r=>r.w)).size; document.getElementById("idBase").textContent=`${weeks} semaines · ${R.length} jours`;
+  let h=`<p style="color:#8a8f98;margin:0 0 6px">Notes de @InnerDiscipline lues sur ses screenshots (Weekly Economic Calendar de Notion). Heures = New York. Pre-Market = 7h00-9h00.</p>`;
+  // nouveau : jours les plus fréquents pour chaque news
+  h+=`<h4>Quel jour tombe chaque news</h4><table><tr><th>News</th><th>Jours</th>${Object.values(ID_DAYS).map(x=>`<th>${x[0]}</th>`).join("")}<th>Le plus fréquent</th></tr>`;
+  for(const t of ["CPI","PPI","NFP","FOMC","MIN","RED","HOL"]){ const g=by(t); if(!g.length) continue; const cnt={}; g.forEach(r=>cnt[r.d]=(cnt[r.d]||0)+1); const mx=Math.max(...Object.values(cnt));
+    const top=Object.keys(ID_DAYS).filter(d=>cnt[d]===mx).map(d=>ID_DAYS[d][0]).join(" / ");
+    h+=`<tr><td><b>${ID_TYPE[t]}</b></td><td>${g.length}</td>${Object.keys(ID_DAYS).map(d=>{const n=cnt[d]||0,p=Math.round(100*n/g.length);return `<td${n===mx?' class="g"':""}>${n?`<span class="bar" style="width:${Math.max(4,p*0.5)}px"></span>${p} %`:"—"}</td>`}).join("")}<td class="g">${top} (${Math.round(100*mx/g.length)} %)</td></tr>`; }
+  h+=`</table><h4>Par type de journée</h4><table><tr><th>Type de journée</th><th>Jours</th><th>Ce qu'il écrit</th><th>Plan</th></tr>`;
+  const cp=by("CPI").concat(by("PPI")), row=(a,n,b,p,c)=>`<tr><td><b>${a}</b></td><td>${n}</td><td>${b}</td><td class="${c}">${p}</td></tr>`;
+  h+=row("🔴 CPI / PPI",cp.length,`Attendre 30 min <b>${pc(cp,"WAIT")}</b> · AM Silver Bullet <b>${pc(cp,"SB")}</b>`,"Attendre 9h00 → AM Silver Bullet","g");
+  let g=by("NFP"); h+=row("🔴 NFP",g.length,`Attendre 15-30 min <b>${pc(g,"WAIT")}</b> · AM Silver Bullet <b>${pc(g,"SB")}</b>`,"Attendre 9h00 → AM Silver Bullet","g");
+  g=by("FOMC"); h+=row("🔴 FOMC",g.length,`Pre-Market ${pc(g,"PM")} · AM choppy ${pc(g,"CH")} · 2 temps <b>${fr(g,r=>r.tags.has("2ST"))}</b> · macro 15h15-15h45 <b>${fr(g,r=>r.tags.has("M315"))}</b>`,"Pre-Market, puis 15h15-15h45","o");
+  g=by("MIN"); h+=row("🔴 FOMC Minutes",g.length,`Pre-Market <b>${pc(g,"PM")}</b> · AM Silver Bullet ${pc(g,"SB")}`,"Pre-Market + AM normale","g");
+  g=by("RED"); h+=row("🔴 Autre news rouge",g.length,`AM Silver Bullet <b>${pc(g,"SB")}</b> · Pre-Market ${pc(g,"PM")}`,"AM Silver Bullet","g");
+  g=by("ORG"); h+=row("🟠 News orange seulement",g.length,`AM Silver Bullet <b>${pc(g,"SB")}</b> · Pre-Market ${pc(g,"PM")} · choppy ${pc(g,"CH")}`,"Pre-Market + AM Silver Bullet","g");
+  g=by("NONE"); h+=row("⚪ Aucune news",g.length,`Pre-Market <b>${pc(g,"PM")}</b> · AM choppy <b>${pc(g,"CH")}</b> · Last Ditch <b>${pc(g,"LD")}</b>`,"Pre-Market, sinon Last Ditch Macro","o");
+  g=by("HOL"); h+=row("🏦 Férié / clôture 13h",g.length,"Low probability / clôture 13h","Éviter","r");
+  h+=`</table><h4>Par jour de la semaine</h4><table><tr><th>Jour</th><th>Pre-Market</th><th>AM Silver Bullet</th><th>AM choppy</th><th>Last Ditch Macro</th><th>Verdict</th></tr>`;
+  const bd={}; Object.keys(ID_DAYS).forEach(d=>bd[d]=R.filter(r=>r.d===d)); const sc={}; Object.keys(bd).forEach(d=>{const x=bd[d];sc[d]=x.length?(x.filter(r=>r.tags.has("SB")).length-x.filter(r=>r.tags.has("CH")).length)/x.length:0});
+  const best=Object.keys(sc).reduce((a,b)=>sc[b]>sc[a]?b:a), worst=Object.keys(sc).reduce((a,b)=>sc[b]<sc[a]?b:a);
+  Object.keys(bd).forEach(d=>{const x=bd[d]; h+=`<tr><td><b>${ID_DAYS[d][0]}</b></td><td>${pc(x,"PM")}</td><td${d===best?' class="g"':""}>${pc(x,"SB")}</td><td${d===worst?' class="r"':""}>${pc(x,"CH")}</td><td>${pc(x,"LD")}</td><td class="${d===best?"g":d===worst?"r":""}">${d===best?"✅ Le meilleur":d===worst?"😬 Le pire":d==="Wed"?"📈 High / low de la semaine si pas de news majeure":"😐 Dépend de la news"}</td></tr>`});
+  box.innerHTML=h+"</table>";
+}
+(function(){
+  let txt=ID_SNAP; try{ const c=localStorage.getItem("econcal-id"); if(c&&idParse(c).length>=idParse(txt).length) txt=c; }catch(e){}
+  idLoad(txt); idStats(); if(typeof render==="function") render();
+  fetch(ID_URL,{cache:"no-store"}).then(r=>r.ok?r.text():null).then(t=>{ if(t&&idLoad(t)){ try{localStorage.setItem("econcal-id",t)}catch(e){} idStats(); render(); } }).catch(()=>{});
 })();
 </script>
 <script>

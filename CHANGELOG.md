@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.20.0] — 2026-11-10
+### Ajouté
+- Calendrier : notes @InnerDiscipline de chaque jour (Pre-Market, AM Silver Bullet, Low probability…) affichées dans la case du jour quand il n'y a pas de note perso ; « Low probability » posé automatiquement si la note le dit.
+- Calendrier : section « 📊 Stats — ce à quoi s'attendre chaque jour » sous le calendrier, avec le nouveau tableau « Quel jour tombe chaque news » (CPI, PPI, NFP, FOMC, Minutes, news rouges, fériés), par type de journée et par jour de la semaine.
+- Données : `data/innerdiscipline.txt` (copie de la page Notion « Données stats InnerDiscipline (auto) »), relue au démarrage depuis GitHub ; mise à jour chaque dimanche par une tâche planifiée.
+
 ## [1.19.0] — 2026-11-10
 ### Ajouté
 - Backtesteur (app desktop) : la bougie M1 se forme seconde par seconde avec les données 1 s du jour du replay (Préférences › Replay pour le désactiver) ; horloge à la seconde ; vitesses « Temps réel » et ¼× en plus.
