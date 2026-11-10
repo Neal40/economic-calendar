@@ -620,6 +620,8 @@ table.tbl:has(#subT){min-width:900px}
 .tx-mb{padding:14px 20px;overflow:auto}
 .tx-mf{display:flex;gap:8px;padding:12px 20px;border-top:1px solid #2a2e39}
 .tx-mf .tx-sp{flex:1}
+.tx-side{position:absolute;top:34px;right:70px;z-index:6;width:270px;background:#1e222d;border:1px solid #2a2e39;border-radius:6px;color:#d1d4dc;font:12px -apple-system,Roboto,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.35)}#btAL{top:auto;bottom:40px}.tx-sh{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;font-weight:600;border-bottom:1px solid #2a2e39}.tx-sh button,.tx-wr button{background:none;border:0;color:#8a8f98;cursor:pointer;font-size:14px}.tx-wr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:6px 10px;border-bottom:1px solid #2a2e39;cursor:default}.tx-wr[data-sym]{cursor:pointer}.tx-wr small{grid-column:1/-1;color:#8a8f98}.tx-wr .up{color:#26a69a}.tx-wr .dn{color:#ef5350}.tx-wr.hit{opacity:.55}.tx-wr input{width:100%;height:26px;background:#131722;border:1px solid #434651;color:#d1d4dc;border-radius:4px;padding:0 6px}
+.tx-jt{width:100%;border-collapse:collapse}.tx-jt th,.tx-jt td{border-bottom:1px solid #2a2e39;padding:5px 6px;text-align:left}.tx-jt th{color:#8a8f98;font-weight:500}
 .tx-keys{max-height:60vh;overflow:auto}.tx-kg{margin:14px 0 6px;font-weight:600;color:#fff}.tx-kg:first-child{margin-top:0}.tx-kr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #2a2e39}.tx-kv{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.tx-kc{background:#2a2e39;border-radius:4px;padding:3px 8px;font:12px ui-monospace,monospace;white-space:nowrap}.tx-kc b{margin-left:6px;cursor:pointer;opacity:.6}.tx-kc b:hover{opacity:1;color:#f23645}.tx-kv button{height:24px!important;padding:0 8px!important;font-size:12px}.tx-kv button.on{border-color:#2962ff!important;color:#fff}
 .tx-mf button,.tx-row button{background:#2962ff;border:1px solid #2962ff;color:#fff;border-radius:4px;height:32px;padding:0 14px;cursor:pointer;white-space:nowrap}
 .tx-mbox button.ghost{background:none;border:1px solid #434651;color:#d1d4dc}
@@ -993,7 +995,7 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
           <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
           <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button><button class="tx-tb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)">⌨</button>
-          <button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
+          <button class="tx-tb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)">🤖 Jarvis</button><button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
           <button class="tx-tb" id="btSplitBtn" title="2 charts côte à côte : NQ + ES synchronisés sur le replay">◫ NQ+ES</button>
           <button class="tx-hb" id="btTreeBtn" hidden title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
         </div>
@@ -3470,7 +3472,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   window.btJournal = renderJournal;
 
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
-  const PDEF = { sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
+  const PDEF = { syncCross: true, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
   let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
   const tfName = (tf) => (tf >= 43200 ? "1M" : tf >= 10080 ? "1W" : tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
   const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
@@ -3497,7 +3499,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     sym: ["Symbole", [["body", "Corps des bougies", "cb"], ["up", "Corps haussier", "color"], ["down", "Corps baissier", "color"], ["border", "Bordures", "cb"], ["bUp", "Bordure haussière", "color"], ["bDn", "Bordure baissière", "color"], ["wick", "Mèches", "cb"], ["wUp", "Mèche haussière", "color"], ["wDn", "Mèche baissière", "color"]]],
     status: ["Ligne d'état", [["title", "Titre (symbole · intervalle)", "cb"], ["ohlc", "Valeurs OHLC", "cb"], ["chg", "Variation de la bougie", "cb"]]],
     scales: ["Échelles et lignes", [["lastLbl", "Étiquette du dernier prix", "cb"], ["lastLine", "Ligne du dernier prix", "cb"], ["txt", "Couleur du texte des échelles", "color"], ["fs", "Taille du texte", "num"], ["right", "Marge droite (barres)", "num"]]],
-    replay: ["Replay", [["sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)", "cb"], ["rth", "Séance RTH uniquement (9:30 - 16:00 NY)", "cb"], ["line", "Graphique en ligne", "cb"], ["invert", "Échelle inversée", "cb"]]],
+    replay: ["Replay", [["sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)", "cb"], ["rth", "Séance RTH uniquement (9:30 - 16:00 NY)", "cb"], ["line", "Graphique en ligne", "cb"], ["invert", "Échelle inversée", "cb"], ["syncCross", "Curseur synchronisé entre NQ et ES", "cb"]]],
     canvas: ["Canevas", [["bg", "Fond", "color"], ["grid", "Grille", "grid"], ["gridC", "Couleur de la grille", "color"], ["cross", "Réticule", "color"], ["mTop", "Marge haute (%)", "num"], ["mBot", "Marge basse (%)", "num"]]],
   };
   function openPrefs(tab, snap) {
@@ -3726,7 +3728,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function step(k) {
     if (!S.raw.length) return;
     const to = Math.max(0, Math.min(S.raw.length - 1, S.cur + k));
-    for (let i = S.done + 1; i <= to; i++) { S.cur = i; processBar(S.raw[i]); }
+    for (let i = S.done + 1; i <= to; i++) { S.cur = i; processBar(S.raw[i]); if (window.btAlertCheck) window.btAlertCheck(S.raw[i]); }
     S.done = Math.max(S.done, to); S.cur = to; draw(); ui();
     if (S.cur >= S.raw.length - 1) play(false);
   }
@@ -4403,6 +4405,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         ["lockScale", "Verrouiller / déverrouiller l'échelle des prix", [], () => lockScale()],
         ["news", "Afficher / masquer les news", ["Alt+Shift+N"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
         ["details", "Fenêtre News / détails", ["Alt+D"], () => $("btNewsBtn").click()],
+        ["watchlist", "Watchlist (NQ / ES)", ["Alt+W"], () => togglePanel("btWL", wlRender)], ["alerts", "Alertes de prix", ["Alt+Shift+A"], () => togglePanel("btAL", alRender)],
+        ["jarvis", "Lancer Jarvis (protocole d'analyse)", ["Alt+Shift+J"], () => $("btJarvisBtn").click()],
         ["nextNews", "Aller à la news suivante", ["Shift+W"], () => { nextNews(); }],
         ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
       ["Replay", [
@@ -4441,8 +4445,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const id = Object.keys(KMAP).find((a) => (KMAP[a] || []).includes(combo));
       if (id) { e.preventDefault(); tfBuf = ""; KRUN[id](); return; }
       // changement de timeframe au clavier : 1, 5, 15, 60, 240, D, W, M puis Entrée
-      if (!e.ctrlKey && !e.metaKey && !e.altKey && /^([0-9]|D|W|M)$/.test(combo)) { tfBuf = /\d/.test(combo) && /^\d*$/.test(tfBuf) ? tfBuf + combo : combo; clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 2500); msg("Timeframe : " + tfBuf + " (Entrée)"); return; }
-      if (k === "enter" && tfBuf) { e.preventDefault(); const tf = { D: 1440, W: 10080, M: 43200 }[tfBuf] || +tfBuf, b = document.querySelector(`#btTfs [data-tf="${tf}"]`); tfBuf = ""; if (b) b.click(); else msg("Timeframe non disponible : " + tf, true); return; }
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && /^[0-9A-Z]$/.test(combo.replace(/^Shift\+/, ""))) { const ch = combo.replace(/^Shift\+/, ""); tfBuf = (tfBuf + ch).slice(-8); clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 3000);
+        msg(/^\d+$|^[DWM]$/.test(tfBuf) ? "Timeframe : " + tfBuf + " (Entrée)" : "Symbole : " + tfBuf + " (Entrée)"); return; }
+      if (k === "enter" && tfBuf) { e.preventDefault(); const buf = tfBuf; tfBuf = "";
+        if (/^\d+$|^[DWM]$/.test(buf)) { const tf = { D: 1440, W: 10080, M: 43200 }[buf] || +buf, b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + tf, true); return; }
+        const m = /^(M?)(NQ|ES)/.exec(buf); if (!m) return msg("Symbole inconnu : " + buf + " (NQ, ES, MNQ, MES)", true);
+        $("btSym").value = m[2]; $("btSym").onchange(); $("oCtr").value = (m[1] ? "M" : "") + m[2]; ui(); load(); msg(`Symbole : ${m[1] ? "M" : ""}${m[2]}Z26`); return; }
       if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
       else if ((k === "delete" || k === "backspace") && selShapes().length) { e.preventDefault(); ctxDo("del"); }
       else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
@@ -4468,6 +4476,72 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       document.addEventListener("keydown", grab, true);
     }
     $("btKeysBtn").onclick = () => openKeys();
+    // Watchlist (Alt+W) et Alertes de prix (Alt+Shift+A) : petits volets en haut à droite du chart
+    const panel = (id, title) => { let p = $(id); if (!p) { p = document.createElement("div"); p.id = id; p.className = "tx-side"; p.hidden = true; $("btWrap").append(p); } p.dataset.title = title; return p; };
+    const symStat = (sym) => { const R = sym === S.sym ? S.raw.slice(0, S.cur + 1) : sym === sym2() ? (S.raw2 || []).filter((b) => S.raw.length && b[0] <= S.raw[S.cur][0]) : []; if (!R.length) return null;
+      const t = R[R.length - 1][0], s0 = ny(sessionKey(t), 0, 0) - 6 * 3600, D0 = R.filter((b) => b[0] >= s0); const o = (D0[0] || R[0])[1], c = R[R.length - 1][4];
+      return { c, ch: c - o, pc: (100 * (c - o)) / o, h: Math.max(...D0.map((b) => b[2])), l: Math.min(...D0.map((b) => b[3])) }; };
+    function wlRender() { const p = panel("btWL", "Watchlist"); if (p.hidden) return;
+      p.innerHTML = `<div class="tx-sh">Watchlist<button data-x="wl">×</button></div>` + [["NQ", "NQZ26"], ["ES", "ESZ26"]].map(([k, n]) => { const s = symStat(k);
+        return `<div class="tx-wr" data-sym="${k}" title="Afficher ${n}"><b>${n}</b><span>${s ? s.c.toFixed(2) : "—"}</span><span class="${s && s.ch >= 0 ? "up" : "dn"}">${s ? (s.ch >= 0 ? "+" : "") + s.ch.toFixed(2) + " (" + s.pc.toFixed(2) + " %)" : "ouvre NQ+ES"}</span><small>${s ? `H ${s.h.toFixed(2)} · L ${s.l.toFixed(2)}` : ""}</small></div>`; }).join(""); }
+    const AL = () => LS.get("bt-alerts", []);
+    function alRender() { const p = panel("btAL", "Alertes"); if (p.hidden) return; const last = S.raw.length ? S.raw[S.cur][4] : 0;
+      p.innerHTML = `<div class="tx-sh">Alertes de prix<button data-x="al">×</button></div><div class="tx-wr"><input id="btALpx" type="number" step="0.25" value="${last ? last.toFixed(2) : ""}"><button data-x="add">＋ ${S.sym}</button></div>` +
+        (AL().map((a, i) => `<div class="tx-wr${a.hit ? " hit" : ""}"><b>${a.sym}</b><span>${a.dir === "up" ? "≥" : "≤"} ${(+a.px).toFixed(2)}</span><span>${a.hit ? "déclenchée " + a.hit : "active"}</span><button data-x="del" data-i="${i}">×</button></div>`).join("") || '<div class="tx-wr"><small>Aucune alerte. Le replay se met en pause quand le prix touche une alerte.</small></div>'); }
+    document.addEventListener("click", (e) => { const b = e.target.closest("#btWL [data-x], #btAL [data-x], #btWL [data-sym]"); if (!b) return;
+      if (b.dataset.sym) { if (b.dataset.sym !== S.sym && S.raw.length) { $("btSym").value = b.dataset.sym; $("btSym").onchange(); load(); } return; }
+      const x = b.dataset.x; if (x === "wl") $("btWL").hidden = true; if (x === "al") $("btAL").hidden = true;
+      if (x === "add") { const px = +$("btALpx").value, last = S.raw.length ? S.raw[S.cur][4] : px; if (!px) return; const L = AL(); L.push({ sym: S.sym, px, dir: px >= last ? "up" : "dn" }); LS.set("bt-alerts", L); msg(`Alerte ${S.sym} ${px.toFixed(2)} ajoutée.`); }
+      if (x === "del") { const L = AL(); L.splice(+b.dataset.i, 1); LS.set("bt-alerts", L); } alRender(); });
+    window.btAlertCheck = (bar) => { const L = AL(); let fired = null; L.forEach((a) => { if (a.hit || a.sym !== S.sym) return; if ((a.dir === "up" && bar[2] >= a.px) || (a.dir === "dn" && bar[3] <= a.px)) { a.hit = hm(bar[0]); fired = a; } });
+      if (!fired) return; LS.set("bt-alerts", L); play(false); msg(`🔔 Alerte ${fired.sym} ${(+fired.px).toFixed(2)} touchée à ${fired.hit}.`);
+      try { const c = new AudioContext(), o = c.createOscillator(); o.frequency.value = 880; o.connect(c.destination); o.start(); o.stop(c.currentTime + 0.25); } catch (err) {} if ($("btAL")) alRender(); };
+    setInterval(() => { wlRender(); }, 700);
+    const togglePanel = (id, fn) => { const p = panel(id, ""); p.hidden = !p.hidden; fn(); };
+    // curseur synchronisé entre NQ et ES (Préférences › Replay)
+    let xsync = false; const syncX = (from, to, toSeries, bars) => from.subscribeCrosshairMove((p) => { if (xsync || !P.split || P.syncCross === false || !to) return; xsync = true;
+      try { const b = p && p.time != null ? (bars() || []).find((x) => toNY(x[0]) === p.time) : null; if (b) to.setCrosshairPosition(b[4], p.time, toSeries()); else to.clearCrosshairPosition(); } catch (err) {} xsync = false; });
+    let xsyncOn = false; const xsyncInit = () => { if (xsyncOn || !chart || !chart2) return; xsyncOn = true; syncX(chart, chart2, () => cs2, () => S.B2); syncX(chart2, chart, () => cs, () => S.B); };
+    setInterval(xsyncInit, 1000);
+
+    // Jarvis dans le backtesteur : protocole de Rudy (jarvis-analyseur.js) calculé sur les bougies déjà rejouées (jamais de données futures)
+    function jarvis() {
+      if (!S.raw.length) return msg("Charge d'abord une journée (Charger).", true);
+      if (pane !== 1) setActive(1);
+      const now = S.raw[S.cur][0], last = S.raw[S.cur][4], d = sessionKey(now), prev = addDays(d, -1), M = [];
+      for (let i = 0; i <= S.cur; i++) { const b = S.raw[i], k = Math.floor(b[0] / 60) * 60, l = M[M.length - 1]; if (!l || l[0] !== k) M.push([k, b[1], b[2], b[3], b[4]]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; } }
+      const rng = (a, b) => { let h = -1e9, l = 1e9, th = 0, tl = 0; for (const x of M) { if (x[0] < a || x[0] >= b) continue; if (x[2] > h) { h = x[2]; th = x[0]; } if (x[3] < l) { l = x[3]; tl = x[0]; } } return h > -1e9 ? { h, l, th, tl } : null; };
+      const after = (t) => rng(t, now + 60), barAt = (t) => M.find((x) => x[0] >= t && x[0] < t + 3600);
+      const L = [], Z = [], id = () => "j" + Date.now() + Math.floor(Math.random() * 1e6);
+      const lvl = (name, t, price, color, dash) => { const a = after(t + 60), taken = !!a && (a.h >= price && a.l <= price); L.push({ name, t, price, taken }); return { id: id(), type: "hray", name: "Jarvis · " + name, p: [{ t, price }], style: { ...defStyle("hray"), color, width: 2, dash: dash || 0, textColor: color }, text: name + (taken ? " ✓" : ""), hidden: false, locked: true, jarvis: true }; };
+      const box = (name, t, p1, p2, color, fill) => { Z.push({ name, t, lo: Math.min(p1, p2), hi: Math.max(p1, p2) }); return { id: id(), type: "rect", name: "Jarvis · " + name, p: [{ t, price: p1 }, { t: t + 60, price: p2 }], style: { ...defStyle("rect"), color, fill, extR: true, textColor: color }, text: name, hidden: false, locked: true, jarvis: true }; };
+      const out = [];
+      // sessions terminées : Asia 20h-0h, London 2h-5h, Premarket 7h-9h30 (heure de New York)
+      [["Asia", ny(prev, 20, 0), ny(d, 0, 0)], ["London", ny(d, 2, 0), ny(d, 5, 0)], ["Premarket", ny(d, 7, 0), ny(d, 9, 30)]].forEach(([n, a, b]) => {
+        if (now < b) return; const r = rng(a, b); if (!r) return; out.push(lvl(n + " High", r.th, r.h, "#e53935"), lvl(n + " Low", r.tl, r.l, "#e53935")); });
+      // opens
+      [["Midnight open", ny(d, 0, 0)], ["8h30 open", ny(d, 8, 30)], ["9h30 open", ny(d, 9, 30)]].forEach(([n, t]) => { const b = barAt(t); if (b && now >= t) out.push(lvl(n, b[0], b[1], "#787b86", 2)); });
+      // NDOG (17h -> 18h la veille) et NWOG (vendredi 17h -> dimanche 18h) si les données sont chargées
+      const gap = (n, tc, to) => { const c = M.filter((x) => x[0] < tc).pop(), o = M.find((x) => x[0] >= to); if (c && o && Math.abs(o[1] - c[4]) >= 0.25 && o[0] - c[0] < 4 * 86400) out.push(box(n, o[0], c[4], o[1], "#5d606b", "rgba(120,123,134,0.22)")); };
+      gap("NDOG", ny(prev, 17, 0), ny(prev, 18, 0));
+      if (new Date(d + "T12:00:00Z").getUTCDay() === 1) gap("NWOG", ny(addDays(d, -3), 17, 0), ny(prev, 18, 0));
+      // 1er FVG m1 après 7h et après 9h30 (1st P.FVG)
+      const fvg = (n, t0) => { for (let i = 2; i < M.length; i++) { const a = M[i - 2], c = M[i]; if (a[0] < t0) continue; if (c[3] > a[2]) return out.push(box(n + " ↑", M[i - 1][0], a[2], c[3], "#1e88e5", "rgba(41,98,255,0.18)")); if (c[2] < a[3]) return out.push(box(n + " ↓", M[i - 1][0], a[3], c[2], "#1e88e5", "rgba(41,98,255,0.18)")); } };
+      fvg("1st P.FVG 7h", ny(d, 7, 0)); fvg("1st P.FVG 9h30", ny(d, 9, 30));
+      shapes = shapes.filter((s) => !s.jarvis).concat(out); sel = null; saveDrawings(); tree();
+      // rapport
+      const o = parts(now * 1000), H = +o.hour, Mi = +o.minute, mac = Mi >= 50 ? `Macro ${H + 1}h (${H}:50 - ${H + 1}:10)` : Mi < 10 ? `Macro ${H}h (${H - 1}:50 - ${H}:10)` : Mi >= 25 && Mi < 35 ? `Mini macro ${H}h30` : "Hors macro";
+      const up = L.filter((x) => !x.taken && x.price > last).sort((a, b) => a.price - b.price)[0], dn = L.filter((x) => !x.taken && x.price < last).sort((a, b) => b.price - a.price)[0];
+      const rows = L.slice().sort((a, b) => b.price - a.price).map((x) => `<tr><td>${esc(x.name)}</td><td style="text-align:right">${x.price.toFixed(2)}</td><td>${x.taken ? '<span style="color:#26a69a">pris ✓</span>' : "intact"}</td><td style="text-align:right">${(x.price - last >= 0 ? "+" : "") + (x.price - last).toFixed(2)}</td></tr>`).join("");
+      const zr = Z.map((z) => `<tr><td>${esc(z.name)}</td><td colspan="3">${z.lo.toFixed(2)} - ${z.hi.toFixed(2)} (${(z.hi - z.lo).toFixed(2)} pts)${last >= z.lo && last <= z.hi ? " · prix dedans" : ""}</td></tr>`).join("");
+      modal("🤖 Jarvis · " + S.sym + " " + hm(now), `<p class="rv-mut" style="margin:0 0 10px">Analyse sur les bougies déjà rejouées (rien après ${hm(now)} NY). ${mac}. Dernier prix ${last.toFixed(2)}.</p>
+        <table class="tx-jt"><tr><th>Niveau</th><th>Prix</th><th>État</th><th>Écart</th></tr>${rows || '<tr><td colspan="4">Aucune session terminée pour l\'instant.</td></tr>'}${zr}</table>
+        <p style="margin:10px 0 0">Prochaines cibles : <b>${up ? `${esc(up.name)} ${up.price.toFixed(2)} (+${(up.price - last).toFixed(2)})` : "—"}</b> au-dessus · <b>${dn ? `${esc(dn.name)} ${dn.price.toFixed(2)} (${(dn.price - last).toFixed(2)})` : "—"}</b> en dessous.</p>`,
+        `<button data-m="clr" class="ghost">Effacer les dessins Jarvis</button><span class="tx-sp"></span><button data-m="x">OK</button>`).onclick = (e) => { const a = e.target.dataset.m; if (a === "clr") { shapes = shapes.filter((s) => !s.jarvis); saveDrawings(); tree(); closeModal(); msg("Dessins Jarvis effacés."); } else if (a === "x") closeModal(); };
+      msg(`Jarvis : ${L.length} niveaux, ${Z.length} zones dessinés.`);
+    }
+    $("btJarvisBtn").onclick = jarvis;
+
     $("btFColor").oninput = () => { if (sel) { sel.style.color = $("btFColor").value; saveDrawings(); } };
     $("btFWidth").onchange = () => { if (sel) { sel.style.width = +$("btFWidth").value; saveDrawings(); } };
     $("btFSet").onclick = () => sel && openSettings(sel);

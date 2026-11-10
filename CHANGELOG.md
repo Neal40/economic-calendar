@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.21.0] — 2026-11-10
+### Ajouté
+- Backtesteur : bouton « 🤖 Jarvis » (Alt+Maj+J) : protocole de Rudy sur les bougies déjà rejouées (high / low Asia, London, Premarket, Midnight / 8h30 / 9h30 open, NDOG, NWOG le lundi, 1st P.FVG 7h et 9h30) dessiné sur le chart + rapport (niveaux pris / intacts, écart au prix, prochaines cibles, macro en cours). « Effacer les dessins Jarvis » ne retire que ses propres dessins.
+- Backtesteur : Watchlist NQ / ES (Alt+W), alertes de prix (Alt+Maj+A : le replay se met en pause et sonne quand le prix touche), saisie directe du symbole (NQ, ES, MNQ, MES puis Entrée), curseur synchronisé entre NQ et ES.
+
 ## [1.20.0] — 2026-11-10
 ### Ajouté
 - Calendrier : notes @InnerDiscipline de chaque jour (Pre-Market, AM Silver Bullet, Low probability…) affichées dans la case du jour quand il n'y a pas de note perso ; « Low probability » posé automatiquement si la note le dit.
