@@ -34,7 +34,7 @@ function writeDb(d) { try { if (fs.existsSync(DB())) fs.copyFileSync(DB(), DB().
 /* ---------- TopstepX session token ---------- */
 function tsxWindow(show) {
   if (loginWin && !loginWin.isDestroyed()) { if (show) loginWin.show(); return loginWin; }
-  loginWin = new BrowserWindow({ width: 1100, height: 800, show, title: "Connexion TopstepX", autoHideMenuBar: true, parent: win || undefined,
+  loginWin = new BrowserWindow({ width: 1100, height: 800, show, title: "Connexion TopstepX", autoHideMenuBar: true, parent: process.platform === "darwin" ? undefined : win || undefined, // Mac : une fenêtre enfant est toujours affichée avec sa fenêtre parente (fenêtre noire en trop)
     webPreferences: { partition: PART, contextIsolation: true, sandbox: true } });
   loginWin.on("close", (e) => { if (!app.isQuitting) { e.preventDefault(); loginWin.hide(); } });
   loginWin.loadURL("https://www.topstepx.com/trade");
