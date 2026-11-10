@@ -2340,6 +2340,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 </script>
 <script>
 /* ---------- Review : What to focus on ? + Journal de Neal (Notion) ---------- */
+const JNAME = window.desktop && window.desktop.platform === "darwin" ? "Journal de Woods" : "Journal de Neal"; // version Mac : journal de Woods
+document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent = JNAME));
 (() => {
   const ID = { wtf: "3e6d85a64009805d8752e587433b54f1", homework: "e3ed85a6400982c5a181815ee98dedad", journal: "2e0d85a640098042b2b6f4e457a34e42", macro: "40cd85a6400980279ba4fffc1f12d785" };
   const D = window.desktop, NC = () => window.NOTION_COLORS || {};
@@ -2537,7 +2539,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function renderJournal() {
     const body = $("rvBodyJ"); if (!body) return;
     const m = state.macro;
-    if (!m) { body.innerHTML = emptyMsg("Journal de Neal"); return; }
+    if (!m) { body.innerHTML = emptyMsg(JNAME); return; }
     const rows = filtered().sort((a, b) => String(b.Date || "").localeCompare(String(a.Date || ""))), s = stats(rows);
     const note = state.journal ? blocksHTML(state.journal.filter((b) => b.type !== "child_database")) : "";
     const V = VIEWS.find((v) => v.name === state.view) || VIEWS[0];
@@ -2666,7 +2668,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const pctFr = (v) => (v * 100).toFixed(2).replace(".", ",") + " %";
   function biasHTML(rows, compact) {
     const B = biasData(rows);
-    if (B.N < BIAS_MIN) return `<div class="panel bz-panel"><div class="ptitle">Détection des biais psychologiques</div><p class="rv-mut" style="margin:6px 0 0">Il faut au moins ${BIAS_MIN} trades pris (TP, SL, BE) dans le Journal de Neal pour lancer l'analyse — ${B.N}/${BIAS_MIN} pour l'instant${state.type ? " avec ce filtre" : ""}.</p></div>`;
+    if (B.N < BIAS_MIN) return `<div class="panel bz-panel"><div class="ptitle">Détection des biais psychologiques</div><p class="rv-mut" style="margin:6px 0 0">Il faut au moins ${BIAS_MIN} trades pris (TP, SL, BE) dans le ${JNAME} pour lancer l'analyse — ${B.N}/${BIAS_MIN} pour l'instant${state.type ? " avec ce filtre" : ""}.</p></div>`;
     let pen = 0; BIAS.forEach((b) => (pen += b.w * ((B.sets[b.k] || []).length / B.N)));
     let score = 100 - pen * 100 * 1.6; if (B.held !== null) score -= (1 - B.held) * 15; if (B.patience !== null && B.patience < 15 * 60000) score -= 8;
     score = Math.max(0, Math.min(100, Math.round(score)));
@@ -2852,7 +2854,8 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     await loadCache();
     if (!D) { ["rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.hidden = true)); $("rvSync").hidden = true; $("rvSetupBtn").hidden = true; if ($("rvSync2")) $("rvSync2").style.visibility = "hidden"; }
     else {
-      ["rvSync", "rvSync2", "rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.style.display = "none")); // synchro automatique : boutons inutiles
+      ["rvSync", "rvAuto", "rvAuto2"].map($).filter(Boolean).forEach((b) => (b.style.display = "none")); // synchro automatique : boutons inutiles
+      if ($("rvSync2")) $("rvSync2").onclick = () => sync(); // synchro Notion à la demande depuis Journal de trading
       setInterval(autoTick, 5000); // Notion -> app : vérifie les changements toutes les 5 s (4 requêtes, sous la limite Notion de ~3/s)
       document.addEventListener("visibilitychange", () => { if (!document.hidden) autoTick(); });
       $("rvTokenSave").onclick = async () => { const r = await D.notionSetToken($("rvToken").value); $("rvTokenMsg").textContent = r.ok ? "Connecté ✓ (" + r.bot + ")" : "Token refusé"; if (r.ok) { showSetup(false); sync(); } };
@@ -4318,7 +4321,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     "Aujourd'hui": "Today", "Mois précédent": "Previous month", "Mois suivant": "Next month", "Semaine précédente": "Previous week", "Semaine suivante": "Next week", "Par mois": "By month", "Par semaine": "By week", "Cliquer pour écrire ton plan": "Click to write your plan", "News en direct (headlines FinancialJuice). Les lignes en rouge sont les news à fort impact.": "Live news (FinancialJuice headlines). Red lines are high-impact news.", "Rien ne s'affiche ? Ouvre": "Nothing showing? Open",
     "(l'aperçu Claude bloque les contenus externes ; le site GitHub Pages et l'app .exe l'affichent).": "(the Claude preview blocks external content; the GitHub Pages site and the .exe app show it).", "+ Ajouter une facture": "+ Add an invoice",
     // journal
-    "Stats TopstepX par compte.": "TopstepX stats per account.", "Journal de Neal": "Neal's journal", "Journal backtest": "Backtest journal", "⟳ Synchroniser Notion": "⟳ Sync Notion", "Synchro Notion : On": "Notion sync: On", "Synchro Notion : Off": "Notion sync: Off", "⟳ Synchroniser TopstepX": "⟳ Sync TopstepX",
+    "Stats TopstepX par compte.": "TopstepX stats per account.", "Journal de Neal": "Neal's journal", "Journal de Woods": "Woods' journal", "Journal backtest": "Backtest journal", "⟳ Synchroniser Notion": "⟳ Sync Notion", "Synchro Notion : On": "Notion sync: On", "Synchro Notion : Off": "Notion sync: Off", "⟳ Synchroniser TopstepX": "⟳ Sync TopstepX",
     "＋ Récupérer un compte": "＋ Recover an account", "Récupérer un compte disparu": "Recover a missing account", "Récupérer": "Recover", "Déconnecter TopstepX": "Disconnect TopstepX", "Importer comptes.json": "Import comptes.json", "Importer trades.json": "Import trades.json", "Exporter tags & images": "Export tags & images", "Importer tags & images": "Import tags & images",
     "Synchro automatique app ⇄ Notion": "Automatic app ⇄ Notion sync", "Sauvegarder tags + images": "Back up tags + images", "Restaurer tags + images": "Restore tags + images", "Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)": "Recover an account that disappeared from TopstepX (passed challenge, closed account…)",
     "Identifiant(s) TopstepX, séparés par des virgules. Les comptes déjà dans l'app sont désormais archivés automatiquement.": "TopstepX ID(s), comma-separated. Accounts already in the app are now archived automatically.",

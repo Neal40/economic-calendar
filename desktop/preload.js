@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("desktop", {
+  platform: process.platform, // "darwin" = version Mac (libellés propres à la version Mac)
   journalGet: () => ipcRenderer.invoke("journal:get"),
   journalSync: (interactive) => ipcRenderer.invoke("journal:sync", interactive),
   journalAddIds: (ids) => ipcRenderer.invoke("journal:addIds", ids),
