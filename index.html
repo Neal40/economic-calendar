@@ -1016,6 +1016,7 @@ table.tbl:has(#subT){min-width:900px}
             <span class="tx-sp"></span>
             <button id="btTreeBtn2" title="Arborescence des objets"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
             <button id="btFavBtn" class="tg" title="Barre de favoris"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button>
+            <button id="btHowBtn" title="Comment dessiner (guide des outils)"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M11.3 11.6a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6"/><circle cx="14" cy="19.3" r=".9" fill="currentColor"/></svg></button>
           </div>
           <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
@@ -3265,7 +3266,38 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const toNY = (t) => t + off(t);
 
   /* ---------------- données / replay ---------------- */
-  const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0 };
+  /* btCore:start — cœur du replay façon FX Replay : horloge, buffer continu, bus d'événements, exécution des ordres (fonctions pures, testées par tools/check.js) */
+  const btCore = (() => {
+    // bus d'événements : le moteur publie (« bar » = chaque bougie jouée, « tick » = fin d'une avancée, « buffer », « end »), le compte, les alertes et l'UI s'abonnent
+    function bus() { const L = {}; return { on(t, f) { (L[t] = L[t] || []).push(f); return () => { L[t] = (L[t] || []).filter((x) => x !== f); }; }, emit(t, e) { (L[t] || []).slice().forEach((f) => f(e)); } }; }
+    // horloge du marché : 1× = 1 minute de marché par seconde réelle ; marché fermé (plus de 2 min sans bougie) = saut direct à la bougie suivante
+    function clockAdvance(clock, speed, dtMs, nextT) { let c = clock + (speed * 60 * dtMs) / 1000; if (nextT != null && nextT - c > 120) c = nextT; return c; }
+    // curseur : dernière bougie dont l'heure est <= horloge
+    function cursorAt(raw, cur, clock) { let j = cur; while (j + 1 < raw.length && raw[j + 1][0] <= clock) j++; return j; }
+    // buffer : il reste moins de « aheadSec » secondes de marché devant le curseur -> charger la séance suivante
+    function needsMore(raw, cur, aheadSec) { return !raw.length || !raw[cur] || raw[raw.length - 1][0] - raw[cur][0] < aheadSec; }
+    // ajoute au buffer (sur place, l'agrégation incrémentale continue) les bougies plus récentes que la dernière ; renvoie le nombre ajouté
+    function append(raw, add) { let lastT = raw.length ? raw[raw.length - 1][0] : -Infinity, n = 0; for (const b of add || []) if (b[0] > lastT) { raw.push(b); lastT = b[0]; n++; } return n; }
+    // séance en précision 1 s : bougies m1 avant la 1re minute couverte par le 1 s, puis le 1 s (M1 formée seconde par seconde)
+    function merge1s(m1, s1) { if (!s1 || s1.length <= 100) return m1; const cut = Math.floor(s1[0][0] / 60) * 60; return m1.filter((b) => b[0] < cut).concat(s1); }
+    // déclenchement d'un ordre en attente sur une bougie [t, open, high, low, close] ; renvoie le prix d'exécution, ou null si pas touché
+    //  Limit achat : low <= prix · Limit vente : high >= prix · Stop achat : high >= prix · Stop vente : low <= prix
+    //  gap : bougie qui ouvre déjà au-delà du prix -> exécution à l'ouverture (meilleure pour une limite, pire pour un stop)
+    //  anti-lookahead : jamais sur la bougie où l'ordre a été posé (o.at), ni avant
+    function trigger(o, b, tick) {
+      if (o.at != null && b[0] <= o.at) return null;
+      const op = b[1], h = b[2], l = b[3], buy = o.qty > 0;
+      if (o.type === "Limit") { if (buy ? l > o.px : h < o.px) return null; return buy ? Math.min(o.px, op) : Math.max(o.px, op); }
+      if (buy ? h < o.px : l > o.px) return null;
+      return (buy ? Math.max(o.px, op) : Math.min(o.px, op)) + (buy ? 1 : -1) * (o.slip || 0) * tick;
+    }
+    // ordre d'évaluation dans une même bougie : stop-loss d'abord (prudent si SL et TP sont touchés ensemble), puis l'ordre de pose
+    function evalOrder(orders) { return [...orders].sort((x, y) => (y.bracket === "SL") - (x.bracket === "SL")); }
+    return { bus, clockAdvance, cursorAt, needsMore, append, merge1s, trigger, evalOrder };
+  })();
+  /* btCore:end */
+  const BUS = btCore.bus(), AHEAD = 2 * 3600; // buffer : on charge la séance suivante quand il reste moins de 2 h de marché devant le curseur
+  const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0, gen: 0, day: null, more: false, end: false, htfTo: 0 };
   const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M" };
   const mondayOf = (d) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };
   const offC = new Map(), offF = (t) => { const h = Math.floor(t / 3600); let v = offC.get(h); if (v === undefined) { v = off(t); offC.set(h, v); } return v; };
@@ -3312,11 +3344,11 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     preTimer = setTimeout(next, 300);
   }
   async function load() {
-    play(false);
-    const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym;
+    play(false); S.gen++; S.more = false; S.end = false;
+    const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym; S.day = d;
     const days = S.tf >= 43200 ? 35 : S.tf >= 10080 ? 9 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
     // historique de l'unité de temps (fichiers NQ_all_tf / ES_all_tf générés par l'app) : contexte complet à gauche du replay
-    S.htf = null; S.htf2 = null;
+    S.htf = null; S.htf2 = null; S.htfTo = to;
     if (sym !== "CSV" && S.tf > 1 && D && D.dataReadTf) {
       const r = await readTf(sym, S.tf, to);
       if (r.ok) S.htf = r.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]);
@@ -3329,7 +3361,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       msg("Chargement…"); const r = await cached(`m1|${sym}|${from}|${to}`, () => D.dataRead(sym, from, to, "m1")); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data.slice(); S.sec = 0;
       if (P.sec !== false) { // précision 1 s : la séance du jour (18:00 la veille -> 17:00) en bougies d'une seconde
         const s0 = ny(addDays(d, -1), 18, 0), r1 = await cached(`s1|${sym}|${s0}|${to}`, () => D.dataRead(sym, s0, to, "1s"));
-        if (r1 && r1.ok && r1.data.length > 100) { const cut = Math.floor(r1.data[0][0] / 60) * 60; S.raw = S.raw.filter((b) => b[0] < cut).concat(r1.data); S.sec = r1.data.length; }
+        if (r1 && r1.ok && r1.data.length > 100) { S.raw = btCore.merge1s(S.raw, r1.data); S.sec = r1.data.length; }
       }
       await loadSecond(from, to); preload(sym, to);
     }
@@ -3342,7 +3374,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   // agrégation incrémentale : en lecture on ne traite que les nouvelles bougies du replay
   let AG = null;
   function aggregate() {
-    const R = rthOn(), key = [S.tf, R, S.raw.length, S.raw[0] ? S.raw[0][0] : 0, S.htf ? S.htf.length : 0, S.htf && S.htf[0] ? S.htf[0][0] : 0].join("|");
+    const R = rthOn(), key = [S.tf, R, S.raw[0] ? S.raw[0][0] : 0, S.htf ? S.htf.length : 0, S.htf && S.htf[0] ? S.htf[0][0] : 0].join("|");
     if (AG && AG.key === key && AG.raw === S.raw && S.cur >= AG.i) {
       const out = AG.out;
       for (let i = AG.i + 1; i <= S.cur && i < S.raw.length; i++) {
@@ -3359,7 +3391,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const out = [];
     let i0 = 0;
     if (!R && S.htf && S.htf.length && S.raw[S.cur]) { // bougies terminées = fichier de l'unité de temps, bougie en cours = m1 du replay
-      const cb = bucket(S.raw[S.cur][0]);
+      const cb = Math.min(bucket(S.raw[S.cur][0]), S.htfTo ? bucket(S.htfTo) : Infinity); // au-delà de la journée chargée, le buffer m1 prend le relais
       for (const b of S.htf) { if (b[0] >= cb) break; out.push(b.slice()); }
       while (i0 < S.cur && bucket(S.raw[i0][0]) < cb) i0++;
     }
@@ -3407,22 +3439,20 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     saveAcc();
   }
   function addBrackets() {
-    const p = A.pos, sl = +$("oSl").value || 40, tp = +$("oTp").value || 80, dir = Math.sign(p.qty);
-    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Stop", qty: -p.qty, px: rnd(p.avg - dir * sl * TICK), bracket: "SL" });
-    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Limit", qty: -p.qty, px: rnd(p.avg + dir * tp * TICK), bracket: "TP" });
+    const p = A.pos, sl = +$("oSl").value || 40, tp = +$("oTp").value || 80, dir = Math.sign(p.qty), at = S.raw[S.cur] ? S.raw[S.cur][0] : null; // pas d'exécution sur la bougie d'entrée
+    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Stop", qty: -p.qty, px: rnd(p.avg - dir * sl * TICK), bracket: "SL", at });
+    A.orders.push({ id: A.seq++, ctr: p.ctr, type: "Limit", qty: -p.qty, px: rnd(p.avg + dir * tp * TICK), bracket: "TP", at });
   }
   function syncBrackets() { if (A.pos) A.orders.forEach((o) => { if (o.bracket) o.qty = -A.pos.qty; }); }
   function processBar(b) {
     newDay(b[0]);
-    const [t, , h, l] = b;
+    const t = b[0];
     // ordres en attente (SL avant TP si les deux sont touchés dans la même minute = prudent)
-    const ords = [...A.orders].sort((x, y) => (y.bracket === "SL") - (x.bracket === "SL"));
-    for (const o of ords) {
+    for (const o of btCore.evalOrder(A.orders)) {
       if (!A.orders.includes(o)) continue;
-      const buy = o.qty > 0, hit = o.type === "Limit" ? (buy ? l <= o.px : h >= o.px) : (buy ? h >= o.px : l <= o.px);
-      if (!hit) continue;
+      const px = btCore.trigger(o, b, TICK); if (px == null) continue;
       A.orders = A.orders.filter((x) => x !== o);
-      fill(o.ctr, o.qty, o.px, t, o.bracket || o.type); syncBrackets();
+      fill(o.ctr, o.qty, px, t, o.bracket || o.type); syncBrackets();
     }
     const day = A.rpDay + upl();
     if (!isProp()) return; // compte classique : pas de MLL / DLL
@@ -3438,7 +3468,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const qty = Math.max(1, parseInt($("oQty").value, 10) || 1) * side, type = $("oType").value, t = S.raw[S.cur][0];
     newDay(t);
     if (type === "Market") { fill(ctr, qty, last() + side * TICK, t, "Market"); syncBrackets(); } // exécution au ask / bid
-    else { const px = rnd(+$("oPx").value || last()); A.orders.push({ id: A.seq++, ctr, type, qty, px }); saveAcc(); }
+    else { const px = rnd(+$("oPx").value || last()); A.orders.push({ id: A.seq++, ctr, type, qty, px, at: t }); saveAcc(); }
     draw(); ui();
   }
 
@@ -3658,7 +3688,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function draw2() {
     const on = !!(P.split && sym2()), w = $("btWrap2"); if (w && w.hidden === on) w.hidden = !on; if ($("btSplitBtn")) $("btSplitBtn").classList.toggle("on", !!P.split);
     if (!on || !chart) return; ensureChart2();
-    const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [], cb2 = tCur ? bucket(tCur) : 0;
+    const tCur = S.raw.length ? S.raw[S.cur][0] : 0, out = [], cb2 = tCur ? Math.min(bucket(tCur), S.htfTo ? bucket(S.htfTo) : Infinity) : 0;
     if (S.htf2 && S.htf2.length) for (const b of S.htf2) { if (b[0] >= cb2) break; out.push(b.slice(0, 6)); }
     for (const b of S.raw2 || []) { if (b[0] > tCur) break; if (S.htf2 && S.htf2.length && bucket(b[0]) < cb2) continue; const k = bucket(b[0]), l = out[out.length - 1]; if (!l || l[0] !== k) out.push([k, b[1], b[2], b[3], b[4], b[5] || 0]); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5] || 0; } }
     S.B2 = out; // bougies du 2e chart : base des dessins de ce chart
@@ -3762,29 +3792,55 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (p != null && marketable(o, p) && S.raw.length) { A.orders = A.orders.filter((x) => x !== o); fill(o.ctr, o.qty, p, S.raw[S.cur][0], o.bracket || o.type); syncBrackets(); msg(`${o.bracket || o.type} déplacé au-delà du prix : exécuté au marché (${p.toFixed(2)}).`); }
     saveAcc(); draw(); ui();
   }
+  /* moteur : chaque bougie jouée passe par le bus (« bar » : ordres + règles du compte, alertes), puis « tick » redessine */
+  BUS.on("bar", (b) => processBar(b));
+  BUS.on("bar", (b) => { if (window.btAlertCheck) window.btAlertCheck(b); });
+  BUS.on("tick", () => { draw(); ui(); });
+  BUS.on("end", () => { play(false); msg("Fin des données disponibles : plus de séance à rejouer après celle-ci."); });
   function step(k) {
     if (!S.raw.length) return;
     const to = Math.max(0, Math.min(S.raw.length - 1, S.cur + k));
-    for (let i = S.done + 1; i <= to; i++) { S.cur = i; processBar(S.raw[i]); if (window.btAlertCheck) window.btAlertCheck(S.raw[i]); }
-    S.done = Math.max(S.done, to); S.cur = to; draw(); ui();
-    if (S.cur >= S.raw.length - 1) play(false);
+    for (let i = S.done + 1; i <= to; i++) { S.cur = i; BUS.emit("bar", S.raw[i]); }
+    S.done = Math.max(S.done, to); S.cur = to; BUS.emit("tick", S.raw[S.cur]);
+    if (btCore.needsMore(S.raw, S.cur, AHEAD)) more();
+    if (S.cur >= S.raw.length - 1 && S.end) BUS.emit("end");
+  }
+  // buffer continu : charge la séance suivante (et celle du 2e chart) avant que le replay n'arrive au bout -> on rejoue plusieurs jours d'affilée
+  async function more() {
+    if (S.more || S.end || !S.raw.length) return;
+    S.more = true; const gen = S.gen;
+    try {
+      for (let k = 0; k < 6; k++) { // jusqu'à 6 jours (week-end, jour férié)
+        const d = addDays(S.day, 1), from = S.raw[S.raw.length - 1][0] + 1, to = ny(d, 17, 0); let add = [];
+        if (S.sym === "CSV") { add = (S.csv || []).filter((b) => b[0] >= from && b[0] <= to); if (!add.length && !(S.csv || []).some((b) => b[0] > to)) break; }
+        else if (D && D.dataRead) {
+          const r = await D.dataRead(S.sym, from, to, "m1"); if (gen !== S.gen) return; add = r && r.ok ? r.data : [];
+          if (add.length && P.sec !== false) { const r1 = await D.dataRead(S.sym, from, to, "1s"); if (gen !== S.gen) return; if (r1 && r1.ok && r1.data.length > 100) { add = btCore.merge1s(add, r1.data); S.sec += r1.data.length; } }
+          if (P.split && sym2() && S.raw2) { const r2 = await D.dataRead(sym2(), S.raw2.length ? S.raw2[S.raw2.length - 1][0] + 1 : from, to, "m1"); if (gen !== S.gen) return; if (r2 && r2.ok) btCore.append(S.raw2, r2.data); }
+        } else break;
+        S.day = d;
+        const n = btCore.append(S.raw, add);
+        if (n) { BUS.emit("buffer", { day: d, n }); msg(`Séance du ${dstr(add[add.length - 1][0])} ajoutée au replay (${n.toLocaleString("fr-FR")} bougies).`); return; }
+      }
+      S.end = true; if (S.cur >= S.raw.length - 1) BUS.emit("end");
+    } finally { if (gen === S.gen) S.more = false; }
   }
   // bougie suivante / précédente de l'unité de temps affichée (avec les données 1 s, une bougie = plusieurs pas)
   function stepCandle() { if (!S.raw.length) return; const cb = bucket(S.raw[S.cur][0]); let j = S.cur;
     if (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === cb) { while (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === cb) j++; }
     else if (j + 1 < S.raw.length) { const nb = bucket(S.raw[++j][0]); while (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === nb) j++; }
-    if (j > S.cur) step(j - S.cur); }
+    if (j > S.cur) step(j - S.cur); else if (!S.end) { msg("Chargement de la séance suivante…"); more().then(() => { if (S.cur < S.raw.length - 1) stepCandle(); }); } }
   function back() { if (!S.raw.length) return; const cb = bucket(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && bucket(S.raw[j][0]) === cb) j--; S.cur = Math.max(0, j); draw(); ui(); }
-  // lecture : horloge du marché, 1× = 1 minute par seconde (comme avant), avancée par 1/10 s -> la bougie se forme en direct avec les données 1 s
+  // lecture : horloge du marché (btCore.clockAdvance), 1× = 1 minute par seconde, mesurée sur le temps réel écoulé -> la bougie se forme en direct avec les données 1 s
   function play(on) {
     if (on === undefined) on = !S.playing; clearInterval(S.playing); S.playing = null; if ($("btPlay")) $("btPlay").textContent = on ? "⏸" : "▶";
     if (!on || !S.raw.length) return;
-    S.clock = S.raw[S.cur][0];
+    S.clock = S.raw[S.cur][0]; let t0 = performance.now();
     S.playing = setInterval(() => {
-      const sp = +$("btSpeed").value || 1, nx = S.raw[S.cur + 1]; if (!nx) return play(false);
-      S.clock += sp * 6; if (nx[0] - S.clock > 120) S.clock = nx[0]; // pas de marché (nuit, week-end) : on saute
-      let j = S.cur; while (j + 1 < S.raw.length && S.raw[j + 1][0] <= S.clock) j++;
-      if (j > S.cur) step(j - S.cur);
+      const now = performance.now(), dt = Math.min(1000, now - t0), nx = S.raw[S.cur + 1]; t0 = now; // onglet en arrière-plan : pas de saut géant
+      if (!nx) { S.clock = S.raw[S.cur][0]; if (S.end) return BUS.emit("end"); if (!S.more) { msg("Chargement de la séance suivante…"); more(); } return; } // fin du buffer : on attend la séance suivante
+      S.clock = btCore.clockAdvance(S.clock, +$("btSpeed").value || 1, dt, nx[0]);
+      const j = btCore.cursorAt(S.raw, S.cur, S.clock); if (j > S.cur) step(j - S.cur);
     }, 100);
   }
 
@@ -4513,6 +4569,38 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       document.addEventListener("keydown", grab, true);
     }
     $("btKeysBtn").onclick = () => openKeys();
+    // guide « Comment dessiner » : les raccourcis affichés sont ceux réellement configurés (⌨)
+    function openHow() {
+      const k = (id) => { const L = (KMAP[id] || []).map(label); return L.length ? L.map((x) => `<kbd>${esc(x)}</kbd>`).join(" ou ") : "<span class=\"rv-mut\">(aucun raccourci)</span>"; };
+      const row = (a, b) => `<div class="tx-kr"><span>${a}</span><span class="tx-kv">${b}</span></div>`;
+      const m = modal("Comment dessiner sur le chart", `<div class="tx-keys">
+        <div class="tx-kg">1. Choisir un outil</div>
+        ${row("Barre d'outils à gauche du chart : clic sur une icône. La petite flèche ouvre le menu du groupe (toutes les variantes).", "")}
+        ${row("☆ dans un menu = favori : il apparaît dans la barre de favoris flottante (déplaçable par ⠿).", "")}
+        ${row("Ligne de tendance · Ligne horizontale · Rayon horizontal", k("trend") + " · " + k("hline") + " · " + k("hray"))}
+        ${row("Rectangle · Fibonacci · Texte · Ligne verticale", k("rect") + " · " + k("fib") + " · " + k("text") + " · " + k("vline"))}
+        <div class="tx-kg">2. Tracer</div>
+        ${row("Outil à 1 point (ligne horizontale, verticale, texte, position long / short…) : un clic à l'endroit voulu.", "1 clic")}
+        ${row("Outil à 2 points (tendance, rectangle, Fibonacci…) : clic au départ, déplace la souris (aperçu en direct), clic à l'arrivée.", "2 clics")}
+        ${row("Outil à plusieurs points (pitchfork 3, XABCD 5, vagues d'Elliott…) : un clic par point, il se termine tout seul.", "n clics")}
+        ${row("Chemin / polyligne : un clic par point, puis double-clic ou Entrée pour finir. Pinceau : maintenir le clic.", "Double-clic / Entrée")}
+        ${row("Aimant : accroche les points à l'open / high / low / close de la bougie la plus proche.", k("magnet"))}
+        ${row("Après le tracé, le curseur revient en croix. Échap annule un tracé en cours.", "<kbd>Échap</kbd>")}
+        <div class="tx-kg">3. Modifier</div>
+        ${row("Clic sur un dessin = sélection (barre flottante : couleur, épaisseur, verrou).", "Clic")}
+        ${row("Glisser une poignée = déplacer un point ; glisser le dessin = le déplacer en entier.", "Glisser")}
+        ${row("Double-clic = paramètres complets (style, niveaux Fibonacci, texte, modèles enregistrés).", "Double-clic")}
+        ${row("Clic droit = menu (cloner, copier, groupe, premier plan / arrière-plan, supprimer).", "Clic droit")}
+        ${row("Supprimer · Dupliquer · Copier / Coller · Annuler le dernier dessin", "<kbd>Suppr</kbd> · <kbd>Ctrl+D</kbd> · <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd> · <kbd>Ctrl+Z</kbd>")}
+        <div class="tx-kg">4. Mesurer et organiser</div>
+        ${row("Mesurer un mouvement (points, %, barres) : Maj + clic-glisser, ou la règle.", "<kbd>Maj</kbd>+clic · " + k("measure"))}
+        ${row("Arborescence des objets (groupes, masquer, verrouiller, renommer)", k("tree"))}
+        ${row("Verrouiller tous · Masquer tous les dessins", k("lockAll") + " · " + k("hideAll"))}
+        ${row("Les dessins sont enregistrés par symbole et par mise en page ; le 2e chart (NQ+ES) a les siens.", "")}
+      </div>`, `<span class="tx-sp"></span><button data-m="x">Compris</button>`);
+      m.onclick = (e) => { if (e.target.dataset.m === "x") closeModal(); };
+    }
+    $("btHowBtn").onclick = openHow;
     // Watchlist (Alt+W) et Alertes de prix (Alt+Shift+A) : petits volets en haut à droite du chart
     const panel = (id, title) => { let p = $(id); if (!p) { p = document.createElement("div"); p.id = id; p.className = "tx-side"; p.hidden = true; $("btWrap").append(p); } p.dataset.title = title; return p; };
     const symStat = (sym) => { const R = sym === S.sym ? S.raw.slice(0, S.cur + 1) : sym === sym2() ? (S.raw2 || []).filter((b) => S.raw.length && b[0] <= S.raw[S.cur][0]) : []; if (!R.length) return null;

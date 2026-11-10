@@ -43,7 +43,7 @@ Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edi
 | `Journal de trading : Stats TopstepX` | KPIs, comptes, graphiques d3, calendrier P&L, table des trades |
 | `Review : What to focus on ? + Journal de Neal (Notion)` | Lecture Notion, cache IndexedDB, auto-sync On/Off, vues Notion reproduites, biais psychologiques, import CSV web |
 | `Review : add / edit / delete in Notion` | Écriture vers Notion (desktop uniquement), drag & drop calendrier, remplissage MAE/MFE depuis TopstepX |
-| `Backtesteur style TopstepX` | Replay m1, compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles |
+| `Backtesteur style TopstepX` | Cœur du replay `btCore` (marqueurs `btCore:start/end` : horloge, buffer continu multi-séances, bus d'événements, exécution des ordres avec gaps et anti-lookahead), compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles, guide « Comment dessiner » |
 | `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
 
 Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.
@@ -83,7 +83,7 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 - **Jarvis** : coller `tools/jarvis-analyseur.js` dans la page topstepx.com/trade, puis `await JARVIS.status()` (voir l'en-tête du fichier pour toutes les commandes).
 
 ## Vérifier un changement
-Il n'y a **pas encore de tests**. Avant de dire « c'est fait » :
+`node tools/check.js` vérifie la syntaxe, le contrat IPC et les fonctions pures `btStats` / `btCore`. Avant de dire « c'est fait » :
 1. Ouvrir `index.html` dans le navigateur, aller sur la vue modifiée, vérifier la console (aucune erreur).
 2. Si le changement touche `desktop/` ou `window.desktop` : vérifier aussi le chemin web (fallback sans `window.desktop`).
 3. Si le changement touche le copier : vérifier en `demo` uniquement, et le dire explicitement.
