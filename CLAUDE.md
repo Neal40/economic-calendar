@@ -43,7 +43,7 @@ Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edi
 | `Journal de trading : Stats TopstepX` | KPIs, comptes, graphiques d3, calendrier P&L, table des trades |
 | `Review : What to focus on ? + Journal de Neal (Notion)` | Lecture Notion, cache IndexedDB, auto-sync On/Off, vues Notion reproduites, biais psychologiques, import CSV web |
 | `Review : add / edit / delete in Notion` | Écriture vers Notion (desktop uniquement), drag & drop calendrier, remplissage MAE/MFE depuis TopstepX |
-| `Backtesteur style TopstepX` | Cœur du replay `btCore` (marqueurs `btCore:start/end` : horloge, buffer continu multi-séances, bus d'événements, exécution des ordres avec gaps et anti-lookahead), compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles, guide « Comment dessiner » |
+| `Backtesteur style TopstepX` | Cœur du replay `btCore` (marqueurs `btCore:start/end` : horloge, buffer continu multi-séances, bus d'événements, exécution des ordres avec gaps et anti-lookahead), compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles, guide « Comment dessiner ». Mise en page façon FX Replay (barre de replay `.tx-rbar` en bas, barre d'icônes `.tx-icons` à droite ; `.tx-side` = panneaux Watchlist / Alertes) ; barre de compte et panneau Order = TopstepX |
 | `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
 
 Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.

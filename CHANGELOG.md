@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.24.0] — 2026-11-10
+### Modifié
+- Backtesteur : mise en page façon FX Replay. On garde la barre de compte (BAL / MLL / RP&L / UP&L / DLL) et le panneau Order de TopstepX ; le reste est réorganisé :
+  - barre du haut : symbole + timeframes en pastilles (1m … 1D 1W 1M), mises en page, NQ+ES ;
+  - sous le chart : plages 1D / 5D / 1M / 3M / 6M / 1Y / Tout, message, heure du replay, % / log / auto ;
+  - nouvelle barre de replay en bas : Buy / Sell au marché + nombre de contrats (synchronisé avec le panneau Order), retour au départ, curseur de progression dans les séances chargées, bougie précédente / lecture / vitesse / bougie suivante, « Aller à une date » (date + heure + Charger), bouton Positions et solde ;
+  - barre d'icônes à droite : Order, Objets, Watchlist, Alertes, News, Jarvis, Sessions, Guide, Préférences ;
+  - tableau Positions / Orders / Trades replié par défaut (bouton Positions).
+
 ## [1.23.0] — 2026-11-10
 ### Modifié
 - Backtesteur : nouveau cœur du replay façon FX Replay (`btCore`) — horloge du marché mesurée sur le temps réel, bus d'événements (bougie jouée → ordres, règles du compte, alertes → affichage).
