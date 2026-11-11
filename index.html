@@ -2698,7 +2698,7 @@ function pareto8020(rows, val, dims) {
   function payoutsPage() {
     const box = $("cp-payouts"); if (!box) return; const L = [];
     ["topstep", "apex"].forEach((k) => { const F = firmOf(k), byAcc = {}; (F.payouts || []).slice().sort((a, b) => String(a.requested).localeCompare(String(b.requested))).forEach((p) => { byAcc[p.account] = (byAcc[p.account] || 0) + 1;
-      const acc = (F.accounts || []).find((a) => a.name === p.account); L.push({ firm: k === "topstep" ? "Topstep" : "Apex", ...p, num: byAcc[p.account], days: acc && acc.days ? acc.days.length : p.tradingDays, st: acc ? STAT(acc.status)[0] === "Blown" ? "Blown" : "Active" : p.accountStatus || "—" }); }); });
+      const acc = (F.accounts || []).find((a) => a.name === p.account); L.push({ firm: k === "topstep" ? "Topstep" : "Apex", ...p, num: p.num || byAcc[p.account], days: p.tradingDays != null ? p.tradingDays : acc && acc.days ? acc.days.length : null, st: acc ? STAT(acc.status)[0] === "Blown" ? "Blown" : "Active" : p.accountStatus || "—" }); }); });
     L.sort((a, b) => String(b.requested).localeCompare(String(a.requested)));
     const tot = L.reduce((s, p) => s + (+p.paid || 0), 0);
     box.innerHTML = head("Payouts", "Tous tes payouts Topstep et Apex") + `<div class="kpis"><div class="kpi"><small>Total reçu</small><b class="pos">${usd(tot)}</b><i>${L.length} payouts</i></div><div class="kpi"><small>Dernier payout</small><b>${L[0] ? usd(L[0].paid) : "—"}</b><i>${L[0] ? fdate(L[0].requested) : ""}</i></div></div>
