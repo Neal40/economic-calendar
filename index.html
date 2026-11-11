@@ -2,7 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060607">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Inner Circle Trader</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600&family=Roboto+Condensed:wght@100;400;500;700;800&display=swap" rel="stylesheet">
@@ -2622,7 +2625,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 <script>
 /* ---------- Thème : Noir (défaut sur la version Mac) ou Classique ; image de fond facultative ---------- */
 (function(){
-  const isMac = window.desktop && window.desktop.platform === "darwin";
+  const isMac = (window.desktop && window.desktop.platform === "darwin") || !!window.Capacitor || matchMedia("(max-width:760px)").matches;
   const get = (k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:v }catch(e){ return d } };
   const set = (k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v) }catch(e){ alert("Image trop lourde pour être enregistrée."); } };
   function apply(){ const th=get("econcal-theme", isMac?"noir":"classique"), w=get("econcal-wall",""); document.body.classList.toggle("noir", th==="noir");
@@ -5248,6 +5251,74 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   window.setLang = setLang; window.i18nTr = tr;
   const sel = document.getElementById("langSel"); if (sel) sel.onchange = () => setLang(sel.value);
   setLang(lang);
+})();
+</script>
+<style>
+/* ---------- Téléphone (≤ 760 px, app Android) : barre d'onglets en bas, menu en tiroir, pages sur une colonne ---------- */
+#mtabs,#mback{display:none}
+@media (max-width:760px){
+  html,body{overscroll-behavior:none}
+  .app{height:100dvh}
+  .main{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  #sideHot,#miniBtn{display:none!important}
+  .app .side,.app.mini .side,body.noir .app .side{position:fixed!important;left:0!important;top:0!important;bottom:0!important;height:100%!important;max-height:none!important;margin:0!important;width:min(82vw,300px)!important;padding:calc(18px + env(safe-area-inset-top)) 14px 18px!important;border-radius:0 24px 24px 0!important;transform:translateX(-105%)!important;opacity:1!important;z-index:90!important;align-items:stretch!important;transition:transform .25s ease!important;box-shadow:none!important;overflow-y:auto!important;background:rgba(10,10,12,.96)!important}
+  body.mdrawer .app .side{transform:none!important;box-shadow:20px 0 60px rgba(0,0,0,.6)!important}
+  .app.mini .side .who div:not(.av),.app.mini .side .mlabel,.app.mini .nav span,body.noir .nav span,body.noir .side .who>div:not(.av){display:block!important}
+  .app.mini .gh span,.app.mini .gh .chev,body.noir .side .gh{display:flex!important}
+  .app .side .nav,.app.mini .nav,body.noir .side .nav{width:100%!important;height:auto!important;justify-content:flex-start!important;padding:11px 12px!important;border-radius:10px!important;font-size:15px}
+  .app .side .who,.app.mini .who,body.noir .side .who{justify-content:flex-start!important;padding:8px!important}
+  body.noir .side .items,body.noir .side .grp{align-items:stretch!important}
+  #mback{display:block;position:fixed;inset:0;z-index:85;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+  body.mdrawer #mback{opacity:1;pointer-events:auto}
+  #mtabs{display:flex;position:fixed;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:80;height:58px;border-radius:22px;background:rgba(14,14,17,.82);backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);border:1px solid rgba(255,255,255,.09);box-shadow:0 10px 30px rgba(0,0,0,.5);justify-content:space-around;align-items:center;padding:0 4px}
+  #mtabs button{flex:1;background:none;border:none;color:#8b8d98;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;padding:6px 0;border-radius:14px;font-family:inherit}
+  #mtabs button svg{width:21px;height:21px}
+  #mtabs button.on{color:#fff}
+  #mtabs button.on svg{filter:drop-shadow(0 0 6px rgba(255,255,255,.35))}
+  /* pages */
+  .page{padding:calc(16px + env(safe-area-inset-top)) 14px 30px!important}
+  .page h2{font-size:24px}
+  .panel{padding:14px 12px;overflow-x:auto}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+  .kpi b{font-size:17px}
+  .pform{grid-template-columns:1fr}
+  .tbl{font-size:12.5px}
+  .tbl th,.tbl td{white-space:nowrap}
+  .row2 .btn,.row2 button{flex:1 1 auto}
+  /* calendrier : une colonne, les jours en liste */
+  .wrap{padding:calc(10px + env(safe-area-inset-top)) 10px 20px!important}
+  .poster{min-width:0!important;padding:18px 14px 16px!important;border-radius:16px}
+  .poster h1{font-size:34px!important;line-height:1.05}
+  .grid{grid-template-columns:1fr!important;gap:8px!important}
+  .grid .wk{margin-top:10px}
+  .day{min-height:0!important}
+  .day.out{display:none}
+  .fjwrap{height:calc(100dvh - 190px)}
+}
+</style>
+<nav id="mtabs" aria-label="Navigation">
+  <button data-mt="calendrier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Calendrier</span></button>
+  <button data-mt="journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal</span></button>
+  <button data-mt="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Review</span></button>
+  <button data-mt="topstep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span></button>
+  <button data-mt="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Plus</span></button>
+</nav>
+<div id="mback"></div>
+<script>
+/* ---------- Téléphone : onglets du bas + tiroir de menu ---------- */
+(function(){
+  const tabs = document.getElementById("mtabs"), back = document.getElementById("mback"), b = document.body;
+  const ACC = ["topstep","apex","payouts","recus"];
+  const mark = () => { const v = location.hash.slice(1) || "calendrier"; tabs.querySelectorAll("button").forEach((x) => { const t = x.dataset.mt; x.classList.toggle("on", t === v || (t === "topstep" && ACC.includes(v)) || (t === "plus" && !["calendrier","journal","review"].concat(ACC).includes(v))); }); };
+  tabs.addEventListener("click", (e) => { const x = e.target.closest("button"); if (!x) return; const t = x.dataset.mt;
+    if (t === "plus") { b.classList.toggle("mdrawer"); return; } b.classList.remove("mdrawer"); go(t); mark(); });
+  back.addEventListener("click", () => b.classList.remove("mdrawer"));
+  document.querySelector(".side").addEventListener("click", (e) => { if (e.target.closest("[data-go]")) setTimeout(() => { b.classList.remove("mdrawer"); mark(); }, 0); });
+  addEventListener("hashchange", mark); mark();
+  // bouton retour Android (app) : ferme le tiroir d'abord
+  addEventListener("popstate", () => { if (b.classList.contains("mdrawer")) b.classList.remove("mdrawer"); });
+  // calendrier sur téléphone : faire défiler jusqu'à aujourd'hui
+  if (matchMedia("(max-width:760px)").matches) setTimeout(() => { const t = document.querySelector(".day.today"); if (t && (location.hash || "#calendrier") === "#calendrier") t.scrollIntoView({ block: "start" }); }, 400);
 })();
 </script>
 </body>

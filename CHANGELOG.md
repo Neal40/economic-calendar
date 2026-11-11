@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.30.0] — 2026-11-11
+### Ajouté
+- **App Android** (`android-app/`, Capacitor) : même `index.html`, APK construit par la CI (`.github/workflows/build-android.yml`) et publié dans la release `latest-android`.
+- **Interface téléphone** (≤ 760 px) : barre d'onglets en bas (Calendrier, Journal, Review, Comptes, Plus), menu en tiroir, pages sur une colonne, calendrier en liste qui s'ouvre sur aujourd'hui, thème Noir par défaut.
+- Manifeste web (`manifest.webmanifest`, icônes `pwa/`) : le site s'installe aussi sur l'écran d'accueil depuis Chrome.
+
 ## [1.29.0] — 2026-11-11
 ### Ajouté
 - Backtesteur : dossier `data_csv` (un CSV par symbole et par unité de temps, NQ / ES / MNQ / MES) lu directement par l'app. Il est cherché dans `Bureau\Inner Circle Trader\data_csv`, puis dans le `data_csv` d'un dossier posé dans `Bureau\Inner Circle Trader` (ex. `economic-calendar-main\data_csv`). Il passe avant le dossier `data` ; les trous du m1 / 1s sont comblés par les bougies de la synchro TopstepX (celles du NQ / ES pour les micros).

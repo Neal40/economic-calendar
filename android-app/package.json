@@ -1,0 +1,17 @@
+{
+  "name": "inner-circle-trader-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App Android d'Inner Circle Trader (même index.html que le site et les apps Mac / Windows, emballé avec Capacitor)",
+  "scripts": {
+    "prepare-www": "node prepare-www.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/core": "^7.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.4.0"
+  }
+}

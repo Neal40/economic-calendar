@@ -1,0 +1,79 @@
+name: Build Android app
+
+on:
+  push:
+    branches: [main]
+    paths: ["index.html", "manifest.webmanifest", "pwa/**", "android-app/**", "desktop/package.json", ".github/workflows/build-android.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android-app
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: android-app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - name: Site → www/, projet Android, icônes
+        run: |
+          node prepare-www.js
+          npx cap add android
+          npx capacitor-assets generate --android --iconBackgroundColor '#0c0c0e' --iconBackgroundColorDark '#0c0c0e' --splashBackgroundColor '#060607' --splashBackgroundColorDark '#060607'
+          npx cap sync android
+      - name: Version (= version de l'app desktop)
+        id: v
+        run: |
+          V=$(node -p "require('../desktop/package.json').version")
+          CODE=$(node -p "const [a,b,c]='$V'.split('.').map(Number); a*10000+b*100+c")
+          sed -i "s/versionCode 1$/versionCode $CODE/; s/versionName \"1.0\"/versionName \"$V\"/" android/app/build.gradle
+          echo "v=$V" >> "$GITHUB_OUTPUT"
+      # Clé de signature : secret ANDROID_KEYSTORE_B64 (+ ANDROID_KEYSTORE_PASS) s'il existe, sinon une clé gardée dans le cache Actions.
+      # La même clé doit signer chaque version, sinon Android refuse la mise à jour (il faut alors désinstaller l'ancienne).
+      - name: Clé de signature (cache)
+        uses: actions/cache@v4
+        with:
+          path: android-app/ict.keystore
+          key: ict-android-keystore-v1
+      - name: Clé de signature
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+        run: |
+          if [ -n "$KS_B64" ]; then echo "$KS_B64" | base64 -d > ict.keystore; echo "KS_PASS=$KS_PASS" >> "$GITHUB_ENV";
+          else
+            echo "KS_PASS=ict-android" >> "$GITHUB_ENV"
+            [ -f ict.keystore ] || keytool -genkeypair -v -keystore ict.keystore -alias ict -keyalg RSA -keysize 2048 -validity 10000 -storepass ict-android -keypass ict-android -dname "CN=Inner Circle Trader"
+          fi
+      - name: Build APK
+        run: |
+          cd android && chmod +x gradlew && ./gradlew --no-daemon assembleRelease
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/zipalign" -f -p 4 app/build/outputs/apk/release/app-release-unsigned.apk ../aligned.apk
+          "$BT/apksigner" sign --ks ../ict.keystore --ks-key-alias ict --ks-pass env:KS_PASS --key-pass env:KS_PASS --out ../Inner-Circle-Trader-android.apk ../aligned.apk
+          "$BT/apksigner" verify ../Inner-Circle-Trader-android.apk
+      - uses: actions/upload-artifact@v6
+        with:
+          name: InnerCircleTrader-android
+          path: android-app/Inner-Circle-Trader-android.apk
+      - name: Publish release "latest-android"
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest-android
+          name: Inner Circle Trader v${{ steps.v.outputs.v }} (Android)
+          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** pour Android. Télécharger `Inner-Circle-Trader-android.apk` sur le téléphone, l'ouvrir et autoriser l'installation depuis cette source. Pour mettre à jour : télécharger la nouvelle version et l'installer par-dessus (les données restent)."
+          prerelease: false
+          make_latest: false
+          files: android-app/Inner-Circle-Trader-android.apk
