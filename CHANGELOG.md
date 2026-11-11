@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.27.0] — 2026-11-11
+### Ajouté
+- Thème « Noir » : fond noir fumé, panneaux en verre, menu et boutons en pilules (l'élément actif en blanc), grands titres, calendrier sombre. Par défaut sur la version Mac ; bouton ◐ en bas du menu ou Profil › Apparence pour passer de Noir à Classique.
+- Profil › Apparence : image de fond personnelle pour le thème Noir (assombrie pour garder le texte lisible, enregistrée sur cet ordinateur).
+
 ## [1.26.0] — 2026-11-11
 ### Ajouté
 - Hexagone de performance : l'axe « Risque » est calculé sur tous les trades, en % du vrai capital (MLL 2 000 $). Risque d'une position = tag « Risque », sinon |P&L net / RR fait| de la fiche Notion liée, sinon perte réalisée (trades perdants). L'infobulle donne le risque moyen en $ et le respect de la règle des tranches (500 $, 250 $ sous 1 500 $ de DD restant).
@@ -34,11 +39,6 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 ### Ajouté
 - Backtesteur : guide « Comment dessiner » (bouton ? de la barre d'outils) avec les raccourcis réellement configurés.
 - `tools/check.js` : tests du cœur du replay (déclenchement des ordres, gaps, anti-lookahead, horloge, buffer).
-
-## [1.23.0] — 2026-11-11
-### Ajouté
-- Thème « Noir » : fond noir fumé, panneaux en verre, menu et boutons en pilules (l'élément actif en blanc), grands titres, calendrier sombre. Par défaut sur la version Mac ; bouton ◐ en bas du menu ou Profil › Apparence pour passer de Noir à Classique.
-- Profil › Apparence : image de fond personnelle pour le thème Noir (assombrie pour garder le texte lisible, enregistrée sur cet ordinateur).
 
 ## [1.22.3] — 2026-11-10
 ### Modifié
