@@ -2611,13 +2611,23 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       ${L.map((p) => `<tr><td>${esc(String(p.date).replace("T", " ").slice(0, 16))}</td><td>${p.firm}</td><td>${esc(p.type || "")}</td><td class="num">${usd(p.amount)}</td><td>${esc(p.ref || "")}</td></tr>`).join("") || '<tr><td colspan="5" class="hintd">Aucun achat.</td></tr>'}</tbody></table></div>
       ${subs.length ? `<div class="panel"><div class="ptitle">Abonnements</div><table class="tbl"><thead><tr><th>ID</th><th>Prop firm</th><th>Statut</th><th class="num">Prix / mois</th><th>Début</th><th>Prochain prélèvement</th></tr></thead><tbody>${subs.map((s) => `<tr><td>${esc(s.id)}</td><td>${s.firm}</td><td><span class="cp-st ${/active/i.test(s.status) ? "up" : ""}">${esc(s.status)}</span></td><td class="num">${usd(s.price)}</td><td>${esc(s.start || "")}</td><td>${esc(s.next || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
   }
+  /* comptes.json du Journal (export Stats TopstepX, dossier data\ : liste de comptes « ID TopstepX ») → format des pages Comptes */
+  function fromJournal(v) {
+    const rows = Array.isArray(v) ? v : v && (v.comptes || v.rows || v.data || v.results);
+    if (!Array.isArray(rows)) return null; const R = rows.filter((r) => r && r["ID TopstepX"] != null); if (!R.length) return null;
+    const st = (c) => c.Statut === "Cramé" ? "blown" : c.Statut === "Passé" ? "passed" : c.Statut === "Archivé" ? "closed" : c["Verrouillé"] ? "violation" : "active";
+    const accounts = R.map((c) => ({ id: String(c["ID TopstepX"]), name: c.Nom || c["Nom TopstepX"] || String(c["ID TopstepX"]), type: c.Type || "", stage: c.Type || "", status: st(c),
+      balance: c["Solde TopstepX"] != null ? +c["Solde TopstepX"] : null, startBalance: c["Solde de départ"] != null ? +c["Solde de départ"] : null, dll: c.DLL ?? null, start: c["Archivé le"] || c["Dernière synchro"] || "", days: [] }));
+    const prev = firmOf("topstep");
+    return { ...(C || {}), updated: new Date().toISOString(), topstep: { ...prev, accounts } };
+  }
   const state = {};
   function render(v) { if (v === "topstep") firmPage("topstep", "Topstep"); else if (v === "apex") firmPage("apex", "Apex"); else if (v === "payouts") payoutsPage(); else if (v === "recus") recusPage(); }
   window.comptesRender = async (v) => { render(v); await load(); render(v); };
   { const h=(location.hash||"").slice(1); if(["topstep","apex","payouts","recus"].includes(h)) window.comptesRender(h); }
   document.addEventListener("change", (e) => {
     if (e.target.classList.contains("cpSel")) { state[e.target.dataset.k] = e.target.value; render(e.target.dataset.k); }
-    if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { const d = JSON.parse(t); if (!d.topstep && !d.apex) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
+    if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { let d = JSON.parse(t); if (!d.topstep && !d.apex) d = fromJournal(d); if (!d) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
   });
   document.addEventListener("click", (e) => { const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
 })();
