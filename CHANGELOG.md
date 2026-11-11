@@ -35,6 +35,11 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Backtesteur : guide « Comment dessiner » (bouton ? de la barre d'outils) avec les raccourcis réellement configurés.
 - `tools/check.js` : tests du cœur du replay (déclenchement des ordres, gaps, anti-lookahead, horloge, buffer).
 
+## [1.23.0] — 2026-11-11
+### Ajouté
+- Thème « Noir » : fond noir fumé, panneaux en verre, menu et boutons en pilules (l'élément actif en blanc), grands titres, calendrier sombre. Par défaut sur la version Mac ; bouton ◐ en bas du menu ou Profil › Apparence pour passer de Noir à Classique.
+- Profil › Apparence : image de fond personnelle pour le thème Noir (assombrie pour garder le texte lisible, enregistrée sur cet ordinateur).
+
 ## [1.22.3] — 2026-11-10
 ### Modifié
 - App Mac : icône style Liquid Glass (bulle de verre avec une courbe, dégradé vert / bleu / violet).
