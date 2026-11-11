@@ -420,7 +420,7 @@ body.noir #sideHot{display:block;position:fixed;left:0;top:0;width:12px;height:1
 .bt-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}.bt-table th,.bt-table td{border-bottom:1px solid #e3e5ea;padding:5px 8px;text-align:left}
 .nauto.on{background:#1f7a3a!important;color:#fff!important}.nauto:not(.on){opacity:.75}
 body.jt-neal-on .jt-tsx,body:not(.jt-neal-on) .jt-neal{display:none!important}
-body.jt-bt-on .jt-tsx{display:none!important}
+body.jt-bt-on .jt-tsx,body.jt-p80-on .jt-tsx{display:none!important}
 .tx-jt{width:100%;border-collapse:collapse;font-size:14px}.tx-jt th{color:var(--mut);font-weight:400;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}.tx-jt td{padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}.tx-jt tr[data-id]:hover td{background:#10141a}
 .rv-new{background:#2f54eb!important;border:none!important;color:#fff!important;font-weight:600}
 .rv-add{float:left;visibility:hidden;background:#26262d;border:none;color:#e3e4ea;border-radius:4px;width:20px;height:20px;line-height:18px;cursor:pointer;font-size:15px;margin-right:4px}
@@ -977,7 +977,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="jtop">
     <div><h2>Journal de trading</h2><p class="lead" style="margin:0"><span id="jSync" class="jt-tsx">Stats TopstepX par compte.</span><span class="jt-neal" id="rvStampJ"></span></p></div>
     <div class="acts">
-      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button></div>
+      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button><button class="rv-tab jtab" data-jt="p80">80/20</button></div>
       <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button><button class="btn gray jt-neal nauto" id="rvAuto2" title="Synchro automatique app ⇄ Notion">Synchro Notion : On</button>
       <button class="btn jt-tsx" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
       <span class="jt-tsx" id="jRecWrap" hidden style="position:relative"><button class="btn gray" id="jRecBtn" title="Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)">＋ Récupérer un compte</button>
@@ -1075,6 +1075,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div id="jtNeal" hidden><div id="rvBodyJ"></div></div>
   <div id="jtBt" hidden></div>
+  <div id="jtP80" hidden></div>
 </div></section>
 <section class="view" id="v-review"><div class="page" style="max-width:none;padding:26px 28px 60px">
   <div class="jtop">
@@ -1640,7 +1641,7 @@ function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); con
 function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
-  if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); }
+  if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["topstep","apex","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
   if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
@@ -1648,11 +1649,11 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
 }
 document.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>go(x.dataset.go)));
 document.querySelectorAll("[data-grp]").forEach(x=>x.addEventListener("click",()=>{ $(x.dataset.grp).classList.toggle("closed"); }));
-function jtab(t){ document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); $("jtTsx").hidden = t!=="tsx"; $("jtNeal").hidden = t!=="neal"; $("jtBt").hidden = t!=="bt"; if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0);
+function jtab(t){ document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); $("jtTsx").hidden = t!=="tsx"; $("jtNeal").hidden = t!=="neal"; $("jtBt").hidden = t!=="bt"; $("jtP80").hidden = t!=="p80"; document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0);
   document.querySelectorAll(".jtab").forEach(b=>b.classList.toggle("on", b.dataset.jt===t)); try{localStorage.setItem("econcal-jtab",t)}catch(e){}
-  if(t==="tsx") setTimeout(()=>window.jdash&&jdash.redraw(),0); else setTimeout(()=>window.reviewRender&&reviewRender(),0); }
+  if(t==="tsx") setTimeout(()=>window.jdash&&jdash.redraw(),0); else if(t!=="p80") setTimeout(()=>window.reviewRender&&reviewRender(),0); }
 document.querySelectorAll(".jtab").forEach(b=>b.onclick=()=>jtab(b.dataset.jt));
-try{ const t=localStorage.getItem("econcal-jtab"); if(t==="neal"||t==="bt") jtab(t); }catch(e){}
+try{ const t=localStorage.getItem("econcal-jtab"); if(t==="neal"||t==="bt"||t==="p80") jtab(t); }catch(e){}
 const NARROW=1100, isNarrow=()=>innerWidth<NARROW;
 const miniPref=()=>{ try{return !!localStorage.getItem("econcal-mini")}catch(e){return false} };
 $("miniBtn").onclick=()=>{ $("app").classList.toggle("mini"); if(!isNarrow()) try{localStorage.setItem("econcal-mini",$("app").classList.contains("mini")?"1":"")}catch(e){} };
@@ -2548,6 +2549,82 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 })();
 </script>
 <script>
+/* ---------- Journal : 80/20 (loi de Pareto) — quels 20 % de trades / horaires / setups font 80 % du P&L ---------- */
+/* p80:start */
+function pareto8020(trades, tagsOf) {
+  const T = (trades || []).filter((t) => t && t["Net P&L"] != null && !isNaN(+t["Net P&L"]));
+  const pl = (t) => +t["Net P&L"], r2 = (x) => Math.round(x * 100) / 100;
+  const gains = T.filter((t) => pl(t) > 0).map(pl).sort((a, b) => b - a), losses = T.filter((t) => pl(t) < 0).map(pl).sort((a, b) => a - b);
+  const sum = (a) => a.reduce((s, x) => s + x, 0), gp = sum(gains), gl = sum(losses);
+  const cover = (a, tot) => { if (!a.length || !tot) return null; let s = 0; for (let i = 0; i < a.length; i++) { s += a[i]; if (Math.abs(s) >= Math.abs(tot) * 0.8 - 1e-9) return { n: i + 1, pct: (i + 1) / a.length }; } return { n: a.length, pct: 1 }; };
+  const topShare = (a, tot) => { if (!a.length || !tot) return null; const k = Math.max(1, Math.ceil(a.length * 0.2)); return sum(a.slice(0, k)) / tot; };
+  const NYF = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", weekday: "short", hour12: false });
+  const ny = (iso) => { const d = new Date(iso); if (isNaN(d)) return null; const p = {}; NYF.formatToParts(d).forEach((x) => (p[x.type] = x.value)); return { h: +p.hour % 24, m: +p.minute, wd: p.weekday }; };
+  const WD = { Mon: "Lundi", Tue: "Mardi", Wed: "Mercredi", Thu: "Jeudi", Fri: "Vendredi", Sat: "Samedi", Sun: "Dimanche" };
+  const slot = (t) => { const n = ny(t.Entry); if (!n) return null; const a = n.h * 60 + (n.m < 30 ? 0 : 30), b = a + 30, f = (x) => Math.floor(x / 60) + "h" + (x % 60 ? "30" : "00"); return f(a) + "–" + f(b); };
+  const tag = (t, k) => { const v = tagsOf && tagsOf(t.ID); const x = v && v[k]; return x == null || x === "" || (Array.isArray(x) && !x.length) ? null : x; };
+  const dims = [
+    ["Créneau d'entrée (heure de New York)", (t) => slot(t)],
+    ["Jour de la semaine", (t) => { const n = ny(t.Entry); return n ? WD[n.wd] || n.wd : null; }],
+    ["Actif", (t) => t.Symbol || t.Contract || null],
+    ["Sens", (t) => t.Direction || null],
+    ["Time (tag)", (t) => tag(t, "Time")],
+    ["Model (tag)", (t) => tag(t, "Model")],
+    ["Respect du plan (tag)", (t) => tag(t, "Respect du plan ?")],
+    ["Erreur (tag)", (t) => tag(t, "Erreur")],
+  ];
+  const groups = dims.map(([name, fn]) => {
+    const G = new Map(); let tagged = 0;
+    for (const t of T) { let k = fn(t); if (k == null) continue; tagged++; (Array.isArray(k) ? k : [k]).forEach((kk) => { const g = G.get(kk) || { key: String(kk), n: 0, net: 0, win: 0, gain: 0, loss: 0 }; const v = pl(t); g.n++; g.net += v; if (v > 0) { g.win++; g.gain += v; } else g.loss += v; G.set(kk, g); }); }
+    const rows = [...G.values()].map((g) => ({ ...g, net: r2(g.net), gain: r2(g.gain), loss: r2(g.loss), winRate: g.n ? g.win / g.n : 0, gainShare: gp ? g.gain / gp : 0, lossShare: gl ? g.loss / gl : 0 })).sort((a, b) => b.net - a.net);
+    const pos = rows.filter((r) => r.net > 0), posTot = sum(pos.map((r) => r.net)); let s = 0; const core = new Set();
+    for (const r of pos) { if (posTot && s >= posTot * 0.8 - 1e-9) break; core.add(r.key); s += r.net; }
+    rows.forEach((r) => (r.core = core.has(r.key)));
+    return { name, rows, tagged, coreShareOfBuckets: rows.length ? core.size / rows.length : 0 };
+  });
+  return { n: T.length, net: r2(sum(T.map(pl))), grossProfit: r2(gp), grossLoss: r2(gl), wins: gains.length, losses: losses.length,
+    winCover: cover(gains, gp), lossCover: cover(losses, gl), top20Gain: topShare(gains, gp), top20Loss: topShare(losses, gl), groups };
+}
+/* p80:end */
+(function () {
+  const usd = (v) => (v < 0 ? "-" : "") + "$" + Math.abs(+v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const pc = (x) => x == null ? "—" : Math.round(x * 100) + " %";
+  const e = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  let acct = "all";
+  window.p80Render = function () {
+    const box = document.getElementById("jtP80"); if (!box) return;
+    const d = window.jdash && jdash.data("trades"), C = window.jdash && jdash.data("comptes");
+    const all = d && d.status === "ok" ? d.data : [], comptes = C && C.status === "ok" ? C.data.filter((c) => !c._all) : [];
+    if (!all.length) { box.innerHTML = '<div class="jempty"><b>Pas encore de trades</b>Synchronise TopstepX (onglet Stats TopstepX) pour voir ton 80/20.</div>'; return; }
+    const T = acct === "all" ? all : all.filter((t) => String(t["ID TopstepX"]) === acct);
+    const P = pareto8020(T, (id) => window.jmeta && jmeta.tags(id));
+    const opt = `<select id="p80Acct" style="max-width:360px"><option value="all">Tous les comptes</option>${comptes.map((c) => `<option value="${e(c["ID TopstepX"])}"${String(c["ID TopstepX"]) === acct ? " selected" : ""}>${e(c.Nom || c["Nom TopstepX"] || c["ID TopstepX"])}</option>`).join("")}</select>`;
+    const line = (c, tot, word) => c ? `${c.n} ${word} sur ${tot} (${pc(c.pct)}) font 80 % ${word === "gagnants" ? "de tes gains" : "de tes pertes"}` : "—";
+    const tbl = (g) => {
+      if (!g.rows.length) return `<div class="panel"><div class="ptitle">${e(g.name)}</div><p class="hintd" style="margin:0">Aucun trade tagué pour l'instant${/tag/.test(g.name) ? " (renseigne les Tags dans Stats TopstepX)" : ""}.</p></div>`;
+      const max = Math.max(...g.rows.map((r) => Math.abs(r.net)), 1);
+      return `<div class="panel"><div class="ptitle">${e(g.name)} <span style="text-transform:none;letter-spacing:0;color:#6f727c;font-weight:400">· ★ = le noyau qui fait 80 % du P&amp;L positif</span></div><table class="tbl"><thead><tr><th></th><th>${e(g.name.replace(/ \(.*\)/, ""))}</th><th class="num">Trades</th><th class="num">% gagnants</th><th class="num">P&amp;L net</th><th style="width:28%"></th><th class="num">Part des gains</th><th class="num">Part des pertes</th></tr></thead><tbody>
+        ${g.rows.map((r) => `<tr${r.core ? ' style="background:rgba(47,211,124,.06)"' : r.net < 0 && r.lossShare >= 0.2 ? ' style="background:rgba(255,92,101,.06)"' : ""}><td>${r.core ? "★" : r.net < 0 && r.lossShare >= 0.2 ? "✕" : ""}</td><td>${e(r.key)}</td><td class="num">${r.n}</td><td class="num">${pc(r.winRate)}</td><td class="num ${r.net >= 0 ? "pos" : "neg"}">${usd(r.net)}</td>
+          <td><div style="height:8px;border-radius:4px;width:${(Math.abs(r.net) / max * 100).toFixed(1)}%;background:${r.net >= 0 ? "#2fd37c" : "#ff5c65"};opacity:.7"></div></td><td class="num">${pc(r.gainShare)}</td><td class="num">${pc(r.lossShare)}</td></tr>`).join("")}</tbody></table></div>`;
+    };
+    const best = P.groups[0].rows.filter((r) => r.core).map((r) => r.key), worst = P.groups.map((g) => g.rows.filter((r) => r.net < 0 && r.lossShare >= 0.2).map((r) => r.key)).flat();
+    box.innerHTML = `<div class="row2" style="margin:0 0 14px;align-items:center;gap:12px"><b style="font-size:15px">Loi de Pareto (80/20)</b>${opt}<span class="hintd" style="margin:0">Environ 20 % des causes font 80 % du résultat : repère ce qui te fait vraiment gagner, et ce qui te coûte le plus.</span></div>
+      <div class="kpis">
+        <div class="kpi"><small>P&amp;L net</small><b class="${P.net >= 0 ? "pos" : "neg"}">${usd(P.net)}</b><i>${P.n} trades · ${P.wins} gagnants · ${P.losses} perdants</i></div>
+        <div class="kpi"><small>Tes gains</small><b class="pos">${pc(P.top20Gain)}</b><i>des gains viennent de tes 20 % meilleurs trades gagnants</i></div>
+        <div class="kpi"><small>Tes pertes</small><b class="neg">${pc(P.top20Loss)}</b><i>des pertes viennent de tes 20 % pires trades perdants</i></div>
+        <div class="kpi"><small>Concentration</small><b>${P.winCover ? pc(P.winCover.pct) : "—"}</b><i>${line(P.winCover, P.wins, "gagnants")}</i></div>
+        <div class="kpi"><small>Concentration des pertes</small><b>${P.lossCover ? pc(P.lossCover.pct) : "—"}</b><i>${line(P.lossCover, P.losses, "perdants")}</i></div>
+      </div>
+      <div class="panel" style="margin-bottom:14px"><div class="ptitle">Ce que disent tes chiffres</div><ul style="margin:0;padding-left:18px;line-height:1.7;color:#c9cbd2">
+        <li>Ton P&amp;L positif vient surtout de ${best.length ? "<b>" + best.map(e).join(", ") + "</b>" : "—"} (créneaux d'entrée, heure de New York).</li>
+        <li>${worst.length ? "Ce qui pèse le plus dans tes pertes : <b>" + [...new Set(worst)].map(e).join(", ") + "</b>." : "Aucune catégorie ne concentre à elle seule 20 % de tes pertes."}</li>
+        <li>Les lignes ★ forment ton noyau 80/20 dans chaque tableau ; les lignes ✕ sont perdantes et font au moins 20 % de tes pertes.</li></ul></div>
+      ${P.groups.map(tbl).join("")}`;
+    document.getElementById("p80Acct").onchange = (ev) => { acct = ev.target.value; window.p80Render(); };
+  };
+})();
+
 /* ---------- Comptes prop firms : Topstep, Apex, Payouts, Achats & reçus (données : Bureau/Inner Circle Trader/comptes/comptes.json, mis à jour chaque mois par une tâche Claude, ou importées à la main) ---------- */
 (function(){
   const KEYC = "econcal-comptes"; let C = null;
