@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.27.1] — 2026-11-11
+### Modifié
+- Thème Noir : le menu devient une capsule de verre flottante, avec seulement les icônes (nom de la page au survol) et la page active dans un rond blanc.
+
 ## [1.27.0] — 2026-11-11
 ### Ajouté
 - Thème « Noir » : fond noir fumé, panneaux en verre, menu et boutons en pilules (l'élément actif en blanc), grands titres, calendrier sombre. Par défaut sur la version Mac ; bouton ◐ en bas du menu ou Profil › Apparence pour passer de Noir à Classique.

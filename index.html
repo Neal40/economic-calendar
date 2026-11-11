@@ -280,6 +280,25 @@ body.noir .etk{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1
 body.noir .etk summary{color:#eee}
 body.noir #ovEarn .modal p,body.noir .etk small{color:#9a9ca5}
 body.noir .imp.both{background:#fff;color:#08080a}
+/* menu latéral du thème Noir : capsule de verre flottante, icônes seules, page active = rond blanc */
+body.noir .app .side{width:84px;flex:none;margin:18px 0 18px 22px;height:auto;max-height:calc(100vh - 36px);align-self:center;padding:16px 12px;border-radius:44px;align-items:center;overflow-y:auto;overflow-x:visible;scrollbar-width:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.035) 45%,rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.06),0 24px 60px rgba(0,0,0,.55);backdrop-filter:blur(30px) saturate(170%);-webkit-backdrop-filter:blur(30px) saturate(170%)}
+body.noir .app .side::-webkit-scrollbar{display:none}
+body.noir .side .who{padding:0;background:none;border:none;justify-content:center;margin-bottom:10px}
+body.noir .side .who .av{width:52px;height:52px;box-shadow:0 0 0 1px rgba(255,255,255,.18)}
+body.noir .side .who>div:not(.av),body.noir .side .mlabel,body.noir .side .gh,body.noir .nav span,body.noir .nav .ext,body.noir #miniBtn{display:none}
+body.noir .side .grp{margin:0;width:100%;display:flex;flex-direction:column;align-items:center}
+body.noir .side .grp.closed .items{display:block}
+body.noir .side .grp+.grp{border-top:1px solid rgba(255,255,255,.12);margin-top:10px;padding-top:10px}
+body.noir .side .items{padding:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+body.noir .side .nav{width:58px;height:58px;padding:0;justify-content:center;border-radius:50%;color:#e6e7ea;background:none}
+body.noir .side .nav .ic{width:23px;height:23px;opacity:.9;stroke-width:1.6}
+body.noir .side .nav:hover{background:rgba(255,255,255,.09)}
+body.noir .side .nav.on{background:#fff;color:#08080a;box-shadow:0 8px 26px rgba(255,255,255,.22),inset 0 -2px 6px rgba(0,0,0,.08)}
+body.noir .side .sfoot{flex-direction:column;align-items:center;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);width:100%}
+body.noir .side .sfoot button{width:40px;height:40px;background:rgba(255,255,255,.06)}
+@media (max-width:1099px){body.noir .app:not(.mini) .side{position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 24px 60px rgba(0,0,0,.55)}}
 /* ---------- Earnings tracker ---------- */
 .etk{border:1px solid #d9dce3;border-radius:10px;margin:0 0 8px;background:#fff}.etk summary{display:grid;grid-template-columns:110px 70px 1fr 120px 120px;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;font-size:13px;color:#1b1e25}
 .etk summary b{font-size:14px}.etk .imp{font-weight:700;border-radius:6px;padding:3px 8px;text-align:center;font-size:12px}.imp.both{background:#1b1e25;color:#fff}.imp.nq{background:#2962ff;color:#fff}.imp.es{background:#e53935;color:#fff}.imp.none{background:#e3e5ea;color:#5b6170}
@@ -2509,6 +2528,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   const set = (k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v) }catch(e){ alert("Image trop lourde pour être enregistrée."); } };
   function apply(){ const th=get("econcal-theme", isMac?"noir":"classique"), w=get("econcal-wall",""); document.body.classList.toggle("noir", th==="noir");
     document.body.classList.toggle("wall", !!w && th==="noir"); document.body.style.setProperty("--wall", w?`url("${w}")`:"none"); const s=document.getElementById("thSel"); if(s) s.value=th; }
+  document.querySelectorAll(".side .nav").forEach(n=>{ if(!n.title){ const t=(n.querySelector("span")||n).textContent.trim(); if(t) n.title=t; } });
   apply();
   document.getElementById("thBtn").onclick=()=>{ set("econcal-theme", document.body.classList.contains("noir")?"classique":"noir"); apply(); };
   document.getElementById("thSel").onchange=e=>{ set("econcal-theme", e.target.value); apply(); };
