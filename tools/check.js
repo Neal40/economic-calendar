@@ -27,6 +27,20 @@ try {
   if (btStats([], { type: "classic" }).n !== 0) errors.push("btStats : liste vide");
 } catch (e) { errors.push("btStats : " + e.message); }
 
+// risque par position du Journal (riskCalc, fonction pure extraite d'index.html)
+try {
+  const src = /\/\* riskCalc:start[\s\S]*?\*\/\n([\s\S]*?)\/\* riskCalc:end \*\//.exec(html)[1], riskCalc = new Function(src + "; return riskCalc;")();
+  const f = (ID, Day, a, b, net, Direction) => ({ ID, Day, Entry: Day + "T" + a + ":00Z", Exit: Day + "T" + b + ":00Z", "Net P&L": net, Direction: Direction || "Long" });
+  const F = [f("a", "2026-01-05", "15:00", "15:05", -400), f("b1", "2026-01-05", "15:10", "15:20", -150), f("b2", "2026-01-05", "15:11", "15:20", -150), f("c", "2026-01-05", "15:30", "15:40", 600),
+    f("d", "2026-01-06", "15:00", "15:10", 1500), f("e", "2026-01-07", "15:00", "15:10", 100)];
+  const r = riskCalc(F, 50000, { rrOf: (id) => ({ c: 3, d: 3 }[id]) });
+  const ok = r.rows.length === 5 && r.n === 4 && r.avg === 350 && r.pct === 17.5 && r.ok === 4 && r.est === 2 && r.rows[2].dd === 1300 && r.rows[2].allowed === 250 && r.rows[3].dd === 1900 && r.rows[4].dd === 2000 && r.rows[4].risk === null;
+  if (!ok) errors.push("riskCalc : résultat inattendu " + JSON.stringify(r));
+  const k = riskCalc([f("x", "2026-01-05", "15:00", "15:05", 900)], 49000 + 1000, { tagRisk: () => 600 });
+  if (k.ok !== 0 || k.pct !== 30) errors.push("riskCalc : tag Risque / règle des tranches");
+  if (riskCalc([], 50000).n !== 0) errors.push("riskCalc : liste vide");
+} catch (e) { errors.push("riskCalc : " + e.message); }
+
 // cœur du replay (btCore : horloge, buffer, exécution des ordres), extrait d'index.html
 try {
   const src = /\/\* btCore:start[^\n]*\n([\s\S]*?)\/\* btCore:end \*\//.exec(html)[1], C = new Function(src + "; return btCore;")();

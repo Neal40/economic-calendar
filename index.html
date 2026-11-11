@@ -2312,12 +2312,40 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   });
 
   /* ----- Hexagone de performance ----- */
+  /* riskCalc:start — fonction pure, testée par tools/check.js. Risque par position d'UN compte, rapporté au vrai capital (MLL 2 000 $).
+     Source du risque : tag « Risque » ($) > |P&L net / RR fait| de la fiche Notion liée > perte réalisée (trades perdants seulement).
+     Règle des tranches : DD restant >= 1 500 $ → 500 $ max (25 %) ; en dessous → 250 $ max. */
+  function riskCalc(fills, start, o) {
+    o = o || {}; const cap = o.cap || 2000, step = o.step || 1500, tag = o.tagRisk || (() => null), rrOf = o.rrOf || (() => null);
+    const F = fills.slice().sort((a, b) => String(a.Entry).localeCompare(String(b.Entry))), G = [];
+    for (const t of F) { const g = G[G.length - 1]; if (g && String(t.Entry) < g.exit && t.Direction === g.dir) { g.f.push(t); if (String(t.Exit) > g.exit) g.exit = String(t.Exit); } else G.push({ dir: t.Direction, exit: String(t.Exit), f: [t] }); }
+    let bal = start, hi = start, day = null; const rows = [];
+    for (const g of G) { const d = g.f[0].Day; if (d !== day) { if (day !== null) hi = Math.max(hi, bal); day = d; }
+      const net = g.f.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0), floor = o.floorCap != null ? Math.min(o.floorCap, hi - cap) : hi - cap, dd = bal - floor, allowed = dd < step ? cap / 8 : cap / 4;
+      const tg = g.f.map((t) => tag(t.ID)).filter((v) => typeof v === "number" && v > 0), rr = g.f.map((t) => rrOf(t.ID)).find((v) => typeof v === "number" && Math.abs(v) >= 0.2);
+      let risk = null, src = null;
+      if (tg.length) { risk = tg.reduce((a, v) => a + v, 0); src = "tag"; } else if (rr !== undefined && Math.abs(net) > 0) { risk = Math.abs(net / rr); src = "rr"; } else if (net < 0) { risk = -net; src = "perte"; }
+      rows.push({ day: d, entry: g.f[0].Entry, net: Math.round(net * 100) / 100, dd: Math.round(dd * 100) / 100, allowed, risk: risk === null ? null : Math.round(risk * 100) / 100, src, pct: risk === null ? null : (risk / cap) * 100, ok: risk === null ? null : risk <= allowed * 1.1 });
+      bal += net; }
+    const K = rows.filter((r) => r.risk !== null), mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
+    return { rows, n: K.length, avg: mean(K.map((r) => r.risk)), pct: mean(K.map((r) => r.pct)), ok: K.filter((r) => r.ok).length, est: K.filter((r) => r.src === "perte").length };
+  }
+  /* riskCalc:end */
+  const riskOf = (c) => {
+    const all = dash.data("comptes").data || [], accs = c._all ? all.filter((a) => !a._all) : [c], F = dash.data("fills_calc").data || [];
+    const rrMap = new Map(), A = window.reviewAPI;
+    try { if (A && A.state && A.state.macro) for (const r of A.state.macro.rows) { if (typeof r["RR fait"] !== "number") continue; const h = A.tsxMatch(r); if (h) h.forEach((t) => rrMap.set(String(t.ID), r["RR fait"])); } } catch (e) {}
+    const o = { tagRisk: (id) => (window.jmeta && jmeta.tags(id) || {})["Risque"], rrOf: (id) => rrMap.get(String(id)) };
+    const rows = accs.flatMap((a) => riskCalc(F.filter((t) => t["ID TopstepX"] === String(a["ID TopstepX"])), Number(a["Solde de départ"]) || (a.Type === "Funded" ? 0 : 50000), { ...o, floorCap: a.Type === "Funded" ? Number(a["Solde de départ"]) || 0 : null }).rows);
+    const K = rows.filter((r) => r.risk !== null);
+    return { n: K.length, avg: K.length ? d3.mean(K, (r) => r.risk) : null, pct: K.length ? d3.mean(K, (r) => r.pct) : null, ok: K.filter((r) => r.ok).length, est: K.filter((r) => r.src === "perte").length };
+  };
   const hexaStats = (c) => {
     const T = (dash.data("fills_calc").data || []).filter((t) => c._all || t["ID TopstepX"] === String(c["ID TopstepX"])).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
     const start = Number(c["Solde de départ"]) || 50000; let bal = start, peak = start, dd = 0;
     for (const t of T) { bal += t["Net P&L"]; peak = Math.max(peak, bal); dd = Math.max(dd, peak - bal); }
-    const risks = T.map((t) => (window.jmeta && jmeta.tags(t.ID) || {})["Risque"]).filter((v) => typeof v === "number" && v > 0);
-    return { Winrate: Number(c["Trade Win %"]) || 0, RR: Number(c["Avg Win / Avg Loss"]) || 0, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: risks.length ? (d3.mean(risks) / start) * 100 : 0 };
+    const rk = riskOf(c);
+    return { Winrate: Number(c["Trade Win %"]) || 0, RR: Number(c["Avg Win / Avg Loss"]) || 0, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: rk.pct, _risk: rk };
   };
   R().addEventListener("click", (e) => { const b = e.target.closest("[data-hx]"); if (b) dash.setParams({ hx: b.dataset.hx }); });
   dash.draw("hexa", (el) => {
@@ -2326,8 +2354,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     R().querySelectorAll("[data-hx]").forEach((b) => b.classList.toggle("on", b.dataset.hx === mode));
     const real = all.data.filter((a) => !a._all);
     const me = hexaStats(c), avgs = real.map(hexaStats), avg = {};
-    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions) || 0, me.Positions), (v) => String(Math.round(v))], ["Risque", 2, (v) => v.toFixed(2) + "%"]];
+    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions) || 0, me.Positions), (v) => String(Math.round(v))], ["Risque", 50, (v) => v.toFixed(1) + "%"]];
     AXES.forEach(([k]) => (avg[k] = d3.mean(avgs, (a) => a[k]) || 0));
+    const rkAll = riskOf(all.data.find((a) => a._all) || { _all: true }), rk = mode === "avg" ? rkAll : me._risk, usd0 = (v) => "$" + Math.round(v).toLocaleString("en-US");
+    const rkTip = rk && rk.n ? `<div class="tl">Risque moyen : ${usd0(rk.avg)} sur 2 000 $ de vrai capital · ${rk.n} position(s)${rk.est ? `, dont ${rk.est} estimée(s) par la perte réalisée` : ""}</div><div class="tl">Règle des tranches (500 $, 250 $ sous 1 500 $ de DD) : ${rk.ok} / ${rk.n} respectée(s)</div>` : `<div class="tl">Aucun risque connu : ajoute le tag « Risque » ou le RR fait dans Notion</div>`;
     const data = mode === "avg" ? avg : me, fill = mode === "avg" ? "rgba(226,179,61,.30)" : "rgba(47,84,235,.38)", stroke = mode === "avg" ? "#e2b33d" : "#3b5bff", tagBg = mode === "avg" ? "#e2b33d" : "#2f54eb", tagFg = mode === "avg" ? "#17130a" : "#fff";
     const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, Rr = Math.min(118, W / 2 - 70);
     const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
@@ -2342,7 +2372,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const g = svg.append("g").attr("transform", `translate(${x},${y})`).style("cursor", "default");
       g.append("rect").attr("x", -w / 2).attr("y", -10).attr("width", w).attr("height", 20).attr("rx", 5).attr("fill", tagBg);
       g.append("text").attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", tagFg).attr("font-size", 11.5).attr("font-weight", 700).text(txt);
-      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl" style="color:#7d9bff">Ce compte : ${f(me[k] || 0)}</div><div class="tl" style="color:#e2b33d">Moyenne de tes ${real.length} comptes : ${f(avg[k] || 0)}</div>`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
+      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl" style="color:#7d9bff">Ce compte : ${f(me[k] || 0)}</div><div class="tl" style="color:#e2b33d">Moyenne de tes ${real.length} comptes : ${f(avg[k] || 0)}</div>${k === "Risque" ? rkTip : ""}`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
        .on("mouseleave", () => tip.style("opacity", 0)); });
   });
 
@@ -2613,7 +2643,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* link a Notion setup to the TopstepX trades taken at the same time (entry within -2 / +3 min) */
   const nyFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
   const nyParts = (iso) => { const p = Object.fromEntries(nyFmt.formatToParts(new Date(iso)).map((x) => [x.type, x.value])); return { day: `${p.year}-${p.month}-${p.day}`, min: +p.hour * 60 + +p.minute }; };
-  const TWIN = { "Open Range": [570, 600], "Open Range 2": [600, 630], "Silver Bullet": [600, 660] };
+  const TWIN = { "Open Range": [570, 600], "Open Range 2": [570, 630], "Silver Bullet": [600, 660] };
   const winOf = (s) => { if (TWIN[s]) return TWIN[s]; const m = /^(\d{1,2}):(\d{2}) to (\d{1,2}):(\d{2})$/.exec(s || ""); if (!m) return null; let a = +m[1] * 60 + +m[2], b = +m[3] * 60 + +m[4]; if (a < 420) { a += 0; } return [a - 2, b + 5]; };
   const TAKEN_ST = ["TP", "SL", "BE (SL)", "BE (TP)"];
   function tsxMatch(r) {

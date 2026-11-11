@@ -83,7 +83,7 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 - **Jarvis** : coller `tools/jarvis-analyseur.js` dans la page topstepx.com/trade, puis `await JARVIS.status()` (voir l'en-tête du fichier pour toutes les commandes).
 
 ## Vérifier un changement
-`node tools/check.js` vérifie la syntaxe, le contrat IPC et les fonctions pures `btStats` / `btCore`. Avant de dire « c'est fait » :
+`node tools/check.js` vérifie la syntaxe, le contrat IPC et les fonctions pures `btStats` / `btCore` / `riskCalc` (risque par position de l'Hexagone). Avant de dire « c'est fait » :
 1. Ouvrir `index.html` dans le navigateur, aller sur la vue modifiée, vérifier la console (aucune erreur).
 2. Si le changement touche `desktop/` ou `window.desktop` : vérifier aussi le chemin web (fallback sans `window.desktop`).
 3. Si le changement touche le copier : vérifier en `demo` uniquement, et le dire explicitement.

@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.26.0] — 2026-11-11
+### Ajouté
+- Hexagone de performance : l'axe « Risque » est calculé sur tous les trades, en % du vrai capital (MLL 2 000 $). Risque d'une position = tag « Risque », sinon |P&L net / RR fait| de la fiche Notion liée, sinon perte réalisée (trades perdants). L'infobulle donne le risque moyen en $ et le respect de la règle des tranches (500 $, 250 $ sous 1 500 $ de DD restant).
+### Corrigé
+- Review : la fenêtre « Open Range 2 » commence à 9h30 (au lieu de 10h00) pour lier les trades TopstepX pris dès l'ouverture.
+
 ## [1.25.0] — 2026-11-11
 ### Modifié
 - Backtesteur : doublons retirés — plus de Buy / Sell / quantité ni de solde dans la barre de replay (panneau Order et BAL suffisent), plus de barre d'icônes à droite (Order, Watchlist, Alertes, Jarvis, News, Sessions, Préférences reviennent en boutons dans la barre du haut).
