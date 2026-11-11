@@ -299,6 +299,19 @@ body.noir .side .nav.on{background:#fff;color:#08080a;box-shadow:0 8px 26px rgba
 body.noir .side .sfoot{flex-direction:column;align-items:center;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);width:100%}
 body.noir .side .sfoot button{width:40px;height:40px;background:rgba(255,255,255,.06)}
 @media (max-width:1099px){body.noir .app:not(.mini) .side{position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 24px 60px rgba(0,0,0,.55)}}
+/* thème Noir : menu plus petit, caché ; il apparaît quand la souris touche le bord gauche (le reste en plein écran) */
+body.noir .app .side{position:fixed;left:14px;top:50%;z-index:60;width:64px;margin:0;padding:12px 8px;border-radius:34px;transform:translate(calc(-100% - 28px),-50%);opacity:0;transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s;max-height:calc(100vh - 28px)}
+body.noir.side-show .app .side{transform:translate(0,-50%);opacity:1}
+body.noir .side .who .av{width:40px;height:40px}
+body.noir .side .who{margin-bottom:6px}
+body.noir .side .items{gap:4px}
+body.noir .side .nav{width:46px;height:46px}
+body.noir .side .nav .ic{width:19px;height:19px}
+body.noir .side .grp+.grp{margin-top:6px;padding-top:6px}
+body.noir .side .sfoot{margin-top:6px;padding-top:6px}
+body.noir .side .sfoot button{width:34px;height:34px}
+#sideHot{display:none}
+body.noir #sideHot{display:block;position:fixed;left:0;top:0;width:12px;height:100vh;z-index:59}
 /* ---------- Earnings tracker ---------- */
 .etk{border:1px solid #d9dce3;border-radius:10px;margin:0 0 8px;background:#fff}.etk summary{display:grid;grid-template-columns:110px 70px 1fr 120px 120px;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;font-size:13px;color:#1b1e25}
 .etk summary b{font-size:14px}.etk .imp{font-weight:700;border-radius:6px;padding:3px 8px;text-align:center;font-size:12px}.imp.both{background:#1b1e25;color:#fff}.imp.nq{background:#2962ff;color:#fff}.imp.es{background:#e53935;color:#fff}.imp.none{background:#e3e5ea;color:#5b6170}
@@ -2529,6 +2542,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function apply(){ const th=get("econcal-theme", isMac?"noir":"classique"), w=get("econcal-wall",""); document.body.classList.toggle("noir", th==="noir");
     document.body.classList.toggle("wall", !!w && th==="noir"); document.body.style.setProperty("--wall", w?`url("${w}")`:"none"); const s=document.getElementById("thSel"); if(s) s.value=th; }
   document.querySelectorAll(".side .nav").forEach(n=>{ if(!n.title){ const t=(n.querySelector("span")||n).textContent.trim(); if(t) n.title=t; } });
+  // menu caché du thème Noir : bord gauche = afficher, sortie de la souris = masquer
+  const hot=document.createElement("div"); hot.id="sideHot"; document.body.append(hot);
+  const side=document.querySelector(".side"); let hideT=null;
+  const show=()=>{ clearTimeout(hideT); document.body.classList.add("side-show"); }, hide=()=>{ clearTimeout(hideT); hideT=setTimeout(()=>document.body.classList.remove("side-show"),350); };
+  hot.addEventListener("mouseenter",show); side.addEventListener("mouseenter",show); side.addEventListener("mouseleave",hide);
+  side.addEventListener("click",e=>{ if(e.target.closest(".nav")) hide(); });
   apply();
   document.getElementById("thBtn").onclick=()=>{ set("econcal-theme", document.body.classList.contains("noir")?"classique":"noir"); apply(); };
   document.getElementById("thSel").onchange=e=>{ set("econcal-theme", e.target.value); apply(); };

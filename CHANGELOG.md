@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.27.3] — 2026-11-11
+### Modifié
+- Thème Noir : menu plus petit et caché ; il apparaît quand la souris touche le bord gauche de l'écran et se cache dès qu'on en sort (ou après un clic). Les pages occupent toute la largeur.
+
 ## [1.27.2] — 2026-11-11
 ### Modifié
 - App Mac : icône noire en verre (courbe blanche dans une plaque de verre), assortie au thème Noir.
