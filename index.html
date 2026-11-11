@@ -2583,8 +2583,8 @@ function pareto8020(rows, val, dims) {
   const wdOfDay = (s) => { s = String(s || "").slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null; return ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][new Date(s + "T12:00:00Z").getUTCDay()]; };
   const MOIS = (s) => { s = String(s || "").slice(0, 7); return /^\d{4}-\d{2}$/.test(s) ? new Date(s + "-15T12:00:00Z").toLocaleDateString("fr-FR", { month: "long", year: "numeric", timeZone: "UTC" }) : null; };
   const TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"];
-  let src = "tsx", metric = "RR fait", acct = "all";
-  try { src = localStorage.getItem("econcal-p80-src") || "tsx"; metric = localStorage.getItem("econcal-p80-metric") || "RR fait"; } catch (x) {}
+  let src = "tsx", metric = "RR fait", acct = "all", taken = "pris";
+  try { src = localStorage.getItem("econcal-p80-src") || "tsx"; metric = localStorage.getItem("econcal-p80-metric") || "RR fait"; taken = localStorage.getItem("econcal-p80-taken") || "pris"; } catch (x) {}
 
   function tsxSource() {
     const d = window.jdash && jdash.data("trades"), C = window.jdash && jdash.data("comptes");
@@ -2599,13 +2599,16 @@ function pareto8020(rows, val, dims) {
   }
   function notionSource() {
     const A = window.reviewAPI, m = A && A.state && A.state.macro, all = m && m.rows ? m.rows : [], sc = (m && m.schema) || {};
-    const taken = all.filter((r) => { const st = Array.isArray(r.Status) ? r.Status : r.Status ? [r.Status] : []; return !st.length || st.some((x) => TAKEN.includes(x)); });
-    const hasPnl = !!sc.PnL || all.some((r) => typeof r.PnL === "number"); if (metric === "PnL" && !hasPnl) metric = "RR fait";
+    const isTaken = (r) => { const st = Array.isArray(r.Status) ? r.Status : r.Status ? [r.Status] : []; return !st.length || st.some((x) => TAKEN.includes(x)); };
+    const sel = all.filter((r) => taken === "tous" || (taken === "pris") === isTaken(r)), nPris = all.filter(isTaken).length;
+    const has = (k) => !!sc[k] || all.some((r) => typeof r[k] === "number"), METRICS = [["RR fait", "RR fait (R)", "R"], ["RR Parfait", "RR Parfait (R)", "R"], ["PnL", "PnL ($)", "$"]].filter(([k]) => k === "RR fait" || has(k));
+    if (!METRICS.some(([k]) => k === metric)) metric = "RR fait";
     const F = ["Time", "Type", "Actif", "Sens", "Model", "PDA HTF", "PD Array M1", "Prise de liquidité", "Status", "Règles respectées", "Respect du plan ?", "Raison hors plan", "Erreur"].filter((k) => sc[k] || all.some((r) => r[k] != null && r[k] !== ""));
-    return { rows: taken, unit: metric === "PnL" ? "$" : "R", val: (r) => typeof r[metric] === "number" ? r[metric] : null,
+    return { rows: sel, unit: metric === "PnL" ? "$" : "R", val: (r) => typeof r[metric] === "number" ? r[metric] : null,
       empty: !all.length && `<b>Journal de Neal pas encore chargé</b>Ouvre l'onglet « Journal de Neal » et clique sur « Synchroniser Notion », puis reviens ici.`,
-      note: `${taken.length} trades pris sur ${all.length} pages (les « Pas pris » sont exclus)`,
-      extra: `<select id="p80Metric" style="max-width:220px"><option value="RR fait"${metric === "RR fait" ? " selected" : ""}>Mesure : RR fait (R)</option>${hasPnl ? `<option value="PnL"${metric === "PnL" ? " selected" : ""}>Mesure : PnL ($)</option>` : ""}</select>`,
+      note: `${all.length} pages : ${nPris} pris (TP, BE, SL) · ${all.length - nPris} pas pris`,
+      extra: `<div class="rv-tabs">${[["pris", "Pris"], ["pas", "Pas pris"], ["tous", "Tous"]].map(([k, l]) => `<button class="rv-tab p80tk${taken === k ? " on" : ""}" data-t="${k}" title="${k === "pris" ? "TP, BE (TP), BE (SL), SL" : k === "pas" ? "Pas pris (TP / SL / BE)" : "Pris + pas pris"}">${l}</button>`).join("")}</div>
+        <select id="p80Metric" style="max-width:220px">${METRICS.map(([k, l]) => `<option value="${k}"${metric === k ? " selected" : ""}>Mesure : ${l}</option>`).join("")}</select>`,
       dims: [...F.map((k) => [k, (r) => r[k]]), ["Créneau d'entrée (heure de New York)", (r) => r["Entrée"] && String(r["Entrée"]).length > 10 ? slot(r["Entrée"]) : null], ["Jour de la semaine", (r) => wdOfDay(r.Date)], ["Mois", (r) => MOIS(r.Date)]] };
   }
 
@@ -2619,11 +2622,12 @@ function pareto8020(rows, val, dims) {
     const wire = () => {
       box.querySelectorAll(".p80src").forEach((b) => (b.onclick = () => { src = b.dataset.s; try { localStorage.setItem("econcal-p80-src", src); } catch (x) {} window.p80Render(); }));
       const a = document.getElementById("p80Acct"); if (a) a.onchange = (ev) => { acct = ev.target.value; window.p80Render(); };
+      box.querySelectorAll(".p80tk").forEach((b) => (b.onclick = () => { taken = b.dataset.t; try { localStorage.setItem("econcal-p80-taken", taken); } catch (x) {} window.p80Render(); }));
       const m = document.getElementById("p80Metric"); if (m) m.onchange = (ev) => { metric = ev.target.value; try { localStorage.setItem("econcal-p80-metric", metric); } catch (x) {} window.p80Render(); };
     };
     if (S.empty) { box.innerHTML = head + `<div class="jempty">${S.empty}</div>`; wire(); return; }
     const P = pareto8020(S.rows, S.val, S.dims);
-    if (!P.n) { box.innerHTML = head + `<div class="jempty"><b>Aucun trade avec un résultat chiffré</b>${S.unit === "R" ? "Renseigne « RR fait » dans tes pages Notion." : "Aucun P&L trouvé."}</div>`; wire(); return; }
+    if (!P.n) { box.innerHTML = head + `<div class="jempty"><b>Aucun trade avec un résultat chiffré</b>${S.unit === "R" ? "Aucune page de cette sélection n'a de « " + e(metric) + " » rempli (pour les « Pas pris », essaie la mesure RR Parfait si tu la remplis)." : "Aucun P&L trouvé."}</div>`; wire(); return; }
     const line = (c, tot, word) => c ? `${c.n} ${word} sur ${tot} (${pc(c.pct)}) font 80 % ${word === "gagnants" ? "de tes gains" : "de tes pertes"}` : "—";
     const tbl = (g) => {
       if (!g.rows.length) return `<div class="panel"><div class="ptitle">${e(g.name)}</div><p class="hintd" style="margin:0">Rien de renseigné pour l'instant.</p></div>`;
