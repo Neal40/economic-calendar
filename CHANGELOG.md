@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.27.2] — 2026-11-11
+### Modifié
+- App Mac : icône noire en verre (courbe blanche dans une plaque de verre), assortie au thème Noir.
+
 ## [1.27.1] — 2026-11-11
 ### Modifié
 - Thème Noir : le menu devient une capsule de verre flottante, avec seulement les icônes (nom de la page au survol) et la page active dans un rond blanc.
