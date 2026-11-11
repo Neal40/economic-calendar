@@ -12,7 +12,7 @@ Application de trading personnelle pour les futures **NQ / ES** (prop firm Topst
   - Arborescence des objets (groupes, renommer, glisser-déposer, multi-sélection, clic droit).
   - Préférences du chart, **sessions de backtest enregistrées**, **mises en page** avec dessins propres et sauvegarde automatique.
   - News Forex Factory sous les bougies, 2 charts côte à côte (NQ + ES).
-  - Une unité de temps = son propre CSV (`NQ_m15.csv`, `NQ_H1.csv`…).
+  - Une unité de temps = son propre CSV (`NQ_m15.csv`, `NQ_H1.csv`…), de 1s à 12M, pour NQ / ES / MNQ / MES (dossier `data_csv`, hors dépôt).
 - **Journal de trading** — statistiques TopstepX par compte, calendrier P&L, graphiques, images et tags.
 - **Review Notion** — lecture et écriture dans tes bases Notion (journal, homework).
 - **Trade copier Tradovate** — copie leader → followers (mode simulation par défaut).

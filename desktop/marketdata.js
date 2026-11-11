@@ -1,11 +1,18 @@
 /* Market data store for the backtester: TopstepX chart API -> CSV files on disk.
  * m1 bars since mid-2023 (one CSV per symbol and year) + 1-second bars (only the last days exist on TopstepX, one CSV per month).
  * Columns: time_ny,ts,open,high,low,close,volume   (/NQ and /ES = front contract, same prices as NQZ26 / ESZ26 on the chart)
+ *
+ * + dossier « data_csv » (téléchargé à la main) : un CSV par symbole et par unité de temps, NQ / ES / MNQ / MES
+ *   (NQ_1s.csv, NQ_5s.csv, NQ_15s.csv, NQ_30s.csv, NQ_m1.csv … NQ_12M.csv). Il passe avant le dossier « data » ;
+ *   les trous du m1 / 1s sont comblés par les fichiers de la synchro (ceux du NQ / ES pour les micros).
+ * Les CSV sont lus une seule fois (en flux, sans bloquer l'app) puis gardés en mémoire en tableaux typés : voir bank().
  */
 const fs = require("fs");
 const path = require("path");
 
-const SYMS = ["NQ", "ES"];
+const SYMS = ["NQ", "ES"];               // symboles synchronisés depuis TopstepX
+const UND = { MNQ: "NQ", MES: "ES" };    // micros : mêmes prix que le contrat principal (repli quand leur fichier manque)
+const SEC_TFS = ["1s", "5s", "15s", "30s"];
 const M1_START = Date.UTC(2023, 6, 1) / 1000; // first m1 data available on TopstepX ~ July 2023
 const HEADER = "time_ny,ts,open,high,low,close,volume\n";
 
@@ -14,8 +21,91 @@ const fmtNY = (() => {
   return (ts) => { const o = {}; f.formatToParts(new Date(ts * 1000)).forEach((x) => (o[x.type] = x.value)); return `${o.year}-${o.month}-${o.day} ${o.hour}:${o.minute}:${o.second}`; };
 })();
 
-function create(baseDir) {
-  const dir = baseDir;
+/* ---------- banque de bougies : un CSV -> Float64Array (6 valeurs par bougie : ts, o, h, l, c, v), triée, sans doublons ----------
+ * Lecture en flux (un fichier 1 s de 100 Mo ne bloque pas l'app), une seule fois par fichier : relu seulement si sa date ou sa taille change.
+ * Mémoire : au-delà de MAXB octets, les plus gros fichiers les moins récemment utilisés sont libérés (ils seront relus au prochain clic). */
+function bank(MAXB = 400 * 1048576) {
+  const C = new Map();
+  let tick = 0;
+  async function parse(file, size) {
+    let cap = Math.max(256, Math.ceil(size / 48)), a = new Float64Array(cap * 6), n = 0, rest = "", cols = null, sorted = true, lastT = -Infinity;
+    const line = (L) => {
+      if (!L) return;
+      if (L.charCodeAt(L.length - 1) === 13) { L = L.slice(0, -1); if (!L) return; }
+      const f = L.split(cols ? cols.sep : /[;,]/);
+      if (!cols) {
+        const head = f.map((x) => x.trim().toLowerCase()), idx = (names) => head.findIndex((h) => names.includes(h));
+        cols = { sep: L.includes(";") && !L.includes(",") ? ";" : ",", t: idx(["ts", "timestamp", "unix", "time"]), o: idx(["open", "o"]), h: idx(["high", "h"]), l: idx(["low", "l"]), c: idx(["close", "c"]), v: idx(["volume", "vol", "v"]) };
+        if (cols.t < 0 || cols.o < 0 || cols.h < 0 || cols.l < 0 || cols.c < 0) throw new Error("colonnes ts / open / high / low / close introuvables dans " + path.basename(file));
+        return;
+      }
+      let t = +f[cols.t]; if (f[cols.t] === "" || !isFinite(t)) t = parseNY(String(f[cols.t] || "").trim()); if (t > 1e12) t = Math.floor(t / 1000);
+      if (!isFinite(t)) return;
+      if (t === lastT) return; // doublon (synchro interrompue)
+      if (t < lastT) sorted = false; else lastT = t;
+      if (n === cap) { cap *= 2; const b = new Float64Array(cap * 6); b.set(a); a = b; }
+      const k = n * 6; a[k] = t; a[k + 1] = +f[cols.o]; a[k + 2] = +f[cols.h]; a[k + 3] = +f[cols.l]; a[k + 4] = +f[cols.c]; a[k + 5] = cols.v >= 0 ? +f[cols.v] || 0 : 0; n++;
+    };
+    for await (const chunk of fs.createReadStream(file, { encoding: "utf8", highWaterMark: 1 << 20 })) {
+      const parts = (rest + chunk).split("\n"); rest = parts.pop();
+      for (let i = 0; i < parts.length; i++) line(parts[i]);
+    }
+    line(rest);
+    if (!sorted) { // fichier pas dans l'ordre : tri par heure puis doublons retirés
+      const ix = Array.from({ length: n }, (_, i) => i).sort((x, y) => a[x * 6] - a[y * 6]), b = new Float64Array(n * 6); let m = 0;
+      for (const i of ix) { if (m && a[i * 6] === b[(m - 1) * 6]) continue; b.set(a.subarray(i * 6, i * 6 + 6), m * 6); m++; }
+      a = b; n = m;
+    }
+    return { a: a.slice(0, n * 6), n };
+  }
+  function evict() {
+    let tot = 0; for (const c of C.values()) tot += c.bytes || 0;
+    if (tot <= MAXB) return;
+    for (const [k, c] of [...C.entries()].filter(([, c]) => c.bytes > 8 * 1048576).sort((x, y) => x[1].use - y[1].use)) { if (tot <= MAXB) break; if (c.use === tick) continue; tot -= c.bytes; C.delete(k); }
+  }
+  // { a, n } du fichier (promesse partagée par les lectures simultanées), ou null si le fichier n'existe pas
+  function get(file) {
+    let st; try { st = fs.statSync(file); } catch (e) { C.delete(file); return Promise.resolve(null); }
+    let c = C.get(file);
+    if (!c || c.m !== st.mtimeMs || c.size !== st.size) {
+      c = { m: st.mtimeMs, size: st.size, bytes: 0, use: 0 };
+      c.p = parse(file, st.size).then((r) => { c.bytes = r.a.byteLength; evict(); return r; }, (e) => { if (C.get(file) === c) C.delete(file); throw e; });
+      C.set(file, c);
+    }
+    c.use = ++tick;
+    return c.p;
+  }
+  return { get, size: () => C.size };
+}
+// 1re bougie dont l'heure est >= t (recherche dichotomique)
+function lowerBound(b, t) { let lo = 0, hi = b.n; while (lo < hi) { const m = (lo + hi) >> 1; if (b.a[m * 6] < t) lo = m + 1; else hi = m; } return lo; }
+// bougies [ts, o, h, l, c, v] d'une banque entre deux heures unix (bornes incluses)
+function sliceRows(b, from, to) {
+  if (!b || !b.n) return [];
+  const out = [], a = b.a;
+  for (let i = lowerBound(b, from); i < b.n && a[i * 6] <= to; i++) { const k = i * 6; out.push([a[k], a[k + 1], a[k + 2], a[k + 3], a[k + 4], a[k + 5]]); }
+  return out;
+}
+// réunion de deux listes triées : « main » gagne sur une même heure, « fill » comble les trous
+function mergeRows(main, fill) {
+  if (!fill || !fill.length) return main || [];
+  if (!main || !main.length) return fill;
+  const out = []; let i = 0, j = 0;
+  while (i < main.length || j < fill.length) {
+    if (j >= fill.length || (i < main.length && main[i][0] <= fill[j][0])) { if (j < fill.length && fill[j][0] === main[i][0]) j++; out.push(main[i++]); }
+    else out.push(fill[j++]);
+  }
+  return out;
+}
+
+// opts.csvDirs : dossiers « data_csv » possibles (le 1er qui existe et contient des CSV est utilisé)
+function create(baseDir, opts = {}) {
+  const dir = baseDir, B = bank();
+  let csvFound = null;
+  const hasCsv = (d) => { try { return fs.readdirSync(d).some((f) => /^[A-Za-z]+_[0-9A-Za-z]+\.csv$/.test(f)); } catch (e) { return false; } };
+  const csvDir = () => { if (csvFound && fs.existsSync(csvFound)) return csvFound; csvFound = (opts.csvDirs || []).find(hasCsv) || null; return csvFound; };
+  const csvFile = (sym, tf) => { const d = csvDir(); return d ? path.join(d, `${sym}_${tf}.csv`) : null; };
+  const rowsOf = async (file, from, to) => { const b = file ? await B.get(file) : null; return b ? sliceRows(b, from, to) : null; };
   const stateFile = path.join(dir, "data-state.json");
   fs.mkdirSync(dir, { recursive: true });
   const readState = () => { try { return JSON.parse(fs.readFileSync(stateFile, "utf8")); } catch (e) { return {}; } };
@@ -81,7 +171,13 @@ function create(baseDir) {
   }
 
   function status() {
-    const st = readState(), out = { dir, running, lastSync: st.lastSync || null, allTf: st.allTf || null };
+    const st = readState(), out = { dir, running, lastSync: st.lastSync || null, allTf: st.allTf || null, csv: null };
+    const cd = csvDir();
+    if (cd) { // dossier data_csv : symboles et unités de temps présents
+      const fl = fs.readdirSync(cd).map((f) => /^([A-Za-z]+)_([0-9A-Za-z]+)\.csv$/.exec(f)).filter(Boolean), syms = {};
+      fl.forEach((m) => (syms[m[1].toUpperCase()] = syms[m[1].toUpperCase()] || []).push(m[2]));
+      out.csv = { dir: cd, files: fl.length, mb: +(fl.reduce((a, m) => a + fs.statSync(path.join(cd, m[0])).size, 0) / 1048576).toFixed(0), syms };
+    }
     for (const sym of SYMS) {
       const files = fs.readdirSync(dir).filter((f) => f.startsWith(sym + "_") && f.endsWith(".csv"));
       out[sym] = { m1Last: st[sym] && st[sym].m1Last ? fmtNY(st[sym].m1Last) : null, s1Last: st[sym] && st[sym].s1Last ? fmtNY(st[sym].s1Last) : null,
@@ -90,28 +186,28 @@ function create(baseDir) {
     return out;
   }
 
-  // read bars of a symbol between two unix timestamps (m1 or 1s)
-  function read(sym, from, to, res = "m1") {
-    const files = res === "1s"
-      ? fs.readdirSync(dir).filter((f) => f.startsWith(`${sym}_1s_`)).sort()
-      : Array.from({ length: yearOf(to) - yearOf(from) + 1 }, (_, i) => `${sym}_m1_${yearOf(from) + i}.csv`);
-    const out = [];
-    for (const f of files) {
-      const p = path.join(dir, f);
-      if (!fs.existsSync(p)) continue;
-      const lines = fs.readFileSync(p, "utf8").split("\n");
-      for (let i = 1; i < lines.length; i++) {
-        const L = lines[i]; if (!L) continue;
-        const a = L.split(","), t = +a[1];
-        if (t < from || t > to || (out.length && t <= out[out.length - 1][0])) continue; // doublons laissés par une synchro interrompue
-        out.push([t, +a[2], +a[3], +a[4], +a[5], +a[6]]);
-      }
+  // fichiers de la synchro TopstepX qui couvrent [from, to] : un par an (m1) ou par mois (1s), noms en UTC
+  function syncFiles(sym, from, to, res) {
+    if (res === "1s") { const a = ymOf(from), z = ymOf(to); let all; try { all = fs.readdirSync(dir); } catch (e) { return []; } return all.filter((f) => f.startsWith(`${sym}_1s_`) && f.slice(sym.length + 4, sym.length + 11) >= a && f.slice(sym.length + 4, sym.length + 11) <= z).sort().map((f) => path.join(dir, f)); }
+    return Array.from({ length: Math.max(0, yearOf(to) - yearOf(from) + 1) }, (_, i) => fileM1(sym, yearOf(from) + i));
+  }
+  // read bars of a symbol between two unix timestamps (m1 or 1s) : data_csv d'abord, trous comblés par la synchro (NQ / ES pour les micros)
+  async function read(sym, from, to, res = "m1") {
+    res = res === "1s" ? "1s" : "m1";
+    to = Math.min(to, Math.floor(Date.now() / 1000) + 86400); from = Math.max(from, 0);
+    const main = await rowsOf(csvFile(sym, res), from, to);
+    let fill = [];
+    for (const s of sym in UND ? [sym, UND[sym]] : [sym]) {
+      for (const f of syncFiles(s, from, to, res)) { const r = await rowsOf(f, from, to); if (r && r.length) fill = fill.length ? mergeRows(fill, r) : r; }
+      if (fill.length) break;
     }
-    return out;
+    return mergeRows(main, fill);
   }
 
   /* ---------- toutes les unités de temps (m2 … 12M) : NQ_all_tf.csv / ES_all_tf.csv + un CSV par unité ---------- */
   const TFS = ["m2", "m3", "m5", "m15", "H1", "H4", "D", "W", "M", "3M", "6M", "12M"];
+  const quarter = (d, n) => d.slice(0, 4) + "-" + Math.floor((+d.slice(5, 7) - 1) / n); // trimestre (n = 3), semestre (6), année (12)
+  const DERIVED = { W: (b) => monday(dateNY(b[0])), M: (b) => dateNY(b[0]).slice(0, 7), "3M": (b) => quarter(dateNY(b[0]), 3), "6M": (b) => quarter(dateNY(b[0]), 6), "12M": (b) => dateNY(b[0]).slice(0, 4) };
   const NATIVE = { m2: "2", m3: "3", m5: "5", m15: "15", H1: "60", H4: "240", D: "1D" };
   const fileTf = (sym, tf) => path.join(dir, `${sym}_${tf}.csv`);
   const dateNY = (ts) => fmtNY(ts).slice(0, 10);
@@ -139,7 +235,6 @@ function create(baseDir) {
     const all = [];
     for (const tf of TFS) { const rows = T[tf] || []; fs.writeFileSync(fileTf(sym, tf), HEADER + rows.map(line).join("\n") + "\n"); rows.forEach((b) => all.push(tf + "," + line(b))); }
     fs.writeFileSync(path.join(dir, `${sym}_all_tf.csv`), "tf," + HEADER + all.join("\n") + "\n");
-    tfCache.clear();
   }
   async function buildAllTf(token, fetchFn, onProgress = () => {}) {
     const out = {};
@@ -167,16 +262,20 @@ function create(baseDir) {
     writeAll(sym, T);
     return { sym, counts: Object.fromEntries(TFS.map((tf) => [tf, (T[tf] || []).length])) };
   }
-  const tfCache = new Map();
-  function readTf(sym, tf, from, to) {
-    const p = fileTf(sym, tf); if (!fs.existsSync(p)) return null;
-    const m = fs.statSync(p).mtimeMs, k = sym + tf; let c = tfCache.get(k);
-    if (!c || c.m !== m) {
-      c = { m, rows: parseCsv(fs.readFileSync(p, "utf8")) }; tfCache.set(k, c); // CSV téléchargé par Neal : colonnes reconnues (ts / time / timestamp, open, high…), heure NY, triées sans doublons
+  // banque d'une unité de temps : data_csv, sinon dossier data ; W / M / 3M / 6M / 12M absents = recalculés depuis le D ; micros = repli sur NQ / ES
+  async function tfBank(sym, tf) {
+    for (const f of [csvFile(sym, tf), fileTf(sym, tf)]) { const b = f ? await B.get(f) : null; if (b && b.n) return b; }
+    if (DERIVED[tf]) {
+      const d = await tfBank(sym, "D");
+      if (d && d.n) { const rows = agg(sliceRows(d, 0, Infinity), DERIVED[tf]), a = new Float64Array(rows.length * 6); rows.forEach((r, i) => a.set(r, i * 6)); return { a, n: rows.length }; }
     }
-    return c.rows.filter((b) => b[0] >= from && b[0] <= to);
+    return sym in UND ? tfBank(UND[sym], tf) : null;
   }
-  return { sync, status, read, readTf, buildAllTf, importAllTf, TFS, dir, isRunning: () => running };
+  // bougies d'une unité de temps (clés : 1s 5s 15s 30s m1 m2 m3 m5 m15 H1 H4 D W M 3M 6M 12M) ; null = aucun fichier
+  async function readTf(sym, tf, from, to) { const b = await tfBank(sym, tf); return b ? sliceRows(b, from, to) : null; }
+  // [1re heure, dernière heure] couvertes par une unité de temps (pour dire à l'utilisateur ce qui existe)
+  async function span(sym, tf) { const b = tf === "m1" || tf === "1s" ? await B.get(csvFile(sym, tf) || "") : await tfBank(sym, tf); return b && b.n ? [b.a[0], b.a[(b.n - 1) * 6]] : null; }
+  return { sync, status, read, readTf, span, buildAllTf, importAllTf, TFS, dir, csvDir, isRunning: () => running };
 }
 
 // parse a CSV chosen by the user (time_ny,ts,open,high,low,close,volume or any CSV with ts/open/high/low/close[/volume])
@@ -206,4 +305,4 @@ function parseNY(s) {
   return g;
 }
 
-module.exports = { create, parseCsv, parseNY, SYMS };
+module.exports = { create, parseCsv, parseNY, mergeRows, SYMS, UND, SEC_TFS };

@@ -169,7 +169,12 @@ function createWindow() {
 
 /* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
 let mdStore = null;
-const md = () => (mdStore = mdStore || marketdata.create(path.join(ICT(), "data")));
+// dossier « data_csv » (un CSV par symbole et par unité de temps, téléchargé à la main) : dans le dossier ICT, ou dans le dépôt posé dans le dossier ICT
+const csvDirs = () => { const d = ICT(), out = [path.join(d, "data_csv")];
+  try { fs.readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).forEach((e) => out.push(path.join(d, e.name, "data_csv"))); } catch (e) { /* dossier ICT absent */ }
+  if (!app.isPackaged) out.push(path.join(__dirname, "..", "data_csv"));
+  return out; };
+const md = () => (mdStore = mdStore || marketdata.create(path.join(ICT(), "data"), { csvDirs: csvDirs() }));
 async function mdSync(interactive) {
   const token = await getToken(!!interactive);
   if (!token) return { ok: false, reason: "login" };
@@ -189,8 +194,8 @@ function mdSchedule() {
 ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes", "comptes.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
-ipcMain.handle("data:read", (e, sym, from, to, res) => { try { return { ok: true, data: md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
-ipcMain.handle("data:readTf", (e, sym, tf, from, to) => { try { const d = md().readTf(sym, tf, from, to); return d ? { ok: true, data: d } : { ok: false, reason: "missing" }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("data:read", async (e, sym, from, to, res) => { try { return { ok: true, data: await md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("data:readTf", async (e, sym, tf, from, to) => { try { const d = await md().readTf(sym, tf, from, to); return d ? { ok: true, data: d, span: await md().span(sym, tf) } : { ok: false, reason: "missing" }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 ipcMain.handle("data:openDir", () => shell.openPath(md().dir));
 ipcMain.handle("data:import", async () => {
   const r = await dialog.showOpenDialog(win, { title: "Importer un CSV de bougies", filters: [{ name: "CSV", extensions: ["csv", "txt"] }], properties: ["openFile"] });

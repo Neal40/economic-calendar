@@ -22,6 +22,16 @@ function acctName(a) {
 /** Account type from the TopstepX account name (PRAC = practice, EXPRESS/XFA = funded, otherwise Trading Combine). */
 function acctType(a) { const n = String(a.accountName || ""); if (/PRAC/i.test(n)) return "Paper"; if (/EXPRESS|XFA|FUNDED|LIVE|\bEFA/i.test(n)) return "Funded"; return "Challenge"; }
 
+/** Statut d'un compte renvoyé par TopstepX (GET /TradingAccount, relevé le 11/11/2026) :
+ *  status 0 = actif · status 1 = verrouillé pour la journée (PDLL / DLL touchée, retradable à la séance suivante) -> toujours « Actif »
+ *  status 6 + ineligible:true = compte perdu (MLL) -> « Cramé ». Autre status inconnu : un funded reste actif tant que son solde est au-dessus du plancher MLL. */
+const acctLocked = (a) => a.status === 1 && a.ineligible !== true;
+function acctStatut(a) {
+  if (a.ineligible === true) return "Cramé";
+  if (a.status === 0 || a.status === 1) return "Actif";
+  return acctType(a) === "Funded" && a.maximumLoss != null && Number(a.balance) > Number(a.maximumLoss) ? "Actif" : "Cramé";
+}
+
 /** API trade → journal row (one per entry). positionSize is the closing side: negative = long position. */
 function toRow(t) {
   const entry = new Date(t.createdAt), exit = new Date(t.exitedAt);
@@ -56,9 +66,9 @@ function buildAccount(a, rows, syncedAt) {
   const avgDur = (arr) => (arr.length ? sum(arr, "Duration (s)") / arr.length : 0);
   const bestDay = byDay.size ? Math.max(...byDay.values()) : 0;
   return {
-    Nom: acctName(a), "ID TopstepX": String(a.accountId), "Nom TopstepX": String(a.accountName || ""), Type: acctType(a), Statut: a.status === 0 ? "Actif" : "Cramé",
+    Nom: acctName(a), "ID TopstepX": String(a.accountId), "Nom TopstepX": String(a.accountName || ""), Type: acctType(a), Statut: acctStatut(a),
     "Solde de départ": a.startingBalance, "Solde TopstepX": r2(a.balance), "Plus haut solde": r2(a.highestBalance ?? a.balance),
-    "Plancher MLL": r2(a.maximumLoss ?? 0), DLL: a.dailyLoss ?? null, "Dernière synchro": syncedAt,
+    "Plancher MLL": r2(a.maximumLoss ?? 0), DLL: a.dailyLoss ?? null, PDLL: a.personalDailyLossLimit ?? null, "Verrouillé": acctLocked(a), "Dernière synchro": syncedAt, // PDLL = Personal Daily Loss Limit ; Verrouillé = limite du jour touchée
     "Total P&L": total, "Trade Win %": n ? r6(wins.length / n) : 0,
     "Day Win %": lastRows.length ? r6(lastRows.filter((t) => t["Net P&L"] > 0).length / lastRows.length) : 0,
     "Avg Winning Trade": wins.length ? r2(gains / wins.length) : 0, "Avg Losing Trade": losses.length ? r2(lossSum / losses.length) : 0,
@@ -143,4 +153,4 @@ async function bars(token, fetchFn, sym, from, to) {
   if (!r.ok) throw new Error("History " + r.status);
   const j = await r.json(); return (j.t || []).map((t, i) => ({ t, h: j.h[i], l: j.l[i] })).filter((b) => b.t >= from - 60 && b.t <= to);
 }
-module.exports = { bars, sync, toRow, buildAccount, targetOf, mergeDb };
+module.exports = { bars, sync, toRow, buildAccount, acctStatut, targetOf, mergeDb };

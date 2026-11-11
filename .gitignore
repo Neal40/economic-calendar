@@ -1,3 +1,5 @@
 # données de compte (jamais dans le dépôt) : écrites par l app à chaque synchro TopstepX
 data/comptes.json
 data/trades.json
+# bougies téléchargées à la main (1,3 Go, un CSV par symbole et par unité de temps) : lues par l app, jamais dans le dépôt
+data_csv/

@@ -812,7 +812,7 @@ table.tbl:has(#subT){min-width:900px}
 /* ---------- Backtesteur : mise en page façon FX Replay (barre de replay en bas, icônes à droite) ; barre de compte et panneau Order = TopstepX ---------- */
 .tx-chartp>.tx-dbar{display:none}
 .tx-head [hidden]{display:none!important}
-.tx-tfs button{border-radius:7px;font-weight:500}.tx-tfs button.on{background:#2a2e39;color:#fff}
+.tx-tfs button{border-radius:7px;font-weight:500;min-width:28px;padding:0 5px}.tx-tfs{flex:none}.tx-tfsep{flex:none;width:1px;height:16px;margin:7px 3px;background:#3a3f4b}.tx-tfs button.on{background:#2a2e39;color:#fff}
 .tx-rng{display:flex;gap:2px}.tx-rng button{background:none;border:0;color:var(--tx-tvfg);font:inherit;font-size:12.5px;height:24px;padding:0 9px;border-radius:7px;cursor:pointer}.tx-rng button:hover,.tx-rng button.on{background:#2a2e39;color:#fff}
 .tx-msg{overflow:hidden;text-overflow:ellipsis;min-width:0}
 .tx-rbar{height:54px;flex:none;background:var(--tx-tv);color:var(--tx-tvfg);display:flex;align-items:center;gap:10px;padding:0 10px;font-family:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif}
@@ -997,6 +997,7 @@ table.tbl:has(#subT){min-width:900px}
     <span class="tsx-chip">Plus haut:<span class="v" data-draw="k" data-source="comptes" data-field="Plus haut solde" data-fmt="usd">—</span></span>
     <span class="tsx-chip">MLL:<span class="v" data-draw="k" data-source="comptes" data-field="Plancher MLL" data-fmt="usd">—</span></span>
     <span class="tsx-chip">Marge avant MLL:<span class="v" data-draw="k" data-source="compte_calc" data-field="Marge avant MLL" data-fmt="usd" data-warn="1000">—</span></span>
+    <span class="tsx-chip" title="Personal Daily Loss Limit : perte du jour à laquelle TopstepX verrouille le compte jusqu'à la séance suivante">PDLL:<span class="v" data-draw="k" data-source="comptes" data-field="PDLL" data-fmt="usd" data-lock="1">—</span></span>
     <span class="tsx-chip">DLL:<span class="v" data-draw="k" data-source="comptes" data-field="DLL" data-fmt="usd">—</span></span>
     <span class="tsx-chip">Statut:<span class="v" data-draw="k" data-source="comptes" data-field="Statut">—</span></span>
     <span class="tsx-chip">Synchro:<span class="v" data-draw="k" data-source="comptes" data-field="Dernière synchro" data-fmt="dt">—</span></span>
@@ -1111,9 +1112,9 @@ table.tbl:has(#subT){min-width:900px}
       <div class="tx-dbar"><div class="tx-dtab on">Chart<i>×</i></div><button class="tx-dtab" id="btOrdShow" hidden title="Afficher le menu des ordres"><span class="tx-dot"></span>Order</button></div>
       <div class="tx-tv">
         <div class="tx-head">
-          <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="CSV">CSV</option></select></label>
+          <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="MNQ">MNQZ26</option><option value="MES">MESZ26</option><option value="CSV">CSV</option></select></label>
           <i class="tx-vs"></i>
-          <span class="tx-tfs" id="btTfs"><button data-tf="1" class="on">1m</button><button data-tf="2">2m</button><button data-tf="3">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><button data-tf="1440">1D</button><button data-tf="10080">1W</button><button data-tf="43200">1M</button></span>
+          <span class="tx-tfs" id="btTfs"><button data-tf="1s" title="1 seconde (chargé au clic)">1s</button><button data-tf="5s" title="5 secondes (chargé au clic)">5s</button><button data-tf="15s" title="15 secondes (chargé au clic)">15s</button><button data-tf="30s" title="30 secondes (chargé au clic)">30s</button><i class="tx-tfsep"></i><button data-tf="1" class="on">1m</button><button data-tf="2" title="2 minutes (chargé au clic)">2m</button><button data-tf="3" title="3 minutes (chargé au clic)">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><i class="tx-tfsep"></i><button data-tf="1440">1D</button><button data-tf="10080">1W</button><button data-tf="43200">1M</button><button data-tf="129600" title="3 mois">3M</button><button data-tf="259200" title="6 mois">6M</button><button data-tf="518400" title="12 mois">12M</button></span>
           <i class="tx-vs"></i>
           <span class="tx-hb tx-on" title="Chandeliers"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg></span>
           <span class="tx-sp"></span>
@@ -2274,9 +2275,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const etat = (r) => { if (r._all) return { col: "#a077d6", pre: "◆ ", suf: "  ·  P&L " + F.usd(r["Total P&L"]) + "  ·  " + (d.data.length - 1) + " comptes" };
       if (r.Statut === "Passé") return { col: "#4ccf6a", pre: "★ ", suf: "  ·  challenge réussi (archivé)" };
       if (r.Statut === "Archivé") return { col: "#8b93a1", pre: "▣ ", suf: "  ·  archivé" };
-      if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: "  ·  cramé" };
-      const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0);
-      if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: "  ·  " + F.usd(m) + " avant MLL" }; return { col: "#f0a033", pre: "● ", suf: "  ·  en cours" }; };
+      const fd = r.Type === "Funded", pre = fd ? "  ·  Funded" : ""; // compte funded : « Funded » devant l'état (orange tant qu'il est actif)
+      if (r.Statut !== "Actif") return { col: "#e5534b", pre: "✖ ", suf: fd ? "  ·  Funded  ·  cramé" : r.Type === "Paper" ? "  ·  cramé" : "  ·  challenge cramé" };
+      const m = (Number(r["Solde TopstepX"]) || 0) - (Number(r["Plancher MLL"]) || 0), lock = r["Verrouillé"] ? "  ·  PDLL atteinte" : "";
+      if (m <= 1000) return { col: "#f0a033", pre: "⚠ ", suf: pre + "  ·  " + F.usd(m) + " avant MLL" + lock }; return { col: "#f0a033", pre: "● ", suf: pre + "  ·  en cours" + lock }; };
     sel.replaceChildren(...rows.map((r) => { const e = etat(r); const o = new Option(e.pre + r.Nom + (r._all ? "" : "  ·  " + F.usd(r["Solde TopstepX"])) + e.suf, String(r["ID TopstepX"]));
       o.style.color = e.col; o.style.backgroundColor = "#10141a"; return o; }));
     sel.value = curId(); const cur = rows.find((r) => String(r["ID TopstepX"]) === sel.value);
@@ -2284,11 +2286,12 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     sel.onchange = () => dash.setParams({ acct: sel.value, mois: null, page: 0 });
   });
   dash.draw("k", (el) => {
-    const d = dash.data(el.dataset.source); if (el.dataset.sign || el.dataset.warn) el.classList.remove("up", "dn", "wn");
+    const d = dash.data(el.dataset.source); if (el.dataset.sign || el.dataset.warn || el.dataset.lock) el.classList.remove("up", "dn", "wn");
     if (d.status !== "ok" || !Array.isArray(d.data)) { el.textContent = "—"; return; }
     const id = curId(), row = d.data.find((r) => String(r["ID TopstepX"]) === id), v = row ? row[el.dataset.field] : null;
     if (v === null || v === undefined || v === "" || (typeof v === "number" && !isFinite(v))) { el.textContent = "—"; return; }
     el.textContent = (F[el.dataset.fmt] || F.txt)(v);
+    if (el.dataset.lock && row["Verrouillé"]) { el.classList.add("dn"); el.textContent += " · atteinte"; } // PDLL touchée : compte verrouillé jusqu'à la séance suivante
     if (el.dataset.sign) { if (Number(v) > 0) el.classList.add("up"); if (Number(v) < 0) el.classList.add("dn"); }
     if (el.dataset.warn) { const dead = (dash.data("comptes").data || []).some((r) => String(r["ID TopstepX"]) === id && r.Statut !== "Actif");
       el.classList.add(dead ? "dn" : Number(v) <= Number(el.dataset.warn) ? "wn" : "up"); if (!dead && Number(v) <= Number(el.dataset.warn)) el.textContent = "⚠ " + el.textContent; }
@@ -3587,7 +3590,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     // ajoute au buffer (sur place, l'agrégation incrémentale continue) les bougies plus récentes que la dernière ; renvoie le nombre ajouté
     function append(raw, add) { let lastT = raw.length ? raw[raw.length - 1][0] : -Infinity, n = 0; for (const b of add || []) if (b[0] > lastT) { raw.push(b); lastT = b[0]; n++; } return n; }
     // séance en précision 1 s : bougies m1 avant la 1re minute couverte par le 1 s, puis le 1 s (M1 formée seconde par seconde)
-    function merge1s(m1, s1) { if (!s1 || s1.length <= 100) return m1; const cut = Math.floor(s1[0][0] / 60) * 60; return m1.filter((b) => b[0] < cut).concat(s1); }
+    function merge1s(m1, s1) { if (!s1 || s1.length <= 100) return m1; const cut = Math.floor(s1[0][0] / 60) * 60, end = Math.floor(s1[s1.length - 1][0] / 60) * 60; return m1.filter((b) => b[0] < cut).concat(s1, m1.filter((b) => b[0] > end)); } // le m1 reprend après la dernière minute couverte
     // déclenchement d'un ordre en attente sur une bougie [t, open, high, low, close] ; renvoie le prix d'exécution, ou null si pas touché
     //  Limit achat : low <= prix · Limit vente : high >= prix · Stop achat : high >= prix · Stop vente : low <= prix
     //  gap : bougie qui ouvre déjà au-delà du prix -> exécution à l'ouverture (meilleure pour une limite, pire pour un stop)
@@ -3606,17 +3609,26 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* btCore:end */
   const BUS = btCore.bus(), AHEAD = 2 * 3600; // buffer : on charge la séance suivante quand il reste moins de 2 h de marché devant le curseur
   const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0, gen: 0, day: null, more: false, end: false, htfTo: 0 };
-  const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M" };
+  const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M", 129600: "3M", 259200: "6M", 518400: "12M" };
+  // S.tf est en minutes : les unités en secondes sont des fractions (1 s = 1/60), 3M / 6M / 12M = 129 600 / 259 200 / 518 400
+  const SECTF = { "1s": 1 / 60, "5s": 5 / 60, "15s": 15 / 60, "30s": 30 / 60 };
+  const tfOf = (v) => SECTF[v] || +v;                         // data-tf d'un bouton -> minutes
+  const tfSec = (tf = S.tf) => Math.round(tf * 60);           // durée de la bougie en secondes
+  const tfKey = (tf) => (tf < 1 ? tfSec(tf) + "s" : TFKEY[tf]); // nom du fichier de l'unité (NQ_5s.csv, NQ_m5.csv, NQ_3M.csv…)
+  const PRELOAD = [5, 15, 60, 240, 1440, 10080, 43200, 129600, 259200, 518400]; // préchargées à l'ouverture ; secondes, 2m et 3m : au clic
+  const und = (s) => (CTR[s] ? CTR[s].und : s);               // MNQ -> NQ, MES -> ES (mêmes prix : ordres et dessins partagés)
+  const SYMNAME = { NQ: "NQZ26 · Nasdaq", ES: "ESZ26 · S&P 500", MNQ: "MNQZ26 · Micro Nasdaq", MES: "MESZ26 · Micro S&P 500", CSV: "CSV" };
   const mondayOf = (d) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };
   const offC = new Map(), offF = (t) => { const h = Math.floor(t / 3600); let v = offC.get(h); if (v === undefined) { v = off(t); offC.set(h, v); } return v; };
   const rthOn = () => !!P.rth && S.tf < 1440;
   const inRth = (t) => { const m = (((t + offF(t)) % 86400) + 86400) % 86400 / 60; return m >= 570 && m < 960; }; // 9:30 - 16:00 NY
   // mémo par minute : une bougie d'UT >= 1 min commence toujours sur une minute (évite Intl à chaque bougie 1 s)
   const BM = new Map(); let bmKey = "";
-  function bucket(t) { const k = S.tf + (rthOn() ? "r" : ""); if (k !== bmKey) { BM.clear(); bmKey = k; } const m = Math.floor(t / 60) * 60; let v = BM.get(m); if (v === undefined) { v = bucket0(m); if (BM.size > 200000) BM.clear(); BM.set(m, v); } return v; }
+  function bucket(t) { if (S.tf < 1) { const s = tfSec(); return Math.floor(t / s) * s; } const k = S.tf + (rthOn() ? "r" : ""); if (k !== bmKey) { BM.clear(); bmKey = k; } const m = Math.floor(t / 60) * 60; let v = BM.get(m); if (v === undefined) { v = bucket0(m); if (BM.size > 200000) BM.clear(); BM.set(m, v); } return v; }
   function bucket0(t) { // début de la bougie TF (H1/H4 alignées sur 18:00 NY, ou 9:30 en mode RTH, D = session, W = lundi, M = 1er du mois)
-    const tf = S.tf * 60;
+    const tf = tfSec();
     if (rthOn() && S.tf >= 60) { const o = offF(t), tn = t + o, a = 34200 % tf; return Math.floor((tn - a) / tf) * tf + a - o; }
+    if (S.tf >= 129600) { const k = sessionKey(t), q = S.tf >= 518400 ? 12 : S.tf >= 259200 ? 6 : 3; return ny(k.slice(0, 5) + String(Math.floor((+k.slice(5, 7) - 1) / q) * q + 1).padStart(2, "0") + "-01", 0, 0); } // trimestre / semestre / année
     if (S.tf >= 43200) return ny(sessionKey(t).slice(0, 8) + "01", 0, 0);
     if (S.tf >= 10080) return ny(mondayOf(sessionKey(t)), 0, 0);
     if (S.tf >= 1440) return ny(sessionKey(t), 0, 0);
@@ -3637,52 +3649,68 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!D || !D.dataStatus) { $("btData").textContent = "Version web : importe un CSV (les bougies TopstepX sont enregistrées par l'app Windows)."; return; }
     const r = await D.dataStatus(); if (!r.ok) return;
     const s = r.data, f = (k) => (s[k] && s[k].m1Last ? `${k} → ${s[k].m1Last.slice(0, 16)}` : `${k} : à télécharger`);
-    $("btData").textContent = `Données ${f("NQ")} · ${f("ES")} · toutes UT ${s.allTf ? s.allTf.slice(0, 10) : "à générer"} · auto 23h01`;
+    const c = s.csv, all = (k) => ["1s", "5s", "15s", "30s", "m1", "m5", "D"].every((tf) => (c.syms[k] || []).includes(tf));
+    $("btData").textContent = `Données ${f("NQ")} · ${f("ES")} · ` + (c ? `data_csv : ${["NQ", "ES", "MNQ", "MES"].filter((k) => c.syms[k]).map((k) => k + (all(k) ? "" : " (partiel)")).join(" ")} (${c.files} fichiers, 1s → 12M)` : `toutes UT ${s.allTf ? s.allTf.slice(0, 10) : "à générer"}`) + " · auto 23h01";
+    $("btData").title = c ? "Dossier data_csv : " + c.dir + " — m1 et 5m → 12M chargés à l'ouverture du Backtesteur ; secondes, 2m et 3m au clic sur l'unité de temps" : "";
   }
   // cache des lectures de bougies : changer d'unité de temps ne relit plus les fichiers
   const RC = new Map(), RCMAX = 40;
   const cached = async (key, fn) => { if (RC.has(key)) return RC.get(key); const r = await fn(); if (r && r.ok) { RC.set(key, r); if (RC.size > RCMAX) RC.delete(RC.keys().next().value); } return r; };
-  const hfOf = (tf, to) => { const back = { 2: 20, 3: 30, 5: 45, 15: 120, 60: 400, 240: 1500 }[tf] || 99999; return tf >= 1440 ? 0 : to - back * 86400; };
-  const readTf = (sym, tf, to) => cached(`tf|${sym}|${tf}|${to}`, () => D.dataReadTf(sym, TFKEY[tf], hfOf(tf, to), to));
+  const hfOf = (tf, to) => { const back = (tf < 1 ? { 1: 2, 5: 4, 15: 8, 30: 15 }[tfSec(tf)] : { 2: 20, 3: 30, 5: 45, 15: 120, 60: 400, 240: 1500 }[tf]) || 99999; return tf >= 1440 ? 0 : to - back * 86400; }; // profondeur d'historique affichée (jours)
+  const readTf = (sym, tf, to) => cached(`tf|${sym}|${tf}|${to}`, () => D.dataReadTf(sym, tfKey(tf), hfOf(tf, to), to));
+  // bougies fines d'une séance : le 1 s (précision 1 s, ou unité en secondes affichée), sinon le fichier de l'unité affichée (5s / 15s / 30s)
+  async function fineBars(sym, from, to, keep) {
+    if (!D || !D.dataRead || !(S.tf < 1 || P.sec !== false)) return null;
+    const get = (k, fn) => (keep ? cached(k + `|${sym}|${from}|${to}`, fn) : fn());
+    const r = await get("s1", () => D.dataRead(sym, from, to, "1s"));
+    if (r && r.ok && r.data.length > 100) return { rows: r.data, res: "1 s" };
+    if (S.tf < 1 && tfSec() > 1 && D.dataReadTf) { const k = tfKey(S.tf), r2 = await get("f" + k, () => D.dataReadTf(sym, k, from, to)); if (r2 && r2.ok && r2.data.length > 100) return { rows: r2.data, res: tfName(S.tf) }; }
+    return null;
+  }
+  const dmy = (t) => { const o = parts(t * 1000); return `${o.day}/${o.month}/${o.year}`; };
   let preTimer = null;
   function preload(sym, to) { // toutes les unités de temps en arrière-plan, une à la fois (zéro latence au changement d'UT)
     clearTimeout(preTimer); if (!D || !D.dataReadTf || sym === "CSV") return;
-    const todo = Object.keys(TFKEY).map(Number).flatMap((tf) => [[sym, tf], ...(P.split && sym2() ? [[sym2(), tf]] : [])]);
+    const todo = PRELOAD.flatMap((tf) => [[sym, tf], ...(P.split && sym2() ? [[sym2(), tf]] : [])]);
     const next = () => { const t = todo.shift(); if (!t) return; readTf(t[0], t[1], to).finally(() => (preTimer = setTimeout(next, 30))); };
     preTimer = setTimeout(next, 300);
   }
   async function load() {
     play(false); S.gen++; S.more = false; S.end = false;
     const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym; S.day = d;
-    const days = S.tf >= 43200 ? 35 : S.tf >= 10080 ? 9 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
+    const days = S.tf >= 129600 ? 3 : S.tf >= 43200 ? 35 : S.tf >= 10080 ? 9 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
     // historique de l'unité de temps (fichiers NQ_all_tf / ES_all_tf générés par l'app) : contexte complet à gauche du replay
-    S.htf = null; S.htf2 = null; S.htfTo = to;
-    if (sym !== "CSV" && S.tf > 1 && D && D.dataReadTf) {
+    S.htf = null; S.htf2 = null; S.htfTo = to; S.pre = null; S.span = null; let warn = "";
+    if (sym !== "CSV" && S.tf !== 1 && D && D.dataReadTf) {
+      if (S.tf < 1 || S.tf === 2 || S.tf === 3) msg(`Chargement des bougies ${tfName(S.tf)}…`);
       const r = await readTf(sym, S.tf, to);
-      if (r.ok) S.htf = r.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]);
-      else if (r.reason === "missing") msg("Historique des unités de temps absent : « Synchro données » (ou importe NQ_all_tf.csv / ES_all_tf.csv).", true);
-      if (P.split && sym2()) { const r2 = await readTf(sym2(), S.tf, to); if (r2.ok) S.htf2 = r2.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]); }
+      if (r.ok) { S.htf = r.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]); S.span = r.span || null; }
+      else if (r.reason === "missing") warn = S.tf < 1 ? `Pas de fichier ${sym}_${tfKey(S.tf)}.csv dans le dossier data_csv : chart construit avec ce qui existe.` : "Historique des unités de temps absent : dossier data_csv, « Synchro données » (ou importe NQ_all_tf.csv / ES_all_tf.csv).";
+      if (P.split && sym2()) { const r2 = S.tf < 1 ? await D.dataReadTf(sym2(), tfKey(S.tf), to - 86400, to) : await readTf(sym2(), S.tf, to); if (r2.ok) S.htf2 = r2.data.map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]); }
+      // 3M / 6M / 12M : la bougie en cours = jours terminés (fichier D) avant le m1 chargé, puis le m1 du replay
+      if (S.tf >= 129600 && S.htf) { const rd = await readTf(sym, 1440, to); if (rd.ok) S.pre = rd.data.filter((b) => b[0] < from).map((b) => [bucket(b[0]), b[1], b[2], b[3], b[4], b[5]]); }
     }
     if (sym === "CSV") { if (!S.csv) return msg("Importe d'abord un CSV.", true); S.raw = S.csv.filter((b) => b[0] >= from && b[0] <= to); }
     else {
       if (!D || !D.dataRead) return msg("Les bougies TopstepX sont lues par l'app Windows — ou importe un CSV.", true);
-      msg("Chargement…"); const r = await cached(`m1|${sym}|${from}|${to}`, () => D.dataRead(sym, from, to, "m1")); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data.slice(); S.sec = 0;
-      if (P.sec !== false) { // précision 1 s : la séance du jour (18:00 la veille -> 17:00) en bougies d'une seconde
-        const s0 = ny(addDays(d, -1), 18, 0), r1 = await cached(`s1|${sym}|${s0}|${to}`, () => D.dataRead(sym, s0, to, "1s"));
-        if (r1 && r1.ok && r1.data.length > 100) { S.raw = btCore.merge1s(S.raw, r1.data); S.sec = r1.data.length; }
+      if (!warn) msg("Chargement…"); const r = await cached(`m1|${sym}|${from}|${to}`, () => D.dataRead(sym, from, to, "m1")); if (!r.ok) return msg("Lecture impossible : " + r.reason, true); S.raw = r.data.slice(); S.sec = 0; S.fine = "";
+      { // précision 1 s (ou unité en secondes) : la séance du jour (18:00 la veille -> 17:00) en bougies fines
+        const s0 = ny(addDays(d, -1), 18, 0), f = await fineBars(sym, s0, to, true);
+        if (f) { S.raw = btCore.merge1s(S.raw, f.rows); S.sec = f.rows.length; S.fine = f.res; }
+        else if (S.tf < 1 && !warn) warn = `Pas de bougies en secondes pour le ${dmy(to)}` + (S.span ? ` (${tfName(S.tf)} disponibles du ${dmy(S.span[0])} au ${dmy(S.span[1])})` : "") + " : la séance est rejouée en bougies m1.";
       }
       await loadSecond(from, to); preload(sym, to);
     }
     if (!S.raw.length) { msg("Aucune bougie pour cette date — « ⟳ Données » ou une autre date.", true); S.B = []; draw(true); return; }
     const [h, m] = ($("btStart").value || "09:30").split(":").map(Number), t0 = ny(d, h, m);
     S.cur = S.raw.findIndex((b) => b[0] >= t0); if (S.cur < 0) S.cur = S.raw.length - 1; S.done = S.cur;
-    loadDrawings(); msg(`${S.sec ? `${S.sec.toLocaleString("fr-FR")} bougies 1 s (M1 formée seconde par seconde)` : S.raw.length + " bougies m1"} · départ ${hm(S.raw[S.cur][0])} · Espace = lecture · ←/→ = bougie · glisser = déplacer · molette = zoom · Shift+clic = mesurer`);
+    loadDrawings(); if (warn) msg(warn, true); else msg(`${S.sec ? `${S.sec.toLocaleString("fr-FR")} bougies ${S.fine || "1 s"} (${S.tf < 1 ? "replay en secondes" : "M1 formée seconde par seconde"})` : S.raw.length + " bougies m1"} · départ ${hm(S.raw[S.cur][0])} · Espace = lecture · ←/→ = bougie · glisser = déplacer · molette = zoom · Shift+clic = mesurer`);
     lastKey = ""; draw(true); ui();
   }
   // agrégation incrémentale : en lecture on ne traite que les nouvelles bougies du replay
   let AG = null;
   function aggregate() {
-    const R = rthOn(), key = [S.tf, R, S.raw[0] ? S.raw[0][0] : 0, S.htf ? S.htf.length : 0, S.htf && S.htf[0] ? S.htf[0][0] : 0].join("|");
+    const R = rthOn(), key = [S.tf, R, S.raw[0] ? S.raw[0][0] : 0, S.htf ? S.htf.length : 0, S.htf && S.htf[0] ? S.htf[0][0] : 0, S.pre ? S.pre.length : 0].join("|");
     if (AG && AG.key === key && AG.raw === S.raw && S.cur >= AG.i) {
       const out = AG.out;
       for (let i = AG.i + 1; i <= S.cur && i < S.raw.length; i++) {
@@ -3701,6 +3729,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!R && S.htf && S.htf.length && S.raw[S.cur]) { // bougies terminées = fichier de l'unité de temps, bougie en cours = m1 du replay
       const cb = Math.min(bucket(S.raw[S.cur][0]), S.htfTo ? bucket(S.htfTo) : Infinity); // au-delà de la journée chargée, le buffer m1 prend le relais
       for (const b of S.htf) { if (b[0] >= cb) break; out.push(b.slice()); }
+      for (const b of S.pre || []) { if (b[0] < cb) continue; const l = out[out.length - 1]; // 3M / 6M / 12M : jours terminés de la bougie en cours
+        if (!l || l[0] !== b[0]) out.push(b.slice()); else { l[2] = Math.max(l[2], b[2]); l[3] = Math.min(l[3], b[3]); l[4] = b[4]; l[5] += b[5]; } }
       while (i0 < S.cur && bucket(S.raw[i0][0]) < cb) i0++;
     }
     for (let i = i0; i <= S.cur && i < S.raw.length; i++) {
@@ -3772,7 +3802,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function order(side) {
     if (!canTrade()) return;
     const ctr = $("oCtr").value, c = CTR[ctr];
-    if (S.sym !== "CSV" && c.und !== S.sym) return msg(`${c.name} ne correspond pas à la chart ${S.sym} : choisis un contrat ${S.sym}.`, true);
+    if (S.sym !== "CSV" && c.und !== und(S.sym)) return msg(`${c.name} ne correspond pas à la chart ${S.sym} : choisis un contrat ${und(S.sym)} ou M${und(S.sym)}.`, true);
     const qty = Math.max(1, parseInt($("oQty").value, 10) || 1) * side, type = $("oType").value, t = S.raw[S.cur][0];
     newDay(t);
     if (type === "Market") { fill(ctr, qty, last() + side * TICK, t, "Market"); syncBrackets(); } // exécution au ask / bid
@@ -3849,7 +3879,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
   const PDEF = { syncCross: true, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
   let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
-  const tfName = (tf) => (tf >= 43200 ? "1M" : tf >= 10080 ? "1W" : tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
+  const tfName = (tf) => (tf < 1 ? Math.round(tf * 60) + "s" : tf >= 518400 ? "12M" : tf >= 259200 ? "6M" : tf >= 129600 ? "3M" : tf >= 43200 ? "1M" : tf >= 10080 ? "1W" : tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
   const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
   function applyPrefs() {
     if (!chart) return; const gv = (d) => P.grid === "both" || P.grid === d;
@@ -3887,7 +3917,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
   const sessions = () => LS.get("bt-sessions", []);
   const snapshot = (name) => ({ id: "s" + Date.now(), name, savedAt: new Date().toISOString(), sym: S.sym, tf: S.tf, day: $("btDate").value, start: $("btStart").value, t: S.raw.length ? S.raw[S.cur][0] : null, acc: JSON.parse(JSON.stringify(A)), markers: JSON.parse(JSON.stringify(markers)), shapes: JSON.parse(JSON.stringify(shapes1().shapes)), folders: JSON.parse(JSON.stringify(shapes1().folders)) });
-  const setTfBtns = () => document.querySelectorAll("#btTfs [data-tf]").forEach((b) => b.classList.toggle("on", +b.dataset.tf === S.tf));
+  const setTfBtns = () => document.querySelectorAll("#btTfs [data-tf]").forEach((b) => b.classList.toggle("on", tfOf(b.dataset.tf) === S.tf));
   async function openSession(s) {
     play(false); $("btSym").value = s.sym; S.sym = s.sym; $("btDate").value = s.day; $("btStart").value = s.start || "09:30"; S.tf = s.tf || 1; setTfBtns();
     A = fixAcc(JSON.parse(JSON.stringify(s.acc))); markers = s.markers || []; saveAcc(); LS.set(dkey(1), s.shapes || []); LS.set(dkey(1) + "-f", s.folders || []);
@@ -3980,8 +4010,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 
   /* ---------------- 2e chart côte à côte (NQ <-> ES), synchronisé sur l'heure du replay ---------------- */
   let chart2 = null, cs2 = null, key2 = "", sync2 = false, xsync = false;
-  const sym2 = () => (S.sym === "NQ" ? "ES" : S.sym === "ES" ? "NQ" : null);
-  async function loadSecond(from, to) { S.raw2 = []; key2 = ""; if (!P.split || !sym2() || !D || !D.dataRead) return; const r = await D.dataRead(sym2(), from, to, "m1"); S.raw2 = r && r.ok ? r.data : []; }
+  const sym2 = () => ({ NQ: "ES", ES: "NQ", MNQ: "MES", MES: "MNQ" }[S.sym] || null);
+  async function loadSecond(from, to) { S.raw2 = []; key2 = ""; if (!P.split || !sym2() || !D || !D.dataRead) return; const r = await D.dataRead(sym2(), from, to, "m1"); S.raw2 = r && r.ok ? r.data : [];
+    if (S.tf < 1 && S.raw2.length) { const f = await fineBars(sym2(), ny(addDays(S.day, -1), 18, 0), to, true); if (f) S.raw2 = btCore.merge1s(S.raw2, f.rows); } } // unité en secondes : le 2e chart aussi
   function ensureChart2() {
     if (chart2) return;
     chart2 = LightweightCharts.createChart($("btChart2"), { autoSize: true, layout: { attributionLogo: false }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#000000" }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, barSpacing: 7 }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) } });
@@ -4002,10 +4033,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     S.B2 = out; // bougies du 2e chart : base des dessins de ce chart
     cs2.setData(out.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] })));
     const key = sym2() + S.tf + (S.raw2 && S.raw2[0] ? S.raw2[0][0] : 0); if (key !== key2) { key2 = key; const r = chart.timeScale().getVisibleRange(); try { if (r) chart2.timeScale().setVisibleRange(r); else chart2.timeScale().scrollToRealTime(); } catch (e) { chart2.timeScale().scrollToRealTime(); } }
-    const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${sym2() === "ES" ? "ESZ26 · S&P 500" : "NQZ26 · Nasdaq"} · ${tfName(S.tf)}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
+    const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${SYMNAME[sym2()] || sym2()} · ${tfName(S.tf)}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
   }
   async function toggleSplit() {
-    if (!sym2()) return msg("Les 2 charts côte à côte marchent avec NQ et ES (pas avec un CSV).", true);
+    if (!sym2()) return msg("Les 2 charts côte à côte marchent avec NQ + ES ou MNQ + MES (pas avec un CSV).", true);
     P.split = !P.split; LS.set("bt-prefs", P); if (!P.split) setActive(1);
     if (P.split && S.raw.length && !(S.raw2 && S.raw2.length)) await loadSecond(S.raw[0][0], S.raw[S.raw.length - 1][0]);
     draw(true); msg(P.split ? `2 charts : ${S.sym} + ${sym2()} synchronisés sur le replay.` : "1 chart.");
@@ -4060,7 +4091,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function legend(d) {
     const el = $("btLegend"); if (!el) return;
     const b = S.B[S.B.length - 1], o = d || (b && { open: b[1], high: b[2], low: b[3], close: b[4] });
-    const tfn = tfName(S.tf), nm = S.sym === "ES" ? "ESZ26 · S&P 500" : S.sym === "CSV" ? "CSV" : "NQZ26 · Nasdaq";
+    const tfn = tfName(S.tf), nm = SYMNAME[S.sym] || S.sym;
     const ttl = P.title ? `<b>${nm} · ${tfn}</b>` : "";
     if (!o) { el.innerHTML = ttl; return; }
     const cl = o.close >= o.open ? "up" : "dn", ch = o.close - o.open;
@@ -4071,11 +4102,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     ensureChart();
     const bars = (S.B = aggregate()), key = S.sym + S.tf + (S.raw[0] ? S.raw[0][0] : 0);
     if (!bars.length) { cs.setData([]); vs.setData([]); ls.setData([]); cs.setMarkers([]); return; }
-    const c = bars.map((b) => ({ time: toNY(b[0]), open: b[1], high: b[2], low: b[3], close: b[4] }));
-    const v = bars.map((b) => ({ time: toNY(b[0]), value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }));
-    const key2r = key + (P.rth ? "r" : "");
-    if (full || key2r !== lastKey || !S.lastLen || bars.length < S.lastLen) { cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
-    else for (let i = Math.max(0, S.lastLen - 1); i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); }
+    const key2r = key + (P.rth ? "r" : ""), all = full || key2r !== lastKey || !S.lastLen || bars.length < S.lastLen;
+    const c = [], v = []; // en lecture, seules les bougies nouvelles ou modifiées sont converties (un chart 1 s = plus de 100 000 bougies)
+    for (let i = all ? 0 : Math.max(0, S.lastLen - 1); i < bars.length; i++) { const b = bars[i], time = toNY(b[0]); c.push({ time, open: b[1], high: b[2], low: b[3], close: b[4] }); v.push({ time, value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }); }
+    if (all) { if (key2r !== lastKey) { const o = { timeScale: { secondsVisible: S.tf < 1 } }; chart.applyOptions(o); if (chart2) chart2.applyOptions(o); }
+      cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
+    else for (let i = 0; i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); }
     S.lastLen = bars.length;
     priceLines();
     const first = bars[0][0], lastT = S.raw[S.cur][0];
@@ -4126,8 +4158,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         if (S.sym === "CSV") { add = (S.csv || []).filter((b) => b[0] >= from && b[0] <= to); if (!add.length && !(S.csv || []).some((b) => b[0] > to)) break; }
         else if (D && D.dataRead) {
           const r = await D.dataRead(S.sym, from, to, "m1"); if (gen !== S.gen) return; add = r && r.ok ? r.data : [];
-          if (add.length && P.sec !== false) { const r1 = await D.dataRead(S.sym, from, to, "1s"); if (gen !== S.gen) return; if (r1 && r1.ok && r1.data.length > 100) { add = btCore.merge1s(add, r1.data); S.sec += r1.data.length; } }
-          if (P.split && sym2() && S.raw2) { const r2 = await D.dataRead(sym2(), S.raw2.length ? S.raw2[S.raw2.length - 1][0] + 1 : from, to, "m1"); if (gen !== S.gen) return; if (r2 && r2.ok) btCore.append(S.raw2, r2.data); }
+          if (add.length) { const f = await fineBars(S.sym, from, to); if (gen !== S.gen) return; if (f) { add = btCore.merge1s(add, f.rows); S.sec += f.rows.length; S.fine = S.fine || f.res; } }
+          if (P.split && sym2() && S.raw2) { const f2 = S.raw2.length ? S.raw2[S.raw2.length - 1][0] + 1 : from, r2 = await D.dataRead(sym2(), f2, to, "m1"); if (gen !== S.gen) return;
+            let a2 = r2 && r2.ok ? r2.data : []; if (a2.length && S.tf < 1) { const g = await fineBars(sym2(), f2, to); if (gen !== S.gen) return; if (g) a2 = btCore.merge1s(a2, g.rows); } btCore.append(S.raw2, a2); }
         } else break;
         S.day = d;
         const n = btCore.append(S.raw, add);
@@ -4245,7 +4278,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
   // chaque mise en page a ses propres dessins ; le 2e chart a les siens (clé du symbole du 2e chart)
-  const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curLay ? curLay + "-" : "") + (n === 2 ? sym2() || "X" : S.sym || "NQ");
+  const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curLay ? curLay + "-" : "") + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ"));
   /* 2 charts : pane = chart dont les dessins sont dans shapes/folders/sel ; act = chart actif (dernier cliqué) ; other = état de l'autre chart */
   let pane = 1, act = 1, other = { shapes: [], folders: [], sel: null, msel: new Set() };
   function swapPane() { const cur = { shapes, folders, sel, msel }; ({ shapes, folders, sel, msel } = other); other = cur; pane = 3 - pane; }
@@ -4706,7 +4739,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("oDot").onclick = () => ordPanel(false); $("btOrdShow").onclick = () => ordPanel(true); if (LS.get("bt-ordpanel", true) === false) ordPanel(false);
     $("btTfs").onclick = (e) => {
       const b = e.target.closest("[data-tf]"); if (!b) return;
-      const old = S.tf; S.tf = +b.dataset.tf; document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
+      const old = S.tf; S.tf = tfOf(b.dataset.tf); document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
       if (S.raw.length) { // historique de la nouvelle unité de temps : on recharge en gardant l'heure du replay
         const cur = S.raw[S.cur][0];
         load().then(() => { const i = S.raw.findIndex((x) => x[0] >= cur); if (i >= 0) { S.cur = i; S.done = Math.max(S.done, i); } draw(true); ui(); });
@@ -4714,7 +4747,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       }
       draw(true);
     };
-    $("btSym").onchange = () => { const s = $("btSym").value; if (s === "NQ" && !["NQ", "MNQ"].includes($("oCtr").value)) $("oCtr").value = "MNQ"; if (s === "ES" && !["ES", "MES"].includes($("oCtr").value)) $("oCtr").value = "MES"; ui(); };
+    $("btSym").onchange = () => { const s = $("btSym").value, u = und(s); if (CTR[s] && CTR[$("oCtr").value].und !== u) $("oCtr").value = "M" + u; ui(); };
     if (!$("btFly")) { const f = document.createElement("div"); f.id = "btFly"; f.className = "tx-fly"; f.hidden = true; document.body.append(f); }
     buildTools(); favBar();
     $("btZoomT").innerHTML = ICON.zoom; $("btStay").innerHTML = ICON.stay; $("btStay").classList.toggle("on", stay);
@@ -4883,11 +4916,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (id) { e.preventDefault(); tfBuf = ""; KRUN[id](); return; }
       // changement de timeframe au clavier : 1, 5, 15, 60, 240, D, W, M puis Entrée
       if (!e.ctrlKey && !e.metaKey && !e.altKey && /^[0-9A-Z]$/.test(combo.replace(/^Shift\+/, ""))) { const ch = combo.replace(/^Shift\+/, ""); tfBuf = (tfBuf + ch).slice(-8); clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 3000);
-        msg(/^\d+$|^[DWM]$/.test(tfBuf) ? "Timeframe : " + tfBuf + " (Entrée)" : "Symbole : " + tfBuf + " (Entrée)"); return; }
+        msg(/^\d+[SM]?$|^[DWM]$/.test(tfBuf) ? "Timeframe : " + tfBuf + " (Entrée)" : "Symbole : " + tfBuf + " (Entrée)"); return; }
       if (k === "enter" && tfBuf) { e.preventDefault(); const buf = tfBuf; tfBuf = "";
-        if (/^\d+$|^[DWM]$/.test(buf)) { const tf = { D: 1440, W: 10080, M: 43200 }[buf] || +buf, b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + tf, true); return; }
+        if (/^\d+[SM]?$|^[DWM]$/.test(buf)) { // 5 = 5 min · 5S = 5 s · D / W / M · 3M / 6M / 12M = mois
+          const tf = { D: 1440, W: 10080, M: 43200, "1M": 43200, "3M": 129600, "6M": 259200, "12M": 518400 }[buf] || (/S$/.test(buf) ? buf.toLowerCase() : parseInt(buf, 10)), b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + buf, true); return; }
         const m = /^(M?)(NQ|ES)/.exec(buf); if (!m) return msg("Symbole inconnu : " + buf + " (NQ, ES, MNQ, MES)", true);
-        $("btSym").value = m[2]; $("btSym").onchange(); $("oCtr").value = (m[1] ? "M" : "") + m[2]; ui(); load(); msg(`Symbole : ${m[1] ? "M" : ""}${m[2]}Z26`); return; }
+        $("btSym").value = m[1] + m[2]; $("oCtr").value = m[1] + m[2]; $("btSym").onchange(); load(); msg(`Symbole : ${m[1]}${m[2]}Z26`); return; }
       if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
       else if ((k === "delete" || k === "backspace") && selShapes().length) { e.preventDefault(); ctxDo("del"); }
       else if ((e.ctrlKey || e.metaKey) && k === "d" && selShapes().length) { e.preventDefault(); ctxDo("clone"); }
@@ -4977,7 +5011,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const t = R[R.length - 1][0], s0 = ny(sessionKey(t), 0, 0) - 6 * 3600, D0 = R.filter((b) => b[0] >= s0); const o = (D0[0] || R[0])[1], c = R[R.length - 1][4];
       return { c, ch: c - o, pc: (100 * (c - o)) / o, h: Math.max(...D0.map((b) => b[2])), l: Math.min(...D0.map((b) => b[3])) }; };
     function wlRender() { const p = panel("btWL", "Watchlist"); if (p.hidden) return;
-      p.innerHTML = `<div class="tx-sh">Watchlist<button data-x="wl">×</button></div>` + [["NQ", "NQZ26"], ["ES", "ESZ26"]].map(([k, n]) => { const s = symStat(k);
+      p.innerHTML = `<div class="tx-sh">Watchlist<button data-x="wl">×</button></div>` + (/^M/.test(S.sym) && CTR[S.sym] ? [["MNQ", "MNQZ26"], ["MES", "MESZ26"]] : [["NQ", "NQZ26"], ["ES", "ESZ26"]]).map(([k, n]) => { const s = symStat(k);
         return `<div class="tx-wr" data-sym="${k}" title="Afficher ${n}"><b>${n}</b><span>${s ? s.c.toFixed(2) : "—"}</span><span class="${s && s.ch >= 0 ? "up" : "dn"}">${s ? (s.ch >= 0 ? "+" : "") + s.ch.toFixed(2) + " (" + s.pc.toFixed(2) + " %)" : "ouvre NQ+ES"}</span><small>${s ? `H ${s.h.toFixed(2)} · L ${s.l.toFixed(2)}` : ""}</small></div>`; }).join(""); }
     const AL = () => LS.get("bt-alerts", []);
     function alRender() { const p = panel("btAL", "Alertes"); if (p.hidden) return; const last = S.raw.length ? S.raw[S.cur][4] : 0;

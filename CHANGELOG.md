@@ -2,6 +2,22 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.29.0] — 2026-11-11
+### Ajouté
+- Backtesteur : dossier `data_csv` (un CSV par symbole et par unité de temps, NQ / ES / MNQ / MES) lu directement par l'app. Il est cherché dans `Bureau\Inner Circle Trader\data_csv`, puis dans le `data_csv` d'un dossier posé dans `Bureau\Inner Circle Trader` (ex. `economic-calendar-main\data_csv`). Il passe avant le dossier `data` ; les trous du m1 / 1s sont comblés par les bougies de la synchro TopstepX (celles du NQ / ES pour les micros).
+- Backtesteur : unités de temps 1s, 5s, 15s, 30s, 3M, 6M et 12M dans la barre (clavier : `5S`, `30S`, `3M`, `6M`, `12M` puis Entrée). En secondes, le replay avance avec les bougies 1 s ; sans 1 s à cette date, avec le fichier de l'unité affichée (5s / 15s / 30s).
+- Backtesteur : charts MNQZ26 et MESZ26 (leurs propres bougies), 2 charts MNQ + MES ; les dessins et les contrats sont partagés avec NQ / ES.
+### Corrigé
+- Journal : un compte verrouillé pour la journée (PDLL / DLL touchée) n'est plus affiché « cramé » : il reste « Actif ». Seul un compte que TopstepX déclare perdu (MLL) est cramé.
+### Ajouté
+- Journal : pastille « PDLL » (Personal Daily Loss Limit) entre « Marge avant MLL » et « DLL » ; elle passe en rouge avec « atteinte » quand la limite du jour a verrouillé le compte.
+- Journal : liste des comptes — « Funded · en cours » en orange pour un funded actif (+ « PDLL atteinte » s'il est verrouillé), « challenge cramé » pour un challenge perdu.
+### Modifié
+- Backtesteur : chargement des bougies — à l'ouverture du Backtesteur, le m1 de la date puis, en arrière-plan, 5m → 12M ; les secondes, le 2m et le 3m ne sont lus qu'au clic sur l'unité de temps. Chaque CSV est lu une seule fois (en flux, sans bloquer l'app) puis gardé en mémoire : un fichier 1 s de 100 Mo se charge en 1 à 2 s au premier clic, puis instantanément.
+- Backtesteur : 3M / 6M / 12M — la bougie en cours est construite avec les jours terminés (fichier D) puis le m1 du replay ; W / M / 3M / 6M / 12M absents du dossier sont recalculés depuis le D.
+- Backtesteur : en lecture, seules les bougies nouvelles sont redessinées (chart 1 s fluide avec plus de 100 000 bougies).
+- `marketdata.test.js` : tests du dossier `data_csv` (trous comblés, micros, unités recalculées).
+
 ## [1.28.0] — 2026-11-11
 ### Ajouté
 - **Comptes** (nouveau menu) : pages Topstep et Apex (KPIs, courbe de capital par compte, jours de trading, tous les comptes), **Payouts** (ID/compte, n°, demandé le, montant, jours de trading, finalisé le, statut Active/Blown, preuve) et **Reçus** (achats, totaux par mois, abonnements). Données lues dans `Bureau/Inner Circle Trader/comptes/comptes.json` (IPC `comptes:read`) ou importées à la main.

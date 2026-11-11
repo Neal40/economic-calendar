@@ -43,7 +43,7 @@ Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edi
 | `Journal de trading : Stats TopstepX` | KPIs, comptes, graphiques d3, calendrier P&L, table des trades |
 | `Review : What to focus on ? + Journal de Neal (Notion)` | Lecture Notion, cache IndexedDB, auto-sync On/Off, vues Notion reproduites, biais psychologiques, import CSV web |
 | `Review : add / edit / delete in Notion` | Écriture vers Notion (desktop uniquement), drag & drop calendrier, remplissage MAE/MFE depuis TopstepX |
-| `Backtesteur style TopstepX` | Cœur du replay `btCore` (marqueurs `btCore:start/end` : horloge, buffer continu multi-séances, bus d'événements, exécution des ordres avec gaps et anti-lookahead), compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles, guide « Comment dessiner ». Mise en page façon FX Replay (barre de replay `.tx-rbar` en bas, barre de dessin avec règle / zoom / rester en dessin / repli ; `.tx-side` = panneaux Watchlist / Alertes) ; barre de compte et panneau Order = TopstepX ; SL / TP réglés en glissant leurs lignes (`ordDrag`, `posAt`) |
+| `Backtesteur style TopstepX` | Cœur du replay `btCore` (marqueurs `btCore:start/end` : horloge, buffer continu multi-séances, bus d'événements, exécution des ordres avec gaps et anti-lookahead), compte démo 50K (MLL 2 000 $ trailing, DLL 1 000 $), chart Lightweight Charts, outils de dessin, modèles, guide « Comment dessiner ». Mise en page façon FX Replay (barre de replay `.tx-rbar` en bas, barre de dessin avec règle / zoom / rester en dessin / repli ; `.tx-side` = panneaux Watchlist / Alertes) ; barre de compte et panneau Order = TopstepX ; SL / TP réglés en glissant leurs lignes (`ordDrag`, `posAt`). Unités de temps : `S.tf` en minutes (secondes = fractions via `SECTF` / `tfSec()`, 3M / 6M / 12M = 129 600 / 259 200 / 518 400) ; préchargées à l'ouverture = `PRELOAD` (5m → 12M), secondes / 2m / 3m au clic ; `fineBars()` = bougies fines du replay (1 s, sinon fichier 5s / 15s / 30s) ; chart MNQ / MES = `und()` pour les ordres et les dessins |
 | `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
 
 Clés localStorage : `econcal-v1` (données principales), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.
@@ -60,14 +60,15 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 | `preload.js` | Pont `window.desktop` (contextBridge) — **seule** API visible depuis `index.html` |
 | `topstepx.js` | Connexion + sync des trades/comptes TopstepX → `userData/journal-db.json` (au lancement + toutes les 5 min) |
 | `notion.js` | API Notion officielle (query, blocks, create, update, archive, append) |
-| `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Bureau\Inner Circle Trader\data` (chargé d'office par le backtesteur) (colonnes `time_ny,ts,open,high,low,close,volume`) |
+| `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Bureau\Inner Circle Trader\data` (chargé d'office par le backtesteur) (colonnes `time_ny,ts,open,high,low,close,volume`). Lit aussi le dossier `data_csv` (un CSV par symbole et par unité : `NQ_1s.csv`, `NQ_5s.csv`, … `NQ_m1.csv`, … `NQ_12M.csv`, pour NQ / ES / MNQ / MES) qui passe avant `data` ; trous du m1 / 1s comblés par la synchro. `bank()` = cache mémoire en tableaux typés, lecture en flux (jamais de `readFileSync` sur ces fichiers : le 1 s fait 100 Mo). `read` / `readTf` sont **async** |
 | `copier.js` | Trade copier Tradovate leader → followers (voir ⚠️) |
 | `prepare.js` | Copie `../index.html` dans `desktop/app/`, remplace Google Fonts et d3 CDN par des fichiers locaux (offline) |
 
 ## Dossier ICT (= Inner Circle Trader) sur le Bureau
 `C:\Users\rudyd\Desktop\Inner Circle Trader\` contient tout :
 - `Inner Circle Trader.exe` — l'app portable (toujours ce nom, jamais dans Téléchargements)
-- `data\` — bougies CSV · `backups\` — sauvegardes quotidiennes
+- `data\` — bougies CSV de la synchro · `backups\` — sauvegardes quotidiennes
+- `data_csv\` — bougies téléchargées à la main, toutes unités de temps (1,3 Go, **jamais dans git** : `.gitignore`). Cherché dans `Inner Circle Trader\data_csv`, puis dans le `data_csv` de n'importe quel dossier posé dans `Inner Circle Trader\` (dont ce dépôt)
 - `inner_circle_trader_main\` — ce dépôt (clone git de `Neal40/economic-calendar`)
 
 **Tester un changement dans l'exe sans attendre GitHub** (≈ 30 s) : fermer l'app, puis `cd desktop && npm run ict` (build portable sans compression, ~360 Mo, copié directement en `Bureau\Inner Circle Trader\Inner Circle Trader.exe`), relancer. `desktop/node_modules` est déjà installé (`npm ci` sinon). La release GitHub reste en compression normale (~106 Mo, build CI ≈ 4 min).
