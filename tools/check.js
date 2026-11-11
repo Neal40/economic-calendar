@@ -56,6 +56,13 @@ try {
   const b = profilCalc(wild, { meta: () => ({ time: false, pda: false, plan: 0, err: ["Gambling"] }) });
   if (!(b.score < a.score && by(b, "windfall") === 0 && by(b, "erratic") < 0.5 && by(b, "size") < 1 && by(b, "rules") === 0 && b.status.k !== "ok")) errors.push("profilCalc : profil erratique mal noté " + JSON.stringify({ s: b.score, c: b.criteria.map((c) => [c.id, c.score]) }));
   if (profilCalc([], {}).score !== 0 || profilCalc([], {}).n !== 0) errors.push("profilCalc : liste vide");
+  // tous les comptes Apex + Topstep (journées comptes.json) : dédoublonnage avec les trades détaillés, parcours prop firm
+  const ext = [{ acc: "A", day: days[0], pnl: 999, n: 1, c: 2 }, { acc: "APEX-1", day: days[0], pnl: -1200, n: 3 }, { acc: "APEX-1", day: days[1], pnl: 300, n: 1 }];
+  const accs = [{ id: "E1", firm: "Apex", kind: "eval", res: "passed", days: 2 }, { id: "E2", firm: "Apex", kind: "eval", res: "failed", days: 2 }, { id: "E3", firm: "Topstep", kind: "eval", res: "failed", days: 3 },
+    { id: "F1", firm: "Apex", kind: "funded", res: "failed", days: 10 }, { id: "F2", firm: "Topstep", kind: "funded", res: "active", days: 4 }];
+  const c = profilCalc(steady, { rules, days: ext, accounts: accs, money: { paid: 500, spent: 1000, payouts: 1 } });
+  if (!(c.accDays === 12 && c.nAcc === 5 && c.net === a.net - 900 && Math.abs(by(c, "evals") - (1 / 3) / 0.6) < 0.01 && by(c, "funded") === 0.2 && by(c, "payouts") === 0.5 && by(c, "risk") < 1))
+    errors.push("profilCalc : comptes Apex + Topstep " + JSON.stringify({ d: c.accDays, n: c.nAcc, net: c.net, c: c.criteria.map((x) => [x.id, x.score]) }));
 } catch (e) { errors.push("profilCalc : " + e.message); }
 
 // cœur du replay (btCore : horloge, buffer, exécution des ordres), extrait d'index.html

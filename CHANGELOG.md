@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.34.0] — 2026-11-12
+### Modifié
+- **Profil › Skill IA** : l'analyse prend par défaut **tous les comptes Apex + Topstep** (pages Comptes / `comptes.json` : journées de chaque compte, évaluations, comptes financés, payouts, achats), complétés par le détail des trades TopstepX quand il existe (sans doublon). Filtre Apex + Topstep / Apex / Topstep ; l'ancienne vue reste dans « Trades TopstepX détaillés ».
+- Windfall : règle des 30 % mesurée compte par compte sur les comptes financés (une évaluation se passe souvent en 1-2 jours).
+### Ajouté
+- Bloc « Ton parcours prop firm » : évaluations réussies, survie des comptes financés (cramés, jours tradés avant de cramer), payouts (par compte financé, part des dépenses récupérée).
+
 ## [1.33.0] — 2026-11-12
 ### Ajouté
 - **Profil › Skill IA — Profil prop firm** : statut exact (Profil partenaire / En bonne voie / À consolider / Profil à risque) et score sur 100 face aux critères Apex, calculés sur les trades TopstepX, leurs tags et les fiches Notion liées. 10 critères en 4 blocs : système défini (règles exactes écrites, trades dans le système), constance (taille, jours tradés, gestion du risque avec la règle des tranches et la DLL), ce qu'Apex ne veut pas (windfall / chance avec le seuil de consistance 30 %, gambling / revenge / erratique, jours « remplissage »), partenariat (respect du plan, croissance régulière).
