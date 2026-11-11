@@ -190,12 +190,13 @@ body{background:#060607}
 .kpi b{font-size:20px;display:block;margin-top:4px;font-weight:600}
 .kpi i{font-style:normal;font-size:11.5px;color:#6f727d}
 .neg{color:#ff5c65}.pos{color:#2fd37c}
+.cp-st{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08);color:#d9dae0}.cp-st.up{background:rgba(47,211,124,.14);color:#2fd37c}.cp-st.dn{background:rgba(255,92,101,.14);color:#ff5c65}.cp-st.warn{background:rgba(242,161,43,.16);color:#f2a12b}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-weight:500;color:#8b8d98;font-size:11.5px;letter-spacing:.04em;padding:7px 8px;border-bottom:1px solid #1f1f25;text-transform:uppercase}
 .tbl td{padding:5px 6px;border-bottom:1px solid #17171b}
 .tbl input,.tbl select,.pform input,.pform select{width:100%;background:#141418;border:1px solid #24242b;border-radius:6px;color:#e3e4ea;padding:6px 8px;font-size:13px}
 .tbl input[type=checkbox]{width:auto}
-.tbl .num{text-align:right}
+.tbl .num{text-align:right;font-size:inherit;font-weight:inherit;line-height:inherit;margin-bottom:0}
 .tbl td.x{width:34px}
 .tbl td.x button{background:none;border:none;color:#6f727d;cursor:pointer;font-size:15px}
 .tbl td.x button:hover{color:#ff5c65}
@@ -383,6 +384,7 @@ body.noir #sideHot{display:block;position:fixed;left:0;top:0;width:12px;height:1
 .jtop .acts{display:flex;gap:8px;flex-wrap:wrap}
 .tsx-hexa{grid-column:span 2}
 @media (max-width:900px){.tsx-hexa{grid-column:auto}}
+.rv-per{display:flex;gap:6px;align-items:center;margin:0 0 12px;flex-wrap:wrap}.rv-per .rv-tab{border:1px solid #23232a;background:#121216}.rv-perk{background:#141418;border:1px solid #24242b;color:#e3e4ea;border-radius:8px;padding:6px 10px}.rv-8020{display:inline-block;border-radius:999px;padding:3px 9px;margin:2px 4px 2px 0;font-size:12.5px}.rv-8020.up{background:rgba(47,211,124,.12);color:#2fd37c}.rv-8020.dn{background:rgba(255,92,101,.12);color:#ff5c65}.rv-8020 b{margin-left:4px}
 .rv-views{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 12px;border-bottom:1px solid #1d1d22;padding-bottom:8px}
 .rv-v{background:none;border:none;color:#9a9ca7;padding:6px 10px;border-radius:6px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;display:flex;gap:6px;align-items:center}
 .rv-v span{font-size:12px;opacity:.8}.rv-v:hover{background:#15151a;color:#e3e4ea}.rv-v.on{background:#1d1d24;color:#fff}
@@ -857,7 +859,8 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
     </div></div>
-  <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="topstep"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 19 9-15 9 15z"/><path d="M8 13h8"/></svg><span>Apex</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
+<div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
       <button class="nav" data-go="profil"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span></button>
       <button class="nav" data-go="abonnement"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Abonnement</span></button>
@@ -922,6 +925,10 @@ table.tbl:has(#subT){min-width:900px}
   <div class="hintd">Rien ne s'affiche ? Ouvre <a href="https://www.financialjuice.com/home" target="_blank" rel="noopener" style="color:#7d9bff">financialjuice.com</a> (l'aperçu Claude bloque les contenus externes ; le site GitHub Pages et l'app .exe l'affichent).</div>
 </div></section>
 
+<section class="view" id="v-topstep"><div class="page" id="cp-topstep"></div></section>
+<section class="view" id="v-apex"><div class="page" id="cp-apex"></div></section>
+<section class="view" id="v-payouts"><div class="page" id="cp-payouts"></div></section>
+<section class="view" id="v-recus"><div class="page" id="cp-recus"></div></section>
 <section class="view" id="v-profil"><div class="page">
   <h2>Profil</h2><p class="lead">Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.</p>
   <div class="panel"><div class="pform">
@@ -1616,7 +1623,7 @@ $("bSave").onclick=()=>{S.brand={name:$("bName").value.trim(),handle:$("bHandle"
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","profil","abonnement","factures"];
+const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","topstep","apex","payouts","recus","profil","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -1630,6 +1637,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); }
+  if(["topstep","apex","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
   if(v==="financialjuice") loadFJ(); if(v==="profil") loadProfile(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
@@ -2534,6 +2542,81 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
 })();
 </script>
 <script>
+/* ---------- Comptes prop firms : Topstep, Apex, Payouts, Achats & reçus (données : Bureau/Inner Circle Trader/comptes/comptes.json, mis à jour chaque mois par une tâche Claude, ou importées à la main) ---------- */
+(function(){
+  const KEYC = "econcal-comptes"; let C = null;
+  try { C = JSON.parse(localStorage.getItem(KEYC) || "null"); } catch (e) {}
+  const usd = (v) => v == null || isNaN(v) ? "—" : (v < 0 ? "-" : "") + "$" + Math.abs(+v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const sgn = (v) => v == null || isNaN(v) ? "—" : (v >= 0 ? "+" : "") + usd(v).replace("$-", "-$");
+  const fdate = (d) => { if (!d) return "—"; const x = new Date(String(d).length === 10 ? d + "T12:00:00" : d); return isNaN(x) ? esc(String(d)) : x.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }); };
+  const firmOf = (k) => (C && C[k]) || { accounts: [], payouts: [], purchases: [], subscriptions: [] };
+  const STAT = (s) => { s = String(s || "").toLowerCase(); return /closed|blown|fail|liquid|breach|expired/.test(s) ? ["Blown", "dn"] : /passed/.test(s) ? ["Passed", "up"] : /violation/.test(s) ? ["Violation", "warn"] : ["Active", "up"]; };
+  function save(d) { C = d; try { localStorage.setItem(KEYC, JSON.stringify(d)); } catch (e) {} }
+  async function load() { if (window.desktop && window.desktop.comptesRead) { try { const r = await window.desktop.comptesRead(); if (r && r.ok && (!C || !C.updated || r.data.updated >= C.updated)) save(r.data); } catch (e) {} } }
+  const head = (title, lead) => `<h2>${title}</h2><p class="lead">${lead}${C && C.updated ? ` · mis à jour le ${new Date(C.updated).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })}` : ""}</p>
+    <div class="row2" style="margin:0 0 14px"><label class="btn gray" style="cursor:pointer">Importer comptes.json<input type="file" accept=".json,application/json" class="cpImp" hidden></label><span class="hintd" style="margin:0">Chaque fin de mois, Claude récupère tes comptes Topstep et Apex depuis ton Chrome et les met ici.</span></div>`;
+  function equity(days, start) { // courbe de capital (SVG)
+    if (!days || !days.length) return '<div class="tsx-empty">Pas de jour de trading enregistré.</div>';
+    const D = days.slice().sort((a, b) => String(a.d).localeCompare(String(b.d))); let c = start || 0; const pts = [c].concat(D.map((x) => (c += +x.pnl || 0)));
+    const W = 900, H = 220, mn = Math.min(...pts), mx = Math.max(...pts), y = (v) => H - 20 - ((v - mn) / ((mx - mn) || 1)) * (H - 40), x = (i) => 30 + (i / (pts.length - 1 || 1)) * (W - 60);
+    const path = pts.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+    const bars = D.map((d, i) => { const v = +d.pnl || 0, h = Math.max(2, Math.abs(v) / Math.max(1, ...D.map((z) => Math.abs(+z.pnl || 0))) * 50); return `<rect x="${x(i + 1) - 6}" y="${H - 4 - h}" width="12" height="${h}" rx="3" fill="${v >= 0 ? "#2fd37c" : "#ff5c65"}" opacity=".55"><title>${esc(d.d)} : ${sgn(v)}</title></rect>`; }).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${bars}<path d="${path}" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#fff"><title>${i ? esc(D[i - 1].d) + " · " : ""}${usd(v)}</title></circle>`).join("")}</svg>`;
+  }
+  function firmPage(k, name) {
+    const F = firmOf(k), A = (F.accounts || []).slice().sort((a, b) => String(b.start).localeCompare(String(a.start)));
+    const box = $("cp-" + k); if (!box) return;
+    if (!A.length) { box.innerHTML = head(name, `Tes comptes ${name}`) + `<div class="panel"><div class="tsx-empty" style="min-height:120px">Aucun compte ${name} pour l'instant.${k === "apex" ? " Connecte-toi à ton dashboard Apex dans Chrome : la tâche mensuelle pourra ensuite le lire." : ""}</div></div>`; return; }
+    const sel = A.find((a) => a.id === state[k]) || A.find((a) => STAT(a.status)[0] === "Active" || STAT(a.status)[0] === "Violation") || A[0]; state[k] = sel.id;
+    const paid = (F.payouts || []).reduce((s, p) => s + (+p.paid || 0), 0), spent = (F.purchases || []).reduce((s, p) => s + (+p.amount || 0), 0);
+    const cnt = (f) => A.filter((a) => STAT(a.status)[0] === f).length, pl = (a) => a.balance != null && a.startBalance != null ? a.balance - a.startBalance : null;
+    box.innerHTML = head(name, `Tes comptes ${name} : soldes, objectifs, jours de trading et trades`) + `
+      <div class="kpis"><div class="kpi"><small>Comptes</small><b>${A.length}</b><i>${cnt("Active") + cnt("Violation")} actifs · ${cnt("Passed")} réussis · ${cnt("Blown")} fermés</i></div>
+        <div class="kpi"><small>Payouts reçus</small><b class="pos">${usd(paid)}</b><i>${(F.payouts || []).length} payouts</i></div>
+        <div class="kpi"><small>Dépensé</small><b class="neg">${usd(spent)}</b><i>abonnements, resets, activations</i></div>
+        <div class="kpi"><small>Net</small><b class="${paid - spent >= 0 ? "pos" : "neg"}">${sgn(paid - spent)}</b><i>payouts - dépenses</i></div></div>
+      <div class="panel"><div class="ptitle" style="display:flex;justify-content:space-between;align-items:center;gap:10px">Courbe de capital <select class="cpSel" data-k="${k}" style="max-width:420px">${A.map((a) => `<option value="${esc(a.id)}"${a.id === sel.id ? " selected" : ""}>${esc(a.name)} · ${STAT(a.status)[0]}</option>`).join("")}</select></div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;margin:-4px 0 10px;color:#9a9ca5;font-size:13px"><span>Solde <b style="color:#fff">${usd(sel.balance)}</b></span><span>P&amp;L <b class="${(pl(sel) || 0) >= 0 ? "pos" : "neg"}">${sgn(pl(sel))}</b></span>${sel.profitTarget ? `<span>Objectif ${usd(sel.profitTarget)}</span>` : ""}<span>${(sel.days || []).length} jours tradés</span>${sel.dll ? `<span>DLL ${usd(sel.dll)}</span>` : ""}<span>${esc(sel.type || "")} · ${esc(sel.stage || "")}</span></div>
+        ${equity(sel.days, sel.startBalance)}</div>
+      <div class="panel"><div class="ptitle">Jours de trading · ${esc(sel.name)}</div><table class="tbl"><thead><tr><th>Jour</th><th class="num">P&amp;L net</th><th class="num">Trades</th><th class="num">Contrats</th><th class="num">Frais</th><th class="num">% gagnants</th></tr></thead><tbody>
+        ${(sel.days || []).slice().sort((a, b) => String(b.d).localeCompare(String(a.d))).map((d) => `<tr><td>${esc(d.d)}</td><td class="num ${+d.pnl >= 0 ? "pos" : "neg"}">${sgn(+d.pnl)}</td><td class="num">${d.n ?? "—"}</td><td class="num">${d.c ?? "—"}</td><td class="num">${usd(d.fees)}</td><td class="num">${d.win != null ? d.win + " %" : "—"}</td></tr>`).join("") || '<tr><td colspan="6" class="hintd">—</td></tr>'}</tbody></table></div>
+      <div class="panel"><div class="ptitle">Tous les comptes</div><table class="tbl"><thead><tr><th>Début</th><th>Compte</th><th>Type</th><th>Étape</th><th>Statut</th><th class="num">Solde</th><th class="num">P&amp;L</th></tr></thead><tbody>
+        ${A.map((a) => { const s = STAT(a.status); return `<tr class="cpRow" data-k="${k}" data-id="${esc(a.id)}" style="cursor:pointer"><td>${esc(String(a.start || "").slice(0, 10))}</td><td>${esc(a.name)}</td><td>${esc(a.type || "")}</td><td>${esc(a.stage || "")}</td><td><span class="cp-st ${s[1]}">${s[0]}</span></td><td class="num">${usd(a.balance)}</td><td class="num ${(pl(a) || 0) >= 0 ? "pos" : "neg"}">${sgn(pl(a))}</td></tr>`; }).join("")}</tbody></table></div>`;
+  }
+  function payoutsPage() {
+    const box = $("cp-payouts"); if (!box) return; const L = [];
+    ["topstep", "apex"].forEach((k) => { const F = firmOf(k), byAcc = {}; (F.payouts || []).slice().sort((a, b) => String(a.requested).localeCompare(String(b.requested))).forEach((p) => { byAcc[p.account] = (byAcc[p.account] || 0) + 1;
+      const acc = (F.accounts || []).find((a) => a.name === p.account); L.push({ firm: k === "topstep" ? "Topstep" : "Apex", ...p, num: byAcc[p.account], days: acc && acc.days ? acc.days.length : p.tradingDays, st: acc ? STAT(acc.status)[0] === "Blown" ? "Blown" : "Active" : p.accountStatus || "—" }); }); });
+    L.sort((a, b) => String(b.requested).localeCompare(String(a.requested)));
+    const tot = L.reduce((s, p) => s + (+p.paid || 0), 0);
+    box.innerHTML = head("Payouts", "Tous tes payouts Topstep et Apex") + `<div class="kpis"><div class="kpi"><small>Total reçu</small><b class="pos">${usd(tot)}</b><i>${L.length} payouts</i></div><div class="kpi"><small>Dernier payout</small><b>${L[0] ? usd(L[0].paid) : "—"}</b><i>${L[0] ? fdate(L[0].requested) : ""}</i></div></div>
+      <div class="panel"><table class="tbl"><thead><tr><th>ID / Compte</th><th class="num">Payout n°</th><th>Demandé le</th><th class="num">Montant demandé</th><th class="num">Jours de trading</th><th>Finalisé le</th><th>Statut du compte</th><th>Preuve</th></tr></thead><tbody>
+      ${L.map((p) => `<tr><td><small class="hintd" style="margin:0">${p.firm}</small><br>${esc(p.account)}</td><td class="num">${p.num}</td><td>${fdate(p.requested)}</td><td class="num">${usd(p.amount)}${p.paid != null && +p.paid !== +p.amount ? `<br><small class="hintd" style="margin:0">reçu ${usd(p.paid)}</small>` : ""}</td><td class="num">${p.days ?? "—"}</td><td>${fdate(p.finalized)}</td><td><span class="cp-st ${p.st === "Blown" ? "dn" : "up"}">${p.st}</span></td><td>${p.proof ? (/^https?:/.test(p.proof) ? `<a href="${esc(p.proof)}" target="_blank" rel="noopener">Voir ↗</a>` : "Oui (dashboard)") : "—"}</td></tr>`).join("") || '<tr><td colspan="8" class="hintd">Aucun payout.</td></tr>'}</tbody></table></div>`;
+  }
+  function recusPage() {
+    const box = $("cp-recus"); if (!box) return; const L = [];
+    ["topstep", "apex"].forEach((k) => (firmOf(k).purchases || []).forEach((p) => L.push({ firm: k === "topstep" ? "Topstep" : "Apex", ...p })));
+    L.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    const byM = {}; L.forEach((p) => { const m = String(p.date).slice(0, 7); byM[m] = (byM[m] || 0) + (+p.amount || 0); });
+    const subs = [].concat(...["topstep", "apex"].map((k) => (firmOf(k).subscriptions || []).map((s) => ({ firm: k === "topstep" ? "Topstep" : "Apex", ...s }))));
+    box.innerHTML = head("Achats & reçus", "Abonnements, resets et activations payés aux prop firms") + `
+      <div class="kpis"><div class="kpi"><small>Total dépensé</small><b class="neg">${usd(L.reduce((s, p) => s + (+p.amount || 0), 0))}</b><i>${L.length} achats</i></div>${Object.keys(byM).sort().reverse().slice(0, 3).map((m) => `<div class="kpi"><small>${new Date(m + "-15").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}</small><b>${usd(byM[m])}</b></div>`).join("")}</div>
+      <div class="panel"><div class="ptitle">Achats</div><table class="tbl"><thead><tr><th>Date</th><th>Prop firm</th><th>Type</th><th class="num">Montant</th><th>Référence</th></tr></thead><tbody>
+      ${L.map((p) => `<tr><td>${esc(String(p.date).replace("T", " ").slice(0, 16))}</td><td>${p.firm}</td><td>${esc(p.type || "")}</td><td class="num">${usd(p.amount)}</td><td>${esc(p.ref || "")}</td></tr>`).join("") || '<tr><td colspan="5" class="hintd">Aucun achat.</td></tr>'}</tbody></table></div>
+      ${subs.length ? `<div class="panel"><div class="ptitle">Abonnements</div><table class="tbl"><thead><tr><th>ID</th><th>Prop firm</th><th>Statut</th><th class="num">Prix / mois</th><th>Début</th><th>Prochain prélèvement</th></tr></thead><tbody>${subs.map((s) => `<tr><td>${esc(s.id)}</td><td>${s.firm}</td><td><span class="cp-st ${/active/i.test(s.status) ? "up" : ""}">${esc(s.status)}</span></td><td class="num">${usd(s.price)}</td><td>${esc(s.start || "")}</td><td>${esc(s.next || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+  }
+  const state = {};
+  function render(v) { if (v === "topstep") firmPage("topstep", "Topstep"); else if (v === "apex") firmPage("apex", "Apex"); else if (v === "payouts") payoutsPage(); else if (v === "recus") recusPage(); }
+  window.comptesRender = async (v) => { render(v); await load(); render(v); };
+  { const h=(location.hash||"").slice(1); if(["topstep","apex","payouts","recus"].includes(h)) window.comptesRender(h); }
+  document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("cpSel")) { state[e.target.dataset.k] = e.target.value; render(e.target.dataset.k); }
+    if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { const d = JSON.parse(t); if (!d.topstep && !d.apex) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
+  });
+  document.addEventListener("click", (e) => { const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
+})();
+</script>
+<script>
 /* ---------- Thème : Noir (défaut sur la version Mac) ou Classique ; image de fond facultative ---------- */
 (function(){
   const isMac = window.desktop && window.desktop.platform === "darwin";
@@ -2743,6 +2826,43 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* --- analytics on Macro --- */
   const WIN = /^(TP|Pas pris \(TP\))$/, LOSS = /^(SL|Pas pris \(SL\))$/;
   const outcome = (r) => { const s = r.Status || []; if (s.some((x) => WIN.test(x))) return 1; if (s.some((x) => LOSS.test(x))) return -1; return 0; };
+
+  /* --- Analyse 80/20 : période (jour / mois / année), pire drawdown, pire série de SL, % TP / BE / SL, points forts / faibles --- */
+  const isTaken = (r) => (r.Status || []).length && !(r.Status || []).some((x) => /^Pas pris/.test(x));
+  const dayOf = (r) => String(r.Date || "").slice(0, 10);
+  function perKeys(rows, per) { const L = per === "jour" ? 10 : per === "mois" ? 7 : 4; return [...new Set(rows.map(dayOf).filter(Boolean).map((d) => d.slice(0, L)))].sort().reverse(); }
+  function perLabel(k) { if (k.length === 4) return k; const [y, m, d] = k.split("-"); const mo = new Date(Date.UTC(+y, +m - 1, d ? +d : 1, 12)); return d ? mo.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : mo.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }); }
+  function riskStats(rows) {
+    const T = rows.filter(isTaken).sort((a, b) => String(a.Date).localeCompare(String(b.Date)));
+    let cum = 0, peak = 0, dd = 0, run = 0, worst = 0;
+    T.forEach((r) => { const o = outcome(r), rr = typeof r["RR fait"] === "number" ? r["RR fait"] : o === -1 ? -1 : 0; cum += rr; peak = Math.max(peak, cum); dd = Math.max(dd, peak - cum); run = o === -1 ? run + 1 : 0; worst = Math.max(worst, run); });
+    const n = T.length, tp = T.filter((r) => outcome(r) === 1).length, sl = T.filter((r) => outcome(r) === -1).length;
+    return { n, tp, sl, be: n - tp - sl, dd, worst, cum };
+  }
+  function pareto(rows, f) { // la plus petite part des valeurs qui fait 80 % des gains (points forts) et 80 % des pertes (points faibles)
+    const g = new Map(); rows.filter(isTaken).forEach((r) => { const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : outcome(r) === -1 ? -1 : 0; (Array.isArray(r[f]) ? r[f] : r[f] ? [r[f]] : []).forEach((k) => { const o = g.get(k) || { k, win: 0, loss: 0, n: 0 }; if (rr > 0) o.win += rr; else o.loss += -rr; o.n++; g.set(k, o); }); });
+    const A = [...g.values()], pick = (key) => { const tot = A.reduce((a, x) => a + x[key], 0); if (!tot) return { list: [], share: 0, tot: 0 }; const S = A.filter((x) => x[key] > 0).sort((a, b) => b[key] - a[key]); let acc = 0; const list = []; for (const x of S) { list.push(x); acc += x[key]; if (acc / tot >= 0.8) break; } return { list, share: acc / tot, tot, of: A.length }; };
+    return { f, strong: pick("win"), weak: pick("loss"), count: A.length };
+  }
+  function analyse8020(allRows) {
+    const per = state.per || "tout", keys = per === "tout" ? [] : perKeys(allRows, per), key = keys.includes(state.perKey) ? state.perKey : keys[0];
+    const rows = per === "tout" || !key ? allRows : allRows.filter((r) => dayOf(r).startsWith(key)), R = riskStats(rows), p = (x) => (R.n ? Math.round((100 * x) / R.n) + " %" : "—");
+    const P = ["Time", "PD Array M1", "Prise de liquidité", "Actif", "Sens"].filter((f) => rows.some((r) => r[f] && (!Array.isArray(r[f]) || r[f].length))).map((f) => pareto(rows, f));
+    const lst = (o, cls) => o.list.length ? o.list.map((x) => `<span class="rv-8020 ${cls}">${esc(x.k)} <b>${(cls === "up" ? "+" : "-") + (cls === "up" ? x.win : x.loss).toFixed(1)}R</b></span>`).join(" ") + `<small class="rv-mut"> · ${o.list.length}/${o.of} valeurs = ${Math.round(o.share * 100)} % ${cls === "up" ? "des gains" : "des pertes"}</small>` : '<span class="rv-mut">—</span>';
+    return `<div class="rv-per">${["tout", "jour", "mois", "annee"].map((x) => `<button class="rv-tab${per === x ? " on" : ""}" data-per="${x}">${{ tout: "Tout", jour: "Par jour", mois: "Par mois", annee: "Par année" }[x]}</button>`).join("")}
+        ${keys.length ? `<select class="rv-perk">${keys.map((k) => `<option value="${k}"${k === key ? " selected" : ""}>${esc(perLabel(k))}</option>`).join("")}</select>` : ""}</div>
+      <div class="kpis">
+        <div class="kpi"><small>Trades pris</small><b>${R.n}</b><i>${rows.length} setups au total</i></div>
+        <div class="kpi"><small>% TP</small><b class="pos">${p(R.tp)}</b><i>${R.tp} trades</i></div>
+        <div class="kpi"><small>% BE</small><b>${p(R.be)}</b><i>${R.be} trades</i></div>
+        <div class="kpi"><small>% SL</small><b class="neg">${p(R.sl)}</b><i>${R.sl} trades</i></div>
+        <div class="kpi"><small>Pire drawdown</small><b class="neg">${R.dd ? "-" + R.dd.toFixed(2) + "R" : "0R"}</b><i>du plus haut au plus bas (RR fait)</i></div>
+        <div class="kpi"><small>Pire série de SL</small><b class="${R.worst >= 3 ? "neg" : ""}">${R.worst}</b><i>SL d'affilée</i></div>
+      </div>
+      <div class="panel" style="margin-bottom:14px"><div class="ptitle">Loi 80/20 · ce qui fait l'essentiel de tes gains et de tes pertes</div>
+        <table class="rv-bt"><thead><tr><th></th><th>Points forts (80 % des gains)</th><th>Points faibles (80 % des pertes)</th></tr></thead><tbody>
+        ${P.map((x) => `<tr><td><b>${esc(x.f)}</b></td><td>${lst(x.strong, "up")}</td><td>${lst(x.weak, "dn")}</td></tr>`).join("") || '<tr><td colspan="3" class="rv-mut">Pas assez de trades pris sur la période.</td></tr>'}</tbody></table></div>`;
+  }
   /* --- account type (Review / Paper / Funded / Challenge) --- */
   const TYPES = ["Challenge", "Funded", "Paper", "Review"];
   const TYPE_C = { Review: "purple", Paper: "gray", Funded: "green", Challenge: "blue" };
@@ -2850,7 +2970,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const vrows = V.filter ? rows.filter(V.filter) : rows;
     let content = "";
     if (V.type === "bias") content = biasHTML(rows);
-    else if (V.type === "analyse") content = `<div class="kpis">
+    else if (V.type === "analyse") content = analyse8020(rows) + `<div class="kpis">
         <div class="kpi"><small>Setups</small><b>${s.n}</b><i>${s.w} gagnants · ${s.l} perdants · ${s.be} BE</i></div>
         <div class="kpi"><small>Winrate (TP vs SL)</small><b class="${s.wr >= 0.5 ? "pos" : "neg"}">${pct(s.wr)}</b><i>pris + pas pris</i></div>
         <div class="kpi"><small>RR moyen (RR fait)</small><b>${f2(s.rr)}</b><i>par setup</i></div>
@@ -3167,10 +3287,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const st = await D.notionStatus(); if (!st.ok) showSetup(true); else if (!state.synced || Date.now() - new Date(state.synced) > 30 * 60 * 1000) sync();
     }
     [$("rvBody"), $("rvBodyJ")].filter(Boolean).forEach((root) => {
+    root.addEventListener("change", (e) => { if (e.target.classList.contains("rv-perk")) { state.perKey = e.target.value; render(); } });
     root.addEventListener("click", (e) => {
       const tr = e.target.closest("tr[data-id],.rv-ci[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
       const ty = e.target.closest(".rv-ty"); if (ty) { state.type = ty.dataset.ty || ""; try { localStorage.setItem("econcal-review-type", state.type); } catch (err) {} render(); return; }
       const bz = e.target.closest("[data-bias]"); if (bz) { state.bias = state.bias === bz.dataset.bias ? null : bz.dataset.bias; render(); return; }
+      const pb = e.target.closest("[data-per]"); if (pb) { state.per = pb.dataset.per; state.perKey = null; render(); return; }
       const vb = e.target.closest(".rv-v"); if (vb) { state.view = vb.dataset.v; try { localStorage.setItem("econcal-review-view", state.view); } catch (err) {} render(); return; }
       const cb = e.target.closest("[data-cal]"); if (cb) { const k = cb.dataset.cal;
         if (cb.classList.contains("rv-nd")) { state.cal[k + ":nd"] = !state.cal[k + ":nd"]; render(); return; }

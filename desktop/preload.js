@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld("desktop", {
   notionSetToken: (t) => ipcRenderer.invoke("notion:setToken", t),
   notionDb: (id) => ipcRenderer.invoke("notion:db", id),
   dataStatus: () => ipcRenderer.invoke("data:status"),
+  comptesRead: () => ipcRenderer.invoke("comptes:read"),
   copierGetConfig: () => ipcRenderer.invoke("copier:getConfig"),
   copierSaveConfig: (c) => ipcRenderer.invoke("copier:saveConfig", c),
   copierStart: () => ipcRenderer.invoke("copier:start"),

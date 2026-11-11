@@ -185,6 +185,8 @@ function mdSchedule() {
     mdSchedule();
   }, t - n);
 }
+// comptes prop firms (Topstep / Apex) : fichier écrit chaque mois par la tâche planifiée Claude dans Bureau/Inner Circle Trader/comptes/
+ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes", "comptes.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
 ipcMain.handle("data:read", (e, sym, from, to, res) => { try { return { ok: true, data: md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });

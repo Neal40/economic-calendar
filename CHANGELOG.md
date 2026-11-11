@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.28.0] — 2026-11-11
+### Ajouté
+- **Comptes** (nouveau menu) : pages Topstep et Apex (KPIs, courbe de capital par compte, jours de trading, tous les comptes), **Payouts** (ID/compte, n°, demandé le, montant, jours de trading, finalisé le, statut Active/Blown, preuve) et **Reçus** (achats, totaux par mois, abonnements). Données lues dans `Bureau/Inner Circle Trader/comptes/comptes.json` (IPC `comptes:read`) ou importées à la main.
+- **Review → Analyses** : loi 80/20 (les valeurs qui font 80 % des gains / pertes par heure, PD Array, prise de liquidité, actif, sens), filtres Par jour / Par mois / Par année, KPIs pire drawdown, pire série de SL, % BE / TP / SL.
+
 ## [1.27.3] — 2026-11-11
 ### Modifié
 - Thème Noir : menu plus petit et caché ; il apparaît quand la souris touche le bord gauche de l'écran et se cache dès qu'on en sort (ou après un clic). Les pages occupent toute la largeur.
