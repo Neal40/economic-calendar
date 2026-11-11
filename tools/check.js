@@ -41,6 +41,23 @@ try {
   if (riskCalc([], 50000).n !== 0) errors.push("riskCalc : liste vide");
 } catch (e) { errors.push("riskCalc : " + e.message); }
 
+// Skill IA du Profil (profilCalc, fonction pure extraite d'index.html)
+try {
+  const src = /\/\* profilCalc:start[\s\S]*?\*\/\r?\n([\s\S]*?)\/\* profilCalc:end \*\//.exec(html)[1], profilCalc = new Function(src + "; return profilCalc;")();
+  const f = (ID, Day, h, net, Size, acc) => ({ ID, "ID TopstepX": acc || "A", Day, Entry: Day + "T" + h + ":00Z", Exit: Day + "T" + h.slice(0, 3) + "59:00Z", Direction: "Long", Size: Size || 2, "Net P&L": net });
+  const days = ["2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16"];
+  const steady = days.map((d, i) => f("s" + i, d, "15:00", i % 4 === 3 ? -100 : 150));
+  const rules = { entries: "1st P.FVG M1 en macro", stops: "sous le swing, 500 $ max", tp: "50 % à 2RR puis BE", trail: "BE après 2RR puis FVG", exits: "fin de macro ou 2 SL" };
+  const a = profilCalc(steady, { rules, risk: { n: 10, ok: 10 }, meta: () => ({ time: true, pda: true, plan: 1, err: [] }) });
+  const by = (r, id) => r.criteria.find((c) => c.id === id).score;
+  if (!(a.n === 10 && a.days === 10 && a.score >= 80 && a.status.k === "ok" && by(a, "rules") === 1 && by(a, "size") === 1)) errors.push("profilCalc : profil régulier mal noté " + JSON.stringify({ s: a.score, c: a.criteria.map((c) => [c.id, c.score]) }));
+  // windfall + revenge (taille doublée juste après une perte) + taille erratique
+  const wild = [...days.slice(0, 9).map((d, i) => f("w" + i, d, "15:00", 20)), f("big", days[9], "15:00", 3000, 10), f("l1", days[2], "16:00", -400), f("l2", days[2], "16:10", -600, 6)];
+  const b = profilCalc(wild, { meta: () => ({ time: false, pda: false, plan: 0, err: ["Gambling"] }) });
+  if (!(b.score < a.score && by(b, "windfall") === 0 && by(b, "erratic") < 0.5 && by(b, "size") < 1 && by(b, "rules") === 0 && b.status.k !== "ok")) errors.push("profilCalc : profil erratique mal noté " + JSON.stringify({ s: b.score, c: b.criteria.map((c) => [c.id, c.score]) }));
+  if (profilCalc([], {}).score !== 0 || profilCalc([], {}).n !== 0) errors.push("profilCalc : liste vide");
+} catch (e) { errors.push("profilCalc : " + e.message); }
+
 // cœur du replay (btCore : horloge, buffer, exécution des ordres), extrait d'index.html
 try {
   const src = /\/\* btCore:start[^\n]*\n([\s\S]*?)\/\* btCore:end \*\//.exec(html)[1], C = new Function(src + "; return btCore;")();

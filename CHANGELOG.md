@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.33.0] — 2026-11-12
+### Ajouté
+- **Profil › Skill IA — Profil prop firm** : statut exact (Profil partenaire / En bonne voie / À consolider / Profil à risque) et score sur 100 face aux critères Apex, calculés sur les trades TopstepX, leurs tags et les fiches Notion liées. 10 critères en 4 blocs : système défini (règles exactes écrites, trades dans le système), constance (taille, jours tradés, gestion du risque avec la règle des tranches et la DLL), ce qu'Apex ne veut pas (windfall / chance avec le seuil de consistance 30 %, gambling / revenge / erratique, jours « remplissage »), partenariat (respect du plan, croissance régulière).
+- Progression : score à la fin de chaque semaine (12 dernières), 20 derniers jours tradés vs avant (par critère), « Prochaines étapes » pour monter le score ; filtres compte et période (Tout / 90 j / 30 j).
+- « Ta stratégie — règles exactes » (entrées, stops initiaux, take profits, trailing, sorties), enregistrée avec les données de l'app, et bouton « Copier le rapport pour Claude ».
+- `tools/check.js` : tests de `profilCalc`.
+
 ## [1.30.0] — 2026-11-11
 ### Ajouté
 - **App Android** (`android-app/`, Capacitor) : même `index.html`, APK construit par la CI (`.github/workflows/build-android.yml`) et publié dans la release `latest-android`.
