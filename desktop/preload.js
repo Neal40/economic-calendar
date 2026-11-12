@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld("desktop", {
   notionDb: (id) => ipcRenderer.invoke("notion:db", id),
   dataStatus: () => ipcRenderer.invoke("data:status"),
   comptesRead: () => ipcRenderer.invoke("comptes:read"),
+  propSync: (firm) => ipcRenderer.invoke("propsync:run", firm),
+  onPropSync: (cb) => ipcRenderer.on("propsync:progress", (e, p) => cb(p)),
   copierGetConfig: () => ipcRenderer.invoke("copier:getConfig"),
   copierSaveConfig: (c) => ipcRenderer.invoke("copier:saveConfig", c),
   copierStart: () => ipcRenderer.invoke("copier:start"),

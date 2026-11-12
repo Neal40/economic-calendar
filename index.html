@@ -2925,8 +2925,21 @@ function profilCalc(fills, o) {
   const STAT = (s) => { s = String(s || "").toLowerCase(); return /closed|blown|fail|liquid|breach|expired/.test(s) ? ["Blown", "dn"] : /passed/.test(s) ? ["Passed", "up"] : /violation/.test(s) ? ["Violation", "warn"] : ["Active", "up"]; };
   function save(d) { C = d; try { localStorage.setItem(KEYC, JSON.stringify(d)); } catch (e) {} }
   async function load() { if (window.desktop && window.desktop.comptesRead) { try { const r = await window.desktop.comptesRead(); if (r && r.ok && (!C || !C.updated || r.data.updated >= C.updated)) save(r.data); } catch (e) {} } }
-  const head = (title, lead) => `<h2>${title}</h2><p class="lead">${lead}${C && C.updated ? ` · mis à jour le ${new Date(C.updated).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })}` : ""}</p>
-    <div class="row2" style="margin:0 0 14px"><label class="btn gray" style="cursor:pointer">Importer comptes.json<input type="file" accept=".json,application/json" class="cpImp" hidden></label><span class="hintd" style="margin:0">Le 1er de chaque mois, Claude récupère tes comptes Topstep, Apex et My Funded Futures depuis ton Chrome et les met ici.</span></div>`;
+  /* synchronisation depuis l'app (Windows / Mac) : bouton par prop firm ; version web : import manuel du fichier */
+  const SYNC_NAME = { topstep: "Topstep", apex: "Apex", mffu: "My Funded Futures", all: "toutes les prop firms" }; let syncSt = null;
+  const canSync = () => !!(window.desktop && window.desktop.propSync);
+  const head = (title, lead, k) => `<h2>${title}</h2><p class="lead">${lead}${C && C.updated ? ` · mis à jour le ${new Date(C.updated).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })}` : ""}</p>
+    <div class="row2" style="margin:0 0 14px;align-items:center;gap:10px;flex-wrap:wrap">${canSync() ? `<button class="btn cpSync" data-k="${k || "all"}"${syncSt && syncSt.running ? " disabled" : ""}>⟳ Synchroniser ${SYNC_NAME[k || "all"]}</button><span class="hintd cpSyncSt" style="margin:0">${syncSt ? esc(syncSt.text) : "Récupère tout depuis le dashboard " + (k ? (k === "apex" ? "d'Apex" : "de " + SYNC_NAME[k]) : "de chaque prop firm") + " (une fenêtre s'ouvre si tu dois te connecter). Le 1er de chaque mois, la tâche Claude le fait aussi."}</span>` : `<label class="btn gray" style="cursor:pointer">Importer comptes.json<input type="file" accept=".json,application/json" class="cpImp" hidden></label><span class="hintd" style="margin:0">Version web : importe le fichier comptes.json. Dans l'app Windows, un bouton « Synchroniser » récupère tout automatiquement.</span>`}</div>`;
+  async function propSync(k) {
+    if (!canSync() || (syncSt && syncSt.running)) return; const firms = k === "all" ? ["topstep", "apex", "mffu"] : [k]; const done = [];
+    const show = () => document.querySelectorAll(".cpSyncSt").forEach((e) => (e.textContent = syncSt.text)), lock = (b) => document.querySelectorAll(".cpSync").forEach((e) => (e.disabled = b));
+    syncSt = { running: true, text: "Synchronisation…" }; lock(true); show();
+    for (const f of firms) { syncSt.firm = f; const r = await window.desktop.propSync(f);
+      if (r && r.ok) { save(r.data); done.push(SYNC_NAME[f] + " : " + r.counts.accounts + " comptes, " + r.counts.payouts + " payouts, " + r.counts.purchases + " achats"); }
+      else done.push(SYNC_NAME[f] + " : échec — " + ((r && r.reason) || "erreur inconnue")); syncSt.text = done.join(" · "); show(); }
+    syncSt = { running: false, text: "✓ Synchronisé le " + new Date().toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) + " — " + done.join(" · ") }; lock(false);
+    const v = (location.hash || "").slice(1); render(v); }
+  if (canSync() && window.desktop.onPropSync) window.desktop.onPropSync((p) => { if (!syncSt || !syncSt.running) return; syncSt.text = SYNC_NAME[p.firm] + " — " + p.text; document.querySelectorAll(".cpSyncSt").forEach((e) => (e.textContent = syncSt.text)); });
   function equity(days, start) { // courbe de capital (SVG)
     if (!days || !days.length) return '<div class="tsx-empty">Pas de jour de trading enregistré.</div>';
     const D = days.slice().sort((a, b) => String(a.d).localeCompare(String(b.d))); let c = start || 0; const pts = [c].concat(D.map((x) => (c += +x.pnl || 0)));
@@ -3057,13 +3070,13 @@ function profilCalc(fills, o) {
   function firmPage(k, name) {
     const F = firmOf(k), ALL = (F.accounts || []).slice().sort((a, b) => String(b.start || "").localeCompare(String(a.start || "")) || String(b.name).localeCompare(String(a.name)));
     const box = $("cp-" + k); if (!box) return;
-    if (!ALL.length) { box.innerHTML = head(name, `Tes comptes ${name}`) + `<div class="panel"><div class="tsx-empty" style="min-height:120px">Aucun compte ${name} pour l'instant.</div></div>`; return; }
+    if (!ALL.length) { box.innerHTML = head(name, `Tes comptes ${name}`, k) + `<div class="panel"><div class="tsx-empty" style="min-height:120px">Aucun compte ${name} pour l'instant.</div></div>`; return; }
     const kf = state["kind_" + k] || "Tous", A = kf === "Tous" ? ALL : ALL.filter((a) => KIND(a) === kf);
     const sel = A.find((a) => a.id === state[k]) || A.find((a) => STAT(a.status)[0] === "Active") || A[0] || ALL[0]; state[k] = sel.id;
     const paid = (F.payouts || []).reduce((s, p) => s + (+p.paid || 0), 0), spent = (F.purchases || []).reduce((s, p) => s + (+p.amount || 0), 0);
     const cnt = (f) => ALL.filter((a) => STAT(a.status)[0] === f).length, nk = (f) => ALL.filter((a) => KIND(a) === f).length, pl = (a) => a.balance != null && a.startBalance != null ? a.balance - a.startBalance : null;
     const kinds = ["Tous", "Challenge", "Funded"].concat(nk("Practice") ? ["Practice"] : []);
-    box.innerHTML = head(name, `Tes comptes ${name} : challenges et comptes funded, soldes, objectifs, jours de trading et achats`) + `
+    box.innerHTML = head(name, `Tes comptes ${name} : challenges et comptes funded, soldes, objectifs, jours de trading et achats`, k) + `
       <div class="kpis"><div class="kpi"><small>Comptes</small><b>${ALL.length}</b><i>${nk("Challenge")} challenges · ${nk("Funded")} funded${nk("Practice") ? " · " + nk("Practice") + " practice" : ""}<br>${cnt("Active") + cnt("Violation")} actifs · ${cnt("Passed")} réussis · ${cnt("Blown")} fermés</i></div>
         <div class="kpi"><small>Payouts reçus</small><b class="pos">${usd(paid)}</b><i>${(F.payouts || []).length} payouts</i></div>
         <div class="kpi"><small>Dépensé</small><b class="neg">${usd(spent)}</b><i>abonnements, resets, activations</i></div>
@@ -3078,23 +3091,36 @@ function profilCalc(fills, o) {
   function payoutsPage() {
     const box = $("cp-payouts"); if (!box) return; const L = [];
     ["topstep", "apex", "mffu"].forEach((k) => { const F = firmOf(k), byAcc = {}; (F.payouts || []).slice().sort((a, b) => String(a.requested).localeCompare(String(b.requested))).forEach((p) => { byAcc[p.account] = (byAcc[p.account] || 0) + 1;
-      const acc = (F.accounts || []).find((a) => a.name === p.account); L.push({ firm: FNAME[k], ...p, num: p.num || byAcc[p.account], days: p.tradingDays != null ? p.tradingDays : acc && acc.days ? acc.days.length : null, st: acc ? STAT(acc.status)[0] === "Blown" ? "Blown" : "Active" : p.accountStatus || "—" }); }); });
+      const acc = (F.accounts || []).find((a) => a.name === p.account); L.push({ firm: FNAME[k], firmKey: k, ...p, num: p.num || byAcc[p.account], days: p.tradingDays != null ? p.tradingDays : acc && acc.days ? acc.days.length : null, st: acc ? STAT(acc.status)[0] === "Blown" ? "Blown" : "Active" : p.accountStatus || "—" }); }); });
     L.sort((a, b) => String(b.requested).localeCompare(String(a.requested)));
     const tot = L.reduce((s, p) => s + (+p.paid || 0), 0);
     box.innerHTML = head("Payouts", "Tous tes payouts Topstep, Apex et My Funded Futures") + `<div class="kpis"><div class="kpi"><small>Total reçu</small><b class="pos">${usd(tot)}</b><i>${L.length} payouts</i></div><div class="kpi"><small>Dernier payout</small><b>${L[0] ? usd(L[0].paid) : "—"}</b><i>${L[0] ? fdate(L[0].requested) : ""}</i></div></div>
       <div class="panel"><table class="tbl"><thead><tr><th>ID / Compte</th><th class="num">Payout n°</th><th>Demandé le</th><th class="num">Montant demandé</th><th class="num">Jours de trading</th><th>Finalisé le</th><th>Statut du compte</th><th>Preuve</th></tr></thead><tbody>
-      ${L.map((p) => `<tr><td><small class="hintd" style="margin:0">${p.firm}</small><br>${esc(p.account)}</td><td class="num">${p.num}</td><td>${fdate(p.requested)}</td><td class="num">${usd(p.amount)}${p.paid != null && +p.paid !== +p.amount ? `<br><small class="hintd" style="margin:0">reçu ${usd(p.paid)}</small>` : ""}</td><td class="num">${p.days ?? "—"}</td><td>${fdate(p.finalized)}</td><td><span class="cp-st ${p.st === "Blown" ? "dn" : "up"}">${p.st}</span></td><td>${p.proof ? (/^https?:/.test(p.proof) ? `<a href="${esc(p.proof)}" target="_blank" rel="noopener">Voir ↗</a>` : "Oui (dashboard)") : "—"}</td></tr>`).join("") || '<tr><td colspan="8" class="hintd">Aucun payout.</td></tr>'}</tbody></table></div>`;
+      ${L.map((p) => `<tr><td><small class="hintd" style="margin:0">${p.firm}</small><br>${esc(p.account)}</td><td class="num">${p.num}</td><td>${fdate(p.requested)}</td><td class="num">${usd(p.amount)}${p.paid != null && +p.paid !== +p.amount ? `<br><small class="hintd" style="margin:0">reçu ${usd(p.paid)}</small>` : ""}</td><td class="num">${p.days ?? "—"}</td><td>${fdate(p.finalized)}</td><td><span class="cp-st ${p.st === "Blown" ? "dn" : "up"}">${p.st}</span></td><td>${p.proof ? (/^data:image\//.test(p.proof) ? `<button class="btn gray cpProof" data-firm="${esc(p.firmKey || "")}" data-acc="${esc(p.account)}" data-req="${esc(p.requested || "")}" style="padding:3px 10px;font-size:12px">Certificat${p.certificate ? " " + esc(p.certificate) : ""}</button>` : /^https?:/.test(p.proof) ? `<a href="${esc(p.proof)}" target="_blank" rel="noopener">Voir ↗</a>` : "Oui (dashboard)") : "—"}</td></tr>`).join("") || '<tr><td colspan="8" class="hintd">Aucun payout.</td></tr>'}</tbody></table></div>`;
   }
+  /* taux USD→EUR (BCE via frankfurter) du jour de l'achat ; week-end / férié → dernier taux publié avant */
+  let fxBusy = false;
+  const fxDay = (d) => String(d || "").slice(0, 10);
+  async function fxLoad(dates) {
+    const miss = [...new Set(dates.map(fxDay).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !FX[d]))]; if (!miss.length || fxBusy) return; fxBusy = true;
+    try { miss.sort(); const from = new Date(miss[0] + "T12:00:00Z"); from.setUTCDate(from.getUTCDate() - 7); const a = from.toISOString().slice(0, 10), b = miss[miss.length - 1] < isoToday ? miss[miss.length - 1] : isoToday;
+      let ser = null; for (const u of [`https://api.frankfurter.app/${a}..${b}?from=USD&to=EUR`, `https://api.frankfurter.dev/v1/${a}..${b}?base=USD&symbols=EUR`]) { try { const r = await fetch(u); if (!r.ok) continue; const j = await r.json(); if (j && j.rates) { ser = j.rates; break; } } catch (e) {} }
+      if (ser) { const days = Object.keys(ser).sort(); for (const d of miss) { let v = null; for (const k of days) { if (k <= d) v = ser[k].EUR; else break; } if (v) FX[d] = v; } try { localStorage.setItem(FXK, JSON.stringify(FX)); } catch (e) {} }
+    } finally { fxBusy = false; } const v = (location.hash || "").slice(1); if (v === "recus") recusPage(); }
+  const eur = (p) => { const r = FX[fxDay(p.date)]; return r ? (+p.amount || 0) * r : null; };
+  const eurFmt = (v) => v == null ? '<span class="hintd" style="margin:0">taux…</span>' : (v < 0 ? "-" : "") + Math.abs(v).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
   function recusPage() {
     const box = $("cp-recus"); if (!box) return; const L = [];
     ["topstep", "apex", "mffu"].forEach((k) => (firmOf(k).purchases || []).forEach((p) => L.push({ firm: FNAME[k], ...p })));
-    L.sort((a, b) => String(b.date).localeCompare(String(a.date)));
-    const byM = {}; L.forEach((p) => { const m = String(p.date).slice(0, 7); byM[m] = (byM[m] || 0) + (+p.amount || 0); });
+    L.sort((a, b) => String(b.date).localeCompare(String(a.date))); fxLoad(L.map((p) => p.date));
+    const byM = {}, byME = {}; L.forEach((p) => { const m = String(p.date).slice(0, 7); byM[m] = (byM[m] || 0) + (+p.amount || 0); const e = eur(p); byME[m] = byME[m] == null && e == null ? null : (byME[m] || 0) + (e || 0); });
+    const totE = L.some((p) => eur(p) != null) ? L.reduce((s, p) => s + (eur(p) || 0), 0) : null, missE = L.filter((p) => eur(p) == null).length;
+    const byF = {}; L.forEach((p) => { const f = byF[p.firm] || (byF[p.firm] = { usd: 0, eur: 0, n: 0 }); f.usd += +p.amount || 0; f.eur += eur(p) || 0; f.n++; });
     const subs = [].concat(...["topstep", "apex", "mffu"].map((k) => (firmOf(k).subscriptions || []).map((s) => ({ firm: FNAME[k], ...s }))));
     box.innerHTML = head("Achats & reçus", "Abonnements, resets et activations payés aux prop firms") + `
-      <div class="kpis"><div class="kpi"><small>Total dépensé</small><b class="neg">${usd(L.reduce((s, p) => s + (+p.amount || 0), 0))}</b><i>${L.length} achats</i></div>${Object.keys(byM).sort().reverse().slice(0, 3).map((m) => `<div class="kpi"><small>${new Date(m + "-15").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}</small><b>${usd(byM[m])}</b></div>`).join("")}</div>
-      <div class="panel"><div class="ptitle">Achats</div><table class="tbl"><thead><tr><th>Date</th><th>Prop firm</th><th>Type</th><th class="num">Montant</th><th>Référence</th></tr></thead><tbody>
-      ${L.map((p) => `<tr><td>${esc(String(p.date).replace("T", " ").slice(0, 16))}</td><td>${p.firm}</td><td>${esc(p.type || "")}</td><td class="num">${usd(p.amount)}</td><td>${esc(p.ref || "")}</td></tr>`).join("") || '<tr><td colspan="5" class="hintd">Aucun achat.</td></tr>'}</tbody></table></div>
+      <div class="kpis"><div class="kpi"><small>Total dépensé</small><b class="neg">${eurFmt(totE)}</b><i>${usd(L.reduce((s, p) => s + (+p.amount || 0), 0))} · ${L.length} achats · au taux du jour de chaque achat${missE ? " · " + missE + " taux en attente" : ""}</i></div>${Object.entries(byF).map(([f, x]) => `<div class="kpi"><small>${f}</small><b>${eurFmt(x.eur)}</b><i>${usd(x.usd)} · ${x.n} achats</i></div>`).join("")}${Object.keys(byM).sort().reverse().slice(0, 2).map((m) => `<div class="kpi"><small>${new Date(m + "-15").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}</small><b>${eurFmt(byME[m])}</b><i>${usd(byM[m])}</i></div>`).join("")}</div>
+      <div class="panel"><div class="ptitle">Achats</div><table class="tbl"><thead><tr><th>Date</th><th>Prop firm</th><th>Type</th><th>Compte</th><th class="num">Montant</th><th class="num">En euros</th><th class="num">Taux du jour</th><th>Référence</th></tr></thead><tbody>
+      ${L.map((p) => { const r = FX[fxDay(p.date)]; return `<tr><td>${esc(String(p.date).replace("T", " ").slice(0, 16))}</td><td>${p.firm}</td><td>${esc(p.type || "")}</td><td>${esc(p.account || "")}</td><td class="num">${usd(p.amount)}</td><td class="num">${eurFmt(eur(p))}</td><td class="num">${r ? "1 $ = " + r.toFixed(4) + " €" : "—"}</td><td>${esc(p.ref || "")}</td></tr>`; }).join("") || '<tr><td colspan="8" class="hintd">Aucun achat.</td></tr>'}</tbody></table></div>
       ${subs.length ? `<div class="panel"><div class="ptitle">Abonnements</div><table class="tbl"><thead><tr><th>ID</th><th>Prop firm</th><th>Statut</th><th class="num">Prix / mois</th><th>Début</th><th>Prochain prélèvement</th></tr></thead><tbody>${subs.map((s) => `<tr><td>${esc(s.id)}</td><td>${s.firm}</td><td><span class="cp-st ${/active/i.test(s.status) ? "up" : ""}">${esc(s.status)}</span></td><td class="num">${usd(s.price)}</td><td>${esc(s.start || "")}</td><td>${esc(s.next || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
   }
   /* comptes.json du Journal (export Stats TopstepX, dossier data\ : liste de comptes « ID TopstepX ») → format des pages Comptes */
@@ -3116,7 +3142,7 @@ function profilCalc(fills, o) {
     if (e.target.classList.contains("cpSel")) { state[e.target.dataset.k] = e.target.value; render(e.target.dataset.k); }
     if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { let d = JSON.parse(t); if (!d.topstep && !d.apex) d = fromJournal(d); if (!d) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
   });
-  document.addEventListener("click", (e) => { const kb = e.target.closest(".cpKind"); if (kb) { state["kind_" + kb.dataset.k] = kb.dataset.v; render(kb.dataset.k); return; } const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
+  document.addEventListener("click", (e) => { const sb = e.target.closest(".cpSync"); if (sb) { propSync(sb.dataset.k); return; } const pb = e.target.closest(".cpProof"); if (pb) { const p = (firmOf(pb.dataset.firm).payouts || []).find((x) => x.account === pb.dataset.acc && String(x.requested || "") === pb.dataset.req); if (p && p.proof) { const ov = document.createElement("div"); ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out"; ov.innerHTML = `<img src="${p.proof}" alt="Certificat" style="max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 10px 40px #000">`; ov.onclick = () => ov.remove(); document.body.appendChild(ov); } return; } const kb = e.target.closest(".cpKind"); if (kb) { state["kind_" + kb.dataset.k] = kb.dataset.v; render(kb.dataset.k); return; } const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
 })();
 </script>
 <script>

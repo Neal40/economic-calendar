@@ -6,6 +6,7 @@ const fs = require("fs");
 const topstepx = require("./topstepx");
 const notion = require("./notion");
 const backup = require("./backup");
+const propsync = require("./propsync");
 app.setPath("userData", backup.migrate(path.join(app.getPath("appData"), "Economic Calendar"), path.join(app.getPath("appData"), "Inner Circle Trader")));
 const ICT = () => path.join(app.getPath("desktop"), "Inner Circle Trader"); // dossier de travail : data/ + backups/
 
@@ -191,6 +192,8 @@ function mdSchedule() {
   }, t - n);
 }
 // comptes prop firms (Topstep / Apex) : fichier écrit chaque mois par la tâche planifiée Claude dans Bureau/Inner Circle Trader/comptes/
+/* synchronisation d'une prop firm (Topstep / Apex / My Funded Futures) : fenêtre de connexion gardée + récupération complète → comptes\comptes.json */
+ipcMain.handle("propsync:run", async (e, firm) => propsync.run(String(firm || ""), { dir: path.join(ICT(), "comptes"), parent: win, onProgress: (p) => { try { if (win && !win.isDestroyed()) win.webContents.send("propsync:progress", p); } catch (x) { /* ignore */ } } }));
 ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes", "comptes.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));

@@ -62,6 +62,7 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 | `notion.js` | API Notion officielle (query, blocks, create, update, archive, append) |
 | `marketdata.js` | Bougies m1 depuis juil. 2023 + 1s → CSV dans `Bureau\Inner Circle Trader\data` (chargé d'office par le backtesteur) (colonnes `time_ny,ts,open,high,low,close,volume`). Lit aussi le dossier `data_csv` (un CSV par symbole et par unité : `NQ_1s.csv`, `NQ_5s.csv`, … `NQ_m1.csv`, … `NQ_12M.csv`, pour NQ / ES / MNQ / MES) qui passe avant `data` ; trous du m1 / 1s comblés par la synchro. `bank()` = cache mémoire en tableaux typés, lecture en flux (jamais de `readFileSync` sur ces fichiers : le 1 s fait 100 Mo). `read` / `readTf` sont **async** |
 | `copier.js` | Trade copier Tradovate leader → followers (voir ⚠️) |
+| `propsync.js` | Bouton « Synchroniser » des pages Comptes : fenêtre `persist:propfirms` (connexion gardée, 2FA fait par l'utilisateur), récupération Topstep / Apex / My Funded Futures avec les appels de leurs dashboards (lecture seule), transformation et fusion dans `Bureau\Inner Circle Trader\comptes\comptes.json` (rien n'est supprimé, preuves gardées) |
 | `prepare.js` | Copie `../index.html` dans `desktop/app/`, remplace Google Fonts et d3 CDN par des fichiers locaux (offline) |
 
 ## Dossier ICT (= Inner Circle Trader) sur le Bureau
