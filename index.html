@@ -327,6 +327,111 @@ body.noir .side .sfoot{margin-top:6px;padding-top:6px}
 body.noir .side .sfoot button{width:34px;height:34px}
 #sideHot{display:none}
 body.noir #sideHot{display:block;position:fixed;left:0;top:0;width:12px;height:100vh;z-index:59}
+/* ---------- Thèmes signature : Matrix, Wall Street, ICT épuré (Fibonacci) — construits sur Noir (body.noir + body.thx + body.th-*) ---------- */
+#thFx{display:none}
+body.thx #thFx{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+body.thx::before{display:none}
+body.thx .panel,body.thx .kpi,body.thx .rv-cal,body.thx .tsx-card,body.thx .poster,body.thx .idstats,body.thx .pf-card,body.thx .pf-head,body.thx .etk{background:var(--glass);border-color:var(--line)}
+body.thx .nav.on,body.thx .side .nav.on,body.thx .btn,body.thx .rv-tab.on,body.thx .bar .seg button.on,body.thx #earnBtn,body.thx .modal .primary,body.thx .imp.both{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+body.thx .nav.on,body.thx .side .nav.on,body.thx .btn{box-shadow:0 8px 26px var(--acc-soft)}
+body.thx .btn.gray,body.thx .bar button,body.thx .bar label.btn{background:var(--glass);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+body.thx .rv-tabs,body.thx .bar .seg,body.thx .tsx-chip{background:var(--glass);border-color:var(--line)}
+body.thx .day.today,body.thx .wrow.today{box-shadow:0 0 0 1.5px var(--acc)}
+body.thx .day:hover,body.thx .wrow:hover{box-shadow:0 0 0 1px var(--acc)}
+body.thx .wk{border-left-color:var(--acc)}
+body.thx .side{background:var(--side);border-color:var(--line)}
+body.thx .side .grp+.grp,body.thx .side .sfoot{border-color:var(--line)}
+body.thx .ptitle,body.thx .mlabel,body.thx .kicker,body.thx .tbl th{color:var(--title)}
+body.thx .bar{background:var(--barbg);border-color:var(--line)}
+body.thx .modal{background:var(--modal);border-color:var(--line)}
+body.thx .pform input,body.thx .pform select,body.thx .pform textarea,body.thx .tbl input,body.thx .tbl select,body.thx .modal input,body.thx .modal select,body.thx .modal textarea,body.thx .pf-menu input{background:var(--field);border-color:var(--line);color:var(--ink)}
+body.thx .pf-menu{background:var(--modal);border-color:var(--line)}
+body.thx .pos{color:var(--up)}body.thx .neg{color:var(--dn)}
+body.thx ::selection{background:var(--acc);color:var(--acc-ink)}
+/* Matrix */
+body.th-matrix{--acc:#00ff66;--acc-ink:#001a08;--acc-soft:rgba(0,255,102,.30);--glass:rgba(0,16,6,.62);--line:rgba(0,255,102,.20);--ink:#c9ffdb;--muted:#5cbf7f;--faint:#2c7446;--title:#39ff88;--side:rgba(0,10,3,.78);--barbg:rgba(0,8,2,.78);--modal:rgba(0,14,5,.95);--field:rgba(0,32,12,.55);--up:#00ff66;--dn:#ff3b5c;--teal:#00ff66;--hand:#7dffb0;background:#000;color:#c9ffdb;font-family:"Space Mono",ui-monospace,Consolas,monospace}
+body.th-matrix #thFx canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.42}
+body.th-matrix #thFx::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.75) 100%)}
+body.th-matrix h1,body.th-matrix .page h2{font-family:"Space Mono",monospace;color:#e2ffec;text-shadow:0 0 22px rgba(0,255,102,.6),0 0 2px #00ff66;letter-spacing:-.02em}
+body.th-matrix .page h2::before{content:"> ";color:#00ff66}
+body.th-matrix .page h2::after{content:"█";color:#00ff66;margin-left:6px;font-size:.7em;vertical-align:.12em;animation:thBlink 1.05s steps(1) infinite}
+@keyframes thBlink{50%{opacity:0}}
+body.th-matrix .panel,body.th-matrix .kpi,body.th-matrix .pf-card,body.th-matrix .pf-head,body.th-matrix .poster{border-radius:6px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:inset 0 0 0 1px rgba(0,255,102,.05),0 0 30px rgba(0,255,102,.06)}
+body.th-matrix .ptitle::before{content:"// ";color:#1fa851}
+body.th-matrix .btn,body.th-matrix .nav.on,body.th-matrix .side .nav.on,body.th-matrix .rv-tab.on{text-shadow:none;box-shadow:0 0 18px rgba(0,255,102,.55),0 0 2px #00ff66}
+body.th-matrix .side .who .av{box-shadow:0 0 0 1px #00ff66,0 0 22px rgba(0,255,102,.55)}
+body.th-matrix .day,body.th-matrix .wrow{background-color:rgba(0,20,8,.45)}
+body.th-matrix .ev .t,body.th-matrix .num{color:#7dffb0}
+body.th-matrix .tsx-empty,body.th-matrix .hintd,body.th-matrix .lead{color:#4fae72}
+/* Wall Street */
+body.th-wallstreet{--acc:#d4af37;--acc-ink:#0a1324;--acc-soft:rgba(212,175,55,.28);--glass:rgba(10,22,42,.66);--line:rgba(212,175,55,.20);--ink:#f3ead3;--muted:#a99f86;--faint:#6f6754;--title:#d4af37;--side:rgba(5,12,26,.82);--barbg:rgba(5,12,26,.8);--modal:rgba(8,18,36,.97);--field:rgba(255,255,255,.04);--up:#3fbf86;--dn:#e5545c;--teal:#3fbf86;--hand:#e9c95a;background:#050c19;color:#f3ead3}
+body.th-wallstreet #thFx{background:radial-gradient(1200px 700px at 80% -10%,rgba(212,175,55,.13),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(40,90,170,.22),transparent 60%),linear-gradient(180deg,#071228,#040915)}
+body.th-wallstreet #thFx svg{position:absolute;inset:0;width:100%;height:100%}
+body.th-wallstreet h1,body.th-wallstreet .page h2{font-family:Georgia,"Times New Roman",serif;font-weight:700;color:#f8f1dc;letter-spacing:-.01em}
+body.th-wallstreet .page h2{border-bottom:3px double rgba(212,175,55,.6);padding-bottom:12px;display:inline-block}
+body.th-wallstreet .page .lead{font-family:Georgia,serif;font-style:italic;color:#b9ae90}
+body.th-wallstreet .ptitle,body.th-wallstreet .mlabel{font-family:Georgia,serif;letter-spacing:.26em;font-weight:700}
+body.th-wallstreet .panel,body.th-wallstreet .kpi,body.th-wallstreet .pf-card,body.th-wallstreet .pf-head,body.th-wallstreet .poster{border-radius:8px;border-top:1px solid rgba(212,175,55,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 22px 60px rgba(0,0,0,.45)}
+body.th-wallstreet .btn,body.th-wallstreet .nav.on,body.th-wallstreet .side .nav.on,body.th-wallstreet .rv-tab.on{background:linear-gradient(180deg,#f0d473,#c9a236 55%,#a8831f);color:#0a1324;border-color:#c9a236}
+body.th-wallstreet .btn{border-radius:4px;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700}
+body.th-wallstreet .side .who .av{box-shadow:0 0 0 1px #d4af37,0 0 0 4px rgba(212,175,55,.18)}
+body.th-wallstreet .kpi b,body.th-wallstreet .num{font-variant-numeric:tabular-nums}
+body.th-wallstreet .main{padding-bottom:34px}
+#thTicker{display:none}
+body.th-wallstreet #thTicker{display:block;position:fixed;left:0;right:0;bottom:0;height:30px;z-index:55;background:linear-gradient(180deg,#0b1730,#060e1f);border-top:1px solid rgba(212,175,55,.55);overflow:hidden;white-space:nowrap;font:600 12px/30px "Space Mono",monospace;color:#f3ead3;pointer-events:none}
+body.th-wallstreet #thTicker .tk{display:inline-block;padding-left:100%;animation:thTick var(--tkd,90s) linear infinite}
+body.th-wallstreet #thTicker .tk span{margin-right:38px}
+body.th-wallstreet #thTicker b{color:#d4af37;font-weight:700}
+body.th-wallstreet #thTicker i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 6px 1px 0}
+body.th-wallstreet #thTicker .lbl{position:absolute;left:0;top:0;bottom:0;z-index:2;padding:0 14px;background:#d4af37;color:#0a1324;font-family:Georgia,serif;letter-spacing:.16em}
+body.th-wallstreet.on-bt #thTicker{display:none}
+@keyframes thTick{to{transform:translateX(-100%)}}
+/* ICT épuré : noir et blanc, éclipse, spirale d'or */
+body.th-ict{--acc:#fff;--acc-ink:#000;--acc-soft:rgba(255,255,255,.16);--glass:rgba(0,0,0,.55);--line:rgba(255,255,255,.14);--ink:#f7f7f7;--muted:#8d8d8d;--faint:#4d4d4d;--title:#d8d8d8;--side:rgba(0,0,0,.78);--barbg:rgba(0,0,0,.78);--modal:rgba(6,6,6,.97);--field:rgba(255,255,255,.03);--up:#e9fff4;--dn:#ff9b9b;--teal:#fff;--hand:#e8e8e8;background:#000;color:#f7f7f7;font-family:"Space Grotesk",-apple-system,"Inter",system-ui,sans-serif}
+body.th-ict #thFx svg{position:absolute;inset:0;width:100%;height:100%}
+body.th-ict .poster{background:rgba(0,0,0,.18);border-color:rgba(255,255,255,.12)}
+body.th-ict .day,body.th-ict .wrow{background-color:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.1)}
+body.th-matrix .poster{background:rgba(0,8,3,.38)}
+body.th-matrix .day,body.th-matrix .wrow{background-color:rgba(0,14,5,.62)}
+body.th-wallstreet .poster{background:rgba(8,18,36,.45)}
+body.th-wallstreet .day,body.th-wallstreet .wrow{background-color:rgba(9,20,40,.72)}
+body.th-ict #thFx .spi{fill:none;stroke:#fff;stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:thDraw 5.5s cubic-bezier(.4,0,.2,1) .2s forwards}
+body.th-ict #thFx .rect{fill:none;stroke:#fff;stroke-opacity:.08;vector-effect:non-scaling-stroke}
+body.th-ict #thFx .fib line{stroke:#fff;stroke-opacity:.07;vector-effect:non-scaling-stroke;stroke-dasharray:2 6}
+body.th-ict #thFx .fib text{fill:#fff;fill-opacity:.22;font:10px "Space Mono",monospace;letter-spacing:.12em}
+body.th-ict #thFx .rot{animation:thRot 240s linear infinite}
+body.th-ict #thFx .ecl{animation:thBreath 9s ease-in-out infinite}
+@keyframes thDraw{to{stroke-dashoffset:0}}
+@keyframes thRot{to{transform:rotate(360deg)}}
+@keyframes thBreath{0%,100%{opacity:.75}50%{opacity:1}}
+body.th-ict .page h2{font-weight:300;letter-spacing:.14em;text-transform:uppercase;font-size:30px}
+body.th-ict .page .lead{letter-spacing:.06em}
+body.th-ict .ptitle{font-weight:400;letter-spacing:.34em}
+body.th-ict .ptitle::before{content:"φ";font-family:Georgia,serif;letter-spacing:0;margin-right:12px;opacity:.6;font-style:italic}
+body.th-ict .panel,body.th-ict .kpi,body.th-ict .pf-card,body.th-ict .pf-head,body.th-ict .poster,body.th-ict .rv-cal,body.th-ict .tsx-card{border-radius:2px;border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:none}
+body.th-ict .btn{border-radius:0;letter-spacing:.2em;text-transform:uppercase;font-size:11.5px;font-weight:600;box-shadow:none}
+body.th-ict .btn.gray{background:transparent;border:1px solid rgba(255,255,255,.35)}
+body.th-ict .btn:hover{box-shadow:0 0 0 1px #fff,0 0 24px rgba(255,255,255,.25)}
+body.th-ict .rv-tabs,body.th-ict .rv-tab,body.th-ict .bar .seg,body.th-ict .bar .seg button,body.th-ict .bar button{border-radius:0}
+body.th-ict .side .nav.on,body.th-ict .nav.on{box-shadow:0 0 0 1px #000,0 0 0 2px rgba(255,255,255,.4),0 0 34px rgba(255,255,255,.45)}
+body.th-ict .side .who .av{box-shadow:0 0 0 1px rgba(255,255,255,.6),0 0 26px rgba(255,255,255,.35);animation:thCorona 7s ease-in-out infinite}
+@keyframes thCorona{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 18px rgba(255,255,255,.25)}50%{box-shadow:0 0 0 1px rgba(255,255,255,.85),0 0 38px rgba(255,255,255,.5)}}
+body.th-ict .day,body.th-ict .wrow{border-radius:2px}
+@media (prefers-reduced-motion:reduce){body.thx #thFx *,body.thx #thTicker .tk,body.th-ict .side .who .av{animation:none!important;stroke-dashoffset:0!important}}
+/* sélecteur de thème (Paramètres › Profil › Apparence) */
+.th-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin:4px 0 14px}
+.th-card{position:relative;cursor:pointer;border-radius:14px;overflow:hidden;border:1px solid rgba(127,127,127,.25);background:#111;transition:transform .18s,box-shadow .18s;text-align:left;padding:0;color:inherit;font:inherit}
+.th-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.th-card.on{box-shadow:0 0 0 2px var(--acc,#3b82f6),0 12px 30px rgba(0,0,0,.35)}
+.th-card .pv{height:96px;position:relative;overflow:hidden}
+.th-card .cap{display:block;padding:9px 12px;font-size:13px;font-weight:600;background:#0c0c0e;color:#eee}
+.th-card .cap small{display:block;font-weight:400;color:#888;font-size:11px;margin-top:2px}
+.pv i{position:absolute;display:block}
+.pv-classique{background:#f6f3ee}.pv-classique i:nth-child(1){left:10px;top:10px;width:26px;bottom:10px;background:#fff;border:1px solid #e3ddd3;border-radius:6px}.pv-classique i:nth-child(2){left:46px;right:10px;top:12px;height:8px;background:#22252c;border-radius:3px}.pv-classique i:nth-child(3){left:46px;right:30px;top:30px;bottom:12px;background:#fff;border:1px solid #e3ddd3;border-radius:6px}
+.pv-noir{background:radial-gradient(120px 80px at 80% 90%,rgba(255,255,255,.18),transparent),#050506}.pv-noir i:nth-child(1){left:10px;top:20px;width:18px;height:56px;border-radius:12px;background:rgba(255,255,255,.08)}.pv-noir i:nth-child(2){left:13px;top:26px;width:12px;height:12px;border-radius:50%;background:#fff}.pv-noir i:nth-child(3){left:40px;right:10px;top:22px;bottom:14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.pv-matrix{background:#000;color:#00ff66;font:700 9px/10px "Space Mono",monospace;letter-spacing:2px;text-shadow:0 0 6px #00ff66}.pv-matrix i{opacity:.75}
+.pv-wallstreet{background:radial-gradient(120px 70px at 85% 0,rgba(212,175,55,.35),transparent),linear-gradient(180deg,#0a1730,#050b18)}.pv-wallstreet i:nth-child(1){left:12px;top:14px;font:700 15px Georgia,serif;color:#f3ead3;border-bottom:3px double #d4af37;padding-bottom:3px}.pv-wallstreet i:nth-child(2){left:0;right:0;bottom:0;height:16px;background:#071025;border-top:1px solid #d4af37;color:#d4af37;font:600 8px/16px "Space Mono",monospace;padding-left:8px;white-space:nowrap;overflow:hidden}.pv-wallstreet i:nth-child(3){right:12px;top:14px;width:42px;height:18px;border-radius:3px;background:linear-gradient(180deg,#f0d473,#a8831f)}
+.pv-ict{background:#000}.pv-ict svg{position:absolute;inset:0;width:100%;height:100%}
 /* ---------- Earnings tracker ---------- */
 .etk{border:1px solid #d9dce3;border-radius:10px;margin:0 0 8px;background:#fff}.etk summary{display:grid;grid-template-columns:110px 70px 1fr 120px 120px;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;font-size:13px;color:#1b1e25}
 .etk summary b{font-size:14px}.etk .imp{font-weight:700;border-radius:6px;padding:3px 8px;text-align:center;font-size:12px}.imp.both{background:#1b1e25;color:#fff}.imp.nq{background:#2962ff;color:#fff}.imp.es{background:#e53935;color:#fff}.imp.none{background:#e3e5ea;color:#5b6170}
@@ -1005,7 +1110,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav" data-go="abonnement"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Abonnement</span></button>
       <button class="nav" data-go="factures"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><span>Factures</span></button>
     </div></div>
-  <div class="sfoot"><button id="thBtn" title="Thème Noir / Classique"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button><button id="miniBtn" title="Réduire le menu"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button></div>
+  <div class="sfoot"><button id="thBtn" title="Thème sombre / Classique (choix du thème : Paramètres › Profil › Apparence)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button><button id="miniBtn" title="Réduire le menu"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button></div>
 </aside>
 <main class="main">
 <div id="tsxWarn" hidden></div>
@@ -1085,7 +1190,7 @@ table.tbl:has(#subT){min-width:900px}
     <div class="hintd" style="margin:0 0 12px">Ton statut exact et ta progression face à ce que veut Apex, sur tous les comptes que tu as eus chez Apex, Topstep et My Funded Futures : un système défini, de la constance (système, taille, jours, risque), pas de gambling ni de windfall, des comptes financés qui durent et des payouts.</div>
     <div id="pfBox"></div></div>
   <div class="panel"><div class="ptitle">Apparence</div><div class="pform">
-    <label>Thème</label><select id="thSel"><option value="noir">Noir (verre, pilules blanches)</option><option value="classique">Classique</option></select>
+    <label>Thème</label><div><div class="th-grid" id="thGrid"></div><select id="thSel" hidden><option value="classique">Classique</option><option value="noir">Noir</option><option value="matrix">Matrix</option><option value="wallstreet">Wall Street</option><option value="ict">ICT épuré</option></select></div>
     <label>Image de fond (thème Noir)</label>
     <div style="display:flex;gap:12px;align-items:center"><input type="file" id="thWall" accept="image/*" style="flex:1;background:none;border:none;padding:0"><button class="btn gray" id="thNoWall" type="button">Retirer</button></div>
   </div><p class="hintd" style="margin:8px 0 0">L'image reste sur cet ordinateur ; elle est assombrie pour garder le texte lisible.</p></div>
@@ -3331,13 +3436,84 @@ function profilCalc(fills, o) {
 })();
 </script>
 <script>
-/* ---------- Thème : Noir (défaut sur la version Mac) ou Classique ; image de fond facultative ---------- */
+/* ---------- Thème : Classique, Noir (défaut sur la version Mac), et thèmes signature Matrix / Wall Street / ICT épuré ; image de fond facultative (Noir) ---------- */
 (function(){
   const isMac = (window.desktop && window.desktop.platform === "darwin") || !!window.Capacitor || matchMedia("(max-width:760px)").matches;
   const get = (k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:v }catch(e){ return d } };
   const set = (k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v) }catch(e){ alert("Image trop lourde pour être enregistrée."); } };
-  function apply(){ const th=get("econcal-theme", isMac?"noir":"classique"), w=get("econcal-wall",""); document.body.classList.toggle("noir", th==="noir");
-    document.body.classList.toggle("wall", !!w && th==="noir"); document.body.style.setProperty("--wall", w?`url("${w}")`:"none"); const s=document.getElementById("thSel"); if(s) s.value=th; }
+  const THEMES = [["classique","Classique","Clair, papier"],["noir","Noir","Verre, pilules blanches"],["matrix","Matrix","Pluie de code, vert phosphore"],["wallstreet","Wall Street","Marine, or, ticker des news"],["ict","ICT épuré","Noir & blanc, éclipse, spirale d'or"]];
+  const DARK = ["noir","matrix","wallstreet","ict"], SIG = ["matrix","wallstreet","ict"];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fx = document.createElement("div"); fx.id="thFx"; fx.setAttribute("aria-hidden","true"); document.body.prepend(fx);
+  const tick = document.createElement("div"); tick.id="thTicker"; tick.setAttribute("aria-hidden","true"); document.body.append(tick);
+  let stopFx = null;
+  // --- Matrix : pluie de code (canvas, ~20 i/s, en pause si la fenêtre est cachée ou dans le Backtesteur)
+  function matrix(){
+    const c=document.createElement("canvas"), x=c.getContext("2d"); fx.append(c);
+    const CH="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789ICTNQES$φΣ<>".split(""), F=16; let W=0,H=0,cols=[],raf=0,last=0;
+    const size=()=>{ W=c.width=innerWidth; H=c.height=innerHeight; cols=Array.from({length:Math.ceil(W/F)},()=>Math.random()*-H/F); x.fillStyle="#000"; x.fillRect(0,0,W,H); };
+    const draw=(t)=>{ raf=requestAnimationFrame(draw); if(t-last<50||document.hidden||document.body.classList.contains("on-bt")) return; last=t;
+      x.fillStyle="rgba(0,0,0,.075)"; x.fillRect(0,0,W,H); x.font=`${F}px "Space Mono",monospace`;
+      for(let i=0;i<cols.length;i++){ const y=cols[i]*F, ch=CH[(Math.random()*CH.length)|0];
+        x.fillStyle="#d8ffe6"; x.fillText(ch,i*F,y); x.fillStyle="rgba(0,255,102,.85)"; x.fillText(CH[(Math.random()*CH.length)|0],i*F,y-F);
+        cols[i] = y>H && Math.random()>.975 ? 0 : cols[i]+1; } };
+    size(); addEventListener("resize",size);
+    if(reduce){ for(let k=0;k<60;k++) draw(k*60); cancelAnimationFrame(raf); } else raf=requestAnimationFrame(draw);
+    return ()=>{ cancelAnimationFrame(raf); removeEventListener("resize",size); };
+  }
+  // --- Wall Street : rosaces guillochées (billet de banque) + ticker des prochaines news du calendrier
+  function rosette(cx,cy,R,r,d,n){ let p=""; for(let i=0;i<=n;i++){ const t=i/n*Math.PI*2*r/(gcd(R,r)), X=cx+(R-r)*Math.cos(t)+d*Math.cos((R-r)/r*t), Y=cy+(R-r)*Math.sin(t)-d*Math.sin((R-r)/r*t); p+=(i?"L":"M")+X.toFixed(1)+" "+Y.toFixed(1); } return p; }
+  function gcd(a,b){ return b?gcd(b,a%b):a; }
+  function wallstreet(){
+    const W=1600,H=1000; fx.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#d4af37" stroke-width=".7" vector-effect="non-scaling-stroke">
+      <path d="${rosette(1330,170,96,35,62,1400)}" stroke-opacity=".16"/><path d="${rosette(1330,170,130,48,70,1600)}" stroke-opacity=".09"/>
+      <path d="${rosette(180,880,110,41,58,1500)}" stroke-opacity=".12"/><path d="${rosette(180,880,150,56,80,1700)}" stroke-opacity=".06"/>
+      ${Array.from({length:14},(_,i)=>`<path d="M0 ${560+i*16} C 400 ${500+i*16}, 1000 ${640+i*16}, ${W} ${560+i*16}" stroke-opacity="${.035+.004*i}"/>`).join("")}</g></svg>`;
+    const ny=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date()), until=new Date(Date.now()+12*864e5).toISOString().slice(0,10);
+    const C={high:"#e5545c",med:"#f0a33a",low:"#d9c86a"}, L=[];
+    try{ Object.keys(S.events||{}).sort().forEach(k=>{ if(k<ny||k>until) return; const d=new Date(k+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"}).toUpperCase();
+      (S.events[k]||[]).forEach(e=>L.push(`<span><b>${esc(d)}</b> ${esc(e.t||"")} <i style="background:${e.k&&e.k!=="ev"?"#d4af37":C[e.i]||"#888"}"></i>${esc(e.n)}</span>`)); }); }catch(e){}
+    tick.innerHTML=`<div class="lbl">NEW YORK</div><div class="tk" style="--tkd:${Math.max(40,L.length*7)}s">${L.length?L.join(""):"<span><b>MARCHÉS</b> Aucune news dans les 12 prochains jours</span>"}</div>`;
+    return ()=>{ tick.innerHTML=""; };
+  }
+  // --- ICT épuré : spirale d'or (rectangles φ), éclipse à l'œil de la spirale, niveaux de Fibonacci
+  function goldenSVG(x,y,h,n){ const P=1.6180339887; let w=h*P, d=`M${x} ${y+h}`, rects=""; for(let i=0,dir=0;i<n;i++,dir=(dir+1)%4){ let s;
+      if(dir===0){ s=h; rects+=`<rect class="rect" x="${x}" y="${y}" width="${s}" height="${s}"/>`; d+=`A${s} ${s} 0 0 1 ${x+s} ${y}`; x+=s; w-=s; }
+      else if(dir===1){ s=w; rects+=`<rect class="rect" x="${x}" y="${y}" width="${s}" height="${s}"/>`; d+=`A${s} ${s} 0 0 1 ${x+s} ${y+s}`; y+=s; h-=s; }
+      else if(dir===2){ s=h; rects+=`<rect class="rect" x="${x+w-s}" y="${y}" width="${s}" height="${s}"/>`; d+=`A${s} ${s} 0 0 1 ${x+w-s} ${y+s}`; w-=s; }
+      else { s=w; rects+=`<rect class="rect" x="${x}" y="${y+h-s}" width="${s}" height="${s}"/>`; d+=`A${s} ${s} 0 0 1 ${x} ${y+h-s}`; h-=s; } }
+    return { d, rects, eye:[x+w/2,y+h/2] }; }
+  function ict(){
+    const W=1600,H=1000, g=goldenSVG(330,120,760,12), [ex,ey]=g.eye, F=[0,.236,.382,.5,.618,.786,1];
+    fx.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><defs>
+        <radialGradient id="thCor" cx="50%" cy="50%" r="50%"><stop offset="38%" stop-color="#fff" stop-opacity="0"/><stop offset="46%" stop-color="#fff" stop-opacity=".55"/><stop offset="56%" stop-color="#fff" stop-opacity=".12"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="thHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".07"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="${ex}" cy="${ey}" r="520" fill="url(#thHalo)"/>
+      <g class="rot" style="transform-origin:${ex}px ${ey}px">${g.rects}<path class="spi" pathLength="1" d="${g.d}" stroke-opacity=".34"/></g>
+      <g class="ecl"><circle cx="${ex}" cy="${ey}" r="92" fill="url(#thCor)"/><circle cx="${ex}" cy="${ey}" r="40" fill="#000" stroke="#fff" stroke-opacity=".85" stroke-width="1.2" vector-effect="non-scaling-stroke"/></g>
+      <g class="fib">${F.map(f=>{ const yy=140+f*720; return `<line x1="1180" x2="${W}" y1="${yy}" y2="${yy}"/><text x="1186" y="${yy-6}">${f===0||f===1?f:f.toFixed(3).replace(/0+$/,"")}</text>`; }).join("")}</g></svg>`;
+    return null;
+  }
+  function apply(){
+    let th=get("econcal-theme", isMac?"noir":"classique"); if(!THEMES.some(t=>t[0]===th)) th="noir";
+    const w=get("econcal-wall",""), b=document.body;
+    b.classList.toggle("noir", DARK.includes(th)); b.classList.toggle("thx", SIG.includes(th)); SIG.forEach(k=>b.classList.toggle("th-"+k, th===k));
+    b.classList.toggle("wall", !!w && th==="noir"); b.style.setProperty("--wall", w?`url("${w}")`:"none");
+    if(stopFx){ stopFx(); stopFx=null; } fx.innerHTML=""; tick.innerHTML="";
+    if(th==="matrix") stopFx=matrix(); else if(th==="wallstreet") stopFx=wallstreet(); else if(th==="ict") stopFx=ict();
+    if(DARK.includes(th)) set("econcal-theme-dark", th);
+    const s=document.getElementById("thSel"); if(s) s.value=th;
+    document.querySelectorAll(".th-card").forEach(c=>c.classList.toggle("on", c.dataset.th===th));
+  }
+  // cartes d'aperçu dans Apparence
+  const grid=document.getElementById("thGrid");
+  if(grid){ const mx=()=>Array.from({length:8},(_,i)=>`<i style="left:${8+i*20}px;top:${(i*23)%40-10}px;writing-mode:vertical-rl">${"アイ01ウエ9IC".slice(i%4,i%4+6)}</i>`).join("");
+    const ictPv=()=>{ const g=goldenSVG(28,10,76,9); return `<svg viewBox="0 0 168 96"><g fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".6">${g.rects.replace(/class="rect"/g,'stroke-opacity=".18"')}<path d="${g.d}"/></g><circle cx="${g.eye[0]}" cy="${g.eye[1]}" r="9" fill="#000" stroke="#fff" stroke-width="1"/><circle cx="${g.eye[0]}" cy="${g.eye[1]}" r="14" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3"/></svg>`; };
+    const PV={classique:"<i></i><i></i><i></i>",noir:"<i></i><i></i><i></i>",matrix:mx(),wallstreet:"<i>Wall Street</i><i>CPI 8:30 · FOMC 2:00 · NFP 8:30 ·</i><i></i>",ict:ictPv()};
+    grid.innerHTML=THEMES.map(([k,n,d])=>`<button type="button" class="th-card" data-th="${k}"><div class="pv pv-${k}">${PV[k]}</div><span class="cap">${n}<small>${d}</small></span></button>`).join("");
+    grid.onclick=e=>{ const c=e.target.closest(".th-card"); if(!c) return; set("econcal-theme", c.dataset.th); apply(); }; }
+  // Backtesteur ouvert : animations en pause, ticker masqué
+  const btv=document.getElementById("v-backtest"); if(btv) new MutationObserver(()=>document.body.classList.toggle("on-bt", btv.classList.contains("on"))).observe(btv,{attributes:true,attributeFilter:["class"]});
   document.querySelectorAll(".side .nav").forEach(n=>{ if(!n.title){ const t=(n.querySelector("span")||n).textContent.trim(); if(t) n.title=t; } });
   // menu caché du thème Noir : bord gauche = afficher, sortie de la souris = masquer
   const hot=document.createElement("div"); hot.id="sideHot"; document.body.append(hot);
@@ -3346,7 +3522,8 @@ function profilCalc(fills, o) {
   hot.addEventListener("mouseenter",show); side.addEventListener("mouseenter",show); side.addEventListener("mouseleave",hide);
   side.addEventListener("click",e=>{ if(e.target.closest(".nav")) hide(); });
   apply();
-  document.getElementById("thBtn").onclick=()=>{ set("econcal-theme", document.body.classList.contains("noir")?"classique":"noir"); apply(); };
+  window.themeRefresh=()=>{ if(document.body.classList.contains("th-wallstreet")) apply(); };
+  document.getElementById("thBtn").onclick=()=>{ set("econcal-theme", document.body.classList.contains("noir")?"classique":get("econcal-theme-dark","noir")); apply(); };
   document.getElementById("thSel").onchange=e=>{ set("econcal-theme", e.target.value); apply(); };
   document.getElementById("thNoWall").onclick=()=>{ set("econcal-wall", null); apply(); };
   document.getElementById("thWall").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const img=new Image(), r=new FileReader();

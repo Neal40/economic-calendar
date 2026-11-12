@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.42.0] — 2026-11-12
+### Ajouté
+- **Apparence › 3 thèmes signature** (en plus de Classique et Noir), choisis avec des cartes d'aperçu :
+  - **Matrix** : pluie de code animée (katakana, chiffres, ICT / NQ / ES / φ), vert phosphore, scanlines CRT, police Space Mono, titres en invite `> … █` qui clignote.
+  - **Wall Street** : marine et or, rosaces guillochées façon billet de banque, titres en serif avec double filet, boutons or, **ticker « NEW YORK »** en bas qui fait défiler les news des 12 prochains jours du calendrier (pastille par impact).
+  - **ICT épuré** : noir et blanc comme le logo, **spirale d'or** (rectangles φ) qui se dessine puis tourne lentement, **éclipse** à l'œil de la spirale avec couronne qui respire, niveaux de Fibonacci (0 → 1) en filigrane, angles nets, titres espacés, φ devant les titres.
+- Animations en pause dans le Backtesteur et quand la fenêtre est cachée ; réduites si le système demande moins d'animations. Le bouton thème du menu bascule entre Classique et le dernier thème sombre choisi.
+
 ## [1.41.0] — 2026-11-12
 ### Corrigé
 - **Profil › Skill IA** : tailles en équivalent mini (10 micros MNQ / MES = 1 NQ / ES) au lieu d'additionner micros et minis ; DLL propre à chaque compte (Topstep 1 000 / 3 000 $, MFFU…) au lieu de 1 000 $ pour tous ; comparaison « 20 derniers jours vs avant » sans le critère Payouts (non daté) et sans le parcours quand trop peu de comptes ; flèches masquées (≈) quand l'écart vient d'échantillons trop petits ; rapport pour Claude étendu à Apex, Topstep et MFFU.
