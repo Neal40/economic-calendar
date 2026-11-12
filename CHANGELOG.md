@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.45.0] — 2026-11-12
+### Ajouté
+- **Paramètres › Affiliation** (sous Profil) : une carte par prop firm avec la réduction, le code promo (bouton Copier) et le lien d'affiliation (ouvert dans le navigateur) ; liens, codes et réductions modifiables dans le tableau (Topstep, Apex, My Funded Futures pré-remplis).
+
 ## [1.44.0] — 2026-11-12
 ### Ajouté
 - **Profil** : carte de profil (logo, nom, handle, bio, stratégies, boutons des réseaux cliquables qui s'ouvrent dans le navigateur) ; champs **Bio**, **Stratégies de trading** (SMC/ICT, Orderflow, Indicateurs, EA/Bots, Chartisme, Price action, Scalping, Swing — clic pour activer) et **Réseaux sociaux** (X, Discord, YouTube, Twitch, Instagram, TikTok) avec lien « Ouvrir ↗ » ; liens vérifiés (http/https seulement, https ajouté si absent).

@@ -192,6 +192,12 @@ body{background:#060607}
 .kpi small{font-size:12px;color:#8b8d98;display:block}
 .kpi b{font-size:20px;display:block;margin-top:4px;font-weight:600}
 .kpi i{font-style:normal;font-size:11.5px;color:#6f727d}
+/* ---------- affiliation ---------- */
+.aff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.aff-card{background:#121216;border:1px solid #1f1f25;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.aff-card b{font-size:15px}.aff-card .aff-off{font-size:13px;color:#22c55e;font-weight:600}
+.aff-code{display:flex;gap:6px;align-items:center}.aff-code code{flex:1;background:#0b0b0e;border:1px dashed #2a2a31;border-radius:6px;padding:6px 8px;font-size:13px;letter-spacing:.5px}
+.aff-card a.btn{text-decoration:none;text-align:center}
 .neg{color:#ff5c65}.pos{color:#2fd37c}
 .cp-2col{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin:14px 0}.cp-2col .panel+.panel{margin-top:0}@media(max-width:1000px){.cp-2col{grid-template-columns:1fr}}.cp-kv td:first-child{color:#9a9ca5}.cp-kv td{padding:7px 4px}.cp-rule{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;margin:0 0 6px;font-size:13px}.cp-rule.ok{background:rgba(47,211,124,.08)}.cp-rule.ko{background:rgba(255,92,101,.08)}.cp-rule b{font-weight:600}.cp-rule.ok b{color:#2fd37c}.cp-rule.ko b{color:#ff5c65}.cp-rule span{color:#9a9ca5;font-size:12px}
 .cp-st{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08);color:#d9dae0}.cp-st.up{background:rgba(47,211,124,.14);color:#2fd37c}.cp-st.dn{background:rgba(255,92,101,.14);color:#ff5c65}.cp-st.warn{background:rgba(242,161,43,.16);color:#f2a12b}
@@ -1120,6 +1126,7 @@ table.tbl:has(#subT){min-width:900px}
 <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
       <button class="nav" data-go="profil"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span></button>
+      <button class="nav" data-go="affiliation"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Affiliation</span></button>
       <button class="nav" data-go="abonnement"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Abonnement</span></button>
       <button class="nav" data-go="factures"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><span>Factures</span></button>
     </div></div>
@@ -1217,6 +1224,14 @@ table.tbl:has(#subT){min-width:900px}
   <div class="panel"><div class="ptitle">Langue / Language</div>
     <div class="hintd" style="margin:0 0 10px">Langue de l'interface (français par défaut).</div>
     <select id="langSel" class="btn gray" style="min-width:180px"><option value="fr">Français</option><option value="en">English</option></select></div>
+</div></section>
+
+<section class="view" id="v-affiliation"><div class="page">
+  <h2>Affiliation</h2><p class="lead">Les prop firms avec lesquelles on a une réduction : lien d'affiliation et code promo.</p>
+  <div class="aff-grid" id="affG"></div>
+  <div class="panel" style="margin-top:16px"><div class="ptitle">Modifier les liens</div>
+    <table class="tbl"><thead><tr><th>Prop firm</th><th>Lien d'affiliation</th><th>Code promo</th><th>Réduction</th><th></th></tr></thead><tbody id="affT"></tbody></table>
+    <div class="row2"><button class="btn" id="affAdd">+ Ajouter une prop firm</button></div></div>
 </div></section>
 
 <section class="view" id="v-abonnement"><div class="page">
@@ -1910,7 +1925,7 @@ $("bSave").onclick=()=>{ const social={}; SOC.forEach(([k])=>{ const u=urlOk($("
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","topstep","apex","mffu","payouts","recus","profil","abonnement","factures"];
+const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","topstep","apex","mffu","payouts","recus","profil","affiliation","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -1925,7 +1940,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["topstep","apex","mffu","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
-  if(v==="financialjuice") loadFJ(); if(v==="profil"){ loadProfile(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  if(v==="financialjuice") loadFJ(); if(v==="profil"){ loadProfile(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -1978,6 +1993,33 @@ function bindTable(tb,arr,rerender){
 bindTable("subT","subs",k=>k?subsKpi():renderSubs());
 $("subAdd").onclick=()=>{S.subs=S.subs||[];S.subs.push({on:true,name:"",cat:"Prop firm",price:null,cur:"USD",freq:"Mensuel",next:""});save();renderSubs();
   const r=$("subT").querySelectorAll("tr"); r[r.length-1].querySelector('[data-k="name"]').focus();};
+
+/* ---------- affiliation (Paramètres › Affiliation) : liens et codes promo des prop firms ---------- */
+const AFF_DEF=[{name:"Topstep",url:"https://www.topstep.com/",code:"",off:""},{name:"Apex Trader Funding",url:"https://apextraderfunding.com/",code:"",off:""},{name:"My Funded Futures",url:"https://myfundedfutures.com/",code:"",off:""}];
+if(!Array.isArray(S.affil)){ S.affil=AFF_DEF.map(x=>({...x})); try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} }
+const affUrl=u=>{ u=(u||"").trim(); return !u?"":/^https?:\/\//i.test(u)?u:"https://"+u; };
+function affCards(){
+  $("affG").innerHTML=S.affil.filter(x=>x.name||x.url).map((x,i)=>`<div class="aff-card"><b>${esc(x.name||"Prop firm")}</b>
+    <span class="aff-off">${x.off?esc(x.off):'<span style="color:#6f727d;font-weight:400">Réduction à renseigner</span>'}</span>
+    ${x.code?`<div class="aff-code"><code>${esc(x.code)}</code><button class="btn gray" data-copy="${esc(x.code)}" type="button">Copier</button></div>`:""}
+    ${x.url?`<a class="btn" href="${esc(affUrl(x.url))}" target="_blank" rel="noopener">Ouvrir le lien ↗</a>`:""}</div>`).join("") || `<div class="hintd">Aucune prop firm. Ajoute tes liens ci-dessous.</div>`;
+}
+function renderAff(){
+  S.affil=S.affil||[];
+  $("affT").innerHTML=S.affil.map((x,i)=>`<tr data-i="${i}">
+    <td><input data-k="name" value="${esc(x.name)}" placeholder="Topstep"></td>
+    <td><input data-k="url" value="${esc(x.url)}" placeholder="https://…"></td>
+    <td><input data-k="code" value="${esc(x.code)}" placeholder="CODE"></td>
+    <td><input data-k="off" value="${esc(x.off)}" placeholder="-50 %"></td>
+    <td class="x"><button title="Supprimer">✕</button></td></tr>`).join("") || `<tr><td colspan="5" style="color:#6f727d;padding:14px 8px">Aucune prop firm.</td></tr>`;
+  affCards();
+}
+bindTable("affT","affil",k=>k?affCards():renderAff());
+$("affG").addEventListener("click",e=>{ const b=e.target.closest("[data-copy]"); if(!b) return; const t=b.dataset.copy;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{ const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select(); document.execCommand("copy"); a.remove(); })
+  .finally(()=>{ b.textContent="Copié ✓"; setTimeout(()=>b.textContent="Copier",1500); }); });
+$("affAdd").onclick=()=>{S.affil=S.affil||[];S.affil.push({name:"",url:"",code:"",off:""});save();renderAff();
+  const r=$("affT").querySelectorAll("tr"); r[r.length-1].querySelector('[data-k="name"]').focus();};
 
 /* ---------- factures ---------- */
 const CATS_B=["Challenge","Reset","Activation"];
@@ -6486,7 +6528,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 (() => {
   const EN = {
     // menu, profil
-    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Abonnement": "Subscription", "Factures": "Invoices", "Réduire le menu": "Collapse menu",
+    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Affiliation": "Affiliate", "Abonnement": "Subscription", "Factures": "Invoices", "Réduire le menu": "Collapse menu",
     "Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.": "Your name, handle and logo, shown in the menu and on the calendar.", "Nom affiché": "Display name", "Retirer": "Remove", "Texte du logo (sans image)": "Logo text (no image)", "Lien Notion (bouton du journal)": "Notion link (journal button)",
     "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
     "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
