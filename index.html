@@ -193,6 +193,7 @@ body{background:#060607}
 .kpi b{font-size:20px;display:block;margin-top:4px;font-weight:600}
 .kpi i{font-style:normal;font-size:11.5px;color:#6f727d}
 .neg{color:#ff5c65}.pos{color:#2fd37c}
+.cp-2col{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin:14px 0}.cp-2col .panel+.panel{margin-top:0}@media(max-width:1000px){.cp-2col{grid-template-columns:1fr}}.cp-kv td:first-child{color:#9a9ca5}.cp-kv td{padding:7px 4px}.cp-rule{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;margin:0 0 6px;font-size:13px}.cp-rule.ok{background:rgba(47,211,124,.08)}.cp-rule.ko{background:rgba(255,92,101,.08)}.cp-rule b{font-weight:600}.cp-rule.ok b{color:#2fd37c}.cp-rule.ko b{color:#ff5c65}.cp-rule span{color:#9a9ca5;font-size:12px}
 .cp-st{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.08);color:#d9dae0}.cp-st.up{background:rgba(47,211,124,.14);color:#2fd37c}.cp-st.dn{background:rgba(255,92,101,.14);color:#ff5c65}.cp-st.warn{background:rgba(242,161,43,.16);color:#f2a12b}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-weight:500;color:#8b8d98;font-size:11.5px;letter-spacing:.04em;padding:7px 8px;border-bottom:1px solid #1f1f25;text-transform:uppercase}
@@ -2932,25 +2933,106 @@ function profilCalc(fills, o) {
     const bars = D.map((d, i) => { const v = +d.pnl || 0, h = Math.max(2, Math.abs(v) / Math.max(1, ...D.map((z) => Math.abs(+z.pnl || 0))) * 50); return `<rect x="${x(i + 1) - 6}" y="${H - 4 - h}" width="12" height="${h}" rx="3" fill="${v >= 0 ? "#2fd37c" : "#ff5c65"}" opacity=".55"><title>${esc(d.d)} : ${sgn(v)}</title></rect>`; }).join("");
     return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${bars}<path d="${path}" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>${pts.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#fff"><title>${i ? esc(D[i - 1].d) + " · " : ""}${usd(v)}</title></circle>`).join("")}</svg>`;
   }
+  /* ---- pages Topstep / Apex : même contenu que le dashboard de chaque prop firm ---- */
+  const KIND = (a) => a.kind || (/^PA-|EXPRESS|XFA|funded/i.test(a.id + " " + a.name + " " + a.stage) ? "Funded" : /PRAC/i.test(a.name) ? "Practice" : "Challenge");
+  const kindTag = (a) => { const k = KIND(a); return `<span class="cp-st ${k === "Funded" ? "up" : k === "Practice" ? "" : "warn"}">${k === "Challenge" ? "Challenge" : k === "Funded" ? "Funded" : "Practice"}</span>`; };
+  const pc0 = (v) => v == null || isNaN(v) ? "—" : Math.round(v) + " %";
+  const kv = (rows) => `<table class="tbl cp-kv">${rows.filter(Boolean).map(([k, v]) => `<tr><td>${k}</td><td class="num">${v}</td></tr>`).join("")}</table>`;
+  const ok = (b) => b ? '<span class="pos">✓</span>' : '<span class="neg">✗</span>';
+  function balChart(pts, floor, target) { // pts = [{d, bal}] ; floor = [{d, v}] (MLL) ; target = nombre
+    if (!pts.length) return '<div class="tsx-empty">Pas de jour de trading enregistré.</div>';
+    const vals = pts.map((p) => p.bal).concat(floor ? floor.map((f) => f.v) : []).concat(target != null ? [target] : []);
+    const W = 900, H = 240, mn = Math.min(...vals), mx = Math.max(...vals), y = (v) => H - 24 - ((v - mn) / ((mx - mn) || 1)) * (H - 48), x = (i) => 40 + (i / (pts.length - 1 || 1)) * (W - 80);
+    const line = (arr, f) => arr.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(f(p)).toFixed(1)}`).join(" ");
+    return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
+      ${target != null ? `<line x1="40" x2="${W - 40}" y1="${y(target)}" y2="${y(target)}" stroke="#2fd37c" stroke-dasharray="4 5" opacity=".6"/><text x="${W - 40}" y="${y(target) - 5}" fill="#2fd37c" font-size="11" text-anchor="end">Objectif ${usd(target)}</text>` : ""}
+      ${floor ? `<path d="${line(floor, (f) => f.v)}" fill="none" stroke="#ff5c65" stroke-width="1.5" stroke-dasharray="5 5"/>` : ""}
+      <path d="${line(pts, (p) => p.bal)}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/>
+      ${pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.bal)}" r="3.5" fill="#3b82f6"><title>${esc(p.d)} · ${usd(p.bal)}</title></circle>`).join("")}
+      <text x="40" y="${H - 6}" fill="#8b8d96" font-size="11">${esc(pts[0].d)}</text><text x="${W - 40}" y="${H - 6}" fill="#8b8d96" font-size="11" text-anchor="end">${esc(pts[pts.length - 1].d)}</text></svg>
+      <div class="hintd" style="margin:4px 0 0"><span style="color:#3b82f6">●</span> Solde${floor ? ' · <span style="color:#ff5c65">- - -</span> Maximum Loss Limit' : ""}${target != null ? ' · <span style="color:#2fd37c">- - -</span> Objectif' : ""}</div>`;
+  }
+  const gauge = (label, val, sub, color) => `<div class="kpi" style="text-align:center"><small>${label}</small><b style="color:${color || "#fff"}">${val}</b><i>${sub || ""}</i></div>`;
+  const buyRows = (a) => (a.purchases || []).length ? `<div class="panel"><div class="ptitle">Achats liés à ce compte · ${usd(a.paid)}</div><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th class="num">Montant</th><th>Référence</th></tr></thead><tbody>${a.purchases.map((p) => `<tr><td>${esc(String(p.date).replace("T", " ").slice(0, 16))}</td><td>${esc(p.type || "")}</td><td class="num">${usd(p.amount)}</td><td>${esc(p.ref || "")}</td></tr>`).join("")}</tbody></table></div>` : "";
+
+  function tsDetail(a) { // Topstep : comme dashboard.topstep.com (accounts/<id> + default)
+    const D = (a.days || []).slice().sort((x, y) => String(x.d).localeCompare(String(y.d)));
+    let bal = a.startBalance || 0, peak = bal; const pts = [{ d: a.start ? String(a.start).slice(0, 10) : "Début", bal }], floor = [{ d: pts[0].d, v: bal - (a.mll || 2000) }];
+    D.forEach((d) => { bal += +d.pnl || 0; peak = Math.max(peak, bal); pts.push({ d: d.d, bal: Math.round(bal * 100) / 100 }); floor.push({ d: d.d, v: Math.min(peak - (a.mll || 2000), a.startBalance || 0) }); });
+    const pnl = (a.balance != null ? a.balance : bal) - (a.startBalance || 0), best = D.length ? Math.max(...D.map((d) => +d.pnl)) : null, worst = D.length ? Math.min(...D.map((d) => +d.pnl)) : null;
+    const tot = D.reduce((s, d) => s + (+d.n || 0), 0), winsN = D.reduce((s, d) => s + Math.round((+d.n || 0) * (+d.win || 0) / 100), 0);
+    const avgW = (() => { const w = D.filter((d) => +d.avgW > 0); const n = w.reduce((s, d) => s + Math.round(d.n * d.win / 100), 0); return n ? w.reduce((s, d) => s + d.avgW * Math.round(d.n * d.win / 100), 0) / n : 0; })();
+    const avgL = (() => { const l = D.filter((d) => +d.avgL < 0); const n = l.reduce((s, d) => s + (d.n - Math.round(d.n * d.win / 100)), 0); return n ? l.reduce((s, d) => s + d.avgL * (d.n - Math.round(d.n * d.win / 100)), 0) / n : 0; })();
+    let streak = 0; for (let i = D.length - 1; i >= 0 && +D[i].pnl > 0; i--) streak++;
+    const cons = pnl > 0 && best > 0 ? best / pnl * 100 : null;
+    const T = (a.trades || []).slice().sort((x, y) => String(y.t).localeCompare(String(x.t)));
+    return `<div class="panel"><div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-start">
+        <div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:16px">${esc(a.name)}</b>${kindTag(a)}<span class="cp-st ${STAT(a.status)[1]}">${esc(a.status)}</span></div>
+          <div class="hintd" style="margin:6px 0 0">${esc(a.type || "")} · ${esc(a.accountType || "")} · ${esc(a.stage || "")}${a.platform ? " · " + esc(a.platform) : ""}${a.dll ? " · Daily Loss Limit protégé" : ""} · créé le ${esc(String(a.start || "").replace("T", " ").slice(0, 16))}</div></div>
+        <div style="text-align:right"><div style="font-size:26px;font-weight:700">${usd(a.balance)}</div><div class="hintd" style="margin:0">Solde actuel · prix payé <b style="color:#fff">${usd(a.paid || 0)}</b></div></div></div>
+      <div class="kpis" style="margin:14px 0 0">
+        ${gauge("Profit", `<span class="${pnl >= 0 ? "pos" : "neg"}">${sgn(pnl)}</span>`, a.profitTarget && KIND(a) === "Challenge" ? "Objectif " + usd(a.profitTarget) : "")}
+        ${gauge("Jours tradés", D.length, a.minDays ? "Min : " + a.minDays : "")}
+        ${a.consistency ? gauge("Consistance", cons == null ? "—" : cons.toFixed(2) + " %", "≤ " + a.consistency + " %", cons != null && cons > a.consistency ? "#ff5c65" : null) : ""}
+        ${gauge("Pire jour", `<span class="neg">${worst == null ? "—" : usd(worst)}</span>`)}${gauge("Meilleur jour", `<span class="pos">${best == null ? "—" : usd(best)}</span>`)}</div></div>
+      <div class="cp-2col"><div class="panel"><div class="ptitle">Solde dans le temps</div>${balChart(pts, floor, KIND(a) === "Challenge" && a.profitTarget ? (a.startBalance || 0) + a.profitTarget : null)}</div>
+        <div class="panel"><div class="ptitle">Path to funding</div>${kv([
+          a.dll ? ["Daily Loss Limit (DLL)", usd(a.dll)] : null, ["Maximum Loss Limit", `Ne pas descendre sous ${usd((a.startBalance || 0) - (a.mll || 2000))} (trailing ${usd(a.mll || 2000)})`],
+          ["Plus haut solde", usd(Math.max(...pts.map((p) => p.bal)))], ["Plus bas solde", usd(Math.min(...pts.map((p) => p.bal)))],
+          ["Meilleur jour", best == null ? "—" : usd(best)], ["Pire jour", worst == null ? "—" : usd(worst)], ["Série gagnante", streak + " jour" + (streak > 1 ? "s" : "")],
+          a.maxPos ? ["Taille max.", a.maxPos + " contrats"] : null, (a.products || []).length ? ["Produits", esc(a.products.join(", "))] : null])}</div></div>
+      <div class="kpis">${gauge("Win rate", pc0(tot ? winsN / tot * 100 : null), "Objectif 60 %")}${gauge("Trade gagnant moyen", `<span class="pos">${usd(avgW)}</span>`)}${gauge("Trade perdant moyen", `<span class="neg">${usd(avgL)}</span>`)}${gauge("Trades", tot, D.reduce((s, d) => s + (+d.c || 0), 0) + " contrats")}${gauge("Frais + commissions", `<span class="neg">${usd(D.reduce((s, d) => s + (+d.fees || 0), 0))}</span>`)}</div>
+      <div class="panel"><div class="ptitle">Jours de trading</div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Jour</th><th class="num">P&amp;L net</th><th class="num">Trades</th><th class="num">Contrats</th><th class="num">Frais + comm.</th><th class="num">P&amp;L haut</th><th class="num">P&amp;L bas</th><th class="num">Gain moy.</th><th class="num">Perte moy.</th><th class="num">% gagnants</th><th class="num">Série G/P</th><th class="num">Durée moy. G / P</th></tr></thead><tbody>
+        ${D.slice().reverse().map((d) => `<tr><td>${esc(d.d)}</td><td class="num ${+d.pnl >= 0 ? "pos" : "neg"}">${sgn(+d.pnl)}</td><td class="num">${d.n ?? "—"}</td><td class="num">${d.c ?? "—"}</td><td class="num">${usd(-(+d.fees || 0))}</td><td class="num">${d.hi != null ? usd(d.hi) : "—"}</td><td class="num">${d.lo != null ? usd(d.lo) : "—"}</td><td class="num">${d.avgW != null ? usd(d.avgW) : "—"}</td><td class="num">${d.avgL != null ? usd(d.avgL) : "—"}</td><td class="num">${d.win != null ? d.win + " %" : "—"}</td><td class="num">${d.cw != null ? d.cw + "/" + d.cl : "—"}</td><td class="num">${d.durW ? esc(d.durW) + " / " + esc(d.durL || "—") : "—"}</td></tr>`).join("") || '<tr><td colspan="12" class="hintd">—</td></tr>'}</tbody></table></div></div>
+      ${T.length ? `<div class="panel"><div class="ptitle">Trades · ${T.length}</div><div style="overflow-x:auto;max-height:420px;overflow-y:auto"><table class="tbl"><thead><tr><th>Heure (CT)</th><th>Jour</th><th>ID</th><th>Sens</th><th class="num">Taille</th><th>Produit</th><th class="num">Prix</th><th class="num">Frais + comm.</th><th class="num">Profit</th></tr></thead><tbody>
+        ${T.map((t) => `<tr><td>${esc(t.t)}</td><td>${esc(t.day)}</td><td>${esc(t.id)}</td><td>${esc(t.side)}</td><td class="num">${t.size}</td><td>${esc(t.prod)}</td><td class="num">${(+t.price).toLocaleString("en-US", { minimumFractionDigits: 2 })}</td><td class="num">${usd(-(+t.fees || 0))}</td><td class="num ${+t.pl > 0 ? "pos" : +t.pl < 0 ? "neg" : ""}">${usd(t.pl)}</td></tr>`).join("")}</tbody></table></div></div>` : ""}
+      ${buyRows(a)}`;
+  }
+
+  function apDetail(a) { // Apex : comme dashboard.apextraderfunding.com (summary / trading / payout)
+    const S = a.summary || {}, R = a.requirements || {}, SE = (a.sessions || []).slice().sort((x, y) => String(x.d).localeCompare(String(y.d))), P = a.payout;
+    const pts = [{ d: SE[0] ? "Départ" : "—", bal: a.startBalance || 0 }].concat(SE.map((s) => ({ d: s.d, bal: +s.bal })));
+    return `<div class="panel"><div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-start">
+        <div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:16px">${esc(a.name)}</b>${kindTag(a)}<span class="cp-st ${STAT(a.status)[1]}">${esc(a.status)}</span></div>
+          <div class="hintd" style="margin:6px 0 0">${esc(a.type || "")} · ${esc(a.stage || "")}${a.start ? " · 1er jour tradé le " + esc(a.start) : ""}</div></div>
+        <div style="text-align:right"><div style="font-size:26px;font-weight:700">${usd(a.balance)}</div><div class="hintd" style="margin:0">Solde actuel · prix payé <b style="color:#fff">${usd(a.paid || 0)}</b></div></div></div></div>
+      <div class="cp-2col"><div class="panel"><div class="ptitle">Account Summary</div>${kv([["Numéro de compte", esc(a.name)], ["Solde initial", usd(S.initial)], ["Solde actuel", usd(S.current)], S.liquidation != null ? ["Seuil de liquidation", usd(S.liquidation)] : null, ["Solde min. pour payout", S.minPayout != null ? usd(S.minPayout) : "—"], ["Profit total", `<span class="${(S.totalProfit || 0) >= 0 ? "pos" : "neg"}">${sgn(S.totalProfit)}</span>`], S.peak != null ? ["Plus haut solde", usd(S.peak)] : null, ["Jours tradés", S.daysTraded ?? "—"], ["Dernière activité", esc(S.lastActivity || "—")], ["Niveau de dormance", esc(S.dormancy || "—")]])}</div>
+        <div class="panel"><div class="ptitle">Eligibility Requirements</div>${kv([["Objectif de profit", R.passedThreshold != null ? usd(R.passedThreshold) : R.profitTarget != null ? usd(R.profitTarget) : "—"], ["Jours de trading min.", R.minDays != null ? R.minDays + " jours" : "—"], ["Jours ≥ " + usd(R.minDailyProfit || 0).replace(".00", "") + " de profit", R.minDays != null ? R.minDays + " jours" : "—"], ["Règle de consistance", R.consistency != null ? "Aucun jour > " + R.consistency + " % du profit total" : "—"], R.blownThreshold != null ? ["Seuil de perte (blown)", usd(R.blownThreshold)] : null])}</div></div>
+      <div class="panel"><div class="ptitle">Trading Chart</div>${balChart(pts, null, R.passedThreshold || null)}</div>
+      <div class="panel"><div class="ptitle">Trading Sessions · ${SE.length}</div><table class="tbl"><thead><tr><th>Date</th><th class="num">Solde du compte</th><th class="num">P&amp;L clôturé</th><th class="num">Fills</th></tr></thead><tbody>
+        ${SE.slice().reverse().map((s) => `<tr><td>${esc(s.d)}</td><td class="num">${usd(s.bal)}</td><td class="num ${+s.pnl >= 0 ? "pos" : "neg"}">${usd(s.pnl)}</td><td class="num">${s.fills ?? "—"}</td></tr>`).join("") || '<tr><td colspan="4" class="hintd">—</td></tr>'}</tbody></table></div>
+      ${P ? `<div class="panel" style="border-color:${P.eligible ? "rgba(47,211,124,.4)" : "rgba(255,92,101,.4)"}"><div class="ptitle" style="color:${P.eligible ? "#2fd37c" : "#ff5c65"}">${P.eligible ? "✓ Éligible au payout" : "✗ Pas éligible au payout"}</div>
+          ${(P.rules || []).filter((r) => !r.passed).length ? `<p class="hintd" style="margin:0 0 10px">Règles non remplies : ${P.rules.filter((r) => !r.passed).map((r) => esc(r.rule)).join(", ")}</p>` : ""}
+          <div class="cp-2col" style="margin:0"><div>${kv([["Statut", esc(P.info.status || "—")], ["Solde actuel", usd(P.info.current)], ["Profit total (lifetime)", sgn(P.info.lifetime)], ["Payouts approuvés", P.info.approved ?? 0], P.info.minPayout != null ? ["Payout min.", usd(P.info.minPayout)] : null])}</div>
+            <div>${(P.rules || []).map((r) => `<div class="cp-rule ${r.passed ? "ok" : "ko"}"><b>${r.passed ? "✓" : "✗"} ${esc(r.rule)}</b><span>${esc(r.detail || "")}</span></div>`).join("")}</div></div></div>
+        <div class="panel"><div class="ptitle">Payout Check Period</div>${kv([["Dernière demande de payout", esc(P.check.lastPayout || "Aucune")], ["Dernière violation", esc(P.check.lastViolation || "Aucune")], ["Dernière session ignorée", esc(P.check.lastIgnored || "Aucune")]])}</div>
+        ${(P.progression || []).length ? `<div class="panel"><div class="ptitle">Trading Progression (depuis le dernier payout)</div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Jour</th><th>Date</th><th class="num">Solde EOD</th><th class="num">Profit / perte</th><th class="num">Progression</th><th class="num">Solde min. atteint</th><th class="num">Jours ${usd(R.minDailyProfit || 250).replace(".00", "")}+</th><th class="num">Jours min.</th><th class="num">Consistance OK</th><th class="num">Consistance %</th></tr></thead><tbody>
+          ${P.progression.slice().reverse().map((g) => `<tr${g.violation ? ' style="background:rgba(242,161,43,.08)"' : ""}><td>${g.day}</td><td>${esc(g.date)}</td><td class="num">${usd(g.eod)}</td><td class="num ${g.pnl >= 0 ? "pos" : "neg"}">${usd(g.pnl)}</td><td class="num">${g.progress == null ? "—" : Math.round(g.progress) + " %"}</td><td class="num">${ok(g.minBal)}</td><td class="num">${g.profitDays}</td><td class="num">${g.tradingDays}</td><td class="num">${ok(g.consistency)}</td><td class="num">${g.dayPct == null ? "N/A" : Math.round(g.dayPct * 100) / 100 + " % / " + (R.consistency || 50) + " %"}</td></tr>`).join("")}</tbody></table></div></div>` : ""}
+        ${P.windfall ? `<div class="panel"><div class="ptitle">Règle de consistance (${P.windfall.percent} %)</div>${kv([["Profit depuis le dernier payout approuvé", sgn(P.windfall.total)], ["Meilleur jour", usd(P.windfall.highest)], ["Profit minimum pour valider", usd(P.windfall.minNeeded)]])}</div>` : ""}
+        <div class="panel"><div class="ptitle">Historique des payouts</div>${(P.history || []).length ? `<table class="tbl"><thead><tr><th>Demandé le</th><th class="num">Montant</th><th>Statut</th></tr></thead><tbody>${P.history.map((h) => `<tr><td>${esc(h.date || "")}</td><td class="num">${usd(h.amount)}</td><td>${esc(h.status || "")}</td></tr>`).join("")}</tbody></table>` : '<p class="hintd" style="margin:0">Aucun payout.</p>'}</div>` : ""}
+      ${buyRows(a)}`;
+  }
+
   function firmPage(k, name) {
-    const F = firmOf(k), A = (F.accounts || []).slice().sort((a, b) => String(b.start).localeCompare(String(a.start)));
+    const F = firmOf(k), ALL = (F.accounts || []).slice().sort((a, b) => String(b.start || "").localeCompare(String(a.start || "")) || String(b.name).localeCompare(String(a.name)));
     const box = $("cp-" + k); if (!box) return;
-    if (!A.length) { box.innerHTML = head(name, `Tes comptes ${name}`) + `<div class="panel"><div class="tsx-empty" style="min-height:120px">Aucun compte ${name} pour l'instant.${k === "apex" ? " Connecte-toi à ton dashboard Apex dans Chrome : la tâche mensuelle pourra ensuite le lire." : ""}</div></div>`; return; }
-    const sel = A.find((a) => a.id === state[k]) || A.find((a) => STAT(a.status)[0] === "Active" || STAT(a.status)[0] === "Violation") || A[0]; state[k] = sel.id;
+    if (!ALL.length) { box.innerHTML = head(name, `Tes comptes ${name}`) + `<div class="panel"><div class="tsx-empty" style="min-height:120px">Aucun compte ${name} pour l'instant.</div></div>`; return; }
+    const kf = state["kind_" + k] || "Tous", A = kf === "Tous" ? ALL : ALL.filter((a) => KIND(a) === kf);
+    const sel = A.find((a) => a.id === state[k]) || A.find((a) => STAT(a.status)[0] === "Active") || A[0] || ALL[0]; state[k] = sel.id;
     const paid = (F.payouts || []).reduce((s, p) => s + (+p.paid || 0), 0), spent = (F.purchases || []).reduce((s, p) => s + (+p.amount || 0), 0);
-    const cnt = (f) => A.filter((a) => STAT(a.status)[0] === f).length, pl = (a) => a.balance != null && a.startBalance != null ? a.balance - a.startBalance : null;
-    box.innerHTML = head(name, `Tes comptes ${name} : soldes, objectifs, jours de trading et trades`) + `
-      <div class="kpis"><div class="kpi"><small>Comptes</small><b>${A.length}</b><i>${cnt("Active") + cnt("Violation")} actifs · ${cnt("Passed")} réussis · ${cnt("Blown")} fermés</i></div>
+    const cnt = (f) => ALL.filter((a) => STAT(a.status)[0] === f).length, nk = (f) => ALL.filter((a) => KIND(a) === f).length, pl = (a) => a.balance != null && a.startBalance != null ? a.balance - a.startBalance : null;
+    const kinds = ["Tous", "Challenge", "Funded"].concat(nk("Practice") ? ["Practice"] : []);
+    box.innerHTML = head(name, `Tes comptes ${name} : challenges et comptes funded, soldes, objectifs, jours de trading et achats`) + `
+      <div class="kpis"><div class="kpi"><small>Comptes</small><b>${ALL.length}</b><i>${nk("Challenge")} challenges · ${nk("Funded")} funded${nk("Practice") ? " · " + nk("Practice") + " practice" : ""}<br>${cnt("Active") + cnt("Violation")} actifs · ${cnt("Passed")} réussis · ${cnt("Blown")} fermés</i></div>
         <div class="kpi"><small>Payouts reçus</small><b class="pos">${usd(paid)}</b><i>${(F.payouts || []).length} payouts</i></div>
         <div class="kpi"><small>Dépensé</small><b class="neg">${usd(spent)}</b><i>abonnements, resets, activations</i></div>
         <div class="kpi"><small>Net</small><b class="${paid - spent >= 0 ? "pos" : "neg"}">${sgn(paid - spent)}</b><i>payouts - dépenses</i></div></div>
-      <div class="panel"><div class="ptitle" style="display:flex;justify-content:space-between;align-items:center;gap:10px">Courbe de capital <select class="cpSel" data-k="${k}" style="max-width:420px">${A.map((a) => `<option value="${esc(a.id)}"${a.id === sel.id ? " selected" : ""}>${esc(a.name)} · ${STAT(a.status)[0]}</option>`).join("")}</select></div>
-        <div style="display:flex;gap:18px;flex-wrap:wrap;margin:-4px 0 10px;color:#9a9ca5;font-size:13px"><span>Solde <b style="color:#fff">${usd(sel.balance)}</b></span><span>P&amp;L <b class="${(pl(sel) || 0) >= 0 ? "pos" : "neg"}">${sgn(pl(sel))}</b></span>${sel.profitTarget ? `<span>Objectif ${usd(sel.profitTarget)}</span>` : ""}<span>${(sel.days || []).length} jours tradés</span>${sel.dll ? `<span>DLL ${usd(sel.dll)}</span>` : ""}<span>${esc(sel.type || "")} · ${esc(sel.stage || "")}</span></div>
-        ${equity(sel.days, sel.startBalance)}</div>
-      <div class="panel"><div class="ptitle">Jours de trading · ${esc(sel.name)}</div><table class="tbl"><thead><tr><th>Jour</th><th class="num">P&amp;L net</th><th class="num">Trades</th><th class="num">Contrats</th><th class="num">Frais</th><th class="num">% gagnants</th></tr></thead><tbody>
-        ${(sel.days || []).slice().sort((a, b) => String(b.d).localeCompare(String(a.d))).map((d) => `<tr><td>${esc(d.d)}</td><td class="num ${+d.pnl >= 0 ? "pos" : "neg"}">${sgn(+d.pnl)}</td><td class="num">${d.n ?? "—"}</td><td class="num">${d.c ?? "—"}</td><td class="num">${usd(d.fees)}</td><td class="num">${d.win != null ? d.win + " %" : "—"}</td></tr>`).join("") || '<tr><td colspan="6" class="hintd">—</td></tr>'}</tbody></table></div>
-      <div class="panel"><div class="ptitle">Tous les comptes</div><table class="tbl"><thead><tr><th>Début</th><th>Compte</th><th>Type</th><th>Étape</th><th>Statut</th><th class="num">Solde</th><th class="num">P&amp;L</th></tr></thead><tbody>
-        ${A.map((a) => { const s = STAT(a.status); return `<tr class="cpRow" data-k="${k}" data-id="${esc(a.id)}" style="cursor:pointer"><td>${esc(String(a.start || "").slice(0, 10))}</td><td>${esc(a.name)}</td><td>${esc(a.type || "")}</td><td>${esc(a.stage || "")}</td><td><span class="cp-st ${s[1]}">${s[0]}</span></td><td class="num">${usd(a.balance)}</td><td class="num ${(pl(a) || 0) >= 0 ? "pos" : "neg"}">${sgn(pl(a))}</td></tr>`; }).join("")}</tbody></table></div>`;
+      <div class="row2" style="margin:0 0 12px;gap:10px;align-items:center;flex-wrap:wrap"><div class="rv-tabs">${kinds.map((x) => `<button class="rv-tab cpKind${x === kf ? " on" : ""}" data-k="${k}" data-v="${x}">${x}</button>`).join("")}</div>
+        <select class="cpSel" data-k="${k}" style="max-width:460px">${A.map((a) => `<option value="${esc(a.id)}"${a.id === sel.id ? " selected" : ""}>${esc(a.name)} · ${KIND(a)} · ${esc(a.status)}</option>`).join("")}</select></div>
+      ${k === "apex" ? apDetail(sel) : tsDetail(sel)}
+      <div class="panel"><div class="ptitle">Tous les comptes${kf !== "Tous" ? " · " + kf : ""} · ${A.length}</div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Début</th><th>Compte</th><th>Type</th><th>Taille / produit</th><th>Étape</th><th>Statut</th><th class="num">Prix payé</th><th class="num">Solde</th><th class="num">P&amp;L</th></tr></thead><tbody>
+        ${A.map((a) => { const s = STAT(a.status); return `<tr class="cpRow" data-k="${k}" data-id="${esc(a.id)}" style="cursor:pointer${a.id === sel.id ? ";background:rgba(59,130,246,.10)" : ""}"><td>${esc(String(a.start || "").slice(0, 10))}</td><td>${esc(a.name)}</td><td>${kindTag(a)}</td><td>${esc(a.type || "")}</td><td>${esc(a.stage || "")}</td><td><span class="cp-st ${s[1]}">${esc(a.status)}</span></td><td class="num">${usd(a.paid || 0)}</td><td class="num">${usd(a.balance)}</td><td class="num ${(pl(a) || 0) >= 0 ? "pos" : "neg"}">${sgn(pl(a))}</td></tr>`; }).join("")}
+        <tr><td colspan="6" class="hintd">Total payé pour ${A.length} compte(s)</td><td class="num"><b>${usd(A.reduce((s, a) => s + (+a.paid || 0), 0))}</b></td><td></td><td></td></tr></tbody></table></div></div>`;
   }
   function payoutsPage() {
     const box = $("cp-payouts"); if (!box) return; const L = [];
@@ -2993,7 +3075,7 @@ function profilCalc(fills, o) {
     if (e.target.classList.contains("cpSel")) { state[e.target.dataset.k] = e.target.value; render(e.target.dataset.k); }
     if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { let d = JSON.parse(t); if (!d.topstep && !d.apex) d = fromJournal(d); if (!d) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
   });
-  document.addEventListener("click", (e) => { const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
+  document.addEventListener("click", (e) => { const kb = e.target.closest(".cpKind"); if (kb) { state["kind_" + kb.dataset.k] = kb.dataset.v; render(kb.dataset.k); return; } const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
 })();
 </script>
 <script>
