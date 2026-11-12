@@ -928,6 +928,50 @@ table.tbl:has(#subT){min-width:900px}
 #btDraw,#btDraw2{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .tx-chartwrap.drawing #btDraw,.tx-chartwrap.drawing #btDraw2{pointer-events:auto;cursor:crosshair}
 .tx-chartwrap.act2::after{content:"";position:absolute;inset:0;border:1px solid var(--tx-acc);pointer-events:none;z-index:3}
+.tx-ico{vertical-align:-4px;margin-right:5px;border-radius:5px}
+.tx-hb .tx-ico2{width:22px;height:22px;border-radius:5px}
+.tx-hmenu svg.tx-ico3{width:20px;height:20px;border-radius:4px;margin:0 4px}
+.tx-chk{display:inline-block;width:28px;text-align:center;color:#2962ff;font-weight:700}
+.tx-jvt .tx-ico{vertical-align:-5px;margin-right:7px}
+.tx-codeb svg{vertical-align:-4px}
+.tx-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border:1px solid #787b86;border-radius:9px;color:#787b86;margin-left:6px}
+.tx-badge.pine{border-color:#2962ff;color:#2962ff}.tx-badge.ts{border-color:#3178c6;background:#3178c6;color:#fff}
+.tx-indl{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
+.tx-indr{border:1px solid rgba(120,123,134,.35);border-radius:6px;padding:6px 10px}
+.tx-indh{display:flex;align-items:center;gap:6px}.tx-indh label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.tx-inderr{color:#f23645;font-size:12px;margin-top:4px;white-space:pre-wrap}
+.tx-indb{display:flex;gap:8px;margin-top:10px;align-items:center}
+.tx-ide{position:fixed;inset:0;z-index:75;background:#131722;color:#d1d4dc;display:flex;flex-direction:column;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif}
+.tx-ide[hidden]{display:none}
+.tx-ide button{background:#2a2e39;color:#d1d4dc;border:1px solid #363a45;border-radius:4px;height:28px;padding:0 10px;cursor:pointer;font-size:12px}
+.tx-ide button:hover{background:#363a45;color:#fff}.tx-ide button.pri{background:#2962ff;border-color:#2962ff;color:#fff}
+.tx-ide input,.tx-ide select{background:#1e222d;color:#d1d4dc;border:1px solid #363a45;border-radius:4px;height:28px;padding:0 8px}
+.tx-ide-top{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;border-bottom:1px solid #2a2e39;font-weight:600;font-size:14px}
+.tx-ide-top small{color:#787b86;font-weight:400}
+.tx-ide-logo{color:#2962ff;font-family:Consolas,monospace;font-weight:700}
+.tx-ide-main{flex:1;display:flex;min-height:0}
+.tx-ide-list{width:230px;border-right:1px solid #2a2e39;display:flex;flex-direction:column;min-height:0}
+.tx-ide-new{display:flex;gap:6px;padding:10px;border-bottom:1px solid #2a2e39}
+#btIdeRows{overflow:auto;flex:1}
+.tx-ide-row{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-left:3px solid transparent}
+.tx-ide-row:hover{background:#1e222d}.tx-ide-row.on{background:#1e222d;border-left-color:#2962ff}
+.tx-ide-row .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-ide-row .dot{width:9px;height:9px;border-radius:50%;border:1px solid #787b86;flex:none}.tx-ide-row .dot.lit{background:#26a69a;border-color:#26a69a;box-shadow:0 0 6px #26a69a}
+.tx-ide-ed{flex:1;display:flex;flex-direction:column;min-width:0}
+.tx-ide-bar{display:flex;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid #2a2e39}
+#btIdeName{width:240px}
+.tx-ide-code{flex:1;display:flex;min-height:0;background:#0f121a}
+#btIdeGut{margin:0;padding:10px 8px;width:46px;text-align:right;color:#4a4f5c;font:13px/20px Consolas,"JetBrains Mono",Menlo,monospace;overflow:hidden;user-select:none;background:#0f121a;border-right:1px solid #1e222d}
+#btIdeTxt{flex:1;resize:none;border:none;outline:none;background:#0f121a;color:#e0e3eb;font:13px/20px Consolas,"JetBrains Mono",Menlo,monospace;padding:10px 12px;white-space:pre;tab-size:4;caret-color:#2962ff}
+.tx-ide-con{height:140px;overflow:auto;border-top:1px solid #2a2e39;padding:8px 12px;font:12px/18px Consolas,Menlo,monospace;display:flex;flex-direction:column;gap:4px}
+.tx-ide-con .ok{color:#26a69a}.tx-ide-con .err{color:#f23645;white-space:pre-wrap}.tx-ide-con .warn{color:#ff9800}.tx-ide-con pre.js{margin:0;color:#b2b5be}
+.tx-ide-help{width:280px;border-left:1px solid #2a2e39;padding:12px 14px;overflow:auto;color:#9598a1;font-size:12px;line-height:1.5}
+.tx-ide-help b{color:#d1d4dc}
+.tx-otags{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+.tx-otag{position:absolute;transform:translateY(-50%);display:flex;align-items:center;height:20px;border:1px solid var(--c);border-radius:3px;background:#fff;color:var(--c);font:600 11px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;white-space:nowrap;pointer-events:auto;cursor:ns-resize;user-select:none}
+.tx-otag span{padding:0 6px}
+.tx-otag b{display:flex;align-items:center;justify-content:center;width:18px;height:100%;border-left:1px solid var(--c);background:var(--c);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.tx-otag b:hover{filter:brightness(1.15)}
 .tx-legend{position:absolute;left:8px;top:6px;z-index:3;pointer-events:none;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#131722;white-space:nowrap}
 .tx-legend b{font-weight:400}.tx-legend .v{margin-left:8px}.tx-legend .up{color:#089981}.tx-legend .dn{color:#f23645}
 .tx-float{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:2px;background:var(--tx-menu);border:1px solid var(--tx-hov);border-radius:6px;padding:3px 4px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -1427,7 +1471,7 @@ table.tbl:has(#subT){min-width:900px}
           <i class="tx-vs"></i>
           <span class="tx-tfs" id="btTfs"><button data-tf="1s" title="1 seconde (chargé au clic)">1s</button><button data-tf="5s" title="5 secondes (chargé au clic)">5s</button><button data-tf="15s" title="15 secondes (chargé au clic)">15s</button><button data-tf="30s" title="30 secondes (chargé au clic)">30s</button><i class="tx-tfsep"></i><button data-tf="1" class="on">1m</button><button data-tf="2" title="2 minutes (chargé au clic)">2m</button><button data-tf="3" title="3 minutes (chargé au clic)">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><i class="tx-tfsep"></i><button data-tf="1440" title="1 jour">D</button><button data-tf="10080" title="1 semaine">W</button><button data-tf="43200" title="1 mois">M</button><button data-tf="129600" title="3 mois">3M</button><button data-tf="259200" title="6 mois">6M</button><button data-tf="518400" title="12 mois">12M</button></span><button class="tx-hb tx-tfmore" id="btTfMore" title="Toutes les unités de temps"><i class="tx-car"></i></button>
           <i class="tx-vs"></i>
-          <button class="tx-hb tx-dd" id="btTypeBtn" title="Type de graphique"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg><i class="tx-car"></i></button><i class="tx-vs"></i><button class="tx-hb" id="btFxBtn" title="Indicateurs : news, Jarvis, alertes, watchlist"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/></g></svg></button><button class="tx-hb" id="btSplitBtn" title="Disposition : 1 chart ou 2 charts NQ + ES synchronisés (Alt+clic)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M14 6.5v15M5.5 14h17"/></g></svg></button><button class="tx-tb tx-tbi" id="btPrefBtn" title="Préférences du chart"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg><span>Préférences</span></button><button class="tx-hb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/><path d="M14 9.5v6M14 18v1"/></g></svg></button><button class="tx-tb tx-tbi" id="btSessBtn" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/></g></svg><span>Sessions</span></button><button class="tx-hb" id="btUndo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M9.5 9.5l-4 4 4 4M5.5 13.5h11a5 5 0 0 1 0 10h-3"/></g></svg></button><button class="tx-hb" id="btRedo" title="Rétablir (Ctrl+Y)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M18.5 9.5l4 4-4 4M22.5 13.5h-11a5 5 0 0 0 0 10h3"/></g></svg></button><span class="tx-sp"></span><button class="tx-hb" id="btOrdTgl" title="Afficher / masquer le panneau Order"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M16.5 6.5v15"/></g></svg></button><button class="tx-tb tx-dd" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)"><span id="btLayName">Mise en page</span><i class="tx-car"></i></button><button class="tx-hb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M15.5 4.5l-8 11h6l-1 8 8-11h-6z"/></g></svg></button><button class="tx-hb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg></button><button class="tx-hb" id="btFullBtn" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M5.5 10.5v-5h5M17.5 5.5h5v5M22.5 17.5v5h-5M10.5 22.5h-5v-5"/></g></svg></button><button class="tx-hb" id="btShotBtn" title="Instantané du graphique"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M4.5 9.5h4l2-3h7l2 3h4v12h-19z"/><circle cx="14" cy="15" r="4"/></g></svg></button><button id="btNewsBtn" hidden></button><button class="tx-hb" id="btTreeBtn" hidden></button>
+          <button class="tx-hb tx-dd" id="btTypeBtn" title="Type de graphique"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg><i class="tx-car"></i></button><i class="tx-vs"></i><button class="tx-hb" id="btFxBtn" title="Indicateurs : news, Jarvis, alertes, watchlist"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/></g></svg></button><button class="tx-hb" id="btSplitBtn" title="Disposition : 1 chart ou 2 charts NQ + ES synchronisés (Alt+clic)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M14 6.5v15M5.5 14h17"/></g></svg></button><button class="tx-tb tx-tbi" id="btPrefBtn" title="Paramètres du chart"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg><span>Paramètres</span></button><button class="tx-hb" id="btIndBtn" title="Éditeur d'indicateurs : coder et enregistrer des indicateurs Pine Script / TypeScript"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 9.5l-5 4.5 5 4.5M17.5 9.5l5 4.5-5 4.5M15.5 6.5l-3 15"/></g></svg></button><button class="tx-hb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><linearGradient id="alBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f05a12"/><stop offset="1" stop-color="#dd2a2a"/></linearGradient><linearGradient id="alBell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#fdf0c6"/></linearGradient></defs><rect width="32" height="32" rx="7.5" fill="url(#alBg)"/><path d="M16 5.4v1.8" stroke="#fffdf6" stroke-width="1.7" stroke-linecap="round"/><path d="M9.3 21V15a6.7 6.7 0 0 1 13.4 0v6l2.1 1.3c.6.4.3 1.4-.4 1.4H7.6c-.7 0-1-1-.4-1.4z" fill="url(#alBell)"/><circle cx="16" cy="26.4" r="1.9" fill="#fff"/><text x="16" y="19.6" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e8501a" font-family="Arial,sans-serif">$</text><circle cx="23.2" cy="8.8" r="3.7" fill="#ffd12a" stroke="#f3b200" stroke-width=".8"/><path d="M23.2 6.9v2.2" stroke="#e8501a" stroke-width="1.3" stroke-linecap="round"/><circle cx="23.2" cy="10.7" r=".7" fill="#e8501a"/></svg></button><button class="tx-tb tx-tbi" id="btSessBtn" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/></g></svg><span>Sessions</span></button><button class="tx-hb" id="btUndo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M9.5 9.5l-4 4 4 4M5.5 13.5h11a5 5 0 0 1 0 10h-3"/></g></svg></button><button class="tx-hb" id="btRedo" title="Rétablir (Ctrl+Y)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M18.5 9.5l4 4-4 4M22.5 13.5h-11a5 5 0 0 0 0 10h3"/></g></svg></button><span class="tx-sp"></span><button class="tx-hb" id="btOrdTgl" title="Afficher / masquer le panneau Order"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M16.5 6.5v15"/></g></svg></button><button class="tx-tb tx-dd" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)"><span id="btLayName">Mise en page</span><i class="tx-car"></i></button><button class="tx-hb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><radialGradient id="jvBg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0d4a73"/><stop offset=".7" stop-color="#072640"/><stop offset="1" stop-color="#020c18"/></radialGradient><filter id="jvGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="16" cy="16" r="16" fill="url(#jvBg)"/><g fill="none" stroke="#3fd0ff" stroke-linecap="round" filter="url(#jvGlow)"><circle cx="16" cy="16" r="13.6" stroke-width=".7" stroke-dasharray="14 2 5 2 1 2" opacity=".85"/><circle cx="16" cy="16" r="11.4" stroke-width="1.5" stroke-dasharray=".9 1.3" opacity=".7"/><path d="M16 6.8a9.2 9.2 0 0 1 9.2 9.2" stroke-width="1.5"/><path d="M6.8 16A9.2 9.2 0 0 0 16 25.2" stroke-width="1.5"/><path d="M8.6 10.4a9.2 9.2 0 0 1 2-1.9" stroke-width="2.2" stroke="#7fe6ff"/><circle cx="16" cy="16" r="5.9" stroke-width="1.9" stroke="#8ff0ff"/><circle cx="16" cy="16" r="3.4" stroke-width=".6" opacity=".7"/></g></svg></button><button class="tx-hb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg></button><button class="tx-hb" id="btFullBtn" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M5.5 10.5v-5h5M17.5 5.5h5v5M22.5 17.5v5h-5M10.5 22.5h-5v-5"/></g></svg></button><button class="tx-hb" id="btShotBtn" title="Instantané du graphique"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M4.5 9.5h4l2-3h7l2 3h4v12h-19z"/><circle cx="14" cy="15" r="4"/></g></svg></button><button id="btNewsBtn" hidden></button><button class="tx-hb" id="btTreeBtn" hidden></button>
         </div>
         <div class="tx-mid">
           <div class="tx-tools" id="btTools">
@@ -1449,7 +1493,7 @@ table.tbl:has(#subT){min-width:900px}
             <button id="btHowBtn" title="Comment dessiner (guide des outils)"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M11.3 11.6a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6"/><circle cx="14" cy="19.3" r=".9" fill="currentColor"/></svg></button>
             <button id="btToolsMin" class="tx-tmin" title="Replier / déplier la barre d'outils">‹</button>
           </div>
-          <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div><div class="tx-al"><button data-al="A" title="Auto (ajuste les données à l'écran) — Alt+R">A</button><button data-al="L" title="Échelle logarithmique">L</button></div><div class="tx-cd" hidden></div><div class="tx-nav"><button data-nv="out" title="Zoom arrière">−</button><button data-nv="in" title="Zoom avant">+</button><button data-nv="l" title="Défiler à gauche">‹</button><button data-nv="r" title="Défiler à droite">›</button><button data-nv="reset" title="Recentrer (Alt+R)">⟲</button></div>
+          <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-otags" id="btOrdTags"></div><div class="tx-legend" id="btLegend"></div><div class="tx-al"><button data-al="A" title="Auto (ajuste les données à l'écran) — Alt+R">A</button><button data-al="L" title="Échelle logarithmique">L</button></div><div class="tx-cd" hidden></div><div class="tx-nav"><button data-nv="out" title="Zoom arrière">−</button><button data-nv="in" title="Zoom avant">+</button><button data-nv="l" title="Défiler à gauche">‹</button><button data-nv="r" title="Défiler à droite">›</button><button data-nv="reset" title="Recentrer (Alt+R)">⟲</button></div>
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
@@ -5272,7 +5316,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const tfmt = (t) => { const d = new Date(t * 1000), h = d.getUTCHours(), hh = P.h24 === false ? `${((h + 11) % 12) + 1}:${p2(d.getUTCMinutes())} ${h < 12 ? "AM" : "PM"}` : `${p2(h)}:${p2(d.getUTCMinutes())}`; return `${P.dow === false ? "" : DOW[d.getUTCDay()] + " "}${p2(d.getUTCDate())}/${p2(d.getUTCMonth() + 1)}/${String(d.getUTCFullYear()).slice(2)}${S.tf < 1440 ? "  " + hh : ""}`; };
     [chart, chart2].forEach((c) => c && c.applyOptions({ layout: { background: BG }, rightPriceScale: { borderColor: P.lines }, timeScale: { borderColor: P.lines }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(dec), timeFormatter: tfmt } }));
     chart.applyOptions({ layout: { textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
-      crosshair: { vertLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 },
+      crosshair: { vertLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: indBottom() } }, timeScale: { rightOffset: +P.right || 0 },
       watermark: { visible: !!P.wm, text: `${(SYMNAME[S.sym] || S.sym || "").split(" · ")[0]}, ${tfName(S.tf)}`, color: hexA(P.wmColor, 0.12), fontSize: 64 } });
     if (P.symLbl) { P.lastLbl = P.symLbl === "vl" || P.symLbl === "v"; P.lastLine = P.symLbl === "vl" || P.symLbl === "l"; }
     cs.applyOptions({ priceFormat: { type: "price", precision: dec, minMove: dec >= 2 ? 0.25 : Math.pow(10, -dec) } });
@@ -5294,7 +5338,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* Paramètres du chart = fenêtre « Settings » de TopstepX : Symbole, Ligne d'état, Échelles et lignes, Canevas (+ Replay, propre au backtesteur) */
   const SG2 = (d) => `<svg viewBox="0 0 28 28"><g fill="none" stroke="currentColor">${d}</g></svg>`;
   const PNAV = [["sym", "Symbole", SG2('<path d="M9.5 5.5v3M9.5 19.5v3M18.5 8.5v3M18.5 19.5v2"/><rect x="7.5" y="8.5" width="4" height="11"/><rect x="16.5" y="11.5" width="4" height="8"/>')], ["status", "Ligne d'état", SG2('<path d="M5.5 8.5h17M5.5 13.5h13M5.5 18.5h9"/>')],
-    ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')]];
+    ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')], ["ind", "Indicateurs", SG2('<path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/>')]];
   function openPrefs(tab, snap) {
     tab = tab || LS.get("bt-prefs-tab", "sym"); LS.set("bt-prefs-tab", tab); snap = snap || { ...P };
     const cb = (k, l, dis) => `<label class="${dis ? "dis" : ""}"><input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>${l}</label>`;
@@ -5321,16 +5365,17 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         + sh("Marges") + r(lb("Haut"), num("mTop") + " %") + r(lb("Bas"), num("mBot") + " %") + r(lb("Droite"), num("right") + " barres"),
       replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full"),
     };
-    const m = modal("Paramètres", `<div class="snav">${PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("")}</div><div class="sbody">${BODY[tab]}</div>`,
+    const m = modal("Paramètres", `<div class="snav">${PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("")}</div><div class="sbody">${tab === "ind" ? indPrefsBody() : BODY[tab]}</div>`,
       `<div class="tpl"><button class="ghost" data-m="tpl">Modèle<i class="tx-car"></i></button><div class="tx-hmenu" data-tplm hidden style="position:absolute;bottom:42px;left:0"><div class="mi" data-m="def">Appliquer les réglages par défaut</div><div class="mi" data-m="savedef">Enregistrer comme modèle par défaut</div></div></div><span class="tx-sp"></span><button data-m="all" class="ghost" title="Applique ces réglages à toutes les mises en page">Appliquer à tous</button><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
     m.querySelector(".tx-mbox").classList.add("tx-set2");
     const sb = m.querySelector(".sbody"); sb.scrollTop = 0;
-    m.oninput = (e) => { const k = e.target.dataset.p; if (!k) return; let v = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" || e.target.type === "range" ? +e.target.value : e.target.value;
+    m.oninput = (e) => { if (e.target.dataset.ii) return indInput(e.target); const k = e.target.dataset.p; if (!k) return; let v = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" || e.target.type === "range" ? +e.target.value : e.target.value;
       if (v === "true" || v === "false") v = v === "true"; else if (e.target.tagName === "SELECT" && /^\d+$/.test(v) && k !== "prec") v = +v;
       const was = P[k]; P[k] = v; if (e.target.type === "color") { const i = e.target.previousElementSibling; if (i) i.style.background = v; }
       if (k === "rth" && was !== v) { offC.clear(); draw(true); } else if (k === "prevColor") draw(true);
       applyPrefs(); if (k === "bgType") openPrefs(tab, snap); };
-    m.onclick = (e) => { const t = e.target.closest("[data-tab]"), a = (e.target.closest("[data-m]") || {}).dataset; const am = a && a.m; if (t) return openPrefs(t.dataset.tab, snap);
+    m.onclick = (e) => { const iel = e.target.closest("[data-ia]"); if (iel) return indAct(iel.dataset.ia, iel.dataset.id, () => openPrefs("ind", snap));
+      const t = e.target.closest("[data-tab]"), a = (e.target.closest("[data-m]") || {}).dataset; const am = a && a.m; if (t) return openPrefs(t.dataset.tab, snap);
       const tm = m.querySelector("[data-tplm]"); if (am === "tpl") { tm.hidden = !tm.hidden; return; } if (tm) tm.hidden = true;
       if (am === "def") { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; offC.clear(); draw(true); applyPrefs(); openPrefs(tab, snap); }
       else if (am === "savedef") { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); msg("Modèle par défaut enregistré : « Appliquer les réglages par défaut » remet désormais ces réglages."); }
@@ -5541,8 +5586,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     priceLines();
     const first = bars[0][0], lastT = S.raw[S.cur][0];
     const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
-    mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
-    $("btClock").textContent = `${hm(lastT)}:${String(lastT % 60).padStart(2, "0")} ${utcOff(lastT)}`; $("btClock").title = `${dstr(lastT)} — heure de New York du replay`; if ($("btEth")) $("btEth").textContent = P.rth ? "RTH" : "ETH"; legend(null); draw2(); hiLo();
+    baseMk = mk; applyMk();
+    $("btClock").textContent = `${hm(lastT)}:${String(lastT % 60).padStart(2, "0")} ${utcOff(lastT)}`; $("btClock").title = `${dstr(lastT)} — heure de New York du replay`; if ($("btEth")) $("btEth").textContent = P.rth ? "RTH" : "ETH"; legend(null); draw2(); hiLo(); indSchedule();
   }
   // P&L si l'ordre de sortie est touché (frais inclus) : affiché à côté du TP / SL
   const exitPnl = (o) => { if (!A.pos || Math.sign(o.qty) === Math.sign(A.pos.qty)) return null; const c = CTR[A.pos.ctr], q = Math.min(Math.abs(o.qty), Math.abs(A.pos.qty)); return (o.px - A.pos.avg) * Math.sign(A.pos.qty) * q * c.pv - c.fee * q; };
@@ -5552,8 +5597,492 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (j >= 0 && S.tf < 1440) { extraLevels.push(B[j][4]); plines.push(cs.createPriceLine({ price: B[j][4], color: P.pcColor, lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, lineVisible: P.prevClose !== "v", axisLabelVisible: P.prevClose !== "l", title: "" })); } }
     if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
     [...A.orders, ...(ordDrag && ordDrag.temp ? [ordDrag] : [])].forEach((o) => { const pl = exitPnl(o);
-      plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: o === ordDrag ? 2 : 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : "  " + (pl >= 0 ? "+" : "") + usd(pl)}` })); });
+      plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: o === ordDrag ? 2 : 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: o.temp ? `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : "  " + (pl >= 0 ? "+" : "") + usd(pl)}` : "" })); });
   }
+  // étiquette HTML de chaque ordre (Limit +1 · P&L · ×) : la croix annule l'ordre, glisser l'étiquette déplace l'ordre
+  function ordTags() {
+    const box = $("btOrdTags"); if (!box) return;
+    if (!chart || !cs || !A.orders.length) { if (box.childElementCount) box.innerHTML = ""; return; }
+    const ps = chart.priceScale("right").width() || 60, H = $("btWrap").clientHeight - (chart.timeScale().height() || 26);
+    const html = A.orders.map((o) => { const y = cs.priceToCoordinate(o.px); if (y == null || y < 0 || y > H) return "";
+      const pl = exitPnl(o), col = o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff";
+      return `<div class="tx-otag" data-oid="${o.id}" style="top:${Math.round(y)}px;right:${ps + 6}px;--c:${col}"><span>${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : " · " + (pl >= 0 ? "+" : "") + usd(pl)}</span><b data-ocx="${o.id}" title="Annuler l'ordre">×</b></div>`; }).join("");
+    if (box._h !== html) { box._h = html; box.innerHTML = html; }
+  }
+  function cancelOrder(id) { const o = A.orders.find((x) => String(x.id) === String(id)); if (!o) return;
+    A.orders = A.orders.filter((x) => x !== o); saveAcc(); draw(); ui(); msg(`Ordre ${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty} @ ${(+o.px).toFixed(2)} annulé.`); }
+  /* ---------------- indicateurs : moteur Pine Script (sous-ensemble v5) + TypeScript / JavaScript ----------------
+     Le script est exécuté une fois par bougie (comme Pine) ; ta.* gardent leur état par ordre d'appel.
+     Pine est traduit en JavaScript (blocs par indentation, x[n], arguments nommés, var, :=, tuples, fonctions =>). */
+  const IND = (() => {
+    const COL = { aqua: "#00bcd4", black: "#363a45", blue: "#2962ff", fuchsia: "#e040fb", gray: "#787b86", green: "#4caf50", lime: "#00e676", maroon: "#880e4f", navy: "#311b92", olive: "#808000", orange: "#ff9800", purple: "#9c27b0", red: "#f23645", silver: "#b2b5be", teal: "#089981", white: "#ffffff", yellow: "#ffeb3b" };
+    const rgbaOf = (c, a) => { if (typeof c !== "string") return c; let m = /^#([0-9a-f]{6})([0-9a-f]{2})?$/i.exec(c); if (m) { const v = parseInt(m[1], 16); return `rgba(${v >> 16},${(v >> 8) & 255},${v & 255},${a})`; } m = /^rgba?\(([^)]+)\)$/.exec(c); if (m) { const p = m[1].split(",").map(Number); return `rgba(${p[0]},${p[1]},${p[2]},${a})`; } return c; };
+    const color = { ...COL, new: (c, t = 0) => rgbaOf(c, Math.max(0, Math.min(1, 1 - (+t || 0) / 100))), rgb: (r, g, b, t = 0) => `rgba(${r},${g},${b},${1 - (+t || 0) / 100})`,
+      from_gradient: (v, lo, hi, c1, c2) => ((v - lo) / (hi - lo || 1) < 0.5 ? c1 : c2), r: () => NaN, g: () => NaN, b: () => NaN, t: () => NaN };
+    const isna = (x) => x == null || (typeof x === "number" && Number.isNaN(x));
+    const SRC = ["open", "high", "low", "close", "volume", "hl2", "hlc3", "ohlc4"];
+    const PARAMS = ["open", "high", "low", "close", "volume", "time", "time_close", "bar_index", "last_bar_index", "hl2", "hlc3", "ohlc4", "hour", "minute", "second", "dayofmonth", "dayofweek", "month", "year",
+      "ta", "math", "input", "color", "plot", "hline", "plotshape", "plotchar", "plotarrow", "plotcandle", "plotbar", "fill", "bgcolor", "barcolor", "indicator", "study", "strategy", "alertcondition", "alert", "library",
+      "label", "line", "box", "table", "array", "map", "matrix", "request", "ticker", "linefill", "polyline", "chart", "runtime", "log", "str", "na", "nz", "fixnan", "$isna", "$h", "$first", "$snap", "barstate", "syminfo", "timeframe",
+      "location", "shape", "size", "display", "extend", "xloc", "yloc", "format", "position", "text", "font", "order", "currency", "session", "adjustment", "scale", "state", "int", "float", "bool", "series", "hist", "hline_style"];
+
+    /* ---------- Pine -> JS ---------- */
+    function matchClose(s, i) { // s[i] = "(" ou "[" -> index de la fermeture
+      const o = s[i], c = o === "(" ? ")" : "]"; let d = 0;
+      for (let k = i; k < s.length; k++) { if (s[k] === o) d++; else if (s[k] === c && --d === 0) return k; }
+      return -1;
+    }
+    function matchBrace(s, i) { let d = 0; for (let k = i; k < s.length; k++) { if (s[k] === "{") d++; else if (s[k] === "}" && --d === 0) return k; } return -1; }
+    // (expr)[n] / f(x)[n] -> ta.prev(expr, n) (historique d'une expression : même ordre d'appel à chaque bougie)
+    function callHist(e) {
+      for (let guard = 0; guard < 50; guard++) {
+        const m = /\)\s*\[/.exec(e); if (!m) return e;
+        let d = 0, k = m.index; for (; k >= 0; k--) { if (e[k] === ")") d++; else if (e[k] === "(" && --d === 0) break; }
+        if (k < 0) return e; let st = k; while (st > 0 && /[\w$.]/.test(e[st - 1])) st--;
+        const bo = e.indexOf("[", m.index), bc = matchClose(e, bo); if (bc < 0) return e;
+        e = e.slice(0, st) + `ta.prev(${e.slice(st, m.index + 1)}, ${e.slice(bo + 1, bc)})` + e.slice(bc + 1);
+      }
+      return e;
+    }
+    function splitTop(s) { const out = []; let d = 0, st = 0; for (let k = 0; k < s.length; k++) { const ch = s[k]; if ("([{".includes(ch)) d++; else if (")]}".includes(ch)) d--; else if (ch === "," && d === 0) { out.push(s.slice(st, k)); st = k + 1; } } out.push(s.slice(st)); return out; }
+    const KW = new Set(["if", "else", "for", "while", "return", "and", "or", "not", "var", "varip", "to", "by", "in", "switch", "true", "false", "function", "let", "const", "typeof", "new"]);
+    // x[n] -> $h("x", n, x)
+    function histRw(e) {
+      let out = "", k = 0;
+      while (k < e.length) {
+        const m = /[A-Za-z_$][\w$]*/y; m.lastIndex = k; const r = m.exec(e);
+        if (r && (k === 0 || !/[\w$.\u0002]/.test(e[k - 1]))) {
+          const id = r[0]; let j = k + id.length; while (e[j] === " ") j++;
+          if (e[j] === "[" && !KW.has(id)) { const c = matchClose(e, j); if (c > 0) { out += `$h("${id}", ${histRw(e.slice(j + 1, c))}, ${id})`; k = c + 1; continue; } }
+          out += id; k += id.length; continue;
+        }
+        if (r) { out += r[0]; k += r[0].length; continue; }
+        out += e[k++];
+      }
+      return out;
+    }
+    // f(a, title="x", color=c) -> f(a, {title: "x", color: c})
+    function namedRw(e) {
+      let out = "", k = 0;
+      while (k < e.length) {
+        const ch = e[k];
+        if (ch === "(") {
+          const c = matchClose(e, k); if (c < 0) { out += e.slice(k); break; }
+          const inner = e.slice(k + 1, c), call = /[\w$]\s*$/.test(out);
+          if (call) { const args = splitTop(inner).map((a) => namedRw(a)), pos = [], nam = [];
+            args.forEach((a) => { const m = /^\s*([A-Za-z_]\w*)\s*=(?![=>])\s*([\s\S]*)$/.exec(a); if (m) nam.push(`${m[1]}: ${m[2].trim()}`); else pos.push(a.trim()); });
+            if (nam.length) pos.push(`{ ${nam.join(", ")} }`);
+            out += "(" + pos.filter((x, i) => x !== "" || i < pos.length - 1).join(", ") + ")";
+          } else out += "(" + namedRw(inner) + ")";
+          k = c + 1; continue;
+        }
+        out += ch; k++;
+      }
+      return out;
+    }
+    const exprRw = (e) => namedRw(callHist(histRw(e
+      .replace(/\binput\.source\(\s*(open|high|low|close|volume|hl2|hlc3|ohlc4)\b/g, 'input.source("$1"')
+      .replace(/\bna\s*\(/g, "$isna(").replace(/\bna\b/g, "NaN")
+      .replace(/\band\b/g, "&&").replace(/\bor\b/g, "||").replace(/\bnot\b/g, "!")
+      .replace(/\bta\.(tr|vwap|obv|accdist|iii|nvi|pvi|pvt|wad|wvad)\b(?!\s*\()/g, (m, f) => (f === "vwap" ? "ta.vwap(hlc3)" : `ta.${f}()`))
+      .replace(/:=/g, "="))));
+    function pineToJs(src) {
+      const strs = [], warns = [];
+      let code = src.replace(/\r/g, "").replace(/("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\/\/[^\n]*/g, (m, s) => (s ? `\u0001${strs.push(s) - 1}\u0002` : ""))
+        .replace(/#([0-9a-fA-F]{8}|[0-9a-fA-F]{6})\b/g, (m, h) => `\u0001${strs.push('"#' + h + '"') - 1}\u0002`);
+      // lignes + continuations
+      const L = [], indOf = (l) => l.replace(/\t/g, "    ").match(/^ */)[0].length;
+      for (const raw of code.split("\n")) {
+        if (!raw.trim()) continue; const t = raw.trim(), ind = indOf(raw), p = L[L.length - 1];
+        const contPrev = p && (/([,(\[+\-*/%?:<>]|&&|\|\||\band|\bor|\bnot|[^=!<>]=)\s*$/.test(p.t) && !/=>\s*$/.test(p.t));
+        const contNext = p && ind > p.ind && (/^([?:+\-*/%)\]]|and\b|or\b|&&|\|\|)/.test(t) || (ind - p.ind) % 4 !== 0);
+        if (contPrev || contNext) p.t += " " + t; else L.push({ t, ind });
+      }
+      const out = [], stack = [], vars = new Set(); let loop = 0;
+      const pad = () => "  ".repeat(stack.length + 1);
+      const inFn = () => stack.some((b) => b.fn);
+      const emit = (s) => { out.push(pad() + s); const top = stack[stack.length - 1]; if (top) top.last = out.length - 1; };
+      const close = (ind) => { while (stack.length && stack[stack.length - 1].ind >= ind) { const b = stack.pop();
+        if (b.fn && b.last >= 0 && !/^\s*(if|else|for|while|\})/.test(out[b.last])) out[b.last] = out[b.last].replace(/^(\s*)(?:let\s+)?/, "$1return ");
+        out.push(pad() + "}"); const top = stack[stack.length - 1]; if (top) top.last = -1; } };
+      const open = (s, b) => { emit(s); stack.push({ ind: b.ind, fn: !!b.fn, last: -1, locals: new Set() }); };
+      for (const { t, ind } of L) {
+        close(ind); let m;
+        if (/^(indicator|study|strategy|library)\s*\(/.test(t) || /^\/\/@/.test(t)) { emit(exprRw(t) + ";"); continue; }
+        if (/^(import|export|type|method|switch)\b/.test(t)) { warns.push(`« ${t.split(/\s/)[0]} » n'est pas pris en charge (ligne ignorée).`); continue; }
+        if ((m = /^if\s+(.+)$/.exec(t))) { open(`if (${exprRw(m[1])}) {`, { ind }); continue; }
+        if ((m = /^else\s+if\s+(.+)$/.exec(t))) { open(`else if (${exprRw(m[1])}) {`, { ind }); continue; }
+        if (t === "else") { open("else {", { ind }); continue; }
+        if ((m = /^for\s+([A-Za-z_]\w*)\s*=\s*(.+?)\s+to\s+(.+?)(?:\s+by\s+(.+))?$/.exec(t))) { const k = loop++, a = exprRw(m[2]), b = exprRw(m[3]);
+          open(`for (let ${m[1]} = ${a}, $e${k} = ${b}, $s${k} = ${m[4] ? exprRw(m[4]) : `(${a}) <= (${b}) ? 1 : -1`}; $s${k} > 0 ? ${m[1]} <= $e${k} : ${m[1]} >= $e${k}; ${m[1]} += $s${k}) {`, { ind }); continue; }
+        if ((m = /^while\s+(.+)$/.exec(t))) { open(`while (${exprRw(m[1])}) {`, { ind }); continue; }
+        if (t === "break" || t === "continue") { emit(t + ";"); continue; }
+        if ((m = /^([A-Za-z_]\w*)\s*\(([^()]*)\)\s*=>\s*(.*)$/.exec(t))) {
+          const ps = m[2].split(",").map((p) => p.trim().replace(/^(simple|series|const)\s+/, "").replace(/^(int|float|bool|color|string)\s+/, "")).filter(Boolean).map((p) => exprRw(p)).join(", ");
+          if (m[3].trim()) emit(`function ${m[1]}(${ps}) { return (${exprRw(m[3])}); }`); else open(`function ${m[1]}(${ps}) {`, { ind, fn: true }); continue; }
+        if ((m = /^(varip|var)\s+(?:(?:int|float|bool|color|string|line|label|box|table|linefill|array<\w+>|map<[\w,\s]+>)\s+)?([A-Za-z_]\w*)\s*=\s*(.+)$/.exec(t))) { vars.add(m[2]); emit(`if ($first) ${m[2]} = ${exprRw(m[3])};`); continue; }
+        if ((m = /^\[([\w\s,]+)\]\s*=(?!=)\s*(.+)$/.exec(t))) { const ns = m[1].split(",").map((x) => x.trim()).filter(Boolean); if (inFn()) emit(`let [${ns.join(", ")}] = ${exprRw(m[2])};`); else { ns.forEach((x) => vars.add(x)); emit(`[${ns.join(", ")}] = ${exprRw(m[2])};`); } continue; }
+        const decl = /^(?:(?:series|simple|const)\s+)?(?:(?:int|float|bool|color|string|line|label|box|table)\s+)?([A-Za-z_]\w*)\s*=(?![=>])\s*(.+)$/.exec(t);
+        if (decl) { const [, nm, ex] = decl;
+          if (inFn()) { const fb = [...stack].reverse().find((b) => b.fn); if (fb.locals.has(nm)) emit(`${nm} = ${exprRw(ex)};`); else { fb.locals.add(nm); emit(`let ${nm} = ${exprRw(ex)};`); } }
+          else { vars.add(nm); emit(`${nm} = ${exprRw(ex)};`); } continue; }
+        emit(exprRw(t) + ";");
+      }
+      close(-1);
+      const V = [...vars].filter((v) => !PARAMS.includes(v));
+      let body = out.join("\n"); if (V.length) body += `\n  $snap([${V.join(", ")}]);`;
+      const restore = (s) => s.replace(/\u0001(\d+)\u0002/g, (m, n) => strs[+n]);
+      return { decl: V.length ? `let ${V.join(", ")};` : "", body: restore(body), names: V, warns };
+    }
+    /* ---------- TypeScript -> JS (annotations de type simples) ---------- */
+    function tsToJs(src) {
+      const strs = [];
+      let c = src.replace(/\r/g, "").replace(/(`(?:[^`\\]|\\.)*`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (m, s) => (s ? `\u0001${strs.push(s) - 1}\u0002` : ""));
+      for (let m, re = /(^|\n)\s*(?:export\s+)?(?:interface|type)\s+[\w$]+[^{=\n]*(=\s*)?\{/g; (m = re.exec(c)); ) { const o = c.indexOf("{", m.index + m[1].length), e = matchBrace(c, o); if (e < 0) break; c = c.slice(0, m.index + m[1].length) + c.slice(e + 1).replace(/^\s*;/, ""); re.lastIndex = m.index; }
+      c = c.replace(/^\s*(export\s+)?type\s+\w+\s*=[^;\n]+;?/gm, "")
+        .replace(/^\s*import\s[^\n]*$/gm, "").replace(/\bexport\s+(default\s+)?/g, "")
+        .replace(/\b(const|let|var)\s+([A-Za-z_$][\w$]*)\s*:\s*[^=;\n]+=/g, "$1 $2 =").replace(/\b(let|var)\s+([A-Za-z_$][\w$]*)\s*:\s*[^=;\n]+;/g, "$1 $2;")
+        .replace(/\s+as\s+(const|[A-Za-z_$][\w$.]*(?:<[^>]*>)?(?:\[\])*)/g, "").replace(/([\w$)\]])!(?=[.\[);,\s])/g, "$1")
+        .replace(/function(\s+[\w$]+)?\s*<[^>()]*>\s*\(/g, "function$1(");
+      // paramètres typés des fonctions et des fonctions fléchées + type de retour
+      c = c.replace(/(function\s*[\w$]*\s*)\(([^()]*)\)\s*(?::\s*[^{=]+)?\{/g, (m, f, ps) => `${f}(${stripPs(ps)}) {`)
+        .replace(/\(([^()]*)\)\s*(?::\s*[\w$<>\[\]|. ]+)?\s*=>/g, (m, ps) => `(${stripPs(ps)}) =>`);
+      return c.replace(/\u0001(\d+)\u0002/g, (m, n) => strs[+n]);
+    }
+    const stripPs = (ps) => splitTop(ps).map((p) => p.replace(/^\s*(public|private|readonly)\s+/, "").replace(/^(\s*\.{0,3}[\w$]+)\s*\??\s*:\s*[^=]+?(\s*=|$)/, "$1$2")).join(",");
+
+    /* ---------- compilation ---------- */
+    function compile(code, lang) {
+      try {
+        if (lang === "pine") { const p = pineToJs(code); const make = new Function("$rt", `${p.decl}\nreturn function (${PARAMS.join(", ")}) {\n${p.body}\n};`); return { make, warns: p.warns, js: p.body, names: p.names }; }
+        const js = tsToJs(code); const make = new Function("$rt", `return function (${PARAMS.join(", ")}) {\n{\n${js}\n}\n};`); return { make, warns: [], js, names: [] };
+      } catch (e) { return { error: "Erreur de syntaxe : " + e.message }; }
+    }
+
+    /* ---------- exécution ---------- */
+    const argsOf = (a, names) => { const r = {}, pos = [...a], last = pos[pos.length - 1]; if (pos.length > 1 && last && typeof last === "object" && !Array.isArray(last)) { pos.pop(); Object.assign(r, last); } else if (pos.length === 1 && names.length > 1 && last && typeof last === "object" && !Array.isArray(last) && names[0] === "title") { pos.pop(); Object.assign(r, last); }
+      names.forEach((n, i) => { if (i < pos.length && r[n] === undefined) r[n] = pos[i]; }); return r; };
+    const SHAPE = { triangleup: "arrowUp", arrowup: "arrowUp", labelup: "arrowUp", triangledown: "arrowDown", arrowdown: "arrowDown", labeldown: "arrowDown", circle: "circle", cross: "circle", xcross: "circle", diamond: "square", square: "square", flag: "square" };
+    function run(cmp, bars, o = {}) {
+      const n = bars.length, rt = { i: 0, cid: 0, pid: 0, iid: 0, hid: 0, st: [], plots: [], hlines: [], marks: [], inputs: [], meta: { name: "", overlay: true }, warns: new Set(cmp.warns || []), H: {}, hn: cmp.names || [] };
+      const ny = o.ny || ((t) => t), inVals = o.inputs || {}, day = (j) => { const d = new Date((ny(bars[j][0]) + 6 * 3600) * 1000); return d.getUTCFullYear() * 400 + d.getUTCMonth() * 32 + d.getUTCDate(); };
+      const SER = { open: (j) => bars[j][1], high: (j) => bars[j][2], low: (j) => bars[j][3], close: (j) => bars[j][4], volume: (j) => bars[j][5], time: (j) => bars[j][0] * 1000, bar_index: (j) => j,
+        hl2: (j) => (bars[j][2] + bars[j][3]) / 2, hlc3: (j) => (bars[j][2] + bars[j][3] + bars[j][4]) / 3, ohlc4: (j) => (bars[j][1] + bars[j][2] + bars[j][3] + bars[j][4]) / 4 };
+      const st = () => { const k = rt.cid++; return rt.st[k] || (rt.st[k] = {}); };
+      const nnum = (x) => (typeof x === "number" ? x : x === true ? 1 : x === false ? 0 : +x);
+      // primitives à état
+      const sma0 = (s, x, len) => { len = Math.max(1, Math.round(len) || 1); const b = s.b || (s.b = []); x = nnum(x); b.push(x); if (isna(x)) s.nan = (s.nan || 0) + 1; else s.sum = (s.sum || 0) + x;
+        while (b.length > len) { const v = b.shift(); if (isna(v)) s.nan--; else s.sum -= v; } return b.length < len || s.nan > 0 ? NaN : s.sum / len; };
+      const ema0 = (s, x, len, a) => { x = nnum(x); if (s.v === undefined) { const v = sma0(s.sm || (s.sm = {}), x, len); if (!isna(v)) s.v = v; return v; } if (isna(x)) return s.v; return (s.v = a * x + (1 - a) * s.v); };
+      const win = (s, x, len) => { len = Math.max(1, Math.round(len) || 1); const b = s.b || (s.b = []); b.push(nnum(x)); while (b.length > len) b.shift(); return b; };
+      const trAt = (j) => { const h = bars[j][2], l = bars[j][3]; if (j === 0) return h - l; const pc = bars[j - 1][4]; return Math.max(h - l, Math.abs(h - pc), Math.abs(l - pc)); };
+      const hiLo = (fn, dflt) => (a, b) => { let src = a, len = b; if (b === undefined) { len = a; src = SER[dflt](rt.i); } const w = win(st(), src, len); if (w.length < Math.round(len)) return NaN; let r = w[0]; for (const v of w) { if (isna(v)) return NaN; r = fn(r, v); } return r; };
+      const pivot = (isHi) => (a, b, c) => { let src = a, l = b, r = c; if (c === undefined) { src = SER[isHi ? "high" : "low"](rt.i); l = a; r = b; } const w = win(st(), src, l + r + 1); if (w.length < l + r + 1) return NaN; const v = w[l]; for (let k = 0; k < w.length; k++) if (k !== l && (isHi ? w[k] >= v && (k > l || w[k] > v) : w[k] <= v && (k > l || w[k] < v))) return NaN; return v; };
+      const ta = {
+        sma: (x, len) => sma0(st(), x, len), ema: (x, len) => ema0(st(), x, len, 2 / (Math.max(1, len) + 1)), rma: (x, len) => ema0(st(), x, len, 1 / Math.max(1, len)),
+        wma: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; let s = 0, d = 0; w.forEach((v, k) => { s += v * (k + 1); d += k + 1; }); return s / d; },
+        vwma: (x, len) => { const s = st(), a = sma0(s.a || (s.a = {}), nnum(x) * bars[rt.i][5], len), b = sma0(s.b || (s.b = {}), bars[rt.i][5], len); return a / b; },
+        hma: (x, len) => { const s = st(), h = Math.max(1, Math.round(len / 2)), w1 = win(s.a || (s.a = {}), x, h), w2 = win(s.b || (s.b = {}), x, len), wm = (w) => { let a = 0, d = 0; w.forEach((v, k) => { a += v * (k + 1); d += k + 1; }); return a / d; };
+          if (w2.length < len) return NaN; const r = 2 * wm(w1) - wm(w2), w3 = win(s.c || (s.c = {}), r, Math.max(1, Math.round(Math.sqrt(len)))); return w3.length < Math.round(Math.sqrt(len)) ? NaN : wm(w3); },
+        rsi: (x, len) => { const s = st(); x = nnum(x); const ch = s.p === undefined ? NaN : x - s.p; s.p = x; if (isna(ch)) return NaN; const u = ema0(s.u || (s.u = {}), Math.max(ch, 0), len, 1 / len), d = ema0(s.d || (s.d = {}), Math.max(-ch, 0), len, 1 / len); return isna(u) || isna(d) ? NaN : d === 0 ? 100 : u === 0 ? 0 : 100 - 100 / (1 + u / d); },
+        tr: () => trAt(rt.i), atr: (len) => ema0(st(), trAt(rt.i), len, 1 / Math.max(1, len)),
+        stdev: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; const m = w.reduce((a, v) => a + v, 0) / w.length; return Math.sqrt(w.reduce((a, v) => a + (v - m) ** 2, 0) / w.length); },
+        variance: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; const m = w.reduce((a, v) => a + v, 0) / w.length; return w.reduce((a, v) => a + (v - m) ** 2, 0) / w.length; },
+        highest: hiLo(Math.max, "high"), lowest: hiLo(Math.min, "low"),
+        change: (x, len = 1) => { const w = win(st(), x, len + 1); return w.length < len + 1 ? NaN : (typeof x === "boolean" ? (w[w.length - 1] !== w[0]) : w[w.length - 1] - w[0]); },
+        mom: (x, len = 1) => { const w = win(st(), x, len + 1); return w.length < len + 1 ? NaN : w[w.length - 1] - w[0]; },
+        roc: (x, len = 1) => { const w = win(st(), x, len + 1); return w.length < len + 1 ? NaN : (100 * (w[w.length - 1] - w[0])) / w[0]; },
+        crossover: (a, b) => { const s = st(), r = s.a !== undefined && a > b && s.a <= s.b; s.a = a; s.b = b; return r; },
+        crossunder: (a, b) => { const s = st(), r = s.a !== undefined && a < b && s.a >= s.b; s.a = a; s.b = b; return r; },
+        cross: (a, b) => { const s = st(), r = s.a !== undefined && ((a > b && s.a <= s.b) || (a < b && s.a >= s.b)); s.a = a; s.b = b; return r; },
+        rising: (x, len) => { const w = win(st(), x, len + 1); return w.length > len && w.slice(0, -1).every((v) => w[w.length - 1] > v); },
+        falling: (x, len) => { const w = win(st(), x, len + 1); return w.length > len && w.slice(0, -1).every((v) => w[w.length - 1] < v); },
+        cum: (x) => { const s = st(); return (s.v = (s.v || 0) + (isna(x) ? 0 : nnum(x))); },
+        vwap: (x = SER.hlc3(rt.i)) => { const s = st(), d = day(rt.i); if (s.d !== d) { s.d = d; s.pv = 0; s.v = 0; } s.pv += nnum(x) * bars[rt.i][5]; s.v += bars[rt.i][5]; return s.v ? s.pv / s.v : NaN; },
+        macd: (x, f = 12, sl = 26, sg = 9) => { const s = st(), a = ema0(s.a || (s.a = {}), x, f, 2 / (f + 1)), b = ema0(s.b || (s.b = {}), x, sl, 2 / (sl + 1)), m = a - b, g = isna(m) ? NaN : ema0(s.c || (s.c = {}), m, sg, 2 / (sg + 1)); return [m, g, m - g]; },
+        bb: (x, len = 20, mult = 2) => { const s = st(), m = sma0(s.a || (s.a = {}), x, len), w = win(s.b || (s.b = {}), x, len); if (isna(m)) return [NaN, NaN, NaN]; const sd = Math.sqrt(w.reduce((a, v) => a + (v - m) ** 2, 0) / w.length); return [m, m + mult * sd, m - mult * sd]; },
+        stoch: (x, h, l, len) => { const s = st(), wh = win(s.h || (s.h = {}), h, len), wl = win(s.l || (s.l = {}), l, len); if (wh.length < len) return NaN; const hh = Math.max(...wh), ll = Math.min(...wl); return hh === ll ? NaN : (100 * (x - ll)) / (hh - ll); },
+        valuewhen: (cond, x, occ = 0) => { const s = st(), L = s.L || (s.L = []); if (cond && !isna(cond)) L.push(x); return L.length > occ ? L[L.length - 1 - occ] : NaN; },
+        barssince: (cond) => { const s = st(); if (cond && !isna(cond)) s.at = rt.i; return s.at === undefined ? NaN : rt.i - s.at; },
+        pivothigh: pivot(true), pivotlow: pivot(false),
+        linreg: (x, len, off = 0) => { const w = win(st(), x, len); if (w.length < len) return NaN; const n2 = w.length, mx = (n2 - 1) / 2, my = w.reduce((a, v) => a + v, 0) / n2; let sxy = 0, sxx = 0; w.forEach((v, k) => { sxy += (k - mx) * (v - my); sxx += (k - mx) ** 2; }); const k = sxx ? sxy / sxx : 0; return my + k * (n2 - 1 - off - mx); },
+        median: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; const a = [...w].sort((p, q) => p - q), h = a.length >> 1; return a.length % 2 ? a[h] : (a[h - 1] + a[h]) / 2; },
+        dev: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; const m = w.reduce((a, v) => a + v, 0) / w.length; return w.reduce((a, v) => a + Math.abs(v - m), 0) / w.length; },
+        cci: (x, len) => { const w = win(st(), x, len); if (w.length < len) return NaN; const m = w.reduce((a, v) => a + v, 0) / w.length, d = w.reduce((a, v) => a + Math.abs(v - m), 0) / w.length; return d ? (x - m) / (0.015 * d) : 0; },
+        obv: () => { const s = st(), j = rt.i; s.v = (s.v || 0) + (j ? Math.sign(bars[j][4] - bars[j - 1][4]) * bars[j][5] : 0); return s.v; },
+        prev: (x, len = 1) => { const w = win(st(), x, len + 1); return w.length < len + 1 ? NaN : w[0]; },
+      };
+      // arguments nommés aussi pour ta.* (length=, source=…)
+      const TAN = { sma: ["source", "length"], ema: ["source", "length"], rma: ["source", "length"], wma: ["source", "length"], rsi: ["source", "length"], atr: ["length"], stdev: ["source", "length"], highest: ["source", "length"], lowest: ["source", "length"], change: ["source", "length"], macd: ["source", "fastlen", "slowlen", "siglen"], bb: ["series", "length", "mult"], vwap: ["source"] };
+      Object.entries(TAN).forEach(([k, names]) => { const f = ta[k]; ta[k] = (...a) => { const last = a[a.length - 1]; if (last && typeof last === "object" && !Array.isArray(last)) { const r = argsOf(a, names); return f(...names.map((x) => r[x]).filter((v, i, arr) => v !== undefined || arr.slice(i).some((y) => y !== undefined))); } return f(...a); }; });
+      const math = { ...Object.fromEntries(Object.getOwnPropertyNames(Math).map((k) => [k, Math[k]])), pi: Math.PI, e: Math.E, phi: 1.618033988749895,
+        round: (x, p) => (p === undefined ? Math.round(x) : Math.round(x * 10 ** p) / 10 ** p), avg: (...a) => a.reduce((s, v) => s + v, 0) / a.length,
+        sum: (x, len) => { const w = win(st(), x, len); return w.length < len ? NaN : w.reduce((s, v) => s + v, 0); }, todegrees: (r) => (r * 180) / Math.PI, toradians: (d) => (d * Math.PI) / 180, round_to_mintick: (x) => Math.round(x / 0.25) * 0.25 };
+      const inp = (type) => function (...a) { const r = argsOf(a, ["defval", "title", "minval", "maxval", "step"]); if (type === "source" && r.options === undefined) r.options = SRC; if (Array.isArray(r.options) && r.minval !== undefined && type !== "int" && type !== "float") r.options = r.options;
+        const k = rt.iid++, key = r.title || "Entrée " + (k + 1); if (rt.i === 0) rt.inputs.push({ key, type, def: r.defval, min: r.minval, max: r.maxval, step: r.step, options: r.options });
+        let v = key in inVals ? inVals[key] : r.defval; if (type === "int") v = Math.round(+v); else if (type === "float") v = +v; else if (type === "bool") v = v === true || v === "true";
+        if (type === "source") { const g = SER[v] || SER.close; return g(rt.i); } return v; };
+      const input = Object.assign(inp("auto"), { int: inp("int"), float: inp("float"), bool: inp("bool"), color: inp("color"), string: inp("string"), source: inp("source"), price: inp("float"), session: inp("string"), timeframe: inp("string"), symbol: inp("string"), text_area: inp("string"), time: inp("int") });
+      const plot = Object.assign(function (...a) { const r = argsOf(a, ["series", "title", "color", "linewidth", "style", "trackprice", "histbase", "offset"]), k = rt.pid++;
+        const P = rt.plots[k] || (rt.plots[k] = { title: r.title || "Plot " + (k + 1), color: typeof r.color === "string" ? r.color : "#2962ff", lw: +r.linewidth || 1, style: r.style || "line", offset: +r.offset || 0, data: new Float64Array(n).fill(NaN), colors: new Array(n), varCol: false, display: r.display });
+        let v = r.series; if (typeof v === "boolean") v = v ? 1 : 0; P.data[rt.i] = isna(v) ? NaN : +v; if (typeof r.color === "string") { P.colors[rt.i] = r.color; if (r.color !== P.color) P.varCol = true; } else if (r.color !== undefined && isna(r.color)) { P.colors[rt.i] = "rgba(0,0,0,0)"; P.varCol = true; } return k; },
+        { style_line: "line", style_linebr: "line", style_stepline: "step", style_stepline_diamond: "step", style_histogram: "hist", style_columns: "hist", style_circles: "circles", style_cross: "circles", style_area: "area", style_areabr: "area" });
+      const hline = Object.assign(function (...a) { const r = argsOf(a, ["price", "title", "color", "linestyle", "linewidth"]), k = rt.hid++; if (!rt.hlines[k]) rt.hlines[k] = { price: +r.price, title: r.title || "", color: typeof r.color === "string" ? r.color : "#787b86", style: r.linestyle || "dashed", lw: +r.linewidth || 1 }; return k; }, { style_solid: "solid", style_dashed: "dashed", style_dotted: "dotted" });
+      const mark = (r, sh) => { if (r.series && !isna(r.series)) rt.marks.push({ i: rt.i, position: r.location === "belowbar" || r.location === "bottom" ? "belowBar" : r.location === "abovebar" || r.location === "top" || r.location === undefined ? "aboveBar" : "inBar", shape: SHAPE[r.style] || sh, color: typeof r.color === "string" ? r.color : "#2962ff", text: r.text || r.char || "" }); };
+      const plotshape = (...a) => mark(argsOf(a, ["series", "title", "style", "location", "color", "offset", "text"]), "circle");
+      const plotchar = (...a) => mark(argsOf(a, ["series", "title", "char", "location", "color"]), "circle");
+      const noop = (name) => { const f = new Proxy(function () {}, { get: (t, k) => (k === Symbol.toPrimitive ? () => NaN : typeof k === "symbol" ? undefined : noop(name + "." + String(k))), apply: () => { rt.warns.add(`${name}() n'est pas pris en charge (ignoré).`); return NaN; } }); return f; };
+      const meta = (...a) => { const r = argsOf(a, ["title", "shorttitle", "overlay"]); if (rt.i === 0) { rt.meta.name = r.name || r.title || rt.meta.name; if (r.overlay !== undefined) rt.meta.overlay = !!r.overlay; } };
+      const strategy = new Proxy(function () {}, { get: (t, k) => noop("strategy." + String(k)), apply: (t, th, a) => { meta(...a); rt.warns.add("strategy() : seuls les plots sont affichés (pas de backtest de stratégie)."); } });
+      const location = { abovebar: "abovebar", belowbar: "belowbar", top: "top", bottom: "bottom", absolute: "absolute" };
+      const shape = { triangleup: "triangleup", triangledown: "triangledown", arrowup: "arrowup", arrowdown: "arrowdown", labelup: "labelup", labeldown: "labeldown", circle: "circle", cross: "cross", xcross: "xcross", diamond: "diamond", square: "square", flag: "flag" };
+      const str = { tostring: (v, f) => (typeof v === "number" && f && /\.(0+)/.test(f) ? v.toFixed(/\.(0+)/.exec(f)[1].length) : String(v)), format: (f, ...a) => f.replace(/\{(\d+)[^}]*\}/g, (m, k) => a[k]), length: (s) => String(s).length, upper: (s) => String(s).toUpperCase(), lower: (s) => String(s).toLowerCase(), contains: (s, x) => String(s).includes(x) };
+      const tfs = (o.tfSec || 60), timeframe = { period: o.tfName || "1", multiplier: tfs >= 86400 ? 1 : tfs >= 60 ? tfs / 60 : tfs, isintraday: tfs < 86400, isdaily: tfs === 86400, isweekly: tfs === 604800, ismonthly: tfs > 604800, isseconds: tfs < 60, isminutes: tfs >= 60 && tfs < 86400, isdwm: tfs >= 86400, in_seconds: () => tfs };
+      const syminfo = { ticker: o.sym || "NQ", tickerid: o.sym || "NQ", root: o.sym || "NQ", mintick: 0.25, pointvalue: o.pv || 20, currency: "USD", type: "futures", timezone: "America/New_York", session: "regular" };
+      const nz = (x, y = 0) => (isna(x) ? y : x);
+      const fixnan = (x) => { const s = st(); if (!isna(x)) s.v = x; return s.v === undefined ? NaN : s.v; };
+      const H = (name, k, cur) => { k = Math.round(+k) || 0; if (k <= 0) return cur; const j = rt.i - k; if (j < 0) return NaN; if (SER[name]) return SER[name](j); const idx = rt.hn.indexOf(name); if (idx < 0) { rt.warns.add(`${name}[…] : historique indisponible pour cette expression.`); return NaN; } const h = rt.H[idx]; return h ? h[j] : NaN; };
+      const snap = (vals) => { for (let k = 0; k < vals.length; k++) (rt.H[k] || (rt.H[k] = []))[rt.i] = vals[k]; };
+      const barstate = {}, state = {};
+      const casts = { int: (x) => (isna(x) ? NaN : Math.trunc(x)), float: (x) => +x, bool: (x) => !!x && !isna(x) };
+      let fn; try { fn = cmp.make(rt); } catch (e) { return { error: "Erreur : " + e.message, meta: rt.meta, plots: [], hlines: [], marks: [], inputs: [], warns: [...rt.warns] }; }
+      const t0 = Date.now(); let err = null;
+      const NO = { fill: noop("fill"), bgcolor: noop("bgcolor"), barcolor: noop("barcolor"), plotarrow: noop("plotarrow"), plotcandle: noop("plotcandle"), plotbar: noop("plotbar"), alertcondition: () => {}, alert: () => {}, label: noop("label"), line: noop("line"), box: noop("box"), table: noop("table"), array: noop("array"), map: noop("map"), matrix: noop("matrix"), request: noop("request"), ticker: noop("ticker"), linefill: noop("linefill"), polyline: noop("polyline"), chart: noop("chart"), runtime: { error: (m) => { throw new Error(m); } }, log: { info: () => {}, warning: () => {}, error: () => {} } };
+      const K = { size: { auto: "auto", tiny: "tiny", small: "small", normal: "normal", large: "large", huge: "huge" }, display: { all: "all", none: "none", data_window: "data_window", pane: "pane" }, extend: { none: "none", left: "left", right: "right", both: "both" }, xloc: { bar_index: "bar_index", bar_time: "bar_time" }, yloc: { price: "price", abovebar: "abovebar", belowbar: "belowbar" }, format: { price: "price", volume: "volume", percent: "percent", inherit: "inherit" }, position: {}, text: {}, font: {}, order: {}, currency: { USD: "USD" }, session: { regular: "regular", extended: "extended" }, adjustment: {}, scale: {} };
+      for (let i = 0; i < n; i++) {
+        rt.i = i; rt.cid = rt.pid = rt.iid = rt.hid = 0; const b = bars[i], d = new Date(ny(b[0]) * 1000);
+        barstate.isfirst = i === 0; barstate.islast = i === n - 1; barstate.isconfirmed = i < n - 1; barstate.isnew = true; barstate.ishistory = true; barstate.isrealtime = false; barstate.islastconfirmedhistory = i === n - 2;
+        try {
+          fn(b[1], b[2], b[3], b[4], b[5], b[0] * 1000, (i + 1 < n ? bars[i + 1][0] : b[0] + tfs) * 1000, i, n - 1, (b[2] + b[3]) / 2, (b[2] + b[3] + b[4]) / 3, (b[1] + b[2] + b[3] + b[4]) / 4,
+            d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCDate(), d.getUTCDay() + 1, d.getUTCMonth() + 1, d.getUTCFullYear(),
+            ta, math, input, color, plot, hline, plotshape, plotchar, NO.plotarrow, NO.plotcandle, NO.plotbar, NO.fill, NO.bgcolor, NO.barcolor, meta, meta, strategy, NO.alertcondition, NO.alert, meta,
+            NO.label, NO.line, NO.box, NO.table, NO.array, NO.map, NO.matrix, NO.request, NO.ticker, NO.linefill, NO.polyline, NO.chart, NO.runtime, NO.log, str, NaN, nz, fixnan, isna, H, i === 0, snap, barstate, syminfo, timeframe,
+            location, shape, K.size, K.display, K.extend, K.xloc, K.yloc, K.format, K.position, K.text, K.font, K.order, K.currency, K.session, K.adjustment, K.scale, state, casts.int, casts.float, casts.bool, (name, k = 1) => H(name, k, NaN), H, hline);
+        } catch (e) { err = `Erreur à la bougie ${i + 1} : ${e.message}`; break; }
+        if (Date.now() - t0 > 8000) { err = "Script trop lent (plus de 8 s) : arrêté."; break; }
+      }
+      return { error: err, meta: rt.meta, plots: rt.plots, hlines: rt.hlines, marks: rt.marks, inputs: rt.inputs, warns: [...rt.warns], ms: Date.now() - t0 };
+    }
+    return { compile, run, pineToJs, tsToJs, SRC };
+  })();
+  /* ---------------- indicateurs : liste, rendu sur le chart, onglet Paramètres › Indicateurs, éditeur de code ---------------- */
+  const IND_TPL = {
+    pine: `//@version=5
+indicator("Mon indicateur", overlay=true)
+length = input.int(20, "Longueur", minval=1)
+src = input.source(close, "Source")
+ma = ta.sma(src, length)
+plot(ma, "SMA", color=color.blue, linewidth=2)
+`,
+    ts: `// TypeScript / JavaScript : le code est exécuté sur chaque bougie (comme Pine Script)
+// Séries : open, high, low, close, volume, hl2, hlc3, ohlc4, time, bar_index
+// Historique : hist("close", 1) = clôture précédente · ta.prev(x, n) · mémoire entre les bougies : state
+indicator({ name: "Mon indicateur TS", overlay: true });
+const length: number = input.int(20, "Longueur");
+const ma: number = ta.ema(close, length);
+plot(ma, { title: "EMA", color: "#2962ff", linewidth: 2 });
+`,
+  };
+  var IND_EX = [
+    { id: "ex-ema", name: "EMA 20 / 50", lang: "pine", on: false, inputs: {}, code: `//@version=5
+indicator("EMA 20 / 50", overlay=true)
+fast = input.int(20, "EMA rapide", minval=1)
+slow = input.int(50, "EMA lente", minval=1)
+plot(ta.ema(close, fast), "EMA rapide", color=color.blue, linewidth=2)
+plot(ta.ema(close, slow), "EMA lente", color=color.orange, linewidth=2)
+` },
+    { id: "ex-rsi", name: "RSI", lang: "pine", on: false, inputs: {}, code: `//@version=5
+indicator("RSI", overlay=false)
+len = input.int(14, "Longueur", minval=1)
+r = ta.rsi(close, len)
+plot(r, "RSI", color=r > 70 ? color.red : r < 30 ? color.green : color.purple, linewidth=2)
+hline(70, "Surachat", color=color.gray)
+hline(50, "Milieu", color=color.silver)
+hline(30, "Survente", color=color.gray)
+` },
+    { id: "ex-vwap", name: "VWAP de séance", lang: "ts", on: false, inputs: {}, code: `// VWAP remis à zéro à chaque séance (18:00 New York)
+indicator({ name: "VWAP de séance", overlay: true });
+const col: string = input.color("#ff9800", "Couleur");
+plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
+` },
+  ];
+  function indList() { return (() => { const L = LS.get("bt-indicators", null); return Array.isArray(L) ? L : JSON.parse(JSON.stringify(IND_EX)); })(); }
+  const indSave = (L) => LS.set("bt-indicators", L);
+  var indCache = new Map(), indSer = new Map(), indRes = {}, indErrShown = {};
+  var indMk = [], baseMk = [], indHl = [], indOscH = 0, indT = 0, indTimer = null;
+  const indCmp = (x) => { const k = x.lang + "\n" + x.code; let c = indCache.get(k); if (!c) { c = IND.compile(x.code, x.lang); indCache.set(k, c); if (indCache.size > 40) indCache.delete(indCache.keys().next().value); } return c; };
+  const indFake = () => { const B = []; let p = 20000; const t0 = Math.floor(Date.now() / 60000) * 60 - 300 * 60; for (let i = 0; i < 300; i++) { const o = p; p += Math.sin(i / 9) * 6; B.push([t0 + i * 60, o, Math.max(o, p) + 3, Math.min(o, p) - 3, p, 1000]); } return B; };
+  function indExec(x, bars) { const c = indCmp(x); if (c.error) return { error: c.error, plots: [], hlines: [], marks: [], inputs: [], warns: [], meta: { name: "", overlay: true } };
+    return IND.run(c, bars, { ny: toNY, inputs: x.inputs || {}, tfSec: tfSec(), tfName: tfName(S.tf), sym: S.sym, pv: (CTR[S.sym] || CTR.NQ).pv }); }
+  function indBottom() { return Math.max((+P.mBot || 0) / 100, indOscH ? indOscH + 0.03 : 0); }
+  function applyMk() { if (!cs) return; const a = baseMk.concat(indMk); a.sort((x, y) => x.time - y.time); cs.setMarkers(a); }
+  function indSchedule() { if (!indList().some((x) => x.on) && !indSer.size) return; clearTimeout(indTimer); indTimer = setTimeout(() => { indT = Date.now(); indRun(); }, Math.max(0, indT + 300 - Date.now())); }
+  function indRun() {
+    if (!chart || !cs) return;
+    const on = indList().filter((x) => x.on), bars = S.B || [], used = new Set(), T = bars.map((b) => toNY(b[0])), osc = [];
+    indHl.forEach(([s, l]) => { try { s.removePriceLine(l); } catch (e) { /* série retirée */ } }); indHl = []; indMk = [];
+    if (bars.length) on.forEach((x) => {
+      const r = indExec(x, bars); indRes[x.id] = r;
+      if (r.error) { if (indErrShown[x.id] !== r.error) { indErrShown[x.id] = r.error; msg(`Indicateur « ${x.name} » : ${r.error}`, true); } return; } delete indErrShown[x.id];
+      const ov = r.meta.overlay !== false, sc = ov ? "right" : "ind-" + x.id; if (!ov) osc.push(x.id);
+      let host = null;
+      r.plots.forEach((p, k) => {
+        if (p.display === "none" || p.display === "data_window") return;
+        const kind = p.style === "hist" ? "hist" : p.style === "area" ? "area" : "line", key = `${x.id}|${k}|${kind}`; used.add(key);
+        let s = indSer.get(key);
+        if (!s) { const base = { priceScaleId: sc, priceLineVisible: false, lastValueVisible: !ov, title: "" };
+          s = kind === "hist" ? chart.addHistogramSeries(base) : kind === "area" ? chart.addAreaSeries(base) : chart.addLineSeries({ ...base, crosshairMarkerVisible: false }); indSer.set(key, s); }
+        const fade = (c, a) => (/^#[0-9a-f]{6}$/i.test(c) ? c + Math.round(a * 255).toString(16).padStart(2, "0") : c);
+        s.applyOptions(kind === "hist" ? { color: p.color, priceScaleId: sc } : kind === "area" ? { lineColor: p.color, topColor: fade(p.color, 0.3), bottomColor: fade(p.color, 0), lineWidth: Math.min(4, Math.max(1, p.lw)), priceScaleId: sc }
+          : { color: p.color, lineWidth: Math.min(4, Math.max(1, p.lw)), lineType: p.style === "step" ? 1 : 0, lineVisible: p.style !== "circles", pointMarkersVisible: p.style === "circles", priceScaleId: sc });
+        const d = new Array(bars.length);
+        for (let i = 0; i < bars.length; i++) { const j = i - p.offset, v = j >= 0 && j < bars.length ? p.data[j] : NaN; d[i] = Number.isFinite(v) ? (p.varCol && p.colors[j] ? { time: T[i], value: v, color: p.colors[j] } : { time: T[i], value: v }) : { time: T[i] }; }
+        s.setData(d); if (!host) host = s;
+      });
+      if (r.hlines.length) {
+        if (!host) { const key = `${x.id}|hl|line`; used.add(key); host = indSer.get(key); if (!host) { host = chart.addLineSeries({ priceScaleId: sc, lineVisible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); indSer.set(key, host); }
+          const ps = r.hlines.map((h) => h.price); host.applyOptions({ autoscaleInfoProvider: () => ({ priceRange: { minValue: Math.min(...ps), maxValue: Math.max(...ps) } }) }); host.setData(T.map((time) => ({ time, value: ps[0] }))); }
+        r.hlines.forEach((h) => indHl.push([host, host.createPriceLine({ price: h.price, color: h.color, lineWidth: Math.min(4, Math.max(1, h.lw)), lineStyle: h.style === "solid" ? 0 : h.style === "dotted" ? 1 : 2, axisLabelVisible: false, title: h.title })]));
+      }
+      r.marks.forEach((m) => { if (T[m.i] != null) indMk.push({ time: T[m.i], position: m.position, shape: m.shape, color: m.color, text: m.text }); });
+    });
+    indSer.forEach((s, k) => { if (!used.has(k)) { try { chart.removeSeries(s); } catch (e) { /* déjà retirée */ } indSer.delete(k); } });
+    const band = osc.length ? Math.min(0.22, 0.6 / osc.length) : 0; indOscH = band * osc.length;
+    osc.forEach((id, j) => chart.priceScale("ind-" + id).applyOptions({ scaleMargins: { top: Math.min(0.97, 1 - band * (osc.length - j) + 0.015), bottom: Math.max(0, band * (osc.length - 1 - j)) } }));
+    chart.priceScale("right").applyOptions({ scaleMargins: { top: (+P.mTop || 0) / 100, bottom: indBottom() } });
+    applyMk();
+  }
+  // réglages d'un indicateur jamais lancé : passage rapide sur les dernières bougies (ou des bougies fictives)
+  const indProbe = (x) => indRes[x.id] || indExec(x, (S.B && S.B.length ? S.B.slice(-400) : indFake()));
+  const hex6 = (c) => (/^#[0-9a-f]{6}/i.test(c || "") ? c.slice(0, 7) : /^rgba?\(/.test(c || "") ? rgbHex(c) : "#2962ff");
+  function indInputField(x, f) {
+    const v = x.inputs && f.key in x.inputs ? x.inputs[f.key] : f.def, a = `data-ii="${esc(x.id)}" data-ik="${esc(f.key)}" data-it="${f.type}"`;
+    const t = f.type === "auto" ? (typeof f.def === "boolean" ? "bool" : typeof f.def === "number" ? "float" : /^#|^rgba?\(/.test(f.def || "") ? "color" : "string") : f.type;
+    if (t === "bool") return `<input type="checkbox" ${a} ${v === true || v === "true" ? "checked" : ""}>`;
+    if (t === "color") return `<input type="color" ${a} value="${hex6(v)}">`;
+    if (Array.isArray(f.options)) return `<select ${a}>${f.options.map((o) => `<option ${String(o) === String(v) ? "selected" : ""}>${esc(String(o))}</option>`).join("")}</select>`;
+    if (t === "int" || t === "float") return `<input type="number" ${a} value="${v}" ${f.min !== undefined ? `min="${f.min}"` : ""} ${f.max !== undefined ? `max="${f.max}"` : ""} step="${f.step || (t === "int" ? 1 : "any")}" style="width:90px">`;
+    return `<input type="text" ${a} value="${esc(String(v ?? ""))}" style="width:160px">`;
+  }
+  function indPrefsBody() {
+    const L = indList();
+    return `<p class="rv-mut" style="margin:0 0 8px">Coche un indicateur pour l'afficher sur le chart. Le code se modifie dans l'éditeur (Pine Script v5 ou TypeScript).</p>
+      <div class="tx-indl">${L.map((x) => { const r = indProbe(x);
+        return `<div class="tx-indr"><div class="tx-indh"><label><input type="checkbox" data-ia="on" data-id="${esc(x.id)}" ${x.on ? "checked" : ""}> <b>${esc(x.name)}</b></label><span class="tx-badge ${x.lang}">${x.lang === "pine" ? "Pine" : "TS"}</span>${r.meta && r.meta.overlay === false ? '<span class="tx-badge">sous le chart</span>' : ""}<span class="tx-sp"></span><button class="ghost" data-ia="edit" data-id="${esc(x.id)}">✎ Code</button><button class="ghost" data-ia="del" data-id="${esc(x.id)}" title="Supprimer">🗑</button></div>
+          ${(r.inputs || []).map((f) => `<div class="r">${esc(f.key)} ${indInputField(x, f)}</div>`).join("")}${r.error ? `<div class="tx-inderr">${esc(r.error)}</div>` : ""}</div>`; }).join("") || '<div class="rv-mut">Aucun indicateur.</div>'}</div>
+      <div class="tx-indb"><button data-ia="newpine" class="ghost">＋ Pine Script</button><button data-ia="newts" class="ghost">＋ TypeScript</button><span class="tx-sp"></span><button data-ia="ide" class="ghost">&lt;/&gt; Ouvrir l'éditeur</button></div>`;
+  }
+  function indInput(el) {
+    const L = indList(), x = L.find((i) => i.id === el.dataset.ii); if (!x) return;
+    x.inputs = x.inputs || {}; const t = el.dataset.it; x.inputs[el.dataset.ik] = el.type === "checkbox" ? el.checked : el.type === "number" ? +el.value : el.value;
+    indSave(L); delete indRes[x.id]; if (x.on) indSchedule();
+  }
+  const indNew = (lang) => { const L = indList(), x = { id: "i" + Date.now(), name: lang === "pine" ? "Mon indicateur" : "Mon indicateur TS", lang, code: IND_TPL[lang], on: false, inputs: {} }; L.push(x); indSave(L); return x; };
+  function indAct(a, id, refresh) {
+    const L = indList(), x = L.find((i) => i.id === id);
+    if (a === "on" && x) { x.on = !x.on; indSave(L); delete indRes[x.id]; indRun(); msg(x.on ? `« ${x.name} » affiché sur le chart.` : `« ${x.name} » masqué.`); return refresh(); }
+    if (a === "edit" && x) { closeModal(); return openIde(x.id); }
+    if (a === "del" && x) { if (!indAct.armed || indAct.armed !== id) { indAct.armed = id; setTimeout(() => (indAct.armed = null), 3000); return msg(`Clique encore sur 🗑 pour supprimer « ${x.name} ».`); }
+      indAct.armed = null; indSave(L.filter((i) => i !== x)); delete indRes[x.id]; indRun(); msg(`« ${x.name} » supprimé.`); return refresh(); }
+    if (a === "newpine" || a === "newts") { const n = indNew(a === "newpine" ? "pine" : "ts"); closeModal(); return openIde(n.id); }
+    if (a === "ide") { closeModal(); return openIde(); }
+  }
+  /* éditeur de code (page plein écran) */
+  let ideId = null, ideDirty = false;
+  function openIde(id) {
+    let o = $("btIde");
+    if (!o) {
+      o = document.createElement("div"); o.id = "btIde"; o.className = "tx-ide"; o.hidden = true;
+      o.innerHTML = `<div class="tx-ide-top"><span class="tx-ide-logo">&lt;/&gt;</span> Éditeur d'indicateurs <small>Pine Script v5 · TypeScript / JavaScript</small><span class="tx-sp"></span><button data-i="close" title="Fermer (Échap)">✕ Fermer</button></div>
+        <div class="tx-ide-main">
+          <aside class="tx-ide-list"><div class="tx-ide-new"><button data-i="newpine">＋ Pine</button><button data-i="newts">＋ TS</button><button data-i="import" title="Importer un fichier .pine / .ts / .js">⇪</button><input type="file" id="btIdeFile" accept=".pine,.ts,.js,.txt" hidden></div><div id="btIdeRows"></div></aside>
+          <section class="tx-ide-ed">
+            <div class="tx-ide-bar"><input id="btIdeName" placeholder="Nom de l'indicateur"><select id="btIdeLang"><option value="pine">Pine Script v5</option><option value="ts">TypeScript / JavaScript</option></select><span class="tx-sp"></span>
+              <button data-i="run" title="Exécuter sur les bougies du chart (Ctrl+Entrée)">▶ Tester</button><button data-i="save" title="Ctrl+S">💾 Enregistrer</button><button data-i="add" class="pri">Enregistrer + afficher</button><button data-i="js" title="Voir le JavaScript généré">JS</button><button data-i="export" title="Exporter le fichier">⇩</button><button data-i="del" title="Supprimer l'indicateur">🗑</button></div>
+            <div class="tx-ide-code"><pre id="btIdeGut"></pre><textarea id="btIdeTxt" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off"></textarea></div>
+            <div class="tx-ide-con" id="btIdeCon"></div>
+          </section>
+          <aside class="tx-ide-help">
+            <b>Pine Script v5</b> (sous-ensemble)<br>indicator(), input.int / float / bool / color / string / source, plot (line, stepline, histogram, columns, circles, area), hline, plotshape, plotchar,
+            var, :=, if / else, for … to … by, while, fonctions =&gt;, tuples [a, b] =, x[n], na, nz, color.new, color.rgb, math.*, str.*, barstate, syminfo, timeframe.<br><br>
+            <b>ta.*</b> sma, ema, rma, wma, vwma, hma, rsi, atr, tr, stdev, variance, highest, lowest, change, mom, roc, crossover, crossunder, cross, rising, falling, cum, vwap, macd, bb, stoch, cci, dev, median, linreg, valuewhen, barssince, pivothigh, pivotlow, obv.<br><br>
+            <b>Ignorés</b> : label, line, box, table, fill, bgcolor, request.security, strategy.* (les plots restent affichés).<br><br>
+            <b>TypeScript</b> : mêmes fonctions et séries ; plot(v, { title, color, linewidth, style }) ; indicator({ name, overlay }) ; hist("close", 1), ta.prev(x, n), state = mémoire entre les bougies. Les annotations de type sont retirées avant l'exécution.<br><br>
+            <b>Raccourcis</b> : Ctrl+S enregistrer · Ctrl+Entrée tester · Tab indenter · Échap fermer.
+          </aside>
+        </div>`;
+      document.body.append(o); bindIde(o);
+    }
+    o.hidden = false; ideRows(); ideOpen(id || ideId || (indList()[0] || indNew("pine")).id); setTimeout(() => $("btIdeTxt").focus(), 0);
+  }
+  const ideCode = () => $("btIdeTxt").value;
+  function ideGut() { const n = ideCode().split("\n").length, g = $("btIdeGut"); if (g._n !== n) { g._n = n; g.textContent = Array.from({ length: n }, (_, i) => i + 1).join("\n"); } g.scrollTop = $("btIdeTxt").scrollTop; }
+  function ideRows() { const L = indList(); $("btIdeRows").innerHTML = L.map((x) => `<div class="tx-ide-row ${x.id === ideId ? "on" : ""}" data-r="${esc(x.id)}"><span class="dot ${x.on ? "lit" : ""}" data-r-on="${esc(x.id)}" title="${x.on ? "Affiché sur le chart (clic = masquer)" : "Masqué (clic = afficher)"}"></span><span class="nm">${esc(x.name)}</span><span class="tx-badge ${x.lang}">${x.lang === "pine" ? "Pine" : "TS"}</span></div>`).join(""); }
+  function ideOpen(id) {
+    if (ideDirty) ideSave(true);
+    const x = indList().find((i) => i.id === id); if (!x) return; ideId = id; ideDirty = false;
+    $("btIdeName").value = x.name; $("btIdeLang").value = x.lang; $("btIdeTxt").value = x.code; $("btIdeTxt").scrollTop = 0; ideGut(); ideRows();
+    $("btIdeCon").innerHTML = `<span class="rv-mut">${x.on ? "Affiché sur le chart." : "Pas encore sur le chart : « Enregistrer + afficher »."} · ▶ Tester pour vérifier le script.</span>`;
+  }
+  function ideSave(quiet, show) {
+    const L = indList(), x = L.find((i) => i.id === ideId); if (!x) return null;
+    x.code = ideCode(); x.lang = $("btIdeLang").value; const c = indCmp(x), r = c.error ? null : IND.run(c, indFake(), { inputs: x.inputs || {} });
+    x.name = $("btIdeName").value.trim() || (r && r.meta.name) || x.name; if (show) x.on = true;
+    indSave(L); ideDirty = false; delete indRes[x.id]; ideRows(); if (x.on) indRun();
+    if (!quiet) { msg(`« ${x.name} » enregistré${show ? " et affiché sur le chart" : ""}.`); ideRun(); } return x;
+  }
+  function ideRun() {
+    const x = { ...(indList().find((i) => i.id === ideId) || {}), code: ideCode(), lang: $("btIdeLang").value }, con = $("btIdeCon"), real = S.B && S.B.length;
+    const c = indCmp(x); if (c.error) { con.innerHTML = `<div class="err">✕ ${esc(c.error)}</div>`; return; }
+    const r = IND.run(c, real ? S.B : indFake(), { ny: toNY, inputs: x.inputs || {}, tfSec: tfSec(), tfName: tfName(S.tf), sym: S.sym });
+    const last = (p) => { for (let i = p.data.length - 1; i >= 0; i--) if (Number.isFinite(p.data[i])) return p.data[i].toFixed(2); return "—"; };
+    con.innerHTML = (r.error ? `<div class="err">✕ ${esc(r.error)}</div>` : `<div class="ok">✓ ${esc(r.meta.name || x.name || "")} · ${r.meta.overlay === false ? "sous le chart" : "sur le chart"} · ${real ? S.B.length + " bougies" : "bougies fictives (charge une séance pour tester sur tes données)"} · ${r.ms} ms</div>`)
+      + (r.plots.length ? `<div>Plots : ${r.plots.map((p) => `<span class="tx-badge" style="border-color:${esc(p.color)};color:${esc(p.color)}">${esc(p.title)} = ${last(p)}</span>`).join(" ")}</div>` : "")
+      + (r.hlines.length ? `<div>Lignes : ${r.hlines.map((h) => esc(h.title || String(h.price))).join(", ")}</div>` : "")
+      + (r.inputs.length ? `<div>Entrées : ${r.inputs.map((f) => esc(f.key)).join(", ")} (réglables dans Paramètres › Indicateurs)</div>` : "")
+      + (r.marks.length ? `<div>Formes : ${r.marks.length}</div>` : "")
+      + r.warns.map((w) => `<div class="warn">⚠ ${esc(w)}</div>`).join("");
+  }
+  function ideClose() { if (ideDirty) ideSave(true); $("btIde").hidden = true; }
+  function bindIde(o) {
+    const ta = $("btIdeTxt");
+    ta.addEventListener("input", () => { ideDirty = true; ideGut(); }); ta.addEventListener("scroll", ideGut);
+    $("btIdeName").addEventListener("input", () => (ideDirty = true)); $("btIdeLang").addEventListener("change", () => (ideDirty = true));
+    ta.addEventListener("keydown", (e) => {
+      e.stopPropagation();
+      const pine = $("btIdeLang").value === "pine", tab = pine ? "    " : "  ", v = ta.value, a = ta.selectionStart, b = ta.selectionEnd;
+      const put = (s, ca = a, cb = b) => { ta.setRangeText(s, ca, cb, "end"); ideDirty = true; ideGut(); };
+      if (e.key === "Tab") { e.preventDefault(); const ls = v.lastIndexOf("\n", a - 1) + 1;
+        if (a !== b || e.shiftKey) { const le = v.indexOf("\n", b); const end = le < 0 ? v.length : le, blk = v.slice(ls, end).split("\n").map((l) => (e.shiftKey ? l.replace(new RegExp("^ {1," + tab.length + "}"), "") : tab + l)).join("\n"); ta.setRangeText(blk, ls, end, "select"); ideDirty = true; ideGut(); }
+        else put(tab); return; }
+      if (e.key === "Enter" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); const ls = v.lastIndexOf("\n", a - 1) + 1, line = v.slice(ls, a), ind = line.match(/^\s*/)[0];
+        const more = pine ? /^\s*(if|else|for|while)\b|=>\s*$/.test(line) : /[{(\[]\s*$/.test(line); put("\n" + ind + (more ? tab : "")); return; }
+      if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) { e.preventDefault(); ideSave(false); return; }
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); ideRun(); return; }
+      if (e.key === "Escape") { e.preventDefault(); ideClose(); }
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !o.hidden && !o.contains(e.target)) ideClose(); });
+    o.addEventListener("keydown", (e) => { if (e.key === "Escape" && e.target !== ta) ideClose(); if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) { e.preventDefault(); ideSave(false); } e.stopPropagation(); });
+    o.addEventListener("click", (e) => {
+      const on = e.target.closest("[data-r-on]"); if (on) { const L = indList(), x = L.find((i) => i.id === on.dataset.rOn); if (x) { x.on = !x.on; indSave(L); delete indRes[x.id]; indRun(); ideRows(); } return; }
+      const row = e.target.closest("[data-r]"); if (row) return ideOpen(row.dataset.r);
+      const a = (e.target.closest("[data-i]") || {}).dataset; if (!a || !a.i) return;
+      const i = a.i;
+      if (i === "close") ideClose();
+      else if (i === "newpine" || i === "newts") { if (ideDirty) ideSave(true); const n = indNew(i === "newpine" ? "pine" : "ts"); ideRows(); ideOpen(n.id); $("btIdeName").select(); }
+      else if (i === "import") $("btIdeFile").click();
+      else if (i === "run") ideRun();
+      else if (i === "save") ideSave(false);
+      else if (i === "add") ideSave(false, true);
+      else if (i === "js") { const c = indCmp({ code: ideCode(), lang: $("btIdeLang").value }); $("btIdeCon").innerHTML = c.error ? `<div class="err">✕ ${esc(c.error)}</div>` : `<pre class="js">${esc(c.js)}</pre>`; }
+      else if (i === "export") { const x = indList().find((k) => k.id === ideId); const blob = new Blob([ideCode()], { type: "text/plain" }), u = URL.createObjectURL(blob), l = document.createElement("a"); l.href = u; l.download = ($("btIdeName").value || "indicateur").replace(/[\\/:*?"<>|]/g, "_") + ($("btIdeLang").value === "pine" ? ".pine" : ".ts"); l.click(); setTimeout(() => URL.revokeObjectURL(u), 2000); }
+      else if (i === "del") { const btn = e.target.closest("[data-i]"); if (!btn.dataset.armed) { btn.dataset.armed = "1"; btn.textContent = "Confirmer ?"; setTimeout(() => { delete btn.dataset.armed; btn.textContent = "🗑"; }, 3000); return; }
+        const L = indList().filter((k) => k.id !== ideId); indSave(L); delete indRes[ideId]; ideDirty = false; indRun(); ideId = null; ideRows(); if (L.length) ideOpen(L[0].id); else ideOpen(indNew("pine").id); msg("Indicateur supprimé."); }
+    });
+    $("btIdeFile").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (!f) return; const code = await f.text(), lang = /\.pine$|\.txt$/i.test(f.name) || /\bindicator\s*\(|\/\/@version/.test(code) && !/\bconst\b|\blet\b/.test(code) ? "pine" : "ts";
+      if (ideDirty) ideSave(true); const L = indList(), x = { id: "i" + Date.now(), name: f.name.replace(/\.[^.]+$/, ""), lang, code, on: false, inputs: {} }; L.push(x); indSave(L); ideRows(); ideOpen(x.id); ideRun(); };
+  }
+
   // ordre sous le pointeur (ligne ou étiquette de prix) -> glisser-déposer
   let ordDrag = null;
   const orderAt = (y) => (chart && pane === 1 && A.orders.length ? A.orders.find((o) => { const oy = Y(o.px); return oy != null && Math.abs(oy - y) < 7; }) || null : null);
@@ -5852,7 +6381,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     return { t: Math.round(t), price: rnd(p) };
   }
   const cv = () => $(pane === 2 ? "btDraw2" : "btDraw");
-  function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) render(); }
+  function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) { render(); ordTags(); } }
   function floatBar() {
     const f = $("btFloat"); if (!f) return; const show = !!(sel && !hideAll && shapes.includes(sel) && !$("btSet").classList.contains("show"));
     if (f.hidden === show) f.hidden = !show;
@@ -5930,8 +6459,16 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     init: (q) => { const sl = (+$("oSl").value || 40) * TICK, tp = (+$("oTp").value || 80) * TICK, w = 30 * S.tf * 60; return [q, { t: q.t + w, price: rnd(q.price + dir * tp) }, { t: q.t + w, price: rnd(q.price - dir * sl) }]; },
     d: (g, s, P) => { const [e, t, st] = s.p, x1 = P[0].x, x2 = P[1].x, ye = P[0].y, yt = P[1].y, ys = P[2].y;
       g.fillStyle = "rgba(38,166,154,.22)"; g.fillRect(x1, Math.min(ye, yt), x2 - x1, Math.abs(yt - ye)); g.fillStyle = "rgba(239,83,80,.22)"; g.fillRect(x1, Math.min(ye, ys), x2 - x1, Math.abs(ys - ye)); g.strokeStyle = "#787b86"; ln(g, { x: x1, y: ye }, { x: x2, y: ye });
-      const c = CTR[$("oCtr").value], q = Math.max(1, parseInt($("oQty").value, 10) || 1), tk = (v) => Math.round(Math.abs(v - e.price) / TICK), cash = (v) => usd(Math.abs(v - e.price) * c.pv * q), rr = Math.abs(t.price - e.price) / (Math.abs(st.price - e.price) || 1), xm = (x1 + x2) / 2;
-      tag(g, `Cible : ${t.price.toFixed(2)} · ${tk(t.price)} ticks · ${cash(t.price)}`, xm, yt + (yt < ye ? -12 : 12), "#26a69a"); tag(g, `Stop : ${st.price.toFixed(2)} · ${tk(st.price)} ticks · ${cash(st.price)}`, xm, ys + (ys > ye ? 12 : -12), "#ef5350"); tag(g, `R:R ${rr.toFixed(2)} · ${q} ${c.name}`, xm, ye + (yt < ye ? 12 : -12)); } });
+      const z = posSize(s), c = z.c, q = z.q, A0 = z.acct, tk = (v) => Math.round(Math.abs(v - e.price) / TICK), amt = (v) => Math.abs(v - e.price) * c.pv * q, cash = (v) => usd(amt(v)) + (A0 ? ` (${((amt(v) / A0) * 100).toFixed(2)}%)` : ""), rr = Math.abs(t.price - e.price) / (Math.abs(st.price - e.price) || 1), xm = (x1 + x2) / 2;
+      tag(g, `Cible : ${t.price.toFixed(2)} · ${tk(t.price)} ticks · ${cash(t.price)}`, xm, yt + (yt < ye ? -12 : 12), "#26a69a"); tag(g, `Stop : ${st.price.toFixed(2)} · ${tk(st.price)} ticks · ${cash(st.price)}`, xm, ys + (ys > ye ? 12 : -12), "#ef5350");
+      tag(g, `R:R ${rr.toFixed(2)} · ${q} ${c.name}${z.mode !== "qty" ? ` · risque visé ${usd(z.target)}${q === 0 ? " — stop trop large" : ""}` : ""}`, xm, ye + (yt < ye ? 12 : -12), q === 0 ? "#ef5350" : undefined); } });
+  // taille des dessins Position longue / courte : quantité fixe, ou calculée depuis un risque en $ ou en % d'une taille de compte
+  const POSDEF = { mode: "qty", qty: 1, acct: 50000, risk: 500, pct: 1, ctr: "" };
+  const posCfg = (s) => ({ ...POSDEF, qty: Math.max(1, parseInt($("oQty").value, 10) || 1), ...LS.get("bt-pos-def", {}), ...((s && s.style && s.style.pos) || {}) });
+  const posSize = (s) => { const o = posCfg(s), c = CTR[o.ctr] || CTR[$("oCtr").value] || CTR.NQ, [e, , st] = s.p, per = Math.abs(st.price - e.price) * c.pv;
+    const target = o.mode === "usd" ? +o.risk || 0 : o.mode === "pct" ? ((+o.acct || 0) * (+o.pct || 0)) / 100 : 0;
+    const q = o.mode === "qty" ? Math.max(1, parseInt(o.qty, 10) || 1) : per > 0 ? Math.floor(target / per) : 0;
+    return { ...o, c, q, target, acct: +o.acct || 0, risk$: per * q }; };
   const rangeBox = (g, P, c) => { g.fillStyle = c; g.fillRect(Math.min(P[0].x, P[1].x), Math.min(P[0].y, P[1].y), Math.abs(P[1].x - P[0].x), Math.abs(P[1].y - P[0].y)); };
   const SPEC = {
     info: { n: 2, d: (g, s, P) => { ln(g, P[0], P[1]); const [a, b] = s.p, d = b.price - a.price, nb = Math.round(t2l(b.t) - t2l(a.t)), an = (Math.atan2(P[0].y - P[1].y, P[1].x - P[0].x) * 180) / Math.PI; tag(g, `${d >= 0 ? "+" : ""}${d.toFixed(2)} (${((d / a.price) * 100).toFixed(2)}%) · ${nb} barres · ${an.toFixed(1)}°`, P[1].x, P[1].y - 16); } },
@@ -6134,7 +6671,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     c.addEventListener("dblclick", (e) => { if (pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); } }); // fin d'un chemin / polyligne / ghost feed
     // mode curseur : sélection / déplacement des dessins avant le déplacement de la chart (phase de capture)
     wrap.addEventListener("mousedown", (e) => {
-      if (tool !== "cross" || e.button !== 0 || e.target.closest(".tx-favbar,.tx-float")) return;
+      if (tool !== "cross" || e.button !== 0 || e.target.closest(".tx-favbar,.tx-float,.tx-otag")) return;
       const { x, y } = pos(e);
       const od = !e.shiftKey && orderAt(y); if (od) { ordDrag = od; e.stopPropagation(); e.preventDefault(); return; }
       if (!e.shiftKey && posAt(y)) { ordDrag = posDragOrder(A.pos.avg); e.stopPropagation(); e.preventDefault(); msg("Glisse vers la perte pour poser le SL, vers le gain pour le TP."); return; }
@@ -6153,7 +6690,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
     if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; if (o.temp) { if (!A.pos || o.px === rnd(A.pos.avg)) { priceLines(); return; } A.orders = A.orders.filter((x) => x.bracket !== o.bracket); delete o.temp; o.id = A.seq++; A.orders.push(o); msg(`${o.bracket} posé à ${o.px.toFixed(2)} (glisse la ligne pour l'ajuster).`); } dropOrder(o); } if (drag) { if (drag.s && drag.s.anc) ancOf(drag.s); drag = null; saveDrawings(); } });
-    wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && (!!orderAt(pos(e).y) || posAt(pos(e).y)))); });
+    wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float,.tx-otag") && (!!orderAt(pos(e).y) || posAt(pos(e).y)))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
@@ -6232,6 +6769,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       h += `<div class="r">Style de ligne <select data-k="dash"><option value="0" ${st.dash == 0 ? "selected" : ""}>Continu</option><option value="1" ${st.dash == 1 ? "selected" : ""}>Tirets</option><option value="2" ${st.dash == 2 ? "selected" : ""}>Pointillés</option></select></div>`;
       if (s.type === "rect" || (SPEC[s.type] && (SPEC[s.type].area || SPEC[s.type].hit))) h += `<div class="r">Fond <span><input type="color" data-k="fillc" value="${rgbHex(st.fill)}"> opacité <input type="number" data-k="filla" min="0" max="100" value="${Math.round(alpha(st.fill) * 100)}" style="width:60px">%</span></div>`;
       if (["trend", "rect", "fib"].includes(s.type)) h += `<div class="r">Prolonger à gauche <input type="checkbox" data-k="extL" ${st.extL ? "checked" : ""}></div><div class="r">Prolonger à droite <input type="checkbox" data-k="extR" ${st.extR ? "checked" : ""}></div>`;
+      if (s.type === "long" || s.type === "short") { const o = posCfg(s);
+        h += `<div class="tx-kg" style="margin-top:8px">Position</div><div class="r">Contrat <select data-pk="ctr"><option value="">Celui du panneau Order</option>${Object.keys(CTR).map((k) => `<option value="${k}" ${o.ctr === k ? "selected" : ""}>${k}</option>`).join("")}</select></div>
+          <div class="r">Taille de compte ($) <input type="number" data-pk="acct" min="0" step="1000" value="${o.acct}" style="width:110px"></div>
+          <div class="r">Taille de position <select data-pk="mode"><option value="qty" ${o.mode === "qty" ? "selected" : ""}>Contrats fixes</option><option value="usd" ${o.mode === "usd" ? "selected" : ""}>Risque en $ (P&L)</option><option value="pct" ${o.mode === "pct" ? "selected" : ""}>Risque en % du compte</option></select></div>
+          <div class="r" data-pm="qty">Contrats <input type="number" data-pk="qty" min="1" step="1" value="${o.qty}" style="width:80px"></div>
+          <div class="r" data-pm="usd">Risque ($) <input type="number" data-pk="risk" min="0" step="50" value="${o.risk}" style="width:100px"></div>
+          <div class="r" data-pm="pct">Risque (%) <input type="number" data-pk="pct" min="0" step="0.1" value="${o.pct}" style="width:80px"></div>
+          <div class="r rv-mut" id="btPosSum"></div>`; }
       if (s.type === "fib" || s.type === "hline") h += `<div class="r">Afficher les prix <input type="checkbox" data-k="labels" ${st.labels ? "checked" : ""}></div>`;
       if (s.type === "fib") h += `<div class="lvs">${st.levels.map((lv, i) => `<div class="lv"><input type="checkbox" data-lv="${i}" data-f="on" ${lv.on ? "checked" : ""}><input type="number" step="0.001" data-lv="${i}" data-f="k" value="${lv.k}"><input type="color" data-lv="${i}" data-f="c" value="${lv.c}"></div>`).join("")}</div><button class="ghost" id="btLvAdd" style="margin-top:6px">＋ Niveau</button>`;
     } else if (editTab === "coords") {
@@ -6239,9 +6784,12 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     } else {
       h += `<div class="r">Texte <input type="text" data-k="text" value="${esc(s.text)}" style="width:220px"></div><div class="r">Couleur du texte <input type="color" data-k="textColor" value="${st.textColor}"></div><div class="r">Taille <select data-k="fontSize">${[10, 11, 12, 14, 16, 20, 24].map((f) => `<option ${f == st.fontSize ? "selected" : ""}>${f}</option>`).join("")}</select></div>`;
     }
-    $("btSetBody").innerHTML = h;
+    $("btSetBody").innerHTML = h; posSum();
     if ($("btLvAdd")) $("btLvAdd").onclick = () => { st.levels.push({ k: 1.272, c: "#9c27b0", on: true }); setBody(); };
   }
+  function posSum() { const el = $("btPosSum"), s = edit; if (!el || !s) return; const z = posSize(s);
+    document.querySelectorAll("#btSetBody [data-pm]").forEach((r) => (r.style.display = r.dataset.pm === z.mode ? "" : "none"));
+    el.textContent = `→ ${z.q} ${z.c.name} · risque réel ${usd(z.risk$)}${z.acct ? ` (${((z.risk$ / z.acct) * 100).toFixed(2)}% du compte)` : ""}${z.mode !== "qty" && z.q === 0 ? " — stop trop large pour ce risque" : ""}`; }
   const alpha = (c) => { const m = /rgba\([^)]*,\s*([\d.]+)\)/.exec(c || ""); return m ? +m[1] : 1; };
   const rgbHex = (c) => { const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c || ""); return m ? "#" + [m[1], m[2], m[3]].map((x) => (+x).toString(16).padStart(2, "0")).join("") : c && c[0] === "#" ? c : "#2962ff"; };
   const hexRgba = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
@@ -6249,7 +6797,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const onEdit = (e) => {
       const el = e.target, s = edit; if (!s) return; const st = s.style, k = el.dataset.k;
       if (el.dataset.lv !== undefined) { const lv = st.levels[+el.dataset.lv], f = el.dataset.f; lv[f] = f === "on" ? el.checked : f === "k" ? +el.value : el.value; return; }
-      if (el.dataset.pt !== undefined) { s.p[+el.dataset.pt].price = +el.value; return; }
+      if (el.dataset.pt !== undefined) { s.p[+el.dataset.pt].price = +el.value; posSum(); return; }
+      if (el.dataset.pk !== undefined) { const pk = el.dataset.pk; st.pos = { ...posCfg(s), [pk]: pk === "mode" || pk === "ctr" ? el.value : +el.value };
+        const { mode, acct, risk, pct, ctr } = st.pos; LS.set("bt-pos-def", { mode, acct, risk, pct, ctr }); posSum(); return; }
       if (k === "text") s.text = el.value;
       else if (k === "fillc" || k === "filla") { const b = $("btSetBody"); st.fill = hexRgba(b.querySelector('[data-k="fillc"]').value, (+b.querySelector('[data-k="filla"]').value || 0) / 100); }
       else if (el.type === "checkbox") st[k] = el.checked; else if (["width", "dash", "fontSize"].includes(k)) st[k] = +el.value; else if (k) st[k] = el.value;
@@ -6382,7 +6932,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btTreeHead").addEventListener("mousedown", (e) => { if (e.button !== 0 || e.target.closest("button")) return; e.preventDefault(); const T = $("btTree"), M = T.parentElement.getBoundingClientRect(), r = T.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
       const mv = (ev) => { T.style.left = Math.max(0, Math.min(M.width - r.width, ev.clientX - M.left - ox)) + "px"; T.style.top = Math.max(0, Math.min(M.height - 40, ev.clientY - M.top - oy)) + "px"; T.style.right = "auto"; };
       const up = () => { removeEventListener("mousemove", mv); removeEventListener("mouseup", up); LS.set("bt-treepos", { x: parseFloat(T.style.left), y: parseFloat(T.style.top) }); }; addEventListener("mousemove", mv); addEventListener("mouseup", up); });
-    $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName(); $("btTreeBtn2").onclick = () => $("btTreeBtn").click();
+    $("btPrefBtn").onclick = () => openPrefs(); $("btIndBtn").onclick = () => openIde(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName(); $("btTreeBtn2").onclick = () => $("btTreeBtn").click();
     setInterval(() => { if (!curLay) return; const L = layouts(), i = L.findIndex((x) => x.id === curLay); if (i >= 0) { L[i] = layoutSnap(L[i]); saveList("bt-layouts", L); } }, 5000); // sauvegarde auto de la mise en page
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = (e.target.closest("[data-a]") || {}).dataset ? (e.target.closest("[data-a]") || { dataset: {} }).dataset.a : undefined;
@@ -6418,6 +6968,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     // panneau d'ordres (simulé, uniquement sur le compte démo du backtesteur)
     $("oBuy").onclick = () => order(1); $("oSell").onclick = () => order(-1);
     $("oFlat").onclick = () => { if (S.raw.length) { flatten("Flatten"); draw(); ui(); } };
+    $("btOrdTags").addEventListener("mousedown", (e) => { const t = e.target.closest(".tx-otag"); if (!t || e.button !== 0) return; e.preventDefault(); e.stopPropagation();
+      if (e.target.dataset.ocx !== undefined) return cancelOrder(e.target.dataset.ocx);
+      const o = A.orders.find((x) => String(x.id) === t.dataset.oid); if (o) { ordDrag = o; priceLines(); } });
     $("oCancel").onclick = () => { A.orders = A.pos ? A.orders.filter((o) => o.bracket) : []; saveAcc(); draw(); ui(); };
     ["oType", "oQty", "oBr", "oCtr"].forEach((id) => $(id).addEventListener("input", () => { if (id === "oType" && $("oType").value !== "Market" && last() != null) $("oPx").value = last(); ui(); }));
     document.querySelector(".tx-qs").onclick = (e) => { const q = e.target.dataset.q; if (!q) return; const cur = parseInt($("oQty").value, 10) || 1; $("oQty").value = q === "+" ? cur + 1 : q === "-" ? Math.max(1, cur - 1) : q; ui(); };
@@ -6512,17 +7065,24 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (["Control", "Alt", "Shift", "Meta"].includes(e.key)) return null; return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && "Shift", k].filter(Boolean).join("+"); };
     const label = (c) => /Mac/.test(navigator.platform) ? c.replace("Ctrl", "⌘").replace("Alt", "⌥").replace("Shift", "⇧") : c;
     let tfBuf = "", tfTimer = null;
+    // 5 = 5 min · 5S = 5 s · 1D / D = Daily · 1W / W · 1M / M = mois · 3M / 6M / 12M · 1H / H1 = 60 · 4H / H4 = 240
+    const TFRE = /^\d+[SMDWH]?$|^[DWM]$|^H\d+$/;
+    const applyTf = (buf) => { const tf = { D: 1440, "1D": 1440, W: 10080, "1W": 10080, M: 43200, "1M": 43200, "3M": 129600, "6M": 259200, "12M": 518400 }[buf]
+        || (/^H\d+$/.test(buf) ? parseInt(buf.slice(1), 10) * 60 : /H$/.test(buf) ? parseInt(buf, 10) * 60 : /S$/.test(buf) ? buf.toLowerCase() : parseInt(buf, 10)),
+        b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + buf, true); };
     document.addEventListener("keydown", (e) => {
-      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || ($("btModal") && !$("btModal").hidden) || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || ($("btModal") && !$("btModal").hidden) || ($("btIde") && !$("btIde").hidden) || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      // pavé numérique (avec ou sans Verr. Num) : 1 = m1, 5 = m5, 15, 60 = H1, 240 = H4… validé par Entrée ou après une courte pause
+      if (/^Numpad\d$/.test(e.code) && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); tfBuf = (tfBuf + e.code.slice(6)).slice(-8); clearTimeout(tfTimer);
+        tfTimer = setTimeout(() => { const b = tfBuf; tfBuf = ""; if (TFRE.test(b)) applyTf(b); }, 1200); msg("Timeframe : " + tfBuf + " (Entrée)"); return; }
       const k = e.key.toLowerCase(), combo = comboOf(e); if (!combo) return;
       const id = Object.keys(KMAP).find((a) => (KMAP[a] || []).includes(combo));
       if (id) { e.preventDefault(); tfBuf = ""; KRUN[id](); return; }
       // changement de timeframe au clavier : 1, 5, 15, 60, 240, D, W, M puis Entrée
       if (!e.ctrlKey && !e.metaKey && !e.altKey && /^[0-9A-Z]$/.test(combo.replace(/^Shift\+/, ""))) { const ch = combo.replace(/^Shift\+/, ""); tfBuf = (tfBuf + ch).slice(-8); clearTimeout(tfTimer); tfTimer = setTimeout(() => (tfBuf = ""), 3000);
-        msg(/^\d+[SM]?$|^[DWM]$/.test(tfBuf) ? "Timeframe : " + tfBuf + " (Entrée)" : "Symbole : " + tfBuf + " (Entrée)"); return; }
+        msg(TFRE.test(tfBuf) ? "Timeframe : " + tfBuf + " (Entrée)" : "Symbole : " + tfBuf + " (Entrée)"); return; }
       if (k === "enter" && tfBuf) { e.preventDefault(); const buf = tfBuf; tfBuf = "";
-        if (/^\d+[SM]?$|^[DWM]$/.test(buf)) { // 5 = 5 min · 5S = 5 s · D / W / M · 3M / 6M / 12M = mois
-          const tf = { D: 1440, W: 10080, M: 43200, "1M": 43200, "3M": 129600, "6M": 259200, "12M": 518400 }[buf] || (/S$/.test(buf) ? buf.toLowerCase() : parseInt(buf, 10)), b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + buf, true); return; }
+        if (TFRE.test(buf)) { clearTimeout(tfTimer); applyTf(buf); return; }
         const m = /^(M?)(NQ|ES)/.exec(buf); if (!m) return msg("Symbole inconnu : " + buf + " (NQ, ES, MNQ, MES)", true);
         $("btSym").value = m[1] + m[2]; $("oCtr").value = m[1] + m[2]; $("btSym").onchange(); load(); msg(`Symbole : ${m[1]}${m[2]}Z26`); return; }
       if (k === "enter" && pending && SPEC[pending.type] && SPEC[pending.type].n === 0) { e.preventDefault(); pending.p.pop(); finishPending(); }
@@ -6592,10 +7152,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const hmenu = (anchor, html, onPick) => { const m = $("btHMenu"); if (!m.hidden && m.dataset.for === anchor.id) { m.hidden = true; return; } m.innerHTML = html; m.dataset.for = anchor.id; m.hidden = false; const r = anchor.getBoundingClientRect();
       m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth - 8)) + "px"; m.style.top = r.bottom + 4 + "px"; m.onclick = (e) => { const it = e.target.closest("[data-v]"); if (!it) return; m.hidden = true; onPick(it.dataset.v); }; };
     document.addEventListener("mousedown", (e) => { const m = $("btHMenu"); if (m && !m.hidden && !m.contains(e.target) && !e.target.closest(`#${m.dataset.for}`)) m.hidden = true; }, true);
+    const ICO_JV = `<svg class="tx-ico3" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><defs><radialGradient id="jvBg2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0d4a73"/><stop offset=".7" stop-color="#072640"/><stop offset="1" stop-color="#020c18"/></radialGradient><filter id="jvGlow2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="16" cy="16" r="16" fill="url(#jvBg2)"/><g fill="none" stroke="#3fd0ff" stroke-linecap="round" filter="url(#jvGlow2)"><circle cx="16" cy="16" r="13.6" stroke-width=".7" stroke-dasharray="14 2 5 2 1 2" opacity=".85"/><circle cx="16" cy="16" r="11.4" stroke-width="1.5" stroke-dasharray=".9 1.3" opacity=".7"/><path d="M16 6.8a9.2 9.2 0 0 1 9.2 9.2" stroke-width="1.5"/><path d="M6.8 16A9.2 9.2 0 0 0 16 25.2" stroke-width="1.5"/><path d="M8.6 10.4a9.2 9.2 0 0 1 2-1.9" stroke-width="2.2" stroke="#7fe6ff"/><circle cx="16" cy="16" r="5.9" stroke-width="1.9" stroke="#8ff0ff"/><circle cx="16" cy="16" r="3.4" stroke-width=".6" opacity=".7"/></g></svg>`, ICO_AL = `<svg class="tx-ico3" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><defs><linearGradient id="alBg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f05a12"/><stop offset="1" stop-color="#dd2a2a"/></linearGradient><linearGradient id="alBell2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#fdf0c6"/></linearGradient></defs><rect width="32" height="32" rx="7.5" fill="url(#alBg2)"/><path d="M16 5.4v1.8" stroke="#fffdf6" stroke-width="1.7" stroke-linecap="round"/><path d="M9.3 21V15a6.7 6.7 0 0 1 13.4 0v6l2.1 1.3c.6.4.3 1.4-.4 1.4H7.6c-.7 0-1-1-.4-1.4z" fill="url(#alBell2)"/><circle cx="16" cy="26.4" r="1.9" fill="#fff"/><text x="16" y="19.6" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e8501a" font-family="Arial,sans-serif">$</text><circle cx="23.2" cy="8.8" r="3.7" fill="#ffd12a" stroke="#f3b200" stroke-width=".8"/><path d="M23.2 6.9v2.2" stroke="#e8501a" stroke-width="1.3" stroke-linecap="round"/><circle cx="23.2" cy="10.7" r=".7" fill="#e8501a"/></svg>`;
     const mi = (v, t, ic, k, on) => `<div class="mi${on ? " on" : ""}" data-v="${v}">${ic || ""}<span>${t}</span>${k ? `<span class="mk">${k}</span>` : ""}</div>`;
     $("btTypeBtn").onclick = () => hmenu($("btTypeBtn"), mi("candles", "Chandeliers", ICON.candles, "", !P.line) + mi("line", "Ligne", SV('<g fill="none" stroke="currentColor"><path d="M4.5 19.5l6-7 5 4 8-10"/></g>'), "Alt+Maj+L", !!P.line), (v) => { P.line = v === "line"; LS.set("bt-prefs", P); applyPrefs(); });
-    $("btFxBtn").onclick = () => hmenu($("btFxBtn"), '<div class="mh">Indicateurs</div>' + mi("news", (P.news === false ? "Afficher" : "Masquer") + " les news (Forex Factory)", SV('<g fill="none" stroke="currentColor"><path d="M4.5 18.5l5-6 4 3 4-7 6 5"/></g>'), "Alt+Maj+N") + mi("newsWin", "Fenêtre News / détails", SV('<g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M8.5 10.5h11M8.5 14h11M8.5 17.5h7"/></g>'), "Alt+D") + mi("jarvis", "Jarvis (protocole d'analyse)", SV('<g fill="none" stroke="currentColor"><path d="M15.5 4.5l-8 11h6l-1 8 8-11h-6z"/></g>'), "Alt+Maj+J") + '<div class="ms"></div>' + mi("alerts", "Alertes de prix", SV('<g fill="none" stroke="currentColor"><path d="M14 4.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/></g>'), "Alt+Maj+A") + mi("wl", "Watchlist", SV('<g fill="none" stroke="currentColor"><circle cx="14" cy="14" r="8.5"/><path d="M14 10v8M10 14h8"/></g>'), "Alt+W"),
-      (v) => { if (v === "news") KRUN.news(); else if (v === "newsWin") $("btNewsBtn").click(); else if (v === "jarvis") $("btJarvisBtn").click(); else if (v === "alerts") KRUN.alerts(); else if (v === "wl") KRUN.watchlist(); });
+    $("btFxBtn").onclick = () => hmenu($("btFxBtn"), '<div class="mh">Indicateurs</div>' + mi("news", (P.news === false ? "Afficher" : "Masquer") + " les news (Forex Factory)", SV('<g fill="none" stroke="currentColor"><path d="M4.5 18.5l5-6 4 3 4-7 6 5"/></g>'), "Alt+Maj+N") + mi("newsWin", "Fenêtre News / détails", SV('<g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M8.5 10.5h11M8.5 14h11M8.5 17.5h7"/></g>'), "Alt+D") + mi("jarvis", "Jarvis (protocole d'analyse)", ICO_JV, "Alt+Maj+J") + '<div class="ms"></div>' + mi("alerts", "Alertes de prix", ICO_AL, "Alt+Maj+A") + mi("wl", "Watchlist", SV('<g fill="none" stroke="currentColor"><circle cx="14" cy="14" r="8.5"/><path d="M14 10v8M10 14h8"/></g>'), "Alt+W")
+        + '<div class="ms"></div><div class="mh">Mes indicateurs (Pine Script / TypeScript)</div>' + indList().map((x) => mi("ind:" + x.id, esc(x.name) + ` <span class="tx-badge ${x.lang}">${x.lang === "pine" ? "Pine" : "TS"}</span>`, `<span class="tx-chk">${x.on ? "✓" : ""}</span>`, "", x.on)).join("")
+        + mi("indset", "Réglages des indicateurs…", SV('<g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g>')) + mi("indide", "Éditeur de code (nouveau / modifier)…", SV('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 9.5l-5 4.5 5 4.5M17.5 9.5l5 4.5-5 4.5M15.5 6.5l-3 15"/></g>')),
+      (v) => { if (v === "news") KRUN.news(); else if (v === "newsWin") $("btNewsBtn").click(); else if (v === "jarvis") $("btJarvisBtn").click(); else if (v === "alerts") KRUN.alerts(); else if (v === "wl") KRUN.watchlist();
+        else if (v === "indset") openPrefs("ind"); else if (v === "indide") openIde(); else if (v.startsWith("ind:")) indAct("on", v.slice(4), () => {}); });
     $("btTfMore").onclick = () => { const G = [["Secondes", ["1s", "5s", "15s", "30s"]], ["Minutes", ["1", "2", "3", "5", "15"]], ["Heures", ["60", "240"]], ["Jours", ["1440", "10080", "43200"]], ["Mois", ["129600", "259200", "518400"]]];
       hmenu($("btTfMore"), G.map(([h, L]) => `<div class="mh">${h}</div><div class="mgrid">${L.map((v) => { const b = document.querySelector(`#btTfs [data-tf="${v}"]`); return b ? mi(v, b.textContent, "", "", b.classList.contains("on")) : ""; }).join("")}</div>`).join(""), (v) => { const b = document.querySelector(`#btTfs [data-tf="${v}"]`); if (b) b.click(); }); };
     $("btUndo").onclick = () => undoRedo(false); $("btRedo").onclick = () => undoRedo(true);
@@ -6687,7 +7251,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const up = L.filter((x) => !x.taken && x.price > last).sort((a, b) => a.price - b.price)[0], dn = L.filter((x) => !x.taken && x.price < last).sort((a, b) => b.price - a.price)[0];
       const rows = L.slice().sort((a, b) => b.price - a.price).map((x) => `<tr><td>${esc(x.name)}</td><td style="text-align:right">${x.price.toFixed(2)}</td><td>${x.taken ? '<span style="color:#26a69a">pris ✓</span>' : "intact"}</td><td style="text-align:right">${(x.price - last >= 0 ? "+" : "") + (x.price - last).toFixed(2)}</td></tr>`).join("");
       const zr = Z.map((z) => `<tr><td>${esc(z.name)}</td><td colspan="3">${z.lo.toFixed(2)} - ${z.hi.toFixed(2)} (${(z.hi - z.lo).toFixed(2)} pts)${last >= z.lo && last <= z.hi ? " · prix dedans" : ""}</td></tr>`).join("");
-      modal("🤖 Jarvis · " + S.sym + " " + hm(now), `<p class="rv-mut" style="margin:0 0 10px">Analyse sur les bougies déjà rejouées (rien après ${hm(now)} NY). ${mac}. Dernier prix ${last.toFixed(2)}.</p>
+      modal(`<span class="tx-jvt"><svg class="tx-ico" width="22" height="22" viewBox="0 0 32 32"  aria-hidden="true"><defs><radialGradient id="jvBg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0d4a73"/><stop offset=".7" stop-color="#072640"/><stop offset="1" stop-color="#020c18"/></radialGradient><filter id="jvGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="16" cy="16" r="16" fill="url(#jvBg)"/><g fill="none" stroke="#3fd0ff" stroke-linecap="round" filter="url(#jvGlow)"><circle cx="16" cy="16" r="13.6" stroke-width=".7" stroke-dasharray="14 2 5 2 1 2" opacity=".85"/><circle cx="16" cy="16" r="11.4" stroke-width="1.5" stroke-dasharray=".9 1.3" opacity=".7"/><path d="M16 6.8a9.2 9.2 0 0 1 9.2 9.2" stroke-width="1.5"/><path d="M6.8 16A9.2 9.2 0 0 0 16 25.2" stroke-width="1.5"/><path d="M8.6 10.4a9.2 9.2 0 0 1 2-1.9" stroke-width="2.2" stroke="#7fe6ff"/><circle cx="16" cy="16" r="5.9" stroke-width="1.9" stroke="#8ff0ff"/><circle cx="16" cy="16" r="3.4" stroke-width=".6" opacity=".7"/></g></svg></span>Jarvis · ` + S.sym + " " + hm(now), `<p class="rv-mut" style="margin:0 0 10px">Analyse sur les bougies déjà rejouées (rien après ${hm(now)} NY). ${mac}. Dernier prix ${last.toFixed(2)}.</p>
         <table class="tx-jt"><tr><th>Niveau</th><th>Prix</th><th>État</th><th>Écart</th></tr>${rows || '<tr><td colspan="4">Aucune session terminée pour l\'instant.</td></tr>'}${zr}</table>
         <p style="margin:10px 0 0">Prochaines cibles : <b>${up ? `${esc(up.name)} ${up.price.toFixed(2)} (+${(up.price - last).toFixed(2)})` : "—"}</b> au-dessus · <b>${dn ? `${esc(dn.name)} ${dn.price.toFixed(2)} (${(dn.price - last).toFixed(2)})` : "—"}</b> en dessous.</p>`,
         `<button data-m="clr" class="ghost">Effacer les dessins Jarvis</button><span class="tx-sp"></span><button data-m="x">OK</button>`).onclick = (e) => { const a = e.target.dataset.m; if (a === "clr") { shapes = shapes.filter((s) => !s.jarvis); saveDrawings(); tree(); closeModal(); msg("Dessins Jarvis effacés."); } else if (a === "x") closeModal(); };
@@ -6794,7 +7358,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     "Jour": "Day", "Entrée": "Entry", "Sortie": "Exit", "Contrat": "Contract", "Sens": "Side", "Qté": "Qty", "Prix": "Price", "Durée": "Duration", "Nom": "Name", "Compte": "Account", "Jours": "Days", "compte cramé (MLL)": "account blown (MLL)",
     "Dans le backtesteur, le drapeau « Clôturer la session » enregistre ici le récapitulatif (P&L, win rate, RR, durée, jours, payouts possibles).": "In the backtester, the « Close session » flag saves the summary here (P&L, win rate, RR, duration, days, possible payouts).",
     // backtesteur : barre du haut, chart, outils
-    "Synchro données": "Sync data", "Importer CSV": "Import CSV", "Dossier": "Folder", "Charger": "Load", "Mise en page": "Layout", "💾 Sessions": "💾 Sessions", "⚙ Préférences": "⚙ Preferences", "Arborescence des objets": "Object tree",
+    "Synchro données": "Sync data", "Importer CSV": "Import CSV", "Dossier": "Folder", "Charger": "Load", "Mise en page": "Layout", "💾 Sessions": "💾 Sessions", "⚙ Préférences": "⚙ Preferences", "Paramètres": "Settings", "Paramètres du chart": "Chart settings", "Paramètres enregistrés.": "Settings saved.", "Mes indicateurs (Pine Script / TypeScript)": "My indicators (Pine Script / TypeScript)", "Réglages des indicateurs…": "Indicator settings…", "Éditeur de code (nouveau / modifier)…": "Code editor (new / edit)…", "Arborescence des objets": "Object tree",
     "Type de compte du backtest (prop firm / classique)": "Backtest account type (prop firm / classic)", "Remettre le compte démo à zéro": "Reset the demo account", "Clôturer la session : récapitulatif dans le Journal backtest": "Close session: summary in the Backtest journal", "Télécharger les bougies TopstepX": "Download TopstepX candles", "Ouvrir le dossier des données": "Open the data folder",
     "Chandeliers": "Candles", "Heure de départ (New York)": "Start time (New York)", "Recommencer la journée": "Restart the day", "Bougie précédente (←)": "Previous candle (←)", "Lecture / pause (Espace)": "Play / pause (Space)", "Bougie suivante (→)": "Next candle (→)", "Mises en page (Ctrl+S = enregistrer)": "Layouts (Ctrl+S = save)",
     "Sessions de backtest enregistrées": "Saved backtest sessions", "Préférences du chart": "Chart preferences", "News USD (Maj+W = news suivante)": "USD news (Shift+W = next news)", "2 charts côte à côte : NQ + ES synchronisés sur le replay": "2 charts side by side: NQ + ES synced on the replay",

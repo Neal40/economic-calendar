@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.50.0] — 2026-11-13
+### Ajouté
+- **Backtesteur › Indicateurs Pine Script / TypeScript** : section « Mes indicateurs » dans le menu ƒx (cocher = afficher sur le chart), onglet **Paramètres › Indicateurs** (activer, réglages des `input`, modifier, supprimer) et icône `</>` à côté de Paramètres qui ouvre un **éditeur de code** plein écran (liste, numéros de ligne, ▶ Tester, Enregistrer, Enregistrer + afficher, import / export `.pine` / `.ts`, JS généré, Ctrl+S / Ctrl+Entrée). Moteur exécuté bougie par bougie : sous-ensemble Pine v5 traduit en JS (`indicator`, `input.*`, `plot` ligne / escalier / histogramme / cercles / aire, `hline`, `plotshape`, `plotchar`, `var`, `:=`, `if` / `for` / `while`, fonctions `=>`, tuples, `x[n]`, `na` / `nz`, `color.*`, `math.*`, ~40 fonctions `ta.*`) ; TypeScript / JavaScript avec la même API (types retirés avant exécution). Indicateurs « sous le chart » (RSI…) dans une bande en bas. Exemples : EMA 20 / 50, RSI, VWAP de séance. `label`, `line`, `box`, `fill`, `bgcolor`, `request.security`, `strategy.*` ignorés avec avertissement.
+- **Ordres en attente** : étiquette « Limit +1 · P&L · × » sur chaque ligne d'ordre ; la croix annule l'ordre, glisser l'étiquette le déplace.
+- **Dessins Position longue / courte** : section Position dans les paramètres du dessin — contrat, taille de compte, taille de position en contrats fixes, risque en $ ou en % du compte (contrats calculés selon le stop, arrondis vers le bas) ; cible / stop affichés en $ et en % du compte.
+- **Pavé numérique** : 1 / 2 / 3 / 5 / 15 = minutes, 60 = H1, 240 = H4, validé par Entrée ou tout seul après 1 s (avec ou sans Verr. Num) ; 1D / 1W / 4H / H4 reconnus au clavier.
+### Modifié
+- Icônes Jarvis (HUD cyan) et Alertes de prix (cloche orange) ; bouton « Préférences » renommé **Paramètres**.
+
 ## [1.49.0] — 2026-11-13
 ### Ajouté
 - **Comptes › Tradeify** (sous My Funded Futures) : bouton « Synchroniser » qui récupère depuis le dashboard Tradeify (fenêtre de connexion gardée, lecture seule) les comptes (solde, limites, drawdown, éligibilité payout et règles : profit minimum, jours, consistance, microscalping), les trades du Journal Tradeify, les commandes payées (coupon compris) et les payouts. Page au format MFFU (courbe, jours, trades, achats liés). Avertissement si le Journal Tradeify ne contient pas tous les trades du compte.
