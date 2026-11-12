@@ -198,7 +198,7 @@ body{background:#060607}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-weight:500;color:#8b8d98;font-size:11.5px;letter-spacing:.04em;padding:7px 8px;border-bottom:1px solid #1f1f25;text-transform:uppercase}
 .tbl td{padding:5px 6px;border-bottom:1px solid #17171b}
-.tbl input,.tbl select,.pform input,.pform select{width:100%;background:#141418;border:1px solid #24242b;border-radius:6px;color:#e3e4ea;padding:6px 8px;font-size:13px}
+.tbl input,.tbl select,.pform input,.pform select,.pform textarea{font-family:inherit;width:100%;background:#141418;border:1px solid #24242b;border-radius:6px;color:#e3e4ea;padding:6px 8px;font-size:13px}
 .tbl input[type=checkbox]{width:auto}
 .tbl .num{text-align:right;font-size:inherit;font-weight:inherit;line-height:inherit;margin-bottom:0}
 .tbl td.x{width:34px}
@@ -250,7 +250,7 @@ body.noir .kpi{border-radius:18px}
 body.noir .ptitle{letter-spacing:.16em;color:#a3a6ae}
 body.noir .btn{background:#fff;color:#08080a;border-radius:999px;padding:9px 18px;box-shadow:0 8px 24px rgba(255,255,255,.12)}
 body.noir .btn.gray{background:rgba(255,255,255,.05);color:#e8e9ec;border:1px solid rgba(255,255,255,.12);box-shadow:none}
-body.noir .tbl input,body.noir .tbl select,body.noir .pform input,body.noir .pform select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px}
+body.noir .tbl input,body.noir .tbl select,body.noir .pform input,body.noir .pform select,body.noir .pform textarea{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px}
 body.noir .pos{color:#3ddc97}
 body.noir .rv-tabs{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:4px}
 body.noir .rv-tab{border-radius:999px}
@@ -419,6 +419,19 @@ body.th-ict .side .who .av{box-shadow:0 0 0 1px rgba(255,255,255,.6),0 0 26px rg
 body.th-ict .day,body.th-ict .wrow{border-radius:2px}
 @media (prefers-reduced-motion:reduce){body.thx #thFx *,body.thx #thTicker .tk,body.th-ict .side .who .av{animation:none!important;stroke-dashoffset:0!important}}
 /* sélecteur de thème (Paramètres › Profil › Apparence) */
+.pcard{display:flex;gap:20px;align-items:flex-start}
+.pcard .pav{width:84px;height:84px;flex:none;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(127,127,127,.3)}.pcard .pav img{width:100%;height:100%;object-fit:cover}
+.pcard .pn{font-size:22px;font-weight:700;line-height:1.2}.pcard .ph{color:#8c8f99;font-size:14px;margin-top:2px}
+.pcard .pb{margin:10px 0 0;white-space:pre-wrap;line-height:1.55;max-width:760px}.pcard .pb.empty{color:#6f727d;font-style:italic}
+.pchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pchip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:7px;border:1px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);color:inherit;cursor:default}
+.pstrats .pchip{cursor:pointer;opacity:.75}.pstrats .pchip.on{opacity:1;background:#2b4bff;border-color:#4d6bff;color:#fff}
+.plinks{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.plink{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1px solid rgba(127,127,127,.3);background:rgba(127,127,127,.07);color:inherit;text-decoration:none;font-size:13px;font-weight:600;transition:transform .15s,background .15s}
+.plink:hover{transform:translateY(-1px);background:rgba(127,127,127,.16)}.plink svg{width:16px;height:16px;flex:none}
+.psoc{display:flex;flex-direction:column;gap:8px}.psoc .row{display:flex;align-items:center;gap:10px}.psoc .row svg{width:18px;height:18px;flex:none;opacity:.8}.psoc .row input{flex:1}
+.psoc .row a{font-size:12.5px;font-weight:600;text-decoration:none;color:#5b7cff;white-space:nowrap}.psoc .row a[hidden]{display:none}
+body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
 .th-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin:4px 0 14px}
 .th-card{position:relative;cursor:pointer;border-radius:14px;overflow:hidden;border:1px solid rgba(127,127,127,.25);background:#111;transition:transform .18s,box-shadow .18s;text-align:left;padding:0;color:inherit;font:inherit}
 .th-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35)}
@@ -1175,7 +1188,8 @@ table.tbl:has(#subT){min-width:900px}
 <section class="view" id="v-payouts"><div class="page" id="cp-payouts"></div></section>
 <section class="view" id="v-recus"><div class="page" id="cp-recus"></div></section>
 <section class="view" id="v-profil"><div class="page">
-  <h2>Profil</h2><p class="lead">Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.</p>
+  <h2>Profil</h2><p class="lead">Ton nom, ton handle, ton logo, ta bio, tes stratégies et tes réseaux.</p>
+  <div class="panel pcard" id="pCard"></div>
   <div class="panel"><div class="pform">
     <label>Nom affiché</label><input id="bName" placeholder="Neal">
     <label>Handle</label><input id="bHandle" placeholder="@ton_handle">
@@ -1184,6 +1198,9 @@ table.tbl:has(#subT){min-width:900px}
       <input type="file" id="bImg" accept="image/*" style="flex:1;background:none;border:none;padding:0"><button class="btn gray" id="bNoImg" type="button">Retirer</button></div>
     <label>Texte du logo (sans image)</label><input id="bLogo" maxlength="4">
     <label>Lien Notion (bouton du journal)</label><input id="bNotion" placeholder="https://www.notion.so/...">
+    <label>Bio</label><textarea id="bBio" rows="3" maxlength="400" placeholder="Décris-toi en quelques mots…" style="resize:vertical"></textarea>
+    <label>Stratégies de trading</label><div class="pstrats" id="bStrats"></div>
+    <label>Réseaux sociaux</label><div class="psoc" id="bSoc"></div>
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Skill IA — Profil prop firm</div>
@@ -1855,15 +1872,41 @@ $("wSave").onclick=()=>{commitWeek();close("ovWeek");render()};
 $("ovWeek").addEventListener("input",()=>{ if(editWeek&&$("ovWeek").classList.contains("show")) commitWeek(); });
 let bImg=null;
 const prevBrand=()=>{$("bPrev").innerHTML=bImg?`<img src="${bImg}" alt="">`:esc($("bLogo").value.toUpperCase())};
+/* Profil : bio, stratégies de trading, réseaux sociaux (liens cliquables, ouverts dans le navigateur) */
+const STRATS=["SMC/ICT","Orderflow","Indicateurs","EA/Bots","Chartisme","Price action","Scalping","Swing"];
+const SOC=[["x","X","https://x.com/…",'<path fill="currentColor" d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/>'],
+  ["discord","Discord","https://discord.gg/…",'<path fill="currentColor" d="M19.6 5.3A16.5 16.5 0 0 0 15.5 4l-.5 1a15 15 0 0 0-6 0l-.5-1a16.5 16.5 0 0 0-4.1 1.3C1.8 9.2 1.1 13 1.4 16.7a16.6 16.6 0 0 0 5 2.5l1.1-1.7c-.6-.2-1.2-.5-1.7-.8l.4-.3a11.8 11.8 0 0 0 11.6 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.7a16.6 16.6 0 0 0 5-2.5c.4-4.3-.7-8-2.9-11.4zM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2z"/>'],
+  ["youtube","YouTube","https://youtube.com/…",'<path fill="currentColor" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8zM9.8 15V9l5.8 3z"/>'],
+  ["twitch","Twitch","https://twitch.tv/…",'<path fill="currentColor" d="M4 2 2.5 6v14h5v2.5h3L13 20h4l5-5V2zm16 12-3 3h-4.5l-2.5 2.5V17H6V4h14zm-4.5-6.5h2v6h-2zm-5 0h2v6h-2z"/>'],
+  ["instagram","Instagram","https://instagram.com/…",'<path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM17.3 5.5a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM12 2.2c-2.7 0-3 0-4 .1-3.8.2-5.5 2-5.7 5.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.2 3.7 1.9 5.5 5.7 5.7 1 .1 1.3.1 4 .1s3 0 4-.1c3.7-.2 5.5-2 5.7-5.7.1-1 .1-1.3.1-4s0-3-.1-4c-.2-3.7-2-5.5-5.7-5.7-1-.1-1.3-.1-4-.1zm0 1.8c2.6 0 2.9 0 4 .1 2.7.1 3.9 1.4 4 4 .1 1 .1 1.3.1 3.9s0 2.9-.1 3.9c-.1 2.6-1.3 3.9-4 4-1 .1-1.4.1-4 .1s-2.9 0-3.9-.1c-2.7-.1-3.9-1.4-4-4C4 14.9 4 14.6 4 12s0-2.9.1-3.9c.1-2.6 1.3-3.9 4-4C9.1 4 9.4 4 12 4z"/>'],
+  ["tiktok","TikTok","https://tiktok.com/@…",'<path fill="currentColor" d="M16.6 2h-3.3v13.4a2.9 2.9 0 1 1-2-2.8V9.2a6.2 6.2 0 1 0 5.3 6.1V8.5a7.6 7.6 0 0 0 4.4 1.4V6.6a4.3 4.3 0 0 1-4.4-4.6z"/>']];
+const ico=d=>`<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const urlOk=u=>{ u=String(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; try{ const x=new URL(u); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
+const shortUrl=u=>{ try{ const x=new URL(u); return (x.host.replace(/^www\./,"")+x.pathname).replace(/\/$/,""); }catch(e){ return u; } };
+if(S.brand&&S.brand.social===undefined){ S.brand.social={x:"https://x.com/ICT_Neal",discord:"https://discord.gg/VnXVwkHf",instagram:"https://www.instagram.com/ict_neal/"}; S.brand.strats=S.brand.strats||["SMC/ICT"]; S.brand.bio=S.brand.bio||""; }
+let bStr=[];
+function renderPCard(){ const b=S.brand||{}, soc=b.social||{}, L=SOC.filter(([k])=>urlOk(soc[k]));
+  $("pCard").innerHTML=`<div class="pav">${b.img?`<img src="${b.img}" alt="">`:`<div class="logo" style="width:100%;height:100%">${esc(b.logo||"")}</div>`}</div><div style="flex:1;min-width:0">
+    <div class="pn">${esc(b.name||"Trader")}</div><div class="ph">${esc(b.handle||"")}</div>
+    <div class="pb${b.bio?"":" empty"}">${b.bio?esc(b.bio):"Pas encore de bio : écris-la ci-dessous."}</div>
+    ${(b.strats||[]).length?`<div class="pchips">${b.strats.map(t=>`<span class="pchip">${esc(t)}</span>`).join("")}</div>`:""}
+    ${L.length?`<div class="plinks">${L.map(([k,n,,d])=>`<a class="plink" href="${esc(urlOk(soc[k]))}" target="_blank" rel="noopener noreferrer" title="${esc(urlOk(soc[k]))}">${ico(d)}${esc(n)}</a>`).join("")}</div>`:""}</div>`; }
+function drawStrats(){ $("bStrats").innerHTML=[...new Set(STRATS.concat(bStr))].map(t=>`<button type="button" class="pchip${bStr.includes(t)?" on":""}" data-s="${esc(t)}">${esc(t)}</button>`).join(""); }
+$("bStrats").onclick=e=>{ const c=e.target.closest(".pchip"); if(!c) return; const t=c.dataset.s; bStr=bStr.includes(t)?bStr.filter(x=>x!==t):bStr.concat(t); drawStrats(); };
+$("bSoc").innerHTML=SOC.map(([k,n,ph,d])=>`<div class="row" title="${n}">${ico(d)}<input id="bS_${k}" placeholder="${ph}"><a id="bSL_${k}" target="_blank" rel="noopener noreferrer" hidden>Ouvrir ↗</a></div>`).join("");
+const socLink=k=>{ const u=urlOk($("bS_"+k).value), a=$("bSL_"+k); a.hidden=!u; if(u) a.href=u; };
+SOC.forEach(([k])=>$("bS_"+k).addEventListener("input",()=>socLink(k)));
 function loadProfile(){ $("bName").value=S.brand.name||""; $("bHandle").value=S.brand.handle||""; $("bLogo").value=S.brand.logo||""; $("bNotion").value=S.brand.notion||"";
-  bImg=S.brand.img||null; $("bImg").value=""; prevBrand(); $("bOk").textContent=""; }
+  $("bBio").value=S.brand.bio||""; bStr=(S.brand.strats||[]).slice(); drawStrats(); const soc=S.brand.social||{}; SOC.forEach(([k])=>{ $("bS_"+k).value=soc[k]||""; socLink(k); });
+  bImg=S.brand.img||null; $("bImg").value=""; prevBrand(); $("bOk").textContent=""; renderPCard(); }
 $("bLogo").oninput=prevBrand; $("bNoImg").onclick=()=>{bImg=null;prevBrand()};
 $("bImg").onchange=e=>{const f=e.target.files[0]; if(!f) return; const im=new Image(); im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;
   const x=c.getContext("2d"),m=Math.min(im.width,im.height); x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,256,256); bImg=c.toDataURL("image/jpeg",.85); prevBrand(); URL.revokeObjectURL(im.src)};
   im.src=URL.createObjectURL(f)};
 $("bCancel").onclick=loadProfile;
-$("bSave").onclick=()=>{S.brand={name:$("bName").value.trim(),handle:$("bHandle").value.trim(),logo:$("bLogo").value.trim().toUpperCase(),img:bImg,notion:$("bNotion").value.trim()};
-  save();render();shell();$("bOk").textContent="Enregistré ✓"};
+$("bSave").onclick=()=>{ const social={}; SOC.forEach(([k])=>{ const u=urlOk($("bS_"+k).value); if(u) social[k]=u; });
+  S.brand={name:$("bName").value.trim(),handle:$("bHandle").value.trim(),logo:$("bLogo").value.trim().toUpperCase(),img:bImg,notion:$("bNotion").value.trim(),bio:$("bBio").value.trim(),strats:bStr.slice(),social};
+  save();render();shell();loadProfile();$("bOk").textContent="Enregistré ✓"};
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */

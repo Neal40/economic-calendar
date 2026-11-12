@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.44.0] — 2026-11-12
+### Ajouté
+- **Profil** : carte de profil (logo, nom, handle, bio, stratégies, boutons des réseaux cliquables qui s'ouvrent dans le navigateur) ; champs **Bio**, **Stratégies de trading** (SMC/ICT, Orderflow, Indicateurs, EA/Bots, Chartisme, Price action, Scalping, Swing — clic pour activer) et **Réseaux sociaux** (X, Discord, YouTube, Twitch, Instagram, TikTok) avec lien « Ouvrir ↗ » ; liens vérifiés (http/https seulement, https ajouté si absent).
+
 ## [1.43.0] — 2026-11-12
 ### Ajouté
 - **Profil › Skill IA › Coach IA** (app Windows / Mac) : Claude lit le rapport complet (score, critères, stratégie, payouts, comptes) et rend un plan — statut, 3 points faibles chiffrés, plan de la semaine, ce qu'il faut garder. Discipline, risque et process seulement, jamais de sens du marché. Clé API Claude chiffrée sur le PC (`safeStorage`, canaux `ai:*`) ; dernière analyse gardée. Version web : « Copier le rapport pour Claude ».
