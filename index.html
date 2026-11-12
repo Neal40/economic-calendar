@@ -161,7 +161,7 @@ body{background:#060607}
 .grp.closed .items{display:none}
 .items{padding:6px 0 2px 0}
 .nav{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px 9px 26px;border-radius:6px;color:#e3e4ea;font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:none;border:none;background:none;text-align:left;margin:2px 0}
-.nav .ic{width:15px;height:15px;opacity:.9}
+.nav .ic{width:15px;height:15px;opacity:.9}.nav .ic.pf{opacity:1;border-radius:3px;flex:none}
 
 .nav:hover{background:#17171c}
 .nav.on{background:#2f54eb;color:#fff}
@@ -644,8 +644,8 @@ table.tbl:has(#subT){min-width:900px}
 .rv-gtools button{background:#23242b;border:1px solid #2f3038;color:#d9dae0;border-radius:7px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
 .rv-gtools button.del{color:#ff8a8a}
 /*TX-START*/
-:root{--tx-bg:#1c1e23;--tx-panel:rgba(0,0,0,.4);--tx-pb:#2a292f;--tx-fg:#e6e8ef;--tx-tv:#0c0e12;--tx-tvfg:#e6e8ef;--tx-acc:#ebbc4d;--tx-acc-h:#fad68a;--tx-acc-sub:rgba(235,188,77,.16);--tx-menu:#222428;--tx-hov:#2d2f32;--tx-line:#4a4d54;--tx-mut:#7d818a;--tx-txt2:#cfd2da;--tx-txt3:#bfc3cb;--tx-in:#0c0e12;--tx-buy:#2d8337;--tx-buy-h:#1e6e2a;--tx-sell:#bd3f3b;--tx-sell-h:#9f2b27;--tx-profit:#7ac880;--tx-loss:#ff8d84;--tx-grey:#565656;--tx-notch:#111215}
-#v-backtest .tx{--tx-bg:#1c1e23;--tx-panel:rgba(0,0,0,.4);--tx-pb:#2a292f;--tx-fg:#e6e8ef;--tx-tv:#0c0e12;--tx-tvfg:#e6e8ef;--tx-acc:#ebbc4d;--tx-acc-h:#fad68a;--tx-acc-sub:rgba(235,188,77,.16);--tx-menu:#222428;--tx-hov:#2d2f32;--tx-line:#4a4d54;--tx-mut:#7d818a;--tx-txt2:#cfd2da;--tx-txt3:#bfc3cb;--tx-in:#0c0e12;--tx-buy:#2d8337;--tx-buy-h:#1e6e2a;--tx-sell:#bd3f3b;--tx-sell-h:#9f2b27;--tx-profit:#7ac880;--tx-loss:#ff8d84;--tx-grey:#565656;--tx-notch:#111215;
+:root{--tx-bg:#1c1e23;--tx-panel:rgba(0,0,0,.4);--tx-pb:#2a292f;--tx-fg:#e6e8ef;--tx-tv:#0c0e12;--tx-tvfg:#e0e0e0;--tx-acc:#df981c;--tx-acc-h:#f0ad3a;--tx-acc-sub:rgba(223,152,28,.16);--tx-menu:#0c0e12;--tx-hov:#22262f;--tx-line:#2a292f;--tx-mut:#7d818a;--tx-txt2:#cfd2da;--tx-txt3:#bfc3cb;--tx-in:#0c0e12;--tx-buy:#2d8337;--tx-buy-h:#1e6e2a;--tx-sell:#bd3f3b;--tx-sell-h:#9f2b27;--tx-profit:#7ac880;--tx-loss:#ff8d84;--tx-grey:#565656;--tx-notch:#111215}
+#v-backtest .tx{--tx-bg:#1c1e23;--tx-panel:rgba(0,0,0,.4);--tx-pb:#2a292f;--tx-fg:#e6e8ef;--tx-tv:#0c0e12;--tx-tvfg:#e0e0e0;--tx-acc:#df981c;--tx-acc-h:#f0ad3a;--tx-acc-sub:rgba(223,152,28,.16);--tx-menu:#0c0e12;--tx-hov:#22262f;--tx-line:#2a292f;--tx-mut:#7d818a;--tx-txt2:#cfd2da;--tx-txt3:#bfc3cb;--tx-in:#0c0e12;--tx-buy:#2d8337;--tx-buy-h:#1e6e2a;--tx-sell:#bd3f3b;--tx-sell-h:#9f2b27;--tx-profit:#7ac880;--tx-loss:#ff8d84;--tx-grey:#565656;--tx-notch:#111215;
   display:flex;flex-direction:column;height:100vh;background:var(--tx-bg);color:var(--tx-fg);font-family:"Roboto Condensed","Arial Narrow",sans-serif;font-size:10.8px;padding:0 5.4px 5px;gap:0;overflow:hidden}
 #v-backtest .tx button{font-family:inherit;cursor:pointer}
 .tx-top{display:flex;align-items:center;gap:4px;padding:4px 0;height:42px;flex:none;min-width:0;overflow:hidden}
@@ -855,6 +855,130 @@ table.tbl:has(#subT){min-width:900px}
 .tx-set .lv{display:grid;grid-template-columns:20px 80px 40px;gap:6px;align-items:center;margin:3px 0}.tx-set .lvs{max-height:220px;overflow:auto;display:grid;grid-template-columns:1fr 1fr}
 .tx-set .actions{display:flex;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:8px;border-top:1px solid var(--tx-line);padding-top:12px}
 .tx-set .ghost{background:transparent;color:var(--tx-txt2);border:1px solid var(--tx-line);border-radius:4px;padding:7px 12px;cursor:pointer}.tx-set .primary{background:var(--tx-acc);color:#0c0e12;border:none;border-radius:4px;padding:7px 18px;cursor:pointer}
+
+/* ---------- v1.39 : interface TopstepX exacte (couleurs relevées sur les captures) ---------- */
+.tx-mid{position:relative}
+.tx-head{gap:1px}.tx-head .tx-hb{width:34px;height:34px}.tx-head .tx-hb svg{width:26px;height:26px}
+.tx-tbi{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 8px}.tx-tbi svg{width:22px;height:22px;flex:none}
+.tx-car{display:inline-block;width:7px;height:7px;border-right:1.4px solid currentColor;border-bottom:1.4px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:6px;opacity:.85}
+.tx-hb.tx-dd{width:auto!important;padding:0 6px}.tx-tb.tx-dd{display:inline-flex;align-items:center}
+.tx-tfmore{width:22px!important}.tx-tfmore .tx-car{margin:0}
+.tx-tfs button.on{background:none!important;color:var(--tx-acc)!important}
+.tx-tools button.on{color:var(--tx-acc)}
+.tx-tools button.tg.on svg{background:var(--tx-acc);color:#000;border-radius:4px}
+.tx-tools .tx-exp{font-size:12px;width:12px}
+/* menus déroulants des outils */
+.tx-fly{background:#0c0e12;border:1px solid #1d2026;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.6);padding:4px 0;min-width:280px;color:#e0e0e0;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif}
+.tx-fly .fh{padding:12px 16px 6px;font-size:11px;letter-spacing:.05em;color:#8d8e8f;font-weight:500}
+.tx-fly .fh~.fh{border-top:1px solid #2a292f;margin-top:4px;padding-top:14px}
+.tx-fly .fi{height:38px;gap:12px;padding:0 12px 0 10px}
+.tx-fly .fi:hover{background:#22262f}
+.tx-fly .fi svg{width:28px;height:28px}
+.tx-fly .fi.on{color:var(--tx-acc)}
+.tx-fly .fk{color:#77787a;font-size:12px}
+.tx-fly .fs{color:transparent;font-size:16px;width:22px}
+.tx-fly .fi:hover .fs{color:#77787a}.tx-fly .fs:hover{background:none;color:#e0e0e0!important}
+.tx-fly .fs.on{color:#8d651f!important}
+.tx-fly .ftg{display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 14px;border-top:1px solid #2a292f;margin-top:4px;cursor:pointer}
+.tx-sw{width:34px;height:18px;border-radius:9px;background:#3a3d43;position:relative;flex:none;transition:background .15s}.tx-sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#e0e0e0;transition:left .15s}
+.tx-sw.on{background:var(--tx-acc)}.tx-sw.on::after{left:18px}
+/* menus du haut (type de chart, indicateurs, instantané, unités) */
+.tx-hmenu{position:fixed;z-index:62;min-width:220px;background:#0c0e12;border:1px solid #1d2026;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.6);padding:4px 0;color:#e0e0e0;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif}
+.tx-hmenu[hidden]{display:none}
+.tx-hmenu .mh{padding:10px 16px 6px;font-size:11px;letter-spacing:.05em;color:#8d8e8f;text-transform:uppercase}
+.tx-hmenu .mi{display:flex;align-items:center;gap:12px;height:38px;padding:0 16px 0 12px;cursor:pointer;white-space:nowrap}
+.tx-hmenu .mi:hover{background:#22262f}.tx-hmenu .mi.on{color:var(--tx-acc)}
+.tx-hmenu .mi svg{width:24px;height:24px;flex:none}.tx-hmenu .mi .mk{margin-left:auto;padding-left:24px;color:#77787a;font-size:12px}
+.tx-hmenu .ms{height:1px;background:#2a292f;margin:4px 0}
+.tx-hmenu .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:4px 8px 8px}.tx-hmenu .mgrid .mi{justify-content:center;padding:0;height:32px;border-radius:4px}
+/* barre des favoris (déplaçable par toute sa surface) */
+.tx-favbar{background:#0c0e12;border:1px solid #2a292f;border-radius:6px;padding:2px 4px 2px 2px;box-shadow:0 2px 10px rgba(0,0,0,.45);cursor:grab;user-select:none}
+.tx-favbar.drag{cursor:grabbing;opacity:.92}
+.tx-favbar .grip{display:flex;align-items:center;justify-content:center;width:14px;height:30px;color:#5d606b;font-size:14px;cursor:grab}
+.tx-favbar button{color:#e0e0e0;cursor:pointer}
+/* Object tree (fenêtre flottante comme TopstepX) */
+.tx-tree.tx-otree{position:absolute;z-index:30;top:46px;right:70px;width:380px;max-width:calc(100% - 80px);height:420px;max-height:calc(100% - 60px);display:flex;flex-direction:column;background:#1f1f1f;border:1px solid #2e2e2e;border-radius:8px;box-shadow:0 6px 28px rgba(0,0,0,.55);color:#dbdbdb;overflow:hidden;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif}
+.tx-tree.tx-otree[hidden]{display:none}
+.tx-otree .tx-th{display:flex;align-items:center;gap:6px;padding:14px 12px 10px 20px;border:none;font-size:20px;font-weight:600;color:#f2f2f2;cursor:move;user-select:none}
+.tx-otree .tx-th span{flex:1}
+.tx-otree .tx-th button{float:none;width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#dbdbdb}
+.tx-otree .tx-th button:hover{background:#2e2e2e}
+.tx-otree #btTreeList{flex:1;overflow:auto;padding:2px 0 8px}
+.tx-otree .row{height:38px;padding:0 10px 0 16px;gap:8px;font-size:14px;color:#dbdbdb}
+.tx-otree .row:hover{background:#2a2a2a}
+.tx-otree .row.sel,.tx-otree .row.sel:hover{background:#142e61}
+.tx-otree .row .ic{width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;color:#dbdbdb}.tx-otree .row .ic svg{width:28px;height:28px}
+.tx-otree .row.dim{color:#7a7a7a}.tx-otree .row.dim .ic{color:#7a7a7a}
+.tx-otree .row .tw{width:16px;color:#9a9a9a;text-align:center;font-size:11px}
+.tx-otree .row .acts{display:none;gap:2px}.tx-otree .row:hover .acts,.tx-otree .row.sel .acts,.tx-otree .row .acts .keep{display:flex}
+.tx-otree .row:not(:hover):not(.sel) .acts{display:flex}.tx-otree .row:not(:hover):not(.sel) .acts button:not(.keep){visibility:hidden}
+.tx-otree .row .acts button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:4px;color:#dbdbdb;background:none;border:none}
+.tx-otree .row .acts button svg{width:24px;height:24px}.tx-otree .row .acts button:hover{background:#3a3a3a}
+.tx-otree .row small{color:#8a8a8a}
+/* menu contextuel (arborescence + dessins) */
+.tx-ctx{background:#0c0e12;border:1px solid #1d2026;border-radius:6px;box-shadow:0 2px 14px rgba(0,0,0,.6);padding:4px 0;min-width:200px;color:#e0e0e0;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif}
+.tx-ctx .ci{align-items:center;justify-content:flex-start;gap:10px;height:36px;padding:0 16px 0 12px}
+.tx-ctx .ci:hover{background:#22262f}
+.tx-ctx .ci .ck{width:20px;flex:none;text-align:center;font-size:14px}
+.tx-ctx .ci svg{width:24px;height:24px;flex:none}
+.tx-ctx .ci span{margin-left:auto;padding-left:24px;color:#77787a;font-size:12px}
+.tx-ctx i{background:#2a292f}
+/* fenêtres (Paramètres, Settings des dessins) : style TopstepX */
+.tx-mbox{background:#1f1f1f;border:1px solid #2e2e2e;border-radius:8px;color:#dbdbdb;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif;box-shadow:0 8px 34px rgba(0,0,0,.55)}
+.tx-mh{border:none;font-size:20px;font-weight:600;color:#f2f2f2;padding:18px 16px 14px 20px}
+.tx-mh button{color:#dbdbdb;font-size:28px;font-weight:300}
+.tx-mf{border-top:1px solid #2e2e2e;padding:14px 16px;align-items:center}
+.tx-mf button,.tx-row button{background:#ffffff;border:1px solid #ffffff;color:#000;border-radius:6px;height:36px;padding:0 16px;font-weight:500;font-size:14px}
+.tx-mf button:hover{background:#e6e6e6}
+.tx-mbox button.ghost{background:none;border:1px solid #c9c9c9;color:#f2f2f2}.tx-mbox button.ghost:hover{background:#2e2e2e}
+.tx-mbox input[type=checkbox]{accent-color:#ffffff;width:18px;height:18px}
+/* Paramètres du chart : navigation à gauche */
+.tx-mbox.tx-set2{width:640px;height:min(760px,88vh);max-height:88vh}
+.tx-set2 .tx-mb{padding:0;display:flex;flex:1;min-height:0;overflow:hidden;border-top:1px solid #2e2e2e}
+.tx-set2 .snav{width:200px;flex:none;border-right:1px solid #2e2e2e;padding:6px 0;overflow:auto}
+.tx-set2 .snav button{display:flex;align-items:center;gap:12px;width:100%;height:44px;padding:0 18px;background:none;border:none;color:#dbdbdb;font:inherit;text-align:left;cursor:pointer}
+.tx-set2 .snav button svg{width:24px;height:24px;flex:none}
+.tx-set2 .snav button:hover{background:#2a2a2a}.tx-set2 .snav button.on{background:#2e2e2e;color:#fff}
+.tx-set2 .sbody{flex:1;overflow:auto;padding:6px 22px 20px}
+.tx-set2 .sh{font-size:11px;letter-spacing:.06em;color:#8d8e8f;text-transform:uppercase;margin:22px 0 10px}
+.tx-set2 .r{display:flex;align-items:center;gap:10px;min-height:44px;padding:0;justify-content:flex-start}
+.tx-set2 .r>label:first-child,.tx-set2 .r>.lb{width:190px;flex:none;display:flex;align-items:center;gap:10px}
+.tx-set2 .r.ind{padding-left:28px}
+.tx-set2 select,.tx-set2 input[type=number],.tx-set2 input[type=text]{height:36px;background:#1f1f1f;border:1px solid #575757;color:#f2f2f2;border-radius:6px;padding:0 10px;font:inherit;min-width:150px}
+.tx-set2 select:hover,.tx-set2 input:hover{border-color:#8a8a8a}
+.tx-set2 input[type=number]{width:90px;min-width:0}
+.tx-set2 .sw{width:36px;height:36px;border:1px solid #575757;border-radius:6px;padding:4px;background:#1f1f1f;display:inline-flex;position:relative;cursor:pointer}
+.tx-set2 .sw input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.tx-set2 .sw i{flex:1;border-radius:3px}
+.tx-set2 .dis{opacity:.45;pointer-events:none}
+.tx-set2 .tpl{position:relative}.tx-set2 .r.full>label:first-child{width:auto}.tx-set2 .r>label input{margin:0}.tx-set2 .tx-mh{border-bottom:none}
+.tx-mk{display:inline-block;width:8px;height:8px;border-radius:50%;background:#9598a1;margin:0 6px 1px 6px;vertical-align:middle}.tx-mk.on{background:#089981}
+/* chart : boutons A / L, compte à rebours, boutons de navigation */
+.tx-al{position:absolute;z-index:5;display:flex;gap:3px;opacity:0;transition:opacity .12s;pointer-events:none}
+.tx-chartwrap:hover .tx-al,.tx-al.always{opacity:1;pointer-events:auto}.tx-al.never{display:none}
+.tx-al button{width:20px;height:20px;padding:0;border-radius:3px;border:1px solid rgba(0,0,0,.35);background:rgba(255,255,255,.85);color:#131722;font:600 11px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;cursor:pointer;line-height:18px}
+.tx-al button:hover{background:#fff}.tx-al button.on{background:#131722;color:#fff;border-color:#131722}
+.tx-cd{position:absolute;z-index:4;pointer-events:none;font:11px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:#fff;text-align:left;padding:1px 0 1px 7px;font-variant-numeric:tabular-nums}
+.tx-cd[hidden]{display:none}
+.tx-nav{position:absolute;z-index:5;left:50%;transform:translateX(-50%);display:flex;gap:4px;opacity:0;pointer-events:none;transition:opacity .15s}
+.tx-chartwrap:hover .tx-nav.hover,.tx-nav.always{opacity:1;pointer-events:auto}
+.tx-nav button{width:28px;height:28px;border-radius:50%;border:none;background:rgba(19,23,34,.7);color:#fff;font-size:15px;cursor:pointer;padding:0}
+.tx-nav button:hover{background:rgba(19,23,34,.9)}
+/* barre du bas */
+.tx-fbi{display:inline-flex;align-items:center;justify-content:center;width:30px;padding:0!important}.tx-fbi svg{width:22px;height:22px}
+#btEth{font-weight:500}
+.tx-rng button{font-size:13px}
+.tx-float[hidden],.tx-favbar[hidden]{display:none!important}
+.tx-tools{overflow-y:auto;overflow-x:hidden;scrollbar-width:none}.tx-tools::-webkit-scrollbar{display:none}
+.tx-tools button{height:31px}.tx-tools>i{margin:3px 10px!important}
+.tx-head{container-type:inline-size}
+.tx-tfs button{min-width:0!important;padding:0 4px!important;font-size:13.5px}
+.tx-set2 select{min-width:190px}
+#btLayName{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@container (max-width:1380px){.tx-tbi span{display:none}.tx-tbi{padding:0 5px}}
+@container (max-width:1180px){.tx-tfsep{display:none!important}#btLayName{max-width:70px}.tx-head .tx-vs{margin:0 2px}}
+@container (max-width:1100px){.tx-head .tx-hb{width:30px!important}.tx-head .tx-hb svg{width:24px;height:24px}#btLayName{max-width:56px}}
+@container (max-width:1060px){#btTfs [data-tf="2"],#btTfs [data-tf="3"],#btTfs [data-tf="15s"],#btTfs [data-tf="30s"]{display:none}}
 /*TX-END*/
 
 </style>
@@ -874,7 +998,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
     </div></div>
-  <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="topstep"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 19 9-15 9 15z"/><path d="M8 13h8"/></svg><span>Apex</span></button><button class="nav" data-go="mffu"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V5l8 7 8-7v15"/></svg><span>My Funded Futures</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
+  <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="topstep"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" transform="translate(8.208 3.776) scale(0.03676)" d="M55.6,82.2H0V6.1h206.3v76.1h-54.4c-3.9,0-7,3.1-7,7v352.1H62.7V89.2c0-3.9-3.1-7-7-7h-.1Z"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic pf" viewBox="0 0 24 24"><defs><linearGradient id="pfApG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0026ff"/><stop offset="1" stop-color="#050927"/></linearGradient></defs><rect width="24" height="24" rx="5" fill="url(#pfApG)"/><path fill="#fff" transform="translate(3 7.517) scale(0.07472)" d="M239.253 21.9472C240.662 19.169 241.252 15.9095 240.662 12.475C239.428 5.25594 233.015 -0.0434828 225.695 0.000268926C223.761 0.0112069 221.877 0.388565 220.063 1.13234L219.337 1.47142L116.857 49.3959L69.8091 17.3041L69.1044 16.8228C64.74 13.9571 59.6763 12.4367 54.4597 12.4367C44.2286 12.4367 34.7514 18.4197 30.3159 27.6787L0.136126 89.2756C-0.284479 90.1343 0.338235 91.1351 1.29416 91.1351C1.68745 91.1351 2.05889 90.9546 2.3047 90.6483L49.8221 30.9491L91.2381 61.3784L41.7323 84.5286C41.0714 84.8348 40.7764 85.6169 41.0659 86.2841C41.3445 86.9349 42.0819 87.2576 42.7538 87.0224L98.9838 67.0716L165.248 115.849L165.232 115.833C168.564 118.442 172.754 120 177.298 120C184.727 120 191.429 115.871 194.811 109.226L194.838 109.183L195.013 108.838L239.269 21.9308L239.253 21.9527V21.9472ZM127.787 56.8556L210.373 27.5529L175.25 89.2319L127.787 56.8556Z"/></svg><span>Apex</span></button><button class="nav" data-go="mffu"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#02040e"/><g transform="translate(3 3) scale(0.16677) translate(-19.82 -44)"><g><path d="M51.2 56.3476V44H58.7276V49.199H70.0189V44H77.5465V49.199H88.8378V44H96.3653V56.3476H51.2Z" fill="#3A82F7"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M30.099 63.2073C30.099 63.2073 29.8762 74.045 30.099 88.1987C30.1186 89.4424 30.1337 90.7064 30.149 91.9864C30.4666 118.543 30.8658 151.927 72.8883 151.927C116.936 151.927 117.565 128.81 117.565 85.0748L117.565 63.2073H30.099ZM110.265 70.5244H37.3154C37.2883 74.9567 37.289 81.1158 37.3987 88.0833C37.4176 89.2874 37.4334 90.4915 37.4492 91.6937C37.6193 104.663 37.7864 117.406 41.8895 127.429C44.0082 132.604 47.0759 136.71 51.6043 139.603C56.1834 142.529 62.8753 144.61 72.8883 144.61C83.3627 144.61 90.497 143.219 95.4292 140.971C100.13 138.828 103.125 135.779 105.227 131.605C107.451 127.19 108.793 121.268 109.508 113.315C110.22 105.384 110.265 96.0779 110.265 85.0748L110.265 70.5244Z" fill="url(#mffuG0)"></path><path d="M58.1131 106.652H44.287C44.287 106.652 44.3734 115.772 47.0522 122.659C49.731 129.545 58.1131 135.921 58.1131 135.921V106.652Z" fill="#F2CB80"></path><path d="M82.5392 94.3049H65.0262V137.75H82.5392V94.3049Z" fill="url(#mffuG1)"></path><path d="M103.739 82.4146H89.4523V135.921C89.4523 135.921 103.739 132.469 103.739 114.346V82.4146Z" fill="#D8AE5E"></path></g><defs><linearGradient id="mffuG0" x1="117.565" y1="61.4677" x2="30.5816" y2="148.161" gradientUnits="userSpaceOnUse"><stop stop-color="#DEB25F"></stop><stop offset="1" stop-color="#F3CC81"></stop></linearGradient><radialGradient id="mffuG1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(82.5392 94.3049) rotate(111.955) scale(46.8421 18.8419)"><stop stop-color="#D8AE5E"></stop><stop offset="1" stop-color="#F4CD83"></stop></radialGradient></defs></g></svg><span>My Funded Futures</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
 <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
       <button class="nav" data-go="profil"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span></button>
@@ -1132,18 +1256,11 @@ table.tbl:has(#subT){min-width:900px}
       <div class="tx-dbar"><div class="tx-dtab on">Chart<i>×</i></div><button class="tx-dtab" id="btOrdShow" hidden title="Afficher le menu des ordres"><span class="tx-dot"></span>Order</button></div>
       <div class="tx-tv">
         <div class="tx-head">
-          <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="MNQ">MNQZ26</option><option value="MES">MESZ26</option><option value="CSV">CSV</option></select></label>
+          <label class="tx-symb"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M7.5 13a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm4-1.5L16 16"/></svg><select id="btSym"><option value="NQ">NQZ26</option><option value="ES">ESZ26</option><option value="MNQ">MNQZ26</option><option value="MES">MESZ26</option><option value="CSV">CSV</option></select></label><button class="tx-hb" id="btWLBtn" title="Watchlist : symboles suivis (Alt+W)"><svg viewBox="0 0 28 28" width="26" height="26"><g fill="none" stroke="currentColor"><circle cx="14" cy="14" r="8.5"/><path d="M14 10v8M10 14h8"/></g></svg></button>
           <i class="tx-vs"></i>
-          <span class="tx-tfs" id="btTfs"><button data-tf="1s" title="1 seconde (chargé au clic)">1s</button><button data-tf="5s" title="5 secondes (chargé au clic)">5s</button><button data-tf="15s" title="15 secondes (chargé au clic)">15s</button><button data-tf="30s" title="30 secondes (chargé au clic)">30s</button><i class="tx-tfsep"></i><button data-tf="1" class="on">1m</button><button data-tf="2" title="2 minutes (chargé au clic)">2m</button><button data-tf="3" title="3 minutes (chargé au clic)">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><i class="tx-tfsep"></i><button data-tf="1440">1D</button><button data-tf="10080">1W</button><button data-tf="43200">1M</button><button data-tf="129600" title="3 mois">3M</button><button data-tf="259200" title="6 mois">6M</button><button data-tf="518400" title="12 mois">12M</button></span>
+          <span class="tx-tfs" id="btTfs"><button data-tf="1s" title="1 seconde (chargé au clic)">1s</button><button data-tf="5s" title="5 secondes (chargé au clic)">5s</button><button data-tf="15s" title="15 secondes (chargé au clic)">15s</button><button data-tf="30s" title="30 secondes (chargé au clic)">30s</button><i class="tx-tfsep"></i><button data-tf="1" class="on">1m</button><button data-tf="2" title="2 minutes (chargé au clic)">2m</button><button data-tf="3" title="3 minutes (chargé au clic)">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><i class="tx-tfsep"></i><button data-tf="1440" title="1 jour">D</button><button data-tf="10080" title="1 semaine">W</button><button data-tf="43200" title="1 mois">M</button><button data-tf="129600" title="3 mois">3M</button><button data-tf="259200" title="6 mois">6M</button><button data-tf="518400" title="12 mois">12M</button></span><button class="tx-hb tx-tfmore" id="btTfMore" title="Toutes les unités de temps"><i class="tx-car"></i></button>
           <i class="tx-vs"></i>
-          <span class="tx-hb tx-on" title="Chandeliers"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg></span>
-          <span class="tx-sp"></span>
-          <button class="tx-tb" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)">▦ <span id="btLayName">Mise en page</span> ▾</button>
-          <button class="tx-tb" id="btSessBtn" title="Sessions de backtest enregistrées">💾 Sessions</button>
-          <button class="tx-tb" id="btPrefBtn" title="Préférences du chart">⚙ Préférences</button><button class="tx-tb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)">⌨</button>
-          <button class="tx-tb" id="btOrdTgl" title="Afficher / masquer le panneau d'ordres">Order</button><button class="tx-tb" id="btWLBtn" title="Watchlist NQ / ES (Alt+W)">Watchlist</button><button class="tx-tb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)">Alertes</button><button class="tx-tb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)">🤖 Jarvis</button><button class="tx-tb" id="btNewsBtn" title="News USD (Maj+W = news suivante)">📰 News</button>
-          <button class="tx-tb" id="btSplitBtn" title="2 charts côte à côte : NQ + ES synchronisés sur le replay">◫ NQ+ES</button>
-          <button class="tx-hb" id="btTreeBtn" hidden title="Arborescence des objets"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
+          <button class="tx-hb tx-dd" id="btTypeBtn" title="Type de graphique"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg><i class="tx-car"></i></button><i class="tx-vs"></i><button class="tx-hb" id="btFxBtn" title="Indicateurs : news, Jarvis, alertes, watchlist"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/></g></svg></button><button class="tx-hb" id="btSplitBtn" title="Disposition : 1 chart ou 2 charts NQ + ES synchronisés (Alt+clic)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M14 6.5v15M5.5 14h17"/></g></svg></button><button class="tx-tb tx-tbi" id="btPrefBtn" title="Préférences du chart"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg><span>Préférences</span></button><button class="tx-hb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/><path d="M14 9.5v6M14 18v1"/></g></svg></button><button class="tx-tb tx-tbi" id="btSessBtn" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/></g></svg><span>Sessions</span></button><button class="tx-hb" id="btUndo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M9.5 9.5l-4 4 4 4M5.5 13.5h11a5 5 0 0 1 0 10h-3"/></g></svg></button><button class="tx-hb" id="btRedo" title="Rétablir (Ctrl+Y)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M18.5 9.5l4 4-4 4M22.5 13.5h-11a5 5 0 0 0 0 10h3"/></g></svg></button><span class="tx-sp"></span><button class="tx-hb" id="btOrdTgl" title="Afficher / masquer le panneau Order"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M16.5 6.5v15"/></g></svg></button><button class="tx-tb tx-dd" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)"><span id="btLayName">Mise en page</span><i class="tx-car"></i></button><button class="tx-hb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M15.5 4.5l-8 11h6l-1 8 8-11h-6z"/></g></svg></button><button class="tx-hb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg></button><button class="tx-hb" id="btFullBtn" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M5.5 10.5v-5h5M17.5 5.5h5v5M22.5 17.5v5h-5M10.5 22.5h-5v-5"/></g></svg></button><button class="tx-hb" id="btShotBtn" title="Instantané du graphique"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M4.5 9.5h4l2-3h7l2 3h4v12h-19z"/><circle cx="14" cy="15" r="4"/></g></svg></button><button id="btNewsBtn" hidden></button><button class="tx-hb" id="btTreeBtn" hidden></button>
         </div>
         <div class="tx-mid">
           <div class="tx-tools" id="btTools">
@@ -1152,26 +1269,27 @@ table.tbl:has(#subT){min-width:900px}
             <button data-tool="measure" title="Règle : mesurer prix, % et durée (Maj+clic)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M5.5 18.5l13-13 4 4-13 13zM9 15l2 2m1-5l2 2m1-5l2 2"/></svg></button>
             <button data-tool="zoom" id="btZoomT" title="Zoom : glisser un cadre sur la période à agrandir"></button>
             <i></i>
-            <button id="btMagnet" class="tg" title="Aimant (accroche OHLC)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M8 6v8a6 6 0 0 0 12 0V6h-4v8a2 2 0 0 1-4 0V6zm0 4h4m4 0h4"/></svg></button>
+            <div class="tx-grp" id="btMagGrp"><button id="btMagnet" class="tg" title="Aimant (Alt+M)"></button><button class="tx-exp" id="btMagExp" title="Aimant faible / fort">›</button></div>
             <button id="btStay" class="tg" title="Rester en mode dessin : l'outil reste actif après chaque tracé"></button>
-            <button id="btLockAll" class="tg" title="Verrouiller tous les dessins"><svg viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" d="M10.5 12.5V10a3.5 3.5 0 0 1 7 0v2.5"/></svg></button>
-            <button id="btHideAll" class="tg" title="Masquer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6" fill="none" stroke="currentColor"/></svg></button>
+            <button id="btLockAll" class="tg" title="Verrouiller tous les dessins (Alt+L)"></button>
+            <button id="btHideAll" class="tg" title="Masquer tous les dessins (Ctrl+Alt+H)"></button>
+            <button id="btLinkBtn" class="tg" title="Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"></button>
             <i></i>
-            <button id="btDelAll" title="Supprimer tous les dessins"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M8.5 9.5h11l-1 13h-9zm-2 0h15M11.5 9.5v-2h5v2m-4 3v7m3-7v7"/></svg></button>
+            <button id="btDelAll" title="Supprimer tous les dessins"></button>
             <span class="tx-sp"></span>
-            <button id="btTreeBtn2" title="Arborescence des objets"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
-            <button id="btFavBtn" class="tg" title="Barre de favoris"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button>
+            
+            <button id="btFavBtn" class="tg" title="Barre des dessins favoris (déplaçable)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/></svg></button><button id="btTreeBtn2" title="Arborescence des objets (Alt+O)"><svg viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M14 6.5l8 4-8 4-8-4zm-8 8l8 4 8-4m-16 4l8 4 8-4"/></svg></button>
             <button id="btHowBtn" title="Comment dessiner (guide des outils)"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.4" d="M11.3 11.6a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.9v.6"/><circle cx="14" cy="19.3" r=".9" fill="currentColor"/></svg></button>
             <button id="btToolsMin" class="tx-tmin" title="Replier / déplier la barre d'outils">‹</button>
           </div>
-          <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div>
+          <div class="tx-chartwrap" id="btWrap"><div id="btChart"></div><canvas id="btDraw"></canvas><div class="tx-legend" id="btLegend"></div><div class="tx-al"><button data-al="A" title="Auto (ajuste les données à l'écran) — Alt+R">A</button><button data-al="L" title="Échelle logarithmique">L</button></div><div class="tx-cd" hidden></div><div class="tx-nav"><button data-nv="out" title="Zoom arrière">−</button><button data-nv="in" title="Zoom avant">+</button><button data-nv="l" title="Défiler à gauche">‹</button><button data-nv="r" title="Défiler à droite">›</button><button data-nv="reset" title="Recentrer (Alt+R)">⟲</button></div>
             <div class="tx-float" id="btFloat" hidden><span class="grip">⠿</span><label title="Couleur"><input type="color" id="btFColor"></label><select id="btFWidth" title="Épaisseur"><option value="1">1px</option><option value="2">2px</option><option value="3">3px</option><option value="4">4px</option></select><button id="btFSet" title="Paramètres">⚙</button><button id="btFLock" title="Verrouiller">🔓</button><button id="btFDel" title="Supprimer">🗑</button></div>
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
-          <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><canvas id="btDraw2"></canvas><div class="tx-legend" id="btLegend2"></div></div>
-          <div class="tx-tree" id="btTree" hidden><div class="tx-th">Arborescence des objets<button id="btNewF" title="Nouveau groupe (avec la sélection)">📁＋</button></div><div id="btTreeList"></div></div>
+          <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><canvas id="btDraw2"></canvas><div class="tx-legend" id="btLegend2"></div><div class="tx-al"><button data-al="A" title="Auto (ajuste les données à l'écran) — Alt+R">A</button><button data-al="L" title="Échelle logarithmique">L</button></div><div class="tx-cd" hidden></div><div class="tx-nav"><button data-nv="out" title="Zoom arrière">−</button><button data-nv="in" title="Zoom avant">+</button><button data-nv="l" title="Défiler à gauche">‹</button><button data-nv="r" title="Défiler à droite">›</button><button data-nv="reset" title="Recentrer (Alt+R)">⟲</button></div></div>
+          <div class="tx-tree tx-otree" id="btTree" hidden><div class="tx-th" id="btTreeHead"><span>Arborescence des objets</span><button id="btNewF" title="Créer un groupe de dessins (avec la sélection)"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><path d="M4.5 8.5v13h19v-11h-9l-2-2z"/><path d="M14 13.5v6M11 16.5h6"/></g></svg></button><button id="btTreeX" title="Fermer"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><path d="M7.5 7.5l13 13M20.5 7.5l-13 13"/></g></svg></button></div><div id="btTreeList"></div></div>
         </div>
-        <div class="tx-foot"><span class="tx-rng" id="btRng" title="Plage affichée"><button data-r="1">1D</button><button data-r="5">5D</button><button data-r="30">1M</button><button data-r="91">3M</button><button data-r="182">6M</button><button data-r="365">1Y</button><button data-r="0">Tout</button></span><i class="tx-vs"></i><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button></div>
+        <div class="tx-foot"><span class="tx-rng" id="btRng" title="Plage affichée"><button data-r="365">1yr</button><button data-r="91">3m</button><button data-r="30">1m</button><button data-r="5">5d</button><button data-r="3">3d</button><button data-r="1">1d</button></span><button class="tx-fb tx-fbi" id="btGoBtn2" title="Aller à une date (Ctrl+G)"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><rect x="5.5" y="7.5" width="15" height="14" rx="1.5"/><path d="M5.5 11.5h15M9.5 5.5v4M16.5 5.5v4M18.5 18.5h5M21 16l2.5 2.5L21 21"/></g></svg></button><i class="tx-vs"></i><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><button class="tx-fb" id="btEth" title="Séance : ETH (complète) / RTH (9:30 - 16:00 NY) — Alt+Maj+E">ETH</button><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button><button class="tx-fb tx-fbi" id="btFull2" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M15.5 6.5h6v6M21.5 6.5l-7 7M12.5 21.5h-6v-6M6.5 21.5l7-7"/></g></svg></button></div>
       <div class="tx-rbar">
         <div class="rb-l"></div>
         <div class="rb-c">
@@ -4450,21 +4568,41 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   window.btJournal = renderJournal;
 
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
-  const PDEF = { syncCross: true, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8 };
+  const PDEF = { syncCross: true, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8, titleMode: "both", mkt: true, vol: false, indTitles: true, indInputs: false, indValues: false, slBg: false, slBgOp: 50, prevColor: false, prec: "def", scaleAL: "hover", noOverlap: true, plusBtn: true, countdown: true, symLbl: "vl", prevClose: "l", pcColor: "#555555", hiLo: "hidden", hlColor: "#7a3e48", bgType: "solid", bg2: "#ffffff", sessBreaks: false, sbColor: "#3d6bb3", crossStyle: 3, wm: false, wmColor: "#000000", lines: "#000000", navBtns: "hover", paneBtns: "hover", dow: true, h24: true };
   let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
+  // décalage UTC de New York (UTC-5 / UTC-4) et clé de séance (18h NY -> 17h NY)
+  const offFmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", timeZoneName: "shortOffset" }), offDay = new Map();
+  const nyOff = (t) => { const d = Math.floor(t / 86400); let v = offDay.get(d); if (v == null) { const z = (offFmt.formatToParts(new Date(t * 1000)).find((p) => p.type === "timeZoneName") || {}).value || "GMT-5", m = /([+-]\d+)/.exec(z); v = (m ? +m[1] : -5) * 3600; offDay.set(d, v); } return v; };
+  const utcOff = (t) => "UTC" + (nyOff(t) / 3600 >= 0 ? "+" : "") + nyOff(t) / 3600;
+  const sessK = (t) => Math.floor((t + nyOff(t) + 6 * 3600) / 86400);
+  let hlLines = [], hlRaf = 0;
+  function hiLo() { // plus haut / plus bas de la partie visible du chart (Paramètres > Échelles et lignes)
+    if (!cs) return; hlLines.forEach((l) => cs.removePriceLine(l)); hlLines = []; if (!P.hiLo || P.hiLo === "hidden" || !S.B || !S.B.length) return;
+    const r = chart.timeScale().getVisibleLogicalRange(); if (!r) return; const i0 = Math.max(0, Math.floor(r.from)), i1 = Math.min(S.B.length - 1, Math.ceil(r.to)); if (i1 < i0) return;
+    let hi = -Infinity, lo = Infinity; for (let i = i0; i <= i1; i++) { if (S.B[i][2] > hi) hi = S.B[i][2]; if (S.B[i][3] < lo) lo = S.B[i][3]; }
+    const o = { color: P.hlColor, lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, lineVisible: P.hiLo !== "v", axisLabelVisible: P.hiLo !== "l" };
+    hlLines = [cs.createPriceLine({ ...o, price: hi, title: "H" }), cs.createPriceLine({ ...o, price: lo, title: "L" })];
+  }
   const tfName = (tf) => (tf < 1 ? Math.round(tf * 60) + "s" : tf >= 518400 ? "12M" : tf >= 259200 ? "6M" : tf >= 129600 ? "3M" : tf >= 43200 ? "1M" : tf >= 10080 ? "1W" : tf >= 1440 ? "1D" : tf >= 60 ? tf / 60 + "h" : tf + "m");
   const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); return false; } };
   function applyPrefs() {
     if (!chart) return; const gv = (d) => P.grid === "both" || P.grid === d;
     [chart2].forEach((c) => c && c.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } }));
     if (cs2) cs2.applyOptions({ upColor: P.body ? P.up : "rgba(0,0,0,0)", downColor: P.body ? P.down : "rgba(0,0,0,0)", borderVisible: !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn });
-    chart.applyOptions({ layout: { background: { type: "solid", color: P.bg }, textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
-      crosshair: { vertLine: { color: P.cross, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 } });
+    const BG = P.bgType === "grad" ? { type: "gradient", topColor: P.bg, bottomColor: P.bg2 } : { type: "solid", color: P.bg }, dec = P.prec === "def" ? 2 : +P.prec;
+    const DOW = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."], p2 = (n) => String(n).padStart(2, "0");
+    const tfmt = (t) => { const d = new Date(t * 1000), h = d.getUTCHours(), hh = P.h24 === false ? `${((h + 11) % 12) + 1}:${p2(d.getUTCMinutes())} ${h < 12 ? "AM" : "PM"}` : `${p2(h)}:${p2(d.getUTCMinutes())}`; return `${P.dow === false ? "" : DOW[d.getUTCDay()] + " "}${p2(d.getUTCDate())}/${p2(d.getUTCMonth() + 1)}/${String(d.getUTCFullYear()).slice(2)}${S.tf < 1440 ? "  " + hh : ""}`; };
+    [chart, chart2].forEach((c) => c && c.applyOptions({ layout: { background: BG }, rightPriceScale: { borderColor: P.lines }, timeScale: { borderColor: P.lines }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(dec), timeFormatter: tfmt } }));
+    chart.applyOptions({ layout: { textColor: P.txt, fontSize: +P.fs || 12 }, grid: { vertLines: { visible: gv("vert"), color: P.gridC }, horzLines: { visible: gv("horz"), color: P.gridC } },
+      crosshair: { vertLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross }, horzLine: { color: P.cross, style: +P.crossStyle, labelBackgroundColor: P.cross } }, rightPriceScale: { scaleMargins: { top: (+P.mTop || 0) / 100, bottom: (+P.mBot || 0) / 100 } }, timeScale: { rightOffset: +P.right || 0 },
+      watermark: { visible: !!P.wm, text: `${(SYMNAME[S.sym] || S.sym || "").split(" · ")[0]}, ${tfName(S.tf)}`, color: hexA(P.wmColor, 0.12), fontSize: 64 } });
+    if (P.symLbl) { P.lastLbl = P.symLbl === "vl" || P.symLbl === "v"; P.lastLine = P.symLbl === "vl" || P.symLbl === "l"; }
+    cs.applyOptions({ priceFormat: { type: "price", precision: dec, minMove: dec >= 2 ? 0.25 : Math.pow(10, -dec) } });
     const L = !!P.line, T0 = "rgba(0,0,0,0)";
     cs.applyOptions({ upColor: !L && P.body ? P.up : T0, downColor: !L && P.body ? P.down : T0, borderVisible: !L && !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !L && !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
     if (ls) ls.applyOptions({ visible: L });
     chart.priceScale("right").applyOptions({ invertScale: !!P.invert });
-    legend(null);
+    legend(null); if (S.B && S.B.length) { priceLines(); hiLo(); }
   }
   function modal(title, body, foot) {
     let m = $("btModal"); if (!m) { m = document.createElement("div"); m.id = "btModal"; m.className = "tx-mod"; document.body.append(m); m.addEventListener("mousedown", (e) => { if (e.target === m) m.querySelector('[data-m="x"]').click(); }); }
@@ -4473,19 +4611,54 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const closeModal = () => { const m = $("btModal"); if (m) m.hidden = true; };
   // saisie de texte (prompt() n'existe pas dans Electron)
   const ask = (label, val) => new Promise((ok) => { const o = document.createElement("div"); o.className = "tx-mod"; o.style.zIndex = 80; o.innerHTML = `<div class="tx-mbox" style="width:420px"><div class="tx-mh">${esc(label)}</div><div class="tx-mb"><div class="tx-row" style="margin:0"><input value="${esc(val || "")}"></div></div><div class="tx-mf"><span class="tx-sp"></span><button class="ghost" data-k="0">Annuler</button><button data-k="1">OK</button></div></div>`; document.body.append(o); const i = o.querySelector("input"), end = (v) => { o.remove(); ok(v); }; i.focus(); i.select(); i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") end(i.value.trim() || null); if (e.key === "Escape") end(null); }; o.onclick = (e) => { if (e.target.dataset.k) end(e.target.dataset.k === "1" ? i.value.trim() || null : null); }; });
-  const PTABS = {
-    sym: ["Symbole", [["body", "Corps des bougies", "cb"], ["up", "Corps haussier", "color"], ["down", "Corps baissier", "color"], ["border", "Bordures", "cb"], ["bUp", "Bordure haussière", "color"], ["bDn", "Bordure baissière", "color"], ["wick", "Mèches", "cb"], ["wUp", "Mèche haussière", "color"], ["wDn", "Mèche baissière", "color"]]],
-    status: ["Ligne d'état", [["title", "Titre (symbole · intervalle)", "cb"], ["ohlc", "Valeurs OHLC", "cb"], ["chg", "Variation de la bougie", "cb"]]],
-    scales: ["Échelles et lignes", [["lastLbl", "Étiquette du dernier prix", "cb"], ["lastLine", "Ligne du dernier prix", "cb"], ["txt", "Couleur du texte des échelles", "color"], ["fs", "Taille du texte", "num"], ["right", "Marge droite (barres)", "num"]]],
-    replay: ["Replay", [["sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)", "cb"], ["rth", "Séance RTH uniquement (9:30 - 16:00 NY)", "cb"], ["line", "Graphique en ligne", "cb"], ["invert", "Échelle inversée", "cb"], ["syncCross", "Curseur synchronisé entre NQ et ES", "cb"]]],
-    canvas: ["Canevas", [["bg", "Fond", "color"], ["grid", "Grille", "grid"], ["gridC", "Couleur de la grille", "color"], ["cross", "Réticule", "color"], ["mTop", "Marge haute (%)", "num"], ["mBot", "Marge basse (%)", "num"]]],
-  };
+  const hexA = (h, al) => { const m = /^#([0-9a-f]{6})$/i.exec(h || ""); if (!m) return h; const n = parseInt(m[1], 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${al})`; };
+  const hex7 = (v) => (/^#[0-9a-f]{6}$/i.test(v || "") ? v : "#000000");
+  /* Paramètres du chart = fenêtre « Settings » de TopstepX : Symbole, Ligne d'état, Échelles et lignes, Canevas (+ Replay, propre au backtesteur) */
+  const SG2 = (d) => `<svg viewBox="0 0 28 28"><g fill="none" stroke="currentColor">${d}</g></svg>`;
+  const PNAV = [["sym", "Symbole", SG2('<path d="M9.5 5.5v3M9.5 19.5v3M18.5 8.5v3M18.5 19.5v2"/><rect x="7.5" y="8.5" width="4" height="11"/><rect x="16.5" y="11.5" width="4" height="8"/>')], ["status", "Ligne d'état", SG2('<path d="M5.5 8.5h17M5.5 13.5h13M5.5 18.5h9"/>')],
+    ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')]];
   function openPrefs(tab, snap) {
-    tab = tab || "sym"; snap = snap || { ...P };
-    const field = ([k, l, t]) => `<div class="r">${l}${t === "cb" ? `<input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>` : t === "color" ? `<input type="color" data-p="${k}" value="${P[k]}">` : t === "grid" ? `<select data-p="${k}">${[["none", "Aucune"], ["both", "Horizontale + verticale"], ["horz", "Horizontale"], ["vert", "Verticale"]].map(([v, n]) => `<option value="${v}" ${P[k] === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : `<input type="number" data-p="${k}" value="${P[k]}" style="width:70px">`}</div>`;
-    const m = modal("Préférences", `<div class="tx-ptabs">${Object.entries(PTABS).map(([k, [n]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}</button>`).join("")}</div><div class="tx-pbody">${PTABS[tab][1].map(field).join("")}</div>`, `<button data-m="def" class="ghost" title="Remettre le modèle par défaut">Par défaut</button><button data-m="savedef" class="ghost" title="Les réglages actuels deviennent le modèle « Par défaut »">Enregistrer comme modèle par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
-    m.oninput = (e) => { const k = e.target.dataset.p; if (!k) return; P[k] = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" ? +e.target.value : e.target.value; applyPrefs(); };
-    m.onclick = (e) => { const t = e.target.dataset.tab, a = e.target.dataset.m; if (t) return openPrefs(t, snap); if (a === "def") { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; applyPrefs(); openPrefs(tab, snap); } else if (a === "savedef") { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); msg("Modèle par défaut enregistré : « Par défaut » remet désormais ces réglages."); } else if (a === "x") { P = snap; applyPrefs(); closeModal(); } else if (a === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Préférences enregistrées."); } };
+    tab = tab || LS.get("bt-prefs-tab", "sym"); LS.set("bt-prefs-tab", tab); snap = snap || { ...P };
+    const cb = (k, l, dis) => `<label class="${dis ? "dis" : ""}"><input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>${l}</label>`;
+    const col = (k) => `<span class="sw" title="Couleur"><i style="background:${P[k]}"></i><input type="color" data-p="${k}" value="${hex7(P[k])}"></span>`;
+    const sel = (k, opts) => `<select data-p="${k}">${opts.map(([v, n]) => `<option value="${v}" ${String(P[k]) === String(v) ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+    const num = (k) => `<input type="number" data-p="${k}" value="${P[k]}">`;
+    const r = (a, b, cls) => `<div class="r ${cls || ""}">${a}${b || ""}</div>`, lb = (t) => `<span class="lb">${t}</span>`, sh = (t) => `<div class="sh">${t}</div>`;
+    const FS = [10, 11, 12, 13, 14, 16, 18].map((v) => [v, v]), VIS = [["hover", "Visibles au survol"], ["always", "Toujours visibles"], ["hidden", "Masqués"]];
+    const tc = S.raw.length ? S.raw[S.cur][0] : Date.now() / 1000;
+    const BODY = {
+      sym: sh("Bougies") + r(cb("prevColor", "Couleur selon la clôture précédente"), "", "full") + r(cb("body", "Corps"), col("up") + col("down")) + r(cb("border", "Bordures"), col("bUp") + col("bDn")) + r(cb("wick", "Mèches"), col("wUp") + col("wDn"))
+        + sh("Modification des données") + r(lb("Séance"), sel("rth", [["false", "Heures de trading étendues"], ["true", "Heures de trading régulières"]])) + r(lb("Précision"), sel("prec", [["def", "Défaut"], ["0", "1"], ["1", "0,1"], ["2", "0,01"]])) + r(lb("Fuseau horaire"), `<select disabled><option>(${utcOff(tc)}) New York</option></select>`),
+      status: sh("Symbole") + r(cb("title", "Titre"), sel("titleMode", [["both", "Ticker et description"], ["ticker", "Ticker"], ["desc", "Description"]])) + r(cb("mkt", "Statut d'ouverture du marché"), "", "full") + r(cb("ohlc", "Valeurs du graphique"), "", "full") + r(cb("chg", "Variation de la bougie"), "", "full") + r(cb("vol", "Volume"), "", "full")
+        + sh("Indicateurs") + r(cb("indTitles", "Titres"), "", "full") + r(cb("indInputs", "Paramètres"), "", "full ind") + r(cb("indValues", "Valeurs"), "", "full") + r(cb("slBg", "Fond"), `<input type="range" data-p="slBgOp" min="0" max="100" value="${P.slBgOp}" style="width:150px;accent-color:#2962ff">`),
+      scales: sh("Échelle des prix") + r(lb("Modes d'échelle (A et L)"), sel("scaleAL", VIS)) + r(`<label class="dis"><input type="checkbox" disabled>Ratio prix / barre</label>`, `<input type="number" class="dis" disabled value="1.5927666">`) + r(lb("Position des échelles"), sel("placement", [["auto", "Auto"], ["right", "Droite"]]))
+        + sh("Étiquettes et lignes de prix") + r(cb("noOverlap", "Pas de chevauchement des étiquettes"), "", "full") + r(cb("plusBtn", "Bouton plus"), "", "full") + r(cb("countdown", "Compte à rebours de clôture de la bougie"), "", "full")
+        + r(lb("Symbole"), sel("symLbl", [["vl", "Valeur, ligne"], ["v", "Valeur"], ["l", "Ligne"], ["hidden", "Masqué"]])) + r(lb("Clôture de la veille"), sel("prevClose", [["hidden", "Masquée"], ["l", "Ligne"], ["v", "Valeur"], ["vl", "Valeur, ligne"]]) + col("pcColor"))
+        + r(lb("Indicateurs et données"), sel("indVal", [["value", "Valeur"], ["hidden", "Masqué"]])) + r(lb("Plus haut et plus bas"), sel("hiLo", [["hidden", "Masqués"], ["vl", "Valeur, ligne"], ["v", "Valeur"], ["l", "Ligne"]]) + col("hlColor"))
+        + sh("Échelle des temps") + r(cb("dow", "Jour de la semaine sur les étiquettes"), "", "full") + r(lb("Format de l'heure"), sel("h24", [["true", "24 heures"], ["false", "12 heures"]])),
+      canvas: sh("Styles de base du graphique") + r(lb("Fond"), sel("bgType", [["solid", "Uni"], ["grad", "Dégradé"]]) + col("bg") + (P.bgType === "grad" ? col("bg2") : "")) + r(lb("Lignes de grille"), sel("grid", [["none", "Aucune"], ["both", "Verticales et horizontales"], ["vert", "Verticales"], ["horz", "Horizontales"]]) + col("gridC"))
+        + r(cb("sessBreaks", "Séparateurs de séance"), col("sbColor")) + r(lb("Réticule"), col("cross") + sel("crossStyle", [[0, "Continu"], [1, "Pointillé"], [2, "Tirets"], [3, "Grands tirets"]])) + r(cb("wm", "Filigrane"), col("wmColor"))
+        + sh("Échelles") + r(lb("Texte"), col("txt") + sel("fs", FS)) + r(lb("Lignes"), col("lines"))
+        + sh("Boutons") + r(lb("Navigation"), sel("navBtns", VIS)) + r(lb("Volet"), sel("paneBtns", VIS))
+        + sh("Marges") + r(lb("Haut"), num("mTop") + " %") + r(lb("Bas"), num("mBot") + " %") + r(lb("Droite"), num("right") + " barres"),
+      replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full"),
+    };
+    const m = modal("Paramètres", `<div class="snav">${PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("")}</div><div class="sbody">${BODY[tab]}</div>`,
+      `<div class="tpl"><button class="ghost" data-m="tpl">Modèle<i class="tx-car"></i></button><div class="tx-hmenu" data-tplm hidden style="position:absolute;bottom:42px;left:0"><div class="mi" data-m="def">Appliquer les réglages par défaut</div><div class="mi" data-m="savedef">Enregistrer comme modèle par défaut</div></div></div><span class="tx-sp"></span><button data-m="all" class="ghost" title="Applique ces réglages à toutes les mises en page">Appliquer à tous</button><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
+    m.querySelector(".tx-mbox").classList.add("tx-set2");
+    const sb = m.querySelector(".sbody"); sb.scrollTop = 0;
+    m.oninput = (e) => { const k = e.target.dataset.p; if (!k) return; let v = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" || e.target.type === "range" ? +e.target.value : e.target.value;
+      if (v === "true" || v === "false") v = v === "true"; else if (e.target.tagName === "SELECT" && /^\d+$/.test(v) && k !== "prec") v = +v;
+      const was = P[k]; P[k] = v; if (e.target.type === "color") { const i = e.target.previousElementSibling; if (i) i.style.background = v; }
+      if (k === "rth" && was !== v) { offC.clear(); draw(true); } else if (k === "prevColor") draw(true);
+      applyPrefs(); if (k === "bgType") openPrefs(tab, snap); };
+    m.onclick = (e) => { const t = e.target.closest("[data-tab]"), a = (e.target.closest("[data-m]") || {}).dataset; const am = a && a.m; if (t) return openPrefs(t.dataset.tab, snap);
+      const tm = m.querySelector("[data-tplm]"); if (am === "tpl") { tm.hidden = !tm.hidden; return; } if (tm) tm.hidden = true;
+      if (am === "def") { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; offC.clear(); draw(true); applyPrefs(); openPrefs(tab, snap); }
+      else if (am === "savedef") { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); msg("Modèle par défaut enregistré : « Appliquer les réglages par défaut » remet désormais ces réglages."); }
+      else if (am === "all") { LS.set("bt-prefs", P); const L = typeof layouts === "function" ? layouts() : []; let n = 0; L.forEach((x) => { if (x && x.prefs) { x.prefs = { ...P }; n++; } }); if (n) saveList("bt-layouts", L); applyPrefs(); msg(`Réglages appliqués aux 2 charts${n ? ` et à ${n} mise(s) en page` : ""}.`); }
+      else if (am === "x") { const rth = P.rth !== snap.rth || P.prevColor !== snap.prevColor; P = snap; if (rth) { offC.clear(); draw(true); } applyPrefs(); closeModal(); }
+      else if (am === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Paramètres enregistrés."); } };
   }
   // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
   const sessions = () => LS.get("bt-sessions", []);
@@ -4657,19 +4830,23 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     ls = chart.addLineSeries({ color: "#2962ff", lineWidth: 2, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: true, visible: false });
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
-    chart.subscribeCrosshairMove((p) => legend(p && p.time ? p.seriesData.get(cs) : null));
+    chart.subscribeCrosshairMove((p) => { const d = p && p.time ? p.seriesData.get(cs) : null; if (d && vs) { const v = p.seriesData.get(vs); d.vol = v ? v.value : 0; } legend(d); });
+    chart.timeScale().subscribeVisibleLogicalRangeChange(() => { if (!hlRaf) hlRaf = requestAnimationFrame(() => { hlRaf = 0; hiLo(); }); });
     chart.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && r.from < 30 && !olderBusy) setTimeout(loadOlder, 0); }); // hors du rendu du chart // bord gauche atteint -> historique plus ancien
     applyPrefs(); loop();
   }
   function legend(d) {
     const el = $("btLegend"); if (!el) return;
     const b = S.B[S.B.length - 1], o = d || (b && { open: b[1], high: b[2], low: b[3], close: b[4] });
-    const tfn = tfName(S.tf), nm = SYMNAME[S.sym] || S.sym;
-    const ttl = P.title ? `<b>${nm} · ${tfn}</b>` : "";
+    const tfn = tfName(S.tf), nm = SYMNAME[S.sym] || S.sym, [tk, ds] = nm.split(" · "), tm = P.titleMode === "ticker" ? tk : P.titleMode === "desc" ? ds || tk : nm;
+    const tc = S.raw.length ? S.raw[S.cur][0] : 0, open = !!tc && mktOpen(tc);
+    const ttl = P.title ? `<b>${tm} · ${tfn}</b>${P.mkt ? `<i class="tx-mk${open ? " on" : ""}" title="${open ? "Marché ouvert" : "Marché fermé"}"></i>` : ""}` : "";
     if (!o) { el.innerHTML = ttl; return; }
     const cl = o.close >= o.open ? "up" : "dn", ch = o.close - o.open;
-    el.innerHTML = ttl + (!P.ohlc ? "" : `<span class="v">O<span class="${cl}">${o.open.toFixed(2)}</span></span><span class="v">H<span class="${cl}">${o.high.toFixed(2)}</span></span><span class="v">L<span class="${cl}">${o.low.toFixed(2)}</span></span><span class="v">C<span class="${cl}">${o.close.toFixed(2)}</span></span>`) + (P.chg ? `<span class="v ${cl}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}</span>` : "");
+    el.innerHTML = ttl + (!P.ohlc ? "" : `<span class="v">O<span class="${cl}">${o.open.toFixed(2)}</span></span><span class="v">H<span class="${cl}">${o.high.toFixed(2)}</span></span><span class="v">L<span class="${cl}">${o.low.toFixed(2)}</span></span><span class="v">C<span class="${cl}">${o.close.toFixed(2)}</span></span>`) + (P.chg ? `<span class="v ${cl}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}</span>` : "") + (P.vol ? `<span class="v">Vol<span class="${cl}">${Math.round(d ? d.vol || 0 : b ? b[5] || 0 : 0).toLocaleString("fr-FR")}</span></span>` : "");
   }
+  // marché des futures CME : fermé de 17h à 18h NY et du vendredi 17h au dimanche 18h
+  function mktOpen(t) { const o = parts(t * 1000), h = +o.hour, wd = new Date(Date.UTC(+o.year, +o.month - 1, +o.day)).getUTCDay(); if (wd === 6) return false; if (wd === 0) return h >= 18; if (wd === 5) return h < 17; return h !== 17; }
   function draw(full) {
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
     ensureChart();
@@ -4677,8 +4854,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!bars.length) { cs.setData([]); vs.setData([]); ls.setData([]); cs.setMarkers([]); return; }
     const key2r = key + (P.rth ? "r" : ""), all = full || key2r !== lastKey || !S.lastLen || bars.length < S.lastLen;
     const c = [], v = []; // en lecture, seules les bougies nouvelles ou modifiées sont converties (un chart 1 s = plus de 100 000 bougies)
-    for (let i = all ? 0 : Math.max(0, S.lastLen - 1); i < bars.length; i++) { const b = bars[i], time = toNY(b[0]); c.push({ time, open: b[1], high: b[2], low: b[3], close: b[4] }); v.push({ time, value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }); }
-    if (all) { if (key2r !== lastKey) { const o = { timeScale: { secondsVisible: S.tf < 1 } }; chart.applyOptions(o); if (chart2) chart2.applyOptions(o); }
+    for (let i = all ? 0 : Math.max(0, S.lastLen - 1); i < bars.length; i++) { const b = bars[i], time = toNY(b[0]), o = { time, open: b[1], high: b[2], low: b[3], close: b[4] };
+      if (P.prevColor && i) { const up = b[4] >= bars[i - 1][4]; o.color = P.body ? (up ? P.up : P.down) : "rgba(0,0,0,0)"; o.borderColor = up ? P.bUp : P.bDn; o.wickColor = up ? P.wUp : P.wDn; } c.push(o); v.push({ time, value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }); }
+    if (all) { if (key2r !== lastKey) { const o = { timeScale: { secondsVisible: S.tf < 1 } }; chart.applyOptions(o); if (chart2) chart2.applyOptions(o); chart.applyOptions({ watermark: { text: `${(SYMNAME[S.sym] || S.sym || "").split(" · ")[0]}, ${tfName(S.tf)}` } }); }
       cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
     else for (let i = 0; i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); }
     S.lastLen = bars.length;
@@ -4686,12 +4864,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const first = bars[0][0], lastT = S.raw[S.cur][0];
     const mk = markers.filter((m) => m.t >= first && m.t <= lastT).map((m) => ({ time: toNY(bucket(m.t)), position: m.position, color: m.color, shape: m.shape, text: m.text }));
     mk.sort((x, y) => x.time - y.time); cs.setMarkers(mk);
-    $("btClock").textContent = `${dstr(lastT)} ${hm(lastT)}${S.sec ? ":" + String(lastT % 60).padStart(2, "0") : ""} UTC-5 (NY)`; legend(null); draw2();
+    $("btClock").textContent = `${hm(lastT)}:${String(lastT % 60).padStart(2, "0")} ${utcOff(lastT)}`; $("btClock").title = `${dstr(lastT)} — heure de New York du replay`; if ($("btEth")) $("btEth").textContent = P.rth ? "RTH" : "ETH"; legend(null); draw2(); hiLo();
   }
   // P&L si l'ordre de sortie est touché (frais inclus) : affiché à côté du TP / SL
   const exitPnl = (o) => { if (!A.pos || Math.sign(o.qty) === Math.sign(A.pos.qty)) return null; const c = CTR[A.pos.ctr], q = Math.min(Math.abs(o.qty), Math.abs(A.pos.qty)); return (o.px - A.pos.avg) * Math.sign(A.pos.qty) * q * c.pv - c.fee * q; };
   function priceLines() {
-    plines.forEach((l) => cs.removePriceLine(l)); plines = [];
+    plines.forEach((l) => cs.removePriceLine(l)); plines = []; extraLevels = [];
+    if (P.prevClose && P.prevClose !== "hidden" && S.B && S.B.length > 1) { const B = S.B, k = sessK(B[B.length - 1][0]); let j = B.length - 1; while (j >= 0 && sessK(B[j][0]) === k) j--;
+      if (j >= 0 && S.tf < 1440) { extraLevels.push(B[j][4]); plines.push(cs.createPriceLine({ price: B[j][4], color: P.pcColor, lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, lineVisible: P.prevClose !== "v", axisLabelVisible: P.prevClose !== "l", title: "" })); } }
     if (A.pos) plines.push(cs.createPriceLine({ price: A.pos.avg, color: A.pos.qty > 0 ? "#26a69a" : "#ef5350", lineWidth: 2, axisLabelVisible: true, title: `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name}  ${usd(upl())}` }));
     [...A.orders, ...(ordDrag && ordDrag.temp ? [ordDrag] : [])].forEach((o) => { const pl = exitPnl(o);
       plines.push(cs.createPriceLine({ price: o.px, color: o.bracket === "SL" ? "#ef5350" : o.bracket === "TP" ? "#26a69a" : "#2962ff", lineWidth: o === ordDrag ? 2 : 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty}${pl == null ? "" : "  " + (pl >= 0 ? "+" : "") + usd(pl)}` })); });
@@ -4805,21 +4985,118 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const GICON = { cur: "cross", lines: "trend", fib: "fib", pat: "_pat", proj: "long", shp: "brush", txt: "text", emo: "emoji" };
   const icon = (id) => ICON[id] || (ICON[GICON[(typeof GROUPS !== "undefined" && (GROUPS.find((G) => G.sec.some((x) => x[1].some((t) => t.id === id))) || {}).g) || ""]]) || SV('<path fill="none" stroke="currentColor" d="M6.5 21.5l3-1 11-11-2-2-11 11zM17.5 8.5l2 2"/>'); // icône par défaut des outils sans dessin dédié
   const T = (id, name, key) => ({ id, name, key });
+
+  /* icônes TopstepX (= TradingView) : 28x28, trait 1 px, poignées rondes */
+  const SG = (d) => SV(`<g fill="none" stroke="currentColor">${d}</g>`), PH = (x, y) => `<circle cx="${x}" cy="${y}" r="1.5" fill="none"/>`;
+  Object.assign(ICON, {
+    info: SG('<path d="M6.5 20.5l12-12"/>' + PH(5.5, 21.5) + PH(19.5, 7.5) + '<rect x="14.5" y="15.5" width="9" height="7" rx="1.5"/><path d="M17 18h4M17 20h3"/>'),
+    angle: SG('<path d="M6.5 21.5l12-11M6.5 21.5h16"/><path d="M14 21.5a7.5 7.5 0 0 0-2.2-5.3"/>' + PH(5.5, 21.5) + PH(19.5, 9.5)),
+    pchan: SG('<path d="M7.5 14.5l14-7M6.5 21.5l14-7"/>' + PH(6, 15.2) + PH(23, 6.8) + PH(5, 22.2)),
+    regr: SG('<path d="M6.5 18l15-8"/><path stroke-dasharray="2 2" d="M6.5 13l15-8M6.5 23l15-8"/>' + PH(5.2, 18.7) + PH(22.8, 9.3)),
+    flat: SG('<path d="M6.5 14l15-7M5 21.5h18"/>' + PH(5.2, 14.7) + PH(22.8, 6.3) + PH(14, 21.5)),
+    disjoint: SG('<path d="M6.5 9.5l15 6M6.5 21.5l15-4"/>' + PH(5.1, 8.9) + PH(22.9, 16.1) + PH(5.1, 21.9)),
+    pitch: SG('<path d="M5.5 22.5l6-7.5M9 9.5l5.5 10.5M9 9.5l14-5M11.5 15l11.5-4M14.5 20l8.5-3"/>' + PH(4.5, 23.5) + PH(8.5, 8.5) + PH(15, 21)),
+    schiff: SG('<path d="M5.5 16.5l6-1.5M9 9.5l5.5 10.5M9 9.5l14-5M11.5 15l11.5-4M14.5 20l8.5-3"/>' + PH(4, 17) + PH(8.5, 8.5) + PH(15, 21)),
+    mschiff: SG('<path d="M7.5 13.5l4 1.5M9 9.5l5.5 10.5M9 9.5l14-5M11.5 15l11.5-4M14.5 20l8.5-3"/><path stroke-dasharray="1.5 1.5" d="M4.5 18.5l3-5"/>' + PH(6.5, 12.5) + PH(8.5, 8.5) + PH(15, 21)),
+    ipitch: SG('<path d="M5.5 22.5l6-7.5M9 9.5l5.5 10.5M9 9.5l10-3.5M11.5 15l8-3M14.5 20l6-2"/>' + PH(4.5, 23.5) + PH(8.5, 8.5) + PH(15, 21)),
+    fib: SG('<path d="M4 6.5h20M4 11.5h20M4 16.5h20M4 21.5h20"/><path stroke-dasharray="1.5 1.5" d="M6 21.5l16-15"/>' + PH(5, 21.5) + PH(23, 6.5)),
+    fibext: SG('<path d="M13 6.5h11M13 11.5h11M13 16.5h11M13 21.5h11"/><path d="M5 20.5l4-11 4 7"/>' + PH(4.5, 21.5) + PH(9, 8.5) + PH(13, 17)),
+    fibchan: SG('<path d="M5.5 12.5l17-7M5.5 17.5l17-7M5.5 22.5l17-7"/>' + PH(4.5, 13) + PH(23.5, 5)),
+    fibtz: SG('<path d="M5.5 4.5v19M8.5 4.5v19M11.5 4.5v19M16.5 4.5v19M23.5 4.5v19"/>'),
+    fibfan: SG('<path d="M5.5 22.5l17-17M5.5 22.5l17-11M5.5 22.5l17-6M5.5 22.5h17M5.5 22.5v-17"/>' + PH(5.5, 22.5)),
+    fibtime: SG('<path d="M6.5 4.5v19M12.5 4.5v19M17.5 4.5v19M23.5 4.5v19"/><path d="M6.5 19.5l6-11 5 8"/>'),
+    fibcirc: SG('<circle cx="14" cy="14" r="3"/><circle cx="14" cy="14" r="6"/><circle cx="14" cy="14" r="9.5"/>'),
+    fibspir: SG('<path d="M15 14a1 1 0 1 0-1 1 2.5 2.5 0 0 0 2.5-2.5 4 4 0 0 0-4-4 6 6 0 0 0-6 6 8.5 8.5 0 0 0 8.5 8.5 10.5 10.5 0 0 0 9.5-6"/>'),
+    fibarc: SG('<path d="M4 21.5h20M10.5 21.5a3.5 3.5 0 0 1 7 0M7.5 21.5a6.5 6.5 0 0 1 13 0M4.5 21.5a9.5 9.5 0 0 1 19 0"/>'),
+    fibwedge: SG('<path d="M5.5 21.5l17-15M5.5 21.5h17M12.5 21.5a7 7 0 0 0-1.8-4.7M18.5 21.5a13 13 0 0 0-3.4-8.6"/>' + PH(5.5, 21.5)),
+    pitchfan: SG('<path d="M5.5 22.5l17-8M5.5 22.5l14-14M5.5 22.5l8-17M13 5l10 9"/>' + PH(5.5, 22.5) + PH(13, 5) + PH(23, 14)),
+    gbox: SG('<rect x="5.5" y="5.5" width="17" height="17"/><path d="M5.5 11.5h17M5.5 16.5h17M11.5 5.5v17M16.5 5.5v17"/>'),
+    gsqf: SG('<rect x="5.5" y="5.5" width="17" height="17"/><path d="M5.5 11.5h17M5.5 16.5h17M11.5 5.5v17M16.5 5.5v17M5.5 22.5l17-17"/>'),
+    gsq: SG('<rect x="5.5" y="5.5" width="17" height="17"/><path d="M5.5 22.5l17-17M5.5 5.5l17 17"/><circle cx="14" cy="14" r="8.5"/>'),
+    gfan: SG('<path d="M5.5 22.5l17-17M5.5 22.5l17-9M5.5 22.5l17-4M5.5 22.5l9-17M5.5 22.5l4-17"/>' + PH(5.5, 22.5)),
+    xabcd: SG('<path d="M5 21l4.5-13 5 9 4-6 5 9z"/>' + PH(5, 21) + PH(9.5, 8) + PH(14.5, 17) + PH(18.5, 11) + PH(23.5, 20)),
+    _pat: SG('<path d="M5 21l4.5-13 5 9 4-6 5 9z"/>' + PH(5, 21) + PH(9.5, 8) + PH(14.5, 17) + PH(18.5, 11) + PH(23.5, 20)),
+    cypher: SG('<path d="M4.5 20.5l5-12 4 6 5-9 5 14z"/>' + PH(4.5, 20.5) + PH(9.5, 8.5) + PH(13.5, 14.5) + PH(18.5, 5.5) + PH(23.5, 19.5)),
+    hs: SG('<path d="M3.5 20.5l4-7 3 3 3.5-10 3.5 10 3-3 4 7"/><path stroke-dasharray="2 2" d="M7.5 16.5h13"/>'),
+    abcd: SG('<path d="M5.5 20.5l5-12 6 8 6-10"/>' + PH(5.5, 20.5) + PH(10.5, 8.5) + PH(16.5, 16.5) + PH(22.5, 6.5)),
+    tripat: SG('<path d="M4.5 20.5l4-12 4 9 4-6 4 4 4-2"/><path stroke-dasharray="2 2" d="M8.5 8.5l15 5M4.5 20.5l19-6"/>'),
+    drives: SG('<path d="M4.5 21.5l3-5 3 2 3-7 3 3 3-8 3 3"/>' + PH(7.5, 16.5) + PH(13.5, 11.5) + PH(19.5, 6.5)),
+    ew5: SG('<path d="M4.5 21.5l4-8 3 4 5-11 3 5 5-6"/>' + PH(8.5, 13.5) + PH(11.5, 17.5) + PH(16.5, 6.5) + PH(19.5, 11.5) + PH(24.5, 5.5)),
+    ewabc: SG('<path d="M5.5 7.5l6 12 5-6 6 9"/>' + PH(11.5, 19.5) + PH(16.5, 13.5) + PH(22.5, 22.5)),
+    ewtri: SG('<path d="M4.5 8.5l4 13 3-9 3 7 3-5 3 3 3-2"/>'),
+    ewwxy: SG('<path d="M4.5 8.5l5 10 5-5 5 9 4-6"/>' + PH(9.5, 18.5) + PH(14.5, 13.5) + PH(19.5, 22.5)),
+    ewwxyz: SG('<path d="M3.5 7.5l4 9 4-4 4 8 4-5 4 9"/>'),
+    cyc: SG('<path d="M5.5 22.5v-15M11.5 22.5v-15M17.5 22.5v-15M23.5 22.5v-15"/><path d="M5.5 13.5a3 3 0 0 1 6 0 3 3 0 0 1 6 0 3 3 0 0 1 6 0"/>'),
+    tcyc: SG('<path d="M4 20.5h20"/><path d="M4.5 20.5a4.5 4.5 0 0 1 9 0 5 5 0 0 1 10 0"/>'),
+    long: SG('<rect x="5.5" y="5.5" width="17" height="17" rx="1"/><path d="M5.5 14.5h17"/><path fill="currentColor" fill-opacity=".25" stroke="none" d="M6 6h16v8H6z"/>' + PH(5.5, 14.5)),
+    short: SG('<rect x="5.5" y="5.5" width="17" height="17" rx="1"/><path d="M5.5 13.5h17"/><path fill="currentColor" fill-opacity=".25" stroke="none" d="M6 14h16v8H6z"/>' + PH(5.5, 13.5)),
+    pfc: SG('<path d="M7.5 7.5v12M10.5 9.5v8M13.5 11.5v7"/><path d="M6.5 10.5h2M6.5 16.5h2M9.5 11.5h2M9.5 15.5h2M12.5 13.5h2M12.5 16.5h2"/><path stroke-dasharray="2 2" d="M14.5 14.5l8-7M14.5 14.5l8 5"/>'),
+    barpat: SG('<path d="M7.5 8.5v12M6 11.5h1.5M7.5 17.5H9M13.5 6.5v12M12 9.5h1.5M13.5 14.5H15M19.5 10.5v12M18 13.5h1.5M19.5 19.5H21"/>'),
+    ghost: SG('<rect x="6.5" y="9.5" width="3" height="8"/><rect x="12.5" y="7.5" width="3" height="8" stroke-dasharray="1.5 1.5"/><rect x="18.5" y="11.5" width="3" height="8" stroke-dasharray="1.5 1.5"/><path d="M8 6.5v3M8 17.5v3M14 4.5v3M14 15.5v3M20 8.5v3M20 19.5v3"/>'),
+    projection: SG('<path d="M6.5 21.5l9-13M6.5 21.5h15M21.5 21.5a15 15 0 0 0-6-13"/>' + PH(6.5, 21.5) + PH(15.5, 8.5) + PH(21.5, 21.5)),
+    avwap: SG('<path d="M4.5 19.5c3-1 4-6 7-6s4 4 7 2 3-7 5-8"/><path d="M4.5 19.5v4M2.5 23.5h4"/>' + PH(4.5, 19.5)),
+    frvp: SG('<path d="M5.5 4.5v19M22.5 4.5v19M5.5 7.5h6M5.5 10.5h10M5.5 13.5h14M5.5 16.5h9M5.5 19.5h5"/>'),
+    avp: SG('<path d="M7.5 4.5v19M7.5 7.5h6M7.5 10.5h10M7.5 13.5h14M7.5 16.5h9M7.5 19.5h5"/>' + PH(7.5, 23.5)),
+    prange: SG('<path d="M14 5.5v17M10 5.5h8M10 22.5h8M11.5 8.5l2.5-3 2.5 3M11.5 19.5l2.5 3 2.5-3"/>'),
+    drange: SG('<path d="M5.5 14h17M5.5 10v8M22.5 10v8M8.5 11.5l-3 2.5 3 2.5M19.5 11.5l3 2.5-3 2.5"/>'),
+    measure: SG('<rect x="5.5" y="5.5" width="17" height="17"/><path d="M14 8.5v11M8.5 14h11M12 10.5l2-2 2 2M17.5 12l2 2-2 2"/>'),
+    brush: SG('<path d="M5.5 22.5c2.5 0 4-1 4.5-3l9-10.5-2-2-10 9c-1.5 1.5-1 3-1.5 6.5zM15.5 8.5l3 3"/>'),
+    hilite: SG('<path d="M7.5 22.5l3-3M10 19l-2.5-2.5 10-10 5 5-10 10z"/><path d="M5.5 23.5h4"/>'),
+    amark: SV('<g fill="none" stroke="currentColor"><path d="M8 20l8.5-8.5"/></g><path fill="currentColor" d="M13.2 9.3l8.3-2.8-2.8 8.3z"/>'),
+    arrow: SG('<path d="M6.5 21.5l14-14M14.5 7.5h6v6"/>' + PH(5.5, 22.5)),
+    aup: SG('<path d="M14 5.5l7 7.5h-4.5v9.5h-5V13H7z"/>'),
+    adn: SG('<path d="M14 22.5l7-7.5h-4.5V5.5h-5V15H7z"/>'),
+    alf: SG('<path d="M5.5 14l7.5-7v4.5h9.5v5H13V21z"/>'),
+    art: SG('<path d="M22.5 14L15 7v4.5H5.5v5H15V21z"/>'),
+    rect: SG('<rect x="5.5" y="7.5" width="17" height="13"/>' + PH(5.5, 7.5) + PH(22.5, 20.5)),
+    rrect: SG('<path d="M10 5.5l13 5-5 12-13-5z"/>' + PH(10, 5.5) + PH(18, 22.5)),
+    path: SG('<path d="M5.5 19.5l5-8 5 5 7-10"/><path d="M18.5 6.5h4v4"/>' + PH(5.5, 19.5) + PH(10.5, 11.5) + PH(15.5, 16.5)),
+    circle: SG('<circle cx="14" cy="14" r="8.5"/>' + PH(14, 14) + PH(22.5, 14)),
+    ellipse: SG('<ellipse cx="14" cy="14" rx="9.5" ry="6"/>' + PH(14, 14)),
+    poly: SG('<path d="M6.5 9.5l12-3 4 11-9 5-7-5z"/>' + PH(6.5, 9.5) + PH(18.5, 6.5) + PH(22.5, 17.5) + PH(13.5, 22.5) + PH(6.5, 17.5)),
+    tri: SG('<path d="M5.5 21.5l5-15 12 15z"/>' + PH(5.5, 21.5) + PH(10.5, 6.5) + PH(22.5, 21.5)),
+    arc: SG('<path d="M5.5 20.5c2-9 15-9 17 0"/>' + PH(5.5, 20.5) + PH(22.5, 20.5) + PH(14, 13.8)),
+    curve: SG('<path d="M5.5 20.5C8 6 18 6 22.5 13.5"/>' + PH(5.5, 20.5) + PH(22.5, 13.5)),
+    dcurve: SG('<path d="M4.5 18.5c3-9 7-9 9.5-4.5s6.5 4.5 9.5-4.5"/>' + PH(4.5, 18.5) + PH(23.5, 9.5)),
+    text: SG('<path d="M7.5 7.5h13M14 7.5v14M11.5 21.5h5"/>'),
+    atext: SG('<path d="M5.5 6.5h11M11 6.5v12M9 18.5h4"/><path d="M20 15.5v7M17 19.5a3 3 0 0 0 6 0M18.5 17h3"/>'),
+    note: SG('<rect x="5.5" y="5.5" width="17" height="13" rx="1"/><path d="M10.5 9h7M14 9v6.5M12 22.5l2-3.5 2 3.5"/>'),
+    pnote: SG('<rect x="5.5" y="5.5" width="17" height="13" rx="1"/><path d="M12 22.5l2-3.5 2 3.5M16 8.5h-2.8a1.4 1.4 0 0 0 0 2.8h1.6a1.4 1.4 0 0 1 0 2.8H12M14 7.3v1.2M14 14.1v1.4"/>'),
+    pin: SG('<path d="M14 23s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z"/><circle cx="14" cy="12" r="2"/>'),
+    table: SG('<rect x="4.5" y="6.5" width="19" height="15"/><path d="M4.5 11.5h19M4.5 16.5h19M10.5 6.5v15M17 6.5v15"/>'),
+    callout: SG('<path d="M5.5 6.5h17v11h-9l-5 4.5v-4.5h-3z"/>'),
+    comment: SG('<path d="M8 6.5h12a3.5 3.5 0 0 1 3.5 3.5v4a3.5 3.5 0 0 1-3.5 3.5h-8l-4 4v-4A3.5 3.5 0 0 1 4.5 14v-4A3.5 3.5 0 0 1 8 6.5z"/>'),
+    plabel: SG('<path d="M6.5 6.5h15v10h-11l-4 5z"/>'),
+    sign: SG('<circle cx="14" cy="9.5" r="5"/><path d="M14 14.5v9M14 7l.8 1.7 1.8.2-1.3 1.2.3 1.8-1.6-.9-1.6.9.3-1.8-1.3-1.2 1.8-.2z"/>'),
+    flag: SG('<path d="M8.5 23.5v-18M8.5 6.5h12l-3 4 3 4h-12"/>'),
+    magWeak: SG('<path d="M8.5 6.5v8a5.5 5.5 0 0 0 11 0v-8h-3.5v8a2 2 0 0 1-4 0v-8z"/><path d="M8.5 10h3.5M16 10h3.5"/>'),
+    magStrong: SG('<path d="M8.5 6.5v8a5.5 5.5 0 0 0 11 0v-8h-3.5v8a2 2 0 0 1-4 0v-8z"/><path d="M8.5 10h3.5M16 10h3.5M12 23.5l2-2.5 2 2.5M14 21v3"/>'),
+    link: SG('<path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/>'),
+    lockOpen: SG('<rect x="8.5" y="12.5" width="11" height="9" rx="1"/><path d="M10.5 12.5V9.5a3.5 3.5 0 0 1 7 0"/>'),
+    lockClosed: SG('<rect x="8.5" y="12.5" width="11" height="9" rx="1"/><path d="M10.5 12.5V10a3.5 3.5 0 0 1 7 0v2.5"/>'),
+    eye: SG('<path d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6"/>'),
+    eyeOff: SG('<path d="M4.5 14S8 8.5 14 8.5 23.5 14 23.5 14 20 19.5 14 19.5 4.5 14 4.5 14z"/><circle cx="14" cy="14" r="2.6"/><path d="M6.5 21.5l15-15"/>'),
+    trash: SG('<path d="M8.5 9.5h11l-1 13h-9zM6.5 9.5h15M11.5 9.5v-2h5v2M12.5 12.5v7M15.5 12.5v7"/>'),
+    gear: SG('<path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/>'),
+    pencil: SG('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>'),
+    folderPlus: SG('<path d="M4.5 8.5v13h19v-11h-9l-2-2z"/><path d="M14 13.5v6M11 16.5h6"/>'),
+    candles: SV('<path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/>'),
+  });
   const GROUPS = [
     { g: "cur", sec: [["Curseurs", [T("cross", "Croix", "Échap"), T("dot", "Point"), T("arrowc", "Flèche"), T("eraser", "Gomme")]]] },
     { g: "lines", sec: [["Lignes", [T("trend", "Ligne de tendance", "Alt+T"), T("ray", "Rayon"), T("info", "Ligne d'info"), T("ext", "Ligne étendue"), T("angle", "Angle de tendance"), T("hline", "Ligne horizontale", "Alt+H"), T("hray", "Demi-droite horizontale", "Alt+J"), T("vline", "Ligne verticale", "Alt+V"), T("xline", "Ligne en croix", "Alt+C")]],
-      ["Canaux", [T("pchan", "Canal parallèle"), T("regr", "Tendance de régression")]], ["Pitchforks", [T("pitch", "Pitchfork"), T("ipitch", "Pitchfork intérieur")]]] },
+      ["Canaux", [T("pchan", "Canal parallèle"), T("regr", "Tendance de régression"), T("flat", "Haut / bas plat"), T("disjoint", "Canal disjoint")]], ["Pitchforks", [T("pitch", "Pitchfork"), T("schiff", "Pitchfork de Schiff"), T("mschiff", "Pitchfork de Schiff modifié"), T("ipitch", "Pitchfork intérieur")]]] },
     { g: "fib", sec: [["Fibonacci", [T("fib", "Retracement de Fibonacci", "Alt+F"), T("fibext", "Extension de Fib (tendance)"), T("fibchan", "Canal de Fib"), T("fibtz", "Zones de temps de Fib"), T("fibfan", "Éventail de vitesse de Fib"), T("fibtime", "Temps de Fib (tendance)"), T("fibcirc", "Cercles de Fib"), T("fibspir", "Spirale de Fib"), T("fibarc", "Arcs de vitesse de Fib"), T("fibwedge", "Coin de Fib"), T("pitchfan", "Pitchfan")]],
       ["Gann", [T("gbox", "Boîte de Gann"), T("gsqf", "Carré de Gann fixe"), T("gsq", "Carré de Gann"), T("gfan", "Éventail de Gann")]]] },
     { g: "pat", icon: "_pat", sec: [["Figures chartistes", [T("xabcd", "Figure XABCD"), T("cypher", "Figure Cypher"), T("hs", "Tête et épaules"), T("abcd", "Figure ABCD"), T("tripat", "Triangle"), T("drives", "Trois poussées")]],
       ["Vagues d'Elliott", [T("ew5", "Impulsion (1·2·3·4·5)"), T("ewabc", "Correction (A·B·C)"), T("ewtri", "Triangle (A·B·C·D·E)"), T("ewwxy", "Double combo (W·X·Y)"), T("ewwxyz", "Triple combo (W·X·Y·Z)")]],
       ["Cycles", [T("cyc", "Lignes cycliques"), T("tcyc", "Cycles de temps")]]] },
-    { g: "proj", sec: [["Prévision", [T("long", "Position longue"), T("short", "Position courte"), T("pfc", "Prévision de position"), T("barpat", "Motif de barres"), T("ghost", "Ghost feed")]],
+    { g: "proj", sec: [["Projection", [T("long", "Position longue"), T("short", "Position courte"), T("pfc", "Prévision"), T("barpat", "Motif de barres"), T("ghost", "Ghost feed"), T("projection", "Projection")]],
       ["Volume", [T("avwap", "VWAP ancré"), T("frvp", "Profil de volume (plage fixe)"), T("avp", "Profil de volume ancré")]],
       ["Mesures", [T("prange", "Plage de prix"), T("drange", "Plage de dates"), T("measure", "Plage de dates et de prix", "Maj+clic")]]] },
     { g: "shp", sec: [["Pinceaux", [T("brush", "Pinceau"), T("hilite", "Surligneur")]], ["Flèches", [T("amark", "Marqueur flèche"), T("arrow", "Flèche"), T("aup", "Flèche haut"), T("adn", "Flèche bas"), T("alf", "Flèche gauche"), T("art", "Flèche droite")]],
       ["Formes", [T("rect", "Rectangle", "Alt+Maj+R"), T("rrect", "Rectangle incliné"), T("path", "Chemin"), T("circle", "Cercle"), T("ellipse", "Ellipse"), T("poly", "Polyligne"), T("tri", "Triangle"), T("arc", "Arc"), T("curve", "Courbe"), T("dcurve", "Double courbe")]]] },
-    { g: "txt", sec: [["Texte et notes", [T("text", "Texte", "Alt+X"), T("note", "Note"), T("pnote", "Note de prix"), T("pin", "Épingle"), T("table", "Tableau"), T("callout", "Bulle"), T("comment", "Commentaire"), T("plabel", "Étiquette de prix"), T("sign", "Panneau"), T("flag", "Drapeau")]]] },
+    { g: "txt", sec: [["Texte et notes", [T("text", "Texte", "Alt+X"), T("atext", "Texte ancré"), T("note", "Note"), T("pnote", "Note de prix"), T("pin", "Épingle"), T("table", "Tableau"), T("callout", "Bulle"), T("comment", "Commentaire"), T("plabel", "Étiquette de prix"), T("sign", "Panneau"), T("flag", "Drapeau")]]] },
     { g: "emo", icon: "_emo", sec: [["Emojis", [T("emoji", "Emojis")]]] },
   ];
   const IMPL = new Set(["cross", "measure", ...Object.keys(TOOLS)]);
@@ -4843,13 +5120,17 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const b = $("btFavBar"); if (!b) return; const on = LS.get("bt-favbar", true); b.hidden = !on; $("btFavBtn").classList.toggle("on", on); if (!on) return;
     const fv = favs().filter((id) => IMPL.has(id)), nm = Object.fromEntries(GROUPS.flatMap((G) => G.sec.flatMap((s) => s[1])).map((t) => [t.id, t.name + (t.key ? " (" + t.key + ")" : "")]));
     b.innerHTML = '<span class="grip" title="Déplacer">⠿</span>' + (fv.length ? fv.map((id) => `<button data-tool="${id}" title="${esc(nm[id] || id)}">${icon(id)}</button>`).join("") : '<span class="empty">☆ Ajoute des favoris depuis les menus d\'outils</span>');
-    const p = LS.get("bt-favpos", null); if (p) { b.style.left = p.x + "px"; b.style.top = p.y + "px"; b.style.bottom = "auto"; b.style.transform = "none"; } else { b.style.left = "50%"; b.style.bottom = "40px"; b.style.top = "auto"; b.style.transform = "translateX(-50%)"; }
+    const p = LS.get("bt-favpos", null); if (p) { b.style.left = p.x + "px"; b.style.top = p.y + "px"; b.style.bottom = "auto"; b.style.transform = "none"; } else { b.style.left = "50%"; b.style.bottom = "78px"; b.style.top = "auto"; b.style.transform = "translateX(-50%)"; }
     setTool(tool);
   }
   const FIB = [[0, "#787b86"], [0.236, "#f23645"], [0.382, "#ff9800"], [0.5, "#4caf50"], [0.618, "#089981"], [0.705, "#00bcd4"], [0.786, "#2962ff"], [1, "#787b86"]];
   const defStyle = (type) => ({ color: type === "rect" ? "#9c27b0" : type === "fib" ? "#787b86" : "#2962ff", width: type === "rect" || type === "fib" ? 1 : 2, dash: 0, fill: "rgba(156,39,176,0.2)", extL: false, extR: false, textColor: "#131722", fontSize: 12, labels: true,
     levels: type === "fib" ? FIB.map(([k, c]) => ({ k, c, on: true })) : undefined });
   let shapes = [], sel = null, tool = "cross", pending = null, drag = null, magnet = false, lockAll = false, hideAll = false, measure = null;
+  let magMode = LS.get("bt-magmode", "weak"), magInd = LS.get("bt-magind", false); // aimant TopstepX : faible / fort, accroche aux niveaux (« indicateurs »)
+  // niveaux « indicateurs » visibles : lignes horizontales (Jarvis, dessins), position, ordres, clôture précédente, plus haut / plus bas
+  const magLevels = () => [...shapes.filter((s) => visible(s) && (s.type === "hline" || s.type === "hray")).map((s) => s.p[0].price), ...(pane === 1 && A.pos ? [A.pos.avg] : []), ...(pane === 1 ? A.orders.map((o) => o.px) : []), ...(pane === 1 ? extraLevels : [])];
+  let extraLevels = [];
   // chaque mise en page a ses propres dessins ; le 2e chart a les siens (clé du symbole du 2e chart)
   const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curLay ? curLay + "-" : "") + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ"));
   /* 2 charts : pane = chart dont les dessins sont dans shapes/folders/sel ; act = chart actif (dernier cliqué) ; other = état de l'autre chart */
@@ -4862,11 +5143,19 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const fkey = () => dkey() + "-f";
   const saveFolders = () => LS.set(fkey(), folders);
   const fOf = (s) => (s.folder ? folders.find((f) => f.id === s.folder) || null : null);
-  const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden;
+  const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden && (s.sync !== "none" || s.tfOnly == null || s.tfOnly === S.tf);
   const lockedS = (s) => s.locked || lockAll || !!(fOf(s) || {}).locked;
-  const loadDrawings = () => { setActive(1); shapes = LS.get(dkey(1), []); folders = LS.get(dkey(1) + "-f", []); sel = null; msel = new Set(); other = { shapes: LS.get(dkey(2), []), folders: LS.get(dkey(2) + "-f", []), sel: null, msel: new Set() }; tree(); };
+  // dessins en « Synchro globale » : copiés dans bt-draw-global-<sous-jacent> et affichés dans toutes les mises en page
+  const gkey = (n = pane) => "bt-draw-global-" + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ"));
+  const gIds = { 1: new Set(), 2: new Set() };
+  const withGlobal = (L, n) => { const ids = new Set(L.map((s) => s.id)), G = LS.get(gkey(n), []); gIds[n] = new Set(G.map((s) => s.id)); return L.concat(G.filter((s) => !ids.has(s.id))); };
+  function saveGlobal() { const mine = shapes.filter((s) => s.sync === "global"), keep = LS.get(gkey(), []).filter((g) => !gIds[pane].has(g.id) && !mine.some((m) => m.id === g.id)); LS.set(gkey(), keep.concat(JSON.parse(JSON.stringify(mine)))); gIds[pane] = new Set(mine.map((s) => s.id)); }
+  // historique des dessins (Ctrl+Z / Ctrl+Y), par chart et par mise en page
+  const HIST = {}; const hist = () => (HIST[dkey()] = HIST[dkey()] || { h: [], r: [], last: JSON.stringify(shapes) });
+  function undoRedo(redo) { const H = hist(), from = redo ? H.r : H.h; if (!from.length) return msg(redo ? "Rien à rétablir." : "Rien à annuler."); (redo ? H.h : H.r).push(H.last); H.last = from.pop(); shapes = JSON.parse(H.last); sel = null; msel = new Set(); LS.set(dkey(), shapes); saveGlobal(); tree(); msg(redo ? "Dessin rétabli." : "Dessin annulé."); }
+  const loadDrawings = () => { setActive(1); shapes = withGlobal(LS.get(dkey(1), []), 1); folders = LS.get(dkey(1) + "-f", []); sel = null; msel = new Set(); other = { shapes: withGlobal(LS.get(dkey(2), []), 2), folders: LS.get(dkey(2) + "-f", []), sel: null, msel: new Set() }; HIST[dkey(1)] = { h: [], r: [], last: JSON.stringify(shapes) }; HIST[dkey(2)] = { h: [], r: [], last: JSON.stringify(other.shapes) }; tree(); };
   const shapes1 = () => (pane === 1 ? { shapes, folders } : other); // dessins du chart principal (sessions / mises en page)
-  const saveDrawings = () => { LS.set(dkey(), shapes); tree(); };
+  const saveDrawings = () => { const H = hist(), now = JSON.stringify(shapes); if (now !== H.last) { H.h.push(H.last); if (H.h.length > 100) H.h.shift(); H.r = []; H.last = now; } LS.set(dkey(), shapes); saveGlobal(); tree(); };
   const tpls = () => LS.get("bt-tpl", {});
   // temps <-> index logique sur les bougies agrégées (marche aussi au-delà de la dernière bougie)
   function t2l(t) { const B = PB(), tf = S.tf * 60; if (!B.length) return null; if (t >= B[B.length - 1][0]) return B.length - 1 + (t - B[B.length - 1][0]) / tf; if (t <= B[0][0]) return (t - B[0][0]) / tf;
@@ -4878,7 +5167,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!PC() || !PB().length) return null;
     const l = PC().timeScale().coordinateToLogical(x); let p = PS().coordinateToPrice(y); if (l == null || p == null) return null;
     let t = l2t(l);
-    if (magnet) { const b = PB()[Math.round(l)]; if (b) { t = b[0]; p = [b[1], b[2], b[3], b[4]].reduce((a, v) => (Math.abs(v - p) < Math.abs(a - p) ? v : a), b[1]); } }
+    if (magnet) { const b = PB()[Math.round(l)]; // aimant fort : toujours sur l'OHLC le plus proche ; faible : seulement à moins de 14 px
+      if (b) { const v = [b[1], b[2], b[3], b[4]].reduce((a, w) => (Math.abs(w - p) < Math.abs(a - p) ? w : a), b[1]), vy = PS().priceToCoordinate(v);
+        if (magMode === "strong" || (vy != null && Math.abs(vy - y) < 14)) { t = b[0]; p = v; } }
+      if (magInd) { let best = null, bd = 10; magLevels().forEach((v) => { const vy = PS().priceToCoordinate(v); if (vy != null && Math.abs(vy - y) < bd) { bd = Math.abs(vy - y); best = v; } }); if (best != null) p = best; } }
     return { t: Math.round(t), price: rnd(p) };
   }
   const cv = () => $(pane === 2 ? "btDraw2" : "btDraw");
@@ -4899,12 +5191,27 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const plotW = W - (ch.priceScale("right").width() || 60), plotH = H - (ch.timeScale().height() || 26);
     g.save(); g.beginPath(); g.rect(0, 0, plotW, plotH); g.clip();
     const list = hideAll ? [] : shapes.filter(visible);
+    for (const s of list) if (s.anc && !(drag && drag.s === s)) { const l = ch.timeScale().coordinateToLogical(s.anc.fx * plotW), p = PS().coordinateToPrice(s.anc.fy * plotH); if (l != null && p != null) s.p[0] = { t: Math.round(l2t(l)), price: p }; }
     if (pending && pane === act) list.push(pending);
     for (const s of list) drawShape(g, s, plotW, plotH);
     if (measure && pane === act) drawMeasure(g, measure);
     if (zoomSel && pane === act) { g.save(); g.fillStyle = "rgba(41,98,255,.12)"; g.strokeStyle = "#2962ff"; g.setLineDash([4, 3]); const zx = Math.min(zoomSel.x0, zoomSel.x1), zy = Math.min(zoomSel.y0, zoomSel.y1), zw = Math.abs(zoomSel.x1 - zoomSel.x0), zh = Math.abs(zoomSel.y1 - zoomSel.y0); g.fillRect(zx, zy, zw, zh); g.strokeRect(zx, zy, zw, zh); g.restore(); }
     if (pane === 1) drawNews(g, plotW, plotH);
     g.restore();
+    if (P.sessBreaks && S.tf < 1440) { const B = PB(), r = ch.timeScale().getVisibleLogicalRange(); if (r) { g.save(); g.strokeStyle = P.sbColor; g.setLineDash([4, 3]); g.lineWidth = 1;
+      for (let i = Math.max(1, Math.floor(r.from)); i <= Math.min(B.length - 1, Math.ceil(r.to)); i++) if (sessK(B[i][0]) !== sessK(B[i - 1][0])) { const x = Math.round(ch.timeScale().logicalToCoordinate(i - 0.5)) + 0.5; if (x > 0 && x < plotW) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, plotH); g.stroke(); } }
+      g.restore(); } }
+    overlays(c, ch, plotW, plotH);
+  }
+  function overlays(c, ch, W, H) {
+    const w = c.parentElement; if (!w) return; const al = w.querySelector(".tx-al"), cd = w.querySelector(".tx-cd"), nv = w.querySelector(".tx-nav"), sw = ch.priceScale("right").width() || 60;
+    if (al) { al.className = "tx-al" + (P.scaleAL === "always" ? " always" : P.scaleAL === "hidden" ? " never" : ""); al.style.left = W + Math.max(2, (sw - 43) / 2) + "px"; al.style.top = H - 24 + "px";
+      al.firstChild.classList.toggle("on", $("btAuto").classList.contains("on")); al.lastChild.classList.toggle("on", $("btLog").classList.contains("on")); }
+    if (nv) { nv.className = "tx-nav" + (P.navBtns === "always" ? " always" : P.navBtns === "hidden" ? "" : " hover"); nv.style.display = P.navBtns === "hidden" ? "none" : ""; nv.style.left = W / 2 + "px"; nv.style.top = H - 42 + "px"; }
+    if (cd) { const B = PB(), b = B[B.length - 1], tc = S.raw.length ? S.raw[S.cur][0] : 0, y = b ? PS().priceToCoordinate(b[4]) : null, on = !!(P.countdown && P.lastLbl && b && S.tf <= 1440 && y != null && y > 8 && y < H - 8 && !P.line);
+      if (cd.hidden === on) cd.hidden = !on;
+      if (on) { const left = Math.max(0, b[0] + Math.round(S.tf * 60) - tc - (S.sec ? 1 : 60)), hh = Math.floor(left / 3600), mm = Math.floor((left % 3600) / 60), ss = left % 60, p2 = (n) => String(n).padStart(2, "0");
+        cd.textContent = (hh ? p2(hh) + ":" : "") + p2(mm) + ":" + p2(ss); cd.style.left = W + "px"; cd.style.width = sw + "px"; cd.style.top = y + 9 + "px"; cd.style.background = b[4] >= b[1] ? P.up : P.down; cd.style.color = (b[4] >= b[1] ? P.up : P.down).toLowerCase() === "#000000" ? "#fff" : "#fff"; } }
   }
   function setDash(g, d) { g.setLineDash(d === 1 ? [6, 4] : d === 2 ? [2, 3] : []); }
   /* ---------- moteur générique des outils (v1.4) : n = clics (0 = libre, fin par double-clic / Entrée), free = main levée ---------- */
@@ -4955,6 +5262,13 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     regr: { n: 2, area: 1, d: (g, s) => { const B = between(s.p[0].t, s.p[1].t), n = B.length; if (n < 2) return; const ys = B.map((b) => b[4]), mx = (n - 1) / 2, my = ys.reduce((a, v) => a + v, 0) / n; let sxy = 0, sxx = 0; ys.forEach((v, i) => { sxy += (i - mx) * (v - my); sxx += (i - mx) ** 2; }); const k = sxy / sxx, c0 = my - k * mx, sd = Math.sqrt(ys.reduce((a, v, i) => a + (v - (c0 + k * i)) ** 2, 0) / n), p = (i, o) => ({ x: X(B[i][0]), y: Y(c0 + k * i + o) }), L = n - 1;
       fillPoly(g, [p(0, 2 * sd), p(L, 2 * sd), p(L, -2 * sd), p(0, -2 * sd)], fillOf(s)); ln(g, p(0, 0), p(L, 0)); g.save(); g.setLineDash([5, 4]); ln(g, p(0, 2 * sd), p(L, 2 * sd)); ln(g, p(0, -2 * sd), p(L, -2 * sd)); g.restore(); } },
     pitch: pitchfork((a) => a), ipitch: pitchfork((a, b) => mid(a, b)),
+    schiff: pitchfork((a, b) => ({ x: a.x, y: (a.y + b.y) / 2 })), mschiff: pitchfork((a, b) => mid(a, b)),
+    flat: { n: 3, area: 1, d: (g, s, P) => { const [a, b, c] = P; fillPoly(g, [a, b, { x: b.x, y: c.y }, { x: a.x, y: c.y }], fillOf(s)); ln(g, a, b); ln(g, { x: a.x, y: c.y }, { x: b.x, y: c.y }); } },
+    disjoint: { n: 3, area: 1, d: (g, s, P) => { const [a, b, c] = P, c2 = { x: b.x, y: c.y - (b.y - a.y) }; fillPoly(g, [a, b, c2, { x: a.x, y: c.y }], fillOf(s)); ln(g, a, b); ln(g, { x: a.x, y: c.y }, c2); } },
+    projection: { n: 3, area: 1, d: (g, s, P) => { const [a, b, c] = P, R = Math.hypot(b.x - a.x, b.y - a.y), t1 = Math.atan2(b.y - a.y, b.x - a.x), t2 = Math.atan2(c.y - a.y, c.x - a.x), ccw = (t2 - t1 + PI2) % PI2 > Math.PI;
+      g.save(); g.fillStyle = fillOf(s); g.beginPath(); g.moveTo(a.x, a.y); g.arc(a.x, a.y, R, t1, t2, ccw); g.closePath(); g.fill(); g.restore(); ln(g, a, b); ln(g, a, c); g.beginPath(); g.arc(a.x, a.y, R, t1, t2, ccw); g.stroke();
+      const d = s.p[2].price - s.p[1].price; tag(g, `${d >= 0 ? "+" : ""}${d.toFixed(2)} (${((d / s.p[1].price) * 100).toFixed(2)}%)`, c.x, c.y + (c.y > a.y ? 14 : -14)); } },
+    atext: { n: 1, box: 1, d: (g, s, P) => { g.save(); const fs = s.style.fontSize || 14; g.font = `${fs}px Roboto,sans-serif`; g.fillStyle = s.style.textColor || "#131722"; String(s.text || "Texte ancré").split("\\n").forEach((l, i) => g.fillText(l, P[0].x, P[0].y + i * (fs + 4))); g.restore(); } },
     fibext: { n: 3, d: (g, s, P) => { pl(g, P); const [a, b, c] = s.p; hLevels(g, Math.min(P[1].x, P[2].x), Math.max(P[1].x, P[2].x) + 90, c.price, b.price - a.price, [0, 0.618, 1, 1.272, 1.618, 2, 2.618]); } },
     fibchan: { n: 3, d: (g, s, P) => { const [a, b, c] = P, oy = c.y - (a.y + ((b.y - a.y) * (c.x - a.x)) / (b.x - a.x || 1)); [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618].forEach((k, i) => { g.strokeStyle = FC[i % 7]; ln(g, { x: a.x, y: a.y + oy * k }, { x: b.x, y: b.y + oy * k }); }); } },
     fibtz: { n: 2, vert: 1, d: (g, s, P, W, H) => { const dt = s.p[1].t - s.p[0].t; if (dt) [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89].forEach((k, i) => { const x = X(s.p[0].t + dt * k); if (x != null && x <= W) vline(g, x, H, FC[i % 7], String(k)); }); } },
@@ -5010,7 +5324,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     sign: { n: 1, box: 1, d: (g, s, P) => { ln(g, P[0], { x: P[0].x, y: P[0].y - 34 }); tbox(g, s, P[0].x - 4, P[0].y - 34, s.text, "#ffffff"); } },
     flag: glyph("🚩", 20), emoji: glyph(null, 26),
   };
-  const TEXTDEF = { note: "Note", pin: "Épingle", table: "Niveau|Prix;PDH|;PDL|", callout: "Bulle", comment: "Commentaire", sign: "Panneau", emoji: "😀", pnote: "" };
+  const TEXTDEF = { atext: "Texte ancré", note: "Note", pin: "Épingle", table: "Niveau|Prix;PDH|;PDL|", callout: "Bulle", comment: "Commentaire", sign: "Panneau", emoji: "😀", pnote: "" };
   GROUPS.forEach((G) => G.sec.forEach(([, items]) => items.forEach((it) => { if (SPEC[it.id]) { TOOLS[it.id] = it.name; IMPL.add(it.id); } })));
   ["dot", "arrowc", "eraser", "zoom"].forEach((id) => IMPL.add(id));
   let stay = LS.get("bt-stay", false), zoomSel = null; // stay = l'outil reste actif après un tracé (comme le crayon-cadenas)
@@ -5107,9 +5421,11 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   }
   function create(type, p) {
     const def = LS.get("bt-tpl-default", {})[type], s = { id: String(Date.now()) + Math.floor(Math.random() * 1e4), type, name: TOOLS[type], p, style: def ? JSON.parse(JSON.stringify(def)) : defStyle(type), text: type === "text" ? "Texte" : TEXTDEF[type] || "", hidden: false, locked: false };
+    if (type === "atext") ancOf(s);
     shapes.push(s); sel = s; saveDrawings();
     if (type === "text" || type in TEXTDEF) openSettings(s, "text");
   }
+  function ancOf(s) { const c = cv(), ch = PC(); if (!c || !ch) return; const W = c.clientWidth - (ch.priceScale("right").width() || 60), H = c.clientHeight - (ch.timeScale().height() || 26), x = X(s.p[0].t), y = Y(s.p[0].price); if (x != null && y != null && W > 0 && H > 0) s.anc = { fx: x / W, fy: y / H }; }
   function pos(e) { const r = $(pane === 2 ? "btWrap2" : "btWrap").getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   function bindDrawing(n = 1) {
     const wrap = $(n === 2 ? "btWrap2" : "btWrap"), c = $(n === 2 ? "btDraw2" : "btDraw");
@@ -5158,19 +5474,33 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
-    if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; if (o.temp) { if (!A.pos || o.px === rnd(A.pos.avg)) { priceLines(); return; } A.orders = A.orders.filter((x) => x.bracket !== o.bracket); delete o.temp; o.id = A.seq++; A.orders.push(o); msg(`${o.bracket} posé à ${o.px.toFixed(2)} (glisse la ligne pour l'ajuster).`); } dropOrder(o); } if (drag) { drag = null; saveDrawings(); } });
+    if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; if (o.temp) { if (!A.pos || o.px === rnd(A.pos.avg)) { priceLines(); return; } A.orders = A.orders.filter((x) => x.bracket !== o.bracket); delete o.temp; o.id = A.seq++; A.orders.push(o); msg(`${o.bracket} posé à ${o.px.toFixed(2)} (glisse la ligne pour l'ajuster).`); } dropOrder(o); } if (drag) { if (drag.s && drag.s.anc) ancOf(drag.s); drag = null; saveDrawings(); } });
     wrap.addEventListener("mousemove", (e) => { if (n === 2) return; const pp = pos(e); newsTip(pp.x, pp.y); wrap.classList.toggle("ordhover", !!ordDrag || (tool === "cross" && !drag && !e.target.closest(".tx-favbar,.tx-float") && (!!orderAt(pos(e).y) || posAt(pos(e).y)))); });
     wrap.addEventListener("dblclick", (e) => { if (tool !== "cross") return; const { x, y } = pos(e), h = hit(x, y); if (h) { e.stopPropagation(); e.preventDefault(); openSettings(h.s); } }, true);
   }
   function tree() {
     const el = $("btTreeList"); if (!el) return;
-    const btns = (o, del) => `<button data-a="eye" title="Afficher / masquer">${o.hidden ? "◌" : "👁"}</button><button data-a="lock" title="Verrouiller">${o.locked ? "🔒" : "🔓"}</button><button data-a="del" title="${del}">🗑</button>`;
-    const row = (s, ind) => `<div class="row ${s === sel || msel.has(s.id) ? "sel" : ""}" draggable="true" data-id="${s.id}" style="padding-left:${12 + ind}px"><span class="nm">${esc(s.name)}${s.text && s.type !== "text" ? " · " + esc(s.text) : ""}</span>${btns(s, "Supprimer")}</div>`;
+    const acts = (o, del) => `<span class="acts"><button data-a="lock" class="${o.locked ? "keep" : ""}" title="${o.locked ? "Déverrouiller" : "Verrouiller"}">${ICON[o.locked ? "lockClosed" : "lockOpen"]}</button><button data-a="eye" class="${o.hidden ? "keep" : ""}" title="${o.hidden ? "Afficher" : "Masquer"}">${ICON[o.hidden ? "eyeOff" : "eye"]}</button><button data-a="del" title="${del}">${ICON.trash}</button></span>`;
+    const tag = (s) => (s.sync === "global" ? " <small>· synchro globale</small>" : s.sync === "none" && s.tfOnly != null ? ` <small>· ${tfName(s.tfOnly)} seulement</small>` : "");
+    const row = (s, ind) => `<div class="row ${s === sel || msel.has(s.id) ? "sel" : ""}${s.hidden ? " dim" : ""}" draggable="true" data-id="${s.id}" style="padding-left:${16 + ind}px"><span class="ic">${icon(s.type)}</span><span class="nm">${esc(s.name)}${s.text && s.type !== "text" && s.type !== "atext" ? " · " + esc(s.text) : ""}${tag(s)}</span>${acts(s, "Supprimer")}</div>`;
     const top = [...shapes].reverse(); // le plus récent (dessiné au-dessus) en haut
+    const symNm = ((pane === 2 ? SYMNAME[sym2()] || sym2() : SYMNAME[S.sym] || S.sym) || "").split(" · ")[0];
+    const head = `<div class="row" data-k="sym" style="cursor:default"><span class="ic">${ICON.candles}</span><span class="nm"><b>${esc(symNm)} · Futures, ${esc(tfName(S.tf))}</b></span></div>`
+      + (pane === 1 ? `<div class="row${P.news === false ? " dim" : ""}" data-k="news"><span class="ic">${SV('<g fill="none" stroke="currentColor"><path d="M4.5 18.5l5-6 4 3 4-7 6 5"/></g>')}</span><span class="nm">News Forex Factory</span><span class="acts"><button data-a="news" class="keep" title="Afficher / masquer les news">${ICON[P.news === false ? "eyeOff" : "eye"]}</button></span></div>` : "");
     const h = folders.map((f) => { const kids = top.filter((s) => s.folder === f.id);
-      return `<div class="row fold" draggable="true" data-fid="${f.id}"><span class="tw" data-a="tog">${f.open === false ? "▸" : "▾"}</span><span class="nm">📁 ${esc(f.name)} <small>(${kids.length})</small></span>${btns(f, "Supprimer le groupe")}</div>` + (f.open === false ? "" : kids.map((s) => row(s, 22)).join("")); }).join("")
+      return `<div class="row fold${f.hidden ? " dim" : ""}" draggable="true" data-fid="${f.id}" style="padding-left:4px"><span class="tw" data-a="tog">${f.open === false ? "▸" : "▾"}</span><span class="ic">${SV('<g fill="none" stroke="currentColor"><path d="M4.5 8.5v13h19v-11h-9l-2-2z"/></g>')}</span><span class="nm">${esc(f.name)} <small>(${kids.length})</small></span>${acts(f, "Supprimer le groupe")}</div>` + (f.open === false ? "" : kids.map((s) => row(s, 22)).join("")); }).join("")
       + top.filter((s) => !fOf(s)).map((s) => row(s, 0)).join("");
-    el.innerHTML = h || `<div class="row" style="color:#8a8f98">Aucun dessin</div>`;
+    el.innerHTML = head + (h || `<div class="row dim" style="cursor:default"><span class="ic"></span><span class="nm">Aucun dessin</span></div>`);
+  }
+  // menu clic droit de l'arborescence (comme TopstepX) : renommer, synchro, verrouiller, masquer, supprimer, paramètres
+  function treeMenu(x, y, fid) {
+    const m = $("btCtx"), L = selShapes(), f = fid && folders.find((v) => v.id === fid), o = f || L[0]; if (!o) return;
+    const it = (a, t, ic, k, ck) => `<div class="ci" data-c="${a}">${ck != null ? `<b class="ck">${ck ? "✓" : ""}</b>` : ic ? ICON[ic] : `<b class="ck"></b>`}${t}${k ? `<span>${k}</span>` : ""}</div>`;
+    const sy = L.length ? L[0].sync || "layout" : "";
+    m.innerHTML = f ? it("ren", "Renommer", "pencil") + it("ungroup", "Dégrouper", null) + "<i></i>" + it("flock", f.locked ? "Déverrouiller" : "Verrouiller", f.locked ? "lockOpen" : "lockClosed") + it("fhide", f.hidden ? "Afficher" : "Masquer", f.hidden ? "eye" : "eyeOff") + it("fdel", "Supprimer", "trash", "Suppr")
+      : it("ren1", "Renommer", "pencil") + "<i></i>" + it("sync:none", "Pas de synchro", null, "", sy === "none") + it("sync:layout", "Synchro dans la mise en page", null, "", sy === "layout") + it("sync:global", "Synchro globale", null, "", sy === "global")
+        + "<i></i>" + it("lock", L.every((s) => s.locked) ? "Déverrouiller" : "Verrouiller", "lockClosed") + it("hide", L.every((s) => s.hidden) ? "Afficher" : "Masquer", "eyeOff") + it("del", "Supprimer", "trash", "Suppr") + (L.length === 1 ? "<i></i>" + it("set", "Paramètres…", "gear") : "");
+    m.dataset.fid = fid || ""; m.hidden = false; m.style.left = Math.min(x, innerWidth - 240) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px";
   }
   const selShapes = () => shapes.filter((s) => msel.has(s.id) || (!msel.size && s === sel));
   function clone(list, dt) { // copie décalée de dt secondes ; la copie devient la sélection
@@ -5204,6 +5534,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     else if (a === "front" || a === "back") { shapes = shapes.filter((s) => !L.includes(s)); if (a === "front") shapes.push(...L); else shapes.unshift(...L); saveDrawings(); }
     else if (a === "lock") { L.forEach((s) => (s.locked = !s.locked)); saveDrawings(); } else if (a === "hide") { L.forEach((s) => (s.hidden = !s.hidden)); saveDrawings(); }
     else if (a === "del") { shapes = shapes.filter((s) => !L.includes(s)); if (L.includes(sel)) sel = null; msel = new Set(); saveDrawings(); } else if (a === "set" && L[0]) openSettings(L[0]);
+    else if (a.startsWith("sync:")) { const v = a.slice(5); L.forEach((s) => { if (v === "layout") { delete s.sync; delete s.tfOnly; } else { s.sync = v; if (v === "none") s.tfOnly = S.tf; else delete s.tfOnly; } }); saveDrawings();
+      msg(v === "global" ? "Synchro globale : le dessin apparaît dans toutes les mises en page de ce symbole." : v === "none" ? `Pas de synchro : le dessin n'est visible qu'en ${tfName(S.tf)}.` : "Synchro dans la mise en page : visible dans toutes les unités de temps de cette mise en page."); }
   }
 
   /* ---------------- fenêtre de paramètres + modèles de dessin ---------------- */
@@ -5340,15 +5672,26 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btFavBtn").onclick = () => { LS.set("bt-favbar", !LS.get("bt-favbar", true)); favBar(); };
     $("btFavBar").onclick = (e) => { const b = e.target.closest("[data-tool]"); if (b) setTool(b.dataset.tool); };
     $("btFavBar").addEventListener("mousedown", (e) => { // déplacer la barre de favoris par la poignée
-      if (!e.target.classList.contains("grip")) return; e.preventDefault(); e.stopPropagation();
-      const b = $("btFavBar"), w = $("btWrap").getBoundingClientRect(), r = b.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+      if (e.button !== 0 || e.target.closest("button")) return; e.preventDefault(); e.stopPropagation();
+      const b = $("btFavBar"), w = $("btWrap").getBoundingClientRect(), r = b.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top; b.classList.add("drag");
       const mv = (ev) => { b.style.left = Math.max(0, Math.min(w.width - r.width, ev.clientX - w.left - ox)) + "px"; b.style.top = Math.max(0, Math.min(w.height - r.height, ev.clientY - w.top - oy)) + "px"; b.style.bottom = "auto"; b.style.transform = "none"; };
-      const up = () => { removeEventListener("mousemove", mv); removeEventListener("mouseup", up); LS.set("bt-favpos", { x: parseFloat(b.style.left), y: parseFloat(b.style.top) }); };
+      const up = () => { b.classList.remove("drag"); removeEventListener("mousemove", mv); removeEventListener("mouseup", up); if (b.style.top !== "auto") LS.set("bt-favpos", { x: parseFloat(b.style.left), y: parseFloat(b.style.top) }); };
       addEventListener("mousemove", mv); addEventListener("mouseup", up);
     });
-    $("btMagnet").onclick = () => { magnet = !magnet; $("btMagnet").classList.toggle("on", magnet); };
-    $("btLockAll").onclick = () => { lockAll = !lockAll; $("btLockAll").classList.toggle("on", lockAll); };
-    $("btHideAll").onclick = () => { hideAll = !hideAll; $("btHideAll").classList.toggle("on", hideAll); };
+    const tbIcons = () => { $("btMagnet").innerHTML = ICON[magMode === "strong" ? "magStrong" : "magWeak"]; $("btLockAll").innerHTML = ICON[lockAll ? "lockClosed" : "lockOpen"]; $("btHideAll").innerHTML = ICON[hideAll ? "eyeOff" : "eye"]; $("btLinkBtn").innerHTML = ICON.link; $("btDelAll").innerHTML = ICON.trash;
+      $("btMagnet").classList.toggle("on", magnet); $("btLockAll").classList.toggle("on", lockAll); $("btHideAll").classList.toggle("on", hideAll); $("btLinkBtn").classList.toggle("on", P.syncCross !== false); };
+    $("btMagnet").onclick = () => { magnet = !magnet; tbIcons(); msg(magnet ? (magMode === "strong" ? "Aimant fort : accroche toujours à l'OHLC." : "Aimant faible : accroche à l'OHLC quand le pointeur est proche.") : "Aimant désactivé."); };
+    $("btLockAll").onclick = () => { lockAll = !lockAll; tbIcons(); };
+    $("btHideAll").onclick = () => { hideAll = !hideAll; tbIcons(); };
+    $("btLinkBtn").onclick = () => { P.syncCross = P.syncCross === false; LS.set("bt-prefs", P); tbIcons(); msg(P.syncCross ? "Charts liés : curseur et défilement synchronisés entre NQ et ES." : "Charts déliés."); };
+    if (!$("btMagFly")) { const f = document.createElement("div"); f.id = "btMagFly"; f.className = "tx-fly"; f.hidden = true; document.body.append(f); }
+    const magFly = () => { const f = $("btMagFly"); f.innerHTML = `<div class="fi${magnet && magMode === "weak" ? " on" : ""}" data-mm="weak">${ICON.magWeak}<span class="fn">Aimant faible</span></div><div class="fi${magnet && magMode === "strong" ? " on" : ""}" data-mm="strong">${ICON.magStrong}<span class="fn">Aimant fort</span></div><div class="ftg" data-mm="ind" title="Accroche aussi aux niveaux affichés : lignes horizontales (Jarvis, dessins), position, ordres, clôture de la veille">Accrocher aux indicateurs<i class="tx-sw${magInd ? " on" : ""}"></i></div>`;
+      f.hidden = false; const r = $("btMagGrp").getBoundingClientRect(); f.style.left = r.right + 6 + "px"; f.style.top = Math.max(8, Math.min(r.top - 6, innerHeight - f.offsetHeight - 8)) + "px"; };
+    $("btMagExp").onclick = (e) => { e.stopPropagation(); if ($("btMagFly").hidden) magFly(); else $("btMagFly").hidden = true; };
+    $("btMagFly").onclick = (e) => { const it = e.target.closest("[data-mm]"); if (!it) return; const v = it.dataset.mm;
+      if (v === "ind") { magInd = !magInd; LS.set("bt-magind", magInd); magFly(); return; } magMode = v; LS.set("bt-magmode", v); magnet = true; $("btMagFly").hidden = true; tbIcons(); msg(v === "strong" ? "Aimant fort activé." : "Aimant faible activé."); };
+    document.addEventListener("mousedown", (e) => { const f = $("btMagFly"); if (f && !f.hidden && !f.contains(e.target) && e.target.closest("#btMagExp") === null) f.hidden = true; }, true);
+    tbIcons();
     $("btDelAll").onclick = () => { if (shapes.length && confirm("Supprimer tous les dessins de cette chart ?")) { shapes = []; sel = null; saveDrawings(); } };
     $("btTreeBtn").onclick = () => { $("btTree").hidden = !$("btTree").hidden; $("btTreeBtn").classList.toggle("on", !$("btTree").hidden); $("btTreeBtn2").classList.toggle("on", !$("btTree").hidden); tree(); };
     const TL = $("btTreeList");
@@ -5356,10 +5699,16 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     $("btCtx").onclick = (e) => { const c = e.target.closest("[data-c]"); if (c) ctxDo(c.dataset.c); };
     document.addEventListener("mousedown", (e) => { const m = $("btCtx"); if (m && !m.hidden && !m.contains(e.target)) m.hidden = true; }, true);
     $("btNewF").onclick = () => groupSel();
+    $("btTreeX").onclick = () => $("btTreeBtn").click();
+    { const tp = LS.get("bt-treepos", null), T = $("btTree"); if (tp) { T.style.left = tp.x + "px"; T.style.top = tp.y + "px"; T.style.right = "auto"; } }
+    $("btTreeHead").addEventListener("mousedown", (e) => { if (e.button !== 0 || e.target.closest("button")) return; e.preventDefault(); const T = $("btTree"), M = T.parentElement.getBoundingClientRect(), r = T.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+      const mv = (ev) => { T.style.left = Math.max(0, Math.min(M.width - r.width, ev.clientX - M.left - ox)) + "px"; T.style.top = Math.max(0, Math.min(M.height - 40, ev.clientY - M.top - oy)) + "px"; T.style.right = "auto"; };
+      const up = () => { removeEventListener("mousemove", mv); removeEventListener("mouseup", up); LS.set("bt-treepos", { x: parseFloat(T.style.left), y: parseFloat(T.style.top) }); }; addEventListener("mousemove", mv); addEventListener("mouseup", up); });
     $("btPrefBtn").onclick = () => openPrefs(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = toggleSplit; layName(); $("btTreeBtn2").onclick = () => $("btTreeBtn").click();
     setInterval(() => { if (!curLay) return; const L = layouts(), i = L.findIndex((x) => x.id === curLay); if (i >= 0) { L[i] = layoutSnap(L[i]); saveList("bt-layouts", L); } }, 5000); // sauvegarde auto de la mise en page
     TL.onclick = (e) => {
-      const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = e.target.dataset.a;
+      const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = (e.target.closest("[data-a]") || {}).dataset ? (e.target.closest("[data-a]") || { dataset: {} }).dataset.a : undefined;
+      if (r.dataset.k) { if (r.dataset.k === "news" && a === "news") { P.news = P.news === false; LS.set("bt-prefs", P); tree(); } return; }
       if (r.dataset.fid) { const f = folders.find((x) => x.id === r.dataset.fid); if (!f) return;
         if (a === "tog") f.open = f.open === false; else if (a === "eye") f.hidden = !f.hidden; else if (a === "lock") f.locked = !f.locked; else if (a === "del") return delFolder(f); else msel = new Set(shapes.filter((s) => s.folder === f.id).map((s) => s.id));
         saveFolders(); tree(); return; }
@@ -5372,7 +5721,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     };
     TL.ondblclick = (e) => { if (e.target.closest(".nm")) rename(e.target.closest(".row")); };
     TL.oncontextmenu = (e) => { const r = e.target.closest(".row"); if (!r || (!r.dataset.id && !r.dataset.fid)) return; e.preventDefault();
-      if (r.dataset.id && !msel.has(r.dataset.id)) { msel = new Set([r.dataset.id]); sel = shapes.find((x) => x.id === r.dataset.id) || sel; tree(); } ctxMenu(e.clientX, e.clientY, r.dataset.fid); };
+      if (r.dataset.id && !msel.has(r.dataset.id)) { msel = new Set([r.dataset.id]); sel = shapes.find((x) => x.id === r.dataset.id) || sel; tree(); } treeMenu(e.clientX, e.clientY, r.dataset.fid); };
     let dragIds = null, dragF = null; // glisser-déposer : dessins vers un groupe / avant un dessin / à la racine, groupes entre eux
     const clearDrop = () => TL.querySelectorAll(".drop").forEach((x) => x.classList.remove("drop"));
     TL.ondragstart = (e) => { const r = e.target.closest(".row"); if (!r) return; if (r.dataset.fid) dragF = r.dataset.fid; else dragIds = msel.has(r.dataset.id) ? [...msel] : [r.dataset.id]; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", "ict"); };
@@ -5407,7 +5756,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const last = parseFloat(String($("oLast").textContent).replace(/[^0-9.\-]/g, "")); if (isFinite(last)) $("oPx").value = last; $("oPx").focus(); $("oPx").select(); msg(`Ordre limite ${side === "buy" ? "achat" : "vente"} : ajuste le prix puis clique ${side === "buy" ? "BUY" : "SELL"}.`); };
     const speed = (d) => { const s = $("btSpeed"), i = Math.max(0, Math.min(s.options.length - 1, s.selectedIndex + d)); if (i === s.selectedIndex) return; s.selectedIndex = i; s.dispatchEvent(new Event("change")); msg("Vitesse du replay : " + s.options[i].text); };
     const zoom = (f) => [chart, chart2].filter(Boolean).forEach((c) => { const ts = c.timeScale(), sp = ts.options().barSpacing || 6; ts.applyOptions({ barSpacing: Math.max(0.5, Math.min(60, sp * f)) }); });
-    const shot = async (copy) => { if (!chart) return; const c = chart.takeScreenshot(), d = $("btDraw"), out = document.createElement("canvas"); out.width = c.width; out.height = c.height; const g = out.getContext("2d"); g.drawImage(c, 0, 0); if (d && d.width) g.drawImage(d, 0, 0, c.width, c.height);
+    const shot = async (copy) => { if (!chart) return; const pics = [[chart.takeScreenshot(), $("btDraw"), $("btLegend")]]; if (chart2 && !$("btWrap2").hidden) pics.push([chart2.takeScreenshot(), $("btDraw2"), $("btLegend2")]);
+      const out = document.createElement("canvas"); out.width = pics.reduce((a, [c]) => a + c.width, 0) + (pics.length - 1) * 2; out.height = Math.max(...pics.map(([c]) => c.height)); const g = out.getContext("2d"), k = window.devicePixelRatio || 1; g.fillStyle = "#2a292f"; g.fillRect(0, 0, out.width, out.height);
+      let ox = 0; for (const [c, d, lg] of pics) { g.drawImage(c, ox, 0); if (d && d.width) g.drawImage(d, ox, 0, d.width * (c.width / Math.max(1, d.width)), d.height * (c.width / Math.max(1, d.width)));
+        if (lg && lg.textContent) { g.save(); g.scale(k, k); g.font = "13px -apple-system,BlinkMacSystemFont,'Trebuchet MS',Roboto,sans-serif"; g.fillStyle = P.txt || "#131722"; g.fillText([...lg.childNodes].map((n) => n.textContent.trim()).filter(Boolean).join("  "), ox / k + 8, 19); g.restore(); } ox += c.width + 2; }
       if (copy) { try { const blob = await new Promise((r) => out.toBlob(r, "image/png")); await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]); msg("Capture copiée dans le presse-papier."); } catch (err) { msg("Copie impossible : " + (err.message || err), true); } return; }
       const a = document.createElement("a"); a.href = out.toDataURL("image/png"); a.download = `${S.sym} ${$("btDate").value} ${S.raw.length ? hm(S.raw[S.cur][0]).replace(":", "h") : ""}.png`; a.click(); msg("Capture enregistrée."); };
     const escape = () => {
@@ -5468,13 +5820,13 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         ["fib", "Fibonacci", ["Alt+F"], () => setTool("fib")], ["text", "Texte", ["Alt+X"], () => setTool("text")], ["measure", "Règle (mesurer)", ["Shift+M"], () => setTool("measure")],
         ["magnet", "Aimant (accroche OHLC)", ["Alt+M"], () => $("btMagnet").click()], ["lockAll", "Verrouiller tous les dessins", ["Alt+L"], () => $("btLockAll").click()],
         ["hideAll", "Masquer tous les dessins", ["Ctrl+Alt+H"], () => $("btHideAll").click()], ["tree", "Arborescence des objets", ["Alt+O"], () => $("btTreeBtn2").click()],
-        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()],
+        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()], ["undo", "Annuler le dernier changement de dessin", ["Ctrl+Z"], () => undoRedo(false)], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"], () => undoRedo(true)],
         ["front", "Dessin au premier plan", ["Ctrl+Shift+↑"], () => zorder(1)], ["backZ", "Dessin à l'arrière-plan", ["Ctrl+Shift+↓"], () => zorder(-1)],
         ["curCross", "Curseur : croix", ["Ctrl+Alt+C"], () => setTool("cross")], ["curArrow", "Curseur : flèche", ["Ctrl+Alt+A"], () => setTool("arrowc")],
         ["curDot", "Curseur : point", ["Ctrl+Alt+D"], () => setTool("dot")], ["curEraser", "Curseur : gomme", ["Ctrl+Alt+E"], () => setTool("eraser")]]],
       ["Interface", [
         ["full", "Plein écran", ["F11", "Shift+F"], fullscreen], ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout(false)],
-        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Alt+Shift+S"], () => shot(true)]]]];
+        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Ctrl+Shift+S"], () => shot(true)]]]];
     const KDEF = {}, KRUN = {}; KEYS.forEach(([, L]) => L.forEach(([id, , d, fn]) => { KDEF[id] = d; KRUN[id] = fn; }));
     let KMAP = { ...KDEF, ...LS.get("bt-keys", {}) };
     const KNAME = { " ": "Espace", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Échap", Enter: "Entrée", Tab: "Tab", Backspace: "Retour", Delete: "Suppr" };
@@ -5556,6 +5908,27 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       m.onclick = (e) => { if (e.target.dataset.m === "x") closeModal(); };
     }
     $("btHowBtn").onclick = openHow;
+
+    // ---- menus du haut façon TopstepX ----
+    if (!$("btHMenu")) { const m = document.createElement("div"); m.id = "btHMenu"; m.className = "tx-hmenu"; m.hidden = true; document.body.append(m); }
+    const hmenu = (anchor, html, onPick) => { const m = $("btHMenu"); if (!m.hidden && m.dataset.for === anchor.id) { m.hidden = true; return; } m.innerHTML = html; m.dataset.for = anchor.id; m.hidden = false; const r = anchor.getBoundingClientRect();
+      m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth - 8)) + "px"; m.style.top = r.bottom + 4 + "px"; m.onclick = (e) => { const it = e.target.closest("[data-v]"); if (!it) return; m.hidden = true; onPick(it.dataset.v); }; };
+    document.addEventListener("mousedown", (e) => { const m = $("btHMenu"); if (m && !m.hidden && !m.contains(e.target) && !e.target.closest(`#${m.dataset.for}`)) m.hidden = true; }, true);
+    const mi = (v, t, ic, k, on) => `<div class="mi${on ? " on" : ""}" data-v="${v}">${ic || ""}<span>${t}</span>${k ? `<span class="mk">${k}</span>` : ""}</div>`;
+    $("btTypeBtn").onclick = () => hmenu($("btTypeBtn"), mi("candles", "Chandeliers", ICON.candles, "", !P.line) + mi("line", "Ligne", SV('<g fill="none" stroke="currentColor"><path d="M4.5 19.5l6-7 5 4 8-10"/></g>'), "Alt+Maj+L", !!P.line), (v) => { P.line = v === "line"; LS.set("bt-prefs", P); applyPrefs(); });
+    $("btFxBtn").onclick = () => hmenu($("btFxBtn"), '<div class="mh">Indicateurs</div>' + mi("news", (P.news === false ? "Afficher" : "Masquer") + " les news (Forex Factory)", SV('<g fill="none" stroke="currentColor"><path d="M4.5 18.5l5-6 4 3 4-7 6 5"/></g>'), "Alt+Maj+N") + mi("newsWin", "Fenêtre News / détails", SV('<g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M8.5 10.5h11M8.5 14h11M8.5 17.5h7"/></g>'), "Alt+D") + mi("jarvis", "Jarvis (protocole d'analyse)", SV('<g fill="none" stroke="currentColor"><path d="M15.5 4.5l-8 11h6l-1 8 8-11h-6z"/></g>'), "Alt+Maj+J") + '<div class="ms"></div>' + mi("alerts", "Alertes de prix", SV('<g fill="none" stroke="currentColor"><path d="M14 4.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/></g>'), "Alt+Maj+A") + mi("wl", "Watchlist", SV('<g fill="none" stroke="currentColor"><circle cx="14" cy="14" r="8.5"/><path d="M14 10v8M10 14h8"/></g>'), "Alt+W"),
+      (v) => { if (v === "news") KRUN.news(); else if (v === "newsWin") $("btNewsBtn").click(); else if (v === "jarvis") $("btJarvisBtn").click(); else if (v === "alerts") KRUN.alerts(); else if (v === "wl") KRUN.watchlist(); });
+    $("btTfMore").onclick = () => { const G = [["Secondes", ["1s", "5s", "15s", "30s"]], ["Minutes", ["1", "2", "3", "5", "15"]], ["Heures", ["60", "240"]], ["Jours", ["1440", "10080", "43200"]], ["Mois", ["129600", "259200", "518400"]]];
+      hmenu($("btTfMore"), G.map(([h, L]) => `<div class="mh">${h}</div><div class="mgrid">${L.map((v) => { const b = document.querySelector(`#btTfs [data-tf="${v}"]`); return b ? mi(v, b.textContent, "", "", b.classList.contains("on")) : ""; }).join("")}</div>`).join(""), (v) => { const b = document.querySelector(`#btTfs [data-tf="${v}"]`); if (b) b.click(); }); };
+    $("btUndo").onclick = () => undoRedo(false); $("btRedo").onclick = () => undoRedo(true);
+    $("btFullBtn").onclick = () => KRUN.full(); $("btFull2").onclick = () => KRUN.full();
+    $("btShotBtn").onclick = () => hmenu($("btShotBtn"), '<div class="mh">Instantané du graphique</div>' + mi("dl", "Télécharger l'image", SV('<g fill="none" stroke="currentColor"><path d="M14 5.5v12M9.5 13l4.5 4.5 4.5-4.5M6.5 18.5v4h15v-4"/></g>'), label(KMAP.shot[0] || "Ctrl+Alt+S")) + mi("cp", "Copier l'image", SV('<g fill="none" stroke="currentColor"><rect x="9.5" y="9.5" width="12" height="12" rx="1.5"/><path d="M6.5 17.5v-11h11"/></g>'), label(KMAP.copyShot[0] || "Ctrl+Maj+S")), (v) => KRUN[v === "cp" ? "copyShot" : "shot"]());
+    $("btGoBtn2").onclick = (e) => { e.stopPropagation(); $("btGoBtn").click(); };
+    $("btEth").onclick = () => KRUN.rth();
+    document.querySelectorAll(".tx-al").forEach((el) => el.addEventListener("click", (e) => { const b = e.target.closest("[data-al]"); if (!b) return; e.stopPropagation(); if (b.dataset.al === "A") recenter(); else $("btLog").click(); }));
+    document.querySelectorAll(".tx-al,.tx-nav").forEach((el) => el.addEventListener("mousedown", (e) => e.stopPropagation()));
+    document.querySelectorAll(".tx-nav").forEach((el) => el.addEventListener("click", (e) => { const b = e.target.closest("[data-nv]"); if (!b) return; e.stopPropagation(); const v = b.dataset.nv;
+      if (v === "in") zoom(1.25); else if (v === "out") zoom(0.8); else if (v === "reset") recenter(); else [chart, chart2].filter(Boolean).forEach((c) => { const ts = c.timeScale(), r = ts.getVisibleLogicalRange(); if (r) { const d = (r.to - r.from) * 0.2 * (v === "l" ? -1 : 1); ts.setVisibleLogicalRange({ from: r.from + d, to: r.to + d }); } }); }));
     /* ---------- mise en page façon FX Replay : barre de replay, plages de temps, barre d'icônes ---------- */
     $("btGoBtn").onclick = (e) => { e.stopPropagation(); const g = $("btGo"); g.hidden = !g.hidden; if (!g.hidden && !$("btDate").value) $("btDate").value = S.raw.length ? sessionKey(S.raw[S.cur][0]) : lastTradingDay(); };
     $("btLoad").addEventListener("click", () => { $("btGo").hidden = true; });

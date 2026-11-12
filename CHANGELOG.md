@@ -2,6 +2,25 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.40.0] — 2026-11-12
+### Modifié
+- **Backtesteur — interface TopstepX à l'identique** (couleurs relevées sur les captures de topstepx.com/trade) : accent orange `#df981c` (comme les tuiles aimant / favoris de TopstepX, remplace l'or de la 1.36.0), menus `#0c0e12`, survol `#22262f`, sélection de l'arborescence bleue `#142e61`.
+- **Barre du haut** comme TopstepX : recherche du symbole, ⊕ Watchlist, unités 1s → 12M (D / W / M) + menu ⌄ de toutes les unités, type de graphique ⌄ (chandeliers / ligne), ƒx Indicateurs (news Forex Factory, fenêtre News, Jarvis, alertes, watchlist), disposition 1 / 2 charts, Préférences, alertes, Sessions, annuler / rétablir, panneau Order, Mise en page ⌄, Jarvis ⚡, raccourcis, plein écran, instantané 📷. Les libellés se replient en icônes quand la fenêtre est étroite.
+- **Barre d'outils de dessin** : icônes refaites au style TopstepX (28 px, trait fin, poignées rondes) pour tous les outils ; sections Lignes, Canaux, Pitchforks, Fibonacci, Gann, Figures, Projection, Volume, Mesures, Pinceaux, Flèches, Formes, Texte et notes ; étoiles des favoris dorées comme TopstepX ; ordre du bas : favoris puis arborescence.
+- **Barre du bas** : plages 1yr 3m 1m 5d 3d 1d + aller à une date, heure du chart `HH:MM:SS UTC-5` (UTC-4 en heure d'été), bouton ETH / RTH, %, log, auto, plein écran.
+- **Logos des prop firms** dans le menu Comptes (Topstep, Apex, My Funded Futures), en vectoriel net à la taille des autres icônes (tirés de leurs sites).
+### Ajouté
+- Outils : Haut / bas plat, Canal disjoint, Pitchfork de Schiff, Pitchfork de Schiff modifié, Projection, Texte ancré (reste fixe à l'écran).
+- **Aimant faible / fort** (menu › à côté de l'aimant) + « Accrocher aux indicateurs » (niveaux affichés : lignes horizontales, Jarvis, position, ordres, clôture de la veille).
+- **Arborescence des objets** en fenêtre flottante déplaçable (style TopstepX) : ligne du symbole, ligne News Forex Factory, icône de chaque outil, verrou / œil / corbeille au survol ; clic droit : Renommer, Pas de synchro (visible seulement dans l'unité de temps du tracé), Synchro dans la mise en page, **Synchro globale** (le dessin apparaît dans toutes les mises en page du symbole), Verrouiller, Masquer, Supprimer, Paramètres….
+- **Paramètres du chart** refaits comme la fenêtre Settings de TopstepX (Symbole, Ligne d'état, Échelles et lignes, Canevas + Replay) : couleur selon la clôture précédente, séance ETH / RTH, précision, titre (ticker / description), statut d'ouverture du marché, volume, modes d'échelle A et L, compte à rebours de clôture de la bougie, étiquette / ligne du symbole, clôture de la veille, plus haut / plus bas visibles, jour de la semaine et format 12 / 24 h, fond uni / dégradé, séparateurs de séance, style du réticule, filigrane, couleur des lignes d'échelle, boutons de navigation ; pied Modèle ⌄ / Appliquer à tous / Annuler / OK.
+- **Instantané du graphique** (📷) : Télécharger l'image `Ctrl+Alt+S`, Copier l'image `Ctrl+Maj+S` (les 2 charts + dessins + légende).
+- Boutons **A** (auto, = Alt+R) et **L** (logarithmique) en bas de l'échelle des prix ; compte à rebours sous l'étiquette du dernier prix ; boutons de navigation (zoom, défilement, recentrer).
+- **Annuler / rétablir** les dessins (`Ctrl+Z` / `Ctrl+Y`).
+- Bouton 🔗 de la barre d'outils : lier les 2 charts (curseur et défilement synchronisés).
+### Corrigé
+- La barre des favoris se déplace en la saisissant n'importe où (plus seulement par la petite poignée) ; la barre flottante d'un dessin ne s'affiche plus quand rien n'est sélectionné.
+
 ## [1.39.0] — 2026-11-12
 ### Modifié
 - **Profil › Skill IA** : « Mon profil · toutes les prop firms » prend toutes les données de tous les comptes Apex, Topstep et MFFU (journées, trades détaillés de comptes.json, Journal TopstepX en priorité pour garder les tags, évaluations, comptes financés, payouts, achats). Filtres colorés Toutes / Apex / Topstep / MFFU.
