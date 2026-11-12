@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.49.0] — 2026-11-13
+### Ajouté
+- **Comptes › Tradeify** (sous My Funded Futures) : bouton « Synchroniser » qui récupère depuis le dashboard Tradeify (fenêtre de connexion gardée, lecture seule) les comptes (solde, limites, drawdown, éligibilité payout et règles : profit minimum, jours, consistance, microscalping), les trades du Journal Tradeify, les commandes payées (coupon compris) et les payouts. Page au format MFFU (courbe, jours, trades, achats liés). Avertissement si le Journal Tradeify ne contient pas tous les trades du compte.
+- **Comptes › Phidias** (sous Tradeify) : synchro du tableau de bord Phidias (comptes en cours par catégorie) et de l'historique de paiement, en euros (montant réel payé, équivalent USD au taux BCE du jour).
+- Tradeify et Phidias ajoutés dans Mes comptes, Payouts, Achats & reçus et « Synchroniser toutes les prop firms ».
+
 ## [1.48.0] — 2026-11-12
 ### Ajouté
 - **Journal de Neal › Analyse › Sortie : 2R ou 3R ?** : à partir du MFE (R) de chaque setup Notion, compare un TP fixe à 2R, un TP fixe à 3R et « 50 % à 2R + BE, runner 3R », face au RR fait réel. Filtres Tous / Trades pris / Reviews, hypothèse si l'objectif n'est pas atteint (BE ou SL), valeur de 1R en $ (défaut 500 $). Liste des setups qui ont touché 2R sans atteindre 3R (coût du 3R) et des trades pris qui ont touché 2R puis fini sous 2R (gains rendus). Suit le filtre de période (jour / mois / année) et de type. Fonction pure `exitCalc` testée par `tools/check.js`.

@@ -1,4 +1,4 @@
-/* Synchronisation des prop firms (Topstep, Apex, My Funded Futures) depuis l'app.
+/* Synchronisation des prop firms (Topstep, Apex, My Funded Futures, Tradeify, Phidias) depuis l'app.
    Une fenêtre Electron (session « persist:propfirms », gardée entre les lancements) ouvre le dashboard de la prop firm ;
    si tu n'es pas connecté, elle s'affiche pour que tu te connectes (2FA compris), puis la récupération tourne en arrière-plan
    avec les mêmes appels que le dashboard (lecture seule : aucun clic d'achat, de reset ou de payout, aucune route qui modifie).
@@ -15,6 +15,10 @@ const FIRMS = {
     logged: `(async () => { try { if (!/apextraderfunding\\.com$/.test(location.hostname)) return false; const t = await (await fetch("/accounts/accountsHistory", { credentials: "include" })).text(); return /Accounts History/i.test(t) && /<table/i.test(t) && !/type="password"/i.test(t); } catch (e) { return false; } })()` },
   mffu: { name: "My Funded Futures", url: "https://myfundedfutures.com/accounts", certs: "https://myfundedfutures.com/certificates",
     logged: `(async () => { try { const r = await fetch("https://api.myfundedfutures.com/api/user-prop-accounts/?page=1&page_size=1", { credentials: "include", headers: { "Accept": "application/json", "X-Tenant": "mffu" } }); return r.status === 200; } catch (e) { return false; } })()` },
+  tradeify: { name: "Tradeify", url: "https://app-f.tradeify.co/",
+    logged: `(async () => { try { if (location.hostname !== "app-f.tradeify.co") return false; const r = await fetch("/api/dashboard/account-overview", { credentials: "include" }); if (r.status !== 200) return false; const j = await r.json(); return !!(j && j.success); } catch (e) { return false; } })()` },
+  phidias: { name: "Phidias", url: "https://member.phidiaspropfirm.com/member",
+    logged: `(async () => { try { if (location.hostname !== "member.phidiaspropfirm.com") return false; const r = await fetch("/member/payment-history", { credentials: "include" }); if (r.status !== 200 || !/payment-history/.test(r.url)) return false; const t = await r.text(); return /href="\/logout"/.test(t) && !/type="password"/i.test(t); } catch (e) { return false; } })()` },
 };
 
 /* ---------- scripts exécutés dans la page (ils écrivent leur avancement dans window.__ps) ---------- */
@@ -82,6 +86,39 @@ const MFFU = (skip) => String.raw`(async () => { const P = window.__ps = { step:
     const pp = await req("getPastPayouts", { page: 1, page_size: 200 }, true); const receipts = await req("getReceipts", { page: 1, page_size: 1000 }); const subs = await req("getSubscriptions", { page: 1, page_size: 1000 });
     const certs = await req("getCertificates", { page: 1, page_size: 200, certificate_type: "Payout" });
     P.result = { list, full, payouts: (pp && pp.data && pp.data.past_payouts) || [], receipts: receipts || [], subs: (subs && subs.subscriptions) || [], certs: (certs && certs.certificates) || [] }; } catch (e) { P.error = String(e.message || e); } P.done = true; })(); "ok"`;
+
+
+/* Tradeify (app-f.tradeify.co) : mêmes appels que le dashboard et le Journal (lecture seule) ; les données de facturation (email, téléphone, adresse) ne sont pas gardées */
+const TRADEIFY = String.raw`(async () => { const P = window.__ps = { step: "Liste des comptes Tradeify…", done: false };
+  try { const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const g = async (u) => { for (let k = 0; k < 4; k++) { const r = await fetch(u, { credentials: "include", headers: { "Accept": "application/json" } }); if (r.status === 429) { await sleep(10000 * (k + 1)); continue; } if (!r.ok) return null; return r.json(); } return null; };
+    const ov = await g("/api/dashboard/account-overview"); if (!ov || !ov.success) throw new Error("comptes Tradeify illisibles");
+    const list = ((ov.data && ov.data.data) || []).map((a) => { const x = { ...a }; delete x.broker_account_id; delete x.subscription; return x; });
+    const full = []; let i = 0;
+    for (const a of list) { P.step = "Trades Tradeify : " + (++i) + " / " + list.length; const trades = [];
+      for (let p = 1; p <= 40; p++) { const j = await g("/api/journal/get-trade-log-summary?" + new URLSearchParams({ account_ids: a.account_id, page: p, page_size: 500 })); await sleep(400); const d = j && j.data; if (!d || !d.results) break;
+        d.results.forEach((t) => trades.push({ open: Date.parse(t.entry_time), close: Date.parse(t.exit_time), side: t.direction || t.side, asset: t.symbol, qty: t.quantity, entry: +t.avg_entry, exit: +t.avg_exit, gross: +t.pnl, net: +t.net_pnl, fees: Math.round((+t.pnl - +t.net_pnl) * 100) / 100, day: t.close_date || t.open_date, id: t.trade_id }));
+        if (!d.next || trades.length >= (d.count || 0)) break; }
+      full.push({ id: a.account_id, trades }); }
+    P.step = "Payouts et achats Tradeify…"; const payouts = [];
+    for (let p = 1; p <= 20; p++) { const j = await g("/api/payouts/payout-tracking?page=" + p); const d = j && j.data; if (!d || !Array.isArray(d.data)) break; payouts.push(...d.data); if (!d.next || p >= (d.total_pages || 1)) break; }
+    const ol = await g("/api/dashboard/get-order-list");
+    const orders = ((ol && ol.data) || []).map((o) => ({ id: o.id, type: o.order_type, status: o.status, accountType: o.account_type, amount: o.amount, base: o.base_amount, discount: o.discount_amount, refunded: o.refunded_amount, coupon: o.coupon_data && o.coupon_data.code, created: o.created_at, account: o.broker_account && o.broker_account.account_id, plan: o.plan && { name: o.plan.name, type: o.plan.plan_type, cycle: o.plan.billing_cycle } }));
+    P.result = { list, full, payouts, orders }; } catch (e) { P.error = String(e.message || e); } P.done = true; })(); "ok"`;
+
+/* Phidias (member.phidiaspropfirm.com, plateforme aMember) : comptes affichés sur le tableau de bord (une section par catégorie) + historique de paiement (en euros) */
+const PHIDIAS = String.raw`(async () => { const P = window.__ps = { step: "Comptes Phidias…", done: false };
+  try { const page = async (u) => { const r = await fetch(u, { credentials: "include" }); return new DOMParser().parseFromString(await r.text(), "text/html"); };
+    const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
+    const d = await page("/member"); const cats = [];
+    [...d.querySelectorAll("h1,h2,h3,h4,h5,.card-title,.section-title")].forEach((h) => { const t = clean(h.textContent); if (!/^(FUNDAMENTAL|PREMIUM|EXPRESS|SWING|STATIC|10K|LIVE|CASH|.*CHALLENGE)/i.test(t)) return;
+      let box = h; for (let k = 0; k < 6 && box.parentElement && !(box.parentElement.querySelectorAll("h1,h2,h3,h4,h5,.card-title,.section-title").length > 1); k++) box = box.parentElement;
+      const txt = clean(box.innerText || box.textContent); if (/Vous n'avez pas de compte|You don't have any account|No tienes/i.test(txt)) return;
+      const cards = [...box.querySelectorAll(".card,.account,.account-card,[class*=account],tr")].filter((c) => /\$|PP-|\d{4,}/.test(c.textContent) && !c.querySelector(".card,.account-card"));
+      (cards.length ? cards : [box]).forEach((c, i) => cats.push({ cat: t, i, text: clean(c.innerText || c.textContent).slice(0, 1500), links: [...c.querySelectorAll("a[href]")].map((a) => new URL(a.getAttribute("href"), location.origin).pathname) })); });
+    P.step = "Historique de paiement Phidias…";
+    const h = await page("/member/payment-history"); const pay = [...h.querySelectorAll("table tbody tr, table tr")].map((tr) => [...tr.querySelectorAll("td")].map((td) => clean(td.textContent))).filter((r) => r.length >= 5);
+    P.result = { cats, pay }; } catch (e) { P.error = String(e.message || e); } P.done = true; })(); "ok"`;
 
 /* ---------- transformations (même format que les pages Comptes de l'app) ---------- */
 const r2 = (x) => (x == null || isNaN(x) ? null : Math.round(+x * 100) / 100);
@@ -161,6 +198,52 @@ function buildMffu(R, old, proofs) {
   return { accounts, payouts, purchases, subscriptions };
 }
 
+
+/* jours de trading agrégés à partir des trades (format des pages Comptes) */
+function daysOf(tr) { const days = {};
+  tr.forEach((t) => { const d = t.day || (t.open ? new Date(t.open).toISOString().slice(0, 10) : null); if (!d) return; const x = days[d] || (days[d] = { d, pnl: 0, n: 0, c: 0, fees: 0, w: 0, hi: null, lo: null }); const net = +t.net || 0;
+    x.pnl += net; x.n++; x.c += +t.qty || 0; x.fees += +t.fees || 0; if (net > 0) x.w++; x.hi = x.hi == null ? net : Math.max(x.hi, net); x.lo = x.lo == null ? net : Math.min(x.lo, net); });
+  return Object.values(days).sort((x, y) => x.d.localeCompare(y.d)).map((x) => ({ d: x.d, pnl: r2(x.pnl), n: x.n, c: x.c, fees: r2(x.fees), win: x.n ? Math.round(x.w / x.n * 100) : 0, hi: r2(x.hi), lo: r2(x.lo) })); }
+
+function buildTradeify(R) {
+  const FULL = new Map((R.full || []).map((x) => [x.id, x.trades || []]));
+  const purchases = (R.orders || []).filter((o) => /complet|paid|success/i.test(o.status || "")).map((o) => ({ date: String(o.created || "").slice(0, 16), amount: r2((+o.amount || 0) - (+o.refunded || 0)), type: (o.type === "plan_purchase" ? "" : String(o.type || "").replace(/_/g, " ") + " · ") + (o.accountType || (o.plan && o.plan.name) || ""), ref: String(o.id), account: o.account || null, status: o.status, coupon: o.coupon || null }));
+  const accounts = (R.list || []).map((a) => { const tr = (FULL.get(a.account_id) || []).slice().sort((x, y) => (x.open || 0) - (y.open || 0)), days = daysOf(tr), start = +a.initial_balance || 0;
+    const funded = /fund/i.test(a.funded_status || ""), pu = purchases.filter((p) => p.account === a.account_id);
+    let b = start; const dates = [], bal = []; days.forEach((d) => { b += +d.pnl || 0; dates.push(d.d); bal.push(r2(b)); });
+    const tp = a.total_profit || {}, pd = a.payout_details || {}, cons = a.consistency_percentage || {};
+    const rules = [{ name: funded ? "Profit minimum entre payouts" : "Objectif de profit", passed: (+tp.current || 0) >= (+a.profit_target || 0) && +a.profit_target > 0, description: pd.reason || "", current: r2(funded ? tp.profit_since_last_payout : tp.current), required: +a.profit_target || 0, value_type: "currency" },
+      { name: "Jours de trading", passed: !a.total_trading_days || (+a.total_trading_days.current >= +a.total_trading_days.required), description: "", current: a.total_trading_days ? a.total_trading_days.current : null, required: a.total_trading_days ? a.total_trading_days.required : null, value_type: "number" },
+      cons.max ? { name: "Consistance (meilleur jour / profit)", passed: (+cons.current || 0) <= +cons.max, description: "≤ " + cons.max + " %", current: cons.current + " %", required: cons.max + " %", value_type: "text" } : null,
+      a.microscalping_details && a.microscalping_details.is_applicable ? { name: "Microscalping (trades < 10 s)", passed: !a.microscalping_details.is_violated, description: a.microscalping_details.trade_heads_under_10s_percentage + " % des trades", current: a.microscalping_details.profit_from_trades_heads_under_10s_percentage + " % du profit", required: "—", value_type: "text" } : null].filter(Boolean);
+    return { id: a.account_id, name: a.account_id, number: a.id, kind: funded ? "Funded" : "Challenge", stage: funded ? "Funded" : (a.funded_status || "Evaluation"), type: a.account_type, plan: a.account_type, status: a.account_status,
+      start: tr.length ? new Date(tr[0].open).toISOString().slice(0, 10) : (pu[0] ? String(pu[0].date).slice(0, 10) : ""), ended: /blown|fail|closed/i.test(a.account_status || "") ? a.last_trading_day : null, lastDay: a.last_trading_day,
+      startBalance: start, balance: a.account_balance != null ? +a.account_balance : null, profitTarget: +a.profit_target || null, dll: +a.daily_loss_limit || null, mll: +a.max_loss_limit || null, minBalance: a.max_trailing_drawdown != null ? +a.max_trailing_drawdown : null,
+      broker: a.broker, platform: "", consistency: cons.max || null, minDays: a.total_trading_days ? a.total_trading_days.required : null, bestDay: a.highest_profit_day || null, passedAt: a.evaluation_passed_at || null,
+      chart: { dates, series: { Balance: bal }, max: bal.length ? Math.max(...bal) : null, min: bal.length ? Math.min(...bal) : null }, stats: null,
+      checklist: funded || rules.length ? { eligible: !!(pd.is_eligible || a.is_eligible_for_payout), total: rules.length, passed: rules.filter((r) => r.passed).length, groups: { payout: rules }, available: a.available_for_payout } : null,
+      journalGap: a.account_balance != null ? r2((+a.account_balance - start) - tr.reduce((s, t) => s + (+t.net || 0), 0)) : null, // P&L absent du Journal Tradeify (trades non importés)
+      days, trades: tr, paid: r2(pu.reduce((s, p) => s + p.amount, 0)) || 0, purchases: pu }; });
+  const cnt = {}, byName = new Map(accounts.map((a) => [a.name, a.status]));
+  const payouts = (R.payouts || []).slice().sort((x, y) => String(x.created_at || x.date).localeCompare(String(y.created_at || y.date))).map((p) => { const nm = p.account_id || p.broker_account_id || (p.account && (p.account.account_id || p.account)) || (p.broker_account && p.broker_account.account_id) || ""; cnt[nm] = (cnt[nm] || 0) + 1; const st = String(p.status || "");
+    return { account: String(nm), num: cnt[nm], requested: String(p.created_at || p.requested_at || p.date || "").slice(0, 10), amount: +(p.amount ?? p.requested_amount ?? 0), paid: /paid|complet|approved|sent|success/i.test(st) ? +(p.payout_amount ?? p.net_amount ?? p.paid_amount ?? p.amount ?? 0) : null, finalized: String(p.paid_at || p.processed_at || p.updated_at || "").slice(0, 10) || null, tradingDays: null, accountStatus: byName.get(String(nm)) || "—", requestStatus: st || null, proof: null }; });
+  return { accounts, payouts, purchases, subscriptions: [] };
+}
+
+function buildPhidias(R, old) {
+  const frDate = (s) => { const m = /^(\d\d)\/(\d\d)\/(\d{4})/.exec(String(s || "")); return m ? m[3] + "-" + m[2] + "-" + m[1] : String(s || ""); };
+  const eurAmt = (s) => { const t = String(s || "").replace(/[^\d,.-]/g, ""); return +(/,\d{1,2}$/.test(t) ? t.replace(/\./g, "").replace(",", ".") : t.replace(/,/g, "")) || 0; };
+  const purchases = (R.pay || []).map((c) => ({ date: frDate(c[0]), amount: r2(eurAmt(c[4])), cur: /\$/.test(c[4]) ? "USD" : "EUR", type: c[2], ref: c[1], account: null, billing: c[3] }));
+  const num = (txt, re) => { const m = re.exec(txt); return m ? +m[1].replace(/,/g, "") : null; };
+  const accounts = (R.cats || []).map((c) => { const t = c.text, nm = (/\b(PP[-\w]*\d{3,}[-\w]*)/.exec(t) || [])[1] || (c.cat + " #" + (c.i + 1));
+    const size = num(t, /\b(\d{2,3})\s?K\b/i), bal = num(t, /(?:Solde|Balance)[^$\d]*\$?\s?([\d,]+(?:\.\d+)?)/i);
+    const funded = /LIVE|FUNDED|FINANC|PA\b/i.test(c.cat + " " + t) && !/CHALLENGE|EVALUATION/i.test(c.cat);
+    return { id: nm, name: nm, kind: funded ? "Funded" : "Challenge", stage: c.cat, type: c.cat, status: /échou|fail|blown|perdu|liquid/i.test(t) ? "Blown" : /réussi|passed|valid/i.test(t) ? "Passed" : "Active",
+      startBalance: size ? size * 1000 : null, balance: bal, start: "", raw: t, links: c.links, days: [], trades: [], paid: 0, purchases: [] }; });
+  const seen = new Set(accounts.map((a) => a.id)); ((old && old.accounts) || []).forEach((a) => { if (!seen.has(a.id)) accounts.push({ ...a, status: /active/i.test(a.status) ? "Closed" : a.status }); });
+  return { accounts, payouts: [], purchases, subscriptions: [] };
+}
+
 /* fusion : on ne perd jamais un compte, un achat ni une preuve */
 function merge(oldF, newF) {
   if (!oldF) return newF; const byId = new Map((oldF.accounts || []).map((a) => [String(a.id), a])); (newF.accounts || []).forEach((a) => byId.set(String(a.id), a));
@@ -207,6 +290,8 @@ async function run(firm, opts) {
     let data;
     if (firm === "topstep") { const A = await runScript(w, TOPSTEP_ACCOUNTS, progress); await load(w, F.billing); await sleep(3000); const B = await runScript(w, TOPSTEP_BILLING, progress); data = buildTopstep(A, B); }
     else if (firm === "apex") { const known = ((all.apex && all.apex.accounts) || []).filter((a) => /expired/i.test(a.histStatus || "")).map((a) => a.id); data = buildApex(await runScript(w, APEX(known), progress), all.apex); }
+    else if (firm === "tradeify") data = buildTradeify(await runScript(w, TRADEIFY, progress));
+    else if (firm === "phidias") data = buildPhidias(await runScript(w, PHIDIAS, progress), all.phidias);
     else { const skip = ((all.mffu && all.mffu.accounts) || []).filter((a) => a.ended).map((a) => a.id); const R = await runScript(w, MFFU(skip), progress); const have = new Set(((all.mffu && all.mffu.payouts) || []).filter((p) => p.proof).map((p) => p.certificate));
       const proofs = await captureCerts(w, F, (R.certs || []).filter((c) => !have.has(c.unique_id)), progress); data = buildMffu(R, all.mffu, proofs); }
     progress("Enregistrement…"); all[firm] = merge(all[firm], data); all.updated = new Date().toISOString();
@@ -217,4 +302,4 @@ async function run(firm, opts) {
   finally { busy = null; try { if (!w.isDestroyed()) w.destroy(); } catch (e) {} }
 }
 
-module.exports = { run, buildTopstep, buildApex, buildMffu, merge, scripts: { TOPSTEP_ACCOUNTS, TOPSTEP_BILLING, APEX, MFFU } };
+module.exports = { run, buildTopstep, buildApex, buildMffu, buildTradeify, buildPhidias, merge, scripts: { TOPSTEP_ACCOUNTS, TOPSTEP_BILLING, APEX, MFFU, TRADEIFY, PHIDIAS } };
