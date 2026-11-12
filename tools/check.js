@@ -41,6 +41,18 @@ try {
   if (riskCalc([], 50000).n !== 0) errors.push("riskCalc : liste vide");
 } catch (e) { errors.push("riskCalc : " + e.message); }
 
+// Sortie 2R ou 3R ? du Journal de Neal (exitCalc, fonction pure extraite d'index.html)
+try {
+  const src = /\/\* exitCalc:start[\s\S]*?\*\/\r?\n([\s\S]*?)\/\* exitCalc:end \*\//.exec(html)[1], exitCalc = new Function(src + "; return exitCalc;")();
+  const R = [{ Status: ["Pas pris (TP)"], "MFE (R)": 2.5, "RR fait": 2.5 }, { Status: ["TP"], "MFE (R)": 4, "RR fait": 4 }, { Status: ["BE (SL)"], "MFE (R)": 2.2, "RR fait": 0 },
+    { Status: ["SL"], "MFE (R)": 1.2, "RR fait": -1 }, { Status: ["Pas pris (TP)"], "RR fait": 2 }];
+  const x = exitCalc(R);
+  const ok = x.n === 4 && x.taken === 3 && x.r2 === 5 && x.r3 === 2 && x.rp === 3.5 && x.real === 3 && x.between.length === 2 && x.missR === 4 && x.gave.length === 1 && x.gaveR === 2 && x.best === "r2";
+  if (!ok) errors.push("exitCalc : résultat inattendu " + JSON.stringify({ ...x, between: x.between.length, gave: x.gave.length }));
+  if (exitCalc(R, { miss: -1 }).r3 !== 1) errors.push("exitCalc : hypothèse SL si 3R non atteint");
+  if (exitCalc([]).n !== 0) errors.push("exitCalc : liste vide");
+} catch (e) { errors.push("exitCalc : " + e.message); }
+
 // Skill IA du Profil (profilCalc, fonction pure extraite d'index.html)
 try {
   const src = /\/\* profilCalc:start[\s\S]*?\*\/\r?\n([\s\S]*?)\/\* profilCalc:end \*\//.exec(html)[1], profilCalc = new Function(src + "; return profilCalc;")();

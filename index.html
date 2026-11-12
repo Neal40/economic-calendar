@@ -4143,6 +4143,62 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const A = [...g.values()], pick = (key) => { const tot = A.reduce((a, x) => a + x[key], 0); if (!tot) return { list: [], share: 0, tot: 0 }; const S = A.filter((x) => x[key] > 0).sort((a, b) => b[key] - a[key]); let acc = 0; const list = []; for (const x of S) { list.push(x); acc += x[key]; if (acc / tot >= 0.8) break; } return { list, share: acc / tot, tot, of: A.length }; };
     return { f, strong: pick("win"), weak: pick("loss"), count: A.length };
   }
+  /* --- Sortie 2R ou 3R ? (MFE de chaque setup) : ce qu'aurait donné un TP fixe à 2R, à 3R, ou 50 % à 2R + BE avec runner à 3R --- */
+  /* exitCalc:start — fonction pure (testée par tools/check.js) */
+  function exitCalc(rows, opt) {
+    opt = opt || {}; const miss = typeof opt.miss === "number" ? opt.miss : 0;
+    const num = (v) => (typeof v === "number" && isFinite(v) ? v : typeof v === "string" && v.trim() !== "" && isFinite(+v) ? +v : null);
+    const st = (r) => (Array.isArray(r.Status) ? r.Status : r.Status ? [r.Status] : []);
+    const out = { n: 0, taken: 0, r2: 0, r3: 0, rp: 0, real: 0, w2: 0, w3: 0, between: [], gave: [], missR: 0, gaveR: 0 };
+    for (const r of rows || []) {
+      const mfe = num(r["MFE (R)"]) ?? num(r["RR Parfait"]); if (mfe === null) continue;
+      const s = st(r), taken = s.length > 0 && !s.some((x) => /^Pas (pris|déclenché)/.test(x));
+      const sl = s.some((x) => /^(SL|Pas pris \(SL\)|Pas pris \(BE ~ SL\))$/.test(x)) && !s.some((x) => /BE/.test(x)) ? -1 : null;
+      const fb = sl !== null ? -1 : s.some((x) => /BE/.test(x)) ? 0 : miss; // objectif pas atteint : SL si le trade a fini au SL, sinon BE (ou l'hypothèse choisie)
+      const a2 = mfe >= 2 ? 2 : fb, a3 = mfe >= 3 ? 3 : fb, ap = mfe >= 3 ? 2.5 : mfe >= 2 ? 1 + 0.5 * Math.max(fb, 0) : fb;
+      const real = taken ? (num(r["RR fait"]) ?? (sl !== null ? -1 : 0)) : null;
+      out.n++; out.r2 += a2; out.r3 += a3; out.rp += ap; if (a2 > 0) out.w2++; if (a3 > 0) out.w3++;
+      if (taken) { out.taken++; out.real += real; }
+      const row = { r, mfe, taken, real, a2, a3, ap, fb };
+      if (mfe >= 2 && mfe < 3) { out.between.push(row); out.missR += 2 - a3; } // 2R l'aurait payé, 3R non
+      if (taken && mfe >= 2 && real < 2) { out.gave.push(row); out.gaveR += 2 - real; } // pris, a touché 2R, fini sous 2R
+    }
+    const rd = (x) => Math.round(x * 100) / 100;
+    ["r2", "r3", "rp", "real", "missR", "gaveR"].forEach((k) => (out[k] = rd(out[k])));
+    out.best = out.n ? [["r2", out.r2], ["r3", out.r3], ["rp", out.rp]].sort((a, b) => b[1] - a[1])[0][0] : null;
+    return out;
+  }
+  /* exitCalc:end */
+  function exitPanel(allRows) {
+    const scope = state.exScope || "tout", rows = allRows.filter((r) => (scope === "pris" ? isTaken(r) : scope === "review" ? !isTaken(r) : true));
+    let usd = 500; try { usd = +localStorage.getItem("econcal-ex-usd") || 500; } catch (e) {}
+    const missOpt = state.exMiss === -1 ? -1 : 0, X = exitCalc(rows, { miss: missOpt });
+    const R = (v) => (v > 0 ? "+" : "") + v.toFixed(2) + "R", $$ = (v) => (v >= 0 ? "+" : "-") + "$" + Math.round(Math.abs(v) * usd).toLocaleString("en-US");
+    const cls = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : ""), wr = (w) => (X.n ? Math.round((100 * w) / X.n) + " %" : "—");
+    const NAME = { r2: "TP fixe à 2R", r3: "TP fixe à 3R", rp: "50 % à 2R + BE, runner 3R" };
+    const d = (r) => { const v = String(r.Date || "").slice(0, 10); return v ? v.slice(8, 10) + "/" + v.slice(5, 7) + "/" + v.slice(2, 4) : ""; };
+    const stc = (r) => esc((Array.isArray(r.Status) ? r.Status : [r.Status || ""]).join(", "));
+    const tbl = (L, cols) => L.length ? `<div class="rv-tw"><table class="rv-t"><thead><tr><th>Date</th><th>Setup</th><th>Actif</th><th>Status</th><th>MFE</th>${cols.map((c) => `<th>${c[0]}</th>`).join("")}<th>Commentaire</th></tr></thead><tbody>` +
+      L.sort((a, b) => String(b.r.Date || "").localeCompare(String(a.r.Date || ""))).map((x) => `<tr data-k="macro" data-id="${esc(x.r._id)}"><td>${d(x.r)}</td><td><b>${esc(x.r.Name || "")}</b></td><td>${esc(x.r.Actif || "")}</td><td>${stc(x.r)}</td><td>${x.mfe.toFixed(2)}R</td>${cols.map((c) => `<td>${c[1](x)}</td>`).join("")}<td><span class="rv-cm" title="${esc(x.r.Commentaire || "")}">${esc(x.r.Commentaire || "")}</span></td></tr>`).join("") + "</tbody></table></div>"
+      : '<p class="rv-mut" style="margin:6px 0">Aucun trade concerné sur cette sélection.</p>';
+    const up = (v) => `<span class="${v > 0 ? "up" : v < 0 ? "dn" : ""}">${R(v)}</span>`;
+    return `<div class="panel" style="margin-bottom:14px"><div class="ptitle">Sortie : 2R ou 3R ? · simulé sur le MFE de chaque setup</div>
+      <div class="rv-per" style="margin-top:6px">${[["tout", "Tous les setups"], ["pris", "Trades pris"], ["review", "Reviews (pas pris)"]].map(([k, l]) => `<button class="rv-tab${scope === k ? " on" : ""}" data-exs="${k}">${l}</button>`).join("")}
+        <span class="rv-mut" style="margin-left:8px">Si l'objectif n'est pas atteint :</span>${[[0, "BE (0R)"], [-1, "SL (−1R)"]].map(([k, l]) => `<button class="rv-tab${missOpt === k ? " on" : ""}" data-exm="${k}">${l}</button>`).join("")}
+        <label class="rv-mut" style="margin-left:8px">1R = $<input class="rv-exusd" type="number" min="1" step="50" value="${usd}" style="width:70px;background:#141418;border:1px solid #24242b;color:#e3e4ea;border-radius:8px;padding:4px 6px"></label></div>
+      ${X.n ? `<div class="kpis">
+        ${["r2", "r3", "rp"].map((k) => `<div class="kpi"${X.best === k ? ' style="outline:1px solid #2fd37c"' : ""}><small>${NAME[k]}${X.best === k ? " · meilleur" : ""}</small><b class="${cls(X[k])}">${R(X[k])}</b><i>${$$(X[k])} · ${k === "r3" ? wr(X.w3) : wr(X.w2)} gagnants · ${X.n} setups</i></div>`).join("")}
+        ${X.taken ? `<div class="kpi"><small>Ce que tu as fait (RR fait)</small><b class="${cls(X.real)}">${R(X.real)}</b><i>${$$(X.real)} · ${X.taken} trades pris</i></div>` : ""}
+        <div class="kpi"><small>Ratés en visant 3R</small><b class="neg">${X.between.length}</b><i>${R(-X.missR)} · ${$$(-X.missR)} · MFE entre 2 et 3R</i></div>
+        <div class="kpi"><small>Pris, 2R touché, fini sous 2R</small><b class="neg">${X.gave.length}</b><i>${R(-X.gaveR)} · ${$$(-X.gaveR)} rendus au marché</i></div>
+      </div>
+      <p class="rv-mut" style="margin:0 0 10px">Écart 2R − 3R : <b class="${cls(X.r2 - X.r3)}">${R(Math.round((X.r2 - X.r3) * 100) / 100)}</b> (${$$(X.r2 - X.r3)}). Le MFE est le plus haut atteint avant la sortie notée : un setup noté TP à 2R peut avoir été plus loin. Calcul seulement, pas un conseil.</p>
+      <h3 class="rv-dbt" style="margin-top:6px">Setups qui ont touché 2R sans atteindre 3R (${X.between.length})</h3>
+      ${tbl(X.between, [["Résultat réel", (x) => (x.taken ? up(x.real) : '<span class="rv-mut">pas pris</span>')], ["À 2R", (x) => up(x.a2)], ["À 3R", (x) => up(x.a3)], ["Coût du 3R", (x) => up(x.a3 - x.a2)]])}
+      <h3 class="rv-dbt" style="margin-top:12px">Trades pris qui ont touché 2R et fini sous 2R (${X.gave.length})</h3>
+      ${tbl(X.gave, [["Résultat réel", (x) => up(x.real)], ["À 2R", (x) => up(x.a2)], ["Gain raté", (x) => up(x.real - 2)]])}`
+      : '<p class="rv-mut" style="margin:6px 0">Aucun setup avec un MFE (R) renseigné sur cette sélection.</p>'}</div>`;
+  }
   function analyse8020(allRows) {
     const per = state.per || "tout", keys = per === "tout" ? [] : perKeys(allRows, per), key = keys.includes(state.perKey) ? state.perKey : keys[0];
     const rows = per === "tout" || !key ? allRows : allRows.filter((r) => dayOf(r).startsWith(key)), R = riskStats(rows), p = (x) => (R.n ? Math.round((100 * x) / R.n) + " %" : "—");
@@ -4160,7 +4216,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       </div>
       <div class="panel" style="margin-bottom:14px"><div class="ptitle">Loi 80/20 · ce qui fait l'essentiel de tes gains et de tes pertes</div>
         <table class="rv-bt"><thead><tr><th></th><th>Points forts (80 % des gains)</th><th>Points faibles (80 % des pertes)</th></tr></thead><tbody>
-        ${P.map((x) => `<tr><td><b>${esc(x.f)}</b></td><td>${lst(x.strong, "up")}</td><td>${lst(x.weak, "dn")}</td></tr>`).join("") || '<tr><td colspan="3" class="rv-mut">Pas assez de trades pris sur la période.</td></tr>'}</tbody></table></div>`;
+        ${P.map((x) => `<tr><td><b>${esc(x.f)}</b></td><td>${lst(x.strong, "up")}</td><td>${lst(x.weak, "dn")}</td></tr>`).join("") || '<tr><td colspan="3" class="rv-mut">Pas assez de trades pris sur la période.</td></tr>'}</tbody></table></div>` + exitPanel(rows);
   }
   /* --- account type (Review / Paper / Funded / Challenge) --- */
   const TYPES = ["Challenge", "Funded", "Paper", "Review"];
@@ -4586,12 +4642,15 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const st = await D.notionStatus(); if (!st.ok) showSetup(true); else if (!state.synced || Date.now() - new Date(state.synced) > 30 * 60 * 1000) sync();
     }
     [$("rvBody"), $("rvBodyJ")].filter(Boolean).forEach((root) => {
-    root.addEventListener("change", (e) => { if (e.target.classList.contains("rv-perk")) { state.perKey = e.target.value; render(); } });
+    root.addEventListener("change", (e) => { if (e.target.classList.contains("rv-perk")) { state.perKey = e.target.value; render(); }
+      if (e.target.classList.contains("rv-exusd")) { try { localStorage.setItem("econcal-ex-usd", String(Math.max(1, +e.target.value || 500))); } catch (err) {} render(); } });
     root.addEventListener("click", (e) => {
       const tr = e.target.closest("tr[data-id],.rv-ci[data-id]"); if (tr) return openRow(tr.dataset.k, tr.dataset.id);
       const ty = e.target.closest(".rv-ty"); if (ty) { state.type = ty.dataset.ty || ""; try { localStorage.setItem("econcal-review-type", state.type); } catch (err) {} render(); return; }
       const bz = e.target.closest("[data-bias]"); if (bz) { state.bias = state.bias === bz.dataset.bias ? null : bz.dataset.bias; render(); return; }
       const pb = e.target.closest("[data-per]"); if (pb) { state.per = pb.dataset.per; state.perKey = null; render(); return; }
+      const xs = e.target.closest("[data-exs]"); if (xs) { state.exScope = xs.dataset.exs; render(); return; }
+      const xm = e.target.closest("[data-exm]"); if (xm) { state.exMiss = +xm.dataset.exm; render(); return; }
       const vb = e.target.closest(".rv-v"); if (vb) { state.view = vb.dataset.v; try { localStorage.setItem("econcal-review-view", state.view); } catch (err) {} render(); return; }
       const cb = e.target.closest("[data-cal]"); if (cb) { const k = cb.dataset.cal;
         if (cb.classList.contains("rv-nd")) { state.cal[k + ":nd"] = !state.cal[k + ":nd"]; render(); return; }

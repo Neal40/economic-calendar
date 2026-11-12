@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.48.0] — 2026-11-12
+### Ajouté
+- **Journal de Neal › Analyse › Sortie : 2R ou 3R ?** : à partir du MFE (R) de chaque setup Notion, compare un TP fixe à 2R, un TP fixe à 3R et « 50 % à 2R + BE, runner 3R », face au RR fait réel. Filtres Tous / Trades pris / Reviews, hypothèse si l'objectif n'est pas atteint (BE ou SL), valeur de 1R en $ (défaut 500 $). Liste des setups qui ont touché 2R sans atteindre 3R (coût du 3R) et des trades pris qui ont touché 2R puis fini sous 2R (gains rendus). Suit le filtre de période (jour / mois / année) et de type. Fonction pure `exitCalc` testée par `tools/check.js`.
+
 ## [1.47.0] — 2026-11-12
 ### Ajouté
 - **Synchro TopstepX avec la connexion Chrome** : favori « → ICT » (page `tsx-chrome.html`) qui envoie la session TopstepX ouverte dans Chrome à l'app via le lien `innercircletrader://tsx` ; l'app la garde chiffrée (`tsx-token.bin`, safeStorage) et se synchronise aussitôt. Boutons « Utiliser ma connexion Chrome » et « Se reconnecter » → ouvre TopstepX dans Chrome (Maj+clic = ancienne fenêtre de connexion de l'app). L'app n'accepte plus qu'une instance à la fois.
