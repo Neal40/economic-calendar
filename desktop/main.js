@@ -114,6 +114,24 @@ ipcMain.handle("journal:logout", async () => {
   return true;
 });
 
+/* ---------- Coach IA du Profil (Skill IA) : API Claude, clé chiffrée avec safeStorage (jamais renvoyée au renderer) ---------- */
+const AIFILE = () => path.join(app.getPath("userData"), "anthropic-key.bin"), AI_MODEL = "claude-sonnet-5-5";
+const AI_SYSTEM = "Tu es un coach de performance pour un trader de futures (NQ / ES) en prop firm (Apex, Topstep, My Funded Futures). Tu analyses uniquement sa discipline, sa gestion du risque, sa constance et son process à partir des chiffres fournis. Tu ne donnes jamais de conseil d'investissement : pas de direction de marché, pas de niveau d'entrée, pas de trade à prendre. Tu t'appuies sur les chiffres du rapport, tu es direct et bienveillant, en français.";
+function getAiKey() { try { const b = fs.readFileSync(AIFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; } }
+ipcMain.handle("ai:status", async () => ({ ok: !!getAiKey(), model: AI_MODEL }));
+ipcMain.handle("ai:setKey", async (e, k) => { k = String(k || "").trim();
+  if (!k) { try { fs.unlinkSync(AIFILE()); } catch (x) {} return { ok: false, reason: "removed" }; }
+  if (!/^sk-ant-[\w-]{20,}$/.test(k)) return { ok: false, reason: "format" };
+  fs.writeFileSync(AIFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(k) : Buffer.from(k, "utf8")); return { ok: true }; });
+ipcMain.handle("ai:ask", async (e, prompt) => { const k = getAiKey(); if (!k) return { ok: false, reason: "clé API manquante" };
+  try {
+    const r = await net.fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "content-type": "application/json", "x-api-key": k, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({ model: AI_MODEL, max_tokens: 3000, system: AI_SYSTEM, messages: [{ role: "user", content: String(prompt || "").slice(0, 80000) }] }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return { ok: false, reason: r.status === 401 ? "clé API refusée" : (j.error && j.error.message) || "HTTP " + r.status };
+    return { ok: true, text: (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n"), model: j.model };
+  } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+
 /* ---------- Notion (Review) ---------- */
 const NFILE = () => path.join(app.getPath("userData"), "notion-token.bin");
 function getNotionToken() {

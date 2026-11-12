@@ -2119,7 +2119,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     if (e !== null && s !== null && p !== null && e !== s) return Math.round((Math.abs(p - e) / Math.abs(e - s)) * 100) / 100;
     return num(t["RR théorique"]);
   };
-  window.jmeta = { rrTheo: (id) => rrTheo(META.tags[id]), tags: (id) => META.tags[id], imgCount: (id) => IC[id] || 0, all: () => META.tags };
+  window.jmeta = { rrTheo: (id) => rrTheo(META.tags[id]), tags: (id) => META.tags[id], imgCount: (id) => IC[id] || 0, all: () => META.tags, openTags: (t) => openTags(t) };
 
   /* ----- shared modal ----- */
   const css = document.createElement("style");
@@ -2901,10 +2901,14 @@ function pareto8020(rows, val, dims) {
    o.rules = { entries, stops, tp, trail, exits } (texte de la stratégie) ; o.dll = 1 000 $.
    o.days = journées de TOUS les comptes Apex + Topstep (comptes.json) { acc, day, pnl, n, c } — ajoutées quand le compte n'a pas de trades détaillés ce jour-là ;
    o.accounts = [{ id, firm, kind: "eval" | "funded", res: "passed" | "failed" | "active" | "closed", days, dll, oneDay }] ; o.money = { paid, spent, payouts }.
-   Tailles en équivalent mini (10 micros MNQ / MES = 1 NQ / ES). Risque par position : règle de Rudy, 500 $ max (perte > 550 $ = hors règle). */
+   Tailles en équivalent mini (10 micros MNQ / MES = 1 NQ / ES), ramenées à un compte 50K (o.accounts[].size). Risque par position : règle de Rudy, 500 $ max pour 50K (× taille du compte / 50K).
+   Consistance : règle de chaque compte (o.accounts[].cons, ex. Apex 0.5, MFFU Core 0.4), sinon o.cons, sinon 0.5 (Apex).
+   Chaque critère peut porter ids = positions concernées ; retour : pos (positions), untagged (ids sans tags). */
 function profilCalc(fills, o) {
   o = o || {}; const meta = o.meta || (() => null), dll = o.dll || 1000, rules = o.rules || {}, maxRisk = o.maxRisk || 500;
   const DLL = new Map((o.dlls || []).concat(o.accounts || []).filter((a) => +a.dll > 0).map((a) => [String(a.id), +a.dll])), dllOf = (acc) => DLL.get(String(acc)) || dll;
+  const AI = (o.accounts || []).concat(o.accInfo || []), SZ = new Map(AI.filter((a) => +a.size > 0).map((a) => [String(a.id), +a.size])), fOf = (acc) => { const v = SZ.get(String(acc)); return v ? Math.max(0.5, v / 50000) : 1; };
+  const CONS = new Map(AI.filter((a) => +a.cons > 0).map((a) => [String(a.id), +a.cons])), consOf = (acc) => CONS.get(String(acc)) || +o.cons || 0.5, scaled = [...SZ.values()].some((v) => v !== 50000);
   const micro = (t) => /(^|[.\/\s])M(NQ|ES|YM|2K|GC|CL)/i.test(String(t.Contract || t.Symbol || t.prod || t.asset || "")), szOf = (t) => (Number(t.Size) || 0) * (micro(t) ? 0.1 : 1);
   const r2 = (x) => Math.round(x * 100) / 100, clamp = (x) => Math.max(0, Math.min(1, x));
   const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -2916,9 +2920,10 @@ function profilCalc(fills, o) {
   const P = [];
   for (const [acc, F] of byAcc) { F.sort((a, b) => String(a.Entry).localeCompare(String(b.Entry))); let g = null;
     for (const t of F) { if (g && String(t.Entry) < g.exit && t.Direction === g.dir) { g.f.push(t); if (String(t.Exit) > g.exit) g.exit = String(t.Exit); } else { g = { acc, dir: t.Direction, exit: String(t.Exit), f: [t] }; P.push(g); } } }
+  const acc0 = (g) => g.acc;
   for (const g of P) {
     g.day = String(g.f[0].Day || g.f[0].Entry).slice(0, 10); g.entry = String(g.f[0].Entry);
-    g.size = Math.round(g.f.reduce((a, t) => a + szOf(t), 0) * 10) / 10; g.net = g.f.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0);
+    g.id = String(g.f[0].ID); g.raw = Math.round(g.f.reduce((a, t) => a + szOf(t), 0) * 10) / 10; g.size = Math.round((g.raw / fOf(acc0(g))) * 10) / 10; g.net = g.f.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0);
     const M = g.f.map((t) => meta(t.ID)).filter(Boolean), pl = M.find((m) => m.plan != null);
     g.m = M.length ? { time: M.some((m) => m.time), pda: M.some((m) => m.pda), plan: pl ? pl.plan : null, err: [...new Set(M.flatMap((m) => m.err || []))] } : null;
   }
@@ -2927,10 +2932,11 @@ function profilCalc(fills, o) {
   const AD = new Map(), DAY = new Map();
   for (const g of P) { const k = g.acc + "|" + g.day, a = AD.get(k) || { acc: g.acc, day: g.day, n: 0, net: 0, size: 0 }; a.n++; a.net += g.net; a.size = Math.max(a.size, g.size); AD.set(k, a); DAY.set(g.day, (DAY.get(g.day) || 0) + g.net); }
   for (const x of o.days || []) { if (!x || !x.day || x.pnl == null || isNaN(+x.pnl)) continue; const k = x.acc + "|" + x.day; if (AD.has(k)) continue;
-    const n = Number(x.n) || 1; AD.set(k, { acc: String(x.acc), day: x.day, n, net: +x.pnl, size: x.c != null && +x.c > 0 ? +x.c / n : null, ext: true }); DAY.set(x.day, (DAY.get(x.day) || 0) + +x.pnl); }
+    const n = Number(x.n) || 1; AD.set(k, { acc: String(x.acc), day: x.day, n, net: +x.pnl, size: x.c != null && +x.c > 0 ? +x.c / n / fOf(x.acc) : null, ext: true }); DAY.set(x.day, (DAY.get(x.day) || 0) + +x.pnl); }
   const ad = [...AD.values()], days = [...DAY.keys()].sort(), net = P.reduce((s, g) => s + g.net, 0) + ad.filter((a) => a.ext).reduce((s, a) => s + a.net, 0);
   const tagged = P.filter((g) => g.m), errRate = (L) => (tagged.length ? tagged.filter((g) => g.m.err.some((e) => L.includes(e))).length / tagged.length : 0);
   const C = [], add = (id, grp, label, want, w, score, value, detail, tip) => C.push({ id, grp, label, want, w, score: score == null || isNaN(score) ? null : r2(clamp(score)), value, detail, tip });
+  const ids = (id, L) => { const c = C.find((x) => x.id === id); if (c && L && L.length) c.ids = L.map((g) => g.id); };
 
   // 1. Système défini : règles exactes écrites
   const RF = [["entries", "Entrées"], ["stops", "Stops initiaux"], ["tp", "Take profits"], ["trail", "Trailing"], ["exits", "Sorties"]];
@@ -2942,6 +2948,7 @@ function profilCalc(fills, o) {
     add("system", "systeme", "Trades dans ton système", "Trader avec un système, sans changer ni sauter de stratégie en stratégie.", 1.5, 0.4 * doc + 0.6 * (1 - Math.min(1, bad * 3)),
       `${Math.round((1 - bad) * 100)} % dans le système`, `${tagged.length} positions taguées · ${Math.round(doc * 100)} % avec Time + PD Array · ${Math.round(bad * 100)} % « Model pas connu / Hors macro / Setup non A+ »`,
       bad > 0.1 ? "Coupe les trades hors macro ou sur un setup non A+ : ce sont eux qu'Apex appelle « changer de stratégie »." : doc < 0.7 ? "Renseigne Time et PD Array M1 sur chaque trade pour prouver que tu suis ton modèle." : null);
+    ids("system", tagged.filter((g) => g.m.err.some((x) => ["Model pas connu", "Hors macro", "Setup non A+"].includes(x))));
   } else add("system", "systeme", "Trades dans ton système", "Trader avec un système, sans changer ni sauter de stratégie en stratégie.", 1.5, null, "—", "Pas assez de trades tagués (Time, PD Array, Erreur) ou liés au Journal Notion.", "Tague tes trades (ou lie-les à leur fiche Notion) pour mesurer si tu restes dans ton système.");
   // 3. Discipline : respect du plan
   const pl = tagged.filter((g) => g.m.plan != null);
@@ -2952,8 +2959,9 @@ function profilCalc(fills, o) {
   const sz = P.map((g) => g.size).concat(ad.filter((a) => a.ext && a.size != null).map((a) => r2(a.size))).filter((x) => x > 0), ms = med(sz);
   if (sz.length >= 5) { const within = sz.filter((x) => x >= ms * 0.5 && x <= ms * 1.5).length / sz.length, mx = Math.max(...sz), e = errRate(["Taille de position"]);
     add("size", "constance", "Taille constante", "Trader avec des tailles constantes.", 1, within * (1 - Math.min(0.5, e * 2)) - (mx > ms * 3 ? 0.1 : 0),
-      `${Math.round(within * 100)} % dans la norme`, `Taille médiane ${ms} contrat(s) équivalent mini (10 micros = 1 mini) · max ${mx} · norme = ${r2(ms * 0.5)} à ${r2(ms * 1.5)}${e ? ` · ${Math.round(e * 100)} % tagués « Taille de position »` : ""}`,
+      `${Math.round(within * 100)} % dans la norme`, `Taille médiane ${ms} contrat(s) équivalent mini (10 micros = 1 mini)${scaled ? ", ramenée à un compte 50K" : ""} · max ${mx} · norme = ${r2(ms * 0.5)} à ${r2(ms * 1.5)}${e ? ` · ${Math.round(e * 100)} % tagués « Taille de position »` : ""}`,
       within < 0.85 ? "Fixe une taille par palier (normal / moitié sous 1 500 $ de DD) et ne la change qu'avec ta règle des tranches." : mx > ms * 3 ? "Une ou plusieurs positions dépassent 3× ta taille habituelle : c'est ce qu'Apex repère en premier." : null);
+    ids("size", P.filter((g) => g.size > 0 && (g.size < ms * 0.5 || g.size > ms * 1.5)));
   } else add("size", "constance", "Taille constante", "Trader avec des tailles constantes.", 1, null, "—", "Moins de 5 positions avec une taille connue (Apex ne donne pas les contrats par jour).", null);
   // 5. Jours tradés réguliers
   if (days.length >= 5) { const nn = ad.map((a) => a.n), mn = med(nn), normal = nn.filter((x) => x <= Math.max(2, 2 * mn)).length / nn.length;
@@ -2964,35 +2972,38 @@ function profilCalc(fills, o) {
   } else add("days", "constance", "Jours tradés réguliers", "Être constant sur les jours tradés.", 0.75, null, "—", "Moins de 5 jours tradés.", null);
   // 6. Gestion du risque : règle par position (500 $ max), règle des tranches (Journal), journées sous la DLL du compte
   const dl = ad.filter((a) => a.net < -dllOf(a.acc)).length, rk = o.risk && o.risk.n ? o.risk.ok / o.risk.n : null, es = errRate(["Stop déplacé"]);
-  const lp = P.filter((g) => g.net < 0), over = lp.filter((g) => g.net < -maxRisk * 1.1).length, pr = lp.length >= 5 ? 1 - over / lp.length : null, ds = ad.length ? 1 - Math.min(1, (dl / ad.length) * 5) : null;
+  const lp = P.filter((g) => g.net < 0), overL = lp.filter((g) => g.net < -maxRisk * fOf(g.acc) * 1.1), over = overL.length, pr = lp.length >= 5 ? 1 - over / lp.length : null, ds = ad.length ? 1 - Math.min(1, (dl / ad.length) * 5) : null;
   const RP = [[pr, 0.45], [rk, 0.25], [ds, 0.3]].filter((x) => x[0] != null), rsc = RP.length ? RP.reduce((s, x) => s + x[0] * x[1], 0) / RP.reduce((s, x) => s + x[1], 0) : null;
   add("risk", "constance", "Gestion du risque", "Une bonne gestion du risque, sans mettre le compte en danger.", 1.5, rsc == null ? null : rsc * (1 - Math.min(0.5, es * 2)),
-    pr != null ? `${Math.round(pr * 100)} % des pertes sous ${maxRisk} $` : `${dl} jour(s) > DLL`,
-    `${pr != null ? `${over} perte(s) de plus de ${Math.round(maxRisk * 1.1)} $ sur ${lp.length} positions perdantes · ` : ""}${rk != null ? `règle des tranches : ${o.risk.ok} / ${o.risk.n} positions OK · ` : ""}${dl} journée(s)-compte sous la DLL du compte (${dll} $ par défaut)${es ? ` · ${Math.round(es * 100)} % « Stop déplacé »` : ""}`,
+    pr != null ? `${Math.round(pr * 100)} % des pertes sous ${maxRisk} $${scaled ? " / 50K" : ""}` : `${dl} jour(s) > DLL`,
+    `${pr != null ? `${over} perte(s) de plus de ${Math.round(maxRisk * 1.1)} $${scaled ? " (pour 50K, ajusté à la taille de chaque compte)" : ""} sur ${lp.length} positions perdantes · ` : ""}${rk != null ? `règle des tranches : ${o.risk.ok} / ${o.risk.n} positions OK · ` : ""}${dl} journée(s)-compte sous la DLL du compte (${dll} $ par défaut)${es ? ` · ${Math.round(es * 100)} % « Stop déplacé »` : ""}`,
     pr != null && pr < 0.9 ? `Une perte sur ${Math.max(2, Math.round(1 / Math.max(0.01, 1 - pr)))} dépasse ${maxRisk} $ : place le stop AVANT l'entrée et calcule la taille dessus (250 $ sous 1 500 $ de DD restant).` : dl ? "Coupe la journée avant la DLL : une seule journée sous la DLL suffit à paraître « risky »." : null);
-  // 7. Pas de windfall : meilleure journée / profit total, compte par compte (règle de consistance 30 %)
+  ids("risk", overL);
+  // 7. Pas de windfall : meilleure journée / profit total, compte par compte (règle de consistance du compte : Apex 50 %, MFFU Core 40 %… sinon 50 %)
   const accDays = new Map(); ad.forEach((a) => { if (!accDays.has(a.acc)) accDays.set(a.acc, []); accDays.get(a.acc).push(a.net); });
-  const KD = new Map((o.accounts || []).map((a) => [String(a.id), a.kind])); // la règle des 30 % s'applique aux comptes financés (une évaluation se passe souvent en 1-2 jours)
-  const WR = []; for (const [acc, L] of accDays) { if (KD.get(acc) === "eval") continue; const p = L.reduce((s, x) => s + x, 0), b = Math.max(0, ...L); if (p > 0 && L.length >= 2) WR.push({ acc, r: b / p }); }
-  WR.sort((x, y) => y.r - x.r);
+  const KD = new Map((o.accounts || []).map((a) => [String(a.id), a.kind])); // la règle de consistance s'applique aux comptes financés (une évaluation se passe souvent en 1-2 jours)
+  const WR = []; for (const [acc, L] of accDays) { if (KD.get(acc) === "eval") continue; const p = L.reduce((s, x) => s + x, 0), b = Math.max(0, ...L); if (p > 0 && L.length >= 2) WR.push({ acc, r: b / p, t: consOf(acc) }); }
+  WR.sort((x, y) => y.r / y.t - x.r / x.t);
   const gross = P.filter((g) => g.net > 0).reduce((s, g) => s + g.net, 0), top = Math.max(0, ...P.map((g) => g.net)), lucky = P.length && gross ? top / gross : null, pc = (r) => (r > 1 ? "> 100 %" : Math.round(r * 100) + " %");
   let wr = null; if (!WR.length && ad.length >= 2) { const pos = ad.filter((a) => a.net > 0), sp = pos.reduce((s, a) => s + a.net, 0); if (sp) wr = Math.max(...pos.map((a) => a.net)) / sp; }
-  const wOk = WR.filter((w) => w.r <= 0.3).length, wMed = med(WR.map((w) => w.r));
-  add("windfall", "anti", "Pas de windfall / chance", "Pas de trader « chanceux » ou « windfall » : les gains ne viennent pas d'un seul jour.", 1.25, WR.length ? mean(WR.map((w) => clamp((0.6 - w.r) / 0.3))) : wr == null ? null : clamp((0.6 - wr) / 0.3),
-    WR.length ? `${wOk} / ${WR.length} comptes ${KD.size ? "financés " : ""}gagnants sous 30 %` : wr == null ? "—" : `Meilleur jour = ${pc(wr)} des gains`,
-    WR.length ? `Règle de consistance${KD.size ? " (comptes financés, hors évaluations)" : ""} : meilleur jour ≤ 30 % du profit du compte · médiane ${pc(wMed)} · pire : ${WR[0].acc} (${pc(WR[0].r)})${lucky != null ? ` · meilleur trade = ${pc(lucky)} des gains bruts` : ""}` : wr == null ? "Pas encore de compte gagnant à analyser." : "Aucun compte gagnant sur 2 jours ou plus : calcul sur toutes tes journées gagnantes.",
-    (WR.length ? wOk / WR.length < 0.7 : wr != null && wr > 0.3) ? "Tes comptes gagnants le sont grâce à une ou deux grosses journées : vise plusieurs journées moyennes, c'est ce qu'Apex demande avant un payout." : null);
+  const wOk = WR.filter((w) => w.r < w.t).length, wMed = med(WR.map((w) => w.r)), t0 = +o.cons || 0.5, tl = [...new Set(WR.map((w) => Math.round(w.t * 100)))].sort((x, y) => x - y).join(" / ") || Math.round(t0 * 100), ws = (r, t) => clamp((2 * t - r) / t);
+  add("windfall", "anti", "Pas de windfall / chance", "Pas de trader « chanceux » ou « windfall » : les gains ne viennent pas d'un seul jour.", 1.25, WR.length ? mean(WR.map((w) => ws(w.r, w.t))) : wr == null ? null : ws(wr, t0),
+    WR.length ? `${wOk} / ${WR.length} comptes ${KD.size ? "financés " : ""}gagnants sous leur règle (${tl} %)` : wr == null ? "—" : `Meilleur jour = ${pc(wr)} des gains`,
+    WR.length ? `Règle de consistance${KD.size ? " (comptes financés, hors évaluations)" : ""} : meilleur jour < ${tl} % du profit du compte (règle de chaque prop firm) · médiane ${pc(wMed)} · pire : ${WR[0].acc} (${pc(WR[0].r)})${lucky != null ? ` · meilleur trade = ${pc(lucky)} des gains bruts` : ""}` : wr == null ? "Pas encore de compte gagnant à analyser." : "Aucun compte gagnant sur 2 jours ou plus : calcul sur toutes tes journées gagnantes.",
+    (WR.length ? wOk / WR.length < 0.7 : wr != null && wr > t0) ? "Tes comptes gagnants le sont grâce à une ou deux grosses journées : vise plusieurs journées moyennes, c'est ce qu'Apex demande avant un payout." : null);
   // 8. Pas erratique / gambler : revenge (taille augmentée juste après une perte), pire journée vs journée perdante moyenne, tags
-  let after = 0, rev = 0; for (let i = 1; i < P.length; i++) { const a = P[i - 1], b = P[i]; if (a.acc !== b.acc || a.day !== b.day || a.net >= 0) continue; after++; if (b.size > a.size && (new Date(b.entry) - new Date(a.exit)) / 60000 <= 15) rev++; }
+  let after = 0, rev = 0, quick = 0; const RV = []; for (let i = 1; i < P.length; i++) { const a = P[i - 1], b = P[i]; if (a.acc !== b.acc || a.day !== b.day || a.net >= 0) continue; after++; const gap = (new Date(b.entry) - new Date(a.exit)) / 60000;
+    if (b.size > a.size && gap <= 15) { rev++; RV.push(b); } else if (b.size >= a.size && gap <= 5) { quick++; RV.push(b); } } // revenge = taille augmentée < 15 min ; re-entrée rapide = même taille < 5 min (compte pour moitié)
   const lossD = ad.filter((a) => a.net < 0).map((a) => -a.net), ratio = lossD.length >= 2 ? Math.max(...lossD) / mean(lossD) : null, eg = errRate(["Gambling", "FOMO", "Revenge trade", "Overtrading", "Low Hunging Fruit"]);
-  const parts = [after ? 1 - Math.min(1, (rev / after) * 2) : null, ratio == null ? null : clamp((5 - ratio) / 3), tagged.length >= 3 ? 1 - Math.min(1, eg * 3) : null].filter((x) => x != null);
+  const parts = [after ? 1 - Math.min(1, ((rev + quick / 2) / after) * 2) : null, ratio == null ? null : clamp((5 - ratio) / 3), tagged.length >= 3 ? 1 - Math.min(1, eg * 3) : null].filter((x) => x != null);
   add("erratic", "anti", "Ni gambler ni erratique", "Pas de gambling, pas de comportement erratique.", 1.25, parts.length ? mean(parts) : null,
-    after ? `${rev} revenge / ${after} pertes` : "Aucun revenge", `Taille augmentée < 15 min après une perte : ${rev} fois · pire journée = ${ratio == null ? "—" : r2(ratio) + "×"} ta journée perdante moyenne${tagged.length >= 3 ? ` · ${Math.round(eg * 100)} % tagués Gambling / FOMO / Revenge / Overtrading` : ""}`,
-    rev ? "Après une perte, reviens à ta taille normale ou arrête 15 min : c'est le schéma « erratique » type." : ratio != null && ratio > 3 ? "Ta pire journée est très au-dessus de tes pertes habituelles : pose une limite de perte journalière perso." : eg > 0.1 ? "Les trades tagués Gambling / FOMO / Revenge sont ta première fuite : règle d'arrêt après le 1er." : null);
+    after ? `${rev} revenge${quick ? ` + ${quick} re-entrée(s) rapide(s)` : ""} / ${after} pertes` : "Aucun revenge", `Taille augmentée < 15 min après une perte : ${rev} fois · re-entrée à la même taille < 5 min : ${quick} fois · pire journée = ${ratio == null ? "—" : r2(ratio) + "×"} ta journée perdante moyenne${tagged.length >= 3 ? ` · ${Math.round(eg * 100)} % tagués Gambling / FOMO / Revenge / Overtrading` : ""}`,
+    rev || quick ? "Après une perte, reviens à ta taille normale et attends 15 min avant de reprendre : c'est le schéma « erratique » type." : ratio != null && ratio > 3 ? "Ta pire journée est très au-dessus de tes pertes habituelles : pose une limite de perte journalière perso." : eg > 0.1 ? "Les trades tagués Gambling / FOMO / Revenge sont ta première fuite : règle d'arrêt après le 1er." : null);
+  ids("erratic", RV);
   // 9. Pas de stratégie de retrait : journées « remplissage » (1 position, 1 contrat, résultat ≈ 0) pour valider les jours minimum
-  if (ad.length >= 5) { const fill = ad.filter((a) => a.n === 1 && (a.size == null || a.size <= 1) && Math.abs(a.net) < 25).length / ad.length;
+  if (ad.length >= 5) { const fth = Math.round(Math.max(25, 0.1 * med(ad.map((a) => Math.abs(a.net))))), fill = ad.filter((a) => a.n === 1 && (a.size == null || a.size <= 1) && Math.abs(a.net) < fth).length / ad.length;
     add("minDays", "anti", "Pas de jours « remplissage »", "Pas de stratégie de retrait qui joue sur le minimum de jours.", 0.5, 1 - Math.min(1, fill * 4),
-      `${Math.round(fill * 100)} % de jours remplissage`, `Journée « remplissage » = 1 seule position / 1 trade, 1 contrat, résultat entre -25 $ et +25 $ (${Math.round(fill * ad.length)} sur ${ad.length} journées-compte)`,
+      `${Math.round(fill * 100)} % de jours remplissage`, `Journée « remplissage » = 1 seule position / 1 trade, 1 contrat, résultat entre -${fth} $ et +${fth} $ (10 % de ta journée médiane, 25 $ minimum) (${Math.round(fill * ad.length)} sur ${ad.length} journées-compte)`,
       fill > 0.1 ? "Ne trade pas juste pour valider un jour : Apex refuse les payouts construits comme ça." : null);
   } else add("minDays", "anti", "Pas de jours « remplissage »", "Pas de stratégie de retrait qui joue sur le minimum de jours.", 0.5, null, "—", "Moins de 5 journées.", null);
   // 10. Croissance régulière : courbe de capital proche d'une droite montante + semaines positives
@@ -3024,9 +3035,41 @@ function profilCalc(fills, o) {
   const K = C.filter((c) => c.score != null), W = K.reduce((s, c) => s + c.w, 0), score = W ? Math.round((K.reduce((s, c) => s + c.score * c.w, 0) / W) * 100) : null;
   const status = score == null ? { k: "none", label: "Pas encore de données" } : score >= 80 ? { k: "ok", label: "Profil partenaire" } : score >= 65 ? { k: "good", label: "En bonne voie" } : score >= 45 ? { k: "mid", label: "À consolider" } : { k: "bad", label: "Profil à risque" };
   if (score != null && K.length / C.length < 0.7) status.label += " (provisoire)";
-  return { n: P.length, accDays: ad.length, nAcc: AC.length, days: days.length, net: r2(net), score, status, criteria: C, coverage: K.length / C.length };
+  return { pos: P.map((g) => ({ id: g.id, acc: g.acc, day: g.day, entry: g.entry, exit: g.exit, dir: g.dir, size: g.size, raw: g.raw, net: r2(g.net) })), untagged: P.filter((g) => !g.m).map((g) => g.id), n: P.length, accDays: ad.length, nAcc: AC.length, days: days.length, net: r2(net), score, status, criteria: C, coverage: K.length / C.length };
 }
 /* profilCalc:end */
+/* payoutCalc:start — fonction pure, testée par tools/check.js. « Prêt pour un payout ? » d'un compte financé actif.
+   a = compte de comptes.json (days [{ d, pnl }], startBalance, balance, type, requirements, summary, consistency) ; fk = "apex" | "topstep" | "mffu" ; pays = payouts de ce compte [{ requested }].
+   Règles (vérifiées le 12/11/2026 sur les sites des prop firms ; celles que la prop firm renvoie pour le compte passent avant) :
+   Apex PA : 5 jours avec le profit journalier minimum (EOD 50K : 250 $), consistance 50 % depuis le dernier payout, solde ≥ « Min Balance to Request », 6 payouts max.
+   Topstep Express Funded (Standard) : 5 jours gagnants de 150 $+ depuis le dernier payout, pas de consistance (Consistency path : 3 jours + 40 %).
+   MFFU : 5 jours gagnants de 150 $+ et 500 $ de profit sur le cycle ; consistance Core 40 %, Builder 50 %, Rapid / Flex / Pro sans. */
+function payoutCalc(a, fk, pays) {
+  a = a || {}; const r2 = (x) => Math.round(x * 100) / 100, usd = (v) => Math.round(v).toLocaleString("fr-FR") + " $";
+  const type = String(a.type || "") + " " + String(a.accountType || ""), size = +((/(\d+)\s*k/i.exec(type) || [])[1] || 0) * 1000 || +a.startBalance || 50000, rq = a.requirements || {};
+  const last = (pays || []).map((p) => String(p.requested || "").slice(0, 10)).filter(Boolean).sort().pop() || "";
+  const D = (a.days || []).filter((d) => d && d.d && String(d.d).slice(0, 10) > last).map((d) => ({ d: String(d.d).slice(0, 10), pnl: +d.pnl || 0 }));
+  let R;
+  if (fk === "apex") R = { days: +rq.minDays || 5, minDay: +rq.minDailyProfit || ({ 25000: 100, 50000: 250, 100000: 250, 150000: 300 })[size] || 250, cons: (+rq.consistency || 50) / 100,
+    minBal: (a.summary && +a.summary.minPayout) || (+a.startBalance || size) + ({ 25000: 1600, 50000: 2600, 100000: 3600, 150000: 4600 })[size] || null, max: 6, src: "Apex PA" };
+  else if (fk === "topstep") { const cp = /consist/i.test(type) || +a.consistency > 0 && /express/i.test(String(a.stage || ""));
+    R = cp ? { days: 3, minDay: 0.01, cons: (+a.consistency || 40) / 100, src: "Topstep XFA Consistency" } : { days: 5, minDay: 150, cons: null, src: "Topstep XFA Standard" }; }
+  else R = { days: 5, minDay: 150, cons: /core/i.test(type) ? 0.4 : /builder/i.test(type) ? 0.5 : null, cycle: 500, src: "MFFU " + (String(a.type || "").trim() || "") };
+  const profit = r2(D.reduce((s, d) => s + d.pnl, 0)), best = Math.max(0, ...D.map((d) => d.pnl)), q = D.filter((d) => d.pnl >= R.minDay).length, I = [];
+  I.push({ k: "days", ok: q >= R.days, label: R.minDay >= 1 ? `${R.days} jours ≥ ${usd(R.minDay)}` : `${R.days} jours tradés`, detail: `${q} / ${R.days}${last ? " depuis le payout du " + last : ""}` });
+  if (R.cons) I.push({ k: "cons", ok: profit > 0 && best < R.cons * profit, label: `Consistance ${Math.round(R.cons * 100)} %`, detail: profit > 0 ? `meilleur jour ${usd(best)} = ${Math.round((best / profit) * 100)} % du profit du cycle` : "pas encore de profit sur le cycle" });
+  if (R.cycle) I.push({ k: "cycle", ok: profit >= R.cycle, label: `Profit du cycle ≥ ${usd(R.cycle)}`, detail: usd(profit) });
+  else if (R.minBal) I.push({ k: "bal", ok: a.balance != null && +a.balance >= R.minBal, label: `Solde ≥ ${usd(R.minBal)}`, detail: a.balance != null ? "solde " + usd(+a.balance) : "solde inconnu" });
+  else I.push({ k: "profit", ok: profit > 0, label: "Profit sur le cycle", detail: usd(profit) });
+  if (R.max) I.push({ k: "max", ok: (pays || []).length < R.max, label: `Moins de ${R.max} payouts`, detail: `${(pays || []).length} payout(s) déjà pris` });
+  const need = [];
+  if (q < R.days) need.push(R.minDay >= 1 ? `${R.days - q} jour(s) de plus à ${usd(R.minDay)} ou plus` : `${R.days - q} jour(s) tradé(s) de plus`);
+  if (R.cons && profit > 0 && best >= R.cons * profit) need.push(`+${usd(best / R.cons - profit + 1)} de profit sans dépasser ${usd(best)} sur une journée (consistance)`);
+  if (R.cycle && profit < R.cycle) need.push(`+${usd(R.cycle - profit)} de profit sur le cycle`);
+  if (R.minBal && a.balance != null && +a.balance < R.minBal) need.push(`+${usd(R.minBal - a.balance)} pour atteindre le solde minimum`);
+  return { ok: I.every((x) => x.ok), items: I, need, rule: R.src, since: last, profit, best, qual: q, size };
+}
+/* payoutCalc:end */
 (function () {
   const e = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const arr = (v) => (Array.isArray(v) ? v : v == null || v === "" ? [] : [v]).map(String);
@@ -3044,7 +3087,7 @@ function profilCalc(fills, o) {
     ["tp", "Take profits", "Ex. 50 % à 2RR puis BE, reste sur la Draw On Liquidity"], ["trail", "Trailing", "Ex. BE après 2RR, puis stop sous chaque nouveau FVG M1"], ["exits", "Sorties", "Ex. fin de macro, news majeure, 2 SL dans la journée = stop"]];
   let acct = "all", per = "all", src = "firms";
   try { acct = localStorage.getItem("econcal-pf-acct") || "all"; per = localStorage.getItem("econcal-pf-per") || "all"; src = localStorage.getItem("econcal-pf-src") || "firms"; } catch (x) {}
-  if (src !== "firms" && src !== "detail") src = "detail";
+  if (src !== "firms" && src !== "detail" && src !== "bt") src = "detail";
   // couleurs des prop firms : Apex bleu, MFFU jaune, Topstep noir
   const FIRM = { apex: { n: "Apex", bg: "#2f7cf6", fg: "#fff" }, mffu: { n: "MFFU", bg: "#f5c518", fg: "#111" }, topstep: { n: "Topstep", bg: "#0b0b0d", fg: "#fff" } };
   const chip = (k, txt) => `<span class="pf-chip" style="background:${FIRM[k].bg};color:${FIRM[k].fg}">${e(txt || FIRM[k].n)}</span>`;
@@ -3054,6 +3097,18 @@ function profilCalc(fills, o) {
   const resOf = (a) => { const s = String(a.status || "").toLowerCase(), lost = a.balance != null && a.startBalance != null && +a.balance < +a.startBalance;
     return /passed/.test(s) ? "passed" : /blown|fail|liquid|breach/.test(s) ? "failed" : /closed|expired|annul/.test(s) ? (lost ? "failed" : "closed") : "active"; };
   const RES = { passed: "Réussi", failed: "Cramé", closed: "Fermé", active: "Actif" };
+  // taille du compte (25K / 50K / 100K / 150K) et règle de consistance de la prop firm pour ce compte
+  const sizeOfAcc = (a) => +((/(\d+)\s*k/i.exec(String(a.type || "")) || [])[1] || 0) * 1000 || (+a.startBalance > 0 ? +a.startBalance : 50000);
+  const consOfAcc = (k, a) => (k === "apex" ? (+(a.requirements || {}).consistency || 50) / 100 : k === "mffu" ? (/core/i.test(a.type) ? 0.4 : /builder/i.test(a.type) ? 0.5 : null) : null);
+  // sessions clôturées du Backtesteur (Journal backtest) → même format que les trades du Journal
+  function btData() {
+    let L = []; try { L = JSON.parse(localStorage.getItem("bt-journal") || "[]") || []; } catch (x) {}
+    const fills = [], info = [];
+    L.forEach((r) => { const acc = "bt:" + r.id, cfg = r.cfg || {}; info.push({ id: acc, size: +cfg.size || 50000, cons: cfg.type === "prop" && +cfg.cons ? +cfg.cons / 100 : null });
+      (r.trades || []).forEach((t, i) => { const a = new Date(+t.tIn * 1000), b = new Date(+t.tOut * 1000), d = String(t.day || "");
+        fills.push({ ID: acc + ":" + i, "ID TopstepX": acc, Day: d, Entry: isNaN(a) ? d + "T14:30:00Z" : a.toISOString(), Exit: isNaN(b) ? d + "T14:30:00Z" : b.toISOString(), Direction: t.side === "Short" ? "Short" : "Long", Size: +t.qty || 1, Contract: t.ctr || "", "Net P&L": +t.pnl || 0, _bt: r.name }); }); });
+    return { fills, info, n: L.length };
+  }
   // trades de comptes.json → format des fills du Journal (1 ligne = 1 position)
   function tradesOf(k, a) {
     const T = a.trades || [], acc = String(a.id), out = [];
@@ -3079,7 +3134,7 @@ function profilCalc(fills, o) {
         const D = (a.days || []).filter((d) => d && d.d && (!cut || String(d.d) >= cut)).map((d) => ({ acc: id, day: String(d.d).slice(0, 10), pnl: +d.pnl, n: d.n, c: k === "topstep" ? null : d.c }));
         if (cut && !D.length && !fills.length && first < cut) continue;
         const neg = (a.days || []).map((d) => +d.pnl || 0).filter((v) => v < 0), worst = neg.length ? Math.min(...neg) : 0, lossSum = neg.reduce((x, v) => x + v, 0);
-        accounts.push({ id, firm: FIRM[k].n, fk: k, name: a.name || id, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first, fills, D, dll: +a.dll || null, oneDay: lossSum < 0 && worst / lossSum >= 0.6 }); D.forEach((d) => days.push(d)); }
+        accounts.push({ id, firm: FIRM[k].n, fk: k, name: a.name || id, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first, fills, D, dll: +a.dll || null, size: sizeOfAcc(a), cons: consOfAcc(k, a), raw: a, pays: (F.payouts || []).filter((p) => String(p.account) === String(a.name) || String(p.account) === id), oneDay: lossSum < 0 && worst / lossSum >= 0.6 }); D.forEach((d) => days.push(d)); }
       (F.payouts || []).forEach((p) => { if (cut && String(p.requested || "") < cut) return; const v = +(p.paid != null ? p.paid : p.amount) || 0; money.payouts++; money.paid += v; money.byFirm[k].payouts++; money.byFirm[k].paid += v; });
       (F.purchases || []).forEach((p) => { if (cut && String(p.date || "") < cut) return; money.spent += +p.amount || 0; money.byFirm[k].spent += +p.amount || 0; }); }
     // comptes du Journal TopstepX pas encore dans comptes.json
@@ -3110,11 +3165,11 @@ function profilCalc(fills, o) {
       const r = window.riskCalc(F, Number(a["Solde de départ"]) || (a.Type === "Funded" ? 0 : 50000), { ...o, floorCap: a.Type === "Funded" ? Number(a["Solde de départ"]) || 0 : null }); n += r.n; ok += r.ok; }
     return n ? { n, ok } : null;
   }
-  let DLLS = [];
+  let DLLS = [], ACCINFO = [];
   function calc(fills, comptes, meta, X, upTo) {
     const o = { meta, rules: S.strat || {}, risk: riskFor(fills, comptes) };
     if (X) { o.days = upTo ? X.days.filter((d) => d.day <= upTo) : X.days; o.accounts = upTo ? X.accounts.filter((a) => (a.first || "") <= upTo) : X.accounts; o.money = X.money; }
-    o.dlls = DLLS;
+    o.dlls = DLLS; o.accInfo = ACCINFO;
     return profilCalc(fills, o); }
 
   function spark(pts) {
@@ -3124,32 +3179,67 @@ function profilCalc(fills, o) {
       <polyline fill="none" stroke="#e6e6e6" stroke-width="1.8" points="${pts.map((p, i) => x(i) + "," + y(p.s)).join(" ")}"/>${pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.s)}" r="2.6" fill="${colOf(p.s / 100)}"><title>Semaine du ${p.w} : ${p.s}/100</title></circle>`).join("")}</svg>`;
   }
 
+  // ----- v1.43 : coach IA (rapport → Claude via l'app desktop) et alertes en direct -----
+  const COACH_ASK = "Tu es mon coach de trading prop firm. À partir de ce rapport : 1) mon statut en une phrase ; 2) mes 3 points faibles les plus coûteux, avec leur cause probable tirée des chiffres (cite-les) ; 3) un plan concret pour la semaine prochaine avec des règles de process mesurables (taille, nombre de trades par jour, arrêt après une perte, tags à remplir) ; 4) ce que je fais déjà bien et dois garder ; 5) le critère qui fera monter mon score le plus vite et comment. Ne me dis jamais quoi trader ni dans quel sens : uniquement discipline, risque et process. Réponds en français, concis, en markdown simple (titres ##, listes).";
+  const coachGet = () => { try { return JSON.parse(localStorage.getItem("econcal-pf-coach") || "null"); } catch (x) { return null; } };
+  const alertsOn = () => { try { return localStorage.getItem("econcal-pf-alerts") !== "off"; } catch (x) { return true; } };
+  function mdHtml(t) { // markdown simple du coach → HTML échappé (titres, gras, listes)
+    const b = (x) => e(x).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>"); let out = "", list = null; const close = () => { if (list) { out += `</${list}>`; list = null; } };
+    String(t || "").split(/\r?\n/).forEach((l) => { const h = /^#{1,4}\s+(.*)/.exec(l), u = /^\s*[-*•]\s+(.*)/.exec(l), o = /^\s*\d+[.)]\s+(.*)/.exec(l);
+      if (h) { close(); out += `<div style="font-weight:700;margin:12px 0 4px">${b(h[1])}</div>`; }
+      else if (u || o) { const k = u ? "ul" : "ol"; if (list !== k) { close(); out += `<${k} style="margin:4px 0;padding-left:20px;line-height:1.7">`; list = k; } out += `<li>${b((u || o)[1])}</li>`; }
+      else if (l.trim()) { close(); out += `<p style="margin:6px 0;line-height:1.6">${b(l)}</p>`; } else close(); });
+    close(); return out;
+  }
+  const coachHtmlOf = (c) => `<div class="hintd" style="margin:0 0 6px">Analyse du ${e(new Date(c.at).toLocaleString("fr-FR", { timeZone: "America/New_York" }))} (NY) · score ${e(c.score)}/100 au moment de l'analyse</div><div style="color:#d6d8de">${mdHtml(c.txt)}</div>`;
+  // alertes en direct (sans DLL perso) : après chaque chargement du Journal (synchro TopstepX toutes les 5 min), positions du jour (heure de New York) de moins de 30 min
+  function liveAlerts() {
+    if (!alertsOn() || !window.jdash) return; const F = jdash.data("fills_calc"); if (!F || F.status !== "ok" || !F.data.length) return;
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date()), P = profilCalc(F.data, {}).pos || [], T = P.filter((p) => p.day === today);
+    if (!T.length) return;
+    let seen = []; try { seen = JSON.parse(localStorage.getItem("econcal-pf-alerted") || "[]"); } catch (x) {}
+    const SN = new Set(seen), out = [], fresh = (p) => Date.now() - new Date(p.entry) < 30 * 60000, usd = (v) => Math.round(v).toLocaleString("fr-FR") + " $";
+    const sz = P.filter((p) => p.day < today && p.size > 0).map((p) => p.size).sort((a, b) => a - b), msz = sz.length >= 5 ? sz[sz.length >> 1] : null;
+    T.forEach((b) => { const i = P.indexOf(b), a = P[i - 1]; if (!fresh(b)) return;
+      if (a && a.acc === b.acc && a.day === b.day && a.net < 0 && b.size > a.size && (new Date(b.entry) - new Date(a.exit)) / 60000 <= 15) out.push(["rev:" + b.id, "Revenge trade ?", `${b.acc} : ${b.raw} contrat(s) moins de 15 min après une perte de ${usd(-a.net)} (${a.raw} contrat(s)). Reviens à ta taille normale ou fais une pause.`]);
+      if (msz && b.size > msz * 1.5) out.push(["sz:" + b.id, "Taille hors norme", `${b.acc} : ${b.raw} contrat(s), plus de 1,5× ta taille habituelle (${msz}).`]); });
+    const Cm = (window.comptesGet && comptesGet()) || {}, byAcc = new Map(); T.forEach((p) => byAcc.set(p.acc, (byAcc.get(p.acc) || 0) + p.net));
+    for (const [acc, pnl] of byAcc) { if (pnl <= 0) continue;
+      for (const k of ["topstep", "apex", "mffu"]) { const F2 = Cm[k] || {}, a = (F2.accounts || []).find((x) => String(x.id) === String(acc) || String(x.name) === String(acc)); if (!a || kindOf(a) !== "funded") continue;
+        const pays = (F2.payouts || []).filter((p) => String(p.account) === String(a.name) || String(p.account) === String(a.id)), r = payoutCalc({ ...a, days: (a.days || []).filter((d) => String(d.d).slice(0, 10) < today).concat([{ d: today, pnl }]) }, k, pays), c = r.items.find((x) => x.k === "cons");
+        if (c && !c.ok && r.profit > 0 && pnl >= r.best) out.push(["cons:" + acc + ":" + today + ":" + Math.floor(pnl / 100), "Consistance", `${a.name} : ta journée (${usd(pnl)}) fait ${Math.round((pnl / r.profit) * 100)} % du profit du cycle, au-dessus de la règle (${c.label}). Chaque dollar de plus aujourd'hui recule ton payout.`]); } }
+    const nw = out.filter((x) => !SN.has(x[0])); if (!nw.length) return;
+    nw.forEach(([k, t, body]) => { SN.add(k); try { if (window.Notification && Notification.permission !== "denied") { const n = () => new Notification("Inner Circle Trader — " + t, { body }); Notification.permission === "granted" ? n() : Notification.requestPermission().then((p) => p === "granted" && n()); } } catch (x) {} });
+    try { localStorage.setItem("econcal-pf-alerted", JSON.stringify([...SN].slice(-300))); } catch (x) {}
+  }
+  if (window.jdash && jdash.load) { const L0 = jdash.load; jdash.load = function () { const r = L0.apply(this, arguments); setTimeout(() => { try { liveAlerts(); } catch (x) { console.error("alertes", x); } }, 0); return r; }; }
   window.profilRender = function () {
     const box = document.getElementById("pfBox"); if (!box) return;
     const G = gather(), comptes = G.comptes, St = S.strat || {}, cut = per !== "all" ? cutDay(+per) : null, firm = src === "firms" ? (acct === "topstep" || acct === "apex" || acct === "mffu" ? acct : "all") : null;
     const FD = firmsData(src === "firms" ? firm : "all", cut, G), ALL = FD.all, selA = src === "detail" && acct !== "all" ? ALL.find((a) => a.id === acct) || null : null;
     if (src === "detail" && acct !== "all" && !selA) acct = "all";
-    DLLS = ALL.filter((a) => a.dll).map((a) => ({ id: a.id, dll: a.dll }));
+    DLLS = ALL.filter((a) => a.dll).map((a) => ({ id: a.id, dll: a.dll })); ACCINFO = ALL.map((a) => ({ id: a.id, size: a.size, cons: a.cons }));
+    const BT = src === "bt" ? btData() : null, MT = BT ? () => null : G.meta; if (BT) ACCINFO = BT.info;
     // Mon profil : journées + trades détaillés + parcours ; Trades détaillés : trade par trade (un compte Apex n'a que ses journées)
-    const X = src === "firms" ? FD : selA && !selA.fills.length ? { days: selA.D, accounts: [], money: {} } : null;
-    const fills = src === "firms" ? FD.fills : selA ? selA.fills : FD.fills;
-    const cps = src === "detail" && selA ? comptes.filter((c) => String(c["ID TopstepX"]) === acct) : comptes, R = calc(fills, cps, G.meta, X);
+    const X = BT ? null : src === "firms" ? FD : selA && !selA.fills.length ? { days: selA.D, accounts: [], money: {} } : null;
+    const fills = BT ? BT.fills : src === "firms" ? FD.fills : selA ? selA.fills : FD.fills;
+    const cps = BT ? [] : src === "detail" && selA ? comptes.filter((c) => String(c["ID TopstepX"]) === acct) : comptes, R = calc(fills, cps, MT, X);
     // progression : score cumulé à la fin de chaque semaine (12 dernières) + 20 derniers jours tradés vs avant
     const days = [...new Set(fills.map((t) => String(t.Day).slice(0, 10)).concat(X ? X.days.map((d) => d.day) : []))].sort(), wk = new Map();
     days.forEach((d) => { const x = new Date(d + "T12:00:00Z"), w = x.getUTCDay(); x.setUTCDate(x.getUTCDate() - (w === 0 ? 6 : w - 1)); wk.set(x.toISOString().slice(0, 10), d); });
-    const pts = [...wk.entries()].slice(-12).map(([w, last]) => ({ w, s: calc(fills.filter((t) => String(t.Day).slice(0, 10) <= last), cps, G.meta, X, last).score })).filter((p) => p.s != null);
+    const pts = [...wk.entries()].slice(-12).map(([w, last]) => { const r = calc(fills.filter((t) => String(t.Day).slice(0, 10) <= last), cps, MT, X, last); return { w, s: r.score, c: r.criteria }; }).filter((p) => p.s != null);
     const sub = (lo, hi) => { if (!X) return null; const ac = X.accounts.filter((a) => (!lo || (a.first || "") >= lo) && (!hi || (a.first || "") < hi));
       return { days: X.days.filter((d) => (!lo || d.day >= lo) && (!hi || d.day < hi)), accounts: ac.length >= 8 ? ac : [], money: {} }; }; // pas de payouts datés par période : critère « Payouts » exclu de la comparaison
-    let cmp = null; if (days.length >= 10) { const c2 = days[Math.max(0, days.length - 20)], A = calc(fills.filter((t) => String(t.Day).slice(0, 10) < c2), cps, G.meta, sub(null, c2)), B = calc(fills.filter((t) => String(t.Day).slice(0, 10) >= c2), cps, G.meta, sub(c2, null)); if (A.score != null && B.score != null) cmp = { A, B, d: B.score - A.score }; }
+    let cmp = null; if (days.length >= 10) { const c2 = days[Math.max(0, days.length - 20)], A = calc(fills.filter((t) => String(t.Day).slice(0, 10) < c2), cps, MT, sub(null, c2)), B = calc(fills.filter((t) => String(t.Day).slice(0, 10) >= c2), cps, MT, sub(c2, null)); if (A.score != null && B.score != null) cmp = { A, B, d: B.score - A.score }; }
     const prev = cmp ? new Map(cmp.A.criteria.map((c) => [c.id, c.score])) : new Map(), now = cmp ? new Map(cmp.B.criteria.map((c) => [c.id, c.score])) : new Map();
     const arrow = (id) => { const a = prev.get(id), b = now.get(id); if (a == null || b == null) return ""; const d = Math.round((b - a) * 100); if (Math.abs(d) >= 60) return `<span class="hintd" style="margin:0" title="Écart trop grand entre deux échantillons trop petits">≈</span>`; return d === 0 ? `<span class="hintd" style="margin:0">=</span>` : `<span style="color:${d > 0 ? COL.ok : COL.bad};font-size:11.5px">${d > 0 ? "▲ +" : "▼ "}${d}</span>`; };
     const st = R.status, sc = R.score;
     const card = (c) => `<div class="pf-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>${c.score == null ? "◌" : c.score >= 0.8 ? "✓" : c.score >= 0.6 ? "~" : "✕"} ${e(c.label)}</b>
         <span style="white-space:nowrap">${arrow(c.id)} <b style="color:${colOf(c.score)}">${c.score == null ? "—" : Math.round(c.score * 100)}</b></span></div>
       <div class="pf-bar"><i style="width:${c.score == null ? 0 : c.score * 100}%;background:${colOf(c.score)}"></i></div>
-      <div style="font-size:13px;margin:6px 0 2px">${e(c.value)}</div><div class="hintd" style="margin:0">${e(c.detail)}</div><div class="hintd" style="margin:6px 0 0;color:#5d6069">Apex : ${e(c.want)}</div></div>`;
+      <div style="font-size:13px;margin:6px 0 2px">${e(c.value)}</div><div class="hintd" style="margin:0">${e(c.detail)}</div><div class="hintd" style="margin:6px 0 0;color:#5d6069">Apex : ${e(c.want)}</div>${c.ids && c.ids.length && (c.score == null || c.score < 0.8) ? `<button class="btn gray pfDr" data-c="${c.id}" type="button" style="margin-top:8px;padding:4px 10px;font-size:12px">Voir les ${c.ids.length} trade(s) concerné(s)</button>` : ""}</div>`;
     const todo = R.criteria.filter((c) => c.tip && (c.score == null || c.score < 0.8)).sort((a, b) => (a.score == null ? 0.5 : a.score) * 1 - (b.score == null ? 0.5 : b.score) * 1 || b.w - a.w).slice(0, 3);
-    const noData = src === "firms" ? !X.days.length && !fills.length : !fills.length && !(X && X.days.length);
+    const noData = BT ? !BT.fills.length : src === "firms" ? !X.days.length && !fills.length : !fills.length && !(X && X.days.length);
     // répartition par prop firm (vue « Mon profil · Toutes »)
     const usd0 = (v) => (v < 0 ? "-" : "") + Math.abs(Math.round(v)).toLocaleString("fr-FR") + " $";
     const BF = src === "firms" && firm === "all" && !noData ? ["apex", "topstep", "mffu"].map((k) => { const D = firmsData(k, cut, G); if (!D.accounts.length && !D.fills.length) return null; const r = calc(D.fills, comptes, G.meta, D);
@@ -3162,12 +3252,52 @@ function profilCalc(fills, o) {
     const pick = `<div class="pf-pick"><button class="btn gray" id="pfPickB" type="button">${cur} ▾</button><div class="pf-menu" id="pfMenu" hidden><input id="pfQ" placeholder="Chercher un compte…">
       <div class="pf-list"><div class="pf-it${acct === "all" ? " on" : ""}" data-a="all"><b>Tous les comptes</b><span class="hintd" style="margin:0">${FD.fills.length} trades · ${ALL.length} comptes</span></div>
       ${["apex", "topstep", "mffu"].map((k) => { const L = ALL.filter((a) => a.fk === k).sort((x, y) => String(y.first).localeCompare(String(x.first))); return L.length ? `<div class="pf-gh">${chip(k, FIRM[k].n + " · " + L.length + " comptes")}</div>` + L.map((a) => `<div class="pf-it${a.id === acct ? " on" : ""}" data-a="${e(a.id)}" data-q="${e((a.name + " " + FIRM[k].n + " " + RES[a.res]).toLowerCase())}">${chip(k)}<span class="pf-nm">${e(a.name)}</span><span class="hintd" style="margin:0">${a.kind === "funded" ? "Funded" : "Challenge"} · ${RES[a.res]} · ${a.fills.length ? a.fills.length + " trades" : a.D.length + " jours"}</span></div>`).join("") : ""; }).join("")}</div></div></div>`;
+    // ----- v1.43 : Prêt pour un payout, positions sans tags, historique par critère, trades concernés, coach IA, alertes -----
+    const FM = new Map(fills.map((t) => [String(t.ID), t])), PM = new Map((R.pos || []).map((p) => [p.id, p])), canTag = !BT && !!(window.jmeta && jmeta.openTags);
+    const nyT = new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }), nyW = new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", weekday: "long" }), nyD = new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", day: "2-digit", month: "2-digit", year: "2-digit" });
+    const fmtNY = (iso) => { const d = new Date(iso); return isNaN(d) ? String(iso).slice(0, 16) : nyD.format(d) + " " + nyT.format(d); };
+    const slot = (iso) => { const d = new Date(iso); if (isNaN(d)) return null; const [h, m] = nyT.format(d).split(":").map(Number), a = h * 60 + (m < 30 ? 0 : 30), f = (x) => String(Math.floor(x / 60) % 24).padStart(2, "0") + ":" + String(x % 60).padStart(2, "0"); return f(a) + "–" + f(a + 30); };
+    const top = (L) => { const M = new Map(); L.filter(Boolean).forEach((x) => M.set(x, (M.get(x) || 0) + 1)); return [...M.entries()].sort((a, b) => b[1] - a[1])[0] || null; };
+    const accLabel = (p) => (String(p.acc).startsWith("bt:") ? (FM.get(p.id) || {})._bt || "Backtest" : p.acc);
+    const PAY = src === "firms" ? FD.accounts.filter((a) => a.kind === "funded" && a.res === "active" && a.raw).map((a) => ({ a, p: payoutCalc(a.raw, a.fk, a.pays) })) : [];
+    const payHtml = PAY.length ? `<div class="panel" style="margin:14px 0"><div class="ptitle">Prêt pour un payout ?</div><div class="hintd" style="margin:0 0 10px">Tes comptes financés actifs, avec les règles de chaque prop firm depuis ton dernier payout (données de la dernière synchro des pages Comptes).</div><div class="pf-grid">${PAY.map(({ a, p }) => `<div class="pf-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span>${chip(a.fk)} <b>${e(a.name)}</b></span><b style="color:${p.ok ? COL.ok : COL.mid};white-space:nowrap">${p.ok ? "✓ Payout possible" : "Pas encore"}</b></div>
+      <div style="margin:8px 0 0;line-height:1.7;font-size:13px">${p.items.map((x) => `<div><span style="color:${x.ok ? COL.ok : COL.bad}">${x.ok ? "✓" : "✕"}</span> ${e(x.label)} <span class="hintd" style="margin:0">— ${e(x.detail)}</span></div>`).join("")}</div>
+      ${p.need.length ? `<div style="margin:8px 0 0;font-size:13px">Il te manque : ${e(p.need.join(" · "))}</div>` : ""}<div class="hintd" style="margin:6px 0 0;color:#5d6069">Règle : ${e(p.rule)}</div></div>`).join("")}</div></div>` : "";
+    const UT = canTag ? (R.untagged || []).map((id) => FM.get(id)).filter(Boolean).sort((x, y) => String(y.Entry).localeCompare(String(x.Entry))) : [];
+    const untagHtml = UT.length ? `<div class="panel" style="margin:14px 0"><div class="ptitle">${UT.length} position(s) sans tags</div><div class="hintd" style="margin:0 0 10px">Sans Time, PD Array et « Respect du plan ? », les critères « Trades dans ton système » et « Respect du plan » restent provisoires. Les plus récentes :</div>
+      <table class="tbl"><thead><tr><th>Date (NY)</th><th>Compte</th><th>Sens</th><th class="num">Taille</th><th class="num">P&amp;L</th><th></th></tr></thead><tbody>${UT.slice(0, 10).map((t) => `<tr><td>${e(fmtNY(t.Entry))}</td><td>${e(t["ID TopstepX"])}</td><td>${e(t.Direction)}</td><td class="num">${e(t.Size)}</td><td class="num">${usd0(+t["Net P&L"] || 0)}</td><td><button class="btn gray pfTag" data-id="${e(t.ID)}" type="button" style="padding:3px 10px;font-size:12px">Taguer</button></td></tr>`).join("")}</tbody></table>
+      <div class="row2" style="margin:10px 0 0"><button class="btn gray pfRe" type="button">↻ Recalculer après avoir tagué</button></div></div>` : "";
+    const HW = pts.slice(-8), dm = (w) => w.slice(8, 10) + "/" + w.slice(5, 7);
+    const histHtml = HW.length >= 2 ? `<div class="panel" style="margin:14px 0"><div class="ptitle">Historique par critère</div><div class="hintd" style="margin:0 0 10px">Score de chaque critère à la fin de chaque semaine (cumulé depuis le début de la période).</div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Critère</th>${HW.map((p) => `<th class="num">${e(dm(p.w))}</th>`).join("")}</tr></thead><tbody>${R.criteria.map((c) => `<tr><td>${e(c.label)}</td>${HW.map((p) => { const x = ((p.c || []).find((y) => y.id === c.id) || {}).score; return `<td class="num" style="color:${colOf(x)};font-weight:600">${x == null ? "—" : Math.round(x * 100)}</td>`; }).join("")}</tr>`).join("")}<tr><td><b>Score global</b></td>${HW.map((p) => `<td class="num"><b>${p.s}</b></td>`).join("")}</tr></tbody></table></div></div>` : "";
+    const bindTag = (b) => (b.onclick = () => { const t = FM.get(b.dataset.id); if (t && window.jmeta && jmeta.openTags) jmeta.openTags(t); });
+    function drill(cid) {
+      const c = R.criteria.find((x) => x.id === cid), el = document.getElementById("pfDrill"); if (!c || !el) return;
+      const L = (c.ids || []).map((id) => PM.get(id)).filter(Boolean).sort((x, y) => String(y.entry).localeCompare(String(x.entry)));
+      const ts = top(L.map((p) => slot(p.entry))), td = top(L.map((p) => { const d = new Date(p.entry); return isNaN(d) ? null : nyW.format(d); })), te = top(L.flatMap((p) => (MT(p.id) || {}).err || []));
+      const why = [ts ? `surtout entre ${ts[0]} (NY) : ${ts[1]} / ${L.length}` : "", td ? `le ${td[0]} : ${td[1]} / ${L.length}` : "", te ? `tag le plus fréquent : « ${e(te[0])} » (${te[1]})` : ""].filter(Boolean).join(" · ");
+      el.innerHTML = `<div class="panel" style="margin:14px 0"><div class="row2" style="margin:0 0 8px;justify-content:space-between;align-items:center"><div class="ptitle" style="margin:0">${e(c.label)} — ${L.length} trade(s) concerné(s)</div><button class="btn gray" id="pfDrX" type="button">Fermer</button></div>
+        <div class="hintd" style="margin:0 0 10px">${why ? why.charAt(0).toUpperCase() + why.slice(1) + ". " : ""}Compare avec l'onglet 80/20 du Journal pour voir si ce créneau te coûte aussi en P&amp;L.${L.length > 200 ? " Les 200 plus récents sont affichés." : ""}</div>
+        <table class="tbl"><thead><tr><th>Date (NY)</th><th>Compte</th><th>Sens</th><th class="num">Taille</th><th class="num">P&amp;L</th>${canTag ? "<th></th>" : ""}</tr></thead><tbody>${L.slice(0, 200).map((p) => `<tr><td>${e(fmtNY(p.entry))}</td><td>${e(accLabel(p))}</td><td>${e(p.dir)}</td><td class="num">${e(p.raw)}</td><td class="num">${usd0(p.net)}</td>${canTag ? `<td><button class="btn gray pfTag" data-id="${e(p.id)}" type="button" style="padding:3px 10px;font-size:12px">Tags</button></td>` : ""}</tr>`).join("")}</tbody></table></div>`;
+      document.getElementById("pfDrX").onclick = () => (el.innerHTML = "");
+      el.querySelectorAll(".pfTag").forEach(bindTag); el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    const alOn = alertsOn(), hasAI = !!(window.desktop && window.desktop.aiAsk), CO = coachGet();
+    const coachHtml = `<div class="panel" style="margin-top:16px"><div class="ptitle">Coach IA</div>
+      <div class="hintd" style="margin:0 0 10px">Claude lit ton score, tes critères, ta stratégie, tes payouts et tes comptes, puis te rend un plan : tes 3 points faibles, leur cause probable chiffrée et quoi faire la semaine prochaine. Il parle de discipline, de risque et de process, jamais du sens du marché ni de trades à prendre.</div>
+      ${hasAI ? `<div class="row2" style="margin:0 0 10px;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" id="pfCoach" type="button">${CO ? "Relancer l'analyse" : "Lancer l'analyse du coach"}</button><button class="btn gray" id="pfKey" type="button">Clé API Claude</button><span id="pfCoachSt" class="hintd" style="margin:0"></span></div>
+        <div class="row2" id="pfKeyRow" hidden style="margin:0 0 10px;gap:8px;align-items:center"><input id="pfKeyIn" type="password" placeholder="sk-ant-… (console.anthropic.com › API Keys)" style="flex:1;min-width:220px"><button class="btn" id="pfKeySave" type="button">Enregistrer</button><button class="btn gray" id="pfKeyDel" type="button">Supprimer</button></div>
+        <div class="hintd" style="margin:0 0 10px">La clé est chiffrée sur cet ordinateur et n'est envoyée qu'à l'API d'Anthropic. Chaque analyse est facturée sur ton compte API (quelques centimes).</div>`
+        : `<div class="hintd" style="margin:0 0 10px">Dans l'app Windows / Mac, le coach appelle Claude directement. Ici, utilise « Copier le rapport pour Claude » en haut et colle-le dans claude.ai.</div>`}
+      <div id="pfCoachOut">${CO ? coachHtmlOf(CO) : ""}</div></div>
+      <div class="panel" style="margin-top:16px"><div class="ptitle">Alertes en direct</div><div class="hintd" style="margin:0 0 10px">Pendant ta séance, à chaque synchro TopstepX (toutes les 5 min), une notification si : tu reprends une position plus grosse moins de 15 min après une perte (revenge) · une position dépasse 1,5× ta taille habituelle · ta journée casse la règle de consistance d'un compte financé.</div>
+        <div class="row2" style="margin:0;gap:10px;align-items:center"><button class="btn ${alOn ? "" : "gray"}" id="pfAl" type="button">${alOn ? "Activées" : "Désactivées"}</button><span class="hintd" style="margin:0">${alOn ? "Clique pour les couper." : "Clique pour les activer."}</span></div></div>`;
+    const payLines = PAY.length ? ["", "## Prêt pour un payout ?", ...PAY.map(({ a, p }) => `- ${a.firm} ${a.name} : ${p.ok ? "payout possible" : "pas encore"} (${p.items.map((x) => (x.ok ? "✓ " : "✕ ") + x.label + " — " + x.detail).join(" ; ")})${p.need.length ? " · manque : " + p.need.join(" · ") : ""}`)] : [];
     box.innerHTML = `<div class="row2" style="margin:0 0 14px;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="rv-tabs"><button class="rv-tab pfsrc${src === "firms" ? " on" : ""}" data-s="firms" title="Tous tes comptes Apex, Topstep et MFFU : journées, trades détaillés, évaluations, comptes financés, payouts">Mon profil · toutes les prop firms</button><button class="rv-tab pfsrc${src === "detail" ? " on" : ""}" data-s="detail" title="Analyse trade par trade, pour tous les comptes ou un seul">Trades détaillés</button></div>
-        ${src === "firms" ? `<div class="rv-tabs">${[["all", "Toutes"], ["apex", "Apex"], ["topstep", "Topstep"], ["mffu", "MFFU"]].map(([k, l]) => `<button class="rv-tab pffirm${firm === k ? " on" : ""}" data-f="${k}">${k === "all" ? l : chip(k, l)}</button>`).join("")}</div>` : pick}
+        <div class="rv-tabs"><button class="rv-tab pfsrc${src === "firms" ? " on" : ""}" data-s="firms" title="Tous tes comptes Apex, Topstep et MFFU : journées, trades détaillés, évaluations, comptes financés, payouts">Mon profil · toutes les prop firms</button><button class="rv-tab pfsrc${src === "detail" ? " on" : ""}" data-s="detail" title="Analyse trade par trade, pour tous les comptes ou un seul">Trades détaillés</button><button class="rv-tab pfsrc${src === "bt" ? " on" : ""}" data-s="bt" title="Tes sessions clôturées du Backtesteur, notées avec les mêmes critères">Backtests</button></div>
+        ${src === "firms" ? `<div class="rv-tabs">${[["all", "Toutes"], ["apex", "Apex"], ["topstep", "Topstep"], ["mffu", "MFFU"]].map(([k, l]) => `<button class="rv-tab pffirm${firm === k ? " on" : ""}" data-f="${k}">${k === "all" ? l : chip(k, l)}</button>`).join("")}</div>` : src === "bt" ? `<span class="hintd" style="margin:0">${BT.n} session(s) clôturée(s) du Backtesteur</span>` : pick}
         <div class="rv-tabs">${[["all", "Tout"], ["90", "90 jours"], ["30", "30 jours"]].map(([k, l]) => `<button class="rv-tab pfper${per === k ? " on" : ""}" data-p="${k}">${l}</button>`).join("")}</div>
         <button class="btn gray" id="pfCopy" title="Copie un rapport complet (stratégie + chiffres) à coller dans Claude pour une analyse détaillée">Copier le rapport pour Claude</button><span id="pfOk" class="hintd" style="margin:0"></span></div>
-      ${noData ? `<div class="jempty" style="margin-bottom:14px">${src === "firms" ? "<b>Pas encore de comptes</b>Synchronise Topstep, Apex et MFFU dans Comptes : l'analyse prendra tous tes comptes." : "<b>Pas de trades détaillés pour ce choix</b>Synchronise tes comptes dans Comptes ou TopstepX dans le Journal."} En attendant, écris ta stratégie ci-dessous.</div>` : `
+      ${noData ? `<div class="jempty" style="margin-bottom:14px">${src === "bt" ? "<b>Aucun backtest clôturé</b>Dans le Backtesteur, clôture une session (drapeau) : ses trades seront notés ici avec les mêmes critères." : src === "firms" ? "<b>Pas encore de comptes</b>Synchronise Topstep, Apex et MFFU dans Comptes : l'analyse prendra tous tes comptes." : "<b>Pas de trades détaillés pour ce choix</b>Synchronise tes comptes dans Comptes ou TopstepX dans le Journal."} En attendant, écris ta stratégie ci-dessous.</div>` : `
       <div class="pf-head"><div><small class="hintd" style="margin:0">Statut</small><div style="font-size:24px;font-weight:700;color:${COL[st.k]}">${e(st.label)}</div>
           <div class="hintd" style="margin:2px 0 0">${R.nAcc ? R.nAcc + " comptes · " : ""}${R.accDays} journées-compte · ${R.days} jours${R.n ? ` · ${R.n} positions détaillées` : ""} · ${Math.round(R.coverage * 100)} % des critères mesurés</div></div>
         <div style="text-align:center"><div style="font-size:40px;font-weight:700;line-height:1;color:${COL[st.k]}">${sc == null ? "—" : sc}<span style="font-size:15px;color:#6f727d">/100</span></div>
@@ -3175,7 +3305,8 @@ function profilCalc(fills, o) {
         <div><small class="hintd" style="margin:0">Progression (score à la fin de chaque semaine, ligne verte = 80)</small>${spark(pts)}</div></div>
       ${bfHtml}
       ${todo.length ? `<div class="panel" style="margin:14px 0"><div class="ptitle">Prochaines étapes pour monter ton score</div><ol style="margin:0;padding-left:20px;line-height:1.75;color:#c9cbd2">${todo.map((c) => `<li><b>${e(c.label)}</b> — ${e(c.tip)}</li>`).join("")}</ol></div>` : ""}
-      ${GRP.map(([g, t, d]) => `<div class="pf-grp"><div class="ptitle" style="margin:14px 0 4px">${e(t)}</div><div class="hintd" style="margin:0 0 8px">${e(d)}</div><div class="pf-grid">${R.criteria.filter((c) => c.grp === g).map(card).join("")}</div></div>`).join("")}`}
+      ${payHtml}${untagHtml}${GRP.map(([g, t, d]) => `<div class="pf-grp"><div class="ptitle" style="margin:14px 0 4px">${e(t)}</div><div class="hintd" style="margin:0 0 8px">${e(d)}</div><div class="pf-grid">${R.criteria.filter((c) => c.grp === g).map(card).join("")}</div></div>`).join("")}<div id="pfDrill"></div>${histHtml}`}
+      ${coachHtml}
       <div class="panel" style="margin-top:16px"><div class="ptitle">Ta stratégie — règles exactes</div><div class="hintd" style="margin:0 0 10px">Apex veut un set de règles précis. Écris-les une fois : elles comptent dans le score (« Règles exactes écrites ») et partent dans le rapport pour Claude.</div>
         <div class="pform" style="max-width:none;grid-template-columns:150px 1fr">${RF.map(([k, l, ph]) => `<label>${l}</label><textarea id="pfR_${k}" rows="2" placeholder="${e(ph)}" style="resize:vertical">${e(St[k] || "")}</textarea>`).join("")}</div>
         <div class="row2"><button class="btn" id="pfSave">Enregistrer la stratégie</button><span id="pfSaved" class="hintd" style="margin:0"></span></div></div>
@@ -3190,17 +3321,33 @@ function profilCalc(fills, o) {
       document.addEventListener("click", () => (pm.hidden = true), { once: true }); }
     box.querySelectorAll(".pfper").forEach((b) => (b.onclick = () => { per = b.dataset.p; try { localStorage.setItem("econcal-pf-per", per); } catch (x) {} window.profilRender(); }));
     document.getElementById("pfSave").onclick = () => { S.strat = {}; RF.forEach(([k]) => (S.strat[k] = document.getElementById("pfR_" + k).value.trim())); save(); window.profilRender(); const ok = document.getElementById("pfSaved"); if (ok) ok.textContent = "Enregistré ✓"; };
-    document.getElementById("pfCopy").onclick = () => {
-      const txt = [`Analyse mon profil de trader prop firm (futures NQ / ES, comptes Apex, Topstep et My Funded Futures) face aux critères Apex : système défini et discipliné, constance (système, taille, jours tradés, gestion du risque), pas de gambling / chance / windfall / comportement erratique / stratégie de retrait sur le minimum de jours, croissance régulière. Donne mon statut exact, ce qui me rapproche ou m'éloigne d'un « partenaire », et les 3 actions prioritaires.`,
+    const report = () => [`Analyse mon profil de trader prop firm (futures NQ / ES, comptes Apex, Topstep et My Funded Futures) face aux critères Apex : système défini et discipliné, constance (système, taille, jours tradés, gestion du risque), pas de gambling / chance / windfall / comportement erratique / stratégie de retrait sur le minimum de jours, croissance régulière. Donne mon statut exact, ce qui me rapproche ou m'éloigne d'un « partenaire », et les 3 actions prioritaires.`,
         ``, `## Ma stratégie`, ...RF.map(([k, l]) => `- ${l} : ${St[k] || "(non écrite)"}`),
-        ``, `## Mes chiffres (${src === "firms" ? (firm === "all" ? "tous mes comptes Apex + Topstep + MFFU" : "tous mes comptes " + FIRM[firm].n) : selA ? "compte " + selA.firm + " " + selA.name : "trades détaillés de tous mes comptes"}, ${per === "all" ? "toute la période" : per + " derniers jours"})`,
+        ``, `## Mes chiffres (${BT ? "mes sessions de backtest" : src === "firms" ? (firm === "all" ? "tous mes comptes Apex + Topstep + MFFU" : "tous mes comptes " + FIRM[firm].n) : selA ? "compte " + selA.firm + " " + selA.name : "trades détaillés de tous mes comptes"}, ${per === "all" ? "toute la période" : per + " derniers jours"})`,
         `Score : ${sc == null ? "—" : sc}/100 — ${st.label} · ${R.nAcc ? R.nAcc + " comptes · " : ""}${R.accDays} journées-compte · ${R.n} positions détaillées · ${R.days} jours · net ${R.net} $${cmp ? ` · 20 derniers jours : ${cmp.B.score}/100 vs avant : ${cmp.A.score}/100` : ""}`,
         ...R.criteria.map((c) => `- ${c.label} : ${c.score == null ? "non mesuré" : Math.round(c.score * 100) + "/100"} — ${c.value} (${c.detail})`),
         pts.length ? `Progression hebdo : ${pts.map((p) => p.w + " " + p.s).join(" · ")}` : "",
-        ...(BF.length > 1 ? ["", "## Par prop firm", ...BF.map((b) => `- ${FIRM[b.k].n} : ${b.r.score}/100 (${b.r.status.label}) · ${b.n} comptes · évals réussies ${b.ev} · financés cramés ${b.fu} · ${b.po} payouts · dépenses récupérées ${b.roi} · P&L net ${usd0(b.net)}`)] : [])].join("\n");
+        ...(BF.length > 1 ? ["", "## Par prop firm", ...BF.map((b) => `- ${FIRM[b.k].n} : ${b.r.score}/100 (${b.r.status.label}) · ${b.n} comptes · évals réussies ${b.ev} · financés cramés ${b.fu} · ${b.po} payouts · dépenses récupérées ${b.roi} · P&L net ${usd0(b.net)}`)] : []), ...payLines].join("\n");
+    document.getElementById("pfCopy").onclick = () => { const txt = report();
       const done = () => { const ok = document.getElementById("pfOk"); if (ok) ok.textContent = "Copié ✓ — colle-le dans Claude"; };
       try { navigator.clipboard.writeText(txt).then(done, () => { prompt("Copie ce rapport :", txt); }); } catch (x) { prompt("Copie ce rapport :", txt); }
     };
+    box.querySelectorAll(".pfDr").forEach((b) => (b.onclick = () => drill(b.dataset.c)));
+    box.querySelectorAll(".pfTag").forEach(bindTag);
+    box.querySelectorAll(".pfRe").forEach((b) => (b.onclick = () => window.profilRender()));
+    const al = document.getElementById("pfAl"); if (al) al.onclick = () => { const on = !alertsOn(); try { localStorage.setItem("econcal-pf-alerts", on ? "on" : "off"); } catch (x) {} if (on && window.Notification && Notification.permission === "default") Notification.requestPermission(); window.profilRender(); };
+    const cst = (t) => { const o = document.getElementById("pfCoachSt"); if (o) o.textContent = t; };
+    const kb = document.getElementById("pfKey"), kr = document.getElementById("pfKeyRow");
+    if (kb && kr) { kb.onclick = async () => { kr.hidden = !kr.hidden; if (!kr.hidden) { const st = await window.desktop.aiStatus(); cst(st && st.ok ? "Une clé est enregistrée (colle une nouvelle clé pour la remplacer)." : "Aucune clé enregistrée."); document.getElementById("pfKeyIn").focus(); } };
+      document.getElementById("pfKeySave").onclick = async () => { const i = document.getElementById("pfKeyIn"), r = await window.desktop.aiSetKey(i.value); i.value = ""; cst(r && r.ok ? "Clé enregistrée ✓" : "Clé invalide : elle doit commencer par sk-ant-"); if (r && r.ok) kr.hidden = true; };
+      document.getElementById("pfKeyDel").onclick = async () => { await window.desktop.aiSetKey(""); cst("Clé supprimée."); }; }
+    const cb = document.getElementById("pfCoach");
+    if (cb) cb.onclick = async () => { const st = await window.desktop.aiStatus(); if (!st || !st.ok) { cst("Ajoute d'abord ta clé API Claude."); if (kr) kr.hidden = false; return; }
+      cb.disabled = true; cst("Le coach analyse tes chiffres… (≈ 30 s)");
+      let r = null; try { r = await window.desktop.aiAsk(report() + "\n\n" + COACH_ASK); } catch (x) { r = { ok: false, reason: x.message }; }
+      cb.disabled = false; if (!r || !r.ok) return cst("Échec : " + ((r && r.reason) || "inconnu"));
+      const c = { at: new Date().toISOString(), txt: r.text, score: sc }; try { localStorage.setItem("econcal-pf-coach", JSON.stringify(c)); } catch (x) {}
+      cst("Analyse reçue ✓"); const o = document.getElementById("pfCoachOut"); if (o) o.innerHTML = coachHtmlOf(c); };
   };
 })();
 

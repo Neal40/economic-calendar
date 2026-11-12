@@ -2,6 +2,21 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.43.0] — 2026-11-12
+### Ajouté
+- **Profil › Skill IA › Coach IA** (app Windows / Mac) : Claude lit le rapport complet (score, critères, stratégie, payouts, comptes) et rend un plan — statut, 3 points faibles chiffrés, plan de la semaine, ce qu'il faut garder. Discipline, risque et process seulement, jamais de sens du marché. Clé API Claude chiffrée sur le PC (`safeStorage`, canaux `ai:*`) ; dernière analyse gardée. Version web : « Copier le rapport pour Claude ».
+- **Prêt pour un payout ?** pour chaque compte financé actif, avec les règles de sa prop firm depuis le dernier payout : Apex PA (5 jours au profit minimum, consistance 50 %, solde minimum, 6 payouts max — règles renvoyées par Apex en priorité), Topstep XFA Standard (5 jours gagnants de 150 $+) ou Consistency (3 jours, 40 %), MFFU (5 jours de 150 $+, 500 $ sur le cycle, consistance Core 40 % / Builder 50 %). Affiche ce qu'il manque (jours, profit pour la consistance, solde).
+- **Voir les trades concernés** sur les critères faibles (taille, risque, revenge, hors système) : liste, créneau NY et jour de la semaine qui reviennent le plus, tag le plus fréquent, bouton Tags.
+- **Positions sans tags** : les 10 plus récentes avec un bouton « Taguer » (ouvre la fenêtre Tags du Journal).
+- **Historique par critère** : score de chaque critère à la fin des 8 dernières semaines.
+- **Backtests** : nouvel onglet qui note les sessions clôturées du Backtesteur avec les mêmes critères.
+- **Alertes en direct** (On / Off) à chaque synchro TopstepX : revenge trade (position plus grosse < 15 min après une perte), taille > 1,5× l'habituelle, journée qui casse la consistance d'un compte financé.
+### Corrigé / amélioré
+- Consistance : règle propre à chaque compte (Apex 50 %, MFFU Core 40 %…) au lieu de 30 % pour tous.
+- Tailles et risque par position ramenés à un compte 50K (un 150K n'est plus vu comme « 3× trop gros »).
+- Revenge : les re-entrées à la même taille moins de 5 min après une perte comptent pour moitié.
+- Journées « remplissage » : seuil relatif (10 % de la journée médiane, 25 $ minimum).
+
 ## [1.42.0] — 2026-11-12
 ### Ajouté
 - **Apparence › 3 thèmes signature** (en plus de Classique et Noir), choisis avec des cartes d'aperçu :

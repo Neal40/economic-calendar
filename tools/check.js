@@ -63,7 +63,31 @@ try {
   const c = profilCalc(steady, { rules, days: ext, accounts: accs, money: { paid: 500, spent: 1000, payouts: 1 } });
   if (!(c.accDays === 12 && c.nAcc === 5 && c.net === a.net - 900 && Math.abs(by(c, "evals") - (1 / 3) / 0.6) < 0.01 && by(c, "funded") === 0.2 && by(c, "payouts") === 0.5 && by(c, "risk") < 1))
     errors.push("profilCalc : comptes Apex + Topstep " + JSON.stringify({ d: c.accDays, n: c.nAcc, net: c.net, c: c.criteria.map((x) => [x.id, x.score]) }));
+  // v1.43 : tailles et risque ramenés à un compte 50K, consistance par compte, trades concernés, positions sans tags
+  const big = days.map((d, i) => f("k" + i, d, "15:00", i % 4 === 3 ? -900 : 300, 6, "K150"));
+  const k1 = profilCalc(big, { accounts: [{ id: "K150", firm: "Apex", kind: "funded", res: "active", size: 150000, cons: 0.5 }], meta: () => null });
+  if (!(by(k1, "risk") === 1 && k1.pos[0].size === 2 && k1.pos[0].raw === 6 && k1.untagged.length === 10)) errors.push("profilCalc : taille / risque 150K " + JSON.stringify({ r: by(k1, "risk"), p: k1.pos[0], u: k1.untagged.length }));
+  const rv = [f("r1", days[0], "15:00", -300, 2), { ...f("r2", days[0], "15:05", -200, 4), Entry: days[0] + "T15:05:00Z", Exit: days[0] + "T15:08:00Z" }];
+  rv[0].Exit = days[0] + "T15:02:00Z";
+  const k2 = profilCalc(rv.concat(steady.slice(1)), {}), er = k2.criteria.find((c) => c.id === "erratic");
+  if (!(er.ids && er.ids[0] === "r2")) errors.push("profilCalc : revenge non repéré " + JSON.stringify(er));
+  const wd = (t) => profilCalc(days.slice(0, 4).map((d, i) => f("c" + i, d, "15:00", i === 0 ? 450 : 200, 2, "W")), { accounts: [{ id: "W", firm: "MFFU", kind: "funded", res: "active", cons: t }] }).criteria.find((c) => c.id === "windfall").score;
+  if (!(wd(0.5) === 1 && wd(0.3) < 1)) errors.push("profilCalc : consistance par compte " + JSON.stringify([wd(0.5), wd(0.3)]));
 } catch (e) { errors.push("profilCalc : " + e.message); }
+
+// « Prêt pour un payout ? » (payoutCalc, fonction pure extraite d'index.html)
+try {
+  const src = /\/\* payoutCalc:start[\s\S]*?\*\/\r?\n([\s\S]*?)\/\* payoutCalc:end \*\//.exec(html)[1], payoutCalc = new Function(src + "; return payoutCalc;")();
+  const D = (L) => L.map((pnl, i) => ({ d: "2026-11-0" + (i + 1), pnl }));
+  const ap = payoutCalc({ type: "50k Tradovate EOD Trail", startBalance: 50000, balance: 53000, requirements: { minDays: 5, minDailyProfit: 250, consistency: 50 }, summary: { minPayout: 52600 }, days: D([300, 300, 300, 300, 1800]) }, "apex", []);
+  if (!(!ap.ok && ap.qual === 5 && ap.items.find((x) => x.k === "cons").ok === false && /consistance/.test(ap.need.join(" ")))) errors.push("payoutCalc : Apex consistance " + JSON.stringify(ap));
+  const ap2 = payoutCalc({ type: "50k Tradovate EOD Trail", startBalance: 50000, balance: 53000, requirements: { minDays: 5, minDailyProfit: 250, consistency: 50 }, summary: { minPayout: 52600 }, days: D([-500, 600, 600, 600, 600, 600]) }, "apex", [{ requested: "2026-11-01" }]);
+  if (!(ap2.ok && ap2.since === "2026-11-01" && ap2.qual === 5)) errors.push("payoutCalc : Apex depuis le dernier payout " + JSON.stringify(ap2));
+  const ts = payoutCalc({ type: "50K Buying Power DLL", stage: "Express Funded", startBalance: 0, balance: 700, days: D([150, 160, 100, 200, 151]) }, "topstep", []);
+  if (!(!ts.ok && ts.qual === 4 && !ts.items.some((x) => x.k === "cons"))) errors.push("payoutCalc : Topstep XFA " + JSON.stringify(ts));
+  const mf = payoutCalc({ type: "Core", days: D([150, 150, 150, 150, 400]) }, "mffu", []);
+  if (!(!mf.ok && mf.items.find((x) => x.k === "cons").label === "Consistance 40 %" && mf.items.find((x) => x.k === "cycle").ok)) errors.push("payoutCalc : MFFU Core " + JSON.stringify(mf));
+} catch (e) { errors.push("payoutCalc : " + e.message); }
 
 // cœur du replay (btCore : horloge, buffer, exécution des ordres), extrait d'index.html
 try {
