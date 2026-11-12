@@ -211,6 +211,10 @@ body{background:#060607}
 .pform label{font-size:12.5px;color:#9a9ca7}
 .hintd{font-size:12px;color:#6f727d;margin-top:10px}
 .pf-head{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:18px;align-items:center;background:#121216;border:1px solid #1f1f25;border-radius:10px;padding:16px 18px}
+.pf-chip{display:inline-block;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.2px;border:1px solid rgba(255,255,255,.18);white-space:nowrap}
+.pf-pick{position:relative}.pf-menu{position:absolute;z-index:50;top:calc(100% + 6px);left:0;width:460px;max-width:90vw;background:#121216;border:1px solid #2a2a31;border-radius:10px;padding:8px;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.pf-menu input{width:100%;margin-bottom:6px}.pf-list{max-height:380px;overflow:auto}.pf-gh{margin:10px 4px 4px}
+.pf-it{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px}.pf-it:hover,.pf-it.on{background:rgba(255,255,255,.06)}.pf-it .pf-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .pf-card{background:#121216;border:1px solid #1f1f25;border-radius:8px;padding:12px 14px}
 .pf-bar{height:6px;border-radius:3px;background:#1f1f25;margin-top:8px;overflow:hidden}.pf-bar i{display:block;height:100%;border-radius:3px}
@@ -954,7 +958,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Skill IA — Profil prop firm</div>
-    <div class="hintd" style="margin:0 0 12px">Ton statut exact et ta progression face à ce que veut Apex, sur tous les comptes que tu as eus chez Apex et Topstep : un système défini, de la constance (système, taille, jours, risque), pas de gambling ni de windfall, des comptes financés qui durent et des payouts.</div>
+    <div class="hintd" style="margin:0 0 12px">Ton statut exact et ta progression face à ce que veut Apex, sur tous les comptes que tu as eus chez Apex, Topstep et My Funded Futures : un système défini, de la constance (système, taille, jours, risque), pas de gambling ni de windfall, des comptes financés qui durent et des payouts.</div>
     <div id="pfBox"></div></div>
   <div class="panel"><div class="ptitle">Apparence</div><div class="pform">
     <label>Thème</label><select id="thSel"><option value="noir">Noir (verre, pilules blanches)</option><option value="classique">Classique</option></select>
@@ -2781,7 +2785,7 @@ function profilCalc(fills, o) {
       rate != null && rate < 0.5 ? "Plus d'une évaluation sur deux est perdue : traite chaque évaluation comme un compte financé (taille réduite, 1 à 2 trades A+ par jour)." : null);
     const fb = FU.filter((a) => a.res === "failed"), fin = FU.filter((a) => a.res !== "active"), md = med(fb.map((a) => a.days).filter((x) => x > 0)), surv = fin.length ? 1 - fb.length / fin.length : null;
     add("funded", "parcours", "Survie des comptes financés", "Ne pas mettre le compte financé en danger, le faire durer et grandir.", 1.5, !FU.length ? null : surv == null ? 1 : fb.length ? 0.6 * surv + 0.4 * clamp((md || 0) / 20) : 1,
-      FU.length ? `${fb.length} / ${FU.length} cramés` : "—", FU.length ? `${FU.length} comptes financés (PA Apex, Express / Funded Topstep) · ${FU.filter((a) => a.res === "active").length} actifs · ${fb.length} cramés${md ? ` après ${md} jours tradés en médiane` : ""}` : "Aucun compte financé pour l'instant.",
+      FU.length ? `${fb.length} / ${FU.length} cramés` : "—", FU.length ? `${FU.length} comptes financés (PA Apex, Express Funded Topstep, Sim Funded MFFU) · ${FU.filter((a) => a.res === "active").length} actifs · ${fb.length} cramés${md ? ` après ${md} jours tradés en médiane` : ""}` : "Aucun compte financé pour l'instant.",
       fb.length && fin.length && fb.length / fin.length > 0.5 ? "La plupart de tes comptes financés finissent cramés : le problème n'est pas de passer, c'est la gestion une fois financé (taille, DLL perso, pas de rattrapage)." : null);
     const m = o.money || {}, nf = Math.max(1, FU.length), pp = (m.payouts || 0) / nf, roi = m.spent ? (m.paid || 0) / m.spent : null;
     add("payouts", "parcours", "Payouts", "Être payé régulièrement, sans stratégie de retrait qui joue sur les règles.", 1, FU.length ? 0.5 * clamp(pp) + 0.5 * (roi == null ? clamp(pp) : clamp(roi)) : null,
@@ -2807,25 +2811,56 @@ function profilCalc(fills, o) {
     ["constance", "Constant avec", "Le système, la taille, les jours tradés et la gestion du risque."],
     ["anti", "Ce qu'Apex ne veut pas", "Gamblers, chanceux, windfall, erratiques, stratégies de retrait sur le minimum de jours."],
     ["partenariat", "Le partenariat", "Un plan constant, des tailles constantes, un compte qui grandit régulièrement."],
-    ["parcours", "Ton parcours prop firm", "Tous tes comptes Apex et Topstep : évaluations, comptes financés, payouts."]];
+    ["parcours", "Ton parcours prop firm", "Tous tes comptes Apex, Topstep et MFFU : évaluations, comptes financés, payouts."]];
   const RF = [["entries", "Entrées", "Ex. 1st P.FVG M1 après prise de liquidité, dans une macro, sens du biais H4"], ["stops", "Stops initiaux", "Ex. sous le swing qui a pris la liquidité, 500 $ max (250 $ sous 1 500 $ de DD)"],
     ["tp", "Take profits", "Ex. 50 % à 2RR puis BE, reste sur la Draw On Liquidity"], ["trail", "Trailing", "Ex. BE après 2RR, puis stop sous chaque nouveau FVG M1"], ["exits", "Sorties", "Ex. fin de macro, news majeure, 2 SL dans la journée = stop"]];
   let acct = "all", per = "all", src = "firms";
   try { acct = localStorage.getItem("econcal-pf-acct") || "all"; per = localStorage.getItem("econcal-pf-per") || "all"; src = localStorage.getItem("econcal-pf-src") || "firms"; } catch (x) {}
-  // comptes.json (pages Comptes) : toutes les journées et tous les comptes Apex + Topstep
-  const kindOf = (a) => { const t = (a.stage || "") + " " + (a.type || ""); return /practice|prac-/i.test(t + a.name) ? null : /eval|combine|challenge/i.test(t) ? "eval" : /funded|express|\bPA\b|performance|live/i.test(t) ? "funded" : null; };
+  if (src !== "firms" && src !== "detail") src = "detail";
+  // couleurs des prop firms : Apex bleu, MFFU jaune, Topstep noir
+  const FIRM = { apex: { n: "Apex", bg: "#2f7cf6", fg: "#fff" }, mffu: { n: "MFFU", bg: "#f5c518", fg: "#111" }, topstep: { n: "Topstep", bg: "#0b0b0d", fg: "#fff" } };
+  const chip = (k, txt) => `<span class="pf-chip" style="background:${FIRM[k].bg};color:${FIRM[k].fg}">${e(txt || FIRM[k].n)}</span>`;
+  // comptes.json (pages Comptes) : tous les comptes Apex + Topstep + MFFU
+  const kindOf = (a) => { const k = String(a.kind || ""); if (/practice/i.test(k)) return null; if (/challenge|eval/i.test(k)) return "eval"; if (/funded/i.test(k)) return "funded";
+    const t = (a.stage || "") + " " + (a.type || ""); return /practice|prac-/i.test(t + a.name) ? null : /eval|combine|challenge/i.test(t) ? "eval" : /funded|express|\bPA\b|performance|live/i.test(t) ? "funded" : null; };
   const resOf = (a) => { const s = String(a.status || "").toLowerCase(), lost = a.balance != null && a.startBalance != null && +a.balance < +a.startBalance;
     return /passed/.test(s) ? "passed" : /blown|fail|liquid|breach/.test(s) ? "failed" : /closed|expired|annul/.test(s) ? (lost ? "failed" : "closed") : "active"; };
-  function firmsData(firm, cut) {
-    const Cm = window.comptesGet && comptesGet(); if (!Cm) return null; const days = [], accounts = []; let paid = 0, spent = 0, payouts = 0;
-    for (const k of ["topstep", "apex", "mffu"]) { if (firm !== "all" && firm !== k) continue; const F = Cm[k] || {}, nm = k === "topstep" ? "Topstep" : k === "apex" ? "Apex" : "MFFU";
-      for (const a of F.accounts || []) { const kd = kindOf(a); if (!kd) continue; const D = (a.days || []).filter((d) => d && d.d && (!cut || String(d.d) >= cut));
-        const first = (a.days || []).map((d) => String(d.d)).sort()[0] || String(a.start || "").slice(0, 10); if (cut && !D.length && first < cut) continue;
-        D.forEach((d) => days.push({ acc: String(a.id), day: String(d.d).slice(0, 10), pnl: +d.pnl, n: d.n, c: d.c }));
-        accounts.push({ id: String(a.id), firm: nm, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first }); }
-      (F.payouts || []).forEach((p) => { if (cut && String(p.requested || "") < cut) return; payouts++; paid += +(p.paid != null ? p.paid : p.amount) || 0; });
-      (F.purchases || []).forEach((p) => { if (cut && String(p.date || "") < cut) return; spent += +p.amount || 0; }); }
-    return { days, accounts, money: { paid, spent, payouts } };
+  const RES = { passed: "Réussi", failed: "Cramé", closed: "Fermé", active: "Actif" };
+  // trades de comptes.json → format des fills du Journal (1 ligne = 1 position)
+  function tradesOf(k, a) {
+    const T = a.trades || [], acc = String(a.id), out = [];
+    if (k === "mffu") T.forEach((t, i) => { if (t.net == null && t.gross == null) return; const o = new Date(+t.open), c = new Date(+t.close || +t.open);
+      out.push({ ID: "mffu:" + acc + ":" + (t.open || i) + ":" + i, "ID TopstepX": acc, Day: String(t.day || o.toISOString()).slice(0, 10), Entry: isNaN(o) ? String(t.day) : o.toISOString(), Exit: isNaN(c) ? String(t.day) : c.toISOString(),
+        Direction: /short|sell/i.test(t.side) ? "Short" : "Long", Size: +t.qty || 1, "Net P&L": t.net != null ? +t.net : +t.gross - (+t.fees || 0) }); });
+    if (k === "topstep") { // fills d'exécution → positions (de plat à plat, par contrat)
+      const F = T.filter((t) => t && t.t).slice().sort((x, y) => String(x.t).localeCompare(String(y.t))), pos = new Map();
+      for (const t of F) { const pr = t.prod || "?", q = (/buy/i.test(t.side) ? 1 : -1) * (+t.size || 0); let g = pos.get(pr);
+        if (!g) { g = { q: 0, max: 0, net: 0, first: t, last: t, dir: q > 0 ? "Long" : "Short" }; pos.set(pr, g); }
+        g.q += q; g.max = Math.max(g.max, Math.abs(g.q)); g.net += (+t.pl || 0) - (+t.fees || 0); g.last = t;
+        if (g.q === 0) { out.push({ ID: "tsx:" + acc + ":" + g.first.id, "ID TopstepX": acc, Day: String(g.first.day || g.first.t).slice(0, 10), Entry: String(g.first.t).replace(" ", "T"), Exit: String(g.last.t).replace(" ", "T"), Direction: g.dir, Size: g.max, "Net P&L": Math.round(g.net * 100) / 100 }); pos.delete(pr); } } }
+    return out;
+  }
+  // tout le parcours : comptes, journées, trades détaillés (Journal TopstepX en priorité pour garder les tags), payouts et achats
+  function allData(cut, G) {
+    const Cm = (window.comptesGet && comptesGet()) || {}, accounts = [], days = [], money = { paid: 0, spent: 0, payouts: 0, byFirm: {} }, jf = new Map(), seen = new Set();
+    G.fills.forEach((t) => { const k = String(t["ID TopstepX"]); if (!jf.has(k)) jf.set(k, []); jf.get(k).push(t); });
+    for (const k of ["apex", "topstep", "mffu"]) { const F = Cm[k] || {}; money.byFirm[k] = { paid: 0, spent: 0, payouts: 0 };
+      for (const a of F.accounts || []) { const kd = kindOf(a); if (!kd) continue; const id = String(a.id); seen.add(id);
+        const first = (a.days || []).map((d) => String(d.d)).sort()[0] || String(a.start || "").slice(0, 10);
+        const fills = (jf.get(id) || tradesOf(k, a)).filter((t) => !cut || String(t.Day).slice(0, 10) >= cut);
+        const D = (a.days || []).filter((d) => d && d.d && (!cut || String(d.d) >= cut)).map((d) => ({ acc: id, day: String(d.d).slice(0, 10), pnl: +d.pnl, n: d.n, c: k === "topstep" ? null : d.c }));
+        if (cut && !D.length && !fills.length && first < cut) continue;
+        accounts.push({ id, firm: FIRM[k].n, fk: k, name: a.name || id, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first, fills, D }); D.forEach((d) => days.push(d)); }
+      (F.payouts || []).forEach((p) => { if (cut && String(p.requested || "") < cut) return; const v = +(p.paid != null ? p.paid : p.amount) || 0; money.payouts++; money.paid += v; money.byFirm[k].payouts++; money.byFirm[k].paid += v; });
+      (F.purchases || []).forEach((p) => { if (cut && String(p.date || "") < cut) return; money.spent += +p.amount || 0; money.byFirm[k].spent += +p.amount || 0; }); }
+    // comptes du Journal TopstepX pas encore dans comptes.json
+    for (const c of G.comptes) { const id = String(c["ID TopstepX"]); if (seen.has(id)) continue; const fills = (jf.get(id) || []).filter((t) => !cut || String(t.Day).slice(0, 10) >= cut); if (!fills.length) continue;
+      accounts.push({ id, firm: "Topstep", fk: "topstep", name: c.Nom || c["Nom TopstepX"] || id, kind: /funded|express/i.test(c.Type || "") ? "funded" : "eval", res: c.Statut === "Cramé" ? "failed" : c.Statut === "Passé" ? "passed" : "active", days: 0, first: fills.map((t) => String(t.Day)).sort()[0], fills, D: [], journalOnly: true }); }
+    return { accounts, days, money };
+  }
+  function firmsData(firm, cut, G) {
+    const A = allData(cut, G), L = A.accounts.filter((a) => firm === "all" || a.fk === firm), m = firm === "all" ? A.money : { ...A.money.byFirm[firm] };
+    return { days: L.flatMap((a) => a.D), accounts: L.filter((a) => !a.journalOnly), money: m, fills: L.flatMap((a) => a.fills), all: A.accounts };
   }
 
   function gather() {
@@ -2861,10 +2896,12 @@ function profilCalc(fills, o) {
   window.profilRender = function () {
     const box = document.getElementById("pfBox"); if (!box) return;
     const G = gather(), comptes = G.comptes, St = S.strat || {}, cut = per !== "all" ? cutDay(+per) : null, firm = src === "firms" ? (acct === "topstep" || acct === "apex" || acct === "mffu" ? acct : "all") : null;
-    const X = src === "firms" ? firmsData(firm, cut) : null;
-    let fills = src === "firms" ? (firm === "apex" ? [] : G.fills) : acct === "all" ? G.fills : G.fills.filter((t) => String(t["ID TopstepX"]) === acct);
-    if (cut) fills = fills.filter((t) => String(t.Day).slice(0, 10) >= cut);
-    const cps = src === "firms" || acct === "all" ? comptes : comptes.filter((c) => String(c["ID TopstepX"]) === acct), R = calc(fills, cps, G.meta, X);
+    const FD = firmsData(src === "firms" ? firm : "all", cut, G), ALL = FD.all, selA = src === "detail" && acct !== "all" ? ALL.find((a) => a.id === acct) || null : null;
+    if (src === "detail" && acct !== "all" && !selA) acct = "all";
+    // Mon profil : journées + trades détaillés + parcours ; Trades détaillés : trade par trade (un compte Apex n'a que ses journées)
+    const X = src === "firms" ? FD : selA && !selA.fills.length ? { days: selA.D, accounts: [], money: {} } : null;
+    const fills = src === "firms" ? FD.fills : selA ? selA.fills : FD.fills;
+    const cps = src === "detail" && selA ? comptes.filter((c) => String(c["ID TopstepX"]) === acct) : comptes, R = calc(fills, cps, G.meta, X);
     // progression : score cumulé à la fin de chaque semaine (12 dernières) + 20 derniers jours tradés vs avant
     const days = [...new Set(fills.map((t) => String(t.Day).slice(0, 10)).concat(X ? X.days.map((d) => d.day) : []))].sort(), wk = new Map();
     days.forEach((d) => { const x = new Date(d + "T12:00:00Z"), w = x.getUTCDay(); x.setUTCDate(x.getUTCDate() - (w === 0 ? 6 : w - 1)); wk.set(x.toISOString().slice(0, 10), d); });
@@ -2879,13 +2916,17 @@ function profilCalc(fills, o) {
       <div class="pf-bar"><i style="width:${c.score == null ? 0 : c.score * 100}%;background:${colOf(c.score)}"></i></div>
       <div style="font-size:13px;margin:6px 0 2px">${e(c.value)}</div><div class="hintd" style="margin:0">${e(c.detail)}</div><div class="hintd" style="margin:6px 0 0;color:#5d6069">Apex : ${e(c.want)}</div></div>`;
     const todo = R.criteria.filter((c) => c.tip && (c.score == null || c.score < 0.8)).sort((a, b) => (a.score == null ? 0.5 : a.score) * 1 - (b.score == null ? 0.5 : b.score) * 1 || b.w - a.w).slice(0, 3);
-    const noData = src === "firms" ? !X || (!X.days.length && !fills.length) : !G.fills.length;
+    const noData = src === "firms" ? !X.days.length && !fills.length : !fills.length && !(X && X.days.length);
+    const nT = (a) => a.fills.length || a.D.length, cur = selA ? `${chip(selA.fk)} ${e(selA.name)}` : "Tous les comptes";
+    const pick = `<div class="pf-pick"><button class="btn gray" id="pfPickB" type="button">${cur} ▾</button><div class="pf-menu" id="pfMenu" hidden><input id="pfQ" placeholder="Chercher un compte…">
+      <div class="pf-list"><div class="pf-it${acct === "all" ? " on" : ""}" data-a="all"><b>Tous les comptes</b><span class="hintd" style="margin:0">${FD.fills.length} trades · ${ALL.length} comptes</span></div>
+      ${["apex", "topstep", "mffu"].map((k) => { const L = ALL.filter((a) => a.fk === k).sort((x, y) => String(y.first).localeCompare(String(x.first))); return L.length ? `<div class="pf-gh">${chip(k, FIRM[k].n + " · " + L.length + " comptes")}</div>` + L.map((a) => `<div class="pf-it${a.id === acct ? " on" : ""}" data-a="${e(a.id)}" data-q="${e((a.name + " " + FIRM[k].n + " " + RES[a.res]).toLowerCase())}">${chip(k)}<span class="pf-nm">${e(a.name)}</span><span class="hintd" style="margin:0">${a.kind === "funded" ? "Funded" : "Challenge"} · ${RES[a.res]} · ${a.fills.length ? a.fills.length + " trades" : a.D.length + " jours"}</span></div>`).join("") : ""; }).join("")}</div></div></div>`;
     box.innerHTML = `<div class="row2" style="margin:0 0 14px;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="rv-tabs"><button class="rv-tab pfsrc${src === "firms" ? " on" : ""}" data-s="firms" title="Tous les comptes des pages Comptes (comptes.json) + le détail des trades TopstepX">Tous mes comptes Apex + Topstep</button><button class="rv-tab pfsrc${src === "tsx" ? " on" : ""}" data-s="tsx" title="Seulement les comptes synchronisés dans le Journal, trade par trade">Trades TopstepX détaillés</button></div>
-        ${src === "firms" ? `<select id="pfAcct" style="max-width:220px">${[["all", "Toutes les prop firms"], ["apex", "Apex"], ["topstep", "Topstep"], ["mffu", "My Funded Futures"]].map(([k, l]) => `<option value="${k}"${firm === k ? " selected" : ""}>${l}</option>`).join("")}</select>` : `<select id="pfAcct" style="max-width:300px"><option value="all">Tous les comptes</option>${comptes.map((c) => `<option value="${e(c["ID TopstepX"])}"${String(c["ID TopstepX"]) === acct ? " selected" : ""}>${e(c.Nom || c["Nom TopstepX"] || c["ID TopstepX"])}</option>`).join("")}</select>`}
+        <div class="rv-tabs"><button class="rv-tab pfsrc${src === "firms" ? " on" : ""}" data-s="firms" title="Tous tes comptes Apex, Topstep et MFFU : journées, trades détaillés, évaluations, comptes financés, payouts">Mon profil · toutes les prop firms</button><button class="rv-tab pfsrc${src === "detail" ? " on" : ""}" data-s="detail" title="Analyse trade par trade, pour tous les comptes ou un seul">Trades détaillés</button></div>
+        ${src === "firms" ? `<div class="rv-tabs">${[["all", "Toutes"], ["apex", "Apex"], ["topstep", "Topstep"], ["mffu", "MFFU"]].map(([k, l]) => `<button class="rv-tab pffirm${firm === k ? " on" : ""}" data-f="${k}">${k === "all" ? l : chip(k, l)}</button>`).join("")}</div>` : pick}
         <div class="rv-tabs">${[["all", "Tout"], ["90", "90 jours"], ["30", "30 jours"]].map(([k, l]) => `<button class="rv-tab pfper${per === k ? " on" : ""}" data-p="${k}">${l}</button>`).join("")}</div>
         <button class="btn gray" id="pfCopy" title="Copie un rapport complet (stratégie + chiffres) à coller dans Claude pour une analyse détaillée">Copier le rapport pour Claude</button><span id="pfOk" class="hintd" style="margin:0"></span></div>
-      ${noData ? `<div class="jempty" style="margin-bottom:14px">${src === "firms" ? "<b>Pas encore de comptes Apex / Topstep</b>Ouvre Comptes › Topstep ou Apex (ou importe comptes.json) : l'analyse prendra tous tes comptes." : "<b>Pas encore de trades TopstepX</b>Synchronise TopstepX dans Journal de trading : l'analyse se remplit toute seule."} En attendant, écris ta stratégie ci-dessous.</div>` : `
+      ${noData ? `<div class="jempty" style="margin-bottom:14px">${src === "firms" ? "<b>Pas encore de comptes</b>Synchronise Topstep, Apex et MFFU dans Comptes : l'analyse prendra tous tes comptes." : "<b>Pas de trades détaillés pour ce choix</b>Synchronise tes comptes dans Comptes ou TopstepX dans le Journal."} En attendant, écris ta stratégie ci-dessous.</div>` : `
       <div class="pf-head"><div><small class="hintd" style="margin:0">Statut</small><div style="font-size:24px;font-weight:700;color:${COL[st.k]}">${e(st.label)}</div>
           <div class="hintd" style="margin:2px 0 0">${R.nAcc ? R.nAcc + " comptes · " : ""}${R.accDays} journées-compte · ${R.days} jours${R.n ? ` · ${R.n} positions détaillées` : ""} · ${Math.round(R.coverage * 100)} % des critères mesurés</div></div>
         <div style="text-align:center"><div style="font-size:40px;font-weight:700;line-height:1;color:${COL[st.k]}">${sc == null ? "—" : sc}<span style="font-size:15px;color:#6f727d">/100</span></div>
@@ -2896,15 +2937,21 @@ function profilCalc(fills, o) {
       <div class="panel" style="margin-top:16px"><div class="ptitle">Ta stratégie — règles exactes</div><div class="hintd" style="margin:0 0 10px">Apex veut un set de règles précis. Écris-les une fois : elles comptent dans le score (« Règles exactes écrites ») et partent dans le rapport pour Claude.</div>
         <div class="pform" style="max-width:none;grid-template-columns:150px 1fr">${RF.map(([k, l, ph]) => `<label>${l}</label><textarea id="pfR_${k}" rows="2" placeholder="${e(ph)}" style="resize:vertical">${e(St[k] || "")}</textarea>`).join("")}</div>
         <div class="row2"><button class="btn" id="pfSave">Enregistrer la stratégie</button><span id="pfSaved" class="hintd" style="margin:0"></span></div></div>
-      <p class="hintd">Calculé sur cet ordinateur à partir de tous tes comptes Apex et Topstep (pages Comptes), du détail de tes trades TopstepX, de leurs tags et des fiches Notion liées. Ce n'est pas l'avis officiel d'Apex : c'est une lecture de tes chiffres face à leurs critères.</p>`;
+      <p class="hintd">Calculé sur cet ordinateur à partir de tous tes comptes Apex, Topstep et MFFU (pages Comptes : journées, trades, payouts, achats), du Journal TopstepX, de leurs tags et des fiches Notion liées. Ce n'est pas l'avis officiel d'Apex : c'est une lecture de tes chiffres face à leurs critères.</p>`;
     box.querySelectorAll(".pfsrc").forEach((b) => (b.onclick = () => { src = b.dataset.s; acct = "all"; try { localStorage.setItem("econcal-pf-src", src); localStorage.setItem("econcal-pf-acct", "all"); } catch (x) {} window.profilRender(); }));
-    const sel = document.getElementById("pfAcct"); if (sel) sel.onchange = (ev) => { acct = ev.target.value; try { localStorage.setItem("econcal-pf-acct", acct); } catch (x) {} window.profilRender(); };
+    const setA = (v) => { acct = v; try { localStorage.setItem("econcal-pf-acct", acct); } catch (x) {} window.profilRender(); };
+    box.querySelectorAll(".pffirm").forEach((b) => (b.onclick = () => setA(b.dataset.f)));
+    const pb = document.getElementById("pfPickB"), pm = document.getElementById("pfMenu");
+    if (pb && pm) { pb.onclick = (ev) => { ev.stopPropagation(); pm.hidden = !pm.hidden; if (!pm.hidden) { const q = document.getElementById("pfQ"); q.focus(); } };
+      pm.onclick = (ev) => { ev.stopPropagation(); const it = ev.target.closest(".pf-it"); if (it) setA(it.dataset.a); };
+      document.getElementById("pfQ").oninput = (ev) => { const q = ev.target.value.trim().toLowerCase(); pm.querySelectorAll(".pf-it[data-q]").forEach((it) => (it.style.display = !q || it.dataset.q.includes(q) ? "" : "none")); };
+      document.addEventListener("click", () => (pm.hidden = true), { once: true }); }
     box.querySelectorAll(".pfper").forEach((b) => (b.onclick = () => { per = b.dataset.p; try { localStorage.setItem("econcal-pf-per", per); } catch (x) {} window.profilRender(); }));
     document.getElementById("pfSave").onclick = () => { S.strat = {}; RF.forEach(([k]) => (S.strat[k] = document.getElementById("pfR_" + k).value.trim())); save(); window.profilRender(); const ok = document.getElementById("pfSaved"); if (ok) ok.textContent = "Enregistré ✓"; };
     document.getElementById("pfCopy").onclick = () => {
       const txt = [`Analyse mon profil de trader prop firm (futures NQ / ES, TopstepX) face aux critères Apex : système défini et discipliné, constance (système, taille, jours tradés, gestion du risque), pas de gambling / chance / windfall / comportement erratique / stratégie de retrait sur le minimum de jours, croissance régulière. Donne mon statut exact, ce qui me rapproche ou m'éloigne d'un « partenaire », et les 3 actions prioritaires.`,
         ``, `## Ma stratégie`, ...RF.map(([k, l]) => `- ${l} : ${St[k] || "(non écrite)"}`),
-        ``, `## Mes chiffres (${src === "firms" ? (firm === "all" ? "tous mes comptes Apex + Topstep" : "tous mes comptes " + firm) : acct === "all" ? "comptes TopstepX du Journal" : "compte " + acct}, ${per === "all" ? "toute la période" : per + " derniers jours"})`,
+        ``, `## Mes chiffres (${src === "firms" ? (firm === "all" ? "tous mes comptes Apex + Topstep + MFFU" : "tous mes comptes " + FIRM[firm].n) : selA ? "compte " + selA.firm + " " + selA.name : "trades détaillés de tous mes comptes"}, ${per === "all" ? "toute la période" : per + " derniers jours"})`,
         `Score : ${sc == null ? "—" : sc}/100 — ${st.label} · ${R.nAcc ? R.nAcc + " comptes · " : ""}${R.accDays} journées-compte · ${R.n} positions détaillées · ${R.days} jours · net ${R.net} $${cmp ? ` · 20 derniers jours : ${cmp.B.score}/100 vs avant : ${cmp.A.score}/100` : ""}`,
         ...R.criteria.map((c) => `- ${c.label} : ${c.score == null ? "non mesuré" : Math.round(c.score * 100) + "/100"} — ${c.value} (${c.detail})`),
         pts.length ? `Progression hebdo : ${pts.map((p) => p.w + " " + p.s).join(" · ")}` : ""].join("\n");
