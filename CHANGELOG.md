@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.36.0] — 2026-11-12
+### Modifié
+- **Backtesteur — thème TopstepX** : couleurs alignées sur le design system de TopstepX (tokens extraits de topstepx.com). Accent or `#ebbc4d` (au lieu de l'orange), gris neutres TopstepX à la place de la palette TradingView (menus, survols, bordures, champs), boutons principaux en or, Buy `#2d8337` / Sell `#bd3f3b`. Couleurs regroupées en variables `--tx-*` (`--tx-acc`, `--tx-buy`, `--tx-sell`, `--tx-profit`, `--tx-loss`…). Couleurs du graphique inchangées (préférences du chart).
+### Corrigé
+- Menus d'outils, clic droit et fenêtres du backtesteur (ajoutés à `<body>`) : la couleur d'accent ne s'y appliquait pas — variables `--tx-*` aussi déclarées sur `:root`.
+
 ## [1.34.0] — 2026-11-12
 ### Modifié
 - **Profil › Skill IA** : l'analyse prend par défaut **tous les comptes Apex + Topstep** (pages Comptes / `comptes.json` : journées de chaque compte, évaluations, comptes financés, payouts, achats), complétés par le détail des trades TopstepX quand il existe (sans doublon). Filtre Apex + Topstep / Apex / Topstep ; l'ancienne vue reste dans « Trades TopstepX détaillés ».
