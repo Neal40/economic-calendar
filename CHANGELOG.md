@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.46.1] — 2026-11-12
+### Ajouté
+- **Mes comptes › Profitabilité totale** : case « Gain en comptes Challenge » (P&L cumulé de tous les comptes challenge, en euros) avec le nombre de challenges passés sur le total (ex. 29/130). Ce P&L reste hors du résultat net (argent non retirable).
+
 ## [1.46.0] — 2026-11-12
 ### Ajouté
 - **Comptes › Mes comptes** (au-dessus de Topstep) : vue d'ensemble de tous les comptes. **Compte All-data** (comptes actifs / inactifs, capital total, positions gagnantes / perdantes, winrate / taux BE, profit et perte moyens, rendement, bouton vers le Journal), liste des comptes Topstep / Apex / MFFU / TopstepX + compte démo du Backtesteur avec onglets **Tous / Actifs / Bientôt inactifs / Inactifs** (bientôt inactif = violation ou à moins de 25 % du seuil de perte), et par compte : renommer, voir le détail, synchroniser, masquer (rien n'est supprimé). Cartes « Ajouter un nouveau compte » (synchro de toutes les prop firms, import comptes.json en web) et « Créer un compte d'entraînement » (Backtesteur). **Profitabilité totale** en euros : dépenses prop firms, gain des comptes funded, réussite des challenges, gains retirés, résultat net, avec le rappel en USD.

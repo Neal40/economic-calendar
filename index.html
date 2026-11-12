@@ -223,7 +223,7 @@ body{background:#060607}
 .ma-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:86px;border:1px dashed #2e2e36;border-radius:6px;background:none;color:#9a9ca5;font:inherit;cursor:pointer;padding:12px}.ma-add span{font-size:22px;line-height:1}.ma-add b{font-weight:400;font-size:13px}.ma-add small{font-size:11.5px;color:#6f727d;text-align:center}.ma-add:hover{border-color:#4a4a55;color:#fff}
 .ma-train{border-color:rgba(47,76,240,.45);background:rgba(47,76,240,.07);color:#8ea2ff}.ma-train b{color:#8ea2ff}.ma-train svg{width:20px;height:20px}
 .ma-empty{grid-column:1/-1;color:#8b8d96;font-size:13px;padding:18px;text-align:center;border:1px solid #23232a;border-radius:6px}
-.ma-prof{margin-top:14px}.ma-pk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}@media(max-width:1000px){.ma-pk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ma-prof{margin-top:14px}.ma-pk{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}@media(max-width:1300px){.ma-pk{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.ma-pk{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .ma-k{background:#141418;border:1px solid #23232a;border-radius:6px;padding:12px}.ma-k small{display:block;font-size:12.5px;color:#9a9ca5}.ma-k b{display:block;font-size:20px;margin:6px 0 4px}.ma-k i{font-style:normal;font-size:12px;color:#8b8d96}.ma-net{background:rgba(47,76,240,.08);border-color:rgba(47,76,240,.3)}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-weight:500;color:#8b8d98;font-size:11.5px;letter-spacing:.04em;padding:7px 8px;border-bottom:1px solid #1f1f25;text-transform:uppercase}
@@ -3760,6 +3760,7 @@ function payoutCalc(a, fk, pays) {
     const spentE = toE(buys), estSpent = est, estSpentN = estN; const paidE = toE(pays);
     const spent = buys.reduce((s, p) => s + p.amount, 0), paid = pays.reduce((s, p) => s + p.amount, 0);
     const FUN = PROP.filter((a) => a.kind === "Funded"), funded = FUN.reduce((s, a) => s + (a.pnl || 0), 0), fundedE = last ? funded * last : null;
+    const CHA = PROP.filter((a) => a.kind === "Challenge"), chal = CHA.reduce((s, a) => s + (a.pnl || 0), 0), chalE = last ? chal * last : null, chPass = CHA.filter((a) => a.st === "Passed").length;
     const CH = PROP.filter((a) => a.kind === "Challenge" && (a.st === "Passed" || a.st === "Blown")), chOk = CH.filter((a) => a.st === "Passed").length;
     const netE = last ? paidE - spentE + (fundedE || 0) : null, net = paid - spent + funded;
     const nm = (S.brand && S.brand.name) || "Mes comptes";
@@ -3789,14 +3790,15 @@ function payoutCalc(a, fk, pays) {
           <div class="ma-grid">${SHOW.map(card).join("") || `<div class="ma-empty">Aucun compte ${tab === "soon" ? "bientôt inactif" : tab === "off" ? "inactif" : tab === "on" ? "actif" : ""} pour l'instant.</div>`}
             <button class="ma-add ma-new">${canS ? "" : `<input type="file" accept=".json,application/json" class="cpImp" hidden>`}<span>+</span><b>Ajouter un nouveau compte</b><small${canS ? ` class="cpSyncSt"` : ""}>${canS ? syncSt && syncSt.running ? esc(syncSt.text) : "Synchronise Topstep, Apex et My Funded Futures" : "Importe le fichier comptes.json"}</small></button>
             <button class="ma-add ma-train" data-go2="backtest">${ICO.cap}<b>Créer un compte d'entraînement</b><small>Gratuit · compte démo 50K du Backtesteur (libre ou challenge prop firm)</small></button></div></div></div>
-      <div class="panel ma-prof"><div class="ma-h">Profitabilité totale <span title="Euros au taux BCE du jour de chaque achat / payout ; à défaut, dernier taux connu (estimé). Gain en comptes funded au dernier taux connu.">ⓘ</span></div>
+      <div class="panel ma-prof"><div class="ma-h">Profitabilité totale <span title="Euros au taux BCE du jour de chaque achat / payout ; à défaut, dernier taux connu (estimé). Gains en comptes funded et Challenge au dernier taux connu (le P&L des challenges n'entre pas dans le résultat net).">ⓘ</span></div>
         <div class="ma-pk">
           <div class="ma-k"><small>Dépenses propfirm</small><b class="neg">${last ? eur0(-spentE) : usd0(-spent)}</b><i>${estSpentN && estSpent ? "dont " + eur0(estSpent).replace("+", "") + " estimés" : buys.length + " achats"}</i></div>
           <div class="ma-k"><small>Gain en comptes funded</small><b class="${funded >= 0 ? "pos" : "neg"}">${fundedE == null ? sgn0(funded) : eur0(fundedE)}</b><i>${FUN.length} compte${FUN.length > 1 ? "s" : ""} funded</i></div>
+          <div class="ma-k"><small>Gain en comptes Challenge</small><b class="${chal >= 0 ? "pos" : "neg"}">${chalE == null ? sgn0(chal) : eur0(chalE)}</b><i>${chPass}/${CHA.length} comptes challenge passés</i></div>
           <div class="ma-k"><small>Réussite des challenges</small><b>${CH.length ? Math.round(chOk / CH.length * 100) : 0} %</b><i>${chOk} réussi${chOk > 1 ? "s" : ""} sur ${CH.length}</i></div>
           <div class="ma-k"><small>Gains retirés</small><b class="${paidE > 0 ? "pos" : ""}">${last ? eur0(paidE).replace("+", "") : usd0(paid)}</b><i>${pays.length} payout${pays.length > 1 ? "s" : ""} · d'après tes prop firms</i></div>
           <div class="ma-k ma-net"><small>Résultat net</small><b class="${(netE ?? net) >= 0 ? "pos" : "neg"}">${netE == null ? sgn0(net) : eur0(netE)}</b><i>retraits − dépenses ± funded</i></div></div>
-        <div class="hintd" style="margin:10px 0 0">USD : dépenses ${usd0(-spent)} · comptes funded ${usd0(funded)} · retirés ${usd0(paid)} · net ${usd0(net)}</div></div>`;
+        <div class="hintd" style="margin:10px 0 0">USD : dépenses ${usd0(-spent)} · comptes funded ${usd0(funded)} · comptes challenge ${usd0(chal)} · retirés ${usd0(paid)} · net ${usd0(net)}</div></div>`;
     const ri = box.querySelector(".ma-ren"); if (ri) { ri.focus(); ri.select(); }
   }
   function maRename(key, v) { const N = maGet(MAK.names, {}); v = String(v || "").trim(); if (v) N[key] = v; else delete N[key]; maSet(MAK.names, N); maEdit = null; comptesPage(); }
