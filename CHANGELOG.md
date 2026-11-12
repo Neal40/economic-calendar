@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.39.0] — 2026-11-12
+### Modifié
+- **Profil › Skill IA** : « Mon profil · toutes les prop firms » prend toutes les données de tous les comptes Apex, Topstep et MFFU (journées, trades détaillés de comptes.json, Journal TopstepX en priorité pour garder les tags, évaluations, comptes financés, payouts, achats). Filtres colorés Toutes / Apex / Topstep / MFFU.
+- « Trades TopstepX détaillés » devient **« Trades détaillés »** : liste de tous les comptes possibles, avec recherche, par couleur de prop firm (Apex bleu, MFFU jaune, Topstep noir) ; un compte Apex est analysé sur ses journées (Apex ne donne pas le détail des trades).
+- Trades Topstep de comptes.json reconstitués en positions (de plat à plat), trades MFFU repris tels quels.
+
 ## [1.36.0] — 2026-11-12
 ### Modifié
 - **Backtesteur — thème TopstepX** : couleurs alignées sur le design system de TopstepX (tokens extraits de topstepx.com). Accent or `#ebbc4d` (au lieu de l'orange), gris neutres TopstepX à la place de la palette TradingView (menus, survols, bordures, champs), boutons principaux en or, Buy `#2d8337` / Sell `#bd3f3b`. Couleurs regroupées en variables `--tx-*` (`--tx-acc`, `--tx-buy`, `--tx-sell`, `--tx-profit`, `--tx-loss`…). Couleurs du graphique inchangées (préférences du chart).
