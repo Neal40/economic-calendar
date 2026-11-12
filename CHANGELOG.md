@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.46.0] — 2026-11-12
+### Ajouté
+- **Comptes › Mes comptes** (au-dessus de Topstep) : vue d'ensemble de tous les comptes. **Compte All-data** (comptes actifs / inactifs, capital total, positions gagnantes / perdantes, winrate / taux BE, profit et perte moyens, rendement, bouton vers le Journal), liste des comptes Topstep / Apex / MFFU / TopstepX + compte démo du Backtesteur avec onglets **Tous / Actifs / Bientôt inactifs / Inactifs** (bientôt inactif = violation ou à moins de 25 % du seuil de perte), et par compte : renommer, voir le détail, synchroniser, masquer (rien n'est supprimé). Cartes « Ajouter un nouveau compte » (synchro de toutes les prop firms, import comptes.json en web) et « Créer un compte d'entraînement » (Backtesteur). **Profitabilité totale** en euros : dépenses prop firms, gain des comptes funded, réussite des challenges, gains retirés, résultat net, avec le rappel en USD.
+### Corrigé
+- Taux USD→EUR : une seule tentative par date et par session (évite une boucle de rendu hors ligne).
+
 ## [1.45.0] — 2026-11-12
 ### Ajouté
 - **Paramètres › Affiliation** (sous Profil) : une carte par prop firm avec la réduction, le code promo (bouton Copier) et le lien d'affiliation (ouvert dans le navigateur) ; liens, codes et réductions modifiables dans le tableau (Topstep, Apex, My Funded Futures pré-remplis).
