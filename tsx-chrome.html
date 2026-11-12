@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inner Circle Trader : connexion TopstepX via Chrome</title>
+<style>
+  body{margin:0;min-height:100vh;background:#060607;color:#e8e8ec;font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;display:flex;justify-content:center;padding:48px 20px;box-sizing:border-box}
+  main{max-width:640px;width:100%}
+  h1{font-size:26px;margin:0 0 6px}
+  p.lead{color:#9a9ca8;margin:0 0 28px}
+  ol{padding-left:20px}
+  li{margin:0 0 18px}
+  .bm{display:inline-block;margin:10px 0 4px;padding:10px 18px;border-radius:12px;background:linear-gradient(180deg,#2a2b31,#141418);border:1px solid rgba(255,255,255,.14);color:#fff;font-weight:600;text-decoration:none;cursor:grab;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+  .muted{color:#8b8d98;font-size:13px}
+  code{background:#15161a;border:1px solid #26272d;border-radius:6px;padding:1px 6px;font-size:13px}
+  .box{background:#0e0e11;border:1px solid #1f2026;border-radius:14px;padding:16px 18px;margin-top:26px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Synchro TopstepX avec ta connexion Chrome</h1>
+  <p class="lead">L'app Inner Circle Trader (Mac / Windows) peut utiliser la session TopstepX déjà ouverte dans Chrome, au lieu de te faire te reconnecter dans l'app.</p>
+  <ol>
+    <li><b>Une seule fois :</b> affiche la barre de favoris (<code>⌘ Maj B</code> sur Mac, <code>Ctrl Maj B</code> sur Windows), puis <b>glisse ce bouton dedans</b> :<br>
+      <a class="bm" id="bm" href="#">→ ICT</a><br>
+      <span class="muted">Ne clique pas dessus ici : glisse-le dans la barre de favoris.</span></li>
+    <li>Ouvre <a href="https://www.topstepx.com/trade" style="color:#fff">topstepx.com/trade</a> dans Chrome, connecté comme d'habitude.</li>
+    <li>Clique sur le favori <b>→ ICT</b>. Chrome demande « Ouvrir Inner Circle Trader ? » : coche <b>Toujours autoriser</b> puis <b>Ouvrir</b>. L'app récupère la session et synchronise tes comptes et tes trades.</li>
+  </ol>
+  <div class="box">
+    <b>À savoir</b>
+    <ul class="muted" style="padding-left:18px;margin:6px 0 0">
+      <li>Le favori ne lit que la session TopstepX de la page ouverte et l'envoie directement à l'app installée sur cet ordinateur (lien <code>innercircletrader://</code>). Rien ne passe par un serveur.</li>
+      <li>L'app la garde chiffrée. Quand TopstepX te déconnecte, l'app affiche « Se reconnecter » : rouvre TopstepX dans Chrome et reclique sur le favori.</li>
+      <li>Le favori ne passe aucun ordre et ne touche à rien sur TopstepX.</li>
+    </ul>
+  </div>
+</main>
+<script>
+  const code = "(()=>{if(!/(^|\\.)topstepx\\.com$/.test(location.hostname)){alert('Ouvre d\\'abord topstepx.com/trade (connecté), puis clique sur ce favori.');return}const t=localStorage.getItem('token');if(!t){alert('Pas connecté à TopstepX dans Chrome : connecte-toi puis reclique.');return}location.href='innercircletrader://tsx?token='+encodeURIComponent(t)})()";
+  const a = document.getElementById("bm");
+  a.href = "javascript:" + code;
+  a.addEventListener("click", (e) => { e.preventDefault(); alert("Glisse ce bouton dans ta barre de favoris, puis utilise-le sur topstepx.com."); });
+</script>
+</body>
+</html>

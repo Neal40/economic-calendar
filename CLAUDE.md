@@ -58,6 +58,7 @@ Indexé par date `YYYY-MM-DD`. `k`: `ev` = news, `after` = earnings après clôt
 | Fichier | Rôle |
 |---|---|
 | `main.js` | Fenêtre, handlers IPC (`journal:*`, `tsx:bars`, `notion:*`, `store:*`, `data:*`, `copier:*`), sync données de marché chaque soir à 23h01, mise à jour auto (`Inner Circle Trader.update.exe` posé à côté de l'exe ; l'ancien nom est encore accepté). Nom produit / exe / titre : **Inner Circle Trader** ; `userData` = `%APPDATA%\Inner Circle Trader` (ancien dossier déplacé une fois par `backup.migrate`) |
+| (connexion Chrome) | `main.js` enregistre le protocole `innercircletrader://` (instance unique) : le favori « → ICT » de `tsx-chrome.html` envoie le jeton TopstepX de Chrome → `tsx-token.bin` (safeStorage), utilisé avant la fenêtre `persist:topstepx` ; jamais loggué ni renvoyé au renderer |
 | `backup.js` | Au démarrage : sauvegarde du jour de userData (json, bin, Local Storage, IndexedDB) dans `Bureau\Inner Circle Trader\backups\AAAA-MM-JJ` (14 jours gardés) + miroir des bougies 1s dans `backups\bougies-1s` |
 | `preload.js` | Pont `window.desktop` (contextBridge) — **seule** API visible depuis `index.html` |
 | `topstepx.js` | Connexion + sync des trades/comptes TopstepX → `userData/journal-db.json` (au lancement + toutes les 5 min) |

@@ -45,7 +45,12 @@ async function readToken(w) {
   try { await new Promise((ok) => (w.webContents.isLoading() ? w.webContents.once("did-stop-loading", ok) : ok())); } catch (e) {}
   try { return await w.webContents.executeJavaScript('localStorage.getItem("token")', true); } catch (e) { return null; }
 }
+/* Jeton TopstepX envoyé depuis Chrome (favori « → ICT » sur topstepx.com) : chiffré avec safeStorage, jamais loggué ni renvoyé au renderer */
+const TSXFILE = () => path.join(app.getPath("userData"), "tsx-token.bin");
+function getChromeToken() { try { const b = fs.readFileSync(TSXFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; } }
+function setChromeToken(t) { try { if (!t) { fs.rmSync(TSXFILE(), { force: true }); return; } fs.writeFileSync(TSXFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, "utf8")); } catch (e) { /* ignore */ } }
 async function getToken(interactive) {
+  const ct = getChromeToken(); if (ct) return ct;
   let w = tsxWindow(false), t = await readToken(w);
   if (t || !interactive) return t;
   w.show(); w.focus();                                      // user signs in to TopstepX in this window
@@ -70,6 +75,7 @@ async function doSync(interactive) {
       try { data = await topstepx.sync(token, sfetch, known); }
       catch (e) {
         if (e.code !== "AUTH") throw e;
+        setChromeToken(null);
         const w = tsxWindow(false); await w.webContents.executeJavaScript('localStorage.removeItem("token")', true).catch(() => {});
         if (!interactive) return { ok: false, reason: "login", db: readDb() };
         w.loadURL("https://www.topstepx.com/login"); token = await getToken(true);
@@ -109,6 +115,7 @@ ipcMain.handle("journal:import", async (e, kind, rows) => {
   return { ok: true, db, added: { comptes: db.comptes.length - before.c, trades: db.trades.length - before.t } };
 });
 ipcMain.handle("journal:logout", async () => {
+  setChromeToken(null);
   await session.fromPartition(PART).clearStorageData();
   if (loginWin && !loginWin.isDestroyed()) loginWin.loadURL("https://www.topstepx.com/login");
   return true;
@@ -172,6 +179,39 @@ ipcMain.handle("store:set", (e, d) => { try {
     if (n(d, "bills") < n(old, "bills") || n(d, "subs") < n(old, "subs")) fs.copyFileSync(STORE(), STORE().replace(/\.json$/, "-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json")); } catch (err) { /* pas encore de fichier */ } const tmp = STORE() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify({ ...d, savedAt: new Date().toISOString() }, null, 1)); fs.renameSync(tmp, STORE()); return true; } catch (err) { return false; } });
 
 /* ---------- main window ---------- */
+/* ---------- Connexion TopstepX via Chrome : lien innercircletrader://tsx?token=… envoyé par le favori « → ICT » ---------- */
+const PROTO = "innercircletrader";
+const LOCK = app.requestSingleInstanceLock(); // une seule app : le lien ouvert par Chrome arrive dans la fenêtre déjà ouverte
+if (!LOCK) app.quit();
+try { const exe = process.env.PORTABLE_EXECUTABLE_FILE; // exe portable Windows : enregistrer le vrai .exe, pas sa copie temporaire
+  if (process.defaultApp) app.setAsDefaultProtocolClient(PROTO, process.execPath, [path.resolve(process.argv[1] || ".")]);
+  else if (exe) app.setAsDefaultProtocolClient(PROTO, exe, []); else app.setAsDefaultProtocolClient(PROTO); } catch (e) { /* ignore */ }
+let pendingUrl = null;
+async function handleProtoUrl(u) {
+  if (!app.isReady() || !win) { pendingUrl = u; return; }
+  let url; try { url = new URL(u); } catch (e) { return; }
+  if (url.protocol !== PROTO + ":" || url.hostname !== "tsx") return;
+  const t = url.searchParams.get("token") || "";
+  if (!/^[\w-]+\.[\w-]+\.[\w-]+$/.test(t) || t.length > 8000) { try { new Notification({ title: "Inner Circle Trader", body: "Lien TopstepX invalide : reclique sur le favori depuis topstepx.com." }).show(); } catch (e) { /* ignore */ } return; }
+  setChromeToken(t);
+  if (win.isMinimized()) win.restore(); win.focus();
+  const r = await doSync(false);
+  try { win.webContents.send("tsx:pushed", r); } catch (e) { /* fenêtre fermée */ }
+}
+app.on("open-url", (e, u) => { e.preventDefault(); handleProtoUrl(u); });            // Mac
+app.on("second-instance", (e, argv) => { const u = argv.find((a) => String(a).startsWith(PROTO + "://")); if (u) handleProtoUrl(u); else if (win) { if (win.isMinimized()) win.restore(); win.focus(); } }); // Windows
+ipcMain.handle("tsx:openChrome", async (e, what) => {
+  const url = what === "help" ? "https://neal40.github.io/economic-calendar/tsx-chrome.html" : "https://www.topstepx.com/trade";
+  const { spawn } = require("child_process");
+  try {
+    if (process.platform === "darwin") { spawn("open", ["-a", "Google Chrome", url], { detached: true, stdio: "ignore" }).on("error", () => shell.openExternal(url)).unref(); }
+    else if (process.platform === "win32") { spawn("cmd.exe", ["/c", "start", "", "chrome", url], { detached: true, stdio: "ignore", windowsHide: true }).on("exit", (c) => { if (c) shell.openExternal(url); }).unref(); }
+    else await shell.openExternal(url);
+    return { ok: true };
+  } catch (err) { await shell.openExternal(url); return { ok: true }; }
+});
+ipcMain.handle("tsx:chromeLinked", () => !!getChromeToken());
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1320, height: 1000, minWidth: 900, minHeight: 600,
@@ -289,8 +329,9 @@ function updWatch() {
 }
 
 app.whenReady().then(() => {
+  if (!LOCK) return;
   try { backup.run({ userData: app.getPath("userData"), dataDir: md().dir, root: path.join(ICT(), "backups") }); } // avant la fenêtre : Local Storage / IndexedDB pas encore ouverts
   catch (e) { try { new Notification({ title: "Inner Circle Trader", body: "Sauvegarde impossible : " + (e.message || e) }).show(); } catch (x) { /* ignore */ } }
-  createWindow(); mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
+  createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());

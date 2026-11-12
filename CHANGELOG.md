@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.47.0] — 2026-11-12
+### Ajouté
+- **Synchro TopstepX avec la connexion Chrome** : favori « → ICT » (page `tsx-chrome.html`) qui envoie la session TopstepX ouverte dans Chrome à l'app via le lien `innercircletrader://tsx` ; l'app la garde chiffrée (`tsx-token.bin`, safeStorage) et se synchronise aussitôt. Boutons « Utiliser ma connexion Chrome » et « Se reconnecter » → ouvre TopstepX dans Chrome (Maj+clic = ancienne fenêtre de connexion de l'app). L'app n'accepte plus qu'une instance à la fois.
+
 ## [1.46.1] — 2026-11-12
 ### Ajouté
 - **Mes comptes › Profitabilité totale** : case « Gain en comptes Challenge » (P&L cumulé de tous les comptes challenge, en euros) avec le nombre de challenges passés sur le total (ex. 29/130). Ce P&L reste hors du résultat net (argent non retirable).

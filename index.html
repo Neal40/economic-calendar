@@ -1293,7 +1293,10 @@ table.tbl:has(#subT){min-width:900px}
     </div>
   </div>
   <div id="jtTsx">
-  <div class="jempty" id="jLogin" hidden><b>Connecte ton compte TopstepX</b>L'app récupère tes comptes et tes trades directement depuis TopstepX et les garde dans sa base locale.<div class="row2" style="justify-content:center"><button class="btn" id="jLoginBtn">Se connecter à TopstepX</button></div></div>
+  <div class="jempty" id="jLogin" hidden><b>Connecte ton compte TopstepX</b>L'app récupère tes comptes et tes trades directement depuis TopstepX et les garde dans sa base locale.<div class="row2" style="justify-content:center"><button class="btn" id="jChromeBtn" hidden>Utiliser ma connexion Chrome</button><button class="btn ghost" id="jLoginBtn">Se connecter dans l'app</button></div></div>
+  <div class="jempty" id="jChromeHelp" hidden style="text-align:left"><b>Synchro TopstepX avec ta connexion Chrome</b>
+    <ol style="margin:8px 0 10px 18px;line-height:1.7"><li>Une seule fois : <a href="#" id="jChromeInstall">ouvre cette page dans Chrome</a> et glisse le bouton « → ICT » dans ta barre de favoris.</li><li><a href="#" id="jChromeOpen">Ouvre TopstepX dans Chrome</a> (déjà connecté).</li><li>Clique sur le favori « → ICT », puis sur « Ouvrir Inner Circle Trader » (coche « Toujours autoriser »).</li></ol>
+    L'app récupère alors ta session et se synchronise toute seule. À refaire seulement quand la session TopstepX expire.<div class="row2" style="margin-top:10px"><button class="btn ghost" id="jChromeClose">Fermer</button></div></div>
   <div class="jempty" id="jEmpty" hidden><b>Aucune donnée TopstepX</b>Importe tes fichiers <code>comptes.json</code> et <code>trades.json</code> (export du dashboard Stats TopstepX) avec les boutons ci-dessus.</div>
 <div class="tsx" id="jroot">
   <div class="tsx-bar">
@@ -2522,6 +2525,20 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     btn.onclick = () => run(true);
     document.getElementById("jLoginBtn").onclick = () => run(true);
     out.onclick = async () => { await D.journalLogout(); alertBox("Déconnecté de TopstepX. Les données locales restent affichées."); };
+    /* connexion via Chrome : le favori « → ICT » sur topstepx.com envoie la session à l'app (lien innercircletrader://) */
+    if (D.tsxOpenChrome) {
+      const cb = document.getElementById("jChromeBtn"), help = document.getElementById("jChromeHelp");
+      const showHelp = () => { help.hidden = false; help.scrollIntoView({ block: "nearest" }); };
+      cb.hidden = false; cb.onclick = () => { showHelp(); D.tsxOpenChrome("trade"); };
+      document.getElementById("jChromeInstall").onclick = (e) => { e.preventDefault(); D.tsxOpenChrome("help"); };
+      document.getElementById("jChromeOpen").onclick = (e) => { e.preventDefault(); D.tsxOpenChrome("trade"); };
+      document.getElementById("jChromeClose").onclick = () => (help.hidden = true);
+      btn.title = "Clic : reconnexion via Chrome · Maj+clic : fenêtre de connexion de l'app";
+      btn.onclick = (e) => { if (e.shiftKey) return run(true); showHelp(); D.tsxOpenChrome("trade"); };
+      D.onTsxPushed((r) => { help.hidden = true; btn.hidden = !!(r && r.ok);
+        if (r && r.ok) { apply(r.db); alertBox("✓ Session Chrome reçue : TopstepX synchronisé."); }
+        else alertBox("Session reçue de Chrome, mais la synchro a échoué (" + ((r && r.reason) || "erreur") + ")."); });
+    }
     D.journalGet().then((db) => { apply(db); if (!(db && db.comptes && db.comptes.length)) { document.getElementById("jEmpty").hidden = true; } run(false); });
     /* auto-sync : every 5 min, every minute when an account is close to its target */
     let lastRun = Date.now(); setInterval(() => { const near = nearTarget().length; if (Date.now() - lastRun >= (near ? 60 : 300) * 1000) { lastRun = Date.now(); run(false); } }, 15000);
