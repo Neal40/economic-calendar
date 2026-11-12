@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.41.0] — 2026-11-12
+### Corrigé
+- **Profil › Skill IA** : tailles en équivalent mini (10 micros MNQ / MES = 1 NQ / ES) au lieu d'additionner micros et minis ; DLL propre à chaque compte (Topstep 1 000 / 3 000 $, MFFU…) au lieu de 1 000 $ pour tous ; comparaison « 20 derniers jours vs avant » sans le critère Payouts (non daté) et sans le parcours quand trop peu de comptes ; flèches masquées (≈) quand l'écart vient d'échantillons trop petits ; rapport pour Claude étendu à Apex, Topstep et MFFU.
+### Amélioré
+- Gestion du risque mesurée sur toutes les positions de toutes les prop firms (règle 500 $ par position) en plus de la règle des tranches du Journal et des journées sous la DLL.
+- Survie des comptes financés : nombre de comptes cramés sur une seule grosse journée, conseil adapté (journée unique vs « à petit feu »).
+- Tableau « Par prop firm » (score, statut, évals réussies, financés cramés, payouts, dépenses récupérées, P&L net) ; une ligne ouvre le détail de la prop firm.
+
 ## [1.40.0] — 2026-11-12
 ### Modifié
 - **Backtesteur — interface TopstepX à l'identique** (couleurs relevées sur les captures de topstepx.com/trade) : accent orange `#df981c` (comme les tuiles aimant / favoris de TopstepX, remplace l'or de la 1.36.0), menus `#0c0e12`, survol `#22262f`, sélection de l'arborescence bleue `#142e61`.

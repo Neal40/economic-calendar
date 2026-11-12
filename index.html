@@ -2795,9 +2795,12 @@ function pareto8020(rows, val, dims) {
    o.meta(id) -> { time, pda, plan (1 | 0.5 | 0 | null), err: [tags Erreur] } ; o.risk = { n, ok } (règle des tranches) ;
    o.rules = { entries, stops, tp, trail, exits } (texte de la stratégie) ; o.dll = 1 000 $.
    o.days = journées de TOUS les comptes Apex + Topstep (comptes.json) { acc, day, pnl, n, c } — ajoutées quand le compte n'a pas de trades détaillés ce jour-là ;
-   o.accounts = [{ id, firm, kind: "eval" | "funded", res: "passed" | "failed" | "active" | "closed", days }] ; o.money = { paid, spent, payouts }. */
+   o.accounts = [{ id, firm, kind: "eval" | "funded", res: "passed" | "failed" | "active" | "closed", days, dll, oneDay }] ; o.money = { paid, spent, payouts }.
+   Tailles en équivalent mini (10 micros MNQ / MES = 1 NQ / ES). Risque par position : règle de Rudy, 500 $ max (perte > 550 $ = hors règle). */
 function profilCalc(fills, o) {
-  o = o || {}; const meta = o.meta || (() => null), dll = o.dll || 1000, rules = o.rules || {};
+  o = o || {}; const meta = o.meta || (() => null), dll = o.dll || 1000, rules = o.rules || {}, maxRisk = o.maxRisk || 500;
+  const DLL = new Map((o.dlls || []).concat(o.accounts || []).filter((a) => +a.dll > 0).map((a) => [String(a.id), +a.dll])), dllOf = (acc) => DLL.get(String(acc)) || dll;
+  const micro = (t) => /(^|[.\/\s])M(NQ|ES|YM|2K|GC|CL)/i.test(String(t.Contract || t.Symbol || t.prod || t.asset || "")), szOf = (t) => (Number(t.Size) || 0) * (micro(t) ? 0.1 : 1);
   const r2 = (x) => Math.round(x * 100) / 100, clamp = (x) => Math.max(0, Math.min(1, x));
   const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
   const med = (a) => { if (!a.length) return null; const b = a.slice().sort((x, y) => x - y), m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
@@ -2810,7 +2813,7 @@ function profilCalc(fills, o) {
     for (const t of F) { if (g && String(t.Entry) < g.exit && t.Direction === g.dir) { g.f.push(t); if (String(t.Exit) > g.exit) g.exit = String(t.Exit); } else { g = { acc, dir: t.Direction, exit: String(t.Exit), f: [t] }; P.push(g); } } }
   for (const g of P) {
     g.day = String(g.f[0].Day || g.f[0].Entry).slice(0, 10); g.entry = String(g.f[0].Entry);
-    g.size = g.f.reduce((a, t) => a + (Number(t.Size) || 0), 0); g.net = g.f.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0);
+    g.size = Math.round(g.f.reduce((a, t) => a + szOf(t), 0) * 10) / 10; g.net = g.f.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0);
     const M = g.f.map((t) => meta(t.ID)).filter(Boolean), pl = M.find((m) => m.plan != null);
     g.m = M.length ? { time: M.some((m) => m.time), pda: M.some((m) => m.pda), plan: pl ? pl.plan : null, err: [...new Set(M.flatMap((m) => m.err || []))] } : null;
   }
@@ -2844,7 +2847,7 @@ function profilCalc(fills, o) {
   const sz = P.map((g) => g.size).concat(ad.filter((a) => a.ext && a.size != null).map((a) => r2(a.size))).filter((x) => x > 0), ms = med(sz);
   if (sz.length >= 5) { const within = sz.filter((x) => x >= ms * 0.5 && x <= ms * 1.5).length / sz.length, mx = Math.max(...sz), e = errRate(["Taille de position"]);
     add("size", "constance", "Taille constante", "Trader avec des tailles constantes.", 1, within * (1 - Math.min(0.5, e * 2)) - (mx > ms * 3 ? 0.1 : 0),
-      `${Math.round(within * 100)} % dans la norme`, `Taille médiane ${ms} contrat(s) · max ${mx} · norme = ${r2(ms * 0.5)} à ${r2(ms * 1.5)}${e ? ` · ${Math.round(e * 100)} % tagués « Taille de position »` : ""}`,
+      `${Math.round(within * 100)} % dans la norme`, `Taille médiane ${ms} contrat(s) équivalent mini (10 micros = 1 mini) · max ${mx} · norme = ${r2(ms * 0.5)} à ${r2(ms * 1.5)}${e ? ` · ${Math.round(e * 100)} % tagués « Taille de position »` : ""}`,
       within < 0.85 ? "Fixe une taille par palier (normal / moitié sous 1 500 $ de DD) et ne la change qu'avec ta règle des tranches." : mx > ms * 3 ? "Une ou plusieurs positions dépassent 3× ta taille habituelle : c'est ce qu'Apex repère en premier." : null);
   } else add("size", "constance", "Taille constante", "Trader avec des tailles constantes.", 1, null, "—", "Moins de 5 positions avec une taille connue (Apex ne donne pas les contrats par jour).", null);
   // 5. Jours tradés réguliers
@@ -2854,12 +2857,14 @@ function profilCalc(fills, o) {
       `${r2(wm)} jour(s) / semaine`, `${days.length} jours sur ${W.size} semaines · ${mn} trade(s) / jour en médiane · ${Math.round((1 - normal) * 100)} % de journées surchargées (> ${Math.max(2, 2 * mn)} trades)`,
       normal < 0.9 ? "Plafonne ton nombre de positions par jour (ex. " + Math.max(2, Math.ceil(mn)) + ") : les journées surchargées sont celles qui font sauter les comptes." : cv > 0.5 ? "Garde un rythme de jours tradés stable d'une semaine à l'autre." : null);
   } else add("days", "constance", "Jours tradés réguliers", "Être constant sur les jours tradés.", 0.75, null, "—", "Moins de 5 jours tradés.", null);
-  // 6. Gestion du risque : règle des tranches + journées sous la DLL
-  const dl = ad.filter((a) => a.net < -dll).length, rk = o.risk && o.risk.n ? o.risk.ok / o.risk.n : null, es = errRate(["Stop déplacé"]);
-  if (P.length || ad.length) add("risk", "constance", "Gestion du risque", "Une bonne gestion du risque, sans mettre le compte en danger.", 1.5, ((rk != null ? 0.7 * rk : 0) + (rk != null ? 0.3 : 1) * (1 - Math.min(1, (dl / Math.max(1, ad.length)) * 5))) * (1 - Math.min(0.5, es * 2)),
-    rk != null ? Math.round(rk * 100) + " % des positions dans la règle" : `${dl} jour(s) > DLL`, `${rk != null ? `${o.risk.ok} / ${o.risk.n} positions sous 500 $ (250 $ sous 1 500 $ de DD restant) · ` : ""}${dl} journée(s) perdante(s) de plus de ${dll} $${es ? ` · ${Math.round(es * 100)} % « Stop déplacé »` : ""}`,
-    rk != null && rk < 0.9 ? "Respecte ta règle des tranches à chaque trade : 500 $ max, 250 $ sous 1 500 $ de DD restant." : dl ? "Coupe la journée avant la DLL : une seule journée > 1 000 $ suffit à paraître « risky »." : null);
-  else add("risk", "constance", "Gestion du risque", "Une bonne gestion du risque.", 1.5, null, "—", "Aucune position.", null);
+  // 6. Gestion du risque : règle par position (500 $ max), règle des tranches (Journal), journées sous la DLL du compte
+  const dl = ad.filter((a) => a.net < -dllOf(a.acc)).length, rk = o.risk && o.risk.n ? o.risk.ok / o.risk.n : null, es = errRate(["Stop déplacé"]);
+  const lp = P.filter((g) => g.net < 0), over = lp.filter((g) => g.net < -maxRisk * 1.1).length, pr = lp.length >= 5 ? 1 - over / lp.length : null, ds = ad.length ? 1 - Math.min(1, (dl / ad.length) * 5) : null;
+  const RP = [[pr, 0.45], [rk, 0.25], [ds, 0.3]].filter((x) => x[0] != null), rsc = RP.length ? RP.reduce((s, x) => s + x[0] * x[1], 0) / RP.reduce((s, x) => s + x[1], 0) : null;
+  add("risk", "constance", "Gestion du risque", "Une bonne gestion du risque, sans mettre le compte en danger.", 1.5, rsc == null ? null : rsc * (1 - Math.min(0.5, es * 2)),
+    pr != null ? `${Math.round(pr * 100)} % des pertes sous ${maxRisk} $` : `${dl} jour(s) > DLL`,
+    `${pr != null ? `${over} perte(s) de plus de ${Math.round(maxRisk * 1.1)} $ sur ${lp.length} positions perdantes · ` : ""}${rk != null ? `règle des tranches : ${o.risk.ok} / ${o.risk.n} positions OK · ` : ""}${dl} journée(s)-compte sous la DLL du compte (${dll} $ par défaut)${es ? ` · ${Math.round(es * 100)} % « Stop déplacé »` : ""}`,
+    pr != null && pr < 0.9 ? `Une perte sur ${Math.max(2, Math.round(1 / Math.max(0.01, 1 - pr)))} dépasse ${maxRisk} $ : place le stop AVANT l'entrée et calcule la taille dessus (250 $ sous 1 500 $ de DD restant).` : dl ? "Coupe la journée avant la DLL : une seule journée sous la DLL suffit à paraître « risky »." : null);
   // 7. Pas de windfall : meilleure journée / profit total, compte par compte (règle de consistance 30 %)
   const accDays = new Map(); ad.forEach((a) => { if (!accDays.has(a.acc)) accDays.set(a.acc, []); accDays.get(a.acc).push(a.net); });
   const KD = new Map((o.accounts || []).map((a) => [String(a.id), a.kind])); // la règle des 30 % s'applique aux comptes financés (une évaluation se passe souvent en 1-2 jours)
@@ -2901,10 +2906,10 @@ function profilCalc(fills, o) {
     add("evals", "parcours", "Évaluations réussies", "Un système qui passe les évaluations de façon reproductible, pas par chance.", 1.25, rate == null ? null : rate / 0.6,
       rate == null ? "—" : `${Math.round(rate * 100)} % réussies`, `${EV.length} évaluations ${firms} : ${ps} réussies · ${fl} perdues · ${EV.length - ps - fl} en cours ou fermées sans perte`,
       rate != null && rate < 0.5 ? "Plus d'une évaluation sur deux est perdue : traite chaque évaluation comme un compte financé (taille réduite, 1 à 2 trades A+ par jour)." : null);
-    const fb = FU.filter((a) => a.res === "failed"), fin = FU.filter((a) => a.res !== "active"), md = med(fb.map((a) => a.days).filter((x) => x > 0)), surv = fin.length ? 1 - fb.length / fin.length : null;
+    const fb = FU.filter((a) => a.res === "failed"), fin = FU.filter((a) => a.res !== "active"), md = med(fb.map((a) => a.days).filter((x) => x > 0)), surv = fin.length ? 1 - fb.length / fin.length : null, od = fb.filter((a) => a.oneDay).length;
     add("funded", "parcours", "Survie des comptes financés", "Ne pas mettre le compte financé en danger, le faire durer et grandir.", 1.5, !FU.length ? null : surv == null ? 1 : fb.length ? 0.6 * surv + 0.4 * clamp((md || 0) / 20) : 1,
-      FU.length ? `${fb.length} / ${FU.length} cramés` : "—", FU.length ? `${FU.length} comptes financés (PA Apex, Express Funded Topstep, Sim Funded MFFU) · ${FU.filter((a) => a.res === "active").length} actifs · ${fb.length} cramés${md ? ` après ${md} jours tradés en médiane` : ""}` : "Aucun compte financé pour l'instant.",
-      fb.length && fin.length && fb.length / fin.length > 0.5 ? "La plupart de tes comptes financés finissent cramés : le problème n'est pas de passer, c'est la gestion une fois financé (taille, DLL perso, pas de rattrapage)." : null);
+      FU.length ? `${fb.length} / ${FU.length} cramés` : "—", FU.length ? `${FU.length} comptes financés (PA Apex, Express Funded Topstep, Sim Funded MFFU) · ${FU.filter((a) => a.res === "active").length} actifs · ${fb.length} cramés${md ? ` après ${md} jours tradés en médiane` : ""}${fb.length ? ` · ${od} cramé(s) sur une seule grosse journée` : ""}` : "Aucun compte financé pour l'instant.",
+      fb.length && fin.length && fb.length / fin.length > 0.5 ? (od / fb.length >= 0.5 ? `${od} de tes ${fb.length} comptes financés cramés sont tombés sur une seule journée : pose une perte max journalière perso (ex. 2 SL) et coupe la plateforme quand elle est atteinte.` : "La plupart de tes comptes financés finissent cramés à petit feu : réduis la taille dès le premier jour rouge et vise le premier payout avant tout.") : null);
     const m = o.money || {}, nf = Math.max(1, FU.length), pp = (m.payouts || 0) / nf, roi = m.spent ? (m.paid || 0) / m.spent : null;
     add("payouts", "parcours", "Payouts", "Être payé régulièrement, sans stratégie de retrait qui joue sur les règles.", 1, FU.length ? 0.5 * clamp(pp) + 0.5 * (roi == null ? clamp(pp) : clamp(roi)) : null,
       `${m.payouts || 0} payout(s)`, `${m.payouts || 0} payout(s) pour ${FU.length} compte(s) financé(s) · reçu ${Math.round(m.paid || 0).toLocaleString("fr-FR")} $ · dépensé ${Math.round(m.spent || 0).toLocaleString("fr-FR")} $${roi != null ? ` (${Math.round(roi * 100)} % récupéré)` : ""}`,
@@ -2949,13 +2954,13 @@ function profilCalc(fills, o) {
     const T = a.trades || [], acc = String(a.id), out = [];
     if (k === "mffu") T.forEach((t, i) => { if (t.net == null && t.gross == null) return; const o = new Date(+t.open), c = new Date(+t.close || +t.open);
       out.push({ ID: "mffu:" + acc + ":" + (t.open || i) + ":" + i, "ID TopstepX": acc, Day: String(t.day || o.toISOString()).slice(0, 10), Entry: isNaN(o) ? String(t.day) : o.toISOString(), Exit: isNaN(c) ? String(t.day) : c.toISOString(),
-        Direction: /short|sell/i.test(t.side) ? "Short" : "Long", Size: +t.qty || 1, "Net P&L": t.net != null ? +t.net : +t.gross - (+t.fees || 0) }); });
+        Direction: /short|sell/i.test(t.side) ? "Short" : "Long", Size: +t.qty || 1, Contract: t.asset || "", "Net P&L": t.net != null ? +t.net : +t.gross - (+t.fees || 0) }); });
     if (k === "topstep") { // fills d'exécution → positions (de plat à plat, par contrat)
       const F = T.filter((t) => t && t.t).slice().sort((x, y) => String(x.t).localeCompare(String(y.t))), pos = new Map();
       for (const t of F) { const pr = t.prod || "?", q = (/buy/i.test(t.side) ? 1 : -1) * (+t.size || 0); let g = pos.get(pr);
         if (!g) { g = { q: 0, max: 0, net: 0, first: t, last: t, dir: q > 0 ? "Long" : "Short" }; pos.set(pr, g); }
         g.q += q; g.max = Math.max(g.max, Math.abs(g.q)); g.net += (+t.pl || 0) - (+t.fees || 0); g.last = t;
-        if (g.q === 0) { out.push({ ID: "tsx:" + acc + ":" + g.first.id, "ID TopstepX": acc, Day: String(g.first.day || g.first.t).slice(0, 10), Entry: String(g.first.t).replace(" ", "T"), Exit: String(g.last.t).replace(" ", "T"), Direction: g.dir, Size: g.max, "Net P&L": Math.round(g.net * 100) / 100 }); pos.delete(pr); } } }
+        if (g.q === 0) { out.push({ ID: "tsx:" + acc + ":" + g.first.id, "ID TopstepX": acc, Day: String(g.first.day || g.first.t).slice(0, 10), Entry: String(g.first.t).replace(" ", "T"), Exit: String(g.last.t).replace(" ", "T"), Direction: g.dir, Size: g.max, Contract: pr, "Net P&L": Math.round(g.net * 100) / 100 }); pos.delete(pr); } } }
     return out;
   }
   // tout le parcours : comptes, journées, trades détaillés (Journal TopstepX en priorité pour garder les tags), payouts et achats
@@ -2968,7 +2973,8 @@ function profilCalc(fills, o) {
         const fills = (jf.get(id) || tradesOf(k, a)).filter((t) => !cut || String(t.Day).slice(0, 10) >= cut);
         const D = (a.days || []).filter((d) => d && d.d && (!cut || String(d.d) >= cut)).map((d) => ({ acc: id, day: String(d.d).slice(0, 10), pnl: +d.pnl, n: d.n, c: k === "topstep" ? null : d.c }));
         if (cut && !D.length && !fills.length && first < cut) continue;
-        accounts.push({ id, firm: FIRM[k].n, fk: k, name: a.name || id, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first, fills, D }); D.forEach((d) => days.push(d)); }
+        const neg = (a.days || []).map((d) => +d.pnl || 0).filter((v) => v < 0), worst = neg.length ? Math.min(...neg) : 0, lossSum = neg.reduce((x, v) => x + v, 0);
+        accounts.push({ id, firm: FIRM[k].n, fk: k, name: a.name || id, kind: kd, res: resOf(a), days: (a.days || []).length || +a.daysTraded || 0, first, fills, D, dll: +a.dll || null, oneDay: lossSum < 0 && worst / lossSum >= 0.6 }); D.forEach((d) => days.push(d)); }
       (F.payouts || []).forEach((p) => { if (cut && String(p.requested || "") < cut) return; const v = +(p.paid != null ? p.paid : p.amount) || 0; money.payouts++; money.paid += v; money.byFirm[k].payouts++; money.byFirm[k].paid += v; });
       (F.purchases || []).forEach((p) => { if (cut && String(p.date || "") < cut) return; money.spent += +p.amount || 0; money.byFirm[k].spent += +p.amount || 0; }); }
     // comptes du Journal TopstepX pas encore dans comptes.json
@@ -2999,9 +3005,11 @@ function profilCalc(fills, o) {
       const r = window.riskCalc(F, Number(a["Solde de départ"]) || (a.Type === "Funded" ? 0 : 50000), { ...o, floorCap: a.Type === "Funded" ? Number(a["Solde de départ"]) || 0 : null }); n += r.n; ok += r.ok; }
     return n ? { n, ok } : null;
   }
+  let DLLS = [];
   function calc(fills, comptes, meta, X, upTo) {
     const o = { meta, rules: S.strat || {}, risk: riskFor(fills, comptes) };
     if (X) { o.days = upTo ? X.days.filter((d) => d.day <= upTo) : X.days; o.accounts = upTo ? X.accounts.filter((a) => (a.first || "") <= upTo) : X.accounts; o.money = X.money; }
+    o.dlls = DLLS;
     return profilCalc(fills, o); }
 
   function spark(pts) {
@@ -3016,6 +3024,7 @@ function profilCalc(fills, o) {
     const G = gather(), comptes = G.comptes, St = S.strat || {}, cut = per !== "all" ? cutDay(+per) : null, firm = src === "firms" ? (acct === "topstep" || acct === "apex" || acct === "mffu" ? acct : "all") : null;
     const FD = firmsData(src === "firms" ? firm : "all", cut, G), ALL = FD.all, selA = src === "detail" && acct !== "all" ? ALL.find((a) => a.id === acct) || null : null;
     if (src === "detail" && acct !== "all" && !selA) acct = "all";
+    DLLS = ALL.filter((a) => a.dll).map((a) => ({ id: a.id, dll: a.dll }));
     // Mon profil : journées + trades détaillés + parcours ; Trades détaillés : trade par trade (un compte Apex n'a que ses journées)
     const X = src === "firms" ? FD : selA && !selA.fills.length ? { days: selA.D, accounts: [], money: {} } : null;
     const fills = src === "firms" ? FD.fills : selA ? selA.fills : FD.fills;
@@ -3024,10 +3033,11 @@ function profilCalc(fills, o) {
     const days = [...new Set(fills.map((t) => String(t.Day).slice(0, 10)).concat(X ? X.days.map((d) => d.day) : []))].sort(), wk = new Map();
     days.forEach((d) => { const x = new Date(d + "T12:00:00Z"), w = x.getUTCDay(); x.setUTCDate(x.getUTCDate() - (w === 0 ? 6 : w - 1)); wk.set(x.toISOString().slice(0, 10), d); });
     const pts = [...wk.entries()].slice(-12).map(([w, last]) => ({ w, s: calc(fills.filter((t) => String(t.Day).slice(0, 10) <= last), cps, G.meta, X, last).score })).filter((p) => p.s != null);
-    const sub = (lo, hi) => X ? { days: X.days.filter((d) => (!lo || d.day >= lo) && (!hi || d.day < hi)), accounts: X.accounts.filter((a) => (!lo || (a.first || "") >= lo) && (!hi || (a.first || "") < hi)), money: X.money } : null;
+    const sub = (lo, hi) => { if (!X) return null; const ac = X.accounts.filter((a) => (!lo || (a.first || "") >= lo) && (!hi || (a.first || "") < hi));
+      return { days: X.days.filter((d) => (!lo || d.day >= lo) && (!hi || d.day < hi)), accounts: ac.length >= 8 ? ac : [], money: {} }; }; // pas de payouts datés par période : critère « Payouts » exclu de la comparaison
     let cmp = null; if (days.length >= 10) { const c2 = days[Math.max(0, days.length - 20)], A = calc(fills.filter((t) => String(t.Day).slice(0, 10) < c2), cps, G.meta, sub(null, c2)), B = calc(fills.filter((t) => String(t.Day).slice(0, 10) >= c2), cps, G.meta, sub(c2, null)); if (A.score != null && B.score != null) cmp = { A, B, d: B.score - A.score }; }
     const prev = cmp ? new Map(cmp.A.criteria.map((c) => [c.id, c.score])) : new Map(), now = cmp ? new Map(cmp.B.criteria.map((c) => [c.id, c.score])) : new Map();
-    const arrow = (id) => { const a = prev.get(id), b = now.get(id); if (a == null || b == null) return ""; const d = Math.round((b - a) * 100); return d === 0 ? `<span class="hintd" style="margin:0">=</span>` : `<span style="color:${d > 0 ? COL.ok : COL.bad};font-size:11.5px">${d > 0 ? "▲ +" : "▼ "}${d}</span>`; };
+    const arrow = (id) => { const a = prev.get(id), b = now.get(id); if (a == null || b == null) return ""; const d = Math.round((b - a) * 100); if (Math.abs(d) >= 60) return `<span class="hintd" style="margin:0" title="Écart trop grand entre deux échantillons trop petits">≈</span>`; return d === 0 ? `<span class="hintd" style="margin:0">=</span>` : `<span style="color:${d > 0 ? COL.ok : COL.bad};font-size:11.5px">${d > 0 ? "▲ +" : "▼ "}${d}</span>`; };
     const st = R.status, sc = R.score;
     const card = (c) => `<div class="pf-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>${c.score == null ? "◌" : c.score >= 0.8 ? "✓" : c.score >= 0.6 ? "~" : "✕"} ${e(c.label)}</b>
         <span style="white-space:nowrap">${arrow(c.id)} <b style="color:${colOf(c.score)}">${c.score == null ? "—" : Math.round(c.score * 100)}</b></span></div>
@@ -3035,6 +3045,14 @@ function profilCalc(fills, o) {
       <div style="font-size:13px;margin:6px 0 2px">${e(c.value)}</div><div class="hintd" style="margin:0">${e(c.detail)}</div><div class="hintd" style="margin:6px 0 0;color:#5d6069">Apex : ${e(c.want)}</div></div>`;
     const todo = R.criteria.filter((c) => c.tip && (c.score == null || c.score < 0.8)).sort((a, b) => (a.score == null ? 0.5 : a.score) * 1 - (b.score == null ? 0.5 : b.score) * 1 || b.w - a.w).slice(0, 3);
     const noData = src === "firms" ? !X.days.length && !fills.length : !fills.length && !(X && X.days.length);
+    // répartition par prop firm (vue « Mon profil · Toutes »)
+    const usd0 = (v) => (v < 0 ? "-" : "") + Math.abs(Math.round(v)).toLocaleString("fr-FR") + " $";
+    const BF = src === "firms" && firm === "all" && !noData ? ["apex", "topstep", "mffu"].map((k) => { const D = firmsData(k, cut, G); if (!D.accounts.length && !D.fills.length) return null; const r = calc(D.fills, comptes, G.meta, D);
+      const ev = D.accounts.filter((a) => a.kind === "eval"), fu = D.accounts.filter((a) => a.kind === "funded"), ps = ev.filter((a) => a.res === "passed").length, fl = ev.filter((a) => a.res === "failed").length;
+      return { k, r, n: D.accounts.length, ev: ps + fl ? Math.round((ps / (ps + fl)) * 100) + " %" : "—", fu: fu.length ? `${fu.filter((a) => a.res === "failed").length} / ${fu.length}` : "—", po: D.money.payouts || 0, roi: D.money.spent ? Math.round(((D.money.paid || 0) / D.money.spent) * 100) + " %" : "—", net: r.net }; }).filter(Boolean) : [];
+    const bfHtml = BF.length > 1 ? `<div class="panel" style="margin:14px 0"><div class="ptitle">Par prop firm</div><table class="tbl"><thead><tr><th>Prop firm</th><th class="num">Score</th><th>Statut</th><th class="num">Comptes</th><th class="num">Évals réussies</th><th class="num">Financés cramés</th><th class="num">Payouts</th><th class="num">Dépenses récupérées</th><th class="num">P&amp;L net trading</th></tr></thead><tbody>
+      ${BF.map((b) => `<tr class="pfBf" data-f="${b.k}" style="cursor:pointer"><td>${chip(b.k)}</td><td class="num"><b style="color:${COL[b.r.status.k]}">${b.r.score == null ? "—" : b.r.score}</b></td><td style="color:${COL[b.r.status.k]}">${e(b.r.status.label)}</td><td class="num">${b.n}</td><td class="num">${b.ev}</td><td class="num">${b.fu}</td><td class="num">${b.po}</td><td class="num">${b.roi}</td><td class="num ${b.net >= 0 ? "pos" : "neg"}">${usd0(b.net)}</td></tr>`).join("")}</tbody></table>
+      <div class="hintd" style="margin:8px 0 0">Clique une ligne pour voir le détail de cette prop firm.</div></div>` : "";
     const nT = (a) => a.fills.length || a.D.length, cur = selA ? `${chip(selA.fk)} ${e(selA.name)}` : "Tous les comptes";
     const pick = `<div class="pf-pick"><button class="btn gray" id="pfPickB" type="button">${cur} ▾</button><div class="pf-menu" id="pfMenu" hidden><input id="pfQ" placeholder="Chercher un compte…">
       <div class="pf-list"><div class="pf-it${acct === "all" ? " on" : ""}" data-a="all"><b>Tous les comptes</b><span class="hintd" style="margin:0">${FD.fills.length} trades · ${ALL.length} comptes</span></div>
@@ -3050,6 +3068,7 @@ function profilCalc(fills, o) {
         <div style="text-align:center"><div style="font-size:40px;font-weight:700;line-height:1;color:${COL[st.k]}">${sc == null ? "—" : sc}<span style="font-size:15px;color:#6f727d">/100</span></div>
           <div class="hintd" style="margin:4px 0 0">${cmp ? `<span style="color:${cmp.d > 0 ? COL.ok : cmp.d < 0 ? COL.bad : "#8b8d98"}">${cmp.d > 0 ? "▲ +" + cmp.d : cmp.d < 0 ? "▼ " + cmp.d : "= stable"}</span> sur tes 20 derniers jours (${cmp.B.score}) vs avant (${cmp.A.score})` : "Progression : il faut au moins 10 jours tradés"}</div></div>
         <div><small class="hintd" style="margin:0">Progression (score à la fin de chaque semaine, ligne verte = 80)</small>${spark(pts)}</div></div>
+      ${bfHtml}
       ${todo.length ? `<div class="panel" style="margin:14px 0"><div class="ptitle">Prochaines étapes pour monter ton score</div><ol style="margin:0;padding-left:20px;line-height:1.75;color:#c9cbd2">${todo.map((c) => `<li><b>${e(c.label)}</b> — ${e(c.tip)}</li>`).join("")}</ol></div>` : ""}
       ${GRP.map(([g, t, d]) => `<div class="pf-grp"><div class="ptitle" style="margin:14px 0 4px">${e(t)}</div><div class="hintd" style="margin:0 0 8px">${e(d)}</div><div class="pf-grid">${R.criteria.filter((c) => c.grp === g).map(card).join("")}</div></div>`).join("")}`}
       <div class="panel" style="margin-top:16px"><div class="ptitle">Ta stratégie — règles exactes</div><div class="hintd" style="margin:0 0 10px">Apex veut un set de règles précis. Écris-les une fois : elles comptent dans le score (« Règles exactes écrites ») et partent dans le rapport pour Claude.</div>
@@ -3058,7 +3077,7 @@ function profilCalc(fills, o) {
       <p class="hintd">Calculé sur cet ordinateur à partir de tous tes comptes Apex, Topstep et MFFU (pages Comptes : journées, trades, payouts, achats), du Journal TopstepX, de leurs tags et des fiches Notion liées. Ce n'est pas l'avis officiel d'Apex : c'est une lecture de tes chiffres face à leurs critères.</p>`;
     box.querySelectorAll(".pfsrc").forEach((b) => (b.onclick = () => { src = b.dataset.s; acct = "all"; try { localStorage.setItem("econcal-pf-src", src); localStorage.setItem("econcal-pf-acct", "all"); } catch (x) {} window.profilRender(); }));
     const setA = (v) => { acct = v; try { localStorage.setItem("econcal-pf-acct", acct); } catch (x) {} window.profilRender(); };
-    box.querySelectorAll(".pffirm").forEach((b) => (b.onclick = () => setA(b.dataset.f)));
+    box.querySelectorAll(".pffirm, .pfBf").forEach((b) => (b.onclick = () => setA(b.dataset.f)));
     const pb = document.getElementById("pfPickB"), pm = document.getElementById("pfMenu");
     if (pb && pm) { pb.onclick = (ev) => { ev.stopPropagation(); pm.hidden = !pm.hidden; if (!pm.hidden) { const q = document.getElementById("pfQ"); q.focus(); } };
       pm.onclick = (ev) => { ev.stopPropagation(); const it = ev.target.closest(".pf-it"); if (it) setA(it.dataset.a); };
@@ -3067,12 +3086,13 @@ function profilCalc(fills, o) {
     box.querySelectorAll(".pfper").forEach((b) => (b.onclick = () => { per = b.dataset.p; try { localStorage.setItem("econcal-pf-per", per); } catch (x) {} window.profilRender(); }));
     document.getElementById("pfSave").onclick = () => { S.strat = {}; RF.forEach(([k]) => (S.strat[k] = document.getElementById("pfR_" + k).value.trim())); save(); window.profilRender(); const ok = document.getElementById("pfSaved"); if (ok) ok.textContent = "Enregistré ✓"; };
     document.getElementById("pfCopy").onclick = () => {
-      const txt = [`Analyse mon profil de trader prop firm (futures NQ / ES, TopstepX) face aux critères Apex : système défini et discipliné, constance (système, taille, jours tradés, gestion du risque), pas de gambling / chance / windfall / comportement erratique / stratégie de retrait sur le minimum de jours, croissance régulière. Donne mon statut exact, ce qui me rapproche ou m'éloigne d'un « partenaire », et les 3 actions prioritaires.`,
+      const txt = [`Analyse mon profil de trader prop firm (futures NQ / ES, comptes Apex, Topstep et My Funded Futures) face aux critères Apex : système défini et discipliné, constance (système, taille, jours tradés, gestion du risque), pas de gambling / chance / windfall / comportement erratique / stratégie de retrait sur le minimum de jours, croissance régulière. Donne mon statut exact, ce qui me rapproche ou m'éloigne d'un « partenaire », et les 3 actions prioritaires.`,
         ``, `## Ma stratégie`, ...RF.map(([k, l]) => `- ${l} : ${St[k] || "(non écrite)"}`),
         ``, `## Mes chiffres (${src === "firms" ? (firm === "all" ? "tous mes comptes Apex + Topstep + MFFU" : "tous mes comptes " + FIRM[firm].n) : selA ? "compte " + selA.firm + " " + selA.name : "trades détaillés de tous mes comptes"}, ${per === "all" ? "toute la période" : per + " derniers jours"})`,
         `Score : ${sc == null ? "—" : sc}/100 — ${st.label} · ${R.nAcc ? R.nAcc + " comptes · " : ""}${R.accDays} journées-compte · ${R.n} positions détaillées · ${R.days} jours · net ${R.net} $${cmp ? ` · 20 derniers jours : ${cmp.B.score}/100 vs avant : ${cmp.A.score}/100` : ""}`,
         ...R.criteria.map((c) => `- ${c.label} : ${c.score == null ? "non mesuré" : Math.round(c.score * 100) + "/100"} — ${c.value} (${c.detail})`),
-        pts.length ? `Progression hebdo : ${pts.map((p) => p.w + " " + p.s).join(" · ")}` : ""].join("\n");
+        pts.length ? `Progression hebdo : ${pts.map((p) => p.w + " " + p.s).join(" · ")}` : "",
+        ...(BF.length > 1 ? ["", "## Par prop firm", ...BF.map((b) => `- ${FIRM[b.k].n} : ${b.r.score}/100 (${b.r.status.label}) · ${b.n} comptes · évals réussies ${b.ev} · financés cramés ${b.fu} · ${b.po} payouts · dépenses récupérées ${b.roi} · P&L net ${usd0(b.net)}`)] : [])].join("\n");
       const done = () => { const ok = document.getElementById("pfOk"); if (ok) ok.textContent = "Copié ✓ — colle-le dans Claude"; };
       try { navigator.clipboard.writeText(txt).then(done, () => { prompt("Copie ce rapport :", txt); }); } catch (x) { prompt("Copie ce rapport :", txt); }
     };
