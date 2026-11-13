@@ -226,6 +226,16 @@ function createWindow() {
   win.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });
 }
 
+// Backtesteur › ⋯ › Ouvrir une nouvelle fenêtre : même page, même préchargement, vue choisie par le hash
+ipcMain.handle("app:newWindow", (e, view) => {
+  const w = new BrowserWindow({ width: 1400, height: 900, minWidth: 900, minHeight: 600, backgroundColor: "#060607", title: "Inner Circle Trader",
+    icon: path.join(__dirname, "app", "icon.png"), autoHideMenuBar: true,
+    webPreferences: { contextIsolation: true, sandbox: true, preload: path.join(__dirname, "preload.js") } });
+  w.loadFile(path.join(__dirname, "app", "index.html"), { hash: /^[a-z]+$/.test(view || "") ? view : "backtest" });
+  w.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });
+  return true;
+});
+
 /* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
 let mdStore = null;
 // dossier « data_csv » (un CSV par symbole et par unité de temps, téléchargé à la main) : dans le dossier ICT, ou dans le dépôt posé dans le dossier ICT

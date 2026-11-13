@@ -43,4 +43,5 @@ contextBridge.exposeInMainWorld("desktop", {
   newsWeek: () => ipcRenderer.invoke("news:week"),
   storeGet: () => ipcRenderer.invoke("store:get"),
   storeSet: (d) => ipcRenderer.invoke("store:set", d),
+  newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),
 });

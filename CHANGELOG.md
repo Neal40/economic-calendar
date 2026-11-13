@@ -2,6 +2,21 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.51.0] — 2026-11-13
+### Ajouté
+- **Backtesteur › Aller à** (bouton du replay, Ctrl+Alt+G) : saut au prochain début de séance (Asie, Londres, New York 8:30, RTH 9:30, Globex 18:00), Silver Bullet (Londres, AM, PM), macro ICT, news du calendrier (rouges ou rouges + orange), prix touché ou date. Le replay s'arrête juste avant l'heure, les ordres s'exécutent pendant le saut. Réglages en heure de New York : favoris ★ (Alt+1 / Alt+2 / Alt+3), jours à sauter.
+- **Pas du replay** indépendant de l'unité du chart (bougie du chart, ou 1m → 4h : la bougie H1 se forme minute par minute), Alt+4 / Alt+5 / Alt+6 ; **vitesse au curseur** (temps réel → 300×).
+- **Panneau Order › Risque %** : taille calculée pour risquer X % du solde initial, du solde actuel ou de la marge avant MLL (stop, frais et slippage compris), stop / cible en points, perte et gain estimés, R:R, **breakeven auto** à X R, **tags** du trade, presets enregistrables, ouverture du journal après l'ordre (Alt+Q = risque on / off).
+- **MAE / MFE et risque initial** enregistrés sur chaque trade du backtest (gardés dans le Journal backtest à la clôture).
+- **Analytique du backtest** (Alt+Y) : filtres (source, sens, résultat, séance, tag), P&L, win rate, profit factor, espérance, R moyen, R idéal (MFE), perdants passés par +1 R, gagnants / perdants, courbe d'équité, résultats par séance NY, sens, jour, heure, mois et tag ; drawdown (max, moyen, récupération, histogramme MAE en R) ; simulateurs stop plus serré, cible fixe en R et Monte Carlo ; export CSV.
+- **Dock Journal / News** à droite (Alt+K, Alt+N) : trades de la session avec R, MFE, tags et note par trade, notes de session, boutons Analytique et Clôturer ; news du jour jusqu'à l'heure du replay.
+- **Sessions** : stratégie et description, filtre par stratégie, P&L et win rate dans la liste. **Type de compte** : frais par contrat (NQ / ES, micros) et slippage (marché et stops), modifiables sans remettre le compte à zéro.
+- **Mise en page des charts** : 1 chart, 2 côte à côte ou l'un sous l'autre, synchro Symbole / Intervalle (2e chart avec sa propre unité) / Réticule / Heure / Plage de dates ; bouton ⋯ : nouvelle fenêtre (backtesteur) et plein écran.
+### Modifié
+- RTH = 9:30 → 16:14 NY (dernière bougie m1 : 16:14).
+### Corrigé
+- 2e chart : plus de plantage quand son historique traverse le passage à l'heure d'hiver.
+
 ## [1.50.0] — 2026-11-13
 ### Ajouté
 - **Backtesteur › Indicateurs Pine Script / TypeScript** : section « Mes indicateurs » dans le menu ƒx (cocher = afficher sur le chart), onglet **Paramètres › Indicateurs** (activer, réglages des `input`, modifier, supprimer) et icône `</>` à côté de Paramètres qui ouvre un **éditeur de code** plein écran (liste, numéros de ligne, ▶ Tester, Enregistrer, Enregistrer + afficher, import / export `.pine` / `.ts`, JS généré, Ctrl+S / Ctrl+Entrée). Moteur exécuté bougie par bougie : sous-ensemble Pine v5 traduit en JS (`indicator`, `input.*`, `plot` ligne / escalier / histogramme / cercles / aire, `hline`, `plotshape`, `plotchar`, `var`, `:=`, `if` / `for` / `while`, fonctions `=>`, tuples, `x[n]`, `na` / `nz`, `color.*`, `math.*`, ~40 fonctions `ta.*`) ; TypeScript / JavaScript avec la même API (types retirés avant exécution). Indicateurs « sous le chart » (RSI…) dans une bande en bas. Exemples : EMA 20 / 50, RSI, VWAP de séance. `label`, `line`, `box`, `fill`, `bgcolor`, `request.security`, `strategy.*` ignorés avec avertissement.
