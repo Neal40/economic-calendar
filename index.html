@@ -8069,7 +8069,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     chart.timeScale().fitContent(); if (bars.length > 120) chart.timeScale().setVisibleLogicalRange({ from: bars.length - 120, to: bars.length + 3 });
     M.charts.push({ el: c, chart, series: s, iv });
     const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high)), pip = pipOf(st.inst, hi);
-    if (rng) rng.textContent = `${nyHM(bars[0].time)} → ${nyHM(bars[bars.length - 1].time)} ET · amplitude ${Math.round((hi - lo) / pip)} pips`;
+    const nyDT = (t) => new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(t * 1000));
+    if (rng) rng.textContent = `${nyDT(bars[0].time)} → ${nyDT(bars[bars.length - 1].time)} ET · amplitude ${Math.round((hi - lo) / pip)} pips`;
     const px = document.getElementById("mkPx"); if (px && iv === "M15") { const l = bars[bars.length - 1]; px.textContent = fmt(l.close, d); }
   }
   async function fillPerf() {
