@@ -196,7 +196,7 @@ body{background:#060607}
 .mk-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}
 .mk-top h2{margin:0 8px 0 0}
 .mk-inst{display:flex;align-items:center;gap:6px;background:#121216;border:1px solid #23232a;border-radius:8px;padding:4px 6px 4px 10px}
-.mk-inst input{background:none;border:none;color:#fff;font:600 14px Inter,system-ui,sans-serif;width:110px;outline:none;text-transform:uppercase}
+.mk-inst input{background:none;border:none;color:#fff;font:600 14px Inter,system-ui,sans-serif;width:130px;outline:none}
 .mk-btn{background:#141418;border:1px solid #26262e;color:#d9dae0;border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .mk-btn:hover{background:#1b1b21;color:#fff}.mk-btn.pri{background:#2f54eb;border-color:#2f54eb;color:#fff}.mk-btn.pri:hover{background:#3d61f5}
 .mk-btn.ok{background:#1f9d55;border-color:#1f9d55;color:#fff;cursor:default}
@@ -7893,10 +7893,10 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     { id: "SystemFocused", name: "System Focused", ic: "📈", rows: [[["Scanner"]], [["Instrument"], ["Performance"]], [["Large Chart"]], [["Positions", "Posts", "Quotes"], ["Events", "Stories", "Sessions"]]] }];
   const IVS = [["M1", "1M"], ["M5", "5M"], ["M15", "15M"], ["M30", "30M"], ["H1", "1H"], ["H4", "4H"], ["D1", "D"], ["W1", "S"], ["MN1", "M"]];
   const PERIODS = [["M5", "5 min", 5], ["M10", "10 min", 10], ["M15", "15 min", 15], ["M30", "30 min", 30], ["H1", "1 h", 60], ["H2", "2 h", 120], ["H4", "4 h", 240], ["H6", "6 h", 360], ["H12", "12 h", 720], ["D1", "24 h", 1440], ["D2", "48 h", 2880]];
-  const SCAN_FX = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY"];
-  const SCAN_MACRO = ["XAU/USD", "XAG/USD"];
-  const COMMON = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY", "XAU/USD", "XAG/USD", "BTC/USD", "ETH/USD"];
-  const WEB_SLUGS = ["eurusd", "gbpusd", "usdjpy", "xauusd"];
+  const SCAN_FX = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", "NZD/USD", "GBP/JPY"]; // scanners de Forex Factory
+  const SCAN_MACRO = ["SPX/USD", "Nikkei225/USD", "FTSE100/USD", "DXY/USD", "WTI/USD", "Gold/USD", "BTC/USD", "VIX/USD"];
+  const COMMON = SCAN_FX.concat(SCAN_MACRO, ["EUR/GBP", "EUR/JPY", "Silver/USD", "ETH/USD"]);
+  const WEB_SLUGS = ["eurusd", "gbpusd", "usdjpy", "goldusd", "spxusd", "dxyusd"];
   const D = !!window.desktop && !!window.desktop.marchePage;
 
   let st = { layout: "Classic", customs: [], inst: "EUR/USD", perf: ["H1", "H6", "H12"], iv: {}, };
@@ -7916,7 +7916,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const nyDay = (d) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(d);
 
   /* ---------- outils prix ---------- */
-  const pipOf = (inst, px) => /JPY/.test(inst) ? 0.01 : /XAU/.test(inst) ? 0.1 : /XAG/.test(inst) ? 0.01 : px >= 1000 ? 1 : px >= 20 ? 0.01 : 0.0001;
+  const pipOf = (inst, px) => /JPY/.test(inst) ? 0.01 : /Gold|XAU/i.test(inst) ? 0.1 : /Silver|XAG/i.test(inst) ? 0.01 : px >= 1000 ? 1 : px >= 20 ? 0.01 : 0.0001;
   const decOf = (px) => px >= 1000 ? 2 : px >= 20 ? 3 : 5;
   const fmt = (v, d) => Number.isFinite(v) ? v.toFixed(d) : "—";
   const sgn = (v, d = 0) => Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(d) : "—";
@@ -7975,7 +7975,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         return box("Cotations des brokers · " + esc(st.inst), q.length ? `<table class="mk-t"><thead><tr><th>Broker</th><th class="n">Bid</th><th class="n">Ask</th><th class="n">Spread</th><th class="n">Commission</th></tr></thead><tbody>${q.slice(0, 15).map((x) => `<tr><td><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.icon ? `<img src="${esc(x.icon)}" alt="" loading="lazy">` : ""}${esc(x.broker)}</a></td><td class="n">${esc(x.bid)}</td><td class="n">${esc(x.ask)}</td><td class="n">${esc(x.spread)}</td><td class="n">${esc(x.commission || "—")}</td></tr>`).join("")}</tbody></table>` : noData("cotations")); }
       case "Sessions": return box("Sessions (heure de New York)", `<div class="mk-ses" data-ses="1">${sessionsHTML()}</div>`);
       case "Scanner": { const n = ctx.scan++; const macro = n % 2 === 1; const sc = (P.scanners || [])[n];
-        const list = (sc && sc.rows && sc.rows.length ? sc.rows.map((r) => r.instrument) : macro ? SCAN_MACRO : SCAN_FX).slice(0, 16);
+        const list = (sc && sc.instruments && sc.instruments.length ? sc.instruments : macro ? SCAN_MACRO : SCAN_FX).slice(0, 16);
         return box(esc(sc && sc.title ? sc.title.replace("Forex Instruments", "Instruments Forex").replace("Macro Instruments", "Instruments macro") : macro ? "Instruments macro" : "Instruments Forex"), `<table class="mk-t mk-scan"><thead><tr><th>Instrument</th><th class="n">Prix</th><th class="n">Pips 24 h</th><th class="n">% 24 h</th><th class="n">Haut / Bas 24 h</th><th>24 h</th></tr></thead><tbody>${list.map((i) => `<tr data-inst="${esc(i)}"><td><b>${esc(i)}</b></td><td class="n">…</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="ch"><canvas></canvas></td></tr>`).join("")}</tbody></table>`, "", ` data-scan="${n}"`); }
       case "Rates": { const r = P.bankRates || [];
         return box("Taux directeurs des banques centrales", r.length ? `<div class="mk-rates">${r.map((x) => `<div>${esc(x.currency)}<b>${esc(x.rate)}</b></div>`).join("")}</div>` : noData("taux")); }
@@ -8046,7 +8046,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       <span class="mk-src">${src}</span></div><div class="mk-grid">${rows}</div>`;
     root.querySelector("#mkLay").onclick = openLayouts;
     root.querySelector("#mkRef").onclick = () => refresh(true);
-    const goInst = () => { const v = root.querySelector("#mkInst").value.trim().toUpperCase(); if (!v || v === st.inst) return; st.inst = v; save(); M.page = null; M.web = null; M.bars = {}; refresh(true); };
+    const goInst = () => { let v = root.querySelector("#mkInst").value.trim(); v = COMMON.find((c) => c.toLowerCase() === v.toLowerCase()) || v.toUpperCase(); if (!v || v === st.inst) return; st.inst = v; save(); M.page = null; M.web = null; M.bars = {}; refresh(true); };
     root.querySelector("#mkInstGo").onclick = goInst; root.querySelector("#mkInst").onkeydown = (e) => { if (e.key === "Enter") goInst(); };
     root.querySelectorAll(".mk-tf").forEach((b) => b.onclick = () => { st.iv[b.dataset.k] = b.dataset.iv; save(); const box = b.closest(".mk-box"); box.querySelectorAll(".mk-tf").forEach((x) => x.classList.toggle("on", x === b)); const c = box.querySelector("[data-chart]"); c.dataset.iv = b.dataset.iv; drawChart(c); });
     root.querySelectorAll("#mkPerf select").forEach((s) => s.onchange = () => { st.perf[+s.dataset.pi] = s.value; save(); fillPerf(); });

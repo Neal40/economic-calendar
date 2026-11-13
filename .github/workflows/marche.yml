@@ -27,7 +27,7 @@ jobs:
       - name: Export
         env:
           PW: /tmp/pw/node_modules/playwright
-        run: node tools/export-marche.js eurusd gbpusd usdjpy xauusd
+        run: node tools/export-marche.js eurusd gbpusd usdjpy goldusd spxusd dxyusd
       - name: Commit
         run: |
           git config user.name "marche-bot"

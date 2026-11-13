@@ -4,7 +4,7 @@ const m = require("./marche");
 
 test("slugOf / cleanInstrument", () => {
   assert.strictEqual(m.slugOf("EUR/USD"), "eurusd");
-  assert.strictEqual(m.cleanInstrument(" xau/usd "), "XAU/USD");
+  assert.strictEqual(m.cleanInstrument(" Gold/USD "), "Gold/USD");
   assert.throws(() => m.cleanInstrument("<script>"));
 });
 

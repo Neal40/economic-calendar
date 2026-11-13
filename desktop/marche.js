@@ -9,7 +9,7 @@ const PAGE = (slug) => "https://www.forexfactory.com/market/" + slug;
 const INTERVALS = ["M1", "M5", "M15", "M30", "H1", "H4", "D1", "W1", "MN1"];
 
 const slugOf = (inst) => String(inst || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-function cleanInstrument(inst) { const s = String(inst || "").trim().toUpperCase(); if (!/^[A-Z0-9./ -]{2,20}$/.test(s)) throw new Error("instrument invalide"); return s; }
+function cleanInstrument(inst) { const s = String(inst || "").trim(); if (!/^[A-Za-z0-9.]{2,16}\/[A-Za-z0-9.]{2,16}$/.test(s)) throw new Error("instrument invalide"); return s; } // casse respectée (ex. « Gold/USD », « Nikkei225/USD »)
 
 /* réponse de /bars -> [{ time, open, high, low, close }] par ordre chronologique (secondes UTC) */
 function parseBars(j) {
@@ -41,7 +41,7 @@ async function bars(fetchFn, inst, interval, n, to) {
 const EXTRACT = String.raw`(() => {
   const T = (el) => (el ? el.textContent.replace(/\s+/g, " ").trim() : "");
   const Q = (s, r) => (r || document).querySelector(s), QA = (s, r) => [...(r || document).querySelectorAll(s)];
-  const abs = (u) => { try { return u ? new URL(u, location.href).href : ""; } catch (e) { return ""; } };
+  const abs = (u) => { try { return u ? new URL(u, document.baseURI).href : ""; } catch (e) { return ""; } };
   const imp = (el) => { const c = el ? (el.className && el.className.baseVal != null ? el.className.baseVal : el.className) + " " + (el.getAttribute("src") || "") : "";
     return /high|red/.test(c) ? "high" : /medium|ora/.test(c) ? "med" : /low|yel/.test(c) ? "low" : /gra|holiday|non/.test(c) ? "none" : ""; };
   const out = { url: location.href, at: new Date().toISOString() };
@@ -52,7 +52,8 @@ const EXTRACT = String.raw`(() => {
   if (mi) out.instrument = { name: T(Q(".market-instrument__name span", mi)), title: T(Q(".market-instrument__title", mi)), bid: T(Q(".market-instrument__bid", mi)),
     flags: QA(".instrument-icon img", mi).map((i) => abs(i.getAttribute("src"))) };
   const perf = Q(".market-instrument-performance");
-  if (perf) { const heads = QA("thead .market-instrument-performance__metric-select select", perf).map((s) => s.value);
+  if (perf) { const PM = { "5 min": "M5", "10 min": "M10", "15 min": "M15", "20 min": "M20", "25 min": "M25", "30 min": "M30", "1 hr": "H1", "2 hr": "H2", "3 hr": "H3", "4 hr": "H4", "5 hr": "H5", "6 hr": "H6", "12 hr": "H12", "24 hr": "D1", "48 hr": "D2" };
+    const heads = QA("thead .market-instrument-performance__metric-select", perf).map((li) => { const t = T(Q("span", li)).replace(/^Last /, ""); return PM[t] || t; });
     const rows = QA("tbody tr", perf); const cells = (i) => rows[i] ? QA(".market-instrument-performance__td--chg", rows[i]).map(T) : [];
     out.performance = heads.map((h, i) => ({ period: h, pip: cells(0)[i] || "", pct: (cells(2)[i] || cells(1)[i] || "") })); }
   out.stories = QA(".news-block__item").map((it) => { const a = Q(".news-block__title a", it), t = Q(".news-block__details span[title]", it), src = QA(".news-block__details a", it).find((x) => /^From /.test(T(x))), cm = Q("[data-comments-link]", it);
@@ -70,9 +71,9 @@ const EXTRACT = String.raw`(() => {
   out.quotes = QA(".market-quotes tbody tr").map((tr) => { const a = Q(".market-quotes__td--broker a", tr), img = Q(".market-quotes__td--broker img", tr);
     return { broker: T(Q(".market-quotes__td--broker span", tr)), url: abs(a && a.getAttribute("href")), icon: abs(img && img.getAttribute("src")), bid: T(Q(".market-quotes__td--bid", tr)), ask: T(Q(".market-quotes__td--ask", tr)), spread: T(Q(".market-quotes__td--spread", tr)), commission: T(Q(".market-quotes__td--commission", tr)) }; }).filter((q) => q.broker);
   out.sessions = QA(".market__session").map((tr) => ({ name: T(Q(".market__session-title", tr)), local: T(Q(".market__session-time", tr)).replace(/ local$/, ""), active: tr.classList.contains("market__session--active"), detail: T(Q(".market__session-block--details", tr)) })).filter((s) => s.name);
-  out.scanners = QA(".mds_scanner").map((sc) => { const title = T(Q("h2", sc)); const head = QA("thead th", sc).map(T);
-    const rows = QA("tbody tr", sc).map((tr) => { const c = QA("td", tr).map(T); const inst = tr.getAttribute("data-instrument") || (Q("[data-instrument]", tr) || {}).getAttribute?.("data-instrument") || c[0] || ""; return { instrument: inst, cells: c }; }).filter((r) => r.instrument && /[A-Za-z]/.test(r.instrument));
-    return { title, head, rows }; });
+  out.scanners = QA(".mds_scanner").map((sc) => { const seen = new Set(), inst = [];
+    QA("[data-instrument]", sc).map((e) => e.getAttribute("data-instrument")).concat(QA("th, td", sc).map(T)).forEach((x) => { x = String(x || "").trim(); if (/^[A-Za-z0-9.]{2,16}\/[A-Za-z0-9.]{2,16}$/.test(x) && !seen.has(x)) { seen.add(x); inst.push(x); } });
+    return { title: T(Q("h2", sc)), instruments: inst }; });
   out.bankRates = QA(".bankrate__rate").map((li) => ({ currency: li.getAttribute("data-currency"), rate: T(Q(".rate", li)) }));
   return JSON.stringify(out);
 })()`;

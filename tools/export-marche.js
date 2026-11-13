@@ -5,9 +5,10 @@ const fs = require("fs"), path = require("path");
 const m = require("../desktop/marche");
 const root = path.join(__dirname, "..");
 const SLUGS = process.argv.slice(2).length ? process.argv.slice(2) : ["eurusd"];
-const NAME = (slug) => slug.length === 6 ? slug.slice(0, 3).toUpperCase() + "/" + slug.slice(3).toUpperCase() : slug.toUpperCase();
+const NAMES = { goldusd: "Gold/USD", spxusd: "SPX/USD", dxyusd: "DXY/USD", wtiusd: "WTI/USD", btcusd: "BTC/USD" };
+const NAME = (slug) => NAMES[slug] || (slug.length === 6 ? slug.slice(0, 3).toUpperCase() + "/" + slug.slice(3).toUpperCase() : slug.toUpperCase());
 const pack = (b) => b.map((x) => [x.time, x.open, x.high, x.low, x.close]);
-const SCAN = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY", "XAU/USD", "XAG/USD"];
+const SCAN = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", "NZD/USD", "GBP/JPY", "SPX/USD", "Nikkei225/USD", "FTSE100/USD", "DXY/USD", "WTI/USD", "Gold/USD", "BTC/USD", "VIX/USD"]; // scanners Forex / Macro de Forex Factory
 
 (async () => {
   let browser = null;
