@@ -41,6 +41,8 @@ contextBridge.exposeInMainWorld("desktop", {
   notionCaption: (id, c) => ipcRenderer.invoke("notion:caption", id, c),
   notionDeleteBlock: (id) => ipcRenderer.invoke("notion:delblock", id),
   newsWeek: () => ipcRenderer.invoke("news:week"),
+  marchePage: (slug, force) => ipcRenderer.invoke("marche:page", slug, force),
+  marcheBars: (inst, interval, n, to) => ipcRenderer.invoke("marche:bars", inst, interval, n, to),
   storeGet: () => ipcRenderer.invoke("store:get"),
   storeSet: (d) => ipcRenderer.invoke("store:set", d),
   newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),

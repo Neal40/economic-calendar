@@ -1,0 +1,36 @@
+name: Marché (données Forex Factory pour la version web)
+
+on:
+  schedule:
+    - cron: "7,37 * * * 0-5" # toutes les 30 min, dimanche → vendredi
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: marche
+  cancel-in-progress: true
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Playwright
+        run: |
+          npm i --no-save --prefix /tmp/pw playwright
+          npx --prefix /tmp/pw playwright install --with-deps chromium
+      - name: Export
+        env:
+          PW: /tmp/pw/node_modules/playwright
+        run: node tools/export-marche.js eurusd gbpusd usdjpy xauusd
+      - name: Commit
+        run: |
+          git config user.name "marche-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add api/marche-*.json
+          git diff --cached --quiet || (git commit -m "Marché: données Forex Factory" && git pull --rebase && git push)

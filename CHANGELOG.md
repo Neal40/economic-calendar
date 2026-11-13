@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.52.0] — 2026-11-13
+### Ajouté
+- **Marché** (menu, au-dessus du Calendrier Économique) : la page forexfactory.com/market/<instrument> dans l'app, en heure de New York — Instrument (prix), Performance (pips, mini-graphique et % sur 3 périodes au choix, 5 min → 48 h), Grand graphique / Graphique (1M → mensuel), Actualités (dernières et plus lues), Posts du forum, Événements à venir, Positions des traders, Cotations des brokers, Sessions (Sydney, Tokyo, Londres, New York), Scanners Forex / macro (clic = changer d'instrument), Taux directeurs.
+- **Mises en page** comme sur Forex Factory : Forex / Macro / Event / System Focused, et mises en page personnalisées (lignes 1 ou 2 colonnes, blocs ajoutés, déplacés, retirés ; plusieurs enregistrables ; « ✎ » sur une mise en page de base = la personnaliser).
+- App Windows : lecture en direct (bougies via l'API mds-api.forexfactory.com, reste de la page via une fenêtre cachée), actualisation toutes les 30 s. Web : `api/marche-<slug>.json` exporté toutes les 30 min par GitHub Actions (EUR/USD, GBP/USD, USD/JPY, XAU/USD).
+
 ## [1.51.0] — 2026-11-13
 ### Ajouté
 - **Backtesteur › Aller à** (bouton du replay, Ctrl+Alt+G) : saut au prochain début de séance (Asie, Londres, New York 8:30, RTH 9:30, Globex 18:00), Silver Bullet (Londres, AM, PM), macro ICT, news du calendrier (rouges ou rouges + orange), prix touché ou date. Le replay s'arrête juste avant l'heure, les ordres s'exécutent pendant le saut. Réglages en heure de New York : favoris ★ (Alt+1 / Alt+2 / Alt+3), jours à sauter.

@@ -7,6 +7,7 @@ const topstepx = require("./topstepx");
 const notion = require("./notion");
 const backup = require("./backup");
 const propsync = require("./propsync");
+const marche = require("./marche");
 app.setPath("userData", backup.migrate(path.join(app.getPath("appData"), "Economic Calendar"), path.join(app.getPath("appData"), "Inner Circle Trader")));
 const ICT = () => path.join(app.getPath("desktop"), "Inner Circle Trader"); // dossier de travail : data/ + backups/
 
@@ -169,6 +170,12 @@ ipcMain.handle("news:week", async () => {
   try { const r = await net.fetch("https://nfs.faireconomy.media/ff_calendar_thisweek.json"); if (!r.ok) return { ok: false, reason: "HTTP " + r.status }; return { ok: true, data: (await r.json()).filter((e) => e.country === "USD") }; }
   catch (e) { return { ok: false, reason: String(e.message || e) }; }
 });
+
+/* ---------- Marché (page forexfactory.com/market/<instrument>) : bougies via mds-api, reste de la page via fenêtre cachée ---------- */
+const mcache = new Map(); // slug -> { at, r } : la page n'est relue qu'au plus toutes les 2 min
+ipcMain.handle("marche:page", async (e, slug, force) => { slug = marche.slugOf(slug) || "eurusd"; const c = mcache.get(slug);
+  if (!force && c && Date.now() - c.at < 120000) return c.r; const r = await marche.page(BrowserWindow, slug); if (r.ok) mcache.set(slug, { at: Date.now(), r }); return r; });
+ipcMain.handle("marche:bars", async (e, inst, interval, n, to) => { try { return { ok: true, data: await marche.bars(net.fetch, inst, interval, n, to) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 
 /* ---------- app data (abonnements + factures) : app-data.json ---------- */
 const STORE = () => path.join(app.getPath("userData"), "app-data.json");

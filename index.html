@@ -192,6 +192,105 @@ body{background:#060607}
 .kpi small{font-size:12px;color:#8b8d98;display:block}
 .kpi b{font-size:20px;display:block;margin-top:4px;font-weight:600}
 .kpi i{font-style:normal;font-size:11.5px;color:#6f727d}
+/* ---------- Marché (page forexfactory.com/market/<instrument> : blocs + mises en page) ---------- */
+.mk-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.mk-top h2{margin:0 8px 0 0}
+.mk-inst{display:flex;align-items:center;gap:6px;background:#121216;border:1px solid #23232a;border-radius:8px;padding:4px 6px 4px 10px}
+.mk-inst input{background:none;border:none;color:#fff;font:600 14px Inter,system-ui,sans-serif;width:110px;outline:none;text-transform:uppercase}
+.mk-btn{background:#141418;border:1px solid #26262e;color:#d9dae0;border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.mk-btn:hover{background:#1b1b21;color:#fff}.mk-btn.pri{background:#2f54eb;border-color:#2f54eb;color:#fff}.mk-btn.pri:hover{background:#3d61f5}
+.mk-btn.ok{background:#1f9d55;border-color:#1f9d55;color:#fff;cursor:default}
+.mk-btn .ic{width:14px;height:14px}
+.mk-src{margin-left:auto;font-size:12px;color:#7d808b;display:flex;align-items:center;gap:7px}
+.mk-dot{width:7px;height:7px;border-radius:50%;background:#555}.mk-dot.live{background:#26a69a;box-shadow:0 0 0 3px #26a69a22}.mk-dot.snap{background:#e0a030}
+.mk-grid{display:flex;flex-direction:column;gap:12px}
+.mk-row{display:grid;gap:12px;grid-template-columns:1fr}
+.mk-row.c2{grid-template-columns:1fr 1fr}
+.mk-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.mk-box{background:#0e0e11;border:1px solid #1d1d22;border-radius:10px;overflow:hidden;min-width:0}
+.mk-h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid #18181d;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#9a9ca7;font-weight:600}
+.mk-h .r{margin-left:auto;display:flex;gap:4px;text-transform:none;letter-spacing:0;font-weight:500}
+.mk-b{padding:10px 12px;font-size:13px;color:#d9dae0}
+.mk-empty{color:#6f727d;font-size:12.5px;padding:6px 0}
+.mk-tf{background:none;border:1px solid transparent;color:#8b8d98;border-radius:5px;padding:3px 7px;font-size:11.5px;cursor:pointer}
+.mk-tf:hover{color:#fff}.mk-tf.on{background:#2f54eb;color:#fff}
+.mk-chart{height:320px}.mk-chart.big{height:440px}
+.mk-ihead{display:flex;align-items:center;gap:14px}
+.mk-flags{display:flex}.mk-flags img{width:30px;height:22px;border-radius:3px;object-fit:cover;border:1px solid #23232a}.mk-flags img+img{margin-left:-8px}
+.mk-iname{font-size:22px;font-weight:700;color:#fff;line-height:1.1}.mk-ititle{font-size:12.5px;color:#8b8d98}
+.mk-price{margin-left:auto;font:700 30px 'Space Mono',ui-monospace,monospace;color:#fff}
+.mk-price.up{color:#26a69a}.mk-price.dn{color:#ef5350}
+.mk-perf{display:grid;grid-template-columns:70px repeat(3,1fr);gap:6px 10px;align-items:center;font-size:12.5px}
+.mk-perf select{background:#141418;border:1px solid #26262e;color:#d9dae0;border-radius:6px;padding:3px 4px;font-size:12px;width:100%}
+.mk-perf .lb{color:#7d808b}.mk-perf .v{text-align:center;font-family:'Space Mono',monospace}
+.mk-up{color:#26a69a}.mk-dn{color:#ef5350}.mk-mut{color:#7d808b}
+.mk-perf canvas,.mk-scan canvas{width:100%;height:36px;display:block}
+.mk-list{display:flex;flex-direction:column}
+.mk-it{padding:8px 0;border-bottom:1px solid #16161b}.mk-it:last-child{border-bottom:none}
+.mk-it a{color:#e6e7ec;text-decoration:none;font-weight:500}.mk-it a:hover{color:#7d9bff}
+.mk-meta{font-size:11.5px;color:#7d808b;margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mk-imp{width:9px;height:9px;border-radius:2px;display:inline-block;flex:none}
+.mk-imp.high{background:#e5484d}.mk-imp.med{background:#f08c2c}.mk-imp.low{background:#e6c43a}.mk-imp.none{background:#6f727d}
+.mk-post{display:flex;gap:10px}.mk-post img,.mk-post .av{width:32px;height:32px;border-radius:50%;flex:none;background:#1b1b21}
+.mk-post p{margin:3px 0 0;color:#a9abb5;font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+table.mk-t{width:100%;border-collapse:collapse;font-size:12.5px}
+.mk-t th{text-align:left;color:#7d808b;font-weight:500;font-size:11.5px;padding:5px 6px;border-bottom:1px solid #1d1d22}
+.mk-t td{padding:6px 6px;border-bottom:1px solid #15151a}.mk-t tr:last-child td{border-bottom:none}
+.mk-t .n{text-align:right;font-family:'Space Mono',monospace}
+.mk-t a{color:#e6e7ec;text-decoration:none}.mk-t a:hover{color:#7d9bff}
+.mk-t img{width:14px;height:14px;vertical-align:-2px;margin-right:6px;border-radius:2px}
+.mk-scan tr{cursor:pointer}.mk-scan tr:hover td{background:#131318}
+.mk-scan td.ch{width:120px}.mk-scan td:first-child{width:22%}
+.mk-pos{display:flex;flex-direction:column;gap:12px}
+.mk-pos .lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.mk-bar{height:10px;border-radius:5px;background:#ef5350;overflow:hidden}.mk-bar i{display:block;height:100%;background:#2874cd}
+.mk-ses{position:relative}
+.mk-ses .ax{display:grid;grid-template-columns:repeat(12,1fr);font-size:10.5px;color:#6f727d;margin-left:84px;margin-bottom:4px}
+.mk-ses .ln{display:flex;align-items:center;height:26px}
+.mk-ses .nm{width:84px;flex:none;font-size:12px;color:#c9cad2}
+.mk-ses .tr{position:relative;flex:1;height:16px;background:#131318;border-radius:4px}
+.mk-ses .bk{position:absolute;top:0;bottom:0;border-radius:4px;background:#26324f}
+.mk-ses .bk.on{background:#2f54eb}
+.mk-ses .now{position:absolute;top:18px;bottom:24px;width:2px;background:#e5484d;margin-left:84px;pointer-events:none}
+.mk-ses .st{font-size:11.5px;color:#7d808b;margin-top:8px}
+.mk-rates{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.mk-rates div{background:#121216;border:1px solid #1f1f25;border-radius:7px;padding:7px 9px;font-size:12px}
+.mk-rates b{display:block;font-size:15px;color:#fff;margin-top:2px}
+/* modale « Mise en page » */
+.mk-ov{position:fixed;inset:0;background:#000a;z-index:900;display:flex;align-items:center;justify-content:center;padding:20px}
+.mk-mod{background:#0e0e11;border:1px solid #23232a;border-radius:12px;width:min(1240px,100%);max-height:92vh;overflow:auto;color:#e3e4ea}
+.mk-mod>header{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #1d1d22;font-weight:600}
+.mk-mod>header button{margin-left:auto}
+.mk-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;padding:16px}
+.mk-card{border:1px solid #23232a;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;background:#111115}
+.mk-card.on{border-color:#1f9d55}
+.mk-card h4{margin:0;font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px}
+.mk-card h4 small{margin-left:auto;font-weight:400;color:#7d808b;font-size:11px}
+.mk-mini{display:flex;flex-direction:column;gap:3px;flex:1;min-height:150px}
+.mk-mini .rw{display:grid;gap:3px}.mk-mini .rw.c2{grid-template-columns:1fr 1fr}
+.mk-mini .cl{display:flex;flex-direction:column;gap:3px}
+.mk-mini span{background:#1a1a20;border-radius:3px;font-size:10.5px;color:#9a9ca7;text-align:center;padding:3px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-mini span.tall{padding:10px 2px}
+.mk-card .acts{display:flex;gap:6px}.mk-card .acts .mk-btn{flex:1;justify-content:center}
+.mk-card.new .mk-mini{border:1px dashed #2a2a33;border-radius:6px;align-items:center;justify-content:center;color:#6f727d;font-size:12px}
+/* éditeur de mise en page personnalisée */
+.mk-ed{display:grid;grid-template-columns:230px 1fr;gap:16px;padding:16px}
+.mk-pal{display:flex;flex-direction:column;gap:6px}
+.mk-pal button{text-align:left}
+.mk-pal small{color:#7d808b;font-size:11.5px;line-height:1.4}
+.mk-rows{display:flex;flex-direction:column;gap:10px}
+.mk-er{border:1px solid #23232a;border-radius:9px;padding:8px;background:#111115}
+.mk-er .bar{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12px;color:#8b8d98}
+.mk-er .bar .sp{flex:1}
+.mk-er .cols{display:grid;gap:8px}.mk-er .cols.c2{grid-template-columns:1fr 1fr}
+.mk-ec{border:1px dashed #2a2a33;border-radius:7px;padding:6px;min-height:46px;display:flex;flex-direction:column;gap:5px;cursor:pointer}
+.mk-ec.sel{border-color:#2f54eb;background:#2f54eb12}
+.mk-chip{display:flex;align-items:center;gap:4px;background:#1a1a20;border-radius:6px;padding:5px 6px 5px 9px;font-size:12px}
+.mk-chip span{flex:1}
+.mk-x{background:none;border:none;color:#7d808b;cursor:pointer;padding:0 4px;font-size:13px}.mk-x:hover{color:#fff}
+.mk-ed input.nm{background:#141418;border:1px solid #26262e;color:#fff;border-radius:7px;padding:7px 10px;font-size:13px;width:100%}
+.mk-edf{display:flex;gap:8px;justify-content:flex-end;padding:0 16px 16px}
+@media (max-width:900px){.mk-row.c2{grid-template-columns:1fr}.mk-ed{grid-template-columns:1fr}.mk-price{font-size:22px}}
 /* ---------- affiliation ---------- */
 .aff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .aff-card{background:#121216;border:1px solid #1f1f25;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
@@ -1228,6 +1327,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="mlabel">Menu principal</div>
   <div class="grp" id="gLab"><button class="gh" data-grp="gLab"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.5 19A2 2 0 0 0 6.3 22h11.4a2 2 0 0 0 1.8-3L14 9.5V2M8.5 2h7M7 16h10"/></svg><span>Laboratoire</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
+      <button class="nav" data-go="marche"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="9" width="3" height="7" rx=".5"/><path d="M8.5 6v3M8.5 16v2"/><rect x="14" y="6" width="3" height="6" rx=".5"/><path d="M15.5 3v3M15.5 12v3"/></svg><span>Marché</span></button>
       <button class="nav" data-go="calendrier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Calendrier Économique</span></button>
       <button class="nav" data-go="financialjuice"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg><span>FinancialJuice</span></button>
       <button class="nav" data-go="journal"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/><path d="M6.5 17A2.5 2.5 0 0 0 4 19.5 2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span>Journal de trading</span></button>
@@ -1247,6 +1347,7 @@ table.tbl:has(#subT){min-width:900px}
 </aside>
 <main class="main">
 <div id="tsxWarn" hidden></div>
+<section class="view" id="v-marche"><div class="page" style="max-width:1500px;padding:24px 26px 60px"><div id="mkRoot"></div></div></section>
 <section class="view" id="v-calendrier">
 
 <div class="bar">
@@ -2056,7 +2157,7 @@ $("bSave").onclick=()=>{ const social={}; SOC.forEach(([k])=>{ const u=urlOk($("
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["calendrier","financialjuice","journal","review","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures"];
+const VIEWS=["marche","calendrier","financialjuice","journal","review","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -2071,7 +2172,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
-  if(v==="financialjuice") loadFJ(); if(v==="profil"){ loadProfile(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -7776,6 +7877,286 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
 })();
 </script>
 <script>
+/* ---------- Marché : page forexfactory.com/market/<instrument> reproduite (blocs + mises en page Forex / Macro / Event / System + personnalisées) ----------
+   App Windows : lecture en direct (bougies = API mds-api.forexfactory.com, reste de la page = desktop/marche.js).
+   Web : api/marche-<slug>.json, exporté toutes les 30 min par GitHub Actions (tools/export-marche.js). Heures affichées en heure de New York. */
+(() => {
+  const KEY = "econcal-marche";
+  const BLOCKS = { // id -> libellé, largeur conseillée, nombre max (0 = illimité)
+    Instrument: { l: "Instrument", max: 1 }, Performance: { l: "Performance", max: 1 }, "Large Chart": { l: "Grand graphique", max: 0 }, Chart: { l: "Graphique", max: 0 },
+    Stories: { l: "Actualités", max: 2 }, Events: { l: "Événements", max: 1 }, Posts: { l: "Posts du forum", max: 1 }, Positions: { l: "Positions", max: 1 },
+    Quotes: { l: "Cotations", max: 1 }, Sessions: { l: "Sessions", max: 0 }, Scanner: { l: "Scanner", max: 0 }, Rates: { l: "Taux directeurs", max: 1 } };
+  const PRESETS = [ // mises en page de Forex Factory (relevées sur la page, window.layoutSelectorState)
+    { id: "Classic", name: "Forex Focused", ic: "💱", rows: [[["Instrument"], ["Performance"]], [["Large Chart"]], [["Stories", "Posts", "Sessions"], ["Events", "Positions", "Quotes"]], [["Scanner"]], [["Scanner"]]] },
+    { id: "MacroFocused", name: "Macro Focused", ic: "🌐", rows: [[["Scanner"]], [["Scanner"]], [["Scanner"]], [["Instrument"], ["Performance"]], [["Large Chart"]], [["Stories"], ["Events", "Sessions"]]] },
+    { id: "EventFocused", name: "Event Focused", ic: "📣", rows: [[["Instrument", "Events", "Sessions"], ["Stories"]], [["Large Chart"]], [["Scanner"]], [["Scanner"]]] },
+    { id: "SystemFocused", name: "System Focused", ic: "📈", rows: [[["Scanner"]], [["Instrument"], ["Performance"]], [["Large Chart"]], [["Positions", "Posts", "Quotes"], ["Events", "Stories", "Sessions"]]] }];
+  const IVS = [["M1", "1M"], ["M5", "5M"], ["M15", "15M"], ["M30", "30M"], ["H1", "1H"], ["H4", "4H"], ["D1", "D"], ["W1", "S"], ["MN1", "M"]];
+  const PERIODS = [["M5", "5 min", 5], ["M10", "10 min", 10], ["M15", "15 min", 15], ["M30", "30 min", 30], ["H1", "1 h", 60], ["H2", "2 h", 120], ["H4", "4 h", 240], ["H6", "6 h", 360], ["H12", "12 h", 720], ["D1", "24 h", 1440], ["D2", "48 h", 2880]];
+  const SCAN_FX = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY"];
+  const SCAN_MACRO = ["XAU/USD", "XAG/USD"];
+  const COMMON = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "USD/CAD", "NZD/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY", "XAU/USD", "XAG/USD", "BTC/USD", "ETH/USD"];
+  const WEB_SLUGS = ["eurusd", "gbpusd", "usdjpy", "xauusd"];
+  const D = !!window.desktop && !!window.desktop.marchePage;
+
+  let st = { layout: "Classic", customs: [], inst: "EUR/USD", perf: ["H1", "H6", "H12"], iv: {}, };
+  try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { /* défaut */ }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* stockage plein / bloqué */ } };
+  const M = { page: null, pageAt: 0, src: "", web: null, bars: {}, scan: {}, charts: [], timer: null, busy: false, err: "" };
+  const slugOf = (i) => String(i || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const el = () => document.getElementById("mkRoot");
+
+  /* ---------- heure de New York ---------- */
+  const NYF = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const offC = new Map();
+  function nyOff(t) { const h = Math.floor(t / 3600); if (offC.has(h)) return offC.get(h);
+    const p = Object.fromEntries(NYF.formatToParts(new Date(t * 1000)).map((x) => [x.type, x.value]));
+    const o = (Date.UTC(+p.year, p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second) / 1000) - t; offC.set(h, o); return o; }
+  const nyHM = (t) => new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit" }).format(new Date(t * 1000));
+  const nyDay = (d) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(d);
+
+  /* ---------- outils prix ---------- */
+  const pipOf = (inst, px) => /JPY/.test(inst) ? 0.01 : /XAU/.test(inst) ? 0.1 : /XAG/.test(inst) ? 0.01 : px >= 1000 ? 1 : px >= 20 ? 0.01 : 0.0001;
+  const decOf = (px) => px >= 1000 ? 2 : px >= 20 ? 3 : 5;
+  const fmt = (v, d) => Number.isFinite(v) ? v.toFixed(d) : "—";
+  const sgn = (v, d = 0) => Number.isFinite(v) ? (v > 0 ? "+" : "") + v.toFixed(d) : "—";
+  const cls = (v) => v > 0 ? "mk-up" : v < 0 ? "mk-dn" : "mk-mut";
+  const unpack = (a) => (a || []).map((x) => Array.isArray(x) ? { time: x[0], open: x[1], high: x[2], low: x[3], close: x[4] } : x);
+  const fr = (s) => String(s || "").replace(/(\d+) hr (\d+) min ago/, "il y a $1 h $2").replace(/(\d+) hr ago/, "il y a $1 h").replace(/(\d+) min ago/, "il y a $1 min").replace(/(\d+) days? ago/, "il y a $1 j").replace(/^Just now$/i, "à l'instant");
+  const due = (s) => /^Tentative$/i.test(s) ? "Provisoire" : /^All Day$/i.test(s) ? "Toute la journée" : /^\d+ (hr|min|day)/.test(s) ? "dans " + s.replace(" hr", " h").replace(" days", " j").replace(" day", " j") : s;
+
+  /* ---------- données ---------- */
+  async function loadPage(force) {
+    const slug = slugOf(st.inst);
+    if (D) { const r = await desktop.marchePage(slug, !!force); if (r && r.ok) { M.page = r.data; M.src = "live"; M.err = ""; } else { M.err = (r && r.reason) || "Forex Factory injoignable"; if (!M.page) M.src = ""; } M.pageAt = Date.now(); return; }
+    try { const r = await fetch(`api/marche-${slug}.json`, { cache: "no-store" }); if (!r.ok) throw new Error(WEB_SLUGS.includes(slug) ? "HTTP " + r.status : "instrument non exporté pour le web");
+      const j = await r.json(); M.web = j; M.page = j.page; M.src = "snap"; M.err = ""; M.scan = Object.fromEntries(Object.entries(j.scan || {}).map(([k, v]) => [k, unpack(v)]));
+    } catch (e) { M.web = null; M.page = null; M.src = ""; M.err = String(e.message || e); }
+    M.pageAt = Date.now();
+  }
+  async function getBars(inst, iv, n) {
+    if (D) { const r = await desktop.marcheBars(inst, iv, n); if (r && r.ok) return r.data; throw new Error((r && r.reason) || "bougies indisponibles"); }
+    if (M.web && M.web.instrument === inst && M.web.bars && M.web.bars[iv]) return unpack(M.web.bars[iv]).slice(-n);
+    try { const r = await fetch(`https://mds-api.forexfactory.com/bars?interval=${iv}&instrument=${encodeURIComponent(inst)}&per_page=${Math.min(200, n)}&extra_fields=`); // direct si le navigateur l'autorise
+      const j = await r.json(); return (j.data || []).map((b) => ({ time: b.timestamp, open: b.open, high: b.high, low: b.low, close: b.close })).sort((a, b) => a.time - b.time);
+    } catch (e) { if (M.web && M.web.instrument === inst) throw new Error("unité non disponible sur le web"); throw new Error("bougies disponibles dans l'app Windows"); }
+  }
+  async function scanBars(inst) { if (!D && M.scan[inst]) return M.scan[inst]; const k = inst; if (M.bars["scan:" + k] && Date.now() - M.bars["scan:" + k].at < 60000) return M.bars["scan:" + k].b;
+    const b = await getBars(inst, "H1", 30); M.bars["scan:" + k] = { at: Date.now(), b }; return b; }
+
+  /* ---------- mise en page ---------- */
+  const allLayouts = () => PRESETS.concat(st.customs.map((c) => ({ ...c, custom: true, ic: "🧩" })));
+  const curLayout = () => allLayouts().find((l) => l.id === st.layout) || PRESETS[0];
+
+  /* ---------- rendu ---------- */
+  function box(title, body, right, extra) { return `<div class="mk-box"${extra || ""}><div class="mk-h">${title}${right ? `<div class="r">${right}</div>` : ""}</div><div class="mk-b">${body}</div></div>`; }
+  const noData = (what) => `<div class="mk-empty">${what ? esc(what) + " : " : ""}${D ? (M.err ? "Forex Factory injoignable (" + esc(M.err) + ")." : "chargement…") : M.src === "snap" ? "rien dans le dernier export." : "disponible dans l'app Windows (lecture en direct de Forex Factory)" + (M.err ? " — " + esc(M.err) : "") + "."}</div>`;
+  let uid = 0;
+  function blockHTML(name, ctx) {
+    const P = M.page || {}; const id = "mk" + (++uid);
+    switch (name) {
+      case "Instrument": { const I = P.instrument || {};
+        return box("Instrument", `<div class="mk-ihead"><div class="mk-flags">${(I.flags || []).map((f) => `<img src="${esc(f)}" alt="">`).join("")}</div><div><div class="mk-iname">${esc(I.name || st.inst)}</div><div class="mk-ititle">${esc(I.title || "")}</div></div><div class="mk-price" id="mkPx">${esc(I.bid || "—")}</div></div>`); }
+      case "Performance":
+        return box("Performance", `<div class="mk-perf" id="mkPerf">${perfHTML(null)}</div>`);
+      case "Chart": case "Large Chart": { const big = name === "Large Chart", k = big ? "L" : "C" + ctx.n, iv = st.iv[k] || (big ? "M15" : "H1");
+        const tfs = IVS.map(([v, l]) => `<button class="mk-tf${v === iv ? " on" : ""}" data-iv="${v}" data-k="${k}">${l}</button>`).join("");
+        return box(`Graphique ${esc(st.inst)} <span class="mk-mut" style="text-transform:none;letter-spacing:0;font-weight:400" id="${id}r"></span>`, `<div class="mk-chart${big ? " big" : ""}" id="${id}" data-chart="${k}" data-iv="${iv}"></div>`, tfs); }
+      case "Stories": { const s = P.stories || []; const hot = ctx.n === 2;
+        return box(hot ? "Actualités les plus lues · " + esc(st.inst) : "Dernières actualités · " + esc(st.inst), s.length ? `<div class="mk-list">${(hot ? s.slice().sort((a, b) => b.comments - a.comments) : s).slice(0, 10).map((x) => `<div class="mk-it"><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><div class="mk-meta">${x.impact ? `<i class="mk-imp ${x.impact}"></i>` : ""}<span>${esc(x.source)}</span><span>·</span><span title="${esc(x.when)}">${esc(fr(x.ago))}</span>${x.comments ? `<span>· ${x.comments} commentaire${x.comments > 1 ? "s" : ""}</span>` : ""}</div></div>`).join("")}</div>` : noData("actualités")); }
+      case "Posts": { const s = P.posts || [];
+        return box("Posts du forum · " + esc(st.inst), s.length ? `<div class="mk-list">${s.slice(0, 8).map((x) => `<div class="mk-it mk-post">${x.avatar ? `<img src="${esc(x.avatar)}" alt="" loading="lazy">` : `<div class="av"></div>`}<div style="min-width:0"><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.user)}</a> <span class="mk-mut" style="font-size:11.5px">${x.verb === "replied" ? "a répondu" : x.verb === "started" ? "a ouvert" : "a posté"} ${esc(fr(x.ago))}</span><p>${esc(x.preview)}</p><div class="mk-meta">${esc(x.thread)}</div></div></div>`).join("")}</div>` : noData("posts")); }
+      case "Events": return box("Événements à venir · " + esc(st.inst), eventsHTML(P));
+      case "Positions": { const p = P.positions;
+        if (!p) return box("Positions des traders", noData("positions"));
+        const num = (s) => (String(s).match(/[\d.]+(?= (Traders|Lots))/) || [""])[0];
+        return box("Positions des traders · " + esc(st.inst), `<div class="mk-pos"><div><div class="lbl"><span class="mk-up" style="color:#2874cd">Achat ${p.longTradersPct}% · ${esc(num(p.longTraders))} traders</span><span class="mk-dn">${esc(num(p.shortTraders))} traders · ${100 - p.longTradersPct}% Vente</span></div><div class="mk-bar"><i style="width:${+p.longTradersPct || 0}%"></i></div></div><div><div class="lbl"><span style="color:#2874cd">Achat ${p.longLotsPct}% · ${esc(num(p.longLots))} lots</span><span class="mk-dn">${esc(num(p.shortLots))} lots · ${100 - p.longLotsPct}% Vente</span></div><div class="mk-bar"><i style="width:${+p.longLotsPct || 0}%"></i></div></div></div>`); }
+      case "Quotes": { const q = P.quotes || [];
+        return box("Cotations des brokers · " + esc(st.inst), q.length ? `<table class="mk-t"><thead><tr><th>Broker</th><th class="n">Bid</th><th class="n">Ask</th><th class="n">Spread</th><th class="n">Commission</th></tr></thead><tbody>${q.slice(0, 15).map((x) => `<tr><td><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.icon ? `<img src="${esc(x.icon)}" alt="" loading="lazy">` : ""}${esc(x.broker)}</a></td><td class="n">${esc(x.bid)}</td><td class="n">${esc(x.ask)}</td><td class="n">${esc(x.spread)}</td><td class="n">${esc(x.commission || "—")}</td></tr>`).join("")}</tbody></table>` : noData("cotations")); }
+      case "Sessions": return box("Sessions (heure de New York)", `<div class="mk-ses" data-ses="1">${sessionsHTML()}</div>`);
+      case "Scanner": { const n = ctx.scan++; const macro = n % 2 === 1; const sc = (P.scanners || [])[n];
+        const list = (sc && sc.rows && sc.rows.length ? sc.rows.map((r) => r.instrument) : macro ? SCAN_MACRO : SCAN_FX).slice(0, 16);
+        return box(esc(sc && sc.title ? sc.title.replace("Forex Instruments", "Instruments Forex").replace("Macro Instruments", "Instruments macro") : macro ? "Instruments macro" : "Instruments Forex"), `<table class="mk-t mk-scan"><thead><tr><th>Instrument</th><th class="n">Prix</th><th class="n">Pips 24 h</th><th class="n">% 24 h</th><th class="n">Haut / Bas 24 h</th><th>24 h</th></tr></thead><tbody>${list.map((i) => `<tr data-inst="${esc(i)}"><td><b>${esc(i)}</b></td><td class="n">…</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="ch"><canvas></canvas></td></tr>`).join("")}</tbody></table>`, "", ` data-scan="${n}"`); }
+      case "Rates": { const r = P.bankRates || [];
+        return box("Taux directeurs des banques centrales", r.length ? `<div class="mk-rates">${r.map((x) => `<div>${esc(x.currency)}<b>${esc(x.rate)}</b></div>`).join("")}</div>` : noData("taux")); }
+    }
+    return box(esc(name), `<div class="mk-empty">Bloc inconnu.</div>`);
+  }
+  function eventsHTML(P) {
+    let ev = (P.events || []).map((e) => ({ when: due(e.due), imp: e.impact, title: e.title, url: e.url, fc: e.forecast }));
+    if (!ev.length && typeof S !== "undefined" && S.events) { // repli : calendrier de l'app (news USD du jour et du lendemain, heure de New York)
+      const now = new Date(), days = [nyDay(now), nyDay(new Date(now.getTime() + 86400000))];
+      ev = days.flatMap((d, k) => (S.events[d] || []).filter((e) => !e.k || e.k === "ev").map((e) => ({ when: (k ? "Demain " : "") + (e.t || ""), imp: e.i || "med", title: "USD " + e.n, url: "", fc: "" })));
+    }
+    if (!ev.length) return noData("événements");
+    return `<table class="mk-t"><thead><tr><th>Quand</th><th></th><th>Événement</th><th class="n">Prévision</th></tr></thead><tbody>${ev.slice(0, 12).map((e) => `<tr><td class="mk-mut" style="white-space:nowrap">${esc(e.when)}</td><td><i class="mk-imp ${esc(e.imp || "none")}"></i></td><td>${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>` : esc(e.title)}</td><td class="n">${esc(e.fc || "")}</td></tr>`).join("")}</tbody></table>`;
+  }
+  function perfHTML(bars) {
+    const head = st.perf.map((p, i) => `<select data-pi="${i}">${PERIODS.map(([v, l]) => `<option value="${v}"${v === p ? " selected" : ""}>${l}</option>`).join("")}</select>`).join("");
+    const calc = st.perf.map((p) => { const min = (PERIODS.find((x) => x[0] === p) || PERIODS[4])[2]; if (!bars || !bars.length) return null;
+      const last = bars[bars.length - 1], t0 = last.time + 300 - min * 60, seg = bars.filter((b) => b.time >= t0); if (!seg.length) return null;
+      const ref = seg[0].open, pip = pipOf(st.inst, last.close); return { pips: (last.close - ref) / pip, pct: (last.close - ref) / ref * 100, seg }; });
+    // pas de bougies : chiffres de la page Forex Factory s'ils existent
+    const pg = (M.page && M.page.performance) || [];
+    const cell = (i, f) => { const c = calc[i]; if (c) return f(c); const p = pg.find((x) => x.period === st.perf[i]); return p ? (f === pipF ? `<span class="${cls(parseFloat(p.pip))}">${esc(p.pip)}</span>` : f === pctF ? `<span class="${cls(parseFloat(p.pct))}">${esc(p.pct)}</span>` : "") : `<span class="mk-mut">—</span>`; };
+    const pipF = (c) => `<span class="${cls(c.pips)}">${sgn(c.pips, Math.abs(c.pips) < 10 ? 1 : 0)}</span>`, pctF = (c) => `<span class="${cls(c.pct)}">${sgn(c.pct, 2)} %</span>`, chF = () => `<canvas></canvas>`;
+    return `<span class="lb">Période</span>${head}<span class="lb">Pips</span>${st.perf.map((_, i) => `<span class="v">${cell(i, pipF)}</span>`).join("")}<span class="lb">Graphique</span>${st.perf.map((_, i) => `<span class="v" data-spark="${i}">${calc[i] ? chF() : ""}</span>`).join("")}<span class="lb">Variation</span>${st.perf.map((_, i) => `<span class="v">${cell(i, pctF)}</span>`).join("")}`;
+  }
+  function spark(cv, closes) { if (!cv || !closes || closes.length < 2) return; const r = cv.getBoundingClientRect(), w = Math.max(40, r.width | 0), h = Math.max(20, r.height | 0), dpr = devicePixelRatio || 1;
+    cv.width = w * dpr; cv.height = h * dpr; const g = cv.getContext("2d"); g.scale(dpr, dpr);
+    const lo = Math.min(...closes), hi = Math.max(...closes), up = closes[closes.length - 1] >= closes[0];
+    g.strokeStyle = up ? "#26a69a" : "#ef5350"; g.lineWidth = 1.5; g.beginPath();
+    closes.forEach((c, i) => { const x = i / (closes.length - 1) * (w - 2) + 1, y = h - 2 - (hi === lo ? 0.5 : (c - lo) / (hi - lo)) * (h - 4); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); }
+
+  /* sessions : Sydney / Tokyo / Londres / New York, 9 h d'ouverture en heure locale (comme Forex Factory), frise de 24 h depuis 17:00 ET */
+  const SES = [["Sydney", "Australia/Sydney", 9], ["Tokyo", "Asia/Tokyo", 9], ["Londres", "Europe/London", 8], ["New York", "America/New_York", 8]];
+  function zoneOff(tz, t) { const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).formatToParts(new Date(t * 1000)).map((x) => [x.type, x.value]));
+    return (Date.UTC(+p.year, p.month - 1, +p.day, +p.hour % 24, +p.minute) / 1000) - Math.floor(t / 60) * 60; }
+  function sessionsHTML() {
+    const now = Date.now() / 1000, nyNow = now + nyOff(now); // « heure murale » NY en secondes
+    let start = Math.floor(nyNow / 86400) * 86400 + 17 * 3600; if (start > nyNow) start -= 86400; // dernier 17:00 ET
+    const wd = new Date(start * 1000).getUTCDay(); const weekend = (wd === 5) || (wd === 6); // de vendredi 17:00 à dimanche 17:00 : marché fermé
+    const ax = Array.from({ length: 12 }, (_, k) => { const h = (17 + k * 2) % 24; return `<span>${h} h</span>`; }).join("");
+    let status = [];
+    const lines = SES.map(([nm, tz, h0]) => {
+      // ouverture locale h0:00 -> heure murale NY ; on cherche la séance qui chevauche la frise
+      const blocks = []; for (let d = -1; d <= 1; d++) { const dayNY = start + d * 86400 + 43200; // un instant de référence
+        const lo = zoneOff(tz, dayNY - nyOff(dayNY)); const localMid = Math.floor((dayNY - nyOff(dayNY) + lo) / 86400) * 86400; const openUTC = localMid + h0 * 3600 - lo; const openNY = openUTC + nyOff(openUTC);
+        const a = Math.max(openNY, start), b = Math.min(openNY + 9 * 3600, start + 86400); if (b > a) blocks.push([a, b, openNY]); }
+      const on = !weekend && blocks.some(([a, b, o]) => nyNow >= o && nyNow < o + 9 * 3600);
+      const cur = blocks.find(([a, b, o]) => nyNow < o + 9 * 3600) || null;
+      if (!weekend && cur) { const mins = Math.round(((on ? cur[2] + 9 * 3600 : cur[2]) - nyNow) / 60); status.push(`${nm} : ${on ? "ouverte, ferme" : "ouvre"} dans ${Math.floor(mins / 60)} h ${String(mins % 60).padStart(2, "0")}`); }
+      return `<div class="ln"><span class="nm">${nm}</span><div class="tr">${weekend ? "" : blocks.map(([a, b]) => `<i class="bk${on ? " on" : ""}" style="left:${(a - start) / 864}%;width:${(b - a) / 864}%"></i>`).join("")}</div></div>`; }).join("");
+    return `<div class="ax">${ax}</div>${lines}<div class="now" style="left:calc((100% - 84px) * ${((nyNow - start) / 86400).toFixed(4)})"></div><div class="st">${weekend ? "Marché Forex fermé (réouverture dimanche 17:00 ET)." : esc(status.join(" · "))}</div>`;
+  }
+
+  /* ---------- page ---------- */
+  function render() {
+    const root = el(); if (!root) return;
+    M.charts.forEach((c) => { try { c.chart.remove(); } catch (e) { /* déjà retiré */ } }); M.charts = []; uid = 0;
+    const L = curLayout(), ctx = { n: 0, scan: 0 }; const cnt = {};
+    const cellHTML = (b) => { cnt[b] = (cnt[b] || 0) + 1; ctx.n = cnt[b]; return blockHTML(b, ctx); };
+    const rows = L.rows.map((r) => `<div class="mk-row${r.length > 1 ? " c2" : ""}">${r.map((c) => `<div class="mk-col">${c.map(cellHTML).join("")}</div>`).join("")}</div>`).join("");
+    const when = M.web && M.web.generated_at ? nyHM(Date.parse(M.web.generated_at) / 1000) : "";
+    const src = M.src === "live" ? `<i class="mk-dot live"></i>Forex Factory en direct` : M.src === "snap" ? `<i class="mk-dot snap"></i>Forex Factory · export de ${esc(when)} ET` : `<i class="mk-dot"></i>${M.busy ? "chargement…" : "hors ligne"}`;
+    root.innerHTML = `<div class="mk-top"><h2>Marché</h2>
+      <label class="mk-inst" title="Instrument (comme sur Forex Factory : EUR/USD, XAU/USD…)"><input id="mkInst" list="mkInstL" value="${esc(st.inst)}" spellcheck="false"><datalist id="mkInstL">${COMMON.map((c) => `<option value="${c}">`).join("")}</datalist><button class="mk-btn" id="mkInstGo" style="padding:4px 8px">OK</button></label>
+      <button class="mk-btn" id="mkLay"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="18" height="8" rx="1.5"/></svg>Mise en page : ${esc(L.name)}</button>
+      <button class="mk-btn" id="mkRef" title="Recharger">⟳ Actualiser</button>
+      <span class="mk-src">${src}</span></div><div class="mk-grid">${rows}</div>`;
+    root.querySelector("#mkLay").onclick = openLayouts;
+    root.querySelector("#mkRef").onclick = () => refresh(true);
+    const goInst = () => { const v = root.querySelector("#mkInst").value.trim().toUpperCase(); if (!v || v === st.inst) return; st.inst = v; save(); M.page = null; M.web = null; M.bars = {}; refresh(true); };
+    root.querySelector("#mkInstGo").onclick = goInst; root.querySelector("#mkInst").onkeydown = (e) => { if (e.key === "Enter") goInst(); };
+    root.querySelectorAll(".mk-tf").forEach((b) => b.onclick = () => { st.iv[b.dataset.k] = b.dataset.iv; save(); const box = b.closest(".mk-box"); box.querySelectorAll(".mk-tf").forEach((x) => x.classList.toggle("on", x === b)); const c = box.querySelector("[data-chart]"); c.dataset.iv = b.dataset.iv; drawChart(c); });
+    root.querySelectorAll("#mkPerf select").forEach((s) => s.onchange = () => { st.perf[+s.dataset.pi] = s.value; save(); fillPerf(); });
+    root.querySelectorAll(".mk-scan tr[data-inst]").forEach((tr) => tr.onclick = () => { st.inst = tr.dataset.inst; save(); M.page = null; M.web = null; M.bars = {}; refresh(true); });
+    root.querySelectorAll("[data-chart]").forEach(drawChart);
+    fillPerf(); fillScans();
+  }
+  async function drawChart(c) {
+    const iv = c.dataset.iv, rng = document.getElementById(c.id + "r");
+    const old = M.charts.find((x) => x.el === c); if (old) { try { old.chart.remove(); } catch (e) { /* ignore */ } M.charts = M.charts.filter((x) => x !== old); }
+    c.innerHTML = `<div class="mk-empty" style="padding:14px">Chargement des bougies…</div>`;
+    let bars; try { bars = await getBars(st.inst, iv, 300); } catch (e) { c.innerHTML = `<div class="mk-empty" style="padding:14px">${esc(e.message || e)}</div>`; return; }
+    if (!document.body.contains(c)) return;
+    if (!bars.length || !window.LightweightCharts) { c.innerHTML = `<div class="mk-empty" style="padding:14px">Aucune bougie.</div>`; return; }
+    c.innerHTML = ""; const d = decOf(bars[bars.length - 1].close);
+    const chart = LightweightCharts.createChart(c, { autoSize: true, layout: { background: { color: "transparent" }, textColor: "#9a9ca7", attributionLogo: false }, grid: { vertLines: { color: "#16161b" }, horzLines: { color: "#16161b" } },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#1d1d22" }, timeScale: { borderColor: "#1d1d22", timeVisible: !/^(D1|W1|MN1)$/.test(iv), secondsVisible: false } });
+    const s = chart.addCandlestickSeries({ upColor: "#26a69a", downColor: "#ef5350", wickUpColor: "#26a69a", wickDownColor: "#ef5350", borderVisible: false, priceFormat: { type: "price", precision: d, minMove: Math.pow(10, -d) } });
+    s.setData(bars.map((b) => ({ time: b.time + nyOff(b.time), open: b.open, high: b.high, low: b.low, close: b.close }))); // heure de New York
+    chart.timeScale().fitContent(); if (bars.length > 120) chart.timeScale().setVisibleLogicalRange({ from: bars.length - 120, to: bars.length + 3 });
+    M.charts.push({ el: c, chart, series: s, iv });
+    const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high)), pip = pipOf(st.inst, hi);
+    if (rng) rng.textContent = `${nyHM(bars[0].time)} → ${nyHM(bars[bars.length - 1].time)} ET · amplitude ${Math.round((hi - lo) / pip)} pips`;
+    const px = document.getElementById("mkPx"); if (px && iv === "M15") { const l = bars[bars.length - 1]; px.textContent = fmt(l.close, d); }
+  }
+  async function fillPerf() {
+    const box = document.getElementById("mkPerf"); if (!box) return;
+    let bars = null; try { bars = await getBars(st.inst, "M5", 600); } catch (e) { /* chiffres de la page à la place */ }
+    if (!document.body.contains(box)) return; box.innerHTML = perfHTML(bars);
+    box.querySelectorAll("select").forEach((s) => s.onchange = () => { st.perf[+s.dataset.pi] = s.value; save(); fillPerf(); });
+    if (bars && bars.length) { const last = bars[bars.length - 1]; st.perf.forEach((p, i) => { const min = (PERIODS.find((x) => x[0] === p) || PERIODS[4])[2]; spark(box.querySelector(`[data-spark="${i}"] canvas`), bars.filter((b) => b.time >= last.time + 300 - min * 60).map((b) => b.close)); });
+      const px = document.getElementById("mkPx"); if (px) { const prev = parseFloat(px.textContent); px.textContent = fmt(last.close, decOf(last.close)); px.classList.toggle("up", Number.isFinite(prev) && last.close > prev); px.classList.toggle("dn", Number.isFinite(prev) && last.close < prev); } }
+  }
+  async function fillScans() {
+    const rows = [...document.querySelectorAll(".mk-scan tr[data-inst]")];
+    for (let k = 0; k < rows.length; k += 4) await Promise.all(rows.slice(k, k + 4).map(async (tr) => {
+      const inst = tr.dataset.inst, td = tr.children;
+      try { const b = await scanBars(inst); if (!b.length) throw new Error("vide"); const last = b[b.length - 1], seg = b.slice(-24), ref = seg[0].open, pip = pipOf(inst, last.close), d = decOf(last.close);
+        const pips = (last.close - ref) / pip, pct = (last.close - ref) / ref * 100, hi = Math.max(...seg.map((x) => x.high)), lo = Math.min(...seg.map((x) => x.low));
+        td[1].textContent = fmt(last.close, d); td[2].innerHTML = `<span class="${cls(pips)}">${sgn(pips, Math.abs(pips) < 10 ? 1 : 0)}</span>`; td[3].innerHTML = `<span class="${cls(pct)}">${sgn(pct, 2)} %</span>`; td[4].textContent = `${fmt(hi, d)} / ${fmt(lo, d)}`; spark(td[5].querySelector("canvas"), seg.map((x) => x.close));
+      } catch (e) { td[1].innerHTML = `<span class="mk-mut" title="${esc(e.message || e)}">—</span>`; }
+    }));
+  }
+
+  /* ---------- modale « Mise en page » (comme Forex Factory) + éditeur de mise en page personnalisée ---------- */
+  const mini = (rows) => `<div class="mk-mini">${rows.map((r) => `<div class="rw${r.length > 1 ? " c2" : ""}">${r.map((c) => `<div class="cl">${c.map((b) => `<span class="${/Chart/.test(b) ? "tall" : ""}">${esc((BLOCKS[b] || { l: b }).l)}</span>`).join("")}</div>`).join("")}</div>`).join("")}</div>`;
+  function modal(html) { const ov = document.createElement("div"); ov.className = "mk-ov"; ov.innerHTML = `<div class="mk-mod">${html}</div>`; ov.addEventListener("mousedown", (e) => { if (e.target === ov) ov.remove(); }); document.body.appendChild(ov); return ov; }
+  function openLayouts() {
+    const L = allLayouts();
+    const ov = modal(`<header>Mise en page du Marché<button class="mk-btn" data-x>Fermer</button></header><div class="mk-cards">${L.map((l) => `<div class="mk-card${l.id === st.layout ? " on" : ""}"><h4>${l.ic} ${esc(l.name)}${l.custom ? "<small>perso</small>" : ""}</h4>${mini(l.rows)}<div class="acts">${l.id === st.layout ? `<button class="mk-btn ok">Mise en page actuelle</button>` : `<button class="mk-btn pri" data-apply="${esc(l.id)}">Appliquer</button>`}<button class="mk-btn" data-edit="${esc(l.id)}" title="${l.custom ? "Modifier" : "Personnaliser une copie"}">✎</button>${l.custom ? `<button class="mk-btn" data-del="${esc(l.id)}" title="Supprimer">✕</button>` : ""}</div></div>`).join("")}
+      <div class="mk-card new"><h4>🧩 Personnalisée</h4><div class="mk-mini">Ta mise en page ici</div><div class="acts"><button class="mk-btn" data-new>Créer une mise en page</button></div></div></div>`);
+    ov.querySelector("[data-x]").onclick = () => ov.remove();
+    ov.querySelectorAll("[data-apply]").forEach((b) => b.onclick = () => { st.layout = b.dataset.apply; save(); ov.remove(); render(); });
+    ov.querySelectorAll("[data-edit]").forEach((b) => b.onclick = () => { const l = L.find((x) => x.id === b.dataset.edit); ov.remove(); editor(l.custom ? l : { id: null, name: l.name + " (perso)", rows: l.rows }); });
+    ov.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => { st.customs = st.customs.filter((c) => c.id !== b.dataset.del); if (st.layout === b.dataset.del) st.layout = "Classic"; save(); ov.remove(); render(); openLayouts(); });
+    ov.querySelector("[data-new]").onclick = () => { ov.remove(); editor({ id: null, name: "Ma mise en page", rows: [[["Instrument"], ["Performance"]], [["Large Chart"]]] }); };
+  }
+  function editor(src) {
+    const E = { id: src.id, name: src.name, rows: JSON.parse(JSON.stringify(src.rows)) }; let sel = null; // [ligne, colonne]
+    const count = (b) => E.rows.flat(2).filter((x) => x === b).length, total = () => E.rows.flat(2).length;
+    const ov = modal(""); const mod = ov.querySelector(".mk-mod");
+    const draw = () => {
+      mod.innerHTML = `<header>${E.id ? "Modifier la mise en page" : "Créer une mise en page"}<button class="mk-btn" data-x>Fermer</button></header><div class="mk-ed"><div class="mk-pal"><input class="nm" value="${esc(E.name)}" maxlength="40" placeholder="Nom">
+        <small>Clique une colonne à droite, puis un bloc pour l'y ajouter (sans colonne choisie : nouvelle ligne pleine largeur). ${total()} / 20 blocs.</small>
+        ${Object.entries(BLOCKS).map(([b, o]) => { const full = (o.max && count(b) >= o.max) || total() >= 20; return `<button class="mk-btn" data-add="${esc(b)}"${full ? " disabled style=\"opacity:.4\"" : ""}>＋ ${esc(o.l)}${o.max ? ` <span class="mk-mut">(${count(b)}/${o.max})</span>` : ""}</button>`; }).join("")}
+        <button class="mk-btn" data-row="1">＋ Ligne 1 colonne</button><button class="mk-btn" data-row="2">＋ Ligne 2 colonnes</button></div>
+        <div class="mk-rows">${E.rows.map((r, i) => `<div class="mk-er"><div class="bar">Ligne ${i + 1}<span class="sp"></span><button class="mk-btn" data-cols="${i}">${r.length > 1 ? "1 colonne" : "2 colonnes"}</button><button class="mk-x" data-up="${i}" title="Monter">↑</button><button class="mk-x" data-dn="${i}" title="Descendre">↓</button><button class="mk-x" data-rm="${i}" title="Supprimer la ligne">✕</button></div>
+          <div class="cols${r.length > 1 ? " c2" : ""}">${r.map((c, j) => `<div class="mk-ec${sel && sel[0] === i && sel[1] === j ? " sel" : ""}" data-sel="${i},${j}">${c.map((b, k) => `<div class="mk-chip"><span>${esc((BLOCKS[b] || { l: b }).l)}</span><button class="mk-x" data-bu="${i},${j},${k}">↑</button><button class="mk-x" data-bd="${i},${j},${k}">↓</button><button class="mk-x" data-bx="${i},${j},${k}">✕</button></div>`).join("") || `<span class="mk-mut" style="font-size:12px">Colonne vide</span>`}</div>`).join("")}</div></div>`).join("") || `<div class="mk-empty">Aucune ligne : ajoute un bloc.</div>`}</div></div>
+        <div class="mk-edf"><button class="mk-btn" data-x>Annuler</button><button class="mk-btn pri" data-save>Enregistrer et appliquer</button></div>`;
+      const q = (s) => mod.querySelectorAll(s), num = (s) => s.split(",").map(Number);
+      q("[data-x]").forEach((b) => b.onclick = () => ov.remove());
+      mod.querySelector(".nm").oninput = (e) => { E.name = e.target.value; };
+      q("[data-add]").forEach((b) => b.onclick = () => { const k = b.dataset.add; if (sel && E.rows[sel[0]] && E.rows[sel[0]][sel[1]]) E.rows[sel[0]][sel[1]].push(k); else E.rows.push([[k]]); draw(); });
+      q("[data-row]").forEach((b) => b.onclick = () => { E.rows.push(b.dataset.row === "2" ? [[], []] : [[]]); sel = [E.rows.length - 1, 0]; draw(); });
+      q("[data-sel]").forEach((c) => c.onclick = (e) => { if (e.target.closest("button")) return; const s = num(c.dataset.sel); sel = sel && sel[0] === s[0] && sel[1] === s[1] ? null : s; draw(); });
+      q("[data-cols]").forEach((b) => b.onclick = () => { const r = E.rows[+b.dataset.cols]; E.rows[+b.dataset.cols] = r.length > 1 ? [r[0].concat(r[1])] : [r[0], []]; sel = null; draw(); });
+      q("[data-up]").forEach((b) => b.onclick = () => { const i = +b.dataset.up; if (i > 0) [E.rows[i - 1], E.rows[i]] = [E.rows[i], E.rows[i - 1]]; sel = null; draw(); });
+      q("[data-dn]").forEach((b) => b.onclick = () => { const i = +b.dataset.dn; if (i < E.rows.length - 1) [E.rows[i + 1], E.rows[i]] = [E.rows[i], E.rows[i + 1]]; sel = null; draw(); });
+      q("[data-rm]").forEach((b) => b.onclick = () => { E.rows.splice(+b.dataset.rm, 1); sel = null; draw(); });
+      q("[data-bx]").forEach((b) => b.onclick = () => { const [i, j, k] = num(b.dataset.bx); E.rows[i][j].splice(k, 1); draw(); });
+      q("[data-bu]").forEach((b) => b.onclick = () => { const [i, j, k] = num(b.dataset.bu); const c = E.rows[i][j]; if (k > 0) [c[k - 1], c[k]] = [c[k], c[k - 1]]; draw(); });
+      q("[data-bd]").forEach((b) => b.onclick = () => { const [i, j, k] = num(b.dataset.bd); const c = E.rows[i][j]; if (k < c.length - 1) [c[k + 1], c[k]] = [c[k], c[k + 1]]; draw(); });
+      mod.querySelector("[data-save]").onclick = () => {
+        const rows = E.rows.map((r) => r.filter((c) => c.length)).filter((r) => r.length); if (!rows.length) return;
+        const name = (E.name || "").trim() || "Ma mise en page";
+        if (E.id) { const c = st.customs.find((x) => x.id === E.id); if (c) Object.assign(c, { name, rows }); } else { E.id = "custom-" + Date.now().toString(36); st.customs.push({ id: E.id, name, rows }); }
+        st.layout = E.id; save(); ov.remove(); render(); };
+    };
+    draw();
+  }
+
+  /* ---------- actualisation ---------- */
+  async function refresh(force) {
+    if (M.busy) return; M.busy = true;
+    try { if (force || !M.page || Date.now() - M.pageAt > (D ? 120000 : 300000)) { if (!M.page) render(); await loadPage(force); } } finally { M.busy = false; }
+    render();
+  }
+  function tick() { // toutes les 30 s quand la page est visible : bougies + prix ; la page Forex Factory toutes les 2 min (5 min sur le web)
+    const v = document.getElementById("v-marche"); if (!v || !v.classList.contains("on") || document.hidden) return;
+    if (Date.now() - M.pageAt > (D ? 120000 : 300000)) return refresh(false);
+    M.bars = Object.fromEntries(Object.entries(M.bars).filter(([k, x]) => Date.now() - x.at < 60000));
+    M.charts.forEach(async (x) => { try { const b = await getBars(st.inst, x.iv, 3); b.forEach((k) => { try { x.series.update({ time: k.time + nyOff(k.time), open: k.open, high: k.high, low: k.low, close: k.close }); } catch (e) { /* bougie plus ancienne */ } }); } catch (e) { /* hors ligne */ } });
+    fillPerf(); fillScans();
+    document.querySelectorAll("#mkRoot [data-ses]").forEach((s) => { s.innerHTML = sessionsHTML(); });
+  }
+  window.marcheShow = () => { refresh(false); if (!M.timer) M.timer = setInterval(tick, 30000); };
+  window.marcheTest = { pipOf, decOf, nyOff, sessionsHTML, PRESETS, BLOCKS }; // vérifications (tools/check.js)
+  { const v = document.getElementById("v-marche"); if (v && v.classList.contains("on")) marcheShow(); } // ouverture directe sur #marche
+})();
+
 /* ---------- Langue : français (défaut) / anglais ---------- */
 // Les textes restent écrits en français dans le code ; en anglais, chaque texte visible (nœuds texte, title, placeholder)
 // est remplacé via le dictionnaire EN (correspondance exacte) ou les motifs RX, et l'original est gardé pour revenir au français.
@@ -7783,7 +8164,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
 (() => {
   const EN = {
     // menu, profil
-    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Affiliation": "Affiliate", "Abonnement": "Subscription", "Factures": "Invoices", "Mes comptes": "My accounts", "Compte All-data": "All-data account", "Voir toutes mes performances !": "See all my performance!", "Profitabilité totale": "Total profitability", "Ajouter un nouveau compte": "Add a new account", "Créer un compte d'entraînement": "Create a training account", "Réduire le menu": "Collapse menu",
+    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Marché": "Market", "Mise en page du Marché": "Market layout", "Actualiser": "Refresh", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Affiliation": "Affiliate", "Abonnement": "Subscription", "Factures": "Invoices", "Mes comptes": "My accounts", "Compte All-data": "All-data account", "Voir toutes mes performances !": "See all my performance!", "Profitabilité totale": "Total profitability", "Ajouter un nouveau compte": "Add a new account", "Créer un compte d'entraînement": "Create a training account", "Réduire le menu": "Collapse menu",
     "Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.": "Your name, handle and logo, shown in the menu and on the calendar.", "Nom affiché": "Display name", "Retirer": "Remove", "Texte du logo (sans image)": "Logo text (no image)", "Lien Notion (bouton du journal)": "Notion link (journal button)",
     "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
     "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
