@@ -6394,18 +6394,21 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const GODEF = [
     { id: "asia", n: "Début de la séance d'Asie", t: "20:00", star: false },
     { id: "london", n: "Début de la séance de Londres", t: "02:00", star: true },
+    { id: "pmo", n: "Opening Premarket", t: "07:00", star: true },
     { id: "nypre", n: "Début de New York (8:30, news)", t: "08:30", star: false },
+    { id: "pmc", n: "Close Premarket", t: "09:00", star: true },
     { id: "rth", n: "Ouverture RTH New York", t: "09:30", star: true },
     { id: "nday", n: "Ouverture du jour suivant (Globex)", t: "18:00", star: false },
     { id: "sbl", n: "Silver Bullet Londres", t: "03:00", star: true },
     { id: "sbam", n: "Silver Bullet AM", t: "10:00", star: true },
-    { id: "sbpm", n: "Silver Bullet PM", t: "14:00", star: false },
+    { id: "sbpm", n: "Silver Bullet PM", t: "14:00", star: true },
     { id: "macro", n: "Prochaine macro", t: "02:33, 04:03, 08:50, 09:50, 10:50, 11:50, 13:10, 15:15", star: false },
     { id: "news", n: "Prochaine news", sp: "news", star: true },
     { id: "price", n: "Un prix…", sp: "price", star: false },
     { id: "date", n: "Une date…", sp: "date", star: false }];
   const goCfg = () => { const c = LS.get("bt-goto", {}); return { ev: c.ev || {}, skip: c.skip || [], imp: c.imp || "high" }; };
-  const goList = () => { const c = goCfg(); return GODEF.map((e) => ({ ...e, ...(c.ev[e.id] || {}) })); };
+  const goMin = (e) => { const h = hhmm(e.t)[0]; return e.sp ? 9000 + ["news", "price", "date"].indexOf(e.sp) : h ? h[0] * 60 + h[1] : 8999; };
+  const goList = () => { const c = goCfg(); return GODEF.map((e) => ({ ...e, ...(c.ev[e.id] || {}) })).sort((a, b) => goMin(a) - goMin(b)); }; // triés par heure NY
   const hhmm = (s) => String(s || "").split(/[,;\s]+/).map((x) => /^(\d{1,2})[:h](\d{2})$/.exec(x)).filter(Boolean).map((m) => [+m[1], +m[2]]).filter(([h, m]) => h < 24 && m < 60);
   function nextAt(after, times, skip) { // 1er horaire NY strictement après « after », hors samedi et jours sautés
     let d = dayOf(after);
@@ -6464,7 +6467,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const goFavs = () => goList().filter((e) => e.star && e.sp !== "date");
   const goFav = (n) => { const e = goFavs()[n]; if (!e) return msg(`Pas de ${n + 1}e favori : étoile un événement dans Aller à › Réglages.`, true); runGo(e); };
   function openGoMenu() {
-    const L = goList(), F = goFavs(), show = F.length ? F : L.filter((e) => !e.sp), kb = (i) => (i < 3 ? `<kbd>Alt+${i + 1}</kbd>` : "");
+    const L = goList(), F = goFavs(), show = F.length ? F : L.filter((e) => !e.sp), kb = (i) => (F.length && i < 9 ? `<kbd>Alt+${i + 1}</kbd>` : "");
     const item = (e, i) => `<button class="gp-it" data-go="${e.id}"><span style="flex:1">${esc(e.n)}</span><small style="color:var(--tx-mut,#7d818a)">${e.sp ? "" : esc(e.t.split(",")[0]) + (e.t.includes(",") ? "…" : "")}</small>${kb(i)}</button>`;
     openBtPop($("btGoBtn"), `<div class="gp-sec">ALLER AU PROCHAIN…</div>${show.map(item).join("")}<div class="gp-sep"></div>
       ${L.filter((e) => e.sp === "price" || e.sp === "date").map((e) => `<button class="gp-it" data-go="${e.id}">${esc(e.n)}</button>`).join("")}<div class="gp-sep"></div><button class="gp-it" data-go="cfg">⚙ Réglages…</button>`, (ev) => {
@@ -6473,7 +6476,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   function openGoSettings() {
     const c = goCfg(), L = goList();
-    const row = (e) => `<div class="tx-li gs-r"><button class="gs-st ${e.star ? "on" : ""}" data-st="${e.id}" title="Favori (menu court, Alt+1 / Alt+2 / Alt+3)">${e.star ? "★" : "☆"}</button><div style="flex:1"><b>${esc(e.n)}</b></div>${e.sp ? (e.sp === "news" ? `<select data-imp="1"><option value="high" ${c.imp === "high" ? "selected" : ""}>Rouges</option><option value="med" ${c.imp === "med" ? "selected" : ""}>Rouges + orange</option></select>` : "") : `<input data-t="${e.id}" value="${esc(e.t)}" title="Heure de New York (HH:MM), plusieurs horaires séparés par des virgules">`}</div>`;
+    const row = (e) => `<div class="tx-li gs-r"><button class="gs-st ${e.star ? "on" : ""}" data-st="${e.id}" title="Favori : dans le menu court, avec un raccourci Alt+1 → Alt+9 dans l'ordre des heures">${e.star ? "★" : "☆"}</button><div style="flex:1"><b>${esc(e.n)}</b></div>${e.sp ? (e.sp === "news" ? `<select data-imp="1"><option value="high" ${c.imp === "high" ? "selected" : ""}>Rouges</option><option value="med" ${c.imp === "med" ? "selected" : ""}>Rouges + orange</option></select>` : "") : `<input data-t="${e.id}" value="${esc(e.t)}" title="Heure de New York (HH:MM), plusieurs horaires séparés par des virgules">`}</div>`;
     const m = modal("Aller à · réglages (heure de New York)", `<div class="tx-list">${L.map(row).join("")}</div>
       <div class="r" style="margin-top:12px">Jours à sauter<span class="gs-days">${[1, 2, 3, 4, 5, 0].map((w) => `<button data-w="${w}" class="${c.skip.includes(w) ? "on" : ""}">${JOURS[w]}</button>`).join("")}</span></div>
       <div class="tx-empty" style="text-align:left">Le replay avance jusqu'à juste avant l'heure choisie (les ordres s'exécutent pendant le saut). Le samedi est toujours sauté ; un jour sans cotation à cette heure passe au suivant.</div>`,
@@ -6501,7 +6504,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   const stepNext = () => (P.stepSync !== false ? stepCandle() : stepWith(stepBk));
   function backStep() { if (P.stepSync !== false) return back(); if (!S.raw.length) return; const cb = stepBk(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && stepBk(S.raw[j][0]) === cb) j--; S.cur = Math.max(0, j); draw(); ui(); }
-  const stepUI = () => { const b = $("btStepBtn"); if (b) { b.textContent = stepName() + " ▾"; b.title = P.stepSync !== false ? "Pas du replay : une bougie de l'unité du chart (Alt+4 / Alt+5 pour changer)" : `Pas du replay : ${tfName(P.stepMin || 1)}, indépendant de l'unité du chart`; } };
+  const stepUI = () => { const b = $("btStepBtn"); if (b) { b.textContent = stepName() + " ▾"; b.title = P.stepSync !== false ? "Pas du replay : une bougie de l'unité du chart (Alt+Maj+← / → pour changer)" : `Pas du replay : ${tfName(P.stepMin || 1)}, indépendant de l'unité du chart`; } };
   function setStep(min, sync) { if (sync != null) P.stepSync = sync; if (min) P.stepMin = min; LS.set("bt-prefs", P); stepUI(); msg(P.stepSync !== false ? "Pas du replay : une bougie du chart." : `Pas du replay : ${tfName(P.stepMin)} (bougie suivante = +${tfName(P.stepMin)}).`); }
   const stepMove = (d) => { if (P.stepSync !== false) { P.stepSync = false; P.stepMin = d > 0 ? Math.max(STEPS.find((s) => s >= Math.min(S.tf, 240)) || 1, 1) : 1; return setStep(); }
     const i = STEPS.indexOf(P.stepMin || 1), n = Math.max(0, Math.min(STEPS.length - 1, (i < 0 ? 0 : i) + d)); setStep(STEPS[n]); };
@@ -6657,7 +6660,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   function initPro() {
     // 1. Aller à
     $("btGoBtn").onclick = (e) => { e.stopPropagation(); $("btGo").hidden = true; openGoMenu(); };
-    $("btGoBtn").title = "Aller à : prochaine séance, Silver Bullet, macro, news, prix ou date (Ctrl+Alt+G · favoris Alt+1 / 2 / 3)";
+    $("btGoBtn").title = "Aller à : prochaine séance, Silver Bullet, macro, news, prix ou date (Ctrl+Alt+G · favoris Alt+1 → Alt+9, dans l'ordre des heures)";
     // 3. pas + vitesse
     $("btNext").onclick = () => stepNext(); $("btPrev").onclick = () => backStep(); $("btStepBtn").onclick = (e) => { e.stopPropagation(); openStepMenu(); }; stepUI();
     $("btSpeedR").oninput = () => { const s = $("btSpeed"); s.selectedIndex = +$("btSpeedR").value; s.dispatchEvent(new Event("change")); };
@@ -7580,8 +7583,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
       ["Replay", [
         ["play", "Lecture / pause", ["Espace"], () => play()], ["stepF", "Bougie / pas suivant", ["→", "L"], () => stepNext()], ["stepB", "Bougie / pas précédent", ["←", "J"], () => backStep()],
-        ["stepDn", "Diminuer le pas du replay", ["Alt+4"], () => stepMove(-1)], ["stepUp", "Augmenter le pas du replay", ["Alt+5"], () => stepMove(1)], ["stepSync", "Pas du replay = bougie du chart", ["Alt+6"], () => setStep(null, P.stepSync === false)],
-        ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller au 1er favori (Aller à)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller au 2e favori", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller au 3e favori", ["Alt+3"], () => goFav(2)],
+        ["stepDn", "Diminuer le pas du replay", ["Alt+Shift+←"], () => stepMove(-1)], ["stepUp", "Augmenter le pas du replay", ["Alt+Shift+→"], () => stepMove(1)], ["stepSync", "Pas du replay = bougie du chart", ["Alt+Shift+↓"], () => setStep(null, P.stepSync === false)],
+        ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"], () => goFav(2)], ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"], () => goFav(3)], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"], () => goFav(4)], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"], () => goFav(5)], ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"], () => goFav(6)], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"], () => goFav(7)], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"], () => goFav(8)],
         ["faster", "Accélérer le replay", ["↑"], () => speed(1)], ["slower", "Ralentir le replay", ["↓"], () => speed(-1)],
         ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }]]],
       ["Ordres", [

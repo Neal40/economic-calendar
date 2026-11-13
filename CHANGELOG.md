@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.52.1] — 2026-11-13
+### Ajouté
+- Backtesteur › Aller à : **Opening Premarket** (7:00) et **Close Premarket** (9:00) ; Silver Bullet Londres (3:00) et Silver Bullet PM (14:00) en favoris.
+### Modifié
+- Menu et réglages « Aller à » triés par heure de New York ; raccourcis **Alt+1 → Alt+9** attribués aux favoris dans l'ordre des heures (02:00 Londres = Alt+1, 03:00 SB Londres = Alt+2, 07:00 = Alt+3…).
+- Pas du replay : raccourcis déplacés sur **Alt+Maj+← / →** (et Alt+Maj+↓ = bougie du chart) pour libérer Alt+4 → Alt+6.
+
 ## [1.52.0] — 2026-11-13
 ### Ajouté
 - **Marché** (menu, au-dessus du Calendrier Économique) : la page forexfactory.com/market/<instrument> dans l'app, en heure de New York — Instrument (prix), Performance (pips, mini-graphique et % sur 3 périodes au choix, 5 min → 48 h), Grand graphique / Graphique (1M → mensuel), Actualités (dernières et plus lues), Posts du forum, Événements à venir, Positions des traders, Cotations des brokers, Sessions (Sydney, Tokyo, Londres, New York), Scanners Forex / macro (clic = changer d'instrument), Taux directeurs.
