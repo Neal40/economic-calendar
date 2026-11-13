@@ -25,7 +25,7 @@ const SCAN = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "USD/CAD", "AUD/USD", 
         page = JSON.parse(await p.evaluate(m.EXTRACT)); await p.close();
       } catch (e) { console.warn(slug, "page :", e.message); }
     }
-    const inst = (page && page.instrument && page.instrument.name) || NAME(slug);
+    const pn = page && page.instrument && page.instrument.name, inst = pn && pn.includes("/") ? pn : NAME(slug); // la page affiche « SPX », l'API attend « SPX/USD »
     const bars = {};
     for (const [iv, n] of [["M5", 600], ["M15", 300], ["H1", 300], ["H4", 300], ["D1", 300]]) { try { bars[iv] = pack(await m.bars(fetch, inst, iv, n)); } catch (e) { console.warn(slug, iv, e.message); } }
     const file = path.join(root, "api", `marche-${slug}.json`);
