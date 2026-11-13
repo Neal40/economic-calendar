@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.52.2] — 2026-11-13
+### Ajouté
+- Backtesteur › Aller à : **les macros** dans le menu, à leur heure — Macro 2h (01:50 → 02:10) … Macro 15h (14:50 → 15:10), comme la propriété « Time » du Journal de Neal, plus Macro 15h15 (Last Ditch, 15:15 → 15:45). Les Silver Bullet affichent aussi la fin de leur fenêtre.
+- **Prochaine macro** (Alt+9 par défaut, et Alt+Maj+M en raccourci fixe) : saute à la prochaine macro étoilée, quelle que soit l'heure ; le menu affiche l'heure de la prochaine macro et de la prochaine news.
+- Réglages « Aller à » : boutons ★ toutes / ☆ aucune pour les macros (les macros étoilées sont celles du menu et de « Prochaine macro »), liste défilante.
+### Modifié
+- Raccourcis Alt+1 → Alt+0 réservés aux favoris hors macros, toujours dans l'ordre des heures (les macros passent par « Prochaine macro »). Le menu « Aller à » défile s'il ne tient pas à l'écran.
+
 ## [1.52.1] — 2026-11-13
 ### Ajouté
 - Backtesteur › Aller à : **Opening Premarket** (7:00) et **Close Premarket** (9:00) ; Silver Bullet Londres (3:00) et Silver Bullet PM (14:00) en favoris.

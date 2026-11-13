@@ -1023,7 +1023,7 @@ table.tbl:has(#subT){min-width:900px}
 #btChart2{position:absolute;inset:0;z-index:0}
 .tx-cw2{border-left:2px solid var(--tx-hov)}
 .tx-grid{flex:1;display:flex;gap:0;min-width:0;min-height:0}
-.tx-pop .gp-sep{height:1px;background:var(--tx-hov,#2d2f32);margin:5px 0}.tx-pop .gp-it.on{color:var(--tx-acc,#ebbc4d)}.tx-pop kbd{font:11px Roboto,sans-serif;color:var(--tx-mut,#7d818a);border:1px solid var(--tx-line,#4a4d54);border-radius:3px;padding:0 4px}
+.tx-pop .gp-sep{height:1px;background:var(--tx-hov,#2d2f32);margin:5px 0}.tx-pop .gp-tm{width:40px;flex:none;color:var(--tx-mut,#7d818a);font-variant-numeric:tabular-nums}.tx-pop .gp-nm{flex:1;white-space:nowrap}.tx-pop .gp-nm small{color:var(--tx-mut,#7d818a);margin-left:6px}.tx-pop .gp-it.gp-mac{padding-top:5px;padding-bottom:5px;font-size:13px;color:var(--tx-txt3,#bfc3cb)}.gs-list{max-height:52vh;overflow:auto}.tx-pop .gp-it.on{color:var(--tx-acc,#ebbc4d)}.tx-pop kbd{font:11px Roboto,sans-serif;color:var(--tx-mut,#7d818a);border:1px solid var(--tx-line,#4a4d54);border-radius:3px;padding:0 4px}
 .gs-r{display:flex;align-items:center;gap:10px}.gs-r input,.gs-r select{width:190px;background:var(--tx-in,#131722);border:1px solid var(--tx-line,#4a4d54);color:#fff;border-radius:4px;padding:5px 8px;font:inherit}
 .gs-st{background:none!important;border:none!important;color:var(--tx-mut,#7d818a)!important;font-size:18px;width:28px;padding:0!important;margin:0!important;cursor:pointer}.gs-st.on{color:var(--tx-acc,#ebbc4d)!important}
 .gs-days{display:flex;gap:4px}.gs-days button{background:var(--tx-in,#131722);border:1px solid var(--tx-line,#4a4d54);color:var(--tx-txt3,#bfc3cb);border-radius:12px;padding:3px 10px;cursor:pointer}.gs-days button.on{background:var(--tx-acc,#ebbc4d);color:#0c0e12;border-color:var(--tx-acc,#ebbc4d)}
@@ -5708,7 +5708,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   function openBtPop(btn, html, onClick, alignRight) {
     const was = $("btPop") && $("btPop").dataset.for === btn.id; closeBtPop(); if (was) return;
     const p = document.createElement("div"); p.className = "tx-pop"; p.id = "btPop"; if (!btn.id) btn.id = "btPopA" + Date.now(); p.dataset.for = btn.id; p.innerHTML = html; document.body.appendChild(p);
-    const r = btn.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight; p.style.top = (r.bottom + 4 + h > window.innerHeight - 4 ? Math.max(4, r.top - h - 4) : r.bottom + 4) + "px"; p.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, alignRight ? r.right - w : r.left)) + "px";
+    const r = btn.getBoundingClientRect(), w = p.offsetWidth, below = window.innerHeight - r.bottom - 8, above = r.top - 8; let h = p.offsetHeight; const up = h > below && above > below, room = up ? above : below;
+    if (h > room) { p.style.maxHeight = room + "px"; p.style.overflowY = "auto"; h = room; } p.style.top = (up ? r.top - h - 4 : r.bottom + 4) + "px"; p.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, alignRight ? r.right - w : r.left)) + "px";
     p.onclick = onClick; setTimeout(() => document.addEventListener("mousedown", btPopOut, true), 0);
   }
   const BTSYNCS = [["syncSym", "Symbole", "Activé : le 2e chart affiche le même symbole que le chart principal. Désactivé : le symbole jumeau (NQ ⇄ ES, MNQ ⇄ MES)."],
@@ -6399,15 +6400,18 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     { id: "pmc", n: "Close Premarket", t: "09:00", star: true },
     { id: "rth", n: "Ouverture RTH New York", t: "09:30", star: true },
     { id: "nday", n: "Ouverture du jour suivant (Globex)", t: "18:00", star: false },
-    { id: "sbl", n: "Silver Bullet Londres", t: "03:00", star: true },
-    { id: "sbam", n: "Silver Bullet AM", t: "10:00", star: true },
-    { id: "sbpm", n: "Silver Bullet PM", t: "14:00", star: true },
-    { id: "macro", n: "Prochaine macro", t: "02:33, 04:03, 08:50, 09:50, 10:50, 11:50, 13:10, 15:15", star: false },
+    { id: "sbl", n: "Silver Bullet Londres", t: "03:00", end: "04:00", star: true },
+    { id: "sbam", n: "Silver Bullet AM", t: "10:00", end: "11:00", star: true },
+    { id: "sbpm", n: "Silver Bullet PM", t: "14:00", end: "15:00", star: true },
+    // macros (propriété « Time » du Journal de Neal) : xx:50 → xx:10, nommées par l'heure qu'elles encadrent (Macro 10h = 09:50 → 10:10), + Last Ditch 15:15 → 15:45
+    ...Array.from({ length: 14 }, (_, i) => { const h = i + 2, p2 = (x) => String(x).padStart(2, "0"); return { id: "mac" + h, n: `Macro ${h}h`, t: `${p2(h - 1)}:50`, end: `${p2(h)}:10`, grp: "macro", star: true }; }),
+    { id: "mac1515", n: "Macro 15h15 (Last Ditch)", t: "15:15", end: "15:45", grp: "macro", star: true },
     { id: "news", n: "Prochaine news", sp: "news", star: true },
+    { id: "macro", n: "Prochaine macro", sp: "macro", star: true },
     { id: "price", n: "Un prix…", sp: "price", star: false },
     { id: "date", n: "Une date…", sp: "date", star: false }];
   const goCfg = () => { const c = LS.get("bt-goto", {}); return { ev: c.ev || {}, skip: c.skip || [], imp: c.imp || "high" }; };
-  const goMin = (e) => { const h = hhmm(e.t)[0]; return e.sp ? 9000 + ["news", "price", "date"].indexOf(e.sp) : h ? h[0] * 60 + h[1] : 8999; };
+  const goMin = (e) => { const h = hhmm(e.t)[0]; return e.sp ? 9000 + ["news", "macro", "price", "date"].indexOf(e.sp) : h ? h[0] * 60 + h[1] : 8999; };
   const goList = () => { const c = goCfg(); return GODEF.map((e) => ({ ...e, ...(c.ev[e.id] || {}) })).sort((a, b) => goMin(a) - goMin(b)); }; // triés par heure NY
   const hhmm = (s) => String(s || "").split(/[,;\s]+/).map((x) => /^(\d{1,2})[:h](\d{2})$/.exec(x)).filter(Boolean).map((m) => [+m[1], +m[2]]).filter(([h, m]) => h < 24 && m < 60);
   function nextAt(after, times, skip) { // 1er horaire NY strictement après « after », hors samedi et jours sautés
@@ -6445,11 +6449,18 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         if (S.raw[i][0] - ts < 3 * 3600) return Math.max(S.cur, i - 1); // juste avant l'heure cible
         ts = nextAt(Math.max(ts, S.raw[i][0] - 1), times, skip); } // pas de cotation à cette heure-là (férié, dimanche) : horaire suivant
       return null;
-    }, () => `${e.n} : replay arrêté juste avant ${hm(ts)} (${dstr(ts)}).`);
+    }, () => `${e.lab ? e.lab(ts) : e.n} : replay arrêté juste avant ${hm(ts)} (${dstr(ts)}).`);
   }
-  function goNews() {
+  const macroEvs = () => { const M = goList().filter((e) => e.grp === "macro"), on = M.filter((e) => e.star); return on.length ? on : M; }; // macros étoilées (toutes si aucune)
+  const macroOf = (ts) => macroEvs().find((x) => hhmm(x.t).some(([h, mi]) => h * 60 + mi === nyMin(ts)));
+  function goMacro() { const M = macroEvs(); return goTime({ n: "Prochaine macro", t: M.map((x) => x.t).join(","), lab: (ts) => { const m = macroOf(ts); return m ? `${m.n} (${m.t} → ${m.end})` : "Prochaine macro"; } }); }
+  function nextNewsEv() {
     const imp = goCfg().imp, ok = (e) => e.ts != null && (imp === "med" ? e.i !== "low" : e.i === "high"), after = nextT(); let ev = null;
     for (let d = dayOf(after), k = 0; k < 21 && !ev; k++, d = addDays(d, 1)) ev = dayNews(d).filter((e) => ok(e) && e.ts > after).sort((a, b) => a.ts - b.ts)[0] || null;
+    return ev;
+  }
+  function goNews() {
+    const ev = S.raw.length ? nextNewsEv() : null;
     if (!ev) return msg("Aucune news à venir sur 3 semaines (le calendrier couvre nov. 2026 → déc. 2027).", true);
     return ffTo(() => { const i = firstAt(ev.ts); return i < 0 ? -1 : Math.max(S.cur, i - 1); }, () => `News ${hm(ev.ts)} : ${ev.n} — replay arrêté juste avant.`);
   }
@@ -6460,15 +6471,20 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       () => `Prix ${px.toFixed(2)} touché le ${dstr(S.raw[S.cur][0])} à ${hm(S.raw[S.cur][0])}.`);
   }
   function runGo(e) {
-    if (!e) return; if (e.sp === "news") return goNews(); if (e.sp === "price") return goPrice();
+    if (!e) return; if (e.sp === "news") return goNews(); if (e.sp === "macro") return goMacro(); if (e.sp === "price") return goPrice();
     if (e.sp === "date") { $("btGo").hidden = false; if (!$("btDate").value) $("btDate").value = S.raw.length ? sessionKey(S.raw[S.cur][0]) : lastTradingDay(); return; }
     return goTime(e);
   }
-  const goFavs = () => goList().filter((e) => e.star && e.sp !== "date");
+  // raccourcis Alt+1 → Alt+0 : favoris hors macros (les macros passent par « Prochaine macro »), dans l'ordre des heures
+  const goFavs = () => goList().filter((e) => e.star && e.grp !== "macro" && e.sp !== "date");
+  const favKey = (i) => (i < 9 ? `Alt+${i + 1}` : i === 9 ? "Alt+0" : "");
   const goFav = (n) => { const e = goFavs()[n]; if (!e) return msg(`Pas de ${n + 1}e favori : étoile un événement dans Aller à › Réglages.`, true); runGo(e); };
   function openGoMenu() {
-    const L = goList(), F = goFavs(), show = F.length ? F : L.filter((e) => !e.sp), kb = (i) => (F.length && i < 9 ? `<kbd>Alt+${i + 1}</kbd>` : "");
-    const item = (e, i) => `<button class="gp-it" data-go="${e.id}"><span style="flex:1">${esc(e.n)}</span><small style="color:var(--tx-mut,#7d818a)">${e.sp ? "" : esc(e.t.split(",")[0]) + (e.t.includes(",") ? "…" : "")}</small>${kb(i)}</button>`;
+    const L = goList(), K = new Map(goFavs().map((e, i) => [e.id, favKey(i)])), on = L.filter((e) => e.star && e.sp !== "price" && e.sp !== "date"), show = on.length ? on : L.filter((e) => !e.sp);
+    const hint = (e) => { try { if (!S.raw.length) return ""; if (e.sp === "news") { const n = nextNewsEv(); return n ? hm(n.ts) : ""; }
+      if (e.sp === "macro") { const ts = nextAt(nextT(), macroEvs().flatMap((x) => hhmm(x.t)), goCfg().skip); return ts ? hm(ts) : ""; } } catch (x) {} return ""; };
+    const item = (e) => { const k = K.get(e.id) || (e.sp === "macro" ? "Alt+Maj+M" : "");
+      return `<button class="gp-it ${e.grp === "macro" ? "gp-mac" : ""}" data-go="${e.id}"><span class="gp-tm">${e.sp ? hint(e) : esc(e.t.split(",")[0])}</span><span class="gp-nm">${esc(e.n)}${e.end ? `<small>→ ${esc(e.end)}</small>` : ""}</span>${k ? `<kbd>${k}</kbd>` : ""}</button>`; };
     openBtPop($("btGoBtn"), `<div class="gp-sec">ALLER AU PROCHAIN…</div>${show.map(item).join("")}<div class="gp-sep"></div>
       ${L.filter((e) => e.sp === "price" || e.sp === "date").map((e) => `<button class="gp-it" data-go="${e.id}">${esc(e.n)}</button>`).join("")}<div class="gp-sep"></div><button class="gp-it" data-go="cfg">⚙ Réglages…</button>`, (ev) => {
       const b = ev.target.closest("[data-go]"); if (!b) return; closeBtPop(); if (b.dataset.go === "cfg") return openGoSettings(); runGo(L.find((e) => e.id === b.dataset.go));
@@ -6476,14 +6492,15 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   function openGoSettings() {
     const c = goCfg(), L = goList();
-    const row = (e) => `<div class="tx-li gs-r"><button class="gs-st ${e.star ? "on" : ""}" data-st="${e.id}" title="Favori : dans le menu court, avec un raccourci Alt+1 → Alt+9 dans l'ordre des heures">${e.star ? "★" : "☆"}</button><div style="flex:1"><b>${esc(e.n)}</b></div>${e.sp ? (e.sp === "news" ? `<select data-imp="1"><option value="high" ${c.imp === "high" ? "selected" : ""}>Rouges</option><option value="med" ${c.imp === "med" ? "selected" : ""}>Rouges + orange</option></select>` : "") : `<input data-t="${e.id}" value="${esc(e.t)}" title="Heure de New York (HH:MM), plusieurs horaires séparés par des virgules">`}</div>`;
-    const m = modal("Aller à · réglages (heure de New York)", `<div class="tx-list">${L.map(row).join("")}</div>
+    const row = (e) => `<div class="tx-li gs-r"><button class="gs-st ${e.star ? "on" : ""}" data-st="${e.id}" title="${e.grp === "macro" ? "Macro affichée dans le menu et incluse dans « Prochaine macro » (Alt+Maj+M)" : "Favori : affiché dans le menu ; raccourcis Alt+1 → Alt+0 dans l'ordre des heures"}">${e.star ? "★" : "☆"}</button><div style="flex:1"><b>${esc(e.n)}</b>${e.end ? ` <small style="color:var(--tx-mut,#7d818a)">→ ${esc(e.end)}</small>` : ""}</div>${e.sp ? (e.sp === "news" ? `<select data-imp="1"><option value="high" ${c.imp === "high" ? "selected" : ""}>Rouges</option><option value="med" ${c.imp === "med" ? "selected" : ""}>Rouges + orange</option></select>` : "") : `<input data-t="${e.id}" value="${esc(e.t)}" title="Heure de New York (HH:MM), plusieurs horaires séparés par des virgules">`}</div>`;
+    const m = modal("Aller à · réglages (heure de New York)", `<div class="r" style="margin-bottom:8px">Macros<span class="gs-days"><button data-mall="1">★ toutes</button><button data-mall="0">☆ aucune</button></span></div><div class="tx-list gs-list">${L.map(row).join("")}</div>
       <div class="r" style="margin-top:12px">Jours à sauter<span class="gs-days">${[1, 2, 3, 4, 5, 0].map((w) => `<button data-w="${w}" class="${c.skip.includes(w) ? "on" : ""}">${JOURS[w]}</button>`).join("")}</span></div>
-      <div class="tx-empty" style="text-align:left">Le replay avance jusqu'à juste avant l'heure choisie (les ordres s'exécutent pendant le saut). Le samedi est toujours sauté ; un jour sans cotation à cette heure passe au suivant.</div>`,
+      <div class="tx-empty" style="text-align:left">Le replay avance jusqu'à juste avant l'heure choisie (les ordres s'exécutent pendant le saut). Le samedi est toujours sauté ; un jour sans cotation à cette heure passe au suivant. Les macros étoilées s'affichent dans le menu et forment « Prochaine macro » (Alt+Maj+M).</div>`,
       `<button data-m="def" class="ghost">Valeurs par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Enregistrer</button>`);
     const ev = JSON.parse(JSON.stringify(c.ev)); let skip = [...c.skip], imp = c.imp;
     m.oninput = (e) => { const t = e.target; if (t.dataset.t) ev[t.dataset.t] = { ...(ev[t.dataset.t] || {}), t: t.value }; if (t.dataset.imp) imp = t.value; };
-    m.onclick = (e) => { const b = e.target.closest("[data-st],[data-w],[data-m]"); if (!b) return;
+    m.onclick = (e) => { const b = e.target.closest("[data-st],[data-w],[data-m],[data-mall]"); if (!b) return;
+      if (b.dataset.mall) { const on = b.dataset.mall === "1"; L.filter((x) => x.grp === "macro").forEach((x) => { ev[x.id] = { ...(ev[x.id] || {}), star: on }; const sb = m.querySelector(`[data-st="${x.id}"]`); if (sb) { sb.classList.toggle("on", on); sb.textContent = on ? "★" : "☆"; } }); return; }
       if (b.dataset.st) { const id = b.dataset.st, cur = L.find((x) => x.id === id); const on = !((ev[id] && ev[id].star != null) ? ev[id].star : cur.star); ev[id] = { ...(ev[id] || {}), star: on }; b.classList.toggle("on", on); b.textContent = on ? "★" : "☆"; return; }
       if (b.dataset.w) { const w = +b.dataset.w; skip = skip.includes(w) ? skip.filter((x) => x !== w) : [...skip, w]; b.classList.toggle("on"); return; }
       const a = b.dataset.m; if (a === "x") return closeModal();
@@ -7584,7 +7601,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       ["Replay", [
         ["play", "Lecture / pause", ["Espace"], () => play()], ["stepF", "Bougie / pas suivant", ["→", "L"], () => stepNext()], ["stepB", "Bougie / pas précédent", ["←", "J"], () => backStep()],
         ["stepDn", "Diminuer le pas du replay", ["Alt+Shift+←"], () => stepMove(-1)], ["stepUp", "Augmenter le pas du replay", ["Alt+Shift+→"], () => stepMove(1)], ["stepSync", "Pas du replay = bougie du chart", ["Alt+Shift+↓"], () => setStep(null, P.stepSync === false)],
-        ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"], () => goFav(2)], ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"], () => goFav(3)], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"], () => goFav(4)], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"], () => goFav(5)], ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"], () => goFav(6)], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"], () => goFav(7)], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"], () => goFav(8)],
+        ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"], () => goFav(2)], ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"], () => goFav(3)], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"], () => goFav(4)], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"], () => goFav(5)], ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"], () => goFav(6)], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"], () => goFav(7)], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"], () => goFav(8)], ["goFav10", "Aller à : 10e favori (ordre des heures)", ["Alt+0"], () => goFav(9)], ["goMacro", "Aller à la prochaine macro (étoilées)", ["Alt+Shift+M"], () => goMacro()],
         ["faster", "Accélérer le replay", ["↑"], () => speed(1)], ["slower", "Ralentir le replay", ["↓"], () => speed(-1)],
         ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }]]],
       ["Ordres", [
