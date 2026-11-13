@@ -15,4 +15,8 @@ fs.copyFileSync("node_modules/d3/dist/d3.min.js","app/d3.min.js");
 h=h.replace(/<script src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/d3\/[^"]+"><\/script>/,'<script src="d3.min.js"></script>');
 fs.writeFileSync("app/index.html",h);
 fs.copyFileSync("build/icon.png","app/icon.png");
+// n° de build (GitHub Actions) : Paramètres › Profil › Application propose aussi une nouvelle build de la même version ; build locale = run 0
+const pkg=JSON.parse(fs.readFileSync(path.join(__dirname,"package.json"),"utf8"));
+let sha=process.env.GITHUB_SHA||""; if(!sha) try{sha=require("child_process").execSync("git rev-parse HEAD",{stdio:["ignore","pipe","ignore"]}).toString().trim()}catch(e){}
+fs.writeFileSync("app/build.json",JSON.stringify({v:pkg.version,run:+process.env.GITHUB_RUN_NUMBER||0,sha,at:new Date().toISOString()}));
 console.log("app/ ready");

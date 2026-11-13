@@ -547,6 +547,22 @@ body.th-ict .side .who .av{box-shadow:0 0 0 1px rgba(255,255,255,.6),0 0 26px rg
 @keyframes thCorona{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 18px rgba(255,255,255,.25)}50%{box-shadow:0 0 0 1px rgba(255,255,255,.85),0 0 38px rgba(255,255,255,.5)}}
 body.th-ict .day,body.th-ict .wrow{border-radius:2px}
 @media (prefers-reduced-motion:reduce){body.thx #thFx *,body.thx #thTicker .tk,body.th-ict .side .who .av{animation:none!important;stroke-dashoffset:0!important}}
+/* Paramètres › Profil › Application : version de l'app + mise à jour depuis GitHub ; pastille sur le menu quand une mise à jour est dispo */
+.apv-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.apv-top .apv-name{font-weight:600;font-size:14.5px}
+.apv-st{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:13.5px;line-height:1.45}
+.apv-st small{display:block;color:#8b8d98;font-size:12px;margin-top:2px}
+.apv-dot{width:9px;height:9px;border-radius:50%;flex:none;margin-top:5px;background:#6f727d}
+.apv-st.ok .apv-dot{background:#3ddc97}.apv-st.new .apv-dot{background:#f5a524;box-shadow:0 0 0 4px rgba(245,165,36,.18)}.apv-st.err .apv-dot{background:#ef4d5a}
+.panel.apv.new{border-color:rgba(245,165,36,.5)}
+.apv .pf-bar{max-width:440px;height:7px}.apv .pf-bar i{background:var(--acc,#2f54eb);transition:width .2s}body.noir:not(.thx) .apv .pf-bar i{background:#fff}
+.apv a.btn{text-decoration:none;display:inline-flex;align-items:center}.apv .btn:disabled{opacity:.5;cursor:default}
+.apv-msg.err{color:#ef4d5a}.apv-msg.info{color:#f5a524}.apv-msg.ok{color:#3ddc97}
+.apv-new{margin-top:12px}.apv-new summary{cursor:pointer;font-size:12.5px;color:#9a9ca7}
+.apv-new .apv-v{font-weight:600;font-size:12.5px;margin:10px 0 2px}.apv-new ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.5;color:#c9cad1}.apv-new li{margin:3px 0}.apv-new code{font-size:11.5px}
+.updot{display:none;width:8px;height:8px;border-radius:50%;background:#f5a524;flex:none;margin-left:auto;box-shadow:0 0 0 3px rgba(245,165,36,.2)}
+.gh .updot{margin-left:6px}
+body.upd-avail .nav .updot,body.upd-avail #gSet.closed>.gh .updot{display:block}
+.app.mini .nav[data-go="profil"]{position:relative}.app.mini .nav .updot{position:absolute;top:5px;right:9px;margin:0}.app.mini .gh .updot{display:none!important}
 /* sélecteur de thème (Paramètres › Profil › Apparence) */
 .pcard{display:flex;gap:20px;align-items:flex-start}
 .pcard .pav{width:84px;height:84px;flex:none;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(127,127,127,.3)}.pcard .pav img{width:100%;height:100%;object-fit:cover}
@@ -1336,9 +1352,9 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
     </div></div>
   <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="comptes"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M12 3l9 5H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg><span>Mes comptes</span></button><button class="nav" data-go="topstep"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" transform="translate(8.208 3.776) scale(0.03676)" d="M55.6,82.2H0V6.1h206.3v76.1h-54.4c-3.9,0-7,3.1-7,7v352.1H62.7V89.2c0-3.9-3.1-7-7-7h-.1Z"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic pf" viewBox="0 0 24 24"><defs><linearGradient id="pfApG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0026ff"/><stop offset="1" stop-color="#050927"/></linearGradient></defs><rect width="24" height="24" rx="5" fill="url(#pfApG)"/><path fill="#fff" transform="translate(3 7.517) scale(0.07472)" d="M239.253 21.9472C240.662 19.169 241.252 15.9095 240.662 12.475C239.428 5.25594 233.015 -0.0434828 225.695 0.000268926C223.761 0.0112069 221.877 0.388565 220.063 1.13234L219.337 1.47142L116.857 49.3959L69.8091 17.3041L69.1044 16.8228C64.74 13.9571 59.6763 12.4367 54.4597 12.4367C44.2286 12.4367 34.7514 18.4197 30.3159 27.6787L0.136126 89.2756C-0.284479 90.1343 0.338235 91.1351 1.29416 91.1351C1.68745 91.1351 2.05889 90.9546 2.3047 90.6483L49.8221 30.9491L91.2381 61.3784L41.7323 84.5286C41.0714 84.8348 40.7764 85.6169 41.0659 86.2841C41.3445 86.9349 42.0819 87.2576 42.7538 87.0224L98.9838 67.0716L165.248 115.849L165.232 115.833C168.564 118.442 172.754 120 177.298 120C184.727 120 191.429 115.871 194.811 109.226L194.838 109.183L195.013 108.838L239.269 21.9308L239.253 21.9527V21.9472ZM127.787 56.8556L210.373 27.5529L175.25 89.2319L127.787 56.8556Z"/></svg><span>Apex</span></button><button class="nav" data-go="mffu"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#02040e"/><g transform="translate(3 3) scale(0.16677) translate(-19.82 -44)"><g><path d="M51.2 56.3476V44H58.7276V49.199H70.0189V44H77.5465V49.199H88.8378V44H96.3653V56.3476H51.2Z" fill="#3A82F7"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M30.099 63.2073C30.099 63.2073 29.8762 74.045 30.099 88.1987C30.1186 89.4424 30.1337 90.7064 30.149 91.9864C30.4666 118.543 30.8658 151.927 72.8883 151.927C116.936 151.927 117.565 128.81 117.565 85.0748L117.565 63.2073H30.099ZM110.265 70.5244H37.3154C37.2883 74.9567 37.289 81.1158 37.3987 88.0833C37.4176 89.2874 37.4334 90.4915 37.4492 91.6937C37.6193 104.663 37.7864 117.406 41.8895 127.429C44.0082 132.604 47.0759 136.71 51.6043 139.603C56.1834 142.529 62.8753 144.61 72.8883 144.61C83.3627 144.61 90.497 143.219 95.4292 140.971C100.13 138.828 103.125 135.779 105.227 131.605C107.451 127.19 108.793 121.268 109.508 113.315C110.22 105.384 110.265 96.0779 110.265 85.0748L110.265 70.5244Z" fill="url(#mffuG0)"></path><path d="M58.1131 106.652H44.287C44.287 106.652 44.3734 115.772 47.0522 122.659C49.731 129.545 58.1131 135.921 58.1131 135.921V106.652Z" fill="#F2CB80"></path><path d="M82.5392 94.3049H65.0262V137.75H82.5392V94.3049Z" fill="url(#mffuG1)"></path><path d="M103.739 82.4146H89.4523V135.921C89.4523 135.921 103.739 132.469 103.739 114.346V82.4146Z" fill="#D8AE5E"></path></g><defs><linearGradient id="mffuG0" x1="117.565" y1="61.4677" x2="30.5816" y2="148.161" gradientUnits="userSpaceOnUse"><stop stop-color="#DEB25F"></stop><stop offset="1" stop-color="#F3CC81"></stop></linearGradient><radialGradient id="mffuG1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(82.5392 94.3049) rotate(111.955) scale(46.8421 18.8419)"><stop stop-color="#D8AE5E"></stop><stop offset="1" stop-color="#F4CD83"></stop></radialGradient></defs></g></svg><span>My Funded Futures</span></button><button class="nav" data-go="tradeify"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#0b0f0c"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#3ee07f">T</text></svg><span>Tradeify</span></button><button class="nav" data-go="phidias"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#121212"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#d9b46a">P</text></svg><span>Phidias</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
-<div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><i class="updot" title="Mise à jour disponible"></i><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="items">
-      <button class="nav" data-go="profil"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span></button>
+      <button class="nav" data-go="profil"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span><i class="updot" title="Mise à jour disponible"></i></button>
       <button class="nav" data-go="affiliation"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Affiliation</span></button>
       <button class="nav" data-go="abonnement"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Abonnement</span></button>
       <button class="nav" data-go="factures"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><span>Factures</span></button>
@@ -1413,6 +1429,7 @@ table.tbl:has(#subT){min-width:900px}
 <section class="view" id="v-recus"><div class="page" id="cp-recus"></div></section>
 <section class="view" id="v-profil"><div class="page">
   <h2>Profil</h2><p class="lead">Ton nom, ton handle, ton logo, ta bio, tes stratégies et tes réseaux.</p>
+  <div class="panel apv" id="apvBox"><div class="ptitle">Application</div><div id="apvBody"></div></div>
   <div class="panel pcard" id="pCard"></div>
   <div class="panel"><div class="pform">
     <label>Nom affiché</label><input id="bName" placeholder="Neal">
@@ -2172,7 +2189,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
-  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -4057,6 +4074,162 @@ function payoutCalc(a, fk, pays) {
     if (e.target.classList.contains("cpImp")) { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { let d = JSON.parse(t); if (!d.topstep && !d.apex) d = fromJournal(d); if (!d) throw 0; save(d); const v = (location.hash || "").slice(1); render(v); } catch (err) { alert("Fichier comptes.json invalide."); } }); }
   });
   document.addEventListener("click", (e) => { const sb = e.target.closest(".cpSync"); if (sb) { propSync(sb.dataset.k); return; } const pb = e.target.closest(".cpProof"); if (pb) { e.preventDefault(); e.stopPropagation(); const p = (firmOf(pb.dataset.firm).payouts || []).find((x) => x.account === pb.dataset.pacc && String(x.requested || "") === pb.dataset.req); if (p && p.proof) { const ov = document.createElement("div"); ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out"; ov.innerHTML = `<img src="${p.proof}" alt="Certificat" style="max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 10px 40px #000">`; ov.onclick = () => ov.remove(); document.body.appendChild(ov); } return; } const kb = e.target.closest(".cpKind"); if (kb) { state["kind_" + kb.dataset.k] = kb.dataset.v; render(kb.dataset.k); return; } const r = e.target.closest(".cpRow"); if (r) { state[r.dataset.k] = r.dataset.id; render(r.dataset.k); $("app").querySelector(".main").scrollTop = 0; } });
+})();
+</script>
+<script>
+/* ---------- Application : version de l'app + mise à jour depuis GitHub (Paramètres › Profil) ; pastille sur le menu Profil quand une mise à jour est dispo ----------
+   Desktop : desktop.appInfo / appUpdCheck / appUpdInstall / onAppUpd (desktop/updater.js). La maj auto (fichier .update.exe à côté de l'exe) reste active.
+   Web : version lue dans desktop/package.json (GitHub Pages) + liens vers les releases. */
+(function () {
+  const D = window.desktop, REPO = "https://github.com/Neal40/economic-calendar";
+  const ST = { info: null, chk: null, at: 0, checking: false, phase: "", got: 0, total: 0, msg: "", msgKind: "", cl: null, clFor: "", clOpen: false, webVer: null };
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const pv = (s) => { const m = /(\d+)\.(\d+)\.(\d+)/.exec(String(s || "")); return m ? m.slice(1).map(Number) : null; };
+  const cmpVer = (a, b) => { const x = pv(a), y = pv(b); if (!x || !y) return 0; for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i] ? 1 : -1; return 0; };
+  const mo = (n) => Math.max(1, Math.round((+n || 0) / 1048576));
+  const NYF = new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const nyWhen = (iso) => { const d = new Date(iso); if (!iso || isNaN(d)) return null; const p = {}; NYF.formatToParts(d).forEach((x) => (p[x.type] = x.value)); return { day: p.day + "/" + p.month, time: p.hour + ":" + p.minute }; };
+  const REASON = {
+    offline: "Impossible de vérifier les mises à jour (hors ligne ?).",
+    rate: "GitHub limite les vérifications : réessaie dans quelques minutes.",
+    release: "Impossible de lire la dernière version sur GitHub.",
+    platform: "Mise à jour depuis l'app indisponible sur ce système.",
+    dev: "Mode développement : pas de mise à jour depuis l'app.",
+    perm: "Impossible de remplacer l'app dans ce dossier : place « Inner Circle Trader » dans le dossier Applications, puis réessaie.",
+    bundle: "App introuvable sur le disque : télécharge la mise à jour depuis GitHub.",
+    updexe: "Lance « Inner Circle Trader.exe » (pas le fichier .update.exe) pour mettre à jour.",
+    copier: "Arrête le Trade copier (mode réel) avant de mettre à jour.",
+    "copier-wait": "Mise à jour téléchargée : elle s'installera toute seule dès que le Trade copier (mode réel) sera arrêté.",
+    uptodate: "Tu as déjà la dernière version.",
+    publishing: "La nouvelle version est en cours de publication sur GitHub : réessaie dans quelques minutes.",
+    busy: "Mise à jour déjà en cours…",
+  };
+  const reasonText = (r) => REASON[r] || (/^HTTP \d+$/.test(r || "") ? "Impossible de lire la dernière version sur GitHub (" + r + ")." : "Échec de la mise à jour : " + (r || "erreur inconnue"));
+  const pct = () => (ST.total ? Math.min(100, Math.floor((ST.got / ST.total) * 100)) : 0);
+  const dlText = () => `Téléchargement… ${pct()} % (${Math.round(ST.got / 1048576)} / ${mo(ST.total)} Mo)`;
+  const avail = () => !!(D && ST.chk && ST.chk.ok && ST.chk.available);
+  const AKEY = "econcal-upd-attempt", curKey = () => (ST.info ? ST.info.version + "+" + (ST.info.run || 0) : "");
+  const notify = (body) => { try { if (window.Notification && Notification.permission !== "denied") { const t = window.tr ? window.tr(body) : body, n = () => new Notification("Inner Circle Trader", { body: t }); Notification.permission === "granted" ? n() : Notification.requestPermission().then((x) => x === "granted" && n()); } } catch (e) { /* ignore */ } };
+
+  /* Nouveautés : sections du CHANGELOG entre la version installée (exclue) et la dernière publiée (incluse) */
+  const fmt = (t) => { t = t.length > 260 ? t.slice(0, 257).replace(/\s+\S*$/, "") + "…" : t; return esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*|`/g, ""); };
+  function parseNews(md, from, to) {
+    const out = []; let cur = null;
+    for (const line of String(md).split(/\r?\n/)) {
+      const h = /^## \[(\d+\.\d+\.\d+)\]/.exec(line);
+      if (h) { cur = cmpVer(h[1], from) > 0 && cmpVer(h[1], to) <= 0 ? { v: h[1], items: [] } : null; if (cur) out.push(cur); continue; }
+      if (cur && /^- /.test(line) && cur.items.length < 6) cur.items.push(fmt(line.slice(2).trim()));
+    }
+    return out.filter((s) => s.items.length).slice(0, 5);
+  }
+  async function loadNews(from, to) {
+    const key = from + ">" + to; if (!from || !to || ST.clFor === key) return; ST.clFor = key; ST.cl = null;
+    try { const r = await fetch("https://raw.githubusercontent.com/Neal40/economic-calendar/main/CHANGELOG.md", { cache: "no-store" }); if (!r.ok) return; ST.cl = parseNews(await r.text(), from, to); render(); }
+    catch (e) { /* hors ligne : pas de nouveautés */ }
+  }
+
+  /* ---------- rendu ---------- */
+  function head() {
+    const i = ST.info || {}, plat = D.platform === "darwin" ? "macOS" : D.platform === "win32" ? "Windows" : D.platform || "";
+    const build = i.packaged === false ? "mode développement" : i.run ? "build " + i.run : "build locale";
+    return `<div class="apv-top"><span class="apv-name">Inner Circle Trader</span><span class="pf-chip">v${esc(i.version || "…")}</span><span class="hintd" style="margin:0">${esc(plat)}</span><span class="hintd" style="margin:0" title="${esc(i.sha || "")}">${esc(build)}</span></div>`;
+  }
+  function status() {
+    const c = ST.chk, i = ST.info || {};
+    if (ST.phase === "download") return `<div class="apv-st new"><i class="apv-dot"></i><div style="flex:1"><span id="apvPct">${dlText()}</span><div class="pf-bar"><i id="apvBar" style="width:${pct()}%"></i></div></div></div>`;
+    if (ST.phase === "install") return `<div class="apv-st new"><i class="apv-dot"></i><div><span>Installation… l'app va redémarrer.</span><small>Elle se rouvre toute seule dans quelques secondes avec la nouvelle version.</small></div></div>`;
+    if (!c) return `<div class="apv-st"><i class="apv-dot"></i><div><span>Vérification des mises à jour…</span></div></div>`;
+    if (!c.ok) return `<div class="apv-st err"><i class="apv-dot"></i><div><span>${esc(reasonText(c.reason))}</span></div></div>`;
+    const L = c.latest || {}, w = nyWhen(L.publishedAt);
+    if (!c.available) return `<div class="apv-st ok"><i class="apv-dot"></i><div><span>À jour</span>${w ? `<small><span>dernière version publiée le ${w.day} à ${w.time} (NY)</span></small>` : ""}</div></div>`;
+    const sameV = cmpVer(L.version, i.version) === 0, bits = [];
+    if (L.size) bits.push(`<span>${mo(L.size)} Mo</span>`); if (w) bits.push(`<span>publiée le ${w.day} à ${w.time} (NY)</span>`); if (!c.ready) bits.push(`<span>publication en cours sur GitHub</span>`);
+    return `<div class="apv-st new"><i class="apv-dot"></i><div><span>Mise à jour disponible</span> <b>v${esc(L.version)}</b>${sameV && L.run ? ` <span class="hintd" style="margin:0">build ${L.run}</span>` : ""}${bits.length ? `<small>${bits.join(" · ")}</small>` : ""}</div></div>`;
+  }
+  function news() {
+    if (!avail() || ST.phase || !ST.cl || !ST.cl.length) return "";
+    return `<details class="apv-new"${ST.clOpen ? " open" : ""}><summary>Nouveautés</summary>${ST.cl.map((s) => `<div class="apv-v">v${esc(s.v)}</div><ul>${s.items.map((t) => `<li>${t}</li>`).join("")}</ul>`).join("")}</details>`;
+  }
+  function actions() {
+    if (ST.phase) return "";
+    const c = ST.chk, can = (ST.info && ST.info.install) || null, B = [];
+    if (avail()) B.push(can && can.ok ? `<button class="btn" data-apv="install"${c.ready ? "" : " disabled"}>Mettre à jour maintenant</button>` : `<a class="btn" href="${esc(c.page || REPO + "/releases")}" target="_blank" rel="noopener">Télécharger depuis GitHub</a>`);
+    B.push(`<button class="btn gray" data-apv="check"${ST.checking ? " disabled" : ""}>${ST.checking ? "Vérification…" : "Vérifier les mises à jour"}</button>`);
+    return `<div class="row2">${B.join("")}</div>`;
+  }
+  function webHTML() {
+    const v = ST.webVer;
+    return `<div class="apv-top"><span class="apv-name">Inner Circle Trader</span>${v ? `<span class="pf-chip">v${esc(v)}</span>` : ""}<span class="hintd" style="margin:0">Version web</span></div>
+      <div class="apv-st ok"><i class="apv-dot"></i><div><span>La version web est toujours à jour : recharge la page pour avoir la dernière version.</span></div></div>
+      <div class="row2"><span class="hintd" style="margin:0">Télécharger l'app :</span><a class="btn gray" href="${REPO}/releases/tag/latest" target="_blank" rel="noopener">Windows</a><a class="btn gray" href="${REPO}/releases/tag/latest-mac" target="_blank" rel="noopener">Mac</a><a class="btn gray" href="${REPO}/releases/tag/latest-android" target="_blank" rel="noopener">Android</a></div>`;
+  }
+  function render() {
+    const b = document.getElementById("apvBody"), box = document.getElementById("apvBox"); if (!b) return;
+    if (box) box.classList.toggle("new", avail() || !!ST.phase);
+    if (!D) { b.innerHTML = webHTML(); return; }
+    const can = (ST.info && ST.info.install) || null;
+    const hint = avail() && !ST.phase ? (can && can.ok ? "L'app se ferme, installe la nouvelle version et se relance toute seule. Tes données sont gardées." : can ? reasonText(can.reason) : "") : "";
+    b.innerHTML = head() + status() + news() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
+      + (D.platform === "win32" && !ST.phase ? `<p class="hintd">La mise à jour automatique reste active.</p>` : "");
+  }
+
+  /* ---------- actions ---------- */
+  async function check(force) {
+    if (!D || !D.appUpdCheck || ST.checking || ST.phase) return;
+    ST.checking = true; if (force) ST.msg = ""; render();
+    let r; try { r = await D.appUpdCheck(!!force); } catch (e) { r = null; }
+    ST.checking = false; ST.at = Date.now();
+    if (r && r.ok) ST.chk = r;
+    else if (ST.chk && ST.chk.ok) { ST.msg = reasonText(r ? r.reason : "offline"); ST.msgKind = "err"; } // garde le dernier résultat
+    else ST.chk = r || { ok: false, reason: "offline" };
+    document.body.classList.toggle("upd-avail", avail());
+    if (avail() && ST.info) loadNews(ST.info.version, ST.chk.latest.version);
+    render();
+  }
+  async function install() {
+    if (!D || !D.appUpdInstall || ST.phase) return;
+    ST.msg = ""; ST.phase = "download"; ST.got = 0; ST.total = (ST.chk && ST.chk.latest && ST.chk.latest.size) || 0; render();
+    try { localStorage.setItem(AKEY, JSON.stringify({ from: curKey(), to: ST.chk && ST.chk.latest && ST.chk.latest.version, at: Date.now() })); } catch (e) { /* ignore */ } // résultat montré au redémarrage
+    let r; try { r = await D.appUpdInstall(); } catch (e) { r = { ok: false, reason: String((e && e.message) || e) }; }
+    if (r && r.ok) { ST.phase = "install"; render(); return; }
+    try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ }
+    ST.phase = ""; ST.msg = reasonText(r && r.reason); ST.msgKind = r && r.reason === "copier-wait" ? "info" : "err"; render();
+    if (r && (r.reason === "uptodate" || r.reason === "publishing")) check(true);
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest && e.target.closest("[data-apv]"); if (!b || b.disabled || !b.closest("#apvBody")) return;
+    if (b.dataset.apv === "check") check(true); else if (b.dataset.apv === "install") install();
+  });
+  document.addEventListener("toggle", (e) => { if (e.target.classList && e.target.classList.contains("apv-new")) ST.clOpen = e.target.open; }, true);
+  if (D && D.onAppUpd) D.onAppUpd((p) => {
+    if (!p) return;
+    if (p.phase === "download") {
+      ST.phase = "download"; ST.got = +p.got || 0; ST.total = +p.total || ST.total;
+      const t = document.getElementById("apvPct"), bar = document.getElementById("apvBar");
+      if (t && bar) { t.textContent = dlText(); bar.style.width = pct() + "%"; return; } // pas de re-rendu complet à chaque paquet
+    } else if (p.phase === "install") ST.phase = "install";
+    render();
+  });
+
+  window.appVerRender = () => { render(); if (D && !ST.checking && (!ST.chk || Date.now() - ST.at > 10 * 60 * 1000)) check(false); };
+  if (D && D.appInfo) {
+    D.appInfo().then((i) => {
+      ST.info = i || null; if (i && i.downloading) ST.phase = "download";
+      // redémarrage après « Mettre à jour » : nouvelle version installée, ou ancienne relancée (remplacement impossible)
+      let a = null; try { a = JSON.parse(localStorage.getItem(AKEY) || "null"); localStorage.removeItem(AKEY); } catch (e) { /* ignore */ }
+      if (i && a && a.from && Date.now() - a.at < 15 * 60 * 1000) {
+        const ok = a.from !== curKey();
+        ST.msg = ok ? `Mise à jour installée : v${i.version}.` : "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub."; ST.msgKind = ok ? "ok" : "err";
+        notify(ok ? `Mise à jour installée : v${i.version}.` : "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub.");
+      }
+      render(); if (location.hash === "#profil") check(false);
+    }).catch(() => {});
+    setTimeout(() => check(false), 20 * 1000);         // au lancement : pastille sur le menu si une mise à jour est dispo
+    setInterval(() => check(false), 3 * 3600 * 1000);  // puis toutes les 3 h
+  } else if (/^https?:$/.test(location.protocol)) {
+    fetch("desktop/package.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => { if (j && j.version) { ST.webVer = j.version; render(); } }).catch(() => {});
+  }
+  render();
 })();
 </script>
 <script>
@@ -8189,6 +8362,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     "Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.": "Your name, handle and logo, shown in the menu and on the calendar.", "Nom affiché": "Display name", "Retirer": "Remove", "Texte du logo (sans image)": "Logo text (no image)", "Lien Notion (bouton du journal)": "Notion link (journal button)",
     "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
     "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
+    // Paramètres › Profil › Application (version + mise à jour)
+    "Mise à jour disponible": "Update available", "À jour": "Up to date", "Vérification des mises à jour…": "Checking for updates…", "Vérification…": "Checking…", "Vérifier les mises à jour": "Check for updates", "Mettre à jour maintenant": "Update now", "Télécharger depuis GitHub": "Download from GitHub", "Installation… l'app va redémarrer.": "Installing… the app will restart.", "Elle se rouvre toute seule dans quelques secondes avec la nouvelle version.": "It reopens by itself in a few seconds with the new version.", "L'app se ferme, installe la nouvelle version et se relance toute seule. Tes données sont gardées.": "The app closes, installs the new version and restarts by itself. Your data is kept.", "La mise à jour automatique reste active.": "Automatic updates stay on.", "Nouveautés": "What's new", "publication en cours sur GitHub": "being published on GitHub", "Version web": "Web version", "La version web est toujours à jour : recharge la page pour avoir la dernière version.": "The web version is always up to date: reload the page to get the latest version.", "Télécharger l'app :": "Download the app:", "build locale": "local build", "mode développement": "development mode", "Impossible de vérifier les mises à jour (hors ligne ?).": "Couldn't check for updates (offline?).", "GitHub limite les vérifications : réessaie dans quelques minutes.": "GitHub is limiting checks: try again in a few minutes.", "Impossible de lire la dernière version sur GitHub.": "Couldn't read the latest version on GitHub.", "Mise à jour depuis l'app indisponible sur ce système.": "In-app update isn't available on this system.", "Mode développement : pas de mise à jour depuis l'app.": "Development mode: no in-app update.", "Impossible de remplacer l'app dans ce dossier : place « Inner Circle Trader » dans le dossier Applications, puis réessaie.": "Can't replace the app in this folder: move « Inner Circle Trader » to the Applications folder, then try again.", "App introuvable sur le disque : télécharge la mise à jour depuis GitHub.": "App not found on disk: download the update from GitHub.", "Lance « Inner Circle Trader.exe » (pas le fichier .update.exe) pour mettre à jour.": "Launch « Inner Circle Trader.exe » (not the .update.exe file) to update.", "Arrête le Trade copier (mode réel) avant de mettre à jour.": "Stop the Trade copier (live mode) before updating.", "Mise à jour téléchargée : elle s'installera toute seule dès que le Trade copier (mode réel) sera arrêté.": "Update downloaded: it will install by itself as soon as the Trade copier (live mode) is stopped.", "Tu as déjà la dernière version.": "You already have the latest version.", "La nouvelle version est en cours de publication sur GitHub : réessaie dans quelques minutes.": "The new version is being published on GitHub: try again in a few minutes.", "Mise à jour déjà en cours…": "Update already in progress…", "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub.": "The update couldn't replace the app: try again, or download it from GitHub.",
     // calendrier
     "Aujourd'hui": "Today", "Mois précédent": "Previous month", "Mois suivant": "Next month", "Semaine précédente": "Previous week", "Semaine suivante": "Next week", "Par mois": "By month", "Par semaine": "By week", "Cliquer pour écrire ton plan": "Click to write your plan", "News en direct (headlines FinancialJuice). Les lignes en rouge sont les news à fort impact.": "Live news (FinancialJuice headlines). Red lines are high-impact news.", "Rien ne s'affiche ? Ouvre": "Nothing showing? Open",
     "(l'aperçu Claude bloque les contenus externes ; le site GitHub Pages et l'app .exe l'affichent).": "(the Claude preview blocks external content; the GitHub Pages site and the .exe app show it).", "+ Ajouter une facture": "+ Add an invoice",
@@ -8239,6 +8414,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     "Le compte actuel et ses trades seront remis à zéro. Continuer ?": "The current account and its trades will be reset. Continue?", "Une position est ouverte : la clôturer au prix actuel ?": "A position is open: close it at the current price?", "Compte cramé (MLL)": "Account blown (MLL)", "DLL atteinte": "DLL reached", "Rien": "Nothing",
   };
   const RX = [
+    [/^publiée le (\d\d\/\d\d) à (\d\d:\d\d) \(NY\)$/, "published on $1 at $2 (NY)"], [/^dernière version publiée le (\d\d\/\d\d) à (\d\d:\d\d) \(NY\)$/, "latest version published on $1 at $2 (NY)"], [/^(\d+) Mo$/, "$1 MB"],
+    [/^Téléchargement… (\d+) % \((\d+) \/ (\d+) Mo\)$/, "Downloading… $1 % ($2 / $3 MB)"], [/^Impossible de lire la dernière version sur GitHub \((.+)\)\.$/, "Couldn't read the latest version on GitHub ($1)."], [/^Échec de la mise à jour : (.+)$/, "Update failed: $1"], [/^Mise à jour installée : v(.+)\.$/, "Update installed: v$1."],
     [/^(\d+)K Prop firm · Backtest$/, "$1K Prop firm · Backtest"], [/^(\d+)K Classique · Backtest$/, "$1K Classic · Backtest"], [/^(.+) prêt\.$/, "$1 ready."],
     [/^Objectif (.+)$/, "Target $1"], [/^atteint le (.+)$/, "reached on $1"], [/^(.+) restants$/, "$1 left"], [/^Consistance \(meilleur jour ≤ (\d+) %\)$/, "Consistency (best day ≤ $1 %)"], [/^Payouts possibles \((\d+) j ≥ (.+)\)$/, "Possible payouts ($1 d ≥ $2)"],
     [/^(\d+) \/ (\d+) jours gagnants ≥ (.+)$/, "$1 / $2 winning days ≥ $3"], [/^(\d+) gagnants · (\d+) perdants · (\d+) trades$/, "$1 winners · $2 losers · $3 trades"], [/^(\d+) gagnants · meilleur (.+) · pire (.+)$/, "$1 winning · best $2 · worst $3"], [/^Tous les backtests \((\d+)\)$/, "All backtests ($1)"],

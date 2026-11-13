@@ -8,6 +8,7 @@ const notion = require("./notion");
 const backup = require("./backup");
 const propsync = require("./propsync");
 const marche = require("./marche");
+const updater = require("./updater");
 app.setPath("userData", backup.migrate(path.join(app.getPath("appData"), "Economic Calendar"), path.join(app.getPath("appData"), "Inner Circle Trader")));
 const ICT = () => path.join(app.getPath("desktop"), "Inner Circle Trader"); // dossier de travail : data/ + backups/
 
@@ -323,32 +324,100 @@ app.on("before-quit", (e) => {
 
 
 /* ---------- Mise à jour automatique : dépose « Inner Circle Trader.update.exe » (ou l'ancien EconomicCalendar.update.exe) à côté de l'exe -> l'app se ferme, remplace l'exe et se relance ---------- */
+const updExe = () => process.env.PORTABLE_EXECUTABLE_FILE || process.execPath;
+const updNotify = (body) => { try { new Notification({ title: "Inner Circle Trader", body }).show(); } catch (e) { /* ignore */ } };
+const updQuit = () => setTimeout(() => { app.isQuitting = true; app.quit(); setTimeout(() => app.exit(0), 5000); }, 800);
+let updBusy = false; // installation lancée (maj auto ou bouton du Profil) : une seule à la fois
+function updInstallWin(upd) { // script cmd détaché : attend la fermeture, remplace l'exe par upd, relance l'app
+  if (updBusy) return false; updBusy = true;
+  const bat = path.join(app.getPath("temp"), "ec-update.cmd");
+  fs.writeFileSync(bat, updater.winScript(upd, updExe()));
+  updNotify("Mise à jour reçue : redémarrage de l'app…");
+  require("child_process").spawn("cmd.exe", ["/c", bat], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+  updQuit(); return true;
+}
 function updWatch() {
   if (process.platform !== "win32" || !app.isPackaged) return;
-  const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, dir = path.dirname(exe);
+  const exe = updExe(), dir = path.dirname(exe);
   // lancée depuis le fichier de mise à jour lui-même : ne jamais s'auto-« installer » (boucle de relance infinie)
   if (/\.update\.exe$/i.test(exe)) return;
+  try { fs.rmSync(path.join(dir, "Inner Circle Trader.update.exe.part"), { force: true }); } catch (e) { /* téléchargement interrompu par une fermeture */ }
   const same = (p) => path.resolve(p).toLowerCase() === path.resolve(exe).toLowerCase();
-  let lastSize = -1, busy = false, upd = "";
+  let lastSize = -1, warned = false, upd = "";
   setInterval(() => {
-    if (busy) return;
+    if (updBusy) return;
     upd = ["Inner Circle Trader.update.exe", "EconomicCalendar.update.exe"].map((n) => path.join(dir, n)).find((p) => !same(p) && fs.existsSync(p)) || "";
-    let st; try { st = fs.statSync(upd); } catch (e) { lastSize = -1; return; }
+    let st; try { st = fs.statSync(upd); } catch (e) { lastSize = -1; warned = false; return; }
     if (st.size < 1e7 || st.size !== lastSize) { lastSize = st.size; return; } // attendre que le fichier soit entièrement copié
-    if (copier && !copier.dry) { if (lastSize !== -2) { try { new Notification({ title: "Inner Circle Trader", body: "Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer." }).show(); } catch (e) { /* ignore */ } } lastSize = -2; return; }
-    busy = true;
-    const bat = path.join(app.getPath("temp"), "ec-update.cmd"), q = (x) => '"' + x + '"';
-    fs.writeFileSync(bat, ["@echo off", "set n=0", ":retry", "ping -n 2 127.0.0.1 >nul", `move /Y ${q(upd)} ${q(exe)} >nul 2>&1`, "if not errorlevel 1 goto ok", "set /a n+=1", "if %n% lss 120 goto retry", "exit /b 1", ":ok", `start "" ${q(exe)}`, '(goto) 2>nul & del "%~f0"', ""].join("\r\n"));
-    try { new Notification({ title: "Inner Circle Trader", body: "Mise à jour reçue : redémarrage de l'app…" }).show(); } catch (e) { /* ignore */ }
-    require("child_process").spawn("cmd.exe", ["/c", bat], { detached: true, stdio: "ignore", windowsHide: true }).unref();
-    setTimeout(() => { app.isQuitting = true; app.quit(); setTimeout(() => app.exit(0), 5000); }, 800);
+    if (copier && !copier.dry) { if (!warned) updNotify("Mise à jour prête : arrête le Trade copier (mode réel) pour l'installer."); warned = true; return; } // une seule notification
+    updInstallWin(upd);
   }, 3000);
 }
+
+/* ---------- Version de l'app + mise à jour depuis GitHub (Paramètres › Profil › Application) : l'utilisateur la lance lui-même, la maj auto ci-dessus reste active ---------- */
+const BUILD = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, "app", "build.json"), "utf8")) || {}; } catch (e) { return {}; } })(); // écrit par prepare.js (n° de build GitHub Actions)
+const updCurrent = () => ({ version: app.getVersion(), run: Math.max(0, Math.floor(+BUILD.run) || 0) });
+function updCanInstall() {
+  if (!app.isPackaged) return { ok: false, reason: "dev" };
+  if (process.platform === "win32") return /\.update\.exe$/i.test(updExe()) ? { ok: false, reason: "updexe" } : { ok: true };
+  if (process.platform === "darwin") {
+    const b = updater.macBundle(process.execPath); if (!b) return { ok: false, reason: "bundle" };
+    try { fs.accessSync(path.dirname(b), fs.constants.W_OK); return { ok: true }; } catch (e) { return { ok: false, reason: "perm" }; }
+  }
+  return { ok: false, reason: "platform" };
+}
+let updLast = null, updAt = 0, updDl = false;
+async function updCheck(force) { // GitHub limite à 60 requêtes / heure : résultat gardé 10 min
+  if (!force && updLast && updLast.ok && Date.now() - updAt < 10 * 60 * 1000) return updLast;
+  const r = await updater.check(net.fetch, process.platform, updCurrent());
+  if (r.ok) { updLast = r; updAt = Date.now(); }
+  return r;
+}
+const updPublic = (r) => { if (!r || !r.ok) return r; const { dl, ...o } = r; return o; };
+const updSend = (p) => { try { if (win && !win.isDestroyed()) win.webContents.send("app:updProgress", p); } catch (e) { /* fenêtre fermée */ } };
+const liveCopier = () => !!(copier && !copier.dry);
+ipcMain.handle("app:info", () => ({ version: app.getVersion(), run: updCurrent().run, sha: String(BUILD.sha || "").slice(0, 7), platform: process.platform, packaged: app.isPackaged, install: updCanInstall(), downloading: updDl }));
+ipcMain.handle("app:updCheck", async (e, force) => updPublic(await updCheck(!!force)));
+ipcMain.handle("app:updInstall", async () => {
+  if (updDl || updBusy) return { ok: false, reason: "busy" };
+  const can = updCanInstall(); if (!can.ok) return can;
+  if (liveCopier()) return { ok: false, reason: "copier" };
+  updDl = true;
+  try {
+    const fresh = await updCheck(true); // GitHub injoignable / limité : dernier résultat de moins de 30 min (le fichier reste vérifié par taille + SHA-256)
+    const r = fresh.ok ? fresh : updLast && updLast.ok && Date.now() - updAt < 30 * 60 * 1000 ? updLast : fresh;
+    if (!r.ok) return r;
+    if (!r.available) return { ok: false, reason: "uptodate" };
+    if (!r.ready || !r.dl) return { ok: false, reason: "publishing" };
+    const prog = (p) => updSend({ phase: "download", got: p.got, total: p.total });
+    if (process.platform === "win32") {
+      // même fichier que la maj auto : s'il ne peut pas être installé tout de suite, la surveillance l'installera plus tard
+      const dest = path.join(path.dirname(updExe()), "Inner Circle Trader.update.exe");
+      await updater.download(net.fetch, r.dl, dest, prog);
+      if (liveCopier()) return { ok: false, reason: "copier-wait" };
+      updSend({ phase: "install" }); updInstallWin(dest);
+      return { ok: true };
+    }
+    const bundle = updater.macBundle(process.execPath), zip = path.join(app.getPath("temp"), "Inner-Circle-Trader-mac.zip");
+    await updater.download(net.fetch, r.dl, zip, prog);
+    updSend({ phase: "install" });
+    const { execFile, spawn } = require("child_process");
+    const run = (cmd, args) => new Promise((ok, ko) => execFile(cmd, args, { maxBuffer: 1 << 20 }, (err) => (err ? ko(err) : ok())));
+    let st; try { st = await updater.macStage(run, zip, bundle); } finally { fs.rmSync(zip, { force: true }); }
+    if (liveCopier()) { fs.rmSync(st.stage, { recursive: true, force: true }); return { ok: false, reason: "copier" }; }
+    updBusy = true;
+    spawn("/bin/sh", ["-c", updater.MAC_SWAP, "sh", bundle, st.stage, st.app, String(process.pid)], { detached: true, stdio: "ignore" }).unref();
+    updQuit(); return { ok: true };
+  } catch (err) { return { ok: false, reason: err.code === "SHA" ? "publishing" : String(err.message || err) }; }
+  finally { updDl = false; }
+});
 
 app.whenReady().then(() => {
   if (!LOCK) return;
   try { backup.run({ userData: app.getPath("userData"), dataDir: md().dir, root: path.join(ICT(), "backups") }); } // avant la fenêtre : Local Storage / IndexedDB pas encore ouverts
   catch (e) { try { new Notification({ title: "Inner Circle Trader", body: "Sauvegarde impossible : " + (e.message || e) }).show(); } catch (x) { /* ignore */ } }
-  createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch(); setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
+  createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch();
+  if (process.platform === "darwin" && app.isPackaged) setTimeout(() => { const b = updater.macBundle(process.execPath); if (b && !updBusy && !updDl) try { fs.rmSync(path.join(path.dirname(b), updater.MAC_STAGE), { recursive: true, force: true }); } catch (e) { /* reste d'une mise à jour Mac interrompue */ } }, 60 * 1000);
+  setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());

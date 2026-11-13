@@ -34,16 +34,23 @@ jobs:
         with:
           name: InnerCircleTrader-windows
           path: desktop/dist/*.exe
+      # version + taille / SHA-256 de l'exe : l'app (Paramètres › Profil › Application) lit le commentaire ict-build du corps de la release
       - name: Version
         id: v
         shell: bash
-        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          f="dist/Inner Circle Trader.exe"
+          echo "size=$(wc -c < "$f" | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          echo "sha256=$(sha256sum "$f" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
       - name: Publish release "latest"
         uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
           name: Inner Circle Trader v${{ steps.v.outputs.v }} (Windows)
-          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** — `Inner.Circle.Trader.exe` = app portable (à renommer « Inner Circle Trader.exe »). Anciens fichiers à ignorer : `Inner.Circle.Trader.Setup.exe` (installeur v1.2, plus fabriqué) et `EconomicCalendar-1.0.0-*` (version **v1.0**, Economic Calendar)."
+          body: |
+            **Inner Circle Trader v${{ steps.v.outputs.v }}** — `Inner.Circle.Trader.exe` = app portable (à renommer « Inner Circle Trader.exe »). Mise à jour depuis l'app : Paramètres › Profil › Application. Anciens fichiers à ignorer : `Inner.Circle.Trader.Setup.exe` (installeur v1.2, plus fabriqué) et `EconomicCalendar-1.0.0-*` (version **v1.0**, Economic Calendar).
+            <!-- ict-build {"v":"${{ steps.v.outputs.v }}","run":${{ github.run_number }},"sha":"${{ github.sha }}","size":${{ steps.v.outputs.size }},"sha256":"${{ steps.v.outputs.sha256 }}"} -->
           prerelease: false
           make_latest: true
           files: |

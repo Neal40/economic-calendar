@@ -28,7 +28,7 @@ Application de trading personnelle pour les futures **NQ / ES** (prop firm Topst
 
 ## Installation et lancement
 
-**Utiliser l'app :** télécharger `Inner.Circle.Trader.exe` dans les [Releases](https://github.com/Neal40/economic-calendar/releases/latest), le renommer `Inner Circle Trader.exe` et le lancer (portable, pas d'installation). La version web est sur [GitHub Pages](https://neal40.github.io/economic-calendar/).
+**Utiliser l'app :** télécharger `Inner.Circle.Trader.exe` dans les [Releases](https://github.com/Neal40/economic-calendar/releases/latest), le renommer `Inner Circle Trader.exe` et le lancer (portable, pas d'installation). Les mises à jour suivantes se font depuis l'app : **Paramètres › Profil › Application › Mettre à jour maintenant** (une pastille sur « Profil » signale une nouvelle version). La version web est sur [GitHub Pages](https://neal40.github.io/economic-calendar/).
 
 **Développer :**
 

@@ -39,10 +39,15 @@ jobs:
           path: |
             desktop/dist/*.dmg
             desktop/dist/*.zip
+      # version + taille / SHA-256 du .zip (utilisé par la mise à jour depuis l'app : Paramètres › Profil › Application)
       - name: Version
         if: github.event_name != 'pull_request'
         id: v
-        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          f="dist/Inner-Circle-Trader-mac.zip"
+          echo "size=$(wc -c < "$f" | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          echo "sha256=$(shasum -a 256 "$f" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
       # Release séparée « latest-mac » : ne touche pas à la release Windows « latest »
       - name: Publish release "latest-mac"
         if: github.event_name != 'pull_request'
@@ -50,7 +55,9 @@ jobs:
         with:
           tag_name: latest-mac
           name: Inner Circle Trader v${{ steps.v.outputs.v }} (macOS)
-          body: "**Inner Circle Trader v${{ steps.v.outputs.v }}** pour Mac (universel : Apple Silicon + Intel). Ouvrir le `.dmg` et glisser l'app dans Applications. App non notarisée par Apple : au premier lancement, faire clic droit → Ouvrir, ou lancer `xattr -cr \"/Applications/Inner Circle Trader.app\"` dans le Terminal."
+          body: |
+            **Inner Circle Trader v${{ steps.v.outputs.v }}** pour Mac (universel : Apple Silicon + Intel). Ouvrir le `.dmg` et glisser l'app dans Applications. App non notarisée par Apple : au premier lancement, faire clic droit → Ouvrir, ou lancer `xattr -cr "/Applications/Inner Circle Trader.app"` dans le Terminal. Ensuite : Paramètres › Profil › Application pour mettre à jour depuis l'app.
+            <!-- ict-build {"v":"${{ steps.v.outputs.v }}","run":${{ github.run_number }},"sha":"${{ github.sha }}","size":${{ steps.v.outputs.size }},"sha256":"${{ steps.v.outputs.sha256 }}"} -->
           prerelease: false
           make_latest: false
           files: |

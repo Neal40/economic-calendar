@@ -46,4 +46,9 @@ contextBridge.exposeInMainWorld("desktop", {
   storeGet: () => ipcRenderer.invoke("store:get"),
   storeSet: (d) => ipcRenderer.invoke("store:set", d),
   newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),
+  // Paramètres › Profil › Application : version, dernière release GitHub, mise à jour lancée par l'utilisateur
+  appInfo: () => ipcRenderer.invoke("app:info"),
+  appUpdCheck: (force) => ipcRenderer.invoke("app:updCheck", force),
+  appUpdInstall: () => ipcRenderer.invoke("app:updInstall"),
+  onAppUpd: (cb) => ipcRenderer.on("app:updProgress", (e, p) => cb(p)),
 });

@@ -2,6 +2,18 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.53.0] — 2026-11-13
+### Ajouté
+- **Paramètres › Profil › Application** : version de l'app (et n° de build), dernière version publiée sur GitHub et bouton **Mettre à jour maintenant** — téléchargement avec progression, vérification du fichier (taille + SHA-256), puis l'app se ferme, installe la nouvelle version et se relance toute seule (données gardées). Windows : même mécanisme que la mise à jour automatique ; Mac : l'app est remplacée dans Applications puis relancée. Bouton « Vérifier les mises à jour », nouveautés de la version (CHANGELOG) et message au redémarrage (« Mise à jour installée » ou échec).
+- Pastille orange sur **Profil** dans le menu quand une mise à jour est disponible (vérification au lancement, puis toutes les 3 h).
+- Une nouvelle build de la même version est aussi proposée : n° de build GitHub Actions dans l'app (`app/build.json`) et dans la release.
+- Version web : version affichée + liens de téléchargement Windows / Mac / Android.
+- Releases `latest` / `latest-mac` : version, n° de build, commit, taille et SHA-256 du fichier dans le corps (commentaire `ict-build`, lu par l'app).
+### Modifié
+- La mise à jour automatique reste active (fichier `Inner Circle Trader.update.exe` posé à côté de l'exe) ; si l'exe reste bloqué plus de 2 min, l'ancienne version est relancée au lieu de laisser l'app fermée, et le fichier de mise à jour est retiré.
+### Corrigé
+- Mise à jour en attente pendant que le Trade copier tourne en mode réel : une seule notification au lieu d'une toutes les 6 s.
+
 ## [1.52.2] — 2026-11-13
 ### Ajouté
 - Backtesteur › Aller à : **les macros** dans le menu, à leur heure — Macro 2h (01:50 → 02:10) … Macro 15h (14:50 → 15:10), comme la propriété « Time » du Journal de Neal, plus Macro 15h15 (Last Ditch, 15:15 → 15:45). Les Silver Bullet affichent aussi la fin de leur fenêtre.
