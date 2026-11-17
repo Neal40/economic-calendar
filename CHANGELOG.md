@@ -2,6 +2,16 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.56.1] — 2026-11-17
+### Modifié
+- Hexagone de performance : l'axe **RR** = moyenne du **RR fait** des setups du Journal de Neal liés aux trades du compte (un setup compté une fois), au lieu de Avg Win / Avg Loss. « — » si aucun setup Notion lié ; l'infobulle donne le nombre de setups.
+- Daily Account Balance : la courbe part du solde de départ **le jour de l'achat du compte** (« Date de début » TopstepX, sinon la date du compte dans Comptes › Topstep, sinon la veille du 1er jour tradé) : l'equity curve s'affiche dès le premier jour de trading.
+- Journal de Neal : **un setup = un seul trade TopstepX**. Les entrées prises au même moment sur les comptes copiés (≤ 2 min d'écart) forment un trade ; deux entrées séparées (ex. 9:49 sortie à BE puis 10:04 au TP) sont deux trades différents et ne sont plus jamais liées au même setup (annule le regroupement des ré-entrées de la 1.55.1). Quand plusieurs trades tombent dans la fenêtre Time, le choix se fait par le Status (TP = gagnant, SL = perdant, BE ≈ 0), la fenêtre exacte, puis l'exclusivité entre setups du même jour. Une Entrée saisie à la main (à la minute) fixe le trade.
+- Entrée / Sortie / PnL / MAE / MFE écrits par l'app (Entrée à la seconde) sont réécrits si le setup est relié à un autre trade.
+- MAE / MFE : calculés sur les bougies 1 min strictement entre l'entrée et la sortie + prix d'entrée et de sortie réels (les minutes de bord contenaient des prix d'avant l'entrée / d'après la sortie) ; **MAE plafonnée à 1 R** (au-delà, le stop aurait sorti la position).
+### Corrigé
+- Journal de trading (responsive) : les cartes du haut passent sur 3 colonnes sous 1 800 px et ne débordent plus (Avg Win / Avg Loss, Profit Factor) ; les étiquettes de l'hexagone ne recouvrent plus les noms des axes.
+
 ## [1.56.0] — 2026-11-17
 ### Ajouté
 - **Graphique** (menu Laboratoire, juste au-dessus de Backtesteur) : une page façon TradingView.

@@ -911,7 +911,9 @@ body.jt-bt-on .jt-tsx,body.jt-p80-on .jt-tsx{display:none!important}
 .tsx-top .tsx-lab{font-size:13px}
 .tsx-top .tsx-viz{zoom:.78}
 .tsx-top .tsx-avgv{font-size:clamp(13px,1.05vw,20px);gap:8px}
-@media (max-width:1500px){.tsx-top{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1800px){.tsx-top{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tsx-top .tsx-card{min-width:0;overflow:hidden}.tsx-top .tsx-kpi>div{min-width:0}
+.tsx-top .tsx-avg{min-width:0;flex:1 1 90px}.tsx-top .tsx-avgv{flex-wrap:wrap;row-gap:2px}
 @media (max-width:800px){.tsx-top{grid-template-columns:1fr}}
 .tsx-row2 .tsx-hexa{grid-column:auto}
 .tsx-row2{display:grid;grid-template-columns:minmax(380px,1fr) minmax(0,2fr);gap:14px;margin-bottom:14px}
@@ -3126,7 +3128,10 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const T = trades(), c = curRow(); if (!T || !c) { el.replaceChildren(); return; }
     let pts;
     if (c._all) { let s0 = 0; pts = daily(T).map((d) => ({ day: d.day, v: Math.round((s0 += d.p) * 100) / 100 })); }
-    else pts = T.filter((t) => t["Solde fin de journée"] !== undefined && t["Solde fin de journée"] !== null && t["Solde fin de journée"] !== "").map((t) => ({ day: t.day, v: Number(t["Solde fin de journée"]) })).sort((a, b) => d3.ascending(a.day, b.day));
+    else { pts = T.filter((t) => t["Solde fin de journée"] !== undefined && t["Solde fin de journée"] !== null && t["Solde fin de journée"] !== "").map((t) => ({ day: t.day, v: Number(t["Solde fin de journée"]) })).sort((a, b) => d3.ascending(a.day, b.day));
+      // la courbe part du solde de départ, le jour de l'achat du compte (sinon la veille du 1er jour tradé) : visible même après un seul jour
+      const st = Number(c["Solde de départ"]); if (pts.length && !isNaN(st)) { const d0 = startDayOf(c), first = pts[0].day;
+        const day = d0 && d0 < first ? d0 : d3.utcFormat("%Y-%m-%d")(d3.utcDay.offset(pDay(first), -1)); pts.unshift({ day, v: st, start: true }); } }
     if (!pts.length) { empty(el); return; }
     const tgt = targetOf(c), mll = Number(c["Plancher MLL"]) || 0;
     const h = 300, mb = 30; const lo = d3.min([...pts.map((p) => p.v), mll || Infinity, c._all ? 0 : Infinity]), hi = d3.max([...pts.map((p) => p.v), tgt || -Infinity, c._all ? 0 : -Infinity]);
@@ -3145,8 +3150,14 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     svg.append("path").datum(pts).attr("d", d3.area().x(X).y0(h - mb).y1((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", `url(#${id})`);
     svg.append("path").datum(pts).attr("d", d3.line().x(X).y((p) => y(p.v)).curve(d3.curveMonotoneX)).attr("fill", "none").attr("stroke", c._all ? col : "#9aa3ad").attr("stroke-width", 1.6);
     svg.selectAll(".pt").data(pts).join("circle").attr("cx", X).attr("cy", (p) => y(p.v)).attr("r", 3.5).attr("fill", "#0c0f13").attr("stroke", col).attr("stroke-width", 1.5)
-      .on("mousemove", (ev, p) => show(el, tip, ev, [dLab(p.day), usd(p.v)])).on("mouseleave", () => hide(tip));
+      .on("mousemove", (ev, p) => show(el, tip, ev, [dLab(p.day), (p.start ? "Achat du compte · " : "") + usd(p.v)])).on("mouseleave", () => hide(tip));
   });
+  /* date d'achat d'un compte : TopstepX (« Date de début ») sinon le même compte dans Comptes › Topstep (comptes.json) */
+  function startDayOf(c) {
+    if (c["Date de début"]) return String(c["Date de début"]).slice(0, 10);
+    try { const C = JSON.parse(localStorage.getItem("econcal-comptes") || "null"), dig = (x) => (/(\d{6,})\D*$/.exec(String(x || "")) || [])[1], k = dig(c["Nom TopstepX"]);
+      const a = k && C && C.topstep && (C.topstep.accounts || []).find((x) => dig(x.name) === k); const d = a && (a.start || a.purchased || a.date); return d ? String(d).slice(0, 10) : null; } catch (e) { return null; }
+  }
   dash.draw("cum", (el) => {
     const T = trades(); if (!T) { el.replaceChildren(); return; } if (!T.length) { empty(el); return; }
     let s = 0; const pts = daily(T).map((d) => ({ day: d.day, v: Math.round((s += d.p) * 100) / 100 }));
@@ -3229,12 +3240,17 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const K = rows.filter((r) => r.risk !== null);
     return { n: K.length, avg: K.length ? d3.mean(K, (r) => r.risk) : null, pct: K.length ? d3.mean(K, (r) => r.pct) : null, ok: K.filter((r) => r.ok).length, est: K.filter((r) => r.src === "perte").length };
   };
+  /* RR de l'hexagone = moyenne du « RR fait » des setups du Journal de Neal liés aux trades de ce compte (un setup compté une fois) */
+  const rrFaitOf = (c) => { const A = window.reviewAPI, L = [];
+    try { if (A && A.state && A.state.macro) for (const r of A.state.macro.rows) { if (typeof r["RR fait"] !== "number") continue; const h = A.tsxMatch(r);
+      if (h && h.some((t) => c._all || String(t["ID TopstepX"]) === String(c["ID TopstepX"]))) L.push(r["RR fait"]); } } catch (e) {}
+    return { n: L.length, avg: L.length ? d3.mean(L) : null }; };
   const hexaStats = (c) => {
     const T = (dash.data("fills_calc").data || []).filter((t) => c._all || t["ID TopstepX"] === String(c["ID TopstepX"])).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
     const start = Number(c["Solde de départ"]) || 50000; let bal = start, peak = start, dd = 0;
     for (const t of T) { bal += t["Net P&L"]; peak = Math.max(peak, bal); dd = Math.max(dd, peak - bal); }
-    const rk = riskOf(c);
-    return { Winrate: Number(c["Trade Win %"]) || 0, RR: Number(c["Avg Win / Avg Loss"]) || 0, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: rk.pct, _risk: rk };
+    const rk = riskOf(c), rr = rrFaitOf(c);
+    return { Winrate: Number(c["Trade Win %"]) || 0, RR: rr.avg, _rr: rr, DD: (dd / start) * 100, Positions: Number(c["Total Trades"]) || 0, Risque: rk.pct, _risk: rk };
   };
   R().addEventListener("click", (e) => { const b = e.target.closest("[data-hx]"); if (b) dash.setParams({ hx: b.dataset.hx }); });
   dash.draw("hexa", (el) => {
@@ -3243,25 +3259,25 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     R().querySelectorAll("[data-hx]").forEach((b) => b.classList.toggle("on", b.dataset.hx === mode));
     const real = all.data.filter((a) => !a._all);
     const me = hexaStats(c), avgs = real.map(hexaStats), avg = {};
-    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => v.toFixed(2)], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions) || 0, me.Positions), (v) => String(Math.round(v))], ["Risque", 50, (v) => v.toFixed(1) + "%"]];
-    AXES.forEach(([k]) => (avg[k] = d3.mean(avgs, (a) => a[k]) || 0));
+    const AXES = [["Winrate", 1, (v) => (v * 100).toFixed(2) + "%"], ["RR", 5, (v) => (v == null ? "—" : v.toFixed(2))], ["DD", 10, (v) => v.toFixed(2) + "%"], ["Positions", Math.max(10, d3.max(avgs, (a) => a.Positions) || 0, me.Positions), (v) => String(Math.round(v))], ["Risque", 50, (v) => v.toFixed(1) + "%"]];
+    AXES.forEach(([k]) => (avg[k] = k === "RR" ? d3.mean(avgs, (a) => a.RR) ?? null : d3.mean(avgs, (a) => a[k]) || 0));
     const rkAll = riskOf(all.data.find((a) => a._all) || { _all: true }), rk = mode === "avg" ? rkAll : me._risk, usd0 = (v) => "$" + Math.round(v).toLocaleString("en-US");
     const rkTip = rk && rk.n ? `<div class="tl">Risque moyen : ${usd0(rk.avg)} sur 2 000 $ de vrai capital · ${rk.n} position(s)${rk.est ? `, dont ${rk.est} estimée(s) par la perte réalisée` : ""}</div><div class="tl">Règle des tranches (500 $, 250 $ sous 1 500 $ de DD) : ${rk.ok} / ${rk.n} respectée(s)</div>` : `<div class="tl">Aucun risque connu : ajoute le tag « Risque » ou le RR fait dans Notion</div>`;
     const data = mode === "avg" ? avg : me, fill = mode === "avg" ? "rgba(226,179,61,.30)" : "rgba(47,84,235,.38)", stroke = mode === "avg" ? "#e2b33d" : "#3b5bff", tagBg = mode === "avg" ? "#e2b33d" : "#2f54eb", tagFg = mode === "avg" ? "#17130a" : "#fff";
-    const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, Rr = Math.min(118, W / 2 - 70);
+    const W = Math.max(280, el.clientWidth || 520), H = 300, cx = W / 2, cy = H / 2 + 6, Rr = Math.min(108, W / 2 - 84);
     const svg = d3.select(el).append("svg").attr("width", "100%").attr("height", H).attr("viewBox", `0 0 ${W} ${H}`);
     const ang = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length, pt = (i, r) => [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
     for (let l = 1; l <= 5; l++) svg.append("polygon").attr("points", AXES.map((a, i) => pt(i, (Rr * l) / 5).join(",")).join(" ")).attr("fill", "none").attr("stroke", "#232a33");
     AXES.forEach((a, i) => { const [x, y] = pt(i, Rr); svg.append("line").attr("x1", cx).attr("y1", cy).attr("x2", x).attr("y2", y).attr("stroke", "#232a33");
-      const [lx, ly] = pt(i, Rr + 22); svg.append("text").attr("x", lx).attr("y", ly).attr("dy", "0.35em").attr("text-anchor", Math.abs(lx - cx) < 10 ? "middle" : lx > cx ? "start" : "end").attr("fill", "#eef1f5").attr("font-size", 14).attr("font-weight", 700).text(a[0]); });
+      const [lx, ly] = pt(i, Rr + 30); svg.append("text").attr("x", lx).attr("y", ly).attr("dy", "0.35em").attr("text-anchor", Math.abs(lx - cx) < 10 ? "middle" : lx > cx ? "start" : "end").attr("fill", "#eef1f5").attr("font-size", 14).attr("font-weight", 700).text(a[0]); });
     const mp = AXES.map(([k, max], i) => pt(i, Math.max(0.04, Math.min(1, (data[k] || 0) / max)) * Rr));
     svg.append("polygon").attr("points", mp.map((p) => p.join(",")).join(" ")).attr("fill", fill).attr("stroke", stroke).attr("stroke-width", 2);
     const tip = d3.select(el).append("div").attr("class", "tsx-tip").style("opacity", 0); el.style.position = "relative";
-    AXES.forEach(([k, , f], i) => { const [x, y] = mp[i]; const txt = f(data[k] || 0); const w = txt.length * 7 + 12;
+    AXES.forEach(([k, , f], i) => { const [x, y] = mp[i]; const txt = f(k === "RR" ? data[k] : data[k] || 0); const w = txt.length * 7 + 12;
       const g = svg.append("g").attr("transform", `translate(${x},${y})`).style("cursor", "default");
       g.append("rect").attr("x", -w / 2).attr("y", -10).attr("width", w).attr("height", 20).attr("rx", 5).attr("fill", tagBg);
       g.append("text").attr("text-anchor", "middle").attr("dy", "0.35em").attr("fill", tagFg).attr("font-size", 11.5).attr("font-weight", 700).text(txt);
-      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl" style="color:#7d9bff">Ce compte : ${f(me[k] || 0)}</div><div class="tl" style="color:#e2b33d">Moyenne de tes ${real.length} comptes : ${f(avg[k] || 0)}</div>${k === "Risque" ? rkTip : ""}`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
+      g.on("mousemove", (ev) => { const r = el.getBoundingClientRect(); tip.html(`<div class="th">${k}</div><div class="tl" style="color:#7d9bff">Ce compte : ${f(k === "RR" ? me[k] : me[k] || 0)}</div><div class="tl" style="color:#e2b33d">Moyenne de tes ${real.length} comptes : ${f(k === "RR" ? avg[k] : avg[k] || 0)}</div>${k === "Risque" ? rkTip : k === "RR" ? `<div class="tl">RR fait moyen des setups du Journal de Neal liés à ce compte : ${me._rr.n} setup(s)${me._rr.n ? "" : " — aucun setup Notion lié avec un RR fait"}</div>` : ""}`).style("left", ev.clientX - r.left + 12 + "px").style("top", ev.clientY - r.top - 10 + "px").style("opacity", 1); })
        .on("mouseleave", () => tip.style("opacity", 0)); });
   });
 
@@ -4831,20 +4847,45 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const TWIN = { "Open Range": [570, 600], "Open Range 2": [570, 630], "Silver Bullet": [600, 660] };
   const winOf = (s) => { if (TWIN[s]) return TWIN[s]; const m = /^(\d{1,2}):(\d{2}) to (\d{1,2}):(\d{2})$/.exec(s || ""); if (!m) return null; let a = +m[1] * 60 + +m[2], b = +m[3] * 60 + +m[4]; if (a < 420) { a += 0; } return [a - 2, b + 5]; };
   const TAKEN_ST = ["TP", "SL", "BE (SL)", "BE (TP)"];
+  /* Un setup Notion = UN trade TopstepX : les entrées prises au même moment sur les comptes copiés (≤ 2 min d'écart) forment un trade.
+     Deux entrées séparées (ex. 9:49 sortie à BE, puis 10:04 au TP) = deux trades différents, jamais liés au même setup.
+     Choix du trade : Entrée saisie à la main (minute pile) → le trade de cette minute ; sinon (Entrée vide ou écrite par l'app, à la seconde)
+     les trades de la fenêtre Time du setup, départagés par le Status (TP = gagnant, SL = perdant, BE ≈ 0), la fenêtre exacte, puis l'exclusivité
+     (un trade déjà pris par un autre setup du jour passe après). */
+  const autoEntry = (v) => /T\d\d:\d\d:\d\d/.test(String(v || "")) && !/T\d\d:\d\d:00(\.0+)?(Z|[+-]\d\d:\d\d)?$/.test(String(v));
+  const strictWin = (s) => { if (TWIN[s]) return TWIN[s]; const m = /^(\d{1,2}):(\d{2}) to (\d{1,2}):(\d{2})$/.exec(s || ""); return m ? [+m[1] * 60 + +m[2], +m[3] * 60 + +m[4]] : null; };
+  let clCache = { ref: null, list: [] };
+  function tsxClusters(d) { // trades groupés par entrée (tous comptes) ; même symbole, ≤ 120 s après la 1re entrée du groupe
+    if (clCache.ref === d.data) return clCache.list;
+    const T = [...d.data].sort((a, b) => String(a.Entry).localeCompare(String(b.Entry))), out = [];
+    for (const t of T) { const te = new Date(t.Entry).getTime(), sym = String(t.Symbol || t.Contract || "").toUpperCase();
+      const c = out.find((x) => x.sym === sym && te - x.t0 <= 120000 && te >= x.t0); if (c) c.trades.push(t); else out.push({ t0: te, sym, trades: [t] }); }
+    out.forEach((c) => { c.net = c.trades.reduce((a, t) => a + (Number(t["Net P&L"]) || 0), 0); c.size = c.trades.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1; const p = nyParts(new Date(c.t0).toISOString()); c.day = p.day; c.min = p.min; });
+    clCache = { ref: d.data, list: out }; return out;
+  }
+  const stFit = (st, c) => { const per = c.net / c.size; // P&L net par contrat
+    if (st.includes("TP") && !st.some((x) => /^BE/.test(x))) return per > 0; if (st.includes("SL") && !st.some((x) => /^BE/.test(x))) return per < 0;
+    if (st.some((x) => /^BE/.test(x))) return Math.abs(per) < 15; return true; };
+  function tsxCands(r, d) {
+    const act = r.Actif ? String(r.Actif).toUpperCase() : null, okSym = (c) => !act || c.sym.includes(act) || c.trades.some((t) => String(t.Contract || "").toUpperCase().includes(act));
+    const CL = tsxClusters(d).filter(okSym);
+    if (r["Entrée"] && String(r["Entrée"]).length > 10 && !autoEntry(r["Entrée"])) { const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return [];
+      return CL.filter((c) => c.t0 - t0 >= -120000 && c.t0 - t0 <= 180000).map((c) => ({ c, score: 10 - Math.abs(c.t0 - t0) / 60000 })); }
+    if (!r.Date || !(r.Status || []).some((x) => TAKEN_ST.includes(x))) return [];
+    const day = String(r.Date).slice(0, 10), tol = (r.Time || []).map(winOf).filter(Boolean), strict = (r.Time || []).map(strictWin).filter(Boolean);
+    if (!tol.length) { if (r["Entrée"] && autoEntry(r["Entrée"])) { const t0 = new Date(r["Entrée"]).getTime(); return CL.filter((c) => Math.abs(c.t0 - t0) <= 60000).map((c) => ({ c, score: 1 })); } return []; }
+    return CL.filter((c) => c.day === day && tol.some(([a, b]) => c.min >= a && c.min <= b))
+      .map((c) => ({ c, score: (stFit(r.Status || [], c) ? 4 : 0) + (strict.some(([a, b]) => c.min >= a && c.min <= b) ? 2 : 0) }));
+  }
   function tsxMatch(r) {
     if (!window.jdash) return null; const d = jdash.data("fills_calc"); if (d.status !== "ok") return null;
-    const act = r.Actif ? String(r.Actif).toUpperCase() : null, okSym = (t) => !act || String(t.Contract || t.Symbol || "").toUpperCase().includes(act);
-    let hit = [];
-    if (r["Entrée"] && String(r["Entrée"]).length > 10) { const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return null;
-      // à partir de l'Entrée (−2 min) : la 1re entrée, puis les ré-entrées du même setup jusqu'à la fin de sa fenêtre Time (ou jusqu'à la Sortie)
-      const day = nyParts(new Date(t0).toISOString()).day, wins = (r.Time || []).map(winOf).filter(Boolean), t1 = r.Sortie && String(r.Sortie).length > 10 ? new Date(r.Sortie).getTime() : NaN;
-      hit = d.data.filter((t) => { if (!okSym(t)) return false; const te = new Date(t.Entry).getTime(), dt = te - t0; if (dt < -120000) return false; if (dt <= 180000 || (!isNaN(t1) && te <= t1)) return true;
-        const p = nyParts(t.Entry); return p.day === day && wins.some(([a, b]) => p.min >= a && p.min <= b); }); }
-    else if (r.Date && (r.Status || []).some((x) => TAKEN_ST.includes(x))) {
-      const day = String(r.Date).slice(0, 10), wins = (r.Time || []).map(winOf).filter(Boolean); if (!wins.length) return null;
-      hit = d.data.filter((t) => { if (!okSym(t)) return false; const p = nyParts(t.Entry); return p.day === day && wins.some(([a, b]) => p.min >= a && p.min <= b); });
-    }
-    return hit.length ? hit : null;
+    const mine = tsxCands(r, d); if (!mine.length) return null; if (mine.length === 1) return mine[0].c.trades;
+    // plusieurs trades possibles : les autres setups du même jour réservent d'abord ceux qui n'ont qu'un choix / le meilleur score
+    const day = String(r.Date || "").slice(0, 10), others = (state.macro ? state.macro.rows : []).filter((x) => x !== r && String(x.Date || "").slice(0, 10) === day).map((x) => ({ x, cs: tsxCands(x, d) })).filter((o) => o.cs.length);
+    const taken = new Set(); others.sort((a, b) => a.cs.length - b.cs.length).forEach((o) => { const best = [...o.cs].sort((a, b) => b.score - a.score)[0]; if (o.cs.length === 1 || best.score >= 6) taken.add(best.c); });
+    const pick = [...mine].sort((a, b) => b.score - a.score || (taken.has(a.c) ? 1 : 0) - (taken.has(b.c) ? 1 : 0) || a.c.t0 - b.c.t0);
+    const free = pick.find((m) => !taken.has(m.c) && m.score === pick[0].score) || pick[0];
+    return free.c.trades;
   }
   /* P&L per linked account : Compte 1 (Master) = first entry, the others = Slaves */
   function tsxAccounts(h) {
@@ -5446,9 +5487,10 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 
   /* --- after a TopstepX / Notion sync (and when a setup is opened) : fill Entrée, Sortie, PnL, MAE (R), MFE (R) of taken setups from the linked TopstepX trades ---
      PnL = P&L net total TopstepX du setup (tous les comptes liés : Master + Slaves), comme « P&L total TopstepX » de la fiche.
-     MAE / MFE en R sur le compte Master, 1 R = taille du SL (2R = 2 × le SL…) : tag « Stop théorique » du trade (distance à « Entrée théorique », sinon au prix d'entrée réel) ;
+     MAE / MFE en R sur le compte Master (MAE plafonnée à 1 R), 1 R = taille du SL (2R = 2 × le SL…) : tag « Stop théorique » du trade (distance à « Entrée théorique », sinon au prix d'entrée réel) ;
      sinon |sortie − entrée| / |RR fait| ; sinon tag « Risque » ($) / (valeur du point × taille).
      PnL = vérité TopstepX : réécrit s'il ne correspond plus aux trades liés (ex. ré-entrée synchronisée plus tard) ; Sortie, MAE et MFE sont alors recalculés aussi. */
+  const autoEntry = (v) => /T\d\d:\d\d:\d\d/.test(String(v || "")) && !/T\d\d:\d\d:00(\.0+)?(Z|[+-]\d\d:\d\d)?$/.test(String(v)); // Entrée écrite par l'app (à la seconde)
   const TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"], FILL = ["Entrée", "Sortie", "PnL", "MAE (R)", "MFE (R)"], afTried = new Map(); let afRun = false;
   const empty = (v) => v === null || v === undefined || v === "";
   const PV = { MNQ: 2, NQ: 20, MES: 5, ES: 50, MYM: 0.5, YM: 5, M2K: 5, RTY: 50, MGC: 10, GC: 100, MCL: 100, CL: 1000 };
@@ -5458,12 +5500,13 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (!(r.Status || []).some((x) => TAKEN.includes(x))) return 0;
     const h = R.tsxMatch(r); if (!h) return 0;
     const A = R.tsxAccounts(h), m = A[0], tot = Math.round(A.reduce((a, x) => a + x.net, 0) * 100) / 100;
-    const redo = SC.PnL && typeof r.PnL === "number" && Math.abs(r.PnL - tot) >= 0.01; // trades liés changés : on recalcule
+    const redo = (SC.PnL && typeof r.PnL === "number" && Math.abs(r.PnL - tot) >= 0.01) // trades liés changés : on recalcule
+      || (autoEntry(r["Entrée"]) && Math.abs(Date.parse(r["Entrée"]) - Math.min(...h.map((t) => Date.parse(t.Entry)))) > 60000);
     if (!redo && !FILL.some((f) => empty(r[f]) && SC[f])) return 0; const T = h.filter((t) => String(t["ID TopstepX"]) === m.id).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
     const sz = T.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1, ep = T.reduce((a, t) => a + t["Entry Price"] * (Number(t.Size) || 0), 0) / sz, xp = T.reduce((a, t) => a + t["Exit Price"] * (Number(t.Size) || 0), 0) / sz;
     const entry = T[0].Entry, exit = T.map((t) => t.Exit).sort().pop(), long = T[0].Direction === "Long";
-    const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10) props["Entrée"] = entry;
-    if (empty(r.Sortie) || String(r.Sortie).length <= 10 || (redo && Date.parse(exit) > Date.parse(r.Sortie))) props.Sortie = exit;
+    const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10 || (redo && autoEntry(r["Entrée"]))) props["Entrée"] = entry;
+    if (empty(r.Sortie) || String(r.Sortie).length <= 10 || (redo && Date.parse(r.Sortie) !== Date.parse(exit))) props.Sortie = exit;
     if (empty(r.PnL) || redo) props.PnL = tot;
     const maeE = empty(r["MAE (R)"]) || redo, mfeE = empty(r["MFE (R)"]) || redo;
     if ((maeE || mfeE) && D.tsxBars) {
@@ -5475,9 +5518,11 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (!(Rpts > 0)) { const risk = T.map((t) => num(tg(t)["Risque"])).find((v) => v > 0), pv = pvOf(T[0].Contract || sym);
         if (risk && pv) Rpts = risk / (pv * sz); }
       if (Rpts > 0) { const b = await D.tsxBars("/" + sym, Math.floor(Date.parse(entry) / 60000) * 60, Math.floor(Date.parse(exit) / 1000));
-        if (b && b.ok && b.data.length) { const hi = Math.max(...b.data.map((x) => x.h)), lo = Math.min(...b.data.map((x) => x.l));
+        if (b && b.ok) { // bougies 1 min strictement entre la minute d'entrée et celle de sortie (les 2 minutes de bord contiennent des prix d'avant l'entrée / d'après la sortie) + prix d'entrée et de sortie réels
+          const m0 = Math.floor(Date.parse(entry) / 60000) * 60, m1 = Math.floor(Date.parse(exit) / 60000) * 60, B = (b.data || []).filter((x) => x.t > m0 && x.t < m1);
+          const hi = Math.max(ep, xp, ...B.map((x) => x.h)), lo = Math.min(ep, xp, ...B.map((x) => x.l));
           const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
-          if (maeE) props["MAE (R)"] = rd(adv); if (mfeE) props["MFE (R)"] = rd(fav); } }
+          if (maeE) props["MAE (R)"] = Math.min(1, rd(adv)); if (mfeE) props["MFE (R)"] = rd(fav); } } // MAE ≤ 1 R : au-delà, le stop aurait sorti la position
     }
     Object.keys(props).forEach((k) => { if (!SC[k] || props[k] === r[k]) delete props[k]; }); // seulement les propriétés de la base Notion
     if (!Object.keys(props).length) return 0;

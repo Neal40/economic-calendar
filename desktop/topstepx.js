@@ -67,7 +67,7 @@ function buildAccount(a, rows, syncedAt) {
   const bestDay = byDay.size ? Math.max(...byDay.values()) : 0;
   return {
     Nom: acctName(a), "ID TopstepX": String(a.accountId), "Nom TopstepX": String(a.accountName || ""), Type: acctType(a), Statut: acctStatut(a),
-    "Solde de départ": a.startingBalance, "Solde TopstepX": r2(a.balance), "Plus haut solde": r2(a.highestBalance ?? a.balance),
+    "Solde de départ": a.startingBalance, "Date de début": a.startDate ? String(a.startDate).slice(0, 10) : null, "Solde TopstepX": r2(a.balance), "Plus haut solde": r2(a.highestBalance ?? a.balance),
     "Plancher MLL": r2(a.maximumLoss ?? 0), DLL: a.dailyLoss ?? null, PDLL: a.personalDailyLossLimit ?? null, "Verrouillé": acctLocked(a), "Dernière synchro": syncedAt, // PDLL = Personal Daily Loss Limit ; Verrouillé = limite du jour touchée
     "Total P&L": total, "Trade Win %": n ? r6(wins.length / n) : 0,
     "Day Win %": lastRows.length ? r6(lastRows.filter((t) => t["Net P&L"] > 0).length / lastRows.length) : 0,
