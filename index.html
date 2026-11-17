@@ -1455,6 +1455,9 @@ table.tbl:has(#subT){min-width:900px}
     <label>Image de fond (thème Noir)</label>
     <div style="display:flex;gap:12px;align-items:center"><input type="file" id="thWall" accept="image/*" style="flex:1;background:none;border:none;padding:0"><button class="btn gray" id="thNoWall" type="button">Retirer</button></div>
   </div><p class="hintd" style="margin:8px 0 0">L'image reste sur cet ordinateur ; elle est assombrie pour garder le texte lisible.</p></div>
+  <div class="panel" id="tsxModePanel" hidden><div class="ptitle">Connexion TopstepX</div><div class="pform">
+    <label>Se connecter avec</label><select id="tsxModeSel"><option value="app">Fenêtre de connexion dans l'app</option><option value="chrome">Ma connexion Chrome (favori « → ICT »)</option></select>
+  </div><p class="hintd" style="margin:8px 0 0">Mode utilisé par le bouton « ⟳ Synchro TopstepX » du Journal de trading. Dans les deux cas, l'app récupère tes comptes et tes trades. Fenêtre de l'app : la connexion s'ouvre dans l'app quand la session a expiré. Chrome : la session vient de Chrome via le favori « → ICT » sur topstepx.com.</p></div>
   <div class="panel"><div class="ptitle">Données</div>
     <div class="hintd" style="margin:0 0 10px">Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.</div><div class="hintd" id="storePath" style="margin:0 0 10px"></div>
     <button class="btn gray" id="dataBtn2">Sauvegarde / Import</button></div>
@@ -1493,7 +1496,7 @@ table.tbl:has(#subT){min-width:900px}
     <div class="acts">
       <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button><button class="rv-tab jtab" data-jt="p80">80/20</button></div>
       <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button><button class="btn gray jt-neal nauto" id="rvAuto2" title="Synchro automatique app ⇄ Notion">Synchro Notion : On</button>
-      <button class="btn jt-tsx" id="jSyncBtn" hidden>⟳ Synchroniser TopstepX</button>
+      <button class="btn jt-tsx" id="jSyncBtn" hidden title="Récupère tes comptes et tes trades TopstepX (mode de connexion : Paramètres › Profil › Connexion TopstepX)">⟳ Synchro TopstepX</button>
       <span class="jt-tsx" id="jRecWrap" hidden style="position:relative"><button class="btn gray" id="jRecBtn" title="Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)">＋ Récupérer un compte</button>
         <div id="jRecPop" class="jrec" hidden><b>Récupérer un compte disparu</b><p>Identifiant(s) TopstepX, séparés par des virgules. Les comptes déjà dans l'app sont désormais archivés automatiquement.</p><input id="jRecIn" placeholder="ex. 29313272, 29315891" spellcheck="false"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn gray" id="jRecNo">Annuler</button><button class="btn" id="jRecGo">Récupérer</button></div><small id="jRecMsg"></small></div></span>
       <button class="jt-tsx btn gray" id="jLogout" hidden>Déconnecter TopstepX</button>
@@ -2736,17 +2739,25 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     // app Windows : synchro et sauvegardes automatiques -> pas de boutons d'import / export / synchro manuelle (Bureau\Inner Circle Trader\data + backups)
     [...document.querySelectorAll(".jimp"), document.getElementById("jMetaExp"), document.getElementById("jMetaImp").closest("label"), document.getElementById("jNotion")].forEach((x) => x && (x.style.display = "none"));
     const btn = document.getElementById("jSyncBtn"), out = document.getElementById("jLogout"), login = document.getElementById("jLogin");
-    out.hidden = false; // le bouton de synchro n'apparaît que si la session TopstepX a expiré (pour se reconnecter)
+    out.hidden = false; btn.hidden = false; // « ⟳ Synchro TopstepX » toujours visible : synchro comptes + trades à la demande
+    /* mode de connexion (Paramètres › Profil › Connexion TopstepX) : "app" = fenêtre de connexion de l'app, "chrome" = favori « → ICT » */
+    const TSXMODE = "econcal-tsx-mode", tsxMode = () => { try { return localStorage.getItem(TSXMODE) === "chrome" && D.tsxOpenChrome ? "chrome" : "app"; } catch (e) { return "app"; } };
+    { const pn = document.getElementById("tsxModePanel"), sel = document.getElementById("tsxModeSel");
+      if (pn && sel) { pn.hidden = false; if (!D.tsxOpenChrome) sel.querySelector('option[value="chrome"]').disabled = true; sel.value = tsxMode();
+        sel.onchange = () => { try { localStorage.setItem(TSXMODE, sel.value); } catch (e) {} }; } }
     const apply = (db) => { if (db && db.comptes && db.comptes.length) { login.hidden = true; dash.load(db.comptes, db.trades || []); } };
     const run = async (interactive) => {
       btn.disabled = true; btn.textContent = "⟳ Synchronisation…";
       const r = await D.journalSync(interactive);
-      btn.disabled = false; btn.textContent = "⟳ Se reconnecter à TopstepX"; btn.hidden = r.ok || r.reason !== "login";
+      btn.disabled = false; btn.textContent = "⟳ Synchro TopstepX";
       if (r.ok) apply(r.db);
-      else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else alertBox("Session TopstepX expirée — clique sur « Se reconnecter à TopstepX »."); }
+      else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else if (!interactive) alertBox("Session TopstepX expirée — clique sur « ⟳ Synchro TopstepX »."); }
       else alertBox("Synchro impossible (" + r.reason + "). Données locales affichées.");
+      if (r.ok && interactive) alertBox("✓ TopstepX synchronisé : " + ((r.db.comptes || []).length) + " compte(s), " + ((r.db.trades || []).length) + " trade(s).");
+      return r;
     };
-    btn.onclick = () => run(true);
+    let chromeSync = null; // défini plus bas si la connexion Chrome est disponible
+    btn.onclick = () => (tsxMode() === "chrome" && chromeSync ? chromeSync() : run(true));
     document.getElementById("jLoginBtn").onclick = () => run(true);
     out.onclick = async () => { await D.journalLogout(); alertBox("Déconnecté de TopstepX. Les données locales restent affichées."); };
     /* connexion via Chrome : le favori « → ICT » sur topstepx.com envoie la session à l'app (lien innercircletrader://) */
@@ -2757,9 +2768,11 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       document.getElementById("jChromeInstall").onclick = (e) => { e.preventDefault(); D.tsxOpenChrome("help"); };
       document.getElementById("jChromeOpen").onclick = (e) => { e.preventDefault(); D.tsxOpenChrome("trade"); };
       document.getElementById("jChromeClose").onclick = () => (help.hidden = true);
-      btn.title = "Clic : reconnexion via Chrome · Maj+clic : fenêtre de connexion de l'app";
-      btn.onclick = (e) => { if (e.shiftKey) return run(true); showHelp(); D.tsxOpenChrome("trade"); };
-      D.onTsxPushed((r) => { help.hidden = true; btn.hidden = !!(r && r.ok);
+      /* mode Chrome : synchro avec la session déjà reçue ; si elle a expiré, ouvrir TopstepX dans Chrome (le favori « → ICT » relance la synchro) */
+      chromeSync = async () => { const r = await run(false);
+        if (r && r.ok) alertBox("✓ TopstepX synchronisé : " + ((r.db.comptes || []).length) + " compte(s), " + ((r.db.trades || []).length) + " trade(s).");
+        if (r && !r.ok && r.reason === "login") { showHelp(); D.tsxOpenChrome("trade"); alertBox("Session TopstepX expirée : clique sur le favori « → ICT » dans Chrome, la synchro se lance toute seule."); } };
+      D.onTsxPushed((r) => { help.hidden = true;
         if (r && r.ok) { apply(r.db); alertBox("✓ Session Chrome reçue : TopstepX synchronisé."); }
         else alertBox("Session reçue de Chrome, mais la synchro a échoué (" + ((r && r.reason) || "erreur") + ")."); });
     }

@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.54.1] — 2026-11-17
+### Ajouté
+- **Paramètres › Profil › Connexion TopstepX** : choix du mode de connexion — fenêtre de connexion dans l'app (par défaut, comme avant) ou connexion Chrome (favori « → ICT »). Réglage gardé dans `localStorage "econcal-tsx-mode"`.
+### Modifié
+- Journal de trading : le bouton s'appelle **« ⟳ Synchro TopstepX »**, il est toujours visible et synchronise les comptes et les trades dans les deux modes. Mode app : la fenêtre de connexion s'ouvre si la session a expiré. Mode Chrome : synchro avec la session reçue de Chrome ; si elle a expiré, TopstepX s'ouvre dans Chrome et le favori « → ICT » relance la synchro. Message de confirmation avec le nombre de comptes / trades.
+### Corrigé
+- Un clic sur le bouton de synchro ne faisait plus qu'ouvrir Chrome (depuis la connexion Chrome) : plus aucune synchro sans le favori « → ICT ».
+
 ## [1.54.0] — 2026-11-17
 ### Ajouté
 - Backtesteur : le bouton 🤖 Jarvis propose 3 protocoles — Jarvis ICT (inchangé), **Jarvis Fuck Model v1.2** et **Jarvis Fuck Model v4.0** (page Notion « Fuck Model »). Calcul sur les bougies déjà rejouées uniquement, aucun ordre passé.

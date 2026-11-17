@@ -50,7 +50,7 @@ Pour ces lignes, éditer avec un script ciblé (Node / Python) plutôt qu'un Edi
 | `Comptes prop firms` | Pages `#comptes` (« Mes comptes » : `comptesPage`, `maAccounts`, `maPositions` ; localStorage `econcal-ma-tab`, `econcal-ma-hidden`, `econcal-ma-names`), `#topstep`, `#apex`, `#mffu`, `#tradeify`, `#phidias`, `#payouts`, `#recus` (liste `FK` ; achats Phidias en euros : `cur: "EUR"`, helpers `pusd` / `amtTxt`) ; données `econcal-comptes` / comptes.json |
 | `Trade copier Tradovate` | UI du copier (la logique est dans `desktop/copier.js`) |
 
-Clés localStorage : `econcal-v1` (données principales), `econcal-upd-attempt` (mise à jour lancée depuis le Profil : résultat au redémarrage), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.
+Clés localStorage : `econcal-v1` (données principales), `econcal-tsx-mode` (connexion TopstepX du bouton « ⟳ Synchro TopstepX » : `app` / `chrome`, Paramètres › Profil), `econcal-upd-attempt` (mise à jour lancée depuis le Profil : résultat au redémarrage), `econcal-jtab`, `econcal-mini`, `econcal-calview` (vue du calendrier : mois / semaine), `econcal-review-type`, `econcal-review-view`, `notionAuto`.
 
 ### Format d'un événement
 `{"t": "8:30 AM", "n": "CPI & Core CPI", "i": "high|med|low", "k": "ev|after|pre|tbd"}`
