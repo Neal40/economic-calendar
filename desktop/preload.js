@@ -45,6 +45,10 @@ contextBridge.exposeInMainWorld("desktop", {
   marcheBars: (inst, interval, n, to) => ipcRenderer.invoke("marche:bars", inst, interval, n, to),
   storeGet: () => ipcRenderer.invoke("store:get"),
   storeSet: (d) => ipcRenderer.invoke("store:set", d),
+  grBars: (sym, res, from, to, countback) => ipcRenderer.invoke("gr:bars", sym, res, from, to, countback),
+  tvShow: (r) => ipcRenderer.invoke("tv:show", r),
+  tvHide: () => ipcRenderer.invoke("tv:hide"),
+  tvNav: (what) => ipcRenderer.invoke("tv:nav", what),
   newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),
   // Paramètres › Profil › Application : version, dernière release GitHub, mise à jour lancée par l'utilisateur
   appInfo: () => ipcRenderer.invoke("app:info"),

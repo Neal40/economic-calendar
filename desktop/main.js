@@ -186,6 +186,61 @@ ipcMain.handle("marche:page", async (e, slug, force) => { slug = marche.slugOf(s
   if (!force && c && Date.now() - c.at < 120000) return c.r; const r = await marche.page(BrowserWindow, slug); if (r.ok) mcache.set(slug, { at: Date.now(), r }); return r; });
 ipcMain.handle("marche:bars", async (e, inst, interval, n, to) => { try { return { ok: true, data: await marche.bars(net.fetch, inst, interval, n, to) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 
+/* ---------- Graphique (page façon TradingView) : bougies de tout contrat TopstepX (chartapi, résolution au choix) + vrai site tradingview.com intégré ---------- */
+const GR_RES = /^\d{1,4}[SDWM]?$/; // résolutions TradingView : 1S, 5S, 1, 5, 60, 240, 1D, 1W, 1M…
+ipcMain.handle("gr:bars", async (e, sym, res, from, to, countback) => {
+  try {
+    sym = String(sym || "").toUpperCase(); res = String(res || "1");
+    if (!/^[A-Z0-9]{1,6}$/.test(sym) || !GR_RES.test(res)) return { ok: false, reason: "paramètres invalides" };
+    const t = await getToken(false); if (!t) return { ok: false, reason: "login" };
+    const n = Math.max(1, Math.min(25000, Math.floor(+countback) || 500)), f = Math.max(0, Math.floor(+from) || 0), tt = Math.floor(+to) || Math.floor(Date.now() / 1000);
+    const r = await sfetch(`https://chartapi.topstepx.com/History?Symbol=${encodeURIComponent("/" + sym)}&Resolution=${encodeURIComponent(res)}&Countback=${n}&From=${f}&To=${tt}`, { headers: { Authorization: "Bearer " + t, Accept: "application/json" } });
+    if (r.status === 401 || r.status === 403) return { ok: false, reason: "login" };
+    if (!r.ok) return { ok: false, reason: "HTTP " + r.status };
+    const j = await r.json(), T = (j && j.t) || [];
+    return { ok: true, data: T.map((x, i) => [x, +j.o[i], +j.h[i], +j.l[i], +j.c[i], j.v ? +j.v[i] || 0 : 0]).sort((a, b) => a[0] - b[0]) };
+  } catch (err) { return { ok: false, reason: String(err.message || err) }; }
+});
+// TradingView.com dans une vue de la fenêtre (session « persist:tradingview » : la connexion reste), placée par la page Graphique sur sa zone
+let tvView = null, tvHost = null;
+const TV_HOME = "https://www.tradingview.com/chart/";
+const tvHostOf = (u) => { try { return new URL(u).hostname; } catch (e) { return ""; } };
+const tvOk = (u) => /(^|\.)tradingview\.com$/i.test(tvHostOf(u));
+const TV_AUTH = /(^|\.)(accounts\.google\.com|appleid\.apple\.com|facebook\.com|x\.com|twitter\.com|linkedin\.com|login\.yahoo\.com|login\.microsoftonline\.com|login\.live\.com)$/i;
+const tvPrefs = () => ({ partition: "persist:tradingview", contextIsolation: true, sandbox: true, nodeIntegration: false });
+function tvEnsure(sender) {
+  const { WebContentsView } = require("electron");
+  if (!tvView || tvView.webContents.isDestroyed()) {
+    tvView = new WebContentsView({ webPreferences: tvPrefs() }); tvView.setBackgroundColor("#131722");
+    const wc = tvView.webContents; wc.setUserAgent(wc.getUserAgent().replace(/\s?(Electron|Inner Circle Trader|economic-calendar)\/\S+/gi, ""));
+    wc.setWindowOpenHandler(({ url }) => {
+      if (tvOk(url)) { wc.loadURL(url); return { action: "deny" }; }
+      if (TV_AUTH.test(tvHostOf(url))) return { action: "allow", overrideBrowserWindowOptions: { width: 520, height: 720, autoHideMenuBar: true, webPreferences: tvPrefs() } };
+      if (/^https?:/i.test(url)) shell.openExternal(url); return { action: "deny" };
+    });
+    wc.on("will-navigate", (ev, url) => { if (!tvOk(url) && !TV_AUTH.test(tvHostOf(url))) { ev.preventDefault(); if (/^https?:/i.test(url)) shell.openExternal(url); } });
+    wc.loadURL(TV_HOME);
+  }
+  const w = BrowserWindow.fromWebContents(sender) || win; if (!w || w.isDestroyed()) return null;
+  if (tvHost !== w) {
+    try { if (tvHost && !tvHost.isDestroyed()) tvHost.contentView.removeChildView(tvView); } catch (e) { /* fenêtre fermée */ }
+    w.contentView.addChildView(tvView); tvHost = w;
+    w.webContents.on("did-start-loading", () => { try { if (tvView && tvHost === w) tvView.setVisible(false); } catch (e) { /* */ } });
+    w.once("closed", () => { if (tvHost === w) tvHost = null; });
+  }
+  return tvView;
+}
+ipcMain.handle("tv:show", (e, r) => { try { const v = tvEnsure(e.sender); if (!v || !r) return false; const z = e.sender.getZoomFactor ? e.sender.getZoomFactor() : 1;
+  v.setBounds({ x: Math.round(r.x * z), y: Math.round(r.y * z), width: Math.max(0, Math.round(r.w * z)), height: Math.max(0, Math.round(r.h * z)) }); v.setVisible(true); return true; } catch (err) { return false; } });
+ipcMain.handle("tv:hide", () => { try { if (tvView && !tvView.webContents.isDestroyed()) tvView.setVisible(false); } catch (e) { /* */ } return true; });
+ipcMain.handle("tv:nav", (e, what) => {
+  try { if (!tvView || tvView.webContents.isDestroyed()) return false; const wc = tvView.webContents, h = wc.navigationHistory || wc;
+    if (what === "back" && h.canGoBack()) h.goBack(); else if (what === "fwd" && h.canGoForward()) h.goForward(); else if (what === "reload") wc.reload(); else if (what === "home") wc.loadURL(TV_HOME);
+    else if (what === "window") { const bw = new BrowserWindow({ width: 1440, height: 900, autoHideMenuBar: true, title: "TradingView", backgroundColor: "#131722", webPreferences: tvPrefs() }); bw.webContents.setUserAgent(wc.getUserAgent());
+      bw.webContents.setWindowOpenHandler(({ url }) => { if (tvOk(url) || TV_AUTH.test(tvHostOf(url))) return { action: "allow", overrideBrowserWindowOptions: { autoHideMenuBar: true, webPreferences: tvPrefs() } }; if (/^https?:/i.test(url)) shell.openExternal(url); return { action: "deny" }; }); bw.loadURL(wc.getURL() || TV_HOME); }
+    return true; } catch (err) { return false; }
+});
+
 /* ---------- app data (abonnements + factures) : app-data.json ---------- */
 const STORE = () => path.join(app.getPath("userData"), "app-data.json");
 ipcMain.handle("store:get", () => { let data = null; try { data = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch (e) { if (fs.existsSync(STORE())) return null; } return { data, path: STORE() }; }); // fichier illisible : null -> l'app ne le réécrit pas

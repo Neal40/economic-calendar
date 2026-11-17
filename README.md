@@ -7,6 +7,7 @@ Application de trading personnelle pour les futures **NQ / ES** (prop firm Topst
 ## Fonctionnalités
 
 - **Calendrier économique USD** — news à impact fort / moyen / faible, résultats d'entreprises, jours fériés NYSE, tout en heure de New York (ET).
+- **Graphique** — page façon TradingView : contrats TopstepX en direct (1 s → 12 mois) + Forex Factory, 1 à 8 graphiques synchronisés, ~60 indicateurs (dont le pack ICT : sessions, PDH / PDL, NWOG / NDOG, FVG) et l'éditeur Pine / TS, 80+ outils de dessin, alertes, liste de surveillance, news, raccourcis TradingView, et le vrai tradingview.com intégré (app Windows).
 - **Backtesteur** — replay minute par minute de NQ / ES (données TopstepX depuis juillet 2023), compte démo 50K avec règles MLL / DLL, ordres marché / limite / stop, TP/SL glissables avec P&L affiché.
   - ~85 outils de dessin (Fibonacci, Gann, figures harmoniques, Elliott, positions long/short, profils de volume…), favoris et barre de favoris, raccourcis FXReplay.
   - Arborescence des objets (groupes, renommer, glisser-déposer, multi-sélection, clic droit).
