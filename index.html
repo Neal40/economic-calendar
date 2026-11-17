@@ -3975,11 +3975,22 @@ function payoutCalc(a, fk, pays) {
       L.push({ key: k + ":" + a.id, firm: k, id: a.id, name: a.name, kind: KIND(a), stage: a.stage || a.type || "", status: a.status, st, bal, start, pnl: bal != null && start != null ? bal - start : null, paid: +a.paid || 0, floor, state: maState(st, bal, floor, mll, dorm), date: String(a.start || "") });
     });
     // comptes du journal TopstepX absents de comptes.json (ex. comptes récupérés par l'API TopstepX)
-    const J = window.jdash && jdash.data("comptes"), seen = new Set(L.filter((a) => a.firm === "topstep").flatMap((a) => [String(a.id), String(a.name).toLowerCase()]));
+    // un même compte vu par le dashboard Topstep (EXPRESS-V2-…-29896215) et par TopstepX (« Topstep 0K …6215 ») = UNE seule carte :
+    // on garde la carte Topstep (prix payé, étape) et on y met le solde / P&L / statut en direct de TopstepX
+    const J = window.jdash && jdash.data("comptes"), TS = new Map();
+    L.filter((a) => a.firm === "topstep").forEach((a) => [String(a.id), String(a.name || "").toLowerCase()].filter(Boolean).forEach((k) => TS.has(k) || TS.set(k, a)));
     if (J && J.status === "ok") J.data.filter((c) => !c._all).forEach((c) => {
-      const id = String(c["ID TopstepX"]), nm = c.Nom || c["Nom TopstepX"] || id; if (seen.has(id) || seen.has(String(nm).toLowerCase())) return;
+      const id = String(c["ID TopstepX"]), nm = c.Nom || c["Nom TopstepX"] || id, raw = String(c["Nom TopstepX"] || "").toLowerCase();
       const st = c.Statut === "Cramé" ? "Blown" : c.Statut === "Passé" ? "Passed" : c.Statut === "Actif" ? (c["Verrouillé"] ? "Violation" : "Active") : "Blown";
       const bal = c["Solde TopstepX"] != null ? +c["Solde TopstepX"] : null, start = c["Solde de départ"] != null ? +c["Solde de départ"] : null, floor = c["Plancher MLL"] != null ? +c["Plancher MLL"] : null;
+      const dig = (x) => (/(\d{6,})\D*$/.exec(String(x || "")) || [])[1], rd = dig(raw);
+      const twin = TS.get(id) || (raw && TS.get(raw)) || TS.get(String(nm).toLowerCase()) || (rd && L.find((a) => a.firm === "topstep" && dig(a.name) === rd));
+      if (twin) { if (twin.tsxId) return; twin.tsxId = id; // doublon : fusion dans la carte Topstep
+        if (/^(Actif|Cramé|Passé)$/.test(c.Statut || "")) { // compte encore suivi par TopstepX : ses chiffres sont les plus récents
+          if (bal != null) twin.bal = bal; if (start != null) twin.start = start; if (floor != null) twin.floor = floor;
+          twin.pnl = bal != null && start != null ? bal - start : c["Total P&L"] != null ? +c["Total P&L"] : twin.pnl;
+          twin.st = st; twin.state = c.Statut === "Actif" ? maState(st, twin.bal, twin.floor, 2000, false) : "off"; }
+        return; }
       L.push({ key: "tsx:" + id, firm: "tsx", id, name: nm, kind: /funded|express/i.test(c.Type || "") ? "Funded" : /paper|prac/i.test(c.Type || "") ? "Practice" : "Challenge", stage: c.Type || "", status: c.Statut || "", st, bal, start, pnl: bal != null && start != null ? bal - start : c["Total P&L"] != null ? +c["Total P&L"] : null, paid: 0, floor, state: c.Statut === "Actif" ? maState(st, bal, floor, 2000, false) : "off", date: String(c["Dernière synchro"] || "") });
     });
     // compte démo 50K du Backtesteur
@@ -4991,6 +5002,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     mb.innerHTML = head + tsx + '<div class="rv-mut" id="rvPg">Chargement de la page…</div>';
     if (API.onRowOpen) API.onRowOpen(kind, r, mb);
     ov.classList.add("show");
+    if (kind === "macro" && window.reviewFillRow && !r._filling) { r._filling = true; reviewFillRow(r).then((k) => { r._filling = false; if (k > 0 && ov.classList.contains("show")) openRow(kind, id); }, () => (r._filling = false)); }
     let blocks = await kget("page:" + id);
     API.curPage = id;
     const ed = API.canEdit && !!D;
@@ -5267,34 +5279,51 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const res = await D.notionDeleteBlock(b.dataset.del); if (!res.ok) return msg(why(res), true);
     const el = b.closest("[data-bid]"); el && el.remove(); msg("Bloc supprimé de Notion ✓"); pageCache(); }, true);
 
-  /* --- after a TopstepX / Notion sync : fill Entrée, Sortie, MAE (R), MFE (R) of taken setups from the linked TopstepX trades --- */
-  const TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"], afDone = new Set(); let afRun = false;
+  /* --- after a TopstepX / Notion sync (and when a setup is opened) : fill Entrée, Sortie, PnL, MAE (R), MFE (R) of taken setups from the linked TopstepX trades ---
+     PnL = P&L net total TopstepX du setup (tous les comptes liés : Master + Slaves), comme « P&L total TopstepX » de la fiche.
+     MAE / MFE en R sur le compte Master : 1 R = |sortie − entrée| / |RR fait| ; si RR fait ≈ 0 (BE), 1 R = tag « Risque » ($) du trade / (valeur du point × taille). */
+  const TAKEN = ["TP", "SL", "BE (SL)", "BE (TP)"], FILL = ["Entrée", "Sortie", "PnL", "MAE (R)", "MFE (R)"], afTried = new Map(); let afRun = false;
   const empty = (v) => v === null || v === undefined || v === "";
+  const PV = { MNQ: 2, NQ: 20, MES: 5, ES: 50, MYM: 0.5, YM: 5, M2K: 5, RTY: 50, MGC: 10, GC: 100, MCL: 100, CL: 1000 };
+  const pvOf = (sym) => { const k = String(sym || "").toUpperCase().replace(/^\//, "").replace(/[FGHJKMNQUVXZ]\d{1,2}$/, ""); return PV[k] || null; };
+  async function fillRow(r) { // -> nombre de propriétés écrites dans Notion (0 si rien à faire), -1 si l'écriture Notion est refusée
+    if (!(r.Status || []).some((x) => TAKEN.includes(x)) || !FILL.some((f) => empty(r[f]) && (R.state.macro && R.state.macro.schema || {})[f])) return 0;
+    const h = R.tsxMatch(r); if (!h) return 0;
+    const A = R.tsxAccounts(h), m = A[0]; const T = h.filter((t) => String(t["ID TopstepX"]) === m.id).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
+    const sz = T.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1, ep = T.reduce((a, t) => a + t["Entry Price"] * (Number(t.Size) || 0), 0) / sz, xp = T.reduce((a, t) => a + t["Exit Price"] * (Number(t.Size) || 0), 0) / sz;
+    const entry = T[0].Entry, exit = T.map((t) => t.Exit).sort().pop(), long = T[0].Direction === "Long";
+    const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10) props["Entrée"] = entry; if (empty(r.Sortie) || String(r.Sortie).length <= 10) props.Sortie = exit;
+    if (empty(r.PnL)) props.PnL = Math.round(A.reduce((a, x) => a + x.net, 0) * 100) / 100;
+    if ((empty(r["MAE (R)"]) || empty(r["MFE (R)"])) && D.tsxBars) {
+      const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : null, sym = String(T[0].Symbol || "MNQ").replace(/^\//, "");
+      let Rpts = rr && Math.abs(rr) >= 0.2 ? Math.abs(xp - ep) / Math.abs(rr) : null;
+      if (!Rpts) { const risk = T.map((t) => Number((window.jmeta && jmeta.tags(t.ID) || {})["Risque"])).find((v) => v > 0), pv = pvOf(T[0].Contract || sym);
+        if (risk && pv) Rpts = risk / (pv * sz); }
+      if (Rpts > 0) { const b = await D.tsxBars("/" + sym, Math.floor(Date.parse(entry) / 60000) * 60, Math.floor(Date.parse(exit) / 1000));
+        if (b && b.ok && b.data.length) { const hi = Math.max(...b.data.map((x) => x.h)), lo = Math.min(...b.data.map((x) => x.l));
+          const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
+          if (empty(r["MAE (R)"])) props["MAE (R)"] = rd(adv); if (empty(r["MFE (R)"])) props["MFE (R)"] = rd(fav); } }
+    }
+    const sc = R.state.macro && R.state.macro.schema || {}; Object.keys(props).forEach((k) => { if (!sc[k]) delete props[k]; }); // seulement les propriétés de la base Notion
+    if (!Object.keys(props).length) return 0;
+    const res = await D.notionUpdate(DB.macro, r._id, window.notionPropsOut(props));
+    if (res.ok) { Object.assign(r, props); return Object.keys(props).length; }
+    if (res.reason === "write" || res.reason === "token") { msg(why(res), true); return -1; }
+    return 0;
+  }
   R.autoFill = async () => {
     if (afRun || !D.notionUpdate || !R.state.macro || !window.jdash || jdash.data("fills_calc").status !== "ok") return; afRun = true; let n = 0;
     try {
       for (const r of R.state.macro.rows) {
-        if (afDone.has(r._id) || !(r.Status || []).some((x) => TAKEN.includes(x)) || !["Entrée", "Sortie", "MAE (R)", "MFE (R)"].some((f) => empty(r[f]))) continue;
-        const h = R.tsxMatch(r); if (!h) continue; afDone.add(r._id);
-        const m = R.tsxAccounts(h)[0]; const T = h.filter((t) => String(t["ID TopstepX"]) === m.id).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
-        const sz = T.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1, ep = T.reduce((a, t) => a + t["Entry Price"] * (Number(t.Size) || 0), 0) / sz, xp = T.reduce((a, t) => a + t["Exit Price"] * (Number(t.Size) || 0), 0) / sz;
-        const entry = T[0].Entry, exit = T.map((t) => t.Exit).sort().pop(), long = T[0].Direction === "Long";
-        const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10) props["Entrée"] = entry; if (empty(r.Sortie) || String(r.Sortie).length <= 10) props.Sortie = exit;
-        const rr = typeof r["RR fait"] === "number" ? r["RR fait"] : null;
-        if ((empty(r["MAE (R)"]) || empty(r["MFE (R)"])) && rr && Math.abs(rr) >= 0.2 && D.tsxBars) {
-          const Rpts = Math.abs(xp - ep) / Math.abs(rr), sym = "/" + String(T[0].Symbol || "MNQ").replace(/^\//, "");
-          const b = await D.tsxBars(sym, Math.floor(Date.parse(entry) / 60000) * 60, Math.floor(Date.parse(exit) / 1000));
-          if (b && b.ok && b.data.length && Rpts > 0) { const hi = Math.max(...b.data.map((x) => x.h)), lo = Math.min(...b.data.map((x) => x.l));
-            const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
-            if (empty(r["MAE (R)"])) props["MAE (R)"] = rd(adv); if (empty(r["MFE (R)"])) props["MFE (R)"] = rd(fav); }
-        }
-        if (!Object.keys(props).length) continue;
-        const res = await D.notionUpdate(DB.macro, r._id, window.notionPropsOut(props));
-        if (res.ok) { Object.assign(r, props); n++; } else if (res.reason === "write" || res.reason === "token") { msg(why(res), true); break; }
+        if (Date.now() - (afTried.get(r._id) || 0) < 10 * 60 * 1000) continue; // une tentative par setup toutes les 10 min (la fiche ouverte force)
+        afTried.set(r._id, Date.now()); const k = await fillRow(r); if (k < 0) break; if (k) n++;
       }
-      if (n) { msg(`${n} setup(s) complété(s) depuis TopstepX : Entrée, Sortie, MAE, MFE ✓`); R.render(); refreshSoon("macro"); }
+      if (n) { msg(`${n} setup(s) complété(s) depuis TopstepX : Entrée, Sortie, PnL, MAE, MFE ✓`); R.render(); refreshSoon("macro"); }
     } finally { afRun = false; }
   };
+  /* fiche ouverte : compléter tout de suite ce setup */
+  window.reviewFillRow = async (r) => { if (!D.notionUpdate || !window.jdash || jdash.data("fills_calc").status !== "ok") return 0; afTried.set(r._id, Date.now());
+    const k = await fillRow(r); if (k > 0) { msg("Setup complété depuis TopstepX : " + FILL.filter((f) => !empty(r[f])).join(", ") + " ✓"); R.render(); refreshSoon("macro"); } return k; };
   window.reviewAutoFill = R.autoFill;
   R.canEdit = true; R.render(); setTimeout(R.autoFill, 3000);
 })();

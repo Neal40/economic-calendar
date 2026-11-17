@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.55.0] — 2026-11-17
+### Ajouté
+- Journal de Neal (Review) : un setup pris est complété automatiquement depuis les trades TopstepX liés — **PnL** (P&L net total TopstepX du setup, tous les comptes liés : Master + Slaves, comme « P&L total TopstepX » de la fiche), Entrée, Sortie, **MAE (R)** et **MFE (R)** (compte Master). Se lance après chaque synchro TopstepX / Notion et dès l'ouverture de la fiche (la fiche se rafraîchit avec les valeurs écrites dans Notion). Seules les propriétés vides sont remplies.
+- MAE / MFE des trades à BE : quand « RR fait » vaut ~0, 1 R = tag « Risque » ($) du trade / (valeur du point × taille). Sans RR fait ni tag Risque, MAE / MFE restent vides (pas de stop connu).
+### Corrigé
+- Mes comptes : un compte vu à la fois par le dashboard Topstep (EXPRESS-V2-…-29896215) et par TopstepX (« Topstep 0K …6215 ») n'apparaît plus en double. Une seule carte Topstep (prix payé, étape) avec le solde / P&L / statut en direct de TopstepX.
+
 ## [1.54.2] — 2026-11-17
 ### Corrigé
 - Synchro TopstepX : fermer la fenêtre de connexion ne bloque plus le bouton sur « Synchronisation… » pendant 10 min. L'attente s'arrête, un message l'indique et « ⟳ Synchro TopstepX » rouvre la fenêtre.
