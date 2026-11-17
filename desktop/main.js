@@ -95,6 +95,7 @@ async function doSync(interactive) {
       delete data.keepIds;
       if (!data.comptes.length && (old.comptes || []).length) throw new Error("TopstepX n'a renvoyé aucun compte — base locale conservée");
       data = topstepx.mergeDb(old, data); // la synchro ajoute / met à jour, elle ne supprime jamais rien
+      try { await topstepx.excursions(token, sfetch, data.trades); } catch (e) { /* bougies 1 s indisponibles : réessai à la prochaine synchro */ } // plus haut / plus bas pendant chaque trade (MAE / MFE)
       writeDb(data); exportFiles(data);
       return { ok: true, db: data };
     } catch (e) { return { ok: false, reason: String(e.message || e), db: readDb() }; }
@@ -104,7 +105,7 @@ async function doSync(interactive) {
 }
 
 ipcMain.handle("journal:get", () => loadDb());
-ipcMain.handle("tsx:bars", async (e, sym, from, to) => { try { const t = await getToken(false); if (!t) return { ok: false, reason: "login" }; return { ok: true, data: await topstepx.bars(t, sfetch, sym, from, to) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+ipcMain.handle("tsx:bars", async (e, sym, from, to, res) => { try { const t = await getToken(false); if (!t) return { ok: false, reason: "login" }; return { ok: true, data: await topstepx.bars(t, sfetch, sym, from, to, res === "1S" ? "1S" : "1") }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 /* ids of accounts to recover by hand (accounts that vanished from TopstepX before being synced) */
 const XFILE = () => path.join(app.getPath("userData"), "tsx-extra-ids.json");
 function readExtra() { try { return JSON.parse(fs.readFileSync(XFILE(), "utf8")) || []; } catch (e) { return []; } }

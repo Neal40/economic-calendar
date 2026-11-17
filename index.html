@@ -5598,7 +5598,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 
   /* --- after a TopstepX / Notion sync (and when a setup is opened) : fill Entrée, Sortie, PnL, MAE (R), MFE (R) of taken setups from the linked TopstepX trades ---
      PnL = P&L net total TopstepX du setup (tous les comptes liés : Master + Slaves), comme « P&L total TopstepX » de la fiche.
-     MAE / MFE en R sur le compte Master (MAE plafonnée à 1 R), 1 R = taille du SL (2R = 2 × le SL…) : tag « Stop théorique » du trade (distance à « Entrée théorique », sinon au prix d'entrée réel) ;
+     MAE / MFE en R sur le compte Master (MAE plafonnée à 1 R), sur les vraies bougies 1 s du trade, 1 R = taille du SL (2R = 2 × le SL…) : tag « Stop théorique » du trade (distance à « Entrée théorique », sinon au prix d'entrée réel) ;
      sinon |sortie − entrée| / |RR fait| ; sinon tag « Risque » ($) / (valeur du point × taille).
      PnL = vérité TopstepX : réécrit s'il ne correspond plus aux trades liés (ex. ré-entrée synchronisée plus tard) ; Sortie, MAE et MFE sont alors recalculés aussi. */
   const autoEntry = (v) => /T\d\d:\d\d:\d\d/.test(String(v || "")) && !/T\d\d:\d\d:00(\.0+)?(Z|[+-]\d\d:\d\d)?$/.test(String(v)); // Entrée écrite par l'app (à la seconde)
@@ -5628,12 +5628,16 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       if (!(Rpts > 0)) Rpts = rr && Math.abs(rr) >= 0.2 ? Math.abs(xp - ep) / Math.abs(rr) : null;
       if (!(Rpts > 0)) { const risk = T.map((t) => num(tg(t)["Risque"])).find((v) => v > 0), pv = pvOf(T[0].Contract || sym);
         if (risk && pv) Rpts = risk / (pv * sz); }
-      if (Rpts > 0) { const b = await D.tsxBars("/" + sym, Math.floor(Date.parse(entry) / 60000) * 60, Math.floor(Date.parse(exit) / 1000));
-        if (b && b.ok) { // bougies 1 min strictement entre la minute d'entrée et celle de sortie (les 2 minutes de bord contiennent des prix d'avant l'entrée / d'après la sortie) + prix d'entrée et de sortie réels
-          const m0 = Math.floor(Date.parse(entry) / 60000) * 60, m1 = Math.floor(Date.parse(exit) / 60000) * 60, B = (b.data || []).filter((x) => x.t > m0 && x.t < m1);
-          const hi = Math.max(ep, xp, ...B.map((x) => x.h)), lo = Math.min(ep, xp, ...B.map((x) => x.l));
-          const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
-          if (maeE) props["MAE (R)"] = Math.min(1, rd(adv)); if (mfeE) props["MFE (R)"] = rd(fav); } } // MAE ≤ 1 R : au-delà, le stop aurait sorti la position
+      if (Rpts > 0) { // plus haut / plus bas PENDANT le trade : vraies bougies 1 s (enregistrées par la synchro TopstepX, sinon demandées à TopstepX), sinon bougies 1 min
+        let hi = null, lo = null, src = "";
+        if (T.every((t) => t.Excursion === "1s")) { hi = Math.max(...T.map((t) => t["Plus haut (trade)"])); lo = Math.min(...T.map((t) => t["Plus bas (trade)"])); src = "1s"; }
+        else { const s0 = Math.floor(Date.parse(entry) / 1000), s1 = Math.floor(Date.parse(exit) / 1000);
+          let b = await D.tsxBars("/" + sym, s0, s1, "1S"), B = b && b.ok ? (b.data || []).filter((x) => x.t >= s0 && x.t <= s1) : [];
+          if (B.length) src = "1s"; else { b = await D.tsxBars("/" + sym, Math.floor(s0 / 60) * 60, s1); B = b && b.ok ? (b.data || []).filter((x) => x.t >= Math.floor(s0 / 60) * 60 && x.t <= s1) : []; if (B.length) src = "1m"; }
+          if (B.length) { hi = Math.max(ep, xp, ...B.map((x) => x.h)); lo = Math.min(ep, xp, ...B.map((x) => x.l)); } }
+        if (hi != null) { const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
+          if (maeE) props["MAE (R)"] = Math.min(1, rd(adv)); if (mfeE) props["MFE (R)"] = rd(fav); } // MAE ≤ 1 R : au-delà, le stop aurait sorti la position
+      }
     }
     Object.keys(props).forEach((k) => { if (!SC[k] || props[k] === r[k]) delete props[k]; }); // seulement les propriétés de la base Notion
     if (!Object.keys(props).length) return 0;

@@ -141,16 +141,39 @@ function mergeDb(old, fresh) {
   for (const c of old.comptes || []) { const id = String(c["ID TopstepX"]); if (seen.has(id)) continue; seen.add(id);
     comptes.push({ ...c, Archivé: true, Statut: c.Statut === "Actif" ? "Archivé" : c.Statut, "Archivé le": c["Archivé le"] || fresh.syncedAt || null }); }
   const tk = (t) => String(t["ID TopstepX"]) + "|" + String(t.ID), have = new Set((fresh.trades || []).map(tk));
-  const trades = [...(fresh.trades || []), ...(old.trades || []).filter((t) => !have.has(tk(t)))];
+  const oldBy = new Map((old.trades || []).map((t) => [tk(t), t]));
+  // plus haut / plus bas pendant le trade (bougies 1 s) : calculés une fois, gardés d'une synchro à l'autre
+  const keepExc = (t) => { const o = oldBy.get(tk(t)); return o && o.Excursion && !t.Excursion ? { ...t, "Plus haut (trade)": o["Plus haut (trade)"], "Plus bas (trade)": o["Plus bas (trade)"], Excursion: o.Excursion } : t; };
+  const trades = [...(fresh.trades || []).map(keepExc), ...(old.trades || []).filter((t) => !have.has(tk(t)))];
   return { ...old, ...fresh, comptes, trades };
 }
 
-async function bars(token, fetchFn, sym, from, to) {
-  const n = Math.min(5000, Math.ceil((to - from) / 60) + 5);
-  const u = "https://chartapi.topstepx.com/History?Symbol=" + encodeURIComponent(sym) + "&Resolution=1&Countback=" + n + "&From=" + from + "&To=" + to;
+async function bars(token, fetchFn, sym, from, to, res = "1") {
+  res = res === "1S" ? "1S" : "1"; // 1S = bougies d'une seconde
+  const n = Math.min(25000, Math.ceil((to - from) / (res === "1S" ? 1 : 60)) + 5);
+  const u = "https://chartapi.topstepx.com/History?Symbol=" + encodeURIComponent(sym) + "&Resolution=" + res + "&Countback=" + n + "&From=" + from + "&To=" + to;
   const r = await fetchFn(u, { headers: { Authorization: "Bearer " + token, Accept: "application/json" } });
   if (r.status === 401 || r.status === 403) { const e = new Error("auth"); e.code = "AUTH"; throw e; }
   if (!r.ok) throw new Error("History " + r.status);
-  const j = await r.json(); return (j.t || []).map((t, i) => ({ t, h: j.h[i], l: j.l[i] })).filter((b) => b.t >= from - 60 && b.t <= to);
+  const j = await r.json(); return (j.t || []).map((t, i) => ({ t, h: j.h[i], l: j.l[i] })).filter((b) => b.t >= from - (res === "1S" ? 1 : 60) && b.t <= to);
 }
-module.exports = { bars, sync, toRow, buildAccount, acctStatut, targetOf, mergeDb };
+
+/** Plus haut / plus bas atteints PENDANT chaque trade, sur les vraies bougies 1 s TopstepX (de la seconde d'entrée à celle de sortie, prix d'entrée / sortie inclus).
+ *  Écrit "Plus haut (trade)", "Plus bas (trade)", Excursion = "1s" sur les trades (sert à la MAE / MFE du Journal de Neal). Lecture seule chez TopstepX.
+ *  Les trades du même instant (comptes copiés) partagent une seule requête. Budget de temps et nombre max par synchro. */
+async function excursions(token, fetchFn, trades, { budgetMs = 25000, max = 80, days = 120 } = {}) {
+  const t0 = Date.now(), cut = Date.now() - days * 864e5, groups = new Map();
+  for (const t of trades || []) { if (t.Excursion || !t.Entry || !t.Exit || Date.parse(t.Exit) < cut) continue;
+    const k = (t.Symbol || t.Contract) + "|" + t.Entry + "|" + t.Exit; (groups.get(k) || groups.set(k, []).get(k)).push(t); }
+  let n = 0;
+  for (const [k, G] of [...groups.entries()].sort((a, b) => b[1][0].Exit.localeCompare(a[1][0].Exit))) { // les plus récents d'abord
+    if (n >= max || Date.now() - t0 > budgetMs) break; n++;
+    const t = G[0], from = Math.floor(Date.parse(t.Entry) / 1000), to = Math.floor(Date.parse(t.Exit) / 1000), sym = "/" + String(t.Symbol || "MNQ").replace(/^\//, "");
+    let B; try { B = await bars(token, fetchFn, sym, from, to, "1S"); } catch (e) { if (e.code === "AUTH") throw e; continue; }
+    B = (B || []).filter((b) => b.t >= from && b.t <= to); if (!B.length) continue; // pas encore de bougies : on réessaiera à la prochaine synchro
+    for (const x of G) { const px = [x["Entry Price"], x["Exit Price"]].filter((v) => typeof v === "number");
+      x["Plus haut (trade)"] = Math.max(...px, ...B.map((b) => b.h)); x["Plus bas (trade)"] = Math.min(...px, ...B.map((b) => b.l)); x.Excursion = "1s"; }
+  }
+  return n;
+}
+module.exports = { bars, excursions, sync, toRow, buildAccount, acctStatut, targetOf, mergeDb };

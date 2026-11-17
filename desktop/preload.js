@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld("desktop", {
   journalSync: (interactive) => ipcRenderer.invoke("journal:sync", interactive),
   journalAddIds: (ids) => ipcRenderer.invoke("journal:addIds", ids),
   journalImport: (kind, rows) => ipcRenderer.invoke("journal:import", kind, rows),
-  tsxBars: (sym, from, to) => ipcRenderer.invoke("tsx:bars", sym, from, to),
+  tsxBars: (sym, from, to, res) => ipcRenderer.invoke("tsx:bars", sym, from, to, res),
   journalLogout: () => ipcRenderer.invoke("journal:logout"),
   tsxOpenChrome: (what) => ipcRenderer.invoke("tsx:openChrome", what),
   tsxChromeLinked: () => ipcRenderer.invoke("tsx:chromeLinked"),

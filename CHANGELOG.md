@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.57.1] — 2026-11-17
+### Modifié
+- Synchro TopstepX : chaque trade récupère les **vraies bougies 1 seconde** de TopstepX entre sa seconde d'entrée et sa seconde de sortie, et garde le plus haut / plus bas atteints pendant le trade (« Plus haut (trade) », « Plus bas (trade) », gardés d'une synchro à l'autre ; les comptes copiés du même instant partagent une requête ; 80 trades / 25 s max par synchro, les plus récents d'abord).
+- Journal de Neal : la **MAE / MFE** utilise ces bougies 1 s (plus de bougies 1 min approximatives) ; si la synchro ne les a pas encore, l'app les demande à TopstepX (1 s, sinon 1 min en dernier recours). MAE toujours plafonnée à 1 R, 1 R = taille du SL.
+
 ## [1.57.0] — 2026-11-17
 ### Ajouté
 - Calendrier › **Par semaine** : bouton de style **☰ Liste / ◧ Focus jour** (mémorisé, `econcal-wstyle`). « Focus jour » = 5 cartes, la journée en grand (news + My plan), les autres journées grisées ; clic sur une carte grisée = la mettre en focus, clic sur la carte en focus = l'éditer. Focus par défaut sur aujourd'hui (heure de New York).
