@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.54.0] — 2026-11-17
+### Ajouté
+- Backtesteur : le bouton 🤖 Jarvis propose 3 protocoles — Jarvis ICT (inchangé), **Jarvis Fuck Model v1.2** et **Jarvis Fuck Model v4.0** (page Notion « Fuck Model »). Calcul sur les bougies déjà rejouées uniquement, aucun ordre passé.
+  - v1.2 : PDH (Buy Stop) / PDL (Sell Stop) de la séance précédente, ordres posés à l'ouverture 18:00 NY, 1 NQ, TP 8,5 pts / SL 20 pts, frais 5,76 $ ; un PDH / PDL pris n'est jamais repris ; « TP loupé » quand le gap NWOG / NDOG dépasse le TP.
+  - v4.0 : ordres posés le vendredi avant la clôture, déclenchés à la reprise du dimanche 18:00 ; NWOG + Daily High / Low des 2 derniers mois encore intacts et traversés par le gap = 1 trade chacun, SL 20 pts, sortie à la clôture de la 1re bougie m1.
+  - **Backtest auto** sur l'historique m1 : win rate, P&L net, profit factor, max drawdown, pire série de pertes, P&L par mois, liste des trades (clic = rejouer la journée), export CSV. Réglages gardés (`localStorage "bt-fm-opts"`).
+  - `fmCore` (fonctions pures entre `fmCore:start` / `fmCore:end`) testé par `tools/check.js`.
+
 ## [1.53.0] — 2026-11-13
 ### Ajouté
 - **Paramètres › Profil › Application** : version de l'app (et n° de build), dernière version publiée sur GitHub et bouton **Mettre à jour maintenant** — téléchargement avec progression, vérification du fichier (taille + SHA-256), puis l'app se ferme, installe la nouvelle version et se relance toute seule (données gardées). Windows : même mécanisme que la mise à jour automatique ; Mac : l'app est remplacée dans Applications puis relancée. Bouton « Vérifier les mises à jour », nouveautés de la version (CHANGELOG) et message au redémarrage (« Mise à jour installée » ou échec).

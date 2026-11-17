@@ -136,6 +136,35 @@ try {
   const B = C.bus(), seen = []; const off = B.on("bar", (b) => seen.push(b)); B.emit("bar", 1); off(); B.emit("bar", 2); eq("bus", seen, [1]);
 } catch (e) { errors.push("btCore : " + e.message); }
 
+// Fuck Model v1.2 / v4.0 (fmCore, fonctions pures extraites d'index.html)
+try {
+  const src = /\/\* fmCore:start[^\n]*\n([\s\S]*?)\/\* fmCore:end \*\//.exec(html)[1], F = new Function(src + "; return fmCore;")();
+  const sk = (t) => String(Math.floor(t / 86400)), day = (d, rows) => rows.map((r, i) => [d * 86400 + 60 * i, ...r]);
+  const bars = [...day(0, [[100, 110, 95, 100], [100, 105, 90, 100]]),
+    ...day(1, [[100, 101, 99, 100], [100, 111, 100, 110.5], [110.5, 119, 110, 118], [118, 118, 108, 109], [109, 111, 89, 89.5], [89.5, 90, 80, 81]]),
+    ...day(2, [[130, 131, 129, 130]])];
+  const sum = (o) => F.v12(bars, sk, o).trades.map((x) => [x.status, x.entry, x.exit, x.pnl.toFixed(2)].join("/")).join(" ");
+  const eq = (name, got, want) => { if (got !== want) errors.push(`fmCore.${name} : ${got} au lieu de ${want}`); };
+  // 1 trade par niveau : buy stop PDH 110 -> TP 118,5 ; sell stop PDL 90 -> TP 81,5 ; gap au-delà du TP le lendemain = TP loupé
+  eq("v12", sum({}), "TP/110/118.5/164.24 TP/90/81.5/164.24 TP (loupé)/130/130/0.00");
+  // un niveau pris (TP ou SL) n'est jamais repris : la remontée au-dessus du PDH après le TP ne redéclenche rien
+  // (option rearm gardée pour les tests du moteur)
+  // réarmement : retour sous le PDH, 2e buy stop stoppé dans la même bougie (baissière : O -> H -> L), puis le sell stop dans la foulée
+  eq("v12 réarmement", sum({ rearm: true }), "TP/110/118.5/164.24 SL/110/90/-405.76 TP/90/81.5/164.24 TP (loupé)/130/130/0.00");
+  eq("v12 prudent", sum({ rearm: true, path: "prudent" }), "TP/110/118.5/164.24 SL/110/90/-405.76 TP/89.5/81/164.24 TP (loupé)/130/130/0.00");
+  const s12 = F.stats(F.v12(bars, sk, { rearm: true }).trades); if (s12.n !== 3 || s12.wins !== 2 || s12.loupe !== 1 || s12.maxRun !== 1) errors.push("fmCore.stats : " + JSON.stringify(s12));
+  if (Math.abs(F.beWr(F.D12) - 71.186) > 0.01) errors.push("fmCore.beWr : " + F.beWr(F.D12));
+  // v4.0 : gap haussier 100 -> 106 qui traverse 3 Daily High intacts, sortie à la clôture de la 1re bougie m1 (107)
+  const w = [...day(7, [[100, 105, 95, 100]]), ...day(8, [[100, 104, 96, 100]]), ...day(9, [[100, 103, 97, 100]]), ...day(12, [[106, 108, 105.5, 107], [107, 107, 90, 91]])];
+  eq("v40", F.v40(w, sk, {}).trades.map((x) => x.lvl + ":" + x.pts).join(","), "103:4,104:3,105:2");
+  eq("v40 entrée à l'ouverture", F.v40(w, sk, { entry: "open", slip: 2 }).trades.map((x) => x.entry + ":" + x.pts).join(","), "106.5:0.5,106.5:0.5,106.5:0.5");
+  // 2 mois max : un Daily High de plus de 60 jours, même intact et traversé, est ignoré
+  const old = [...day(1, [[100, 105.5, 95, 100]]), ...w.filter((b) => b[0] >= 7 * 86400)];
+  eq("v40 2 mois max", F.v40(old.map((b) => [b[0] < 2 * 86400 ? b[0] : b[0] + 60 * 86400, ...b.slice(1)]), sk, {}).trades.map((x) => x.lvl).join(","), "103,104,105");
+  eq("v40 dans les 2 mois", F.v40(old, sk, {}).trades.map((x) => x.lvl).join(","), "103,104,105,105.5");
+  eq("v40 sans niveau traversé", String(F.v40([...day(9, [[100, 103, 97, 100]]), ...day(12, [[100.5, 101, 100, 100.5]])], sk, {}).trades.length), "0");
+} catch (e) { errors.push("fmCore : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);

@@ -1014,6 +1014,9 @@ table.tbl:has(#subT){min-width:900px}
 .tx-ptabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid var(--tx-hov);padding-bottom:8px}
 .tx-ptabs button{background:none;border:none;color:var(--tx-txt3);padding:7px 12px;border-radius:4px;cursor:pointer}
 .tx-ptabs button.on{background:var(--tx-hov);color:#fff}
+.fm-ch{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;height:auto!important;padding:10px 14px!important;margin:0 0 8px;text-align:left}.fm-ch b{font-size:14px;color:#fff}.fm-ch span{color:#8a8f98;font-size:12px}.fm-ch:hover{border-color:#2962ff!important}
+.fm-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}.fm-g label{display:flex;flex-direction:column;gap:4px;color:#8a8f98;font-size:12px;min-width:0}.fm-g input,.fm-g select{width:100%;box-sizing:border-box;min-width:0;background:#131722;border:1px solid #434651;color:#fff;border-radius:4px;padding:5px 8px;font:inherit;color-scheme:dark}
+.fm-k{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.fm-k div{background:#131722;border:1px solid #2a2e39;border-radius:6px;padding:8px 10px}.fm-k small{display:block;color:#8a8f98;font-size:11px;margin-bottom:2px}.fm-k b{font-size:15px}
 .tx-mb .r{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
 .tx-mb input[type=number],.tx-mb select,.tx-row input{background:var(--tx-in);border:1px solid var(--tx-line);color:#fff;border-radius:4px;padding:5px 8px;font:inherit}
 .tx-row{display:flex;gap:8px;margin-bottom:12px}
@@ -5351,6 +5354,129 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     return { bus, clockAdvance, cursorAt, needsMore, append, merge1s, trigger, evalOrder };
   })();
   /* btCore:end */
+  /* fmCore:start — Fuck Model (page Notion « Fuck Model ») : v1.2 = cassure PDH / PDL par ordres stop, TP / SL fixes ; v4.0 = NWOG, Daily High / Low traversés par le gap, sortie à la clôture de la 1re bougie m1. Fonctions pures, testées par tools/check.js */
+  const fmCore = (() => {
+    // bougies m1 [t, open, high, low, close] -> séances (sk = clé de séance : 18:00 -> 17:00 NY)
+    function sessions(bars, sk) {
+      const out = []; let cur = null;
+      for (let i = 0; i < bars.length; i++) {
+        const b = bars[i], d = sk(b[0]);
+        if (!cur || cur.d !== d) { cur = { d, i0: i, i1: i, o: b[1], h: b[2], l: b[3], c: b[4], t0: b[0], t1: b[0] }; out.push(cur); }
+        else { cur.i1 = i; if (b[2] > cur.h) cur.h = b[2]; if (b[3] < cur.l) cur.l = b[3]; cur.c = b[4]; cur.t1 = b[0]; }
+      }
+      return out;
+    }
+    // v1.2 : un PDH / PDL pris (TP ou SL) n'est jamais repris dans la séance (rearm = false, l'option ne sert qu'aux tests) ; Buy Stop au PDH, Sell Stop au PDL, posés à l'ouverture de la séance (18:00 NY = 00h00 Paris), 1 NQ, TP 8,5 pts (170 $) / SL 20 pts (400 $), frais Tradeify 5,76 $
+    const D12 = { tp: 8.5, sl: 20, qty: 1, pv: 20, fee: 5.76, ctr: "NQ", rearm: false, rd: 0, path: "ohlc" };
+    function v12(bars, sk, opt) {
+      const o = { ...D12, ...(opt || {}) }, S = sessions(bars, sk), T = []; let state = null;
+      for (let k = 1; k < S.length; k++) {
+        const s = S[k], p = S[k - 1];
+        if ((o.from && s.d < o.from) || (o.to && s.d > o.to)) continue;
+        const sides = [{ dir: 1, lvl: p.h, name: "Buy Stop", armed: true }, { dir: -1, lvl: p.l, name: "Sell Stop", armed: true }];
+        let pos = null;
+        const rec = (x) => T.push({ d: s.d, pdh: p.h, pdl: p.l, ...x });
+        const close = (b, px, st) => { const pts = (px - pos.entry) * pos.dir; rec({ ordre: pos.name, dir: pos.dir, lvl: pos.lvl, tIn: pos.t, entry: pos.entry, tOut: b[0], exit: px, status: st, gap: pos.gap, pts, pnl: pts * o.pv * o.qty - o.fee * o.qty }); pos.side.armed = false; pos = null; };
+        for (let i = s.i0; i <= s.i1; i++) {
+          const b = bars[i], t = b[0], op = b[1], h = b[2], l = b[3], c = b[4];
+          // 1) ouverture de la bougie : gap au-delà du SL / TP d'une position, ou au-delà d'un niveau armé
+          if (pos) { const d = pos.dir, slp = pos.entry - d * o.sl, tpp = pos.entry + d * o.tp;
+            if (d > 0 ? op <= slp : op >= slp) close(b, op, "SL"); else if (d > 0 ? op >= tpp : op <= tpp) close(b, op, "TP"); }
+          if (!pos) for (const sd of sides) {
+            if (!sd.armed || (sd.dir > 0 ? op <= sd.lvl : op >= sd.lvl)) continue;
+            if (sd.dir > 0 ? op >= sd.lvl + o.tp : op <= sd.lvl - o.tp) { rec({ ordre: sd.name, dir: sd.dir, lvl: sd.lvl, tIn: t, entry: op, tOut: t, exit: op, status: "TP (loupé)", gap: true, pts: 0, pnl: 0 }); sd.armed = false; continue; } // NWOG / NDOG : le gap dépasse déjà le TP
+            pos = { dir: sd.dir, name: sd.name, lvl: sd.lvl, side: sd, entry: op, t, gap: true }; break;
+          }
+          // 2) chemin dans la bougie : haussière = O -> L -> H -> C, baissière = O -> H -> L -> C ; « prudent » = SL d'abord si SL et TP sont dans la même bougie
+          const P = c >= op ? [op, l, h, c] : [op, h, l, c];
+          if (o.path === "prudent" && pos) { const d = pos.dir, slp = pos.entry - d * o.sl, tpp = pos.entry + d * o.tp;
+            if (d > 0 ? l <= slp : h >= slp) close(b, slp, "SL"); else if (d > 0 ? h >= tpp : l <= tpp) close(b, tpp, "TP"); }
+          for (let j = 0; j < 3 && o.path !== "prudent"; j++) {
+            let a = P[j]; const z = P[j + 1]; if (a === z) continue;
+            const up = z > a;
+            for (let pass = 0; pass < 3; pass++) { // après une sortie, le reste du segment peut déclencher l'autre ordre
+              if (!pos) for (const sd of sides) { // entrée : le segment traverse le niveau dans le bon sens
+                if (!sd.armed || (sd.dir > 0) !== up || !(sd.dir > 0 ? a <= sd.lvl && z >= sd.lvl : a >= sd.lvl && z <= sd.lvl)) continue;
+                pos = { dir: sd.dir, name: sd.name, lvl: sd.lvl, side: sd, entry: sd.lvl, t, gap: false }; break;
+              }
+              if (!pos) break;
+              const d = pos.dir, slp = pos.entry - d * o.sl, tpp = pos.entry + d * o.tp; // sortie : un segment monotone n'atteint que le TP (dans le sens du trade) ou le SL
+              if (up === d > 0) { if (d > 0 ? z >= tpp : z <= tpp) { close(b, tpp, "TP"); a = tpp; continue; } }
+              else if (d > 0 ? z <= slp : z >= slp) { close(b, slp, "SL"); a = slp; continue; }
+              break;
+            }
+          }
+          if (o.path === "prudent" && !pos) for (const sd of sides) {
+            if (!sd.armed) continue;
+            const d = sd.dir; if (d > 0 ? h < sd.lvl : l > sd.lvl) continue;
+            pos = { dir: d, name: sd.name, lvl: sd.lvl, side: sd, entry: sd.lvl, t, gap: false };
+            const slp = sd.lvl - d * o.sl, tpp = sd.lvl + d * o.tp;
+            if (d > 0 ? l <= slp : h >= slp) close(b, slp, "SL"); else if (d > 0 ? h >= tpp : l <= tpp) close(b, tpp, "TP");
+            break;
+          }
+          // réarmement (option, règle à confirmer) : une bougie clôture de nouveau de l'autre côté du niveau (à rd points au moins) -> l'ordre stop est reposé ; sinon 1 trade par niveau et par séance
+          if (o.rearm) for (const sd of sides) if (!sd.armed && !(pos && pos.side === sd) && (sd.dir > 0 ? c < sd.lvl - o.rd : c > sd.lvl + o.rd)) sd.armed = true;
+        }
+        state = { d: s.d, t0: s.t0, pdh: p.h, pdl: p.l, last: bars[s.i1][4], sides: sides.map((x) => ({ dir: x.dir, lvl: x.lvl, name: x.name, armed: x.armed })), pos: pos ? { dir: pos.dir, name: pos.name, entry: pos.entry, t: pos.t, lvl: pos.lvl } : null };
+        if (pos && !(o.live && k === S.length - 1)) close(bars[s.i1], bars[s.i1][4], "Clôture");
+      }
+      return { trades: T, state };
+    }
+    // Daily High / Low des séances avant k ouvertes depuis « since » (2 mois max), encore intacts à la fin de la séance k-1
+    function weeklyLevels(S, k, since) {
+      const L = []; let j0 = k; while (j0 > 0 && S[j0 - 1].t0 >= since) j0--;
+      for (let j = j0; j < k; j++) {
+        let hi = false, lo = false;
+        for (let m = j + 1; m < k; m++) { if (S[m].h >= S[j].h) hi = true; if (S[m].l <= S[j].l) lo = true; }
+        if (!hi) L.push({ type: "H", d: S[j].d, px: S[j].h });
+        if (!lo) L.push({ type: "L", d: S[j].d, px: S[j].l });
+      }
+      return L;
+    }
+    // v4.0 : ordres posés le vendredi avant la clôture, déclenchés à la reprise du dimanche 18:00 ; chaque Daily High (gap haussier) / Low (gap baissier) traversé par le gap = 1 trade,
+    // SL fixe 20 pts, sortie à la clôture de la 1re bougie m1. Pas de gap au-delà d'un niveau = pas de trade.
+    // entry "level" = étude FX Replay (rempli au niveau) ; "open" = réaliste futures (rempli à l'ouverture du gap + slippage) ; cfd = clôture du vendredi à 16:14 comme le NAS100 de FX Replay (skip fourni par l'appelant)
+    const D40 = { sl: 20, qty: 1, pv: 20, fee: 5.76, ctr: "NQ", look: 60, entry: "level", slip: 0, tick: 0.25, weekly: true, minGapH: 24, maxGapH: 100, cfd: true };
+    function v40(bars, sk, opt) {
+      const o = { ...D40, ...(opt || {}) }; if (o.skip) bars = bars.filter((b) => !o.skip(b[0])); // ex. clôture CFD 16:14 : bougies 16:15 -> 17:59 NY ignorées
+      const S = sessions(bars, sk), T = [], gaps = [];
+      for (let k = 1; k < S.length; k++) {
+        const s = S[k], p = S[k - 1];
+        if ((o.from && s.d < o.from) || (o.to && s.d > o.to)) continue;
+        const gh = (s.t0 - p.t1) / 3600; if (gh > o.maxGapH || (o.weekly && gh <= o.minGapH)) continue; // trou de données (> maxGapH) : pas un vrai NWOG
+        const C = p.c, O = s.o, b = bars[s.i0], up = O > C;
+        if (O === C) { gaps.push({ d: s.d, C, O, up, n: 0 }); continue; }
+        const lv = weeklyLevels(S, k, s.t0 - Math.min(o.look, 62) * 86400).filter((x) => (up ? x.type === "H" && x.px > C && x.px <= O : x.type === "L" && x.px < C && x.px >= O)).sort((a, z) => (up ? a.px - z.px : z.px - a.px));
+        gaps.push({ d: s.d, C, O, up, n: lv.length, t0: s.t0 });
+        for (const x of lv) {
+          const d = up ? 1 : -1, entry = o.entry === "open" ? O + d * o.slip * o.tick : x.px, slp = entry - d * o.sl;
+          let exit = b[4];
+          const hitSl = d > 0 ? b[3] <= slp : b[2] >= slp;
+          if (hitSl) exit = slp;
+          const pts = (exit - entry) * d;
+          T.push({ d: s.d, ordre: d > 0 ? "Buy Stop" : "Sell Stop", dir: d, lvl: x.px, lvlDay: x.d, lvlType: x.type, C, O, tIn: b[0], entry, tOut: b[0] + 60, exit, status: hitSl ? "SL" : pts >= 0 ? "TP" : "Perte", pts, rr: pts / o.sl, pnl: pts * o.pv * o.qty - o.fee * o.qty });
+        }
+      }
+      return { trades: T, gaps };
+    }
+    // stats d'une liste de trades (les « TP loupés » sont comptés à part, hors win rate)
+    function stats(T) {
+      const R = T.filter((x) => x.status !== "TP (loupé)"), n = R.length, wins = R.filter((x) => x.pnl > 0).length;
+      let eq = 0, peak = 0, dd = 0, run = 0, maxRun = 0, gw = 0, gl = 0; const runs = [], months = {};
+      for (const x of R) {
+        eq += x.pnl; if (eq > peak) peak = eq; if (eq - peak < dd) dd = eq - peak;
+        if (x.pnl > 0) { gw += x.pnl; if (run) runs.push(run); run = 0; } else { gl += x.pnl; run++; if (run > maxRun) maxRun = run; }
+        const m = x.d.slice(0, 7); months[m] = months[m] || { n: 0, w: 0, pnl: 0 }; months[m].n++; months[m].pnl += x.pnl; if (x.pnl > 0) months[m].w++;
+      }
+      if (run) runs.push(run);
+      const days = new Set(R.map((x) => x.d)).size;
+      return { n, wins, losses: n - wins, loupe: T.length - n, wr: n ? (wins / n) * 100 : 0, pnl: eq, gw, gl, pf: gl ? gw / -gl : null, avgW: wins ? gw / wins : 0, avgL: n - wins ? gl / (n - wins) : 0, maxDD: dd, maxRun, avgRun: runs.length ? runs.reduce((a, z) => a + z, 0) / runs.length : 0, days, perDay: days ? n / days : 0, months };
+    }
+    // win rate minimum (frais compris) pour un TP / SL fixes : SL net / (TP net + SL net)
+    const beWr = (o) => ((o.sl * o.pv + o.fee) / ((o.tp + o.sl) * o.pv)) * 100;
+    return { sessions, v12, v40, weeklyLevels, stats, beWr, D12, D40 };
+  })();
+  /* fmCore:end */
   const BUS = btCore.bus(), AHEAD = 2 * 3600; // buffer : on charge la séance suivante quand il reste moins de 2 h de marché devant le curseur
   const S = { sym: "NQ", raw: [], csv: null, cur: 0, tf: 1, playing: null, done: -1, B: [], lastLen: 0, gen: 0, day: null, more: false, end: false, htfTo: 0 };
   const TFKEY = { 2: "m2", 3: "m3", 5: "m5", 15: "m15", 60: "H1", 240: "H4", 1440: "D", 10080: "W", 43200: "M", 129600: "3M", 259200: "6M", 518400: "12M" };
@@ -7768,7 +7894,9 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         ["news", "Afficher / masquer les news", ["Alt+Shift+N"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
         ["details", "Fenêtre News / détails", ["Alt+D"], () => $("btNewsBtn").click()],
         ["watchlist", "Watchlist (NQ / ES)", ["Alt+W"], () => togglePanel("btWL", wlRender)], ["alerts", "Alertes de prix", ["Alt+Shift+A"], () => togglePanel("btAL", alRender)],
-        ["jarvis", "Lancer Jarvis (protocole d'analyse)", ["Alt+Shift+J"], () => $("btJarvisBtn").click()],
+        ["jarvis", "Lancer Jarvis (choix du protocole)", ["Alt+Shift+J"], () => $("btJarvisBtn").click()],
+        ["jarvisFM12", "Jarvis Fuck Model v1.2 (PDH / PDL)", [], () => jarvisFM12()], ["jarvisFM40", "Jarvis Fuck Model v4.0 (NWOG)", [], () => jarvisFM40()],
+        ["fmBacktest", "Backtest auto Fuck Model v1.2", [], () => fmBacktest(12)], ["fmBacktest40", "Backtest auto Fuck Model v4.0", [], () => fmBacktest(40)],
         ["nextNews", "Aller à la news suivante", ["Shift+W"], () => { nextNews(); }],
         ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
       ["Replay", [
@@ -7834,7 +7962,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       draft = draft || JSON.parse(JSON.stringify(KMAP)); let cap = null;
       const chip = (id, i, c) => `<span class="tx-kc">${esc(label(c))}<b data-k="del" data-id="${id}" data-i="${i}" title="Retirer">×</b></span>`;
       const m = modal("Raccourcis clavier", `<div class="tx-keys">${KEYS.map(([g, L]) => `<div class="tx-kg">${g}</div>` + L.map(([id, n]) => `<div class="tx-kr"><span>${n}</span><span class="tx-kv">${(draft[id] || []).map((c, i) => chip(id, i, c)).join("")}<button data-k="add" data-id="${id}" class="ghost" title="Ajouter un raccourci">＋</button></span></div>`).join("")).join("")}
-        <div class="tx-kg">Fixes</div><div class="tx-kr rv-mut"><span>Échap : annuler / outil curseur · Suppr : effacer la sélection · Ctrl+D / C / V / Z : dupliquer, copier, coller, annuler · Tape 1, 5, 15, 60, 240, D, W ou M puis Entrée : timeframe</span></div></div>`,
+        <div class="tx-kg">Fixes</div><div class="tx-kr rv-mut"><span>Échap : annuler / outil curseur · Suppr : effacer la sélection · Ctrl+D / C / V / Z : dupliquer, copier, coller, annuler · Tape 1, 5, 15, 60, 240, 1D, W ou M (clavier ou pavé numérique) puis Entrée : timeframe — au pavé numérique, validé tout seul après 1 s</span></div></div>`,
         `<button data-m="def" class="ghost">Par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
       m.onclick = (e) => { const t = e.target, a = t.dataset.m, ka = t.dataset.k;
         if (ka === "del") { draft[t.dataset.id].splice(+t.dataset.i, 1); return openKeys(draft); }
@@ -7993,7 +8121,192 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         `<button data-m="clr" class="ghost">Effacer les dessins Jarvis</button><span class="tx-sp"></span><button data-m="x">OK</button>`).onclick = (e) => { const a = e.target.dataset.m; if (a === "clr") { shapes = shapes.filter((s) => !s.jarvis); saveDrawings(); tree(); closeModal(); msg("Dessins Jarvis effacés."); } else if (a === "x") closeModal(); };
       msg(`Jarvis : ${L.length} niveaux, ${Z.length} zones dessinés.`);
     }
-    $("btJarvisBtn").onclick = jarvis;
+
+    /* ---------- Jarvis Fuck Model v1.2 / v4.0 (page Notion « Fuck Model ») : calculé sur les bougies déjà rejouées, plus un backtest automatique sur l'historique m1 ---------- */
+    const FMK = "bt-fm-opts", FMN = { 12: "Fuck Model v1.2", 40: "Fuck Model v4.0" };
+    const fmOpt = (v) => { const o = { ...(v === 12 ? fmCore.D12 : fmCore.D40), ...((LS.get(FMK, {}) || {})[v] || {}) }; if (v === 12) o.rearm = false; else o.look = Math.min(+o.look || 60, 62); return o; }; // v1.2 : un PDH / PDL pris n'est jamais repris ; v4.0 : 2 mois max
+    const fmSave = (v, o) => { const all = LS.get(FMK, {}) || {}; all[v] = o; LS.set(FMK, all); };
+    const fmPv = (o) => (CTR[o.ctr] || CTR.NQ).pv;
+    const nyMin = (t) => ((((t + offF(t)) % 86400) + 86400) % 86400) / 60;
+    const fmSkip = (o) => (o.cfd ? (t) => { const m = nyMin(t); return m >= 975 && m < 1080; } : null); // v4.0 : clôture CFD 16:14, bougies 16:15 -> 17:59 NY ignorées
+    const fmM1 = () => { const M = []; for (let i = 0; i <= S.cur && i < S.raw.length; i++) { const b = S.raw[i], k = Math.floor(b[0] / 60) * 60, l = M[M.length - 1]; if (!l || l[0] !== k) M.push([k, b[1], b[2], b[3], b[4]]); else { if (b[2] > l[2]) l[2] = b[2]; if (b[3] < l[3]) l[3] = b[3]; l[4] = b[4]; } } return M; };
+    // historique avant le début du buffer (le replay ne charge que ~3 jours : le lundi, la séance du vendredi et la semaine précédente manquent)
+    async function fmHist(days) {
+      const M = fmM1(); if (!M.length) return M; const t0 = S.raw[0][0], from = t0 - days * 86400; let pre = [];
+      if (S.sym === "CSV") pre = (S.csv || []).filter((b) => b[0] >= from && b[0] < t0).map((b) => b.slice(0, 5));
+      else if (D && D.dataRead) { const r = await cached(`m1|${S.sym}|${from}|${t0}`, () => D.dataRead(S.sym, from, t0 - 1, "m1")); if (r && r.ok) pre = r.data.filter((b) => b[0] < t0).map((b) => b.slice(0, 5)); }
+      return pre.concat(M);
+    }
+    const fid = () => "j" + Date.now() + Math.floor(Math.random() * 1e6);
+    const fmLine = (tag, name, t, price, color, dash) => ({ id: fid(), type: "hray", name: "Jarvis FM · " + name, p: [{ t, price }], style: { ...defStyle("hray"), color, width: 2, dash: dash || 0, textColor: color }, text: name, hidden: false, locked: true, jarvis: tag });
+    const fmPos = (tag, name, dir, t1, t2, entry, tp, sl, o) => ({ id: fid(), type: dir > 0 ? "long" : "short", name: "Jarvis FM · " + name, p: [{ t: t1, price: entry }, { t: t2, price: rnd(tp) }, { t: t2, price: rnd(sl) }], style: { ...defStyle(dir > 0 ? "long" : "short"), pos: { mode: "qty", qty: o.qty, ctr: o.ctr } }, text: name, hidden: false, locked: true, jarvis: tag });
+    const fmBox = (tag, name, t, p1, p2, color, fill) => ({ id: fid(), type: "rect", name: "Jarvis FM · " + name, p: [{ t, price: p1 }, { t: t + 60, price: p2 }], style: { ...defStyle("rect"), color, fill, extR: true, textColor: color }, text: name, hidden: false, locked: true, jarvis: tag });
+    const fmPut = (tag, out) => { shapes = shapes.filter((s) => s.jarvis !== tag).concat(out); sel = null; saveDrawings(); tree(); };
+    const px2 = (x) => (+x).toFixed(2), sgn = (x) => (x >= 0 ? "+" : "") + (+x).toFixed(2);
+    const stCol = (s) => (s === "TP" ? "#26a69a" : s === "SL" || s === "Perte" ? "#ef5350" : "#f9a825");
+    const fmFoot = `<button data-m="clr" class="ghost">Effacer les dessins</button><button data-m="bt" class="ghost">Backtest auto…</button><span class="tx-sp"></span><button data-m="x">OK</button>`;
+    const fmWide = (m, w) => { const b = m.querySelector(".tx-mbox"); if (b) b.style.width = (w || 820) + "px"; return m; };
+    const fmFootClick = (v, tag) => (e) => { const a = e.target.dataset.m; if (a === "clr") { shapes = shapes.filter((s) => s.jarvis !== tag); saveDrawings(); tree(); closeModal(); msg("Dessins Jarvis FM effacés."); } else if (a === "bt") fmBacktest(v); else if (a === "x") closeModal(); };
+
+    // v1.2 : PDH / PDL, ordres stop en attente, trades déjà joués dans la séance
+    async function jarvisFM12() {
+      if (!S.raw.length) return msg("Charge d'abord une journée (Charger).", true);
+      if (pane !== 1) setActive(1);
+      const o = fmOpt(12); o.pv = fmPv(o);
+      const now = S.raw[S.cur][0], last = S.raw[S.cur][4], d = sessionKey(now), r = fmCore.v12(await fmHist(5), sessionKey, { ...o, live: true }), st = r.state;
+      if (!st || st.d !== d) return msg("Jarvis FM v1.2 : il faut la séance précédente (PDH / PDL) dans les bougies chargées.", true);
+      const T = r.trades.filter((x) => x.d === d), tag = "fm12", out = [fmLine(tag, "PDH · Buy Stop", st.t0, st.pdh, "#2962ff"), fmLine(tag, "PDL · Sell Stop", st.t0, st.pdl, "#ef5350")];
+      T.forEach((x, i) => { if (x.status !== "TP (loupé)") out.push(fmPos(tag, `#${i + 1} ${x.ordre} · ${x.status}`, x.dir, x.tIn, Math.max(x.tOut, x.tIn + 300), x.entry, x.entry + x.dir * o.tp, x.entry - x.dir * o.sl, o)); });
+      if (st.pos) out.push(fmPos(tag, `${st.pos.name} · en cours`, st.pos.dir, st.pos.t, now + 1800, st.pos.entry, st.pos.entry + st.pos.dir * o.tp, st.pos.entry - st.pos.dir * o.sl, o));
+      else st.sides.forEach((sd) => { if (sd.armed) out.push(fmPos(tag, `${sd.name} en attente`, sd.dir, now, now + 3600, sd.lvl, sd.lvl + sd.dir * o.tp, sd.lvl - sd.dir * o.sl, o)); });
+      fmPut(tag, out);
+      const pnl = T.reduce((a, x) => a + x.pnl, 0), wins = T.filter((x) => x.pnl > 0).length, done = T.filter((x) => x.status !== "TP (loupé)").length;
+      const rows = T.map((x, i) => `<tr><td>#${i + 1}</td><td>${hm(x.tIn)}</td><td>${x.ordre}${x.gap ? " · gap" : ""}</td><td style="text-align:right">${px2(x.entry)}</td><td style="text-align:right">${px2(x.exit)}</td><td style="color:${stCol(x.status)}">${x.status}</td><td style="text-align:right">${usd(x.pnl)}</td></tr>`).join("");
+      const pend = st.pos ? `<b>${st.pos.name}</b> en cours depuis ${hm(st.pos.t)} à ${px2(st.pos.entry)} · TP ${px2(st.pos.entry + st.pos.dir * o.tp)} · SL ${px2(st.pos.entry - st.pos.dir * o.sl)} · flottant ${sgn((last - st.pos.entry) * st.pos.dir)} pts`
+        : st.sides.map((sd) => `${sd.name} ${px2(sd.lvl)} : ${sd.armed ? `<b>en attente</b> (${sgn(sd.lvl - last)} pts)` : "déjà pris : jamais repris"}`).join(" · ");
+      fmWide(modal(`🖕 Jarvis ${FMN[12]} · ${S.sym} ${hm(now)}`, `<p class="rv-mut" style="margin:0 0 10px">Séance du ${d} (ouverture 18:00 NY = 00h00 Paris) · bougies jusqu'à ${hm(now)} NY uniquement. PDH ${px2(st.pdh)} · PDL ${px2(st.pdl)} · dernier prix ${px2(last)}.<br>Règles : Buy Stop au PDH, Sell Stop au PDL (un niveau pris, en TP ou en SL, n'est jamais repris), ${o.qty} ${o.ctr}, TP ${o.tp} pts (${usd(o.tp * o.pv * o.qty)}) / SL ${o.sl} pts (${usd(o.sl * o.pv * o.qty)}), frais ${usd(o.fee * o.qty)} · ordres STOP, jamais LIMIT · win rate minimum ${fmCore.beWr(o).toFixed(1)} %.</p>
+        <p style="margin:0 0 10px">${pend}</p>
+        <table class="tx-jt"><tr><th>#</th><th>Heure</th><th>Ordre</th><th>Entrée</th><th>Sortie</th><th>Statut</th><th>P&amp;L net</th></tr>${rows || '<tr><td colspan="7">Aucun déclenchement pour l\'instant dans la séance.</td></tr>'}</table>
+        <p style="margin:10px 0 0">Séance : <b>${done}</b> trade(s), ${wins} TP · P&amp;L net <b style="color:${pnl >= 0 ? "#26a69a" : "#ef5350"}">${usd(pnl)}</b></p>`, fmFoot), 760).onclick = fmFootClick(12, "fm12");
+      msg(`Jarvis FM v1.2 : PDH ${px2(st.pdh)} / PDL ${px2(st.pdl)}, ${done} trade(s) dans la séance.`);
+    }
+
+    // v4.0 : à la reprise du dimanche, NWOG + Daily High / Low traversés ; le reste de la semaine, niveaux intacts à surveiller pour le prochain NWOG
+    async function jarvisFM40() {
+      if (!S.raw.length) return msg("Charge d'abord une journée (Charger).", true);
+      if (pane !== 1) setActive(1);
+      const o = fmOpt(40); o.pv = fmPv(o);
+      const sk40 = fmSkip(o), M = (await fmHist(o.look + 5)).filter((b) => !(sk40 && sk40(b[0]))), now = S.raw[S.cur][0], last = S.raw[S.cur][4], SS = fmCore.sessions(M, sessionKey), k = SS.length - 1, s = SS[k], p = SS[k - 1], tag = "fm40", out = [];
+      if (!p) return msg("Jarvis FM v4.0 : il faut les séances précédentes dans les bougies chargées.", true);
+      const open = s.t0 - p.t1 > o.minGapH * 3600 || !o.weekly;
+      let body;
+      if (open) {
+        const C = p.c, O = s.o, up = O > C, L = fmCore.weeklyLevels(SS, k, s.t0 - o.look * 86400);
+        out.push(fmBox(tag, `${o.weekly ? "NWOG" : "NDOG"} ${sgn(O - C)} pts`, s.t0, C, O, "#5d606b", "rgba(120,123,134,0.22)"));
+        L.forEach((x) => { const hit = up ? x.type === "H" && x.px > C && x.px <= O : x.type === "L" && x.px < C && x.px >= O; out.push(fmLine(tag, `Daily ${x.type === "H" ? "High" : "Low"} ${x.d.slice(5)}${hit ? " · traversé" : ""}`, s.t0 - 3600, x.px, hit ? "#f9a825" : "#787b86", hit ? 0 : 2)); });
+        const ready = now >= s.t0 + 59, run = (e) => (ready ? fmCore.v40(M, sessionKey, { ...o, skip: null, entry: e, from: s.d, to: s.d }).trades : []), T = run("level"), TR = run("open");
+        T.forEach((x, i) => out.push(fmPos(tag, `#${i + 1} ${x.ordre} ${x.lvlType === "H" ? "DH" : "DL"} ${x.lvlDay.slice(5)} · ${sgn(x.rr)} R`, x.dir, x.tIn, x.tIn + 900, x.entry, x.exit, x.entry - x.dir * o.sl, o)));
+        const pnl = T.reduce((a, x) => a + x.pnl, 0), pnlR = TR.reduce((a, x) => a + x.pnl, 0), pcol = (x) => (x >= 0 ? "#26a69a" : "#ef5350");
+        const rows = T.map((x, i) => { const y = TR[i]; return `<tr><td>#${i + 1}</td><td>${x.ordre} · Daily ${x.lvlType === "H" ? "High" : "Low"} du ${x.lvlDay}</td><td style="text-align:right">${px2(x.entry)}</td><td style="text-align:right">${px2(y.entry)}</td><td style="text-align:right">${px2(x.exit)}</td><td style="text-align:right">${x.rr.toFixed(2)}</td><td style="text-align:right">${y.rr.toFixed(2)}</td><td style="text-align:right;color:${pcol(x.pnl)}">${usd(x.pnl)}</td><td style="text-align:right;color:${pcol(y.pnl)}">${usd(y.pnl)}</td></tr>`; }).join("");
+        body = `<p class="rv-mut" style="margin:0 0 10px">Reprise du ${hm(s.t0)} NY (séance du ${s.d}) · clôture précédente${o.cfd ? " (16:14, comme le CFD de FX Replay)" : ""} ${px2(C)} → ouverture ${px2(O)} = gap ${up ? "haussier" : "baissier"} de ${Math.abs(O - C).toFixed(2)} pts. Deux versions : théorique FX Replay (rempli au niveau) et réaliste futures (rempli à l'ouverture du gap${o.slip ? ` + ${o.slip} ticks` : ""}) · SL ${o.sl} pts · sortie à la clôture de la 1re bougie m1.</p>
+          ${ready ? `<table class="tx-jt"><tr><th>#</th><th>Ordre · niveau</th><th>Entrée théo.</th><th>Entrée réelle</th><th>Sortie</th><th>R théo.</th><th>R réel</th><th>P&amp;L théo.</th><th>P&amp;L réel</th></tr>${rows || `<tr><td colspan="9">Le gap ne traverse aucun Daily ${up ? "High" : "Low"} intact : <b>trades annulés</b>.</td></tr>`}</table>
+          <p style="margin:10px 0 0">Total sur ${T.length} trade(s) : théorique <b style="color:${pcol(pnl)}">${usd(pnl)}</b> · réaliste <b style="color:${pcol(pnlR)}">${usd(pnlR)}</b> · écart <b>${usd(pnlR - pnl)}</b>.</p>` : `<p><b>La 1re bougie m1 n'est pas encore clôturée</b> : avance le replay d'une minute pour voir la sortie.</p>`}`;
+      } else {
+        // préparation : niveaux de la semaine encore intacts (séance en cours comprise), pour les ordres à poser avant la reprise
+        const L = fmCore.weeklyLevels(SS, k + 1, now - o.look * 86400).sort((a, z) => z.px - a.px);
+        L.forEach((x) => out.push(fmLine(tag, `${x.type === "H" ? "Buy Stop · DH" : "Sell Stop · DL"} ${x.d.slice(5)}`, now, x.px, x.type === "H" ? "#2962ff" : "#ef5350", 2)));
+        const rows = L.map((x) => `<tr><td>${x.type === "H" ? "Buy Stop" : "Sell Stop"}</td><td>Daily ${x.type === "H" ? "High" : "Low"} du ${x.d}</td><td style="text-align:right">${px2(x.px)}</td><td style="text-align:right">${sgn(x.px - last)}</td></tr>`).join("");
+        body = `<p class="rv-mut" style="margin:0 0 10px">Séance du ${s.d}, pas une reprise ${o.weekly ? "du dimanche (NWOG)" : ""} : voici les Daily High / Low des ${o.look} derniers jours encore intacts à ${hm(now)} NY. Le vendredi avant la clôture, ordres posés sur ces niveaux pour être déclenchés à la reprise du dimanche 18:00 ; seuls ceux que le gap traverse sont déclenchés, sinon annulation.</p>
+          <table class="tx-jt"><tr><th>Ordre</th><th>Niveau</th><th>Prix</th><th>Écart</th></tr>${rows || '<tr><td colspan="4">Aucun niveau intact.</td></tr>'}</table>`;
+      }
+      fmPut(tag, out);
+      fmWide(modal(`🖕 Jarvis ${FMN[40]} · ${S.sym} ${hm(now)}`, body, fmFoot), 920).onclick = fmFootClick(40, tag);
+      msg(`Jarvis FM v4.0 : ${out.length} dessins.`);
+    }
+
+    // backtest automatique sur l'historique m1 (data / data_csv), jusqu'à la veille de la journée rejouée par défaut (pas de données futures)
+    function fmBacktest(v) {
+      const o = fmOpt(v), to0 = o.btTo || addDays(S.day || lastTradingDay(), -1), from0 = o.btFrom || "2023-07-01";
+      const num = (k, lab, step) => `<label>${lab}<input type="number" data-k="${k}" value="${o[k]}" step="${step || "any"}"></label>`;
+      const f = v === 12 ? num("tp", "TP (points)", 0.25) + num("sl", "SL (points)", 0.25) + num("qty", "Contrats", 1) + num("fee", "Frais par contrat ($ aller-retour)") + `<label>Bougie m1 avec TP et SL<select data-k="path"><option value="ohlc"${o.path !== "prudent" ? " selected" : ""}>Chemin O-L-H-C / O-H-L-C (selon la couleur)</option><option value="prudent"${o.path === "prudent" ? " selected" : ""}>Prudent : SL compté d'abord</option></select></label>`
+        : num("sl", "SL (points)", 0.25) + num("qty", "Contrats", 1) + num("fee", "Frais par contrat ($ aller-retour)") + num("look", "Daily High / Low des N derniers jours (2 mois max = 60)", 1) +
+          num("slip", "Slippage à l'ouverture, version réaliste (ticks)", 1) +
+          `<label>Clôture du vendredi<select data-k="cfd"><option value="1"${o.cfd ? " selected" : ""}>16:14 (NAS100 CFD de FX Replay, comme l'étude)</option><option value="0"${o.cfd ? "" : " selected"}>17:00 (futures CME)</option></select></label>` +
+          `<label>Gaps<select data-k="weekly"><option value="1"${o.weekly ? " selected" : ""}>NWOG seulement (reprise du dimanche)</option><option value="0"${o.weekly ? "" : " selected"}>Chaque reprise (NDOG compris)</option></select></label>`;
+      const m = fmWide(modal(`🧪 Backtest auto · ${FMN[v]}`, `<div class="fm-g"><label>Du<input type="date" data-k="btFrom" value="${from0}"></label><label>Au<input type="date" data-k="btTo" value="${to0}"></label>
+        <label>Contrat<select data-k="ctr">${["NQ", "MNQ"].map((c) => `<option${o.ctr === c ? " selected" : ""}>${c}</option>`).join("")}</select></label>${f}</div>
+        <p class="rv-mut" style="margin:10px 0 0">Bougies m1 du dossier data / data_csv (${und(S.sym === "CSV" ? "NQ" : S.sym)}). ${v === 12 ? "Dans une bougie m1, l'ordre des prix est déduit de sa couleur (haussière : ouverture → plus bas → plus haut → clôture ; baissière : ouverture → plus haut → plus bas → clôture), ou SL d'abord en mode prudent." : "Le SL est vérifié sur la 1re bougie m1 ; sinon sortie à sa clôture."}</p><div id="fmRes"></div>`,
+        `<span class="tx-sp"></span><button data-m="x" class="ghost">Fermer</button><button data-m="run">Lancer le backtest</button>`), 900);
+      m.onclick = async (e) => {
+        const a = e.target.dataset.m; if (a === "x") return closeModal(); if (a !== "run") return;
+        const n = { ...o }; m.querySelectorAll("[data-k]").forEach((el) => { const k = el.dataset.k; n[k] = el.type === "number" ? +el.value : k === "rearm" || k === "weekly" || k === "cfd" ? el.value === "1" : el.value; }); if (v === 40) n.look = Math.max(1, Math.min(n.look || 60, 60));
+        fmSave(v, n); e.target.disabled = true; try { await fmRun(v, n, $("fmRes")); } finally { e.target.disabled = false; }
+      };
+    }
+    async function fmRun(v, o, el) {
+      const sym = und(S.sym === "CSV" ? "NQ" : S.sym), from = o.btFrom, to = o.btTo; o = { ...o, pv: fmPv(o) };
+      if (!from || !to || from > to) return (el.innerHTML = `<p style="color:#ef5350">Dates invalides.</p>`);
+      let bars = [];
+      if (S.sym === "CSV" || !D || !D.dataRead) { if (!S.csv) return (el.innerHTML = `<p style="color:#ef5350">Version web : importe d'abord un CSV m1.</p>`); bars = S.csv.map((b) => b.slice(0, 5)); }
+      else {
+        let a = addDays(from, -(v === 40 ? 14 : 6)); // séances d'avant : PDH / PDL et Daily High / Low de la semaine
+        while (a <= to) {
+          const b = addDays(a, 30) < to ? addDays(a, 30) : to; el.innerHTML = `<p class="rv-mut">Lecture des bougies m1 ${sym} : ${a} → ${b}…</p>`;
+          const r = await D.dataRead(sym, ny(addDays(a, -1), 18, 0), ny(b, 17, 0), "m1"); if (!r || !r.ok) return (el.innerHTML = `<p style="color:#ef5350">Lecture impossible : ${esc((r && r.reason) || "?")}</p>`);
+          btCore.append(bars, r.data.map((x) => x.slice(0, 5))); a = addDays(b, 1);
+        }
+      }
+      if (bars.length < 100) return (el.innerHTML = `<p style="color:#ef5350">Pas assez de bougies m1 sur cette période.</p>`);
+      el.innerHTML = `<p class="rv-mut">Calcul sur ${bars.length.toLocaleString("fr-FR")} bougies…</p>`; await new Promise((ok) => setTimeout(ok, 20));
+      if (v === 40) return fmRun40(bars, o, el, from, to);
+      const r = v === 12 ? fmCore.v12(bars, sessionKey, { ...o, from, to }) : fmCore.v40(bars, sessionKey, { ...o, skip: fmSkip(o), from, to }), T = r.trades, st = fmCore.stats(T);
+      const k = (lab, val, col) => `<div><small>${lab}</small><b${col ? ` style="color:${col}"` : ""}>${val}</b></div>`, pc = (x) => (x >= 0 ? "#26a69a" : "#ef5350");
+      const kp = k("Trades", st.n + (st.loupe ? ` <span class="rv-mut" style="font-size:12px">+ ${st.loupe} TP loupés</span>` : "")) + k("Win rate", st.wr.toFixed(1) + " %" + (v === 12 ? ` <span class="rv-mut" style="font-size:12px">min. ${fmCore.beWr(o).toFixed(1)} %</span>` : ""), v === 12 ? pc(st.wr - fmCore.beWr(o)) : "") +
+        k("P&amp;L net", usd(st.pnl), pc(st.pnl)) + k("Profit factor", st.pf == null ? "∞" : st.pf.toFixed(2)) + k("Max drawdown", usd(st.maxDD), "#ef5350") + k("Pire série de pertes", st.maxRun + ` <span class="rv-mut" style="font-size:12px">moy. ${st.avgRun.toFixed(2)}</span>`) +
+        k("Gain moyen / perte moyenne", `${usd(st.avgW)} / ${usd(st.avgL)}`) + k(v === 12 ? "Trades par jour tradé" : "Semaines avec trade", v === 12 ? st.perDay.toFixed(2) : `${st.days} / ${r.gaps.length}`);
+      const mo = Object.keys(st.months).sort().reverse().map((m2) => { const x = st.months[m2]; return `<tr><td>${m2}</td><td style="text-align:right">${x.n}</td><td style="text-align:right">${((x.w / x.n) * 100).toFixed(0)} %</td><td style="text-align:right;color:${pc(x.pnl)}">${usd(x.pnl)}</td></tr>`; }).join("");
+      const L = T.slice().reverse(), shown = L.slice(0, 300);
+      const tr = shown.map((x, i) => `<tr data-i="${i}" style="cursor:pointer" title="Rejouer cette journée"><td>${x.d}</td><td>${hm(x.tIn)}</td><td>${x.ordre}${x.lvlType ? ` · D${x.lvlType} ${x.lvlDay.slice(5)}` : x.gap ? " · gap" : ""}</td><td style="text-align:right">${px2(x.entry)}</td><td style="text-align:right">${px2(x.exit)}</td><td style="color:${stCol(x.status)}">${x.status}</td><td style="text-align:right">${(x.pts / o.sl).toFixed(2)}</td><td style="text-align:right;color:${pc(x.pnl)}">${usd(x.pnl)}</td></tr>`).join("");
+      el.innerHTML = `<div class="fm-k" style="margin-top:12px">${kp}</div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:0 0 250px;max-height:340px;overflow:auto"><table class="tx-jt"><tr><th>Mois</th><th>Trades</th><th>WR</th><th>P&amp;L</th></tr>${mo}</table></div>
+        <div style="flex:1;max-height:340px;overflow:auto"><table class="tx-jt"><tr><th>Séance</th><th>Heure</th><th>Ordre</th><th>Entrée</th><th>Sortie</th><th>Statut</th><th>R</th><th>P&amp;L net</th></tr>${tr || '<tr><td colspan="8">Aucun trade.</td></tr>'}</table>${L.length > 300 ? `<p class="rv-mut">300 derniers trades affichés sur ${L.length} (tous dans l'export CSV).</p>` : ""}</div></div>
+        <p style="margin:10px 0 0"><button data-x="csv" class="ghost" style="height:30px">Exporter en CSV</button> <span class="rv-mut">Clic sur un trade = rejouer la journée dans le Backtesteur.</span></p>`;
+      el.onclick = (e) => {
+        if (e.target.dataset.x === "csv") {
+          const head = "seance;heure_ny;ordre;niveau;entree;sortie;statut;points;R;pnl_net\n", csv = head + T.map((x) => [x.d, hm(x.tIn), x.ordre, px2(x.lvl), px2(x.entry), px2(x.exit), x.status, x.pts.toFixed(2), (x.pts / o.sl).toFixed(2), x.pnl.toFixed(2)].join(";")).join("\n");
+          const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = `fuck-model-v${v === 12 ? "1.2" : "4.0"}_${from}_${to}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); return;
+        }
+        const row = e.target.closest("tr[data-i]"); if (!row) return; const x = shown[+row.dataset.i], hh = +hm(x.tIn).slice(0, 2);
+        $("btDate").value = x.d; $("btStart").value = hh >= 18 ? "00:00" : hm(Math.max(x.tIn - 900, ny(x.d, 0, 0))); closeModal(); load();
+        if (hh >= 18) msg("Trade de la veille au soir (reprise 18:00) : recule avec ← pour le revoir.");
+      };
+    }
+
+    // v4.0 : théorique FX Replay (rempli au niveau) et réaliste futures (rempli à l'ouverture du gap + slippage), même trades, côte à côte
+    function fmRun40(bars, o, el, from, to) {
+      const base = { ...o, skip: fmSkip(o), from, to }, rT = fmCore.v40(bars, sessionKey, { ...base, entry: "level" }), rO = fmCore.v40(bars, sessionKey, { ...base, entry: "open" });
+      const TT = rT.trades, TO = rO.trades, sT = fmCore.stats(TT), sO = fmCore.stats(TO), pc = (x) => (x >= 0 ? "#26a69a" : "#ef5350");
+      const avgR = (T) => (T.length ? T.reduce((a, x) => a + x.rr, 0) / T.length : 0), pf = (x) => (x.pf == null ? "∞" : x.pf.toFixed(2));
+      const row = (lab, a, b, d, col) => `<tr><td>${lab}</td><td style="text-align:right${col ? `;color:${col(a.raw)}` : ""}">${a.txt}</td><td style="text-align:right${col ? `;color:${col(b.raw)}` : ""}">${b.txt}</td><td style="text-align:right;color:#8a8f98">${d}</td></tr>`;
+      const V = (raw, txt) => ({ raw, txt: txt == null ? String(raw) : txt });
+      const cmp = row("Trades", V(sT.n), V(sO.n), "—") +
+        row("Win rate", V(sT.wr, sT.wr.toFixed(1) + " %"), V(sO.wr, sO.wr.toFixed(1) + " %"), (sO.wr - sT.wr).toFixed(1) + " pts") +
+        row("P&amp;L net", V(sT.pnl, usd(sT.pnl)), V(sO.pnl, usd(sO.pnl)), usd(sO.pnl - sT.pnl) + (sT.pnl ? ` (${(((sO.pnl - sT.pnl) / Math.abs(sT.pnl)) * 100).toFixed(0)} %)` : ""), pc) +
+        row("R moyen par trade", V(avgR(TT), avgR(TT).toFixed(2)), V(avgR(TO), avgR(TO).toFixed(2)), (avgR(TO) - avgR(TT)).toFixed(2) + " R") +
+        row("Profit factor", V(0, pf(sT)), V(0, pf(sO)), "—") +
+        row("Max drawdown", V(sT.maxDD, usd(sT.maxDD)), V(sO.maxDD, usd(sO.maxDD)), usd(sO.maxDD - sT.maxDD)) +
+        row("Pire série de pertes", V(sT.maxRun), V(sO.maxRun), "—") +
+        row("Semaines avec trade", V(0, `${sT.days} / ${rT.gaps.length}`), V(0, `${sO.days} / ${rO.gaps.length}`), "—");
+      const months = [...new Set([...Object.keys(sT.months), ...Object.keys(sO.months)])].sort().reverse();
+      const mo = months.map((m2) => { const a = sT.months[m2] || { n: 0, pnl: 0 }, b = sO.months[m2] || { pnl: 0 }; return `<tr><td>${m2}</td><td style="text-align:right">${a.n}</td><td style="text-align:right;color:${pc(a.pnl)}">${usd(a.pnl)}</td><td style="text-align:right;color:${pc(b.pnl)}">${usd(b.pnl)}</td></tr>`; }).join("");
+      const P = TT.map((x, i) => ({ t: x, o: TO[i] })).reverse(), shown = P.slice(0, 300);
+      const tr = shown.map(({ t, o: r }, i) => `<tr data-i="${i}" style="cursor:pointer" title="Rejouer cette journée"><td>${t.d}</td><td>${t.ordre} · D${t.lvlType} ${t.lvlDay.slice(5)}</td><td style="text-align:right">${px2(t.entry)}</td><td style="text-align:right">${px2(r.entry)}</td><td style="text-align:right">${px2(t.exit)}</td><td style="text-align:right">${t.rr.toFixed(2)}</td><td style="text-align:right">${r.rr.toFixed(2)}</td><td style="text-align:right;color:${pc(t.pnl)}">${usd(t.pnl)}</td><td style="text-align:right;color:${pc(r.pnl)}">${usd(r.pnl)}</td></tr>`).join("");
+      el.innerHTML = `<p style="margin:12px 0 6px"><b>Théorique</b> = étude FX Replay, ordre rempli au niveau · <b>Réaliste</b> = futures, ordre stop rempli à l'ouverture du gap${o.slip ? ` + ${o.slip} ticks de slippage` : ""} · même sortie (clôture de la 1re bougie m1) et même SL ${o.sl} pts.</p>
+        <table class="tx-jt" style="margin-bottom:12px"><tr><th></th><th style="text-align:right">Théorique (FX Replay)</th><th style="text-align:right">Réaliste (futures)</th><th style="text-align:right">Écart</th></tr>${cmp}</table>
+        <div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:0 0 290px;max-height:340px;overflow:auto"><table class="tx-jt"><tr><th>Mois</th><th>Trades</th><th>Théo.</th><th>Réel</th></tr>${mo}</table></div>
+        <div style="flex:1;max-height:340px;overflow:auto"><table class="tx-jt"><tr><th>Séance</th><th>Ordre · niveau</th><th>Entrée théo.</th><th>Entrée réelle</th><th>Sortie</th><th>R théo.</th><th>R réel</th><th>P&amp;L théo.</th><th>P&amp;L réel</th></tr>${tr || '<tr><td colspan="9">Aucun trade.</td></tr>'}</table>${P.length > 300 ? `<p class="rv-mut">300 derniers trades affichés sur ${P.length} (tous dans l'export CSV).</p>` : ""}</div></div>
+        <p style="margin:10px 0 0"><button data-x="csv" class="ghost" style="height:30px">Exporter en CSV</button> <span class="rv-mut">Clic sur un trade = rejouer la journée dans le Backtesteur. La séance du lundi = reprise du dimanche 18:00.</span></p>`;
+      el.onclick = (e) => {
+        if (e.target.dataset.x === "csv") {
+          const head = "seance;ordre;niveau;jour_niveau;cloture_vendredi;ouverture;entree_theo;entree_reelle;sortie;statut_theo;statut_reel;R_theo;R_reel;pnl_theo;pnl_reel\n";
+          const csv = head + TT.map((t, i) => { const r = TO[i]; return [t.d, t.ordre, px2(t.lvl), t.lvlDay, px2(t.C), px2(t.O), px2(t.entry), px2(r.entry), px2(t.exit), t.status, r.status, t.rr.toFixed(2), r.rr.toFixed(2), t.pnl.toFixed(2), r.pnl.toFixed(2)].join(";"); }).join("\n");
+          const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = `fuck-model-v4.0_theo-vs-reel_${from}_${to}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); return;
+        }
+        const tr2 = e.target.closest("tr[data-i]"); if (!tr2) return; const x = shown[+tr2.dataset.i].t;
+        $("btDate").value = x.d; $("btStart").value = "00:00"; closeModal(); load(); msg("Trade à la reprise du dimanche 18:00 : recule avec ← pour le revoir.");
+      };
+    }
+
+    // bouton 🤖 Jarvis : choix du protocole
+    function jarvisMenu() {
+      const it = (k, t, d) => `<button data-j="${k}" class="ghost fm-ch"><b>${t}</b><span>${d}</span></button>`;
+      modal("🤖 Jarvis", it("ict", "Jarvis · Protocole ICT", "Sessions Asia / London / Premarket, opens, NDOG / NWOG, 1st P.FVG") + it("12", "Jarvis · Fuck Model v1.2", "PDH / PDL en ordres stop · TP 8,5 pts / SL 20 pts · un niveau pris n'est jamais repris") + it("40", "Jarvis · Fuck Model v4.0", "NWOG : Daily High / Low traversés par le gap · sortie clôture m1") +
+        `<p class="rv-mut" style="margin:8px 0 0">Analyse sur les bougies déjà rejouées uniquement. Aucun ordre n'est passé.</p>`, `<span class="tx-sp"></span><button data-m="x" class="ghost">Fermer</button>`).onclick = (e) => {
+        const b = e.target.closest("[data-j]"); if (e.target.dataset.m === "x") return closeModal(); if (!b) return; closeModal();
+        ({ ict: jarvis, 12: jarvisFM12, 40: jarvisFM40 })[b.dataset.j]();
+      };
+    }
+    $("btJarvisBtn").onclick = jarvisMenu;
 
     $("btFColor").oninput = () => { if (sel) { sel.style.color = $("btFColor").value; saveDrawings(); } };
     $("btFWidth").onchange = () => { if (sel) { sel.style.width = +$("btFWidth").value; saveDrawings(); } };
