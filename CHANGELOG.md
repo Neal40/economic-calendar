@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.57.3] — 2026-11-17
+### Corrigé
+- Journal de Neal : le **Status passe avant l'Entrée** pour choisir le trade lié. Notion arrondit les heures à la minute : une Entrée écrite à 9:49 (trade à BE) restait liée au mauvais trade alors que le setup est TP (trade de 10:04). Score : Status cohérent (TP = gagnant, SL = perdant, BE ≈ 0) > proximité de l'Entrée > fenêtre exacte. L'Entrée, la Sortie, le PnL, la MAE et la MFE sont réécrits quand l'Entrée pointe un autre trade.
+- MAE / MFE : 1 R tiré du « RR fait » seulement si le résultat réel du trade est cohérent (≥ 1 pt, même sens) — plus de MFE à 512 R sur un trade à BE ; aucune valeur écrite si 1 R < 1 pt.
+
 ## [1.57.2] — 2026-11-17
 ### Corrigé
 - Calendrier › Par semaine : revenir de « Focus jour » à « Liste » ne casse plus la mise en page (les colonnes du style Focus restaient appliquées).

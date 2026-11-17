@@ -4979,15 +4979,15 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (st.includes("TP") && !st.some((x) => /^BE/.test(x))) return per > 0; if (st.includes("SL") && !st.some((x) => /^BE/.test(x))) return per < 0;
     if (st.some((x) => /^BE/.test(x))) return Math.abs(per) < 15; return true; };
   function tsxCands(r, d) {
+    // candidats = trades proches de l'Entrée (−2 / +3 min) + trades de la fenêtre Time ; score : Status cohérent (+4, TP = gagnant, SL = perdant, BE ≈ 0)
+    // > Entrée (+3) > fenêtre exacte (+2). Le Status passe avant l'Entrée : Notion arrondit les heures à la minute, une Entrée peut donc pointer le mauvais trade.
     const act = r.Actif ? String(r.Actif).toUpperCase() : null, okSym = (c) => !act || c.sym.includes(act) || c.trades.some((t) => String(t.Contract || "").toUpperCase().includes(act));
-    const CL = tsxClusters(d).filter(okSym);
-    if (r["Entrée"] && String(r["Entrée"]).length > 10 && !autoEntry(r["Entrée"])) { const t0 = new Date(r["Entrée"]).getTime(); if (isNaN(t0)) return [];
-      return CL.filter((c) => c.t0 - t0 >= -120000 && c.t0 - t0 <= 180000).map((c) => ({ c, score: 10 - Math.abs(c.t0 - t0) / 60000 })); }
-    if (!r.Date || !(r.Status || []).some((x) => TAKEN_ST.includes(x))) return [];
-    const day = String(r.Date).slice(0, 10), tol = (r.Time || []).map(winOf).filter(Boolean), strict = (r.Time || []).map(strictWin).filter(Boolean);
-    if (!tol.length) { if (r["Entrée"] && autoEntry(r["Entrée"])) { const t0 = new Date(r["Entrée"]).getTime(); return CL.filter((c) => Math.abs(c.t0 - t0) <= 60000).map((c) => ({ c, score: 1 })); } return []; }
-    return CL.filter((c) => c.day === day && tol.some(([a, b]) => c.min >= a && c.min <= b))
-      .map((c) => ({ c, score: (stFit(r.Status || [], c) ? 4 : 0) + (strict.some(([a, b]) => c.min >= a && c.min <= b) ? 2 : 0) }));
+    const CL = tsxClusters(d).filter(okSym), st = r.Status || [], taken = st.some((x) => TAKEN_ST.includes(x));
+    const t0 = r["Entrée"] && String(r["Entrée"]).length > 10 ? new Date(r["Entrée"]).getTime() : NaN;
+    const day = r.Date ? String(r.Date).slice(0, 10) : !isNaN(t0) ? nyParts(new Date(t0).toISOString()).day : null;
+    const tol = (r.Time || []).map(winOf).filter(Boolean), strict = (r.Time || []).map(strictWin).filter(Boolean);
+    const near = (c) => !isNaN(t0) && c.t0 - t0 >= -120000 && c.t0 - t0 <= 180000, inWin = (c) => taken && c.day === day && tol.some(([a, b]) => c.min >= a && c.min <= b);
+    return CL.filter((c) => near(c) || inWin(c)).map((c) => ({ c, score: (taken && stFit(st, c) ? 4 : 0) + (near(c) ? 3 : 0) + (strict.some(([a, b]) => c.day === day && c.min >= a && c.min <= b) ? 2 : 0) }));
   }
   function tsxMatch(r) {
     if (!window.jdash) return null; const d = jdash.data("fills_calc"); if (d.status !== "ok") return null;
@@ -5613,11 +5613,11 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const h = R.tsxMatch(r); if (!h) return 0;
     const A = R.tsxAccounts(h), m = A[0], tot = Math.round(A.reduce((a, x) => a + x.net, 0) * 100) / 100;
     const redo = (SC.PnL && typeof r.PnL === "number" && Math.abs(r.PnL - tot) >= 0.01) // trades liés changés : on recalcule
-      || (autoEntry(r["Entrée"]) && Math.abs(Date.parse(r["Entrée"]) - Math.min(...h.map((t) => Date.parse(t.Entry)))) > 60000);
+      || (!empty(r["Entrée"]) && String(r["Entrée"]).length > 10 && Math.abs(Date.parse(r["Entrée"]) - Math.min(...h.map((t) => Date.parse(t.Entry)))) > 120000); // l'Entrée pointe un autre trade
     if (!redo && !FILL.some((f) => empty(r[f]) && SC[f])) return 0; const T = h.filter((t) => String(t["ID TopstepX"]) === m.id).sort((a, b) => String(a.Entry).localeCompare(String(b.Entry)));
     const sz = T.reduce((a, t) => a + (Number(t.Size) || 0), 0) || 1, ep = T.reduce((a, t) => a + t["Entry Price"] * (Number(t.Size) || 0), 0) / sz, xp = T.reduce((a, t) => a + t["Exit Price"] * (Number(t.Size) || 0), 0) / sz;
     const entry = T[0].Entry, exit = T.map((t) => t.Exit).sort().pop(), long = T[0].Direction === "Long";
-    const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10 || (redo && autoEntry(r["Entrée"]))) props["Entrée"] = entry;
+    const props = {}; if (empty(r["Entrée"]) || String(r["Entrée"]).length <= 10 || (redo && Math.abs(Date.parse(r["Entrée"]) - Date.parse(entry)) > 60000)) props["Entrée"] = entry;
     if (empty(r.Sortie) || String(r.Sortie).length <= 10 || (redo && Date.parse(r.Sortie) !== Date.parse(exit))) props.Sortie = exit;
     if (empty(r.PnL) || redo) props.PnL = tot;
     const maeE = empty(r["MAE (R)"]) || redo, mfeE = empty(r["MFE (R)"]) || redo;
@@ -5626,7 +5626,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const tg = (t) => (window.jmeta && jmeta.tags(t.ID)) || {}, num = (v) => (v === "" || v == null || isNaN(+v) ? null : +v);
       const ts = T.find((t) => num(tg(t)["Stop théorique"]) != null);
       let Rpts = ts ? Math.abs((num(tg(ts)["Entrée théorique"]) ?? ts["Entry Price"]) - num(tg(ts)["Stop théorique"])) : null; // 1 R = taille du SL
-      if (!(Rpts > 0)) Rpts = rr && Math.abs(rr) >= 0.2 ? Math.abs(xp - ep) / Math.abs(rr) : null;
+      if (!(Rpts > 0)) Rpts = rr && Math.abs(rr) >= 0.2 && Math.abs(xp - ep) >= 1 && (rr > 0) === ((long ? xp - ep : ep - xp) > 0) ? Math.abs(xp - ep) / Math.abs(rr) : null; // RR fait cohérent avec le résultat réel
       if (!(Rpts > 0)) { const risk = T.map((t) => num(tg(t)["Risque"])).find((v) => v > 0), pv = pvOf(T[0].Contract || sym);
         if (risk && pv) Rpts = risk / (pv * sz); }
       if (Rpts > 0) { // plus haut / plus bas PENDANT le trade : vraies bougies 1 s (enregistrées par la synchro TopstepX, sinon demandées à TopstepX), sinon bougies 1 min
@@ -5636,7 +5636,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
           let b = await D.tsxBars("/" + sym, s0, s1, "1S"), B = b && b.ok ? (b.data || []).filter((x) => x.t >= s0 && x.t <= s1) : [];
           if (B.length) src = "1s"; else { b = await D.tsxBars("/" + sym, Math.floor(s0 / 60) * 60, s1); B = b && b.ok ? (b.data || []).filter((x) => x.t >= Math.floor(s0 / 60) * 60 && x.t <= s1) : []; if (B.length) src = "1m"; }
           if (B.length) { hi = Math.max(ep, xp, ...B.map((x) => x.h)); lo = Math.min(ep, xp, ...B.map((x) => x.l)); } }
-        if (hi != null) { const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
+        if (hi != null && Rpts >= 1) { const adv = long ? ep - lo : hi - ep, fav = long ? hi - ep : ep - lo, rd = (v) => Math.round((Math.max(0, v) / Rpts) * 100) / 100;
           if (maeE) props["MAE (R)"] = Math.min(1, rd(adv)); if (mfeE) props["MFE (R)"] = rd(fav); } // MAE ≤ 1 R : au-delà, le stop aurait sorti la position
       }
     }
