@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.57.0] — 2026-11-17
+### Ajouté
+- Calendrier › **Par semaine** : bouton de style **☰ Liste / ◧ Focus jour** (mémorisé, `econcal-wstyle`). « Focus jour » = 5 cartes, la journée en grand (news + My plan), les autres journées grisées ; clic sur une carte grisée = la mettre en focus, clic sur la carte en focus = l'éditer. Focus par défaut sur aujourd'hui (heure de New York).
+- Éditeur du jour : champ **Comptes** (All accounts / Fewer accounts / No trading), affiché en pastille dans les deux styles.
+### Modifié
+- Semaine du 16 au 20 nov. : Fed Chairman Warsh Speaks (lun. 12:00 PM), FOMC Member Waller Speaks (ven. 8:25 AM), « My plan » de la Roadmap @corleone_trades et notes InnerDiscipline de la semaine (`data/innerdiscipline.txt`).
+
 ## [1.56.1] — 2026-11-17
 ### Modifié
 - Hexagone de performance : l'axe **RR** = moyenne du **RR fait** des setups du Journal de Neal liés aux trades du compte (un setup compté une fois), au lieu de Avg Win / Avg Loss. « — » si aucun setup Notion lié ; l'infobulle donne le nombre de setups.

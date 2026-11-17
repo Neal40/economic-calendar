@@ -114,6 +114,48 @@ h1{font-size:62px;line-height:1;margin:14px 0 8px;font-weight:700;letter-spacing
 .wrow .wp .empty{font-size:13px;color:#9a9ea8}
 .legend .holi{display:none}
 .poster.wkmode .legend .holi{display:inline-flex}
+.acc{display:inline-block;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;border:1.3px solid var(--teal);color:var(--teal);border-radius:20px;padding:2px 8px;white-space:nowrap}
+/* vue semaine, style « Focus » : la journée choisie en grand, les autres grisées */
+.bar #wStyle{display:none}
+.bar.wk #wStyle{display:inline-flex}
+.grid.wkfocus{grid-template-columns:1fr 2.35fr 1fr 1fr 1fr;gap:14px;margin-top:30px;align-items:stretch}
+.fc{position:relative;display:flex;flex-direction:column;min-height:440px;background-color:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:20px 20px 16px;cursor:pointer;transition:opacity .15s,box-shadow .15s,background-color .15s}
+.fc.dim{background-color:#dcdee4;opacity:.62}
+.fc.dim:hover{opacity:.9}
+.fc.past.dim{opacity:.45}
+.fc.on{background-color:#eef0f3;border:2px solid var(--teal);box-shadow:0 0 0 5px rgba(63,139,132,.18);padding:26px 30px 20px}
+.fc.closed,.fc.bank{background-image:repeating-linear-gradient(135deg,transparent 0 9px,rgba(120,126,140,.22) 9px 10.5px)}
+.fc .fh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--card-b);margin-bottom:16px}
+.fc .fh .dw{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#555963;font-weight:700;display:flex;align-items:center;gap:10px}
+.fc .fh .tdy{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;background:var(--teal);color:#fff;border-radius:20px;padding:4px 10px}
+.fc .fh .fnum{font-size:42px;font-weight:600;line-height:.9;color:var(--ink)}
+.fc .fh .fnum small{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;color:#555963;font-weight:700;margin-left:5px}
+.fc.on .fh .fnum{font-size:58px}
+.fc .fe{margin-bottom:16px}
+.fc .fe .t{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:19px;font-weight:700}
+.fc .fe .n{font-size:17px;font-weight:600;line-height:1.25;margin-top:4px}
+.fc .fe.lowi .t{font-size:14px}.fc .fe.lowi .n{font-size:13.5px;font-weight:500;color:#4b4e57}
+.fc .fe .ic{font-size:15px}
+.fc .fl{display:grid;grid-template-columns:14px 96px 1fr;align-items:start;font-size:17px;line-height:1.25;margin-bottom:9px}
+.fc .fl .dot{margin-top:7px}
+.fc .fl .t{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;margin-top:1px;white-space:nowrap}
+.fc .fl .n{font-weight:500}
+.fc .fl.earn{grid-template-columns:14px 124px 1fr}.fc .fl.earn .ic{font-size:12px;margin-top:2px}
+.fc .fl.lowi{font-size:14px;color:#4b4e57}.fc .fl.lowi .t{font-size:12.5px}
+.fc .fplan{border-top:1px solid var(--card-b);margin-top:8px;padding-top:16px}
+.fc .fplan .k{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.18em;color:#555963;font-weight:700;margin-bottom:8px}
+.fc .fplan .note{font-size:31px;line-height:1.05}
+.fc .fplan .plan{font-family:'Caveat',cursive;font-size:25px;line-height:1.15;color:#22242a;font-weight:500;white-space:pre-line;margin-top:6px}
+.fc .fplan .empty{font-size:13px;color:#9a9ea8}
+.fc .ff{margin-top:auto;border-top:1px solid var(--card-b);padding-top:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fc .ff:empty{display:none}
+.fc .ff .badge{position:static;font-size:9px}
+.fc .none{font-size:15px}
+body.noir .fc{background-color:rgba(255,255,255,.035);border-color:rgba(255,255,255,.1);border-radius:20px}
+body.noir .fc.dim{background-color:rgba(255,255,255,.02)}
+body.noir .fc.on{background-color:rgba(255,255,255,.07);border-color:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.08)}
+body.noir .fc .fh .fnum,body.noir .fc .fplan .plan{color:inherit}
+body.noir .fc .fh,body.noir .fc .fplan,body.noir .fc .ff{border-color:rgba(255,255,255,.1)}
 
 .foot{margin-top:20px;font-size:12.5px;color:#3d4048;line-height:1.6}
 .foot .star{color:var(--red);font-weight:700}
@@ -1538,6 +1580,7 @@ table.tbl:has(#subT){min-width:900px}
   <button id="next" title="Mois suivant">→</button>
   <button id="today">Aujourd'hui</button>
   <span class="seg"><button id="vMonth" class="on">Par mois</button><button id="vWeek">Par semaine</button></span>
+  <span class="seg" id="wStyle" title="Style de la vue semaine"><button id="wsList" class="on" title="Une ligne par jour (Day · News · My plan)">☰ Liste</button><button id="wsFocus" title="La journée en grand, les autres journées grisées">◧ Focus jour</button></span>
   <span class="sep"></span>
   <button class="chip" data-f="high"><span class="dot high"></span>High</button>
   <button class="chip" data-f="med"><span class="dot med"></span>Medium</button>
@@ -1917,7 +1960,7 @@ table.tbl:has(#subT){min-width:900px}
   <div id="rows"></div>
   <button class="ghost" id="addRow" style="border:none;border-radius:8px;padding:7px 12px;cursor:pointer">+ Ajouter un événement</button>
   <div class="hint">Heure en ET (ex. 8:30 AM, All day, Tentative). Type « Earnings » : la colonne heure est ignorée.</div>
-  <div class="two">
+  <div class="two" style="grid-template-columns:1fr 1fr 1.6fr">
     <div><label>STATUT DU JOUR</label>
       <select id="dStatus">
         <option value="auto">Auto (calendrier NYSE)</option>
@@ -1927,6 +1970,13 @@ table.tbl:has(#subT){min-width:900px}
         <option value="early">Early close</option>
         <option value="key">Key day</option>
         <option value="low">Low probability</option>
+      </select></div>
+    <div><label>COMPTES</label>
+      <select id="dAcc">
+        <option value="">—</option>
+        <option value="all">All accounts</option>
+        <option value="fewer">Fewer accounts</option>
+        <option value="none">No trading</option>
       </select></div>
     <div><label>NOTE MANUSCRITE (rouge)</label><input id="dNote" placeholder="Laisser vide = note auto"></div>
   </div>
@@ -1981,10 +2031,11 @@ const SEED = {
     "2026-11-10":[{t:"8:30 AM",n:"CPI & Core CPI (m/m, y/y)",i:"high",k:"ev"}],
     "2026-11-12":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}],
     "2026-11-13":[{t:"8:30 AM",n:"PPI & Core PPI",i:"high",k:"ev"}],
+    "2026-11-16":[{t:"12:00 PM",n:"Fed Chairman Warsh Speaks",i:"high",k:"ev"}],
     "2026-11-17":[{t:"8:30 AM",n:"Retail Sales & Core Retail Sales",i:"high",k:"ev"},{n:"NVDA earnings",k:"after"}],
     "2026-11-18":[{t:"2:00 PM",n:"FOMC Meeting Minutes",i:"high",k:"ev"}],
     "2026-11-19":[{t:"8:30 AM",n:"Philly Fed · Unemployment Claims",i:"med",k:"ev"}],
-    "2026-11-20":[{t:"10:00 AM",n:"Revised UoM",i:"med",k:"ev"},{t:"Tentative",n:"Treasury Currency Report",i:"med",k:"ev"}],
+    "2026-11-20":[{t:"8:25 AM",n:"FOMC Member Waller Speaks",i:"med",k:"ev"},{t:"10:00 AM",n:"Revised UoM",i:"med",k:"ev"},{t:"Tentative",n:"Treasury Currency Report",i:"med",k:"ev"}],
     "2026-11-23":[{t:"9:45 AM",n:"Flash Manufacturing & Services PMI",i:"med",k:"ev"}],
     "2026-11-24":[{t:"10:00 AM",n:"CB Consumer Confidence",i:"med",k:"ev"},{n:"DELL · BABA earnings",k:"tbd"}],
     "2026-11-25":[{t:"8:30 AM",n:"Core PCE · Prelim GDP",i:"high",k:"ev"},{t:"8:30 AM",n:"GDP Price Index · Claims",i:"med",k:"ev"}],
@@ -2003,7 +2054,13 @@ const SEED = {
     "2026-12-30":[{t:"2:00 PM",n:"FOMC Meeting Minutes",i:"high",k:"ev"}],
     "2026-12-31":[{t:"8:30 AM",n:"Unemployment Claims",i:"med",k:"ev"}]
   },
-  days:{},
+  days:{ // « My plan » de @corleone_trades (Economic Calendar Roadmap, semaine du 16 au 20 nov.) ; la note rouge reste celle d'InnerDiscipline
+    "2026-11-16":{plan:"Normal trading, with fewer accounts.\nWarsh speaks at lunch, not in the AM. I never trade while the Fed Chair speaks.",acc:"fewer"},
+    "2026-11-17":{st:"key",plan:"AM: normal trading.\nPM traders, be careful: price can wait for NVDA's earnings after the close."},
+    "2026-11-18":{plan:"Normal trading, with fewer accounts.\nNo news in the AM, but there is in the PM.",acc:"fewer"},
+    "2026-11-19":{plan:"Normal trading.",acc:"all"},
+    "2026-11-20":{plan:"Normal trading.",acc:"all"}
+  },
   weeks:{
     "2026-11-02":{l:"NFP week",s:"Midterm elections Tue"},
     "2026-11-09":{l:"CPI & PPI week",s:"Veterans Day Wed"},
@@ -2029,10 +2086,14 @@ if((S.seedV||1)<3){ for(const k in SEED.events){ if(k<"2026-12-01") continue; co
     SEED.events[k].forEach(e=>{ if(!cur.some(c=>c.n===e.n)) cur.push(e) }); if(cur.length) S.events[k]=cur; } }
 if(!S.brand||S.brand.handle==="@ton_handle") S.brand={...SEED.brand};
 if((S.seedV||1)<4){ for(const k in LOW){ const cur=S.events[k]||[]; LOW[k].forEach(e=>{ if(!cur.some(c=>c.n===e.n&&c.i==="low")) cur.push(e) }); S.events[k]=cur; } }
+if((S.seedV||1)<5){ // v1.57 : semaine du 16 nov. (Warsh, Waller) + plans du jour
+  ["2026-11-16","2026-11-20"].forEach(k=>{ const cur=S.events[k]||[]; SEED.events[k].forEach(e=>{ if(!cur.some(c=>c.n===e.n)) cur.push(e) }); S.events[k]=cur; });
+  S.days=S.days||{}; for(const k in SEED.days){ const o=S.days[k]||{}, d=SEED.days[k];
+    if(!o.plan&&d.plan) o.plan=d.plan; if(!o.acc&&d.acc) o.acc=d.acc; if((o.st===undefined||o.st==="auto")&&d.st) o.st=d.st; S.days[k]=o; } }
 const tOrd=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;return (+m[1]%12+(m[3].toUpperCase()==="PM"?12:0))*60+ +m[2]};
 for(const k in S.events) S.events[k].sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||tOrd(a.t)-tOrd(b.t));
 window.calEvents=k=>(S.events[k]||[]); // utilisé par le backtesteur (news sous les bougies)
-S.seedV=4; SEED.seedV=4;
+S.seedV=5; SEED.seedV=5;
 if(S.brand&&S.brand.name===undefined){S.brand.name="Neal";} if(S.brand&&!S.brand.notion) S.brand.notion=SEED.brand.notion; S.subs=S.subs||[]; S.bills=S.bills||[]; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 const DS=window.desktop;
 let storeReady=false; // app Windows : on n'écrit app-data.json qu'après l'avoir relu (sinon des factures vides pourraient l'écraser)
@@ -2085,7 +2146,7 @@ function dayInfo(d){
   let note = o.note || (HOLST(st) ? (h&&h.st===st ? autoNote(h) : autoNote({st,name:h?h.name:"Holiday"})) : "");
   const idr = typeof idRow==="function" ? idRow(k) : null; // notes InnerDiscipline (Weekly Economic Calendar Notion), si pas de note perso
   if(idr && !o.note && !HOLST(st)){ note = idNote(idr); if((o.st===undefined||o.st==="auto") && !st && (idr.tags.has("LOW")||idr.tags.has("AVOID"))) st="low"; }
-  return {k,st,note,h,plan:o.plan||"",id:idr};
+  return {k,st,note,h,plan:o.plan||"",acc:o.acc||"",id:idr};
 }
 
 /* ---------- state ---------- */
@@ -2098,6 +2159,10 @@ let calView="month"; try{ if(localStorage.getItem("econcal-calview")==="week") c
 const mondayOf=d=>{const w=d.getDay(); return addD(d, w===6?2:w===0?1:1-w)}; // sam./dim. -> lundi suivant
 const nyDate=()=>{const [Y,M,Dd]=nyToday().split("-").map(Number);return D(Y,M-1,Dd)};
 let wcur=mondayOf(nyDate());
+let wStyle="list"; try{ if(localStorage.getItem("econcal-wstyle")==="focus") wStyle="focus" }catch(e){} // style de la vue semaine : liste (une ligne par jour) / focus (journée en grand, autres grisées)
+let focusK=null; // journée en focus (YYYY-MM-DD), sinon aujourd'hui (NY) ou le lundi
+const ACC={all:"ALL ACCOUNTS",fewer:"FEWER ACCOUNTS",none:"NO TRADING"};
+const accPill=a=>ACC[a]?`<span class="acc">${ACC[a]}</span>`:"";
 
 function autoWeek(days,m){
   const inM=m==null?days:days.filter(d=>d.getMonth()===m); if(m==null) m=days[0].getMonth();
@@ -2150,6 +2215,7 @@ function footHTML(footNotes){
 }
 /* vue « Par semaine » : une ligne par jour (Day · News · My plan) */
 function renderWeek(){
+  if(wStyle==="focus") return renderFocus();
   const days=[0,1,2,3,4].map(i=>addD(wcur,i)), a=days[0], b=days[4], today=nyToday();
   const m3=d=>MONTHS[d.getMonth()].slice(0,3);
   document.getElementById("title").textContent=`Week of ${m3(a)} ${a.getDate()}–${a.getMonth()===b.getMonth()?"":m3(b)+" "}${b.getDate()}`;
@@ -2173,10 +2239,49 @@ function renderWeek(){
     let plan=(info.note?`<div class="note">${esc(info.note)}</div>`:"")+(info.plan?`<div class="plan">${esc(info.plan)}</div>`:"");
     if(!plan) plan=`<div class="empty">Cliquer pour écrire ton plan</div>`;
     const cls="wrow"+(info.st==="closed"?" closed":info.st==="bank"?" bank":"")+(info.k===today?" today":"");
-    h+=`<div class="${cls}" data-d="${info.k}"><div class="wd"><span class="dw">${SH[d.getDay()].toUpperCase()}</span><span class="wnum">${d.getDate()}<small>${m3(d).toUpperCase()}</small></span>${stBadge(info.st)}</div><div class="wn">${news}</div><div class="wp">${plan}</div></div>`;
+    h+=`<div class="${cls}" data-d="${info.k}"><div class="wd"><span class="dw">${SH[d.getDay()].toUpperCase()}</span><span class="wnum">${d.getDate()}<small>${m3(d).toUpperCase()}</small></span>${stBadge(info.st)}${accPill(info.acc)}</div><div class="wn">${news}</div><div class="wp">${plan}</div></div>`;
     if(HOLST(info.st)&&info.h) footNotes.push({d,info});
   });
-  const g=document.getElementById("grid"); g.classList.add("wkview"); g.innerHTML=h;
+  const g=document.getElementById("grid"); g.classList.remove("wkfocus"); g.classList.add("wkview"); g.innerHTML=h;
+  document.getElementById("foot").innerHTML=footHTML(footNotes);
+}
+
+/* vue « Par semaine », style Focus : 5 cartes, la journée choisie en grand (news + My plan), les autres grisées */
+function holEv(info,evs){ if(!(HOLST(info.st)&&info.h)||evs.some(e=>/holiday|closed|early close/i.test(e.n))) return null;
+  return {t:info.st==="early"?"1:00 PM":"All day",n:info.st==="bank"?`Bank Holiday (${info.h.name})`:info.st==="closed"?`NYSE closed (${info.h.name})`:`Early close (${info.h.name})`,i:"hol",k:"ev"}; }
+const evShow=e=>e.k==="ev"?(e.i==="hol"||filt[e.i==="high"?"high":e.i==="low"?"low":"med"]):filt.earn;
+function renderFocus(){
+  const days=[0,1,2,3,4].map(i=>addD(wcur,i)), keys=days.map(iso), today=nyToday();
+  if(!keys.includes(focusK)) focusK=keys.includes(today)?today:keys[0];
+  const m3=d=>MONTHS[d.getMonth()].slice(0,3), a=days[0], b=days[4], fd=days[keys.indexOf(focusK)];
+  document.getElementById("title").textContent=`${DOW[fd.getDay()]}, ${m3(fd)} ${fd.getDate()}`;
+  document.getElementById("subT").textContent="My plan before the New York open.";
+  document.getElementById("src").textContent = (a.getFullYear()>2026) ? "Sources: Fed, BLS, BEA, Census, NYSE" : "Sources: Forex Factory, NYSE, Nasdaq";
+  const mf=d=>["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."][d.getMonth()];
+  document.getElementById("mlabel").textContent=`${a.getDate()}${a.getMonth()===b.getMonth()?"":" "+mf(a)} – ${b.getDate()} ${mf(b)} ${b.getFullYear()}`;
+  const footNotes=[]; let h="";
+  days.forEach(d=>{
+    const info=dayInfo(d), raw=S.events[info.k]||[], he=holEv(info,raw), on=info.k===focusK;
+    const evs=(he?[he]:[]).concat(raw).filter(evShow);
+    let body;
+    if(on){
+      body=evs.map(e=>e.k==="ev"?`<div class="fl${e.i==="low"?" lowi":""}"><span class="dot ${e.i||"low"}"></span><span class="t">${esc(e.t)}</span><span class="n">${esc(e.n)}</span></div>`
+        :`<div class="fl earn"><span class="ic">${e.k==="after"?"○":e.k==="pre"?"✳":"◌"}</span><span class="t">${e.k==="after"?"After close":e.k==="pre"?"Pre-market":"Time TBD"}</span><span class="n">${esc(e.n)}</span></div>`).join("")||`<div class="none">No news</div>`;
+      body=`<div>${body}</div><div class="fplan"><div class="k">MY PLAN</div>${info.note?`<div class="note">${esc(info.note)}</div>`:""}${info.plan?`<div class="plan">${esc(info.plan)}</div>`:""}${!info.note&&!info.plan?`<div class="empty">Cliquer pour écrire ton plan</div>`:""}</div>`;
+    } else {
+      // carte grisée : les news (sans les Low) groupées par heure
+      const L=evs.filter(e=>e.i!=="low"), byT=[];
+      L.forEach(e=>{ const t=e.k==="ev"?e.t:(e.k==="after"?"After close":e.k==="pre"?"Pre-market":"TBD"); const g=byT.find(x=>x.t===t); if(g) g.e.push(e); else byT.push({t,e:[e]}); });
+      body=byT.map(g=>{ const i=g.e[0]; const dot=i.k==="ev"?`<span class="dot ${i.i||"low"}"></span>`:`<span class="ic">${i.k==="after"?"○":"✳"}</span>`;
+        return `<div class="fe"><div class="t">${dot}${esc(g.t)}</div>${g.e.map(e=>`<div class="n">${esc(e.n)}</div>`).join("")}</div>`; }).join("")||`<div class="none">No news</div>`;
+    }
+    const cls="fc"+(on?" on":" dim")+(info.k<today?" past":"")+(info.st==="closed"?" closed":info.st==="bank"?" bank":"");
+    h+=`<div class="${cls}" data-f="${info.k}"><div class="fh"><span class="dw">${SH[d.getDay()].toUpperCase()}${info.k===today?'<span class="tdy">TODAY</span>':""}</span><span class="fnum">${d.getDate()}<small>${m3(d).toUpperCase()}</small></span></div>${body}<div class="ff">${stBadge(info.st)}${accPill(info.acc)}</div></div>`;
+    if(HOLST(info.st)&&info.h) footNotes.push({d,info});
+  });
+  const g=document.getElementById("grid"); g.classList.remove("wkview"); g.classList.add("wkfocus");
+  g.style.gridTemplateColumns=keys.map(k=>k===focusK?"2.35fr":"1fr").join(" ");
+  g.innerHTML=h;
   document.getElementById("foot").innerHTML=footHTML(footNotes);
 }
 
@@ -2185,13 +2290,15 @@ function render(){
   const wkm=calView==="week";
   document.getElementById("vMonth").classList.toggle("on",!wkm); document.getElementById("vWeek").classList.toggle("on",wkm);
   document.getElementById("poster").classList.toggle("wkmode",wkm);
+  document.querySelector("#v-calendrier .bar").classList.toggle("wk",wkm);
+  document.getElementById("wsList").classList.toggle("on",wStyle!=="focus"); document.getElementById("wsFocus").classList.toggle("on",wStyle==="focus");
   document.getElementById("prev").title=wkm?"Semaine précédente":"Mois précédent"; document.getElementById("next").title=wkm?"Semaine suivante":"Mois suivant";
   { const lg=document.getElementById("logo");
     if(S.brand.img){ lg.innerHTML=`<img src="${S.brand.img}" alt="">`; } else lg.textContent=S.brand.logo||"";
     document.getElementById("handle").textContent=S.brand.handle||"";
     document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("off",!filt[c.dataset.f])); }
   if(wkm){ renderWeek(); return; }
-  document.getElementById("grid").classList.remove("wkview");
+  document.getElementById("grid").classList.remove("wkview","wkfocus"); document.getElementById("grid").style.gridTemplateColumns="";
   document.getElementById("subT").textContent="The month at a glance: news, holidays and key earnings.";
   document.getElementById("title").textContent=`${MONTHS[m]} ${y}`;
   document.getElementById("src").textContent = (y>2026) ? "Sources: Fed, BLS, BEA, Census, NYSE" : "Sources: Forex Factory, NYSE, Nasdaq";
@@ -2238,13 +2345,15 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySele
 const stepCal=n=>{ if(calView==="week"){ wcur=addD(wcur,7*n); cur=D(wcur.getFullYear(),wcur.getMonth(),1); } else cur=D(cur.getFullYear(),cur.getMonth()+n,1); render(); };
 $("prev").onclick=()=>stepCal(-1);
 $("next").onclick=()=>stepCal(1);
-$("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1);wcur=mondayOf(nyDate());render()};
+$("today").onclick=()=>{const t=new Date();cur=D(t.getFullYear(),t.getMonth(),1);wcur=mondayOf(nyDate());focusK=null;render()};
 function setCalView(v){ if(v===calView) return; calView=v; try{localStorage.setItem("econcal-calview",v)}catch(e){}
   if(v==="week"){ const t=mondayOf(nyDate()), inCur=d=>d.getMonth()===cur.getMonth()&&d.getFullYear()===cur.getFullYear();
     if(inCur(t)||inCur(addD(t,4))) wcur=t; else { let f=D(cur.getFullYear(),cur.getMonth(),1); while(f.getDay()===0||f.getDay()===6) f=addD(f,1); wcur=addD(f,1-f.getDay()); } }
   else cur=D(wcur.getFullYear(),wcur.getMonth(),1);
   render(); }
 $("vMonth").onclick=()=>setCalView("month"); $("vWeek").onclick=()=>setCalView("week");
+const setWStyle=v=>{ wStyle=v; try{localStorage.setItem("econcal-wstyle",v)}catch(e){} render(); };
+$("wsList").onclick=()=>setWStyle("list"); $("wsFocus").onclick=()=>setWStyle("focus");
 document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{filt[c.dataset.f]=!filt[c.dataset.f]; try{localStorage.setItem("econcal-filt",JSON.stringify(filt))}catch(e){} render()});
 
 let editDay=null, editWeek=null;
@@ -2273,11 +2382,13 @@ $("addRow").onclick=()=>{$("rows").insertAdjacentHTML("beforeend",rowHTML()); co
 $("grid").addEventListener("click",e=>{
   const w=e.target.closest(".wk,.tw");
   if(w){editWeek=w.dataset.w;weekSnap={w:editWeek,v:S.weeks[editWeek]};const o=S.weeks[editWeek]||{};$("wLabel").value=o.l||"";$("wSub").value=o.s||"";open("ovWeek");return}
-  const d=e.target.closest(".day[data-d],.wrow[data-d]"); if(!d) return;
-  editDay=d.dataset.d; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
+  const fc=e.target.closest(".fc[data-f]");
+  if(fc&&fc.dataset.f!==focusK){ focusK=fc.dataset.f; render(); return; } // carte grisée → la mettre en focus ; carte en focus → éditer
+  const d=e.target.closest(".day[data-d],.wrow[data-d],.fc[data-f]"); if(!d) return;
+  editDay=d.dataset.d||d.dataset.f; const [Y,M,Dd]=editDay.split("-").map(Number); const dt=D(Y,M-1,Dd);
   $("dTitle").textContent=`${DOW[dt.getDay()]} ${Dd} ${MONTHS[M-1]} ${Y}`;
   $("rows").innerHTML=(S.events[editDay]||[]).map(rowHTML).join(""); $("rows").querySelectorAll(".row").forEach(paintImp);
-  const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||""; $("dPlan").value=o.plan||"";
+  const o=S.days[editDay]||{}; $("dStatus").value=o.st===undefined?"auto":o.st; $("dNote").value=o.note||""; $("dPlan").value=o.plan||""; $("dAcc").value=o.acc||"";
   daySnap={d:editDay, ev:S.events[editDay], day:S.days[editDay]};
   open("ovDay");
 });
@@ -2289,8 +2400,8 @@ function commitDay(){
   const order=t=>{const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return /all day/i.test(t)?-1:9999;let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);return h*60+ +m[2]};
   evs.sort((a,b)=>(a.k!=="ev")-(b.k!=="ev")||order(a.t)-order(b.t));
   if(evs.length) S.events[editDay]=evs; else delete S.events[editDay];
-  const st=$("dStatus").value, note=$("dNote").value.trim(), plan=$("dPlan").value.trim();
-  if(st==="auto"&&!note&&!plan) delete S.days[editDay]; else { S.days[editDay]={st:st==="auto"?undefined:st,note}; if(plan) S.days[editDay].plan=plan; }
+  const st=$("dStatus").value, note=$("dNote").value.trim(), plan=$("dPlan").value.trim(), acc=$("dAcc").value;
+  if(st==="auto"&&!note&&!plan&&!acc) delete S.days[editDay]; else { S.days[editDay]={st:st==="auto"?undefined:st,note}; if(plan) S.days[editDay].plan=plan; if(acc) S.days[editDay].acc=acc; }
   save();
 }
 $("dSave").onclick=()=>{ clearTimeout(dayTimer); commitDay(); daySnap=null; close("ovDay"); render(); };
@@ -4562,7 +4673,7 @@ $("earnBtn").onclick=earnOpen; $("earnClose").onclick=()=>close("ovEarn");
 </script>
 <script>
 /* ---------- InnerDiscipline : notes de la semaine + stats « ce à quoi s'attendre chaque jour » (données : page Notion « Données stats InnerDiscipline (auto) », copiée dans data/innerdiscipline.txt chaque dimanche) ---------- */
-const ID_SNAP = "year=2026\n02-02|Mon|RED|NFPWK|SB\n02-02|Tue|RED||SB\n02-02|Wed|RED||PM,SB\n02-02|Thu|ORG|VNFP|LOW,PM,SB\n02-02|Fri|NFP||WAIT,SB\n03-23|Mon|NONE||PM,CH,MAC,LD,AVOID\n03-23|Tue|RED||SB\n03-23|Wed|NONE||PM,CH,MAC,LD\n03-23|Thu|RED||SB\n03-23|Fri|ORG||PM,CH\n04-20|Mon|NONE||PM,CH,LD\n04-20|Tue|RED||PM,CH\n04-20|Wed|NONE||PM,CH,LD,WHL\n04-20|Thu|ORG||SB\n04-20|Fri|ORG||SB\n04-27|Mon|NONE||PM,CH,LD\n04-27|Tue|ORG|VHI|SB,CH\n04-27|Wed|FOMC||PM,CH,2ST,M315\n04-27|Thu|RED||PM,SB\n04-27|Fri|ORG||PM,CH\n05-04|Mon|NONE|NFPWK|CH\n05-04|Tue|RED||SB,LRD\n05-04|Wed|ORG||PM,SB,T11\n05-04|Thu|ORG|VNFP|LOW,AVOID,SB\n05-04|Fri|NFP||WAIT,SB\n05-11|Mon|NONE|VHI|LOW,PM,CH\n05-11|Tue|CPI||WAIT,SB\n05-11|Wed|PPI||WAIT,SB\n05-11|Thu|RED||SB\n05-11|Fri|NONE||PM,CH,LD\n05-18|Mon|NONE||PM,CH,LD\n05-18|Tue|ORG||SB\n05-18|Wed|MIN||PM,WHL\n05-18|Thu|ORG||SB\n05-18|Fri|ORG||SB\n05-25|Mon|HOL||\n05-25|Tue|ORG||PM,SB\n05-25|Wed|NONE||PM,CH,LD\n05-25|Thu|RED||SB\n05-25|Fri|NONE||PM,CH,LD\n06-08|Mon|NONE||PM,CH,LD\n06-08|Tue|NONE|VHI|LOW,PM,CH\n06-08|Wed|CPI||WAIT,SB\n06-08|Thu|PPI||WAIT,SB\n06-08|Fri|ORG||PM,SB\n06-15|Mon|NONE||PM,CH,LD\n06-15|Tue|NONE|VHI|PM,CH,LD\n06-15|Wed|FOMC||PM,SB,CH,2ST,M315\n06-15|Thu|ORG||PM,SB,MAC\n06-15|Fri|HOL||LOW\n06-22|Mon|NONE|POSTHOL|PM,SB,CH,LD\n06-22|Tue|ORG||PM,SB,MAC\n06-22|Wed|NONE||PM,SB,CH,LD\n06-22|Thu|RED||SB\n06-22|Fri|ORG||PM,SB\n06-29|Mon|NONE|NFPWK|PM,SB,LD\n06-29|Tue|ORG||SB,LD\n06-29|Wed|RED|VNFP|SB,T11\n06-29|Thu|NFP||PM,SB,AVOID\n06-29|Fri|HOL||\n07-06|Mon|RED|POSTHOL|PM,CH\n07-06|Tue|NONE||PM,CH,LD\n07-06|Wed|MIN||PM,SB,WHL\n07-06|Thu|ORG||PM,SB\n07-06|Fri|NONE||PM,CH,LD\n07-13|Mon|NONE|VHI|LOW,PM,LD\n07-13|Tue|CPI||WAIT,SB\n07-13|Wed|PPI||WAIT,SB\n07-13|Thu|ORG||PM,SB\n07-13|Fri|ORG||SB\n07-20|Mon|NONE||PM,CH,MAC,LD\n07-20|Tue|ORG||PM,CH,LD\n07-20|Wed|NONE||PM,CH,MAC,LD,WHL\n07-20|Thu|ORG||PM,SB\n07-20|Fri|ORG||SB\n07-27|Mon|NONE||PM,CH,LD\n07-27|Tue|ORG|VHI|PM,LOW,CH\n07-27|Wed|FOMC||PM,CH,2ST,M315\n07-27|Thu|RED||PM,SB\n07-27|Fri|ORG||PM,SB\n08-03|Mon|RED|NFPWK|SB,LD\n08-03|Tue|ORG||PM,SB,LD\n08-03|Wed|ORG||PM,SB,T11\n08-03|Thu|ORG|VNFP|LOW,PM,CH\n08-03|Fri|NFP||WAIT,SB\n08-10|Mon|NONE||PM,LD\n08-10|Tue|NONE|VHI|LOW,PM\n08-10|Wed|CPI||WAIT,SB\n08-10|Thu|PPI||WAIT,SB\n08-10|Fri|ORG||SB\n08-17|Mon|NONE||AVOID,PM,LD\n08-17|Tue|NONE||PM,SB\n08-17|Wed|MIN||PM,CH,WHL\n08-17|Thu|ORG||PM,SB\n08-17|Fri|NONE||PM,LD\n08-24|Mon|ORG||PM,CH\n08-24|Tue|ORG||SB\n08-24|Wed|RED||PM,SB\n08-24|Thu|ORG||PM,CH\n08-24|Fri|RED||PM,SB\n08-31|Mon|NONE|NFPWK|SB,LD,LRD\n08-31|Tue|RED||SB\n08-31|Wed|ORG||PM,CH,MAC,T11\n08-31|Thu|ORG|VNFP|AVOID,PM,SB\n08-31|Fri|NFP||WAIT,SB\n09-07|Mon|HOL||\n09-07|Tue|NONE|POSTHOL|PM,CH,MAC\n09-07|Wed|NONE|VHI|LOW,PM\n09-07|Thu|PPI||WAIT,SB\n09-07|Fri|CPI||WAIT,SB\n09-14|Mon|NONE||PM,CH,LD\n09-14|Tue|NONE|VHI|PM,CH\n09-14|Wed|FOMC||PM,CH,2ST,M315\n09-14|Thu|ORG||PM,SB\n09-14|Fri|NONE||PM,CH,LD\n09-21|Mon|NONE||LOW,PM,CH,LD\n09-21|Tue|NONE||PM,CH\n09-21|Wed|NONE||PM,CH\n09-21|Thu|ORG||SB\n09-21|Fri|ORG||SB\n09-28|Mon|NONE|NFPWK|PM,SB,LD\n09-28|Tue|ORG||SB,LD\n09-28|Wed|RED||PM,SB,T11\n09-28|Thu|ORG|VNFP|LOW,PM,SB\n09-28|Fri|NFP||WAIT,SB\n10-05|Mon|ORG||LOW,PM,LD\n10-05|Tue|NONE||PM,CH\n10-05|Wed|MIN||PM,SB,WHL\n10-05|Thu|ORG||PM,SB\n10-05|Fri|ORG||PM,SB,LD\n10-12|Mon|HOL||PM,CH\n10-12|Tue|NONE|VHI|LOW,PM,CH,LD\n10-12|Wed|CPI||WAIT,SB\n10-12|Thu|PPI||WAIT,SB\n10-12|Fri|NONE||PM,SB,LD\n10-19|Mon|NONE||LOW,AVOID,MAC,PM,CH,LD\n10-19|Tue|NONE||MAC,PM,CH,LD\n10-19|Wed|NONE||MAC,PM,CH,LD\n10-19|Thu|ORG||PM,SB,LD\n10-19|Fri|ORG||SB\n10-26|Mon|NONE||PM,CH,LD\n10-26|Tue|ORG|VHI|LOW,SB\n10-26|Wed|FOMC||PM,CH,2ST,M315\n10-26|Thu|RED||PM,SB\n10-26|Fri|ORG||PM,SB\n11-02|Mon|ORG|NFPWK|SB,LD\n11-02|Tue|RED||SB,MAC\n11-02|Wed|ORG||SB,T11\n11-02|Thu|ORG|VNFP|AVOID,PM,CH\n11-02|Fri|NFP||WAIT,SB,LRD\n11-09|Mon|NONE|VHI|LOW,PM,CH,LD\n11-09|Tue|CPI||WAIT,SB\n11-09|Wed|HOL||AVOID,PM,SB\n11-09|Thu|ORG|VHI|PM,CH,LD\n11-09|Fri|PPI||WAIT,SB";
+const ID_SNAP = "year=2026\n02-02|Mon|RED|NFPWK|SB\n02-02|Tue|RED||SB\n02-02|Wed|RED||PM,SB\n02-02|Thu|ORG|VNFP|LOW,PM,SB\n02-02|Fri|NFP||WAIT,SB\n03-23|Mon|NONE||PM,CH,MAC,LD,AVOID\n03-23|Tue|RED||SB\n03-23|Wed|NONE||PM,CH,MAC,LD\n03-23|Thu|RED||SB\n03-23|Fri|ORG||PM,CH\n04-20|Mon|NONE||PM,CH,LD\n04-20|Tue|RED||PM,CH\n04-20|Wed|NONE||PM,CH,LD,WHL\n04-20|Thu|ORG||SB\n04-20|Fri|ORG||SB\n04-27|Mon|NONE||PM,CH,LD\n04-27|Tue|ORG|VHI|SB,CH\n04-27|Wed|FOMC||PM,CH,2ST,M315\n04-27|Thu|RED||PM,SB\n04-27|Fri|ORG||PM,CH\n05-04|Mon|NONE|NFPWK|CH\n05-04|Tue|RED||SB,LRD\n05-04|Wed|ORG||PM,SB,T11\n05-04|Thu|ORG|VNFP|LOW,AVOID,SB\n05-04|Fri|NFP||WAIT,SB\n05-11|Mon|NONE|VHI|LOW,PM,CH\n05-11|Tue|CPI||WAIT,SB\n05-11|Wed|PPI||WAIT,SB\n05-11|Thu|RED||SB\n05-11|Fri|NONE||PM,CH,LD\n05-18|Mon|NONE||PM,CH,LD\n05-18|Tue|ORG||SB\n05-18|Wed|MIN||PM,WHL\n05-18|Thu|ORG||SB\n05-18|Fri|ORG||SB\n05-25|Mon|HOL||\n05-25|Tue|ORG||PM,SB\n05-25|Wed|NONE||PM,CH,LD\n05-25|Thu|RED||SB\n05-25|Fri|NONE||PM,CH,LD\n06-08|Mon|NONE||PM,CH,LD\n06-08|Tue|NONE|VHI|LOW,PM,CH\n06-08|Wed|CPI||WAIT,SB\n06-08|Thu|PPI||WAIT,SB\n06-08|Fri|ORG||PM,SB\n06-15|Mon|NONE||PM,CH,LD\n06-15|Tue|NONE|VHI|PM,CH,LD\n06-15|Wed|FOMC||PM,SB,CH,2ST,M315\n06-15|Thu|ORG||PM,SB,MAC\n06-15|Fri|HOL||LOW\n06-22|Mon|NONE|POSTHOL|PM,SB,CH,LD\n06-22|Tue|ORG||PM,SB,MAC\n06-22|Wed|NONE||PM,SB,CH,LD\n06-22|Thu|RED||SB\n06-22|Fri|ORG||PM,SB\n06-29|Mon|NONE|NFPWK|PM,SB,LD\n06-29|Tue|ORG||SB,LD\n06-29|Wed|RED|VNFP|SB,T11\n06-29|Thu|NFP||PM,SB,AVOID\n06-29|Fri|HOL||\n07-06|Mon|RED|POSTHOL|PM,CH\n07-06|Tue|NONE||PM,CH,LD\n07-06|Wed|MIN||PM,SB,WHL\n07-06|Thu|ORG||PM,SB\n07-06|Fri|NONE||PM,CH,LD\n07-13|Mon|NONE|VHI|LOW,PM,LD\n07-13|Tue|CPI||WAIT,SB\n07-13|Wed|PPI||WAIT,SB\n07-13|Thu|ORG||PM,SB\n07-13|Fri|ORG||SB\n07-20|Mon|NONE||PM,CH,MAC,LD\n07-20|Tue|ORG||PM,CH,LD\n07-20|Wed|NONE||PM,CH,MAC,LD,WHL\n07-20|Thu|ORG||PM,SB\n07-20|Fri|ORG||SB\n07-27|Mon|NONE||PM,CH,LD\n07-27|Tue|ORG|VHI|PM,LOW,CH\n07-27|Wed|FOMC||PM,CH,2ST,M315\n07-27|Thu|RED||PM,SB\n07-27|Fri|ORG||PM,SB\n08-03|Mon|RED|NFPWK|SB,LD\n08-03|Tue|ORG||PM,SB,LD\n08-03|Wed|ORG||PM,SB,T11\n08-03|Thu|ORG|VNFP|LOW,PM,CH\n08-03|Fri|NFP||WAIT,SB\n08-10|Mon|NONE||PM,LD\n08-10|Tue|NONE|VHI|LOW,PM\n08-10|Wed|CPI||WAIT,SB\n08-10|Thu|PPI||WAIT,SB\n08-10|Fri|ORG||SB\n08-17|Mon|NONE||AVOID,PM,LD\n08-17|Tue|NONE||PM,SB\n08-17|Wed|MIN||PM,CH,WHL\n08-17|Thu|ORG||PM,SB\n08-17|Fri|NONE||PM,LD\n08-24|Mon|ORG||PM,CH\n08-24|Tue|ORG||SB\n08-24|Wed|RED||PM,SB\n08-24|Thu|ORG||PM,CH\n08-24|Fri|RED||PM,SB\n08-31|Mon|NONE|NFPWK|SB,LD,LRD\n08-31|Tue|RED||SB\n08-31|Wed|ORG||PM,CH,MAC,T11\n08-31|Thu|ORG|VNFP|AVOID,PM,SB\n08-31|Fri|NFP||WAIT,SB\n09-07|Mon|HOL||\n09-07|Tue|NONE|POSTHOL|PM,CH,MAC\n09-07|Wed|NONE|VHI|LOW,PM\n09-07|Thu|PPI||WAIT,SB\n09-07|Fri|CPI||WAIT,SB\n09-14|Mon|NONE||PM,CH,LD\n09-14|Tue|NONE|VHI|PM,CH\n09-14|Wed|FOMC||PM,CH,2ST,M315\n09-14|Thu|ORG||PM,SB\n09-14|Fri|NONE||PM,CH,LD\n09-21|Mon|NONE||LOW,PM,CH,LD\n09-21|Tue|NONE||PM,CH\n09-21|Wed|NONE||PM,CH\n09-21|Thu|ORG||SB\n09-21|Fri|ORG||SB\n09-28|Mon|NONE|NFPWK|PM,SB,LD\n09-28|Tue|ORG||SB,LD\n09-28|Wed|RED||PM,SB,T11\n09-28|Thu|ORG|VNFP|LOW,PM,SB\n09-28|Fri|NFP||WAIT,SB\n10-05|Mon|ORG||LOW,PM,LD\n10-05|Tue|NONE||PM,CH\n10-05|Wed|MIN||PM,SB,WHL\n10-05|Thu|ORG||PM,SB\n10-05|Fri|ORG||PM,SB,LD\n10-12|Mon|HOL||PM,CH\n10-12|Tue|NONE|VHI|LOW,PM,CH,LD\n10-12|Wed|CPI||WAIT,SB\n10-12|Thu|PPI||WAIT,SB\n10-12|Fri|NONE||PM,SB,LD\n10-19|Mon|NONE||LOW,AVOID,MAC,PM,CH,LD\n10-19|Tue|NONE||MAC,PM,CH,LD\n10-19|Wed|NONE||MAC,PM,CH,LD\n10-19|Thu|ORG||PM,SB,LD\n10-19|Fri|ORG||SB\n10-26|Mon|NONE||PM,CH,LD\n10-26|Tue|ORG|VHI|LOW,SB\n10-26|Wed|FOMC||PM,CH,2ST,M315\n10-26|Thu|RED||PM,SB\n10-26|Fri|ORG||PM,SB\n11-02|Mon|ORG|NFPWK|SB,LD\n11-02|Tue|RED||SB,MAC\n11-02|Wed|ORG||SB,T11\n11-02|Thu|ORG|VNFP|AVOID,PM,CH\n11-02|Fri|NFP||WAIT,SB,LRD\n11-09|Mon|NONE|VHI|LOW,PM,CH,LD\n11-09|Tue|CPI||WAIT,SB\n11-09|Wed|HOL||AVOID,PM,SB\n11-09|Thu|ORG|VHI|PM,CH,LD\n11-09|Fri|PPI||WAIT,SB\n11-16|Mon|NONE||PM,CH,LD,MAC\n11-16|Tue|RED||PM,SB\n11-16|Wed|MIN||PM,CH\n11-16|Thu|ORG||PM,CH,LD\n11-16|Fri|ORG||SB";
 const ID_URL = "https://raw.githubusercontent.com/Neal40/economic-calendar/main/data/innerdiscipline.txt";
 const ID_TAG = { PM:"Pre-Market", SB:"AM Silver Bullet", CH:"AM choppy / HRLR", LD:"Last Ditch Macro", MAC:"Macros high probability", WAIT:"Attendre 15-30 min après la news", LOW:"Low probability", AVOID:"Débutants : éviter (tape read)", T11:"Trader jusqu'à 11h", "2ST":"FOMC en 2 temps (14h00 fake / 14h30 real)", M315:"Macro 15h15-15h45", WHL:"Mercredi = high / low de la semaine", LRD:"Large range day" };
 const ID_TYPE = { CPI:"CPI", PPI:"PPI", NFP:"NFP", FOMC:"FOMC", MIN:"FOMC Minutes", RED:"Autre news rouge", ORG:"News orange seulement", NONE:"Aucune news", HOL:"Férié / clôture 13h" };
