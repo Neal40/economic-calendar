@@ -186,7 +186,8 @@ textarea.json{font-family:'Space Mono',monospace;font-size:11px;height:260px}
 html,body{height:100%}
 body{background:#060607}
 .app{display:flex;height:100vh;overflow:hidden}
-.side{width:262px;flex:none;background:#0b0b0d;border-right:1px solid #1d1d22;color:#d9dae0;display:flex;flex-direction:column;padding:16px 14px 12px;overflow-y:auto;transition:width .2s}
+.side{width:262px;flex:none;background:#0b0b0d;border-right:1px solid #1d1d22;color:#d9dae0;display:flex;flex-direction:column;padding:16px 14px 12px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;transition:width .2s}
+.side::-webkit-scrollbar{display:none}
 .side .applogo{width:46px;height:46px;border-radius:11px;background:#2f54eb;display:flex;align-items:center;justify-content:center;color:#fff;margin:2px 0 16px}
 .side .applogo .ic{width:24px;height:24px}
 .who{display:flex;align-items:center;gap:11px;background:#141418;border:1px solid #1f1f25;border-radius:10px;padding:10px 11px;cursor:pointer}
@@ -2242,7 +2243,7 @@ function renderWeek(){
     h+=`<div class="${cls}" data-d="${info.k}"><div class="wd"><span class="dw">${SH[d.getDay()].toUpperCase()}</span><span class="wnum">${d.getDate()}<small>${m3(d).toUpperCase()}</small></span>${stBadge(info.st)}${accPill(info.acc)}</div><div class="wn">${news}</div><div class="wp">${plan}</div></div>`;
     if(HOLST(info.st)&&info.h) footNotes.push({d,info});
   });
-  const g=document.getElementById("grid"); g.classList.remove("wkfocus"); g.classList.add("wkview"); g.innerHTML=h;
+  const g=document.getElementById("grid"); g.classList.remove("wkfocus"); g.style.gridTemplateColumns=""; g.classList.add("wkview"); g.innerHTML=h;
   document.getElementById("foot").innerHTML=footHTML(footNotes);
 }
 

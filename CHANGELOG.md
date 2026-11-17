@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.57.2] — 2026-11-17
+### Corrigé
+- Calendrier › Par semaine : revenir de « Focus jour » à « Liste » ne casse plus la mise en page (les colonnes du style Focus restaient appliquées).
+- Menu latéral : plus de barre de défilement visible (le menu défile toujours à la molette).
+
 ## [1.57.1] — 2026-11-17
 ### Modifié
 - Synchro TopstepX : chaque trade récupère les **vraies bougies 1 seconde** de TopstepX entre sa seconde d'entrée et sa seconde de sortie, et garde le plus haut / plus bas atteints pendant le trade (« Plus haut (trade) », « Plus bas (trade) », gardés d'une synchro à l'autre ; les comptes copiés du même instant partagent une requête ; 80 trades / 25 s max par synchro, les plus récents d'abord).
