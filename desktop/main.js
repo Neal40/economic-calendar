@@ -40,9 +40,16 @@ function tsxWindow(show) {
   loginWin = new BrowserWindow({ width: 1100, height: 800, show, title: "Connexion TopstepX", autoHideMenuBar: true, parent: process.platform === "darwin" ? undefined : win || undefined, // Mac : une fenêtre enfant est toujours affichée avec sa fenêtre parente (fenêtre noire en trop)
     webPreferences: { partition: PART, contextIsolation: true, sandbox: true } });
   loginWin.on("close", (e) => { if (!app.isQuitting) { e.preventDefault(); loginWin.hide(); } });
+  // TopstepX se connecte maintenant via login.topstep.com (même identifiant que le dashboard Topstep) : garder le titre « Connexion TopstepX »
+  loginWin.on("page-title-updated", (e) => e.preventDefault());
+  // après la connexion, toujours revenir sur TopstepX (jamais rester sur le dashboard Topstep, où l'app ne trouve pas la session TopstepX)
+  loginWin.webContents.on("did-navigate", (e, u) => { if (tsxLeftToTopstep(u)) loginWin.loadURL("https://www.topstepx.com/trade"); });
   loginWin.loadURL("https://www.topstepx.com/trade");
   return loginWin;
 }
+/* page Topstep hors connexion (dashboard.topstep.com, www.topstep.com…) : pas TopstepX -> on renvoie sur topstepx.com */
+function tsxLeftToTopstep(u) { try { const h = new URL(u).hostname; const pth = new URL(u).pathname; return /(^|\.)topstep\.com$/i.test(h) && !/^login\./i.test(h) && !/forgot|reset|register|verify/i.test(pth); } catch (e) { return false; } }
+let tsxLoginClosed = false; // fenêtre de connexion fermée par l'utilisateur pendant l'attente
 async function readToken(w) {
   try { await new Promise((ok) => (w.webContents.isLoading() ? w.webContents.once("did-stop-loading", ok) : ok())); } catch (e) {}
   try { return await w.webContents.executeJavaScript('localStorage.getItem("token")', true); } catch (e) { return null; }
@@ -55,10 +62,11 @@ async function getToken(interactive) {
   const ct = getChromeToken(); if (ct) return ct;
   let w = tsxWindow(false), t = await readToken(w);
   if (t || !interactive) return t;
-  w.show(); w.focus();                                      // user signs in to TopstepX in this window
+  tsxLoginClosed = false; w.show(); w.focus();             // user signs in to TopstepX in this window
   const until = Date.now() + 10 * 60 * 1000;
   while (Date.now() < until && !w.isDestroyed()) {
     await new Promise((r) => setTimeout(r, 1500));
+    if (!w.isVisible()) { tsxLoginClosed = true; return null; } // fenêtre fermée : on arrête d'attendre, le bouton « Synchro TopstepX » la rouvre
     t = await readToken(w);
     if (t && !/\/login/i.test(w.webContents.getURL())) { w.hide(); return t; }
   }
@@ -71,7 +79,7 @@ async function doSync(interactive) {
   syncing = (async () => {
     try {
       let token = await getToken(interactive);
-      if (!token) return { ok: false, reason: "login", db: readDb() };
+      if (!token) return { ok: false, reason: "login", closed: interactive && tsxLoginClosed, db: readDb() };
       let data;
       const old = loadDb(), known = [...(old.comptes || []).map((c) => ({ id: c["ID TopstepX"], compte: c })), ...readExtra().map((id) => ({ id }))];
       try { data = await topstepx.sync(token, sfetch, known); }
@@ -81,7 +89,7 @@ async function doSync(interactive) {
         const w = tsxWindow(false); await w.webContents.executeJavaScript('localStorage.removeItem("token")', true).catch(() => {});
         if (!interactive) return { ok: false, reason: "login", db: readDb() };
         w.loadURL("https://www.topstepx.com/login"); token = await getToken(true);
-        if (!token) return { ok: false, reason: "login", db: readDb() };
+        if (!token) return { ok: false, reason: "login", closed: tsxLoginClosed, db: readDb() };
         data = await topstepx.sync(token, sfetch, known);
       }
       delete data.keepIds;

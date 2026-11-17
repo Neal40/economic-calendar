@@ -2751,6 +2751,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
       const r = await D.journalSync(interactive);
       btn.disabled = false; btn.textContent = "⟳ Synchro TopstepX";
       if (r.ok) apply(r.db);
+      else if (r.reason === "login" && r.closed) alertBox("Fenêtre de connexion TopstepX fermée — clique sur « ⟳ Synchro TopstepX » pour la rouvrir.");
       else if (r.reason === "login") { if (!(r.db && r.db.comptes && r.db.comptes.length)) { login.hidden = false; document.getElementById("jroot").hidden = true; document.getElementById("jEmpty").hidden = true; } else if (!interactive) alertBox("Session TopstepX expirée — clique sur « ⟳ Synchro TopstepX »."); }
       else alertBox("Synchro impossible (" + r.reason + "). Données locales affichées.");
       if (r.ok && interactive) alertBox("✓ TopstepX synchronisé : " + ((r.db.comptes || []).length) + " compte(s), " + ((r.db.trades || []).length) + " trade(s).");

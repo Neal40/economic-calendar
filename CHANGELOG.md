@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.54.2] — 2026-11-17
+### Corrigé
+- Synchro TopstepX : fermer la fenêtre de connexion ne bloque plus le bouton sur « Synchronisation… » pendant 10 min. L'attente s'arrête, un message l'indique et « ⟳ Synchro TopstepX » rouvre la fenêtre.
+- Fenêtre de connexion : TopstepX passe maintenant par login.topstep.com (même email / mot de passe que le dashboard Topstep). La fenêtre garde le titre « Connexion TopstepX » et revient toujours sur topstepx.com après la connexion (jamais sur le dashboard Topstep, où l'app ne trouve pas la session TopstepX). Les pages mot de passe oublié / inscription restent accessibles.
+
 ## [1.54.1] — 2026-11-17
 ### Ajouté
 - **Paramètres › Profil › Connexion TopstepX** : choix du mode de connexion — fenêtre de connexion dans l'app (par défaut, comme avant) ou connexion Chrome (favori « → ICT »). Réglage gardé dans `localStorage "econcal-tsx-mode"`.
