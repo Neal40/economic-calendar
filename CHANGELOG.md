@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.55.1] — 2026-11-17
+### Corrigé
+- Journal de Neal : les trades TopstepX liés à un setup incluent maintenant les **ré-entrées** (ex. Macro 10h : entrée 9:49 sortie à BE, puis ré-entrée 10:05 au TP) — de l'Entrée (−2 min) jusqu'à la fin de la fenêtre Time du setup (ou jusqu'à la Sortie). Avant, une fois l'Entrée renseignée, seuls les trades des 3 minutes suivantes étaient liés.
+- PnL = vérité TopstepX : s'il ne correspond plus aux trades liés (ré-entrée synchronisée plus tard), il est réécrit dans Notion, et la Sortie, la MAE et la MFE sont recalculées.
+### Modifié
+- MAE / MFE : **1 R = taille du SL** (2R = 2 × le SL…) — tag « Stop théorique » du trade dans le Journal (distance à « Entrée théorique », sinon au prix d'entrée réel). Sinon |sortie − entrée| / |RR fait|, sinon tag « Risque » ($).
+
 ## [1.55.0] — 2026-11-17
 ### Ajouté
 - Journal de Neal (Review) : un setup pris est complété automatiquement depuis les trades TopstepX liés — **PnL** (P&L net total TopstepX du setup, tous les comptes liés : Master + Slaves, comme « P&L total TopstepX » de la fiche), Entrée, Sortie, **MAE (R)** et **MFE (R)** (compte Master). Se lance après chaque synchro TopstepX / Notion et dès l'ouverture de la fiche (la fiche se rafraîchit avec les valeurs écrites dans Notion). Seules les propriétés vides sont remplies.
