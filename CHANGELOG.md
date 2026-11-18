@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.58.0] — 2026-11-18
+### Ajouté
+- Laboratoire : nouvelle page **Skill IA & Coach IA** (`#skillia`) — le Skill IA « Profil prop firm » et le coach IA quittent Paramètres › Profil.
+- Paramètres › Profil : panneau **Menu latéral · ordre des pages** — glisser-déposer (ou ↑ / ↓) les pages dans leur section ou vers une autre section, puis « Enregistrer » : l'ordre est gardé au relancement (localStorage `econcal-navorder`). Bouton « Ordre par défaut ».
+### Modifié
+- Journal de trading : l'onglet **80/20 devient 20/80** et reçoit en haut les sections « Loi 80/20 · ce qui fait l'essentiel de tes gains et de tes pertes » et « Sortie : 2R ou 3R ? · simulé sur le MFE de chaque setup » (Journal de Neal, période Tout / jour / mois / année).
+- Journal de Neal › Analyse : ces deux sections et le tableau « Macro · N setups » (déjà dans Statistiques) sont retirés ; la page garde la période et les KPIs.
+
 ## [1.57.3] — 2026-11-17
 ### Corrigé
 - Journal de Neal : le **Status passe avant l'Entrée** pour choisir le trade lié. Notion arrondit les heures à la minute : une Entrée écrite à 9:49 (trade à BE) restait liée au mauvais trade alors que le setup est TP (trade de 10:04). Score : Status cohérent (TP = gagnant, SL = perdant, BE ≈ 0) > proximité de l'Entrée > fenêtre exacte. L'Entrée, la Sortie, le PnL, la MAE et la MFE sont réécrits quand l'Entrée pointe un autre trade.

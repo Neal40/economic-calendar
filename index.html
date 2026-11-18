@@ -1540,6 +1540,10 @@ table.tbl:has(#subT){min-width:900px}
 @container (max-width:1100px){.tx-head .tx-hb{width:30px!important}.tx-head .tx-hb svg{width:24px;height:24px}#btLayName{max-width:56px}}
 @container (max-width:1060px){#btTfs [data-tf="2"],#btTfs [data-tf="3"],#btTfs [data-tf="15s"],#btTfs [data-tf="30s"]{display:none}}
 /*TX-END*/
+.navord{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 12px}.navord-g>b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8b8e98;margin:0 0 6px}
+.navord-l{min-height:44px;border:1px dashed #2a2a32;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px}
+.navord-i{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:#15151a;border:1px solid #24242b;cursor:grab;user-select:none}.navord-i.drag{opacity:.45}
+.navord-h{color:#6f727c;font-size:12px;letter-spacing:-2px}.navord-t{flex:1}.navord-i button{background:none;border:1px solid #2a2a32;color:#c9cbd2;border-radius:6px;width:24px;height:22px;cursor:pointer;padding:0}.navord-i button:disabled{opacity:.3;cursor:default}
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -1559,6 +1563,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="graphique"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v3M7 17v4M17 5v3M17 16v3"/><rect x="5" y="6" width="4" height="11" rx="1"/><rect x="15" y="8" width="4" height="8" rx="1"/></svg><span>Graphique</span></button>
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
+      <button class="nav" data-go="skillia"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9.5 16h5M2 12v3M22 12v3"/></svg><span>Skill IA &amp; Coach IA</span></button>
     </div></div>
   <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="comptes"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M12 3l9 5H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg><span>Mes comptes</span></button><button class="nav" data-go="topstep"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" transform="translate(8.208 3.776) scale(0.03676)" d="M55.6,82.2H0V6.1h206.3v76.1h-54.4c-3.9,0-7,3.1-7,7v352.1H62.7V89.2c0-3.9-3.1-7-7-7h-.1Z"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic pf" viewBox="0 0 24 24"><defs><linearGradient id="pfApG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0026ff"/><stop offset="1" stop-color="#050927"/></linearGradient></defs><rect width="24" height="24" rx="5" fill="url(#pfApG)"/><path fill="#fff" transform="translate(3 7.517) scale(0.07472)" d="M239.253 21.9472C240.662 19.169 241.252 15.9095 240.662 12.475C239.428 5.25594 233.015 -0.0434828 225.695 0.000268926C223.761 0.0112069 221.877 0.388565 220.063 1.13234L219.337 1.47142L116.857 49.3959L69.8091 17.3041L69.1044 16.8228C64.74 13.9571 59.6763 12.4367 54.4597 12.4367C44.2286 12.4367 34.7514 18.4197 30.3159 27.6787L0.136126 89.2756C-0.284479 90.1343 0.338235 91.1351 1.29416 91.1351C1.68745 91.1351 2.05889 90.9546 2.3047 90.6483L49.8221 30.9491L91.2381 61.3784L41.7323 84.5286C41.0714 84.8348 40.7764 85.6169 41.0659 86.2841C41.3445 86.9349 42.0819 87.2576 42.7538 87.0224L98.9838 67.0716L165.248 115.849L165.232 115.833C168.564 118.442 172.754 120 177.298 120C184.727 120 191.429 115.871 194.811 109.226L194.838 109.183L195.013 108.838L239.269 21.9308L239.253 21.9527V21.9472ZM127.787 56.8556L210.373 27.5529L175.25 89.2319L127.787 56.8556Z"/></svg><span>Apex</span></button><button class="nav" data-go="mffu"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#02040e"/><g transform="translate(3 3) scale(0.16677) translate(-19.82 -44)"><g><path d="M51.2 56.3476V44H58.7276V49.199H70.0189V44H77.5465V49.199H88.8378V44H96.3653V56.3476H51.2Z" fill="#3A82F7"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M30.099 63.2073C30.099 63.2073 29.8762 74.045 30.099 88.1987C30.1186 89.4424 30.1337 90.7064 30.149 91.9864C30.4666 118.543 30.8658 151.927 72.8883 151.927C116.936 151.927 117.565 128.81 117.565 85.0748L117.565 63.2073H30.099ZM110.265 70.5244H37.3154C37.2883 74.9567 37.289 81.1158 37.3987 88.0833C37.4176 89.2874 37.4334 90.4915 37.4492 91.6937C37.6193 104.663 37.7864 117.406 41.8895 127.429C44.0082 132.604 47.0759 136.71 51.6043 139.603C56.1834 142.529 62.8753 144.61 72.8883 144.61C83.3627 144.61 90.497 143.219 95.4292 140.971C100.13 138.828 103.125 135.779 105.227 131.605C107.451 127.19 108.793 121.268 109.508 113.315C110.22 105.384 110.265 96.0779 110.265 85.0748L110.265 70.5244Z" fill="url(#mffuG0)"></path><path d="M58.1131 106.652H44.287C44.287 106.652 44.3734 115.772 47.0522 122.659C49.731 129.545 58.1131 135.921 58.1131 135.921V106.652Z" fill="#F2CB80"></path><path d="M82.5392 94.3049H65.0262V137.75H82.5392V94.3049Z" fill="url(#mffuG1)"></path><path d="M103.739 82.4146H89.4523V135.921C89.4523 135.921 103.739 132.469 103.739 114.346V82.4146Z" fill="#D8AE5E"></path></g><defs><linearGradient id="mffuG0" x1="117.565" y1="61.4677" x2="30.5816" y2="148.161" gradientUnits="userSpaceOnUse"><stop stop-color="#DEB25F"></stop><stop offset="1" stop-color="#F3CC81"></stop></linearGradient><radialGradient id="mffuG1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(82.5392 94.3049) rotate(111.955) scale(46.8421 18.8419)"><stop stop-color="#D8AE5E"></stop><stop offset="1" stop-color="#F4CD83"></stop></radialGradient></defs></g></svg><span>My Funded Futures</span></button><button class="nav" data-go="tradeify"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#0b0f0c"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#3ee07f">T</text></svg><span>Tradeify</span></button><button class="nav" data-go="phidias"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#121212"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#d9b46a">P</text></svg><span>Phidias</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
 <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><i class="updot" title="Mise à jour disponible"></i><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -1654,9 +1659,10 @@ table.tbl:has(#subT){min-width:900px}
     <label>Réseaux sociaux</label><div class="psoc" id="bSoc"></div>
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
-  <div class="panel"><div class="ptitle">Skill IA — Profil prop firm</div>
-    <div class="hintd" style="margin:0 0 12px">Ton statut exact et ta progression face à ce que veut Apex, sur tous les comptes que tu as eus chez Apex, Topstep et My Funded Futures : un système défini, de la constance (système, taille, jours, risque), pas de gambling ni de windfall, des comptes financés qui durent et des payouts.</div>
-    <div id="pfBox"></div></div>
+  <div class="panel" id="navOrdBox"><div class="ptitle">Menu latéral · ordre des pages</div>
+    <div class="hintd" style="margin:0 0 10px">Glisse une page (poignée ⋮⋮) pour la déplacer dans sa section ou vers une autre section, ou utilise ↑ / ↓. Clique sur « Enregistrer » : l'ordre est gardé au prochain lancement de l'app.</div>
+    <div class="navord" id="navOrd"></div>
+    <div class="row2"><button class="btn" id="navOrdSave" type="button">Enregistrer</button><button class="btn gray" id="navOrdCancel" type="button">Annuler</button><button class="btn gray" id="navOrdReset" type="button">Ordre par défaut</button><span id="navOrdOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Apparence</div><div class="pform">
     <label>Thème</label><div><div class="th-grid" id="thGrid"></div><select id="thSel" hidden><option value="classique">Classique</option><option value="noir">Noir</option><option value="matrix">Matrix</option><option value="wallstreet">Wall Street</option><option value="ict">ICT épuré</option></select></div>
     <label>Image de fond (thème Noir)</label>
@@ -1671,6 +1677,13 @@ table.tbl:has(#subT){min-width:900px}
   <div class="panel"><div class="ptitle">Langue / Language</div>
     <div class="hintd" style="margin:0 0 10px">Langue de l'interface (français par défaut).</div>
     <select id="langSel" class="btn gray" style="min-width:180px"><option value="fr">Français</option><option value="en">English</option></select></div>
+</div></section>
+
+<section class="view" id="v-skillia"><div class="page" style="max-width:1300px">
+  <h2>Skill IA &amp; Coach IA</h2><p class="lead">Ton statut et ta progression face aux critères des prop firms, puis le plan du coach IA.</p>
+  <div class="panel"><div class="ptitle">Skill IA — Profil prop firm</div>
+    <div class="hintd" style="margin:0 0 12px">Ton statut exact et ta progression face à ce que veut Apex, sur tous les comptes que tu as eus chez Apex, Topstep et My Funded Futures : un système défini, de la constance (système, taille, jours, risque), pas de gambling ni de windfall, des comptes financés qui durent et des payouts.</div>
+    <div id="pfBox"></div></div>
 </div></section>
 
 <section class="view" id="v-affiliation"><div class="page">
@@ -1701,7 +1714,7 @@ table.tbl:has(#subT){min-width:900px}
   <div class="jtop">
     <div><h2>Journal de trading</h2><p class="lead" style="margin:0"><span id="jSync" class="jt-tsx">Stats TopstepX par compte.</span><span class="jt-neal" id="rvStampJ"></span></p></div>
     <div class="acts">
-      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button><button class="rv-tab jtab" data-jt="p80">80/20</button></div>
+      <div class="rv-tabs"><button class="rv-tab jtab on" data-jt="tsx">Stats TopstepX</button><button class="rv-tab jtab" data-jt="neal">Journal de Neal</button><button class="rv-tab jtab" data-jt="bt">Journal backtest</button><button class="rv-tab jtab" data-jt="p80">20/80</button></div>
       <button class="btn jt-neal" id="rvSync2">⟳ Synchroniser Notion</button><button class="btn gray jt-neal nauto" id="rvAuto2" title="Synchro automatique app ⇄ Notion">Synchro Notion : On</button>
       <button class="btn jt-tsx" id="jSyncBtn" hidden title="Récupère tes comptes et tes trades TopstepX (mode de connexion : Paramètres › Profil › Connexion TopstepX)">⟳ Synchro TopstepX</button>
       <span class="jt-tsx" id="jRecWrap" hidden style="position:relative"><button class="btn gray" id="jRecBtn" title="Récupérer un compte qui a disparu de TopstepX (challenge passé, compte fermé…)">＋ Récupérer un compte</button>
@@ -2455,8 +2468,38 @@ $("bSave").onclick=()=>{ const social={}; SOC.forEach(([k])=>{ const u=urlOk($("
   save();render();shell();loadProfile();$("bOk").textContent="Enregistré ✓"};
 $("dataBtn2").onclick=()=>$("dataBtn").click();
 
+/* ---------- Menu latéral : ordre des pages par section (Paramètres › Profil, localStorage econcal-navorder) ---------- */
+const NAVKEY="econcal-navorder", NAVGRP=["gLab","gAcc","gSet"];
+const NAVDEF=(()=>{ const o={}; NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); o[g]=it?[...it.querySelectorAll(":scope > .nav[data-go]")].map(b=>b.dataset.go):[]; }); return o; })();
+const navBtn=go=>document.querySelector('.side .items > .nav[data-go="'+go+'"]');
+function navOrdGet(){ try{ const o=JSON.parse(localStorage.getItem(NAVKEY)||"null"); if(o&&typeof o==="object") return o; }catch(e){} return null; }
+function navOrdApply(o){ o=o||NAVDEF; const seen=new Set();
+  NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); if(!it) return; (o[g]||[]).forEach(go=>{ const b=navBtn(go); if(b&&!seen.has(go)){ seen.add(go); it.appendChild(b); } }); });
+  NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); if(!it) return; NAVDEF[g].forEach(go=>{ if(!seen.has(go)){ const b=navBtn(go); if(b){ seen.add(go); it.appendChild(b); } } }); }); }
+navOrdApply(navOrdGet());
+let navDraft=null;
+function navOrdCur(){ const o={}; NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); o[g]=it?[...it.querySelectorAll(":scope > .nav[data-go]")].map(b=>b.dataset.go):[]; }); return o; }
+function navOrdDraw(keep){ const box=$("navOrd"); if(!box) return; if(!keep||!navDraft) navDraft=navOrdCur();
+  const lbl=go=>{ const b=navBtn(go); return b?(b.querySelector("span")||b).textContent.trim():go; };
+  box.innerHTML=NAVGRP.map(g=>{ const t=($(g).querySelector(".gh span")||{}).textContent||g;
+    return `<div class="navord-g"><b>${esc(t)}</b><div class="navord-l" data-g="${g}">${navDraft[g].map((go,i)=>`<div class="navord-i" draggable="true" data-go="${go}"><span class="navord-h">⋮⋮</span><span class="navord-t">${esc(lbl(go))}</span><button type="button" data-mv="-1" title="Monter"${i?"":" disabled"}>↑</button><button type="button" data-mv="1" title="Descendre"${i<navDraft[g].length-1?"":" disabled"}>↓</button></div>`).join("")||'<div class="hintd navord-empty" style="margin:0">Dépose une page ici</div>'}</div></div>`; }).join("");
+  $("navOrdOk").textContent=""; }
+(function(){ const box=$("navOrd"); if(!box) return; let drag=null;
+  const fromDom=()=>{ const o={}; box.querySelectorAll(".navord-l").forEach(l=>o[l.dataset.g]=[...l.querySelectorAll(".navord-i")].map(x=>x.dataset.go)); navDraft=o; };
+  box.addEventListener("click",e=>{ const b=e.target.closest("[data-mv]"); if(!b) return; const it=b.closest(".navord-i"), g=it.parentNode.dataset.g, L=navDraft[g], i=L.indexOf(it.dataset.go), j=i+ +b.dataset.mv; if(j<0||j>=L.length) return; [L[i],L[j]]=[L[j],L[i]]; navOrdDraw(true); });
+  box.addEventListener("dragstart",e=>{ const it=e.target.closest(".navord-i"); if(!it) return; drag=it; it.classList.add("drag"); try{ e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",it.dataset.go); }catch(x){} });
+  box.addEventListener("dragend",()=>{ if(drag) drag.classList.remove("drag"); drag=null; fromDom(); navOrdDraw(true); });
+  box.addEventListener("dragover",e=>{ if(!drag) return; const l=e.target.closest(".navord-l"); if(!l) return; e.preventDefault();
+    const after=[...l.querySelectorAll(".navord-i:not(.drag)")].find(x=>{ const r=x.getBoundingClientRect(); return e.clientY<r.top+r.height/2; });
+    const em=l.querySelector(".navord-empty"); if(em) em.remove(); if(after) l.insertBefore(drag,after); else l.appendChild(drag); });
+  box.addEventListener("drop",e=>{ if(drag) e.preventDefault(); });
+  $("navOrdSave").onclick=()=>{ try{ localStorage.setItem(NAVKEY,JSON.stringify(navDraft)); }catch(x){} navOrdApply(navDraft); navOrdDraw(); $("navOrdOk").textContent="Enregistré ✓"; };
+  $("navOrdCancel").onclick=()=>navOrdDraw();
+  $("navOrdReset").onclick=()=>{ navDraft=JSON.parse(JSON.stringify(NAVDEF)); navOrdDraw(true); $("navOrdOk").textContent="Ordre par défaut : clique sur « Enregistrer » pour le garder."; };
+})();
+
 /* ---------- shell / routing ---------- */
-const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures"];
+const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures","skillia"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -2471,7 +2514,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
-  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -3520,9 +3563,10 @@ function pareto8020(rows, val, dims) {
       box.querySelectorAll(".p80tk").forEach((b) => (b.onclick = () => { taken = b.dataset.t; try { localStorage.setItem("econcal-p80-taken", taken); } catch (x) {} window.p80Render(); }));
       const m = document.getElementById("p80Metric"); if (m) m.onchange = (ev) => { metric = ev.target.value; try { localStorage.setItem("econcal-p80-metric", metric); } catch (x) {} window.p80Render(); };
     };
-    if (S.empty) { box.innerHTML = head + `<div class="jempty">${S.empty}</div>`; wire(); return; }
+    const neal = window.reviewAPI && window.reviewAPI.p80Neal ? window.reviewAPI.p80Neal() : "";
+    if (S.empty) { box.innerHTML = neal + head + `<div class="jempty">${S.empty}</div>`; wire(); return; }
     const P = pareto8020(S.rows, S.val, S.dims);
-    if (!P.n) { box.innerHTML = head + `<div class="jempty"><b>Aucun trade avec un résultat chiffré</b>${S.unit === "R" ? "Aucune page de cette sélection n'a de « " + e(metric) + " » rempli (pour les « Pas pris », essaie la mesure RR Parfait si tu la remplis)." : "Aucun P&L trouvé."}</div>`; wire(); return; }
+    if (!P.n) { box.innerHTML = neal + head + `<div class="jempty"><b>Aucun trade avec un résultat chiffré</b>${S.unit === "R" ? "Aucune page de cette sélection n'a de « " + e(metric) + " » rempli (pour les « Pas pris », essaie la mesure RR Parfait si tu la remplis)." : "Aucun P&L trouvé."}</div>`; wire(); return; }
     const line = (c, tot, word) => c ? `${c.n} ${word} sur ${tot} (${pc(c.pct)}) font 80 % ${word === "gagnants" ? "de tes gains" : "de tes pertes"}` : "—";
     const tbl = (g) => {
       if (!g.rows.length) return `<div class="panel"><div class="ptitle">${e(g.name)}</div><p class="hintd" style="margin:0">Rien de renseigné pour l'instant.</p></div>`;
@@ -3534,7 +3578,7 @@ function pareto8020(rows, val, dims) {
     const ord = P.groups.filter((g) => g.rows.length && g.name !== "Status");
     const best = ord.slice(0, 3).map((g) => { const k = g.rows.filter((r) => r.core).map((r) => r.key); return k.length ? `${e(g.name.replace(/ \(.*\)/, ""))} : <b>${k.map(e).join(", ")}</b>` : ""; }).filter(Boolean);
     const worst = [...new Set(P.groups.filter((g) => g.name !== "Status").map((g) => g.rows.filter((r) => r.net < 0 && r.lossShare >= 0.2).map((r) => r.key)).flat())];
-    box.innerHTML = head + `<div class="kpis">
+    box.innerHTML = neal + head + `<div class="kpis">
         <div class="kpi"><small>Résultat net</small><b class="${P.net >= 0 ? "pos" : "neg"}">${fmt(P.net)}</b><i>${P.n} trades · ${P.wins} gagnants · ${P.losses} perdants${S.note ? "<br>" + e(S.note) : ""}</i></div>
         <div class="kpi"><small>Tes gains</small><b class="pos">${pc(P.top20Gain)}</b><i>des gains viennent de tes 20 % meilleurs trades gagnants</i></div>
         <div class="kpi"><small>Tes pertes</small><b class="neg">${pc(P.top20Loss)}</b><i>des pertes viennent de tes 20 % pires trades perdants</i></div>
@@ -3931,7 +3975,7 @@ function payoutCalc(a, fk, pays) {
       const ts = top(L.map((p) => slot(p.entry))), td = top(L.map((p) => { const d = new Date(p.entry); return isNaN(d) ? null : nyW.format(d); })), te = top(L.flatMap((p) => (MT(p.id) || {}).err || []));
       const why = [ts ? `surtout entre ${ts[0]} (NY) : ${ts[1]} / ${L.length}` : "", td ? `le ${td[0]} : ${td[1]} / ${L.length}` : "", te ? `tag le plus fréquent : « ${e(te[0])} » (${te[1]})` : ""].filter(Boolean).join(" · ");
       el.innerHTML = `<div class="panel" style="margin:14px 0"><div class="row2" style="margin:0 0 8px;justify-content:space-between;align-items:center"><div class="ptitle" style="margin:0">${e(c.label)} — ${L.length} trade(s) concerné(s)</div><button class="btn gray" id="pfDrX" type="button">Fermer</button></div>
-        <div class="hintd" style="margin:0 0 10px">${why ? why.charAt(0).toUpperCase() + why.slice(1) + ". " : ""}Compare avec l'onglet 80/20 du Journal pour voir si ce créneau te coûte aussi en P&amp;L.${L.length > 200 ? " Les 200 plus récents sont affichés." : ""}</div>
+        <div class="hintd" style="margin:0 0 10px">${why ? why.charAt(0).toUpperCase() + why.slice(1) + ". " : ""}Compare avec l'onglet 20/80 du Journal pour voir si ce créneau te coûte aussi en P&amp;L.${L.length > 200 ? " Les 200 plus récents sont affichés." : ""}</div>
         <table class="tbl"><thead><tr><th>Date (NY)</th><th>Compte</th><th>Sens</th><th class="num">Taille</th><th class="num">P&amp;L</th>${canTag ? "<th></th>" : ""}</tr></thead><tbody>${L.slice(0, 200).map((p) => `<tr><td>${e(fmtNY(p.entry))}</td><td>${e(accLabel(p))}</td><td>${e(p.dir)}</td><td class="num">${e(p.raw)}</td><td class="num">${usd0(p.net)}</td>${canTag ? `<td><button class="btn gray pfTag" data-id="${e(p.id)}" type="button" style="padding:3px 10px;font-size:12px">Tags</button></td>` : ""}</tr>`).join("")}</tbody></table></div>`;
       document.getElementById("pfDrX").onclick = () => (el.innerHTML = "");
       el.querySelectorAll(".pfTag").forEach(bindTag); el.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -4906,13 +4950,23 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       ${tbl(X.gave, [["Résultat réel", (x) => up(x.real)], ["À 2R", (x) => up(x.a2)], ["Gain raté", (x) => up(x.real - 2)]])}`
       : '<p class="rv-mut" style="margin:6px 0">Aucun setup avec un MFE (R) renseigné sur cette sélection.</p>'}</div>`;
   }
-  function analyse8020(allRows) {
+  function perSel(allRows) {
     const per = state.per || "tout", keys = per === "tout" ? [] : perKeys(allRows, per), key = keys.includes(state.perKey) ? state.perKey : keys[0];
-    const rows = per === "tout" || !key ? allRows : allRows.filter((r) => dayOf(r).startsWith(key)), R = riskStats(rows), p = (x) => (R.n ? Math.round((100 * x) / R.n) + " %" : "—");
+    const rows = per === "tout" || !key ? allRows : allRows.filter((r) => dayOf(r).startsWith(key));
+    const bar = `<div class="rv-per">${["tout", "jour", "mois", "annee"].map((x) => `<button class="rv-tab${per === x ? " on" : ""}" data-per="${x}">${{ tout: "Tout", jour: "Par jour", mois: "Par mois", annee: "Par année" }[x]}</button>`).join("")}
+        ${keys.length ? `<select class="rv-perk">${keys.map((k) => `<option value="${k}"${k === key ? " selected" : ""}>${esc(perLabel(k))}</option>`).join("")}</select>` : ""}</div>`;
+    return { rows, bar };
+  }
+  function loiPanel(rows) {
     const P = ["Time", "PD Array M1", "Prise de liquidité", "Actif", "Sens"].filter((f) => rows.some((r) => r[f] && (!Array.isArray(r[f]) || r[f].length))).map((f) => pareto(rows, f));
     const lst = (o, cls) => o.list.length ? o.list.map((x) => `<span class="rv-8020 ${cls}">${esc(x.k)} <b>${(cls === "up" ? "+" : "-") + (cls === "up" ? x.win : x.loss).toFixed(1)}R</b></span>`).join(" ") + `<small class="rv-mut"> · ${o.list.length}/${o.of} valeurs = ${Math.round(o.share * 100)} % ${cls === "up" ? "des gains" : "des pertes"}</small>` : '<span class="rv-mut">—</span>';
-    return `<div class="rv-per">${["tout", "jour", "mois", "annee"].map((x) => `<button class="rv-tab${per === x ? " on" : ""}" data-per="${x}">${{ tout: "Tout", jour: "Par jour", mois: "Par mois", annee: "Par année" }[x]}</button>`).join("")}
-        ${keys.length ? `<select class="rv-perk">${keys.map((k) => `<option value="${k}"${k === key ? " selected" : ""}>${esc(perLabel(k))}</option>`).join("")}</select>` : ""}</div>
+    return `<div class="panel" style="margin-bottom:14px"><div class="ptitle">Loi 80/20 · ce qui fait l'essentiel de tes gains et de tes pertes</div>
+        <table class="rv-bt"><thead><tr><th></th><th>Points forts (80 % des gains)</th><th>Points faibles (80 % des pertes)</th></tr></thead><tbody>
+        ${P.map((x) => `<tr><td><b>${esc(x.f)}</b></td><td>${lst(x.strong, "up")}</td><td>${lst(x.weak, "dn")}</td></tr>`).join("") || '<tr><td colspan="3" class="rv-mut">Pas assez de trades pris sur la période.</td></tr>'}</tbody></table></div>`;
+  }
+  function analyse8020(allRows) {
+    const { rows, bar } = perSel(allRows), R = riskStats(rows), p = (x) => (R.n ? Math.round((100 * x) / R.n) + " %" : "—");
+    return bar + `
       <div class="kpis">
         <div class="kpi"><small>Trades pris</small><b>${R.n}</b><i>${rows.length} setups au total</i></div>
         <div class="kpi"><small>% TP</small><b class="pos">${p(R.tp)}</b><i>${R.tp} trades</i></div>
@@ -4920,10 +4974,13 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         <div class="kpi"><small>% SL</small><b class="neg">${p(R.sl)}</b><i>${R.sl} trades</i></div>
         <div class="kpi"><small>Pire drawdown</small><b class="neg">${R.dd ? "-" + R.dd.toFixed(2) + "R" : "0R"}</b><i>du plus haut au plus bas (RR fait)</i></div>
         <div class="kpi"><small>Pire série de SL</small><b class="${R.worst >= 3 ? "neg" : ""}">${R.worst}</b><i>SL d'affilée</i></div>
-      </div>
-      <div class="panel" style="margin-bottom:14px"><div class="ptitle">Loi 80/20 · ce qui fait l'essentiel de tes gains et de tes pertes</div>
-        <table class="rv-bt"><thead><tr><th></th><th>Points forts (80 % des gains)</th><th>Points faibles (80 % des pertes)</th></tr></thead><tbody>
-        ${P.map((x) => `<tr><td><b>${esc(x.f)}</b></td><td>${lst(x.strong, "up")}</td><td>${lst(x.weak, "dn")}</td></tr>`).join("") || '<tr><td colspan="3" class="rv-mut">Pas assez de trades pris sur la période.</td></tr>'}</tbody></table></div>` + exitPanel(rows);
+      </div>`;
+  }
+  /* Page 20/80 du Journal de trading : Loi 80/20 + Sortie 2R / 3R sur le Journal de Neal (toutes les pages, période au choix) */
+  function p80Neal() {
+    const m = state.macro; if (!m || !m.rows || !m.rows.length) return "";
+    const { rows, bar } = perSel(m.rows);
+    return `<div class="rv-page wide" style="margin:0 0 18px"><div class="row2" style="margin:0 0 8px;align-items:center;gap:10px"><b style="font-size:15px">${esc(JNAME)} (Notion)</b><span class="hintd" style="margin:0">${rows.length} setups sur la période</span></div>${bar}${loiPanel(rows)}${exitPanel(rows)}</div>`;
   }
   /* --- account type (Review / Paper / Funded / Challenge) --- */
   const TYPES = ["Challenge", "Funded", "Paper", "Review"];
@@ -5036,9 +5093,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   };
 
   /* --- rendering --- */
-  function render() { renderWTF(); renderJournal(); }
+  function render() { renderWTF(); renderJournal(); const p = $("jtP80"); if (p && !p.hidden && window.p80Render) window.p80Render(); }
   window.reviewRender = render;
-  const API = window.reviewAPI = { ID, state, kset, typeOf, tsxMatch: (r) => tsxMatch(r), tsxAccounts: (h) => tsxAccounts(h), curPage: null, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), onRowOpen: null, canEdit: false };
+  const API = window.reviewAPI = { ID, state, kset, typeOf, tsxMatch: (r) => tsxMatch(r), tsxAccounts: (h) => tsxAccounts(h), curPage: null, render: () => render(), journalVisible: () => !!document.querySelector("#v-journal.on #jtNeal:not([hidden])"), closeRow: () => ov.classList.remove("show"), p80Neal: () => p80Neal(), onRowOpen: null, canEdit: false };
   function renderWTF() {
     const body = $("rvBody"); if (!body) return;
     const stamp = state.synced ? "Synchro Notion : " + new Date(state.synced).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
@@ -5067,7 +5124,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         <div class="kpi"><small>Σ RR</small><b class="${s.sum >= 0 ? "pos" : "neg"}">${f2(s.sum)}</b><i>si tous les setups étaient pris</i></div>
       </div>
       <div class="rv-grid">${["Time", "PD Array M1", "Prise de liquidité", "Status"].map((f) => `<div class="panel"><div class="ptitle">Par ${esc(f)}</div>${breakdown(rows, f, m.schema)}</div>`).join("")}</div>
-      <div class="panel" style="margin-top:14px"><div class="ptitle">Macro · ${rows.length} setups</div>${dbTable({ schema: m.schema, rows }, COLS, "macro")}</div>`;
+`;
     else if (V.type === "calendar") content = calendar("macro", { schema: m.schema, rows: vrows }, (r) => colorOf(m.schema, "Status", (r.Status || [])[0]), (r) => dotOf(m.schema, "Status", (r.Status || [])[0]));
     else if (V.type === "table") content = `<div class="panel"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div>${dbTable({ schema: m.schema, rows: vrows }, V.cols, "macro")}</div>`;
     else content = `<div class="panel rv-chart" data-view="${esc(V.name)}"><div class="ptitle">${esc(V.name)} · ${vrows.length} setups</div><div class="rv-cv"></div></div>`;
@@ -5377,7 +5434,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       $("rvSetupBtn").onclick = () => showSetup($("rvSetup").hidden);
       const st = await D.notionStatus(); if (!st.ok) showSetup(true); else if (!state.synced || Date.now() - new Date(state.synced) > 30 * 60 * 1000) sync();
     }
-    [$("rvBody"), $("rvBodyJ")].filter(Boolean).forEach((root) => {
+    [$("rvBody"), $("rvBodyJ"), $("jtP80")].filter(Boolean).forEach((root) => {
     root.addEventListener("change", (e) => { if (e.target.classList.contains("rv-perk")) { state.perKey = e.target.value; render(); }
       if (e.target.classList.contains("rv-exusd")) { try { localStorage.setItem("econcal-ex-usd", String(Math.max(1, +e.target.value || 500))); } catch (err) {} render(); } });
     root.addEventListener("click", (e) => {
@@ -11075,7 +11132,7 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
 (() => {
   const EN = {
     // menu, profil
-    "Menu principal": "Main menu", "Laboratoire": "Lab", "Calendrier Économique": "Economic Calendar", "Marché": "Market", "Mise en page du Marché": "Market layout", "Actualiser": "Refresh", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Affiliation": "Affiliate", "Abonnement": "Subscription", "Factures": "Invoices", "Mes comptes": "My accounts", "Compte All-data": "All-data account", "Voir toutes mes performances !": "See all my performance!", "Profitabilité totale": "Total profitability", "Ajouter un nouveau compte": "Add a new account", "Créer un compte d'entraînement": "Create a training account", "Réduire le menu": "Collapse menu",
+    "Menu principal": "Main menu", "Laboratoire": "Lab", "Skill IA & Coach IA": "AI skill & coach", "Menu latéral · ordre des pages": "Side menu · page order", "Ordre par défaut": "Default order", "Calendrier Économique": "Economic Calendar", "Marché": "Market", "Mise en page du Marché": "Market layout", "Actualiser": "Refresh", "Journal de trading": "Trading journal", "Backtesteur": "Backtester", "Paramètres": "Settings", "Profil": "Profile", "Affiliation": "Affiliate", "Abonnement": "Subscription", "Factures": "Invoices", "Mes comptes": "My accounts", "Compte All-data": "All-data account", "Voir toutes mes performances !": "See all my performance!", "Profitabilité totale": "Total profitability", "Ajouter un nouveau compte": "Add a new account", "Créer un compte d'entraînement": "Create a training account", "Réduire le menu": "Collapse menu",
     "Ton nom, ton handle et ton logo, affichés dans le menu et sur le calendrier.": "Your name, handle and logo, shown in the menu and on the calendar.", "Nom affiché": "Display name", "Retirer": "Remove", "Texte du logo (sans image)": "Logo text (no image)", "Lien Notion (bouton du journal)": "Notion link (journal button)",
     "Enregistrer": "Save", "Annuler": "Cancel", "Données": "Data", "Sauvegarde / Import": "Backup / Import", "Langue": "Language", "Langue de l'interface (français par défaut).": "Interface language (French by default).", "@ton_handle": "@your_handle", "Modifier le profil": "Edit profile",
     "Calendrier, abonnements et factures sont enregistrés dans cette app / ce navigateur. Dans l'app Windows, abonnements et factures sont aussi écrits dans un fichier JSON.": "Calendar, subscriptions and invoices are stored in this app / browser. In the Windows app, subscriptions and invoices are also written to a JSON file.",
