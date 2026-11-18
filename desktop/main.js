@@ -440,7 +440,7 @@ async function updCheck(force) { // GitHub limite à 60 requêtes / heure : rés
 const updPublic = (r) => { if (!r || !r.ok) return r; const { dl, ...o } = r; return o; };
 const updSend = (p) => { try { if (win && !win.isDestroyed()) win.webContents.send("app:updProgress", p); } catch (e) { /* fenêtre fermée */ } };
 const liveCopier = () => !!(copier && !copier.dry);
-ipcMain.handle("app:info", () => ({ version: app.getVersion(), run: updCurrent().run, sha: String(BUILD.sha || "").slice(0, 7), platform: process.platform, packaged: app.isPackaged, install: updCanInstall(), downloading: updDl }));
+ipcMain.handle("app:info", () => ({ lastUpd: process.platform === "darwin" ? updater.macSwapResult(MAC_UPDLOG()) : null, version: app.getVersion(), run: updCurrent().run, sha: String(BUILD.sha || "").slice(0, 7), platform: process.platform, packaged: app.isPackaged, install: updCanInstall(), downloading: updDl }));
 ipcMain.handle("app:updCheck", async (e, force) => updPublic(await updCheck(!!force)));
 ipcMain.handle("app:updInstall", async () => {
   if (updDl || updBusy) return { ok: false, reason: "busy" };
@@ -472,7 +472,7 @@ ipcMain.handle("app:updInstall", async () => {
     let st; try { st = await updater.macStage(run, zip, bundle); } finally { fs.rmSync(zip, { force: true }); }
     if (liveCopier()) { fs.rmSync(st.stage, { recursive: true, force: true }); return { ok: false, reason: "copier" }; }
     updBusy = true;
-    spawn("/bin/sh", ["-c", updater.MAC_SWAP, "sh", bundle, st.stage, st.app, String(process.pid)], { detached: true, stdio: "ignore" }).unref();
+    spawn("/bin/sh", updater.macSwapArgs(bundle, st.stage, st.app, process.pid, MAC_UPDLOG(), true), { detached: true, stdio: "ignore" }).unref();
     updQuit(); return { ok: true };
   } catch (err) { return { ok: false, reason: err.code === "SHA" ? "publishing" : String(err.message || err) }; }
   finally { updDl = false; }
@@ -481,6 +481,15 @@ ipcMain.handle("app:updInstall", async () => {
 /* ---------- Mac : maj automatique (comme sur Windows) ----------
    Vérifie GitHub 2 min après le lancement puis toutes les 30 min, télécharge et prépare la nouvelle version en arrière-plan (taille + SHA-256 vérifiés),
    puis l'installe quand l'app est fermée (sans la relancer) ou, si l'ordinateur reste inactif 10 min, en relançant l'app. Jamais pendant le Trade copier en réel. */
+const MAC_UPDLOG = () => path.join(app.getPath("logs"), "mise-a-jour.log"); // ~/Library/Logs/Inner Circle Trader/mise-a-jour.log
+/* résultat de la dernière mise à jour Mac (écrit par le script de remplacement) : affiché une fois au lancement s'il a échoué */
+function macUpdReport() {
+  const r = updater.macSwapResult(MAC_UPDLOG()); if (!r) return null;
+  const seen = path.join(app.getPath("userData"), "maj-vue.txt"); let last = ""; try { last = fs.readFileSync(seen, "utf8"); } catch (e) { /* jamais */ }
+  if (last !== r.at) { try { fs.writeFileSync(seen, r.at); } catch (e) { /* ignore */ }
+    if (!r.ok) updNotify(r.step === "ancienne-app" ? "Mise à jour bloquée : macOS a refusé de remplacer l'app. Ouvre Réglages Système › Confidentialité et sécurité › Gestion des apps et autorise Inner Circle Trader." : "Mise à jour : la nouvelle version n'a pas pu être copiée (ancienne version gardée)."); }
+  return r;
+}
 let macStaged = null; // { stage, app, bundle, version } : nouvelle version prête à côté de l'app
 async function macAutoPrep() {
   if (process.platform !== "darwin" || !app.isPackaged || macStaged || updDl || updBusy) return;
@@ -502,11 +511,12 @@ async function macAutoPrep() {
 function macAutoSwap(relaunch) { // lance le remplacement détaché ; l'app doit quitter juste après
   if (!macStaged || updBusy || liveCopier()) return false;
   updBusy = true; const s = macStaged;
-  require("child_process").spawn("/bin/sh", ["-c", relaunch ? updater.MAC_SWAP : updater.MAC_SWAP_QUIT, "sh", s.bundle, s.stage, s.app, String(process.pid)], { detached: true, stdio: "ignore" }).unref();
+  require("child_process").spawn("/bin/sh", updater.macSwapArgs(s.bundle, s.stage, s.app, process.pid, MAC_UPDLOG(), relaunch), { detached: true, stdio: "ignore" }).unref();
   return true;
 }
 function macAutoUpdate() {
   if (process.platform !== "darwin" || !app.isPackaged) return;
+  try { macUpdReport(); } catch (e) { /* ignore */ }
   setTimeout(macAutoPrep, 2 * 60 * 1000); setInterval(macAutoPrep, 30 * 60 * 1000);
   const { powerMonitor } = require("electron");
   setInterval(() => { try { if (macStaged && !updBusy && !updDl && powerMonitor.getSystemIdleTime() >= 600 && macAutoSwap(true)) { updNotify("Installation de la mise à jour…"); updQuit(); } } catch (e) { /* ignore */ } }, 60 * 1000);

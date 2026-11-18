@@ -94,19 +94,25 @@ test("macBundle / macStage", async () => {
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
-test("MAC_SWAP : remplace l'app et la relance, ou garde l'ancienne", { skip: process.platform === "win32" }, () => {
+test("macSwapArgs : remplace l'app et la relance, ou garde l'ancienne", { skip: process.platform === "win32" }, () => {
   const dir = tmp(), bin = path.join(dir, "bin"), app = path.join(dir, "Inner Circle Trader.app"), stage = path.join(dir, u.MAC_STAGE), opened = path.join(dir, "opened");
   fs.mkdirSync(bin); fs.writeFileSync(path.join(bin, "open"), `#!/bin/sh\necho "$1" >> "${opened}"\n`, { mode: 0o755 });
   const env = { ...process.env, PATH: bin + path.delimiter + process.env.PATH };
   const mk = (p, v) => { fs.mkdirSync(p, { recursive: true }); fs.writeFileSync(path.join(p, "v"), v); };
   const dead = spawnSync(process.execPath, ["-e", "0"]).pid; // processus déjà terminé
   mk(app, "old"); mk(path.join(stage, "new.app"), "new");
-  spawnSync("/bin/sh", ["-c", u.MAC_SWAP, "sh", app, stage, path.join(stage, "new.app"), String(dead)], { env });
+  const log = path.join(dir, "logs", "maj.log");
+  spawnSync("/bin/sh", u.macSwapArgs(app, stage, path.join(stage, "new.app"), dead, log, true), { env });
+  assert.strictEqual(u.macSwapResult(log).ok, true);
   assert.strictEqual(fs.readFileSync(path.join(app, "v"), "utf8"), "new"); assert.ok(!fs.existsSync(stage));
   assert.strictEqual(fs.readFileSync(opened, "utf8").trim(), app);
   // nouvelle app absente : l'ancienne est remise en place et relancée
   fs.mkdirSync(stage);
-  spawnSync("/bin/sh", ["-c", u.MAC_SWAP, "sh", app, stage, path.join(stage, "absent.app"), String(dead)], { env });
+  spawnSync("/bin/sh", u.macSwapArgs(app, stage, path.join(stage, "absent.app"), dead, log, true), { env });
+  const r = u.macSwapResult(log); assert.strictEqual(r.ok, false); assert.strictEqual(r.step, "nouvelle-app");
   assert.strictEqual(fs.readFileSync(path.join(app, "v"), "utf8"), "new"); assert.strictEqual(fs.readFileSync(opened, "utf8").trim().split("\n").length, 2);
+  // fermeture sans relance
+  mk(path.join(stage, "n2.app"), "v2"); spawnSync("/bin/sh", u.macSwapArgs(app, stage, path.join(stage, "n2.app"), dead, log, false), { env });
+  assert.strictEqual(fs.readFileSync(path.join(app, "v"), "utf8"), "v2"); assert.strictEqual(fs.readFileSync(opened, "utf8").trim().split("\n").length, 2);
   fs.rmSync(dir, { recursive: true, force: true });
 });

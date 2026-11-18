@@ -4531,7 +4531,8 @@ function payoutCalc(a, fk, pays) {
     if (!D) { b.innerHTML = webHTML(); return; }
     const can = (ST.info && ST.info.install) || null;
     const hint = avail() && !ST.phase ? (can && can.ok ? "L'app se ferme, installe la nouvelle version et se relance toute seule. Tes données sont gardées." : can ? reasonText(can.reason) : "") : "";
-    b.innerHTML = head() + status() + news() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
+    const lu = ST.info && ST.info.lastUpd, luTxt = lu && !lu.ok ? `<p class="hintd apv-msg err">Dernière mise à jour (${esc(lu.at)}) bloquée : ${lu.step === "ancienne-app" ? "macOS a refusé de remplacer l'app. Ouvre Réglages Système › Confidentialité et sécurité › Gestion des apps, autorise Inner Circle Trader, puis relance la mise à jour." : "la nouvelle version n'a pas pu être copiée, l'ancienne a été gardée."} <span style="opacity:.6">(${esc(lu.detail || "")})</span></p>` : "";
+    b.innerHTML = head() + status() + luTxt + news() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
       + (D.platform === "win32" && !ST.phase ? `<p class="hintd">La mise à jour automatique reste active.</p>` : D.platform === "darwin" && !ST.phase ? `<p class="hintd">Mise à jour automatique : l'app télécharge les nouvelles versions en arrière-plan et les installe quand tu la fermes (ou si le Mac reste inactif 10 min).</p>` : "");
   }
 

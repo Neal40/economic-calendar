@@ -110,12 +110,19 @@ async function macStage(run, zip, bundle) {
     return { stage, app };
   } catch (e) { fs.rmSync(stage, { recursive: true, force: true }); throw e; }
 }
-/* Mac : lancé après la fermeture de l'app ($1 = app, $2 = dossier de préparation, $3 = nouvelle app, $4 = PID de l'app) :
-   attend la fin du PID, remplace l'app (retour à l'ancienne si le remplacement échoue), la relance, puis nettoie */
-const MAC_SWAP = 'n=0; while kill -0 "$4" 2>/dev/null && [ $n -lt 300 ]; do sleep 0.2; n=$((n+1)); done; ' +
-  'if mv "$1" "$2/old.app"; then mv "$3" "$1" || mv "$2/old.app" "$1"; fi; open "$1"; sleep 2; rm -rf "$2"';
+/* Mac : lancé après la fermeture de l'app ($1 = app, $2 = dossier de préparation, $3 = nouvelle app, $4 = PID de l'app, $5 = journal, $6 = "1" pour relancer) :
+   attend la fin du PID, remplace l'app (retour à l'ancienne si le remplacement échoue), écrit le résultat dans le journal, relance si demandé, puis nettoie */
+const MAC_SWAP_SH = 'L="$5"; mkdir -p "$(dirname "$L")" 2>/dev/null; log() { echo "$(date "+%Y-%m-%d %H:%M:%S") $*" >> "$L"; }; ' +
+  'n=0; while kill -0 "$4" 2>/dev/null && [ $n -lt 300 ]; do sleep 0.2; n=$((n+1)); done; ' +
+  'if mv "$1" "$2/old.app" 2>>"$L"; then if mv "$3" "$1" 2>>"$L"; then log "OK"; else mv "$2/old.app" "$1"; log "ECHEC nouvelle-app"; fi; else log "ECHEC ancienne-app"; fi; ' +
+  '[ "$6" = "1" ] && open "$1"; sleep 2; rm -rf "$2"';
+/* arguments de /bin/sh pour le remplacement */
+const macSwapArgs = (bundle, stage, app, pid, log, relaunch) => ["-c", MAC_SWAP_SH, "sh", bundle, stage, app, String(pid), log, relaunch ? "1" : "0"];
+/* dernière ligne du journal : { at, ok, step } ou null */
+function macSwapResult(log) {
+  let t = ""; try { t = fs.readFileSync(log, "utf8"); } catch (e) { return null; }
+  const lines = t.trim().split(/\n/).filter((l) => /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d (OK|ECHEC)/.test(l)); const l = lines[lines.length - 1]; if (!l) return null;
+  const m = /^(\S+ \S+) (OK|ECHEC)\s*(\S*)/.exec(l); return { at: m[1], ok: m[2] === "OK", step: m[3] || "", detail: t.trim().split(/\n/).slice(-3).join(" | ").slice(0, 400) };
+}
 
-/* Mac, maj automatique installée à la fermeture de l'app : même remplacement, sans relancer l'app */
-const MAC_SWAP_QUIT = MAC_SWAP.replace('open "$1"; ', "");
-
-module.exports = { REPO, TARGETS, parseVer, cmpVer, parseMeta, parseRelease, isNewer, check, download, winScript, macBundle, macStage, MAC_STAGE, MAC_SWAP, MAC_SWAP_QUIT };
+module.exports = { REPO, TARGETS, parseVer, cmpVer, parseMeta, parseRelease, isNewer, check, download, winScript, macBundle, macStage, MAC_STAGE, MAC_SWAP_SH, macSwapArgs, macSwapResult };
