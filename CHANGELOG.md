@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.61.1] — 2026-11-18
+### Corrigé
+- **Menu latéral** : les pages enlevées restaient affichées avec le thème Noir (le style du menu passait par-dessus le masquage).
+
 ## [1.61.0] — 2026-11-18
 ### Ajouté
 - **Menu latéral : enlever / remettre des pages** (Paramètres › Profil › Menu latéral) : bouton « Enlever » / « Remettre » sur chaque page, gardé avec l'ordre (`econcal-navorder.hidden`). Une section sans page visible disparaît du menu. Profil reste toujours visible.
