@@ -1869,10 +1869,10 @@ table.tbl:has(#subT){min-width:900px}
     <div class="ptitle">Connecter Notion (une seule fois)</div>
     <ol class="rv-steps">
       <li>Va sur <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener">notion.so/profile/integrations</a> → <b>Nouvelle intégration</b> (type interne, ton espace) → copie le <b>secret</b>.</li>
-      <li>Dans Notion, ouvre la page <b>Mon temple</b> → <b>•••</b> → <b>Connexions</b> → ajoute ton intégration (elle aura accès à « Journal de Neal » et « What to focus on ? »).</li>
+      <li id="rvStep2">Dans Notion, ouvre la page <b>Mon temple</b> → <b>•••</b> → <b>Connexions</b> → ajoute ton intégration (elle aura accès à « Journal de Neal » et « What to focus on ? »).</li>
       <li>Colle le secret ici : <input id="rvToken" type="password" placeholder="ntn_…" style="width:320px"> <button class="btn" id="rvTokenSave">Connecter</button> <span id="rvTokenMsg" class="hintd"></span></li>
     </ol>
-    <div class="hintd">Le secret reste chiffré sur ton PC. L'app lit seulement tes pages (lecture seule).</div>
+    <div class="hintd" id="rvSetupNote">Le secret reste chiffré sur ton PC. L'app lit seulement tes pages (lecture seule).</div>
   </div>
   <div id="rvBody"></div>
 </div></section>
@@ -4824,6 +4824,11 @@ function idStats(){
 <script>
 /* ---------- Review : What to focus on ? + Journal de Neal (Notion) ---------- */
 const JNAME = window.desktop && window.desktop.platform === "darwin" ? "Journal de Woods" : "Journal de Neal"; // version Mac : journal de Woods
+if (window.desktop && window.desktop.platform === "darwin") { // version Mac : pages Notion de Woods dans « Connecter Notion »
+  const st2 = document.getElementById("rvStep2"), nt = document.getElementById("rvSetupNote");
+  if (st2) st2.innerHTML = 'Dans Notion, ouvre ta page <a href="https://app.notion.com/p/1833af1cf74e8041a2ecdd465fd5daaf" target="_blank" rel="noopener"><b>Mon journal de Trading - WoodsFx</b></a> → <b>•••</b> (en haut à droite) → <b>Connexions</b> → ajoute ton intégration. Fais pareil sur la page <a href="https://app.notion.com/p/3ce3af1cf74e808ca807d13aec5c983f" target="_blank" rel="noopener"><b>What to focus on ?</b></a> si elle n\'est pas dans ce journal. Dans l\'intégration (onglet <b>Capacités</b>), coche <b>Lire</b>, <b>Mettre à jour</b> et <b>Insérer du contenu</b> pour pouvoir ajouter et modifier tes trades depuis l\'app.';
+  if (nt) nt.textContent = "Le secret reste chiffré sur ton Mac (trousseau macOS). L'app lit ton journal et y écrit seulement quand tu ajoutes ou modifies un trade.";
+}
 document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent = JNAME));
 (() => {
   const IS_MAC = window.desktop && window.desktop.platform === "darwin";
@@ -4921,7 +4926,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       await step("wtf", () => D.notionBlocks(ID.wtf));
       state.synced = new Date().toISOString(); await kset("synced", state.synced);
     } catch (reason) {
-      st.textContent = reason === "token" ? "Token Notion invalide ou manquant." : reason === "access" ? "L'intégration n'a pas accès à la page : ajoute-la dans Notion (••• → Connexions) sur « Mon temple »." : "Synchro Notion impossible : " + reason;
+      st.textContent = reason === "token" ? "Token Notion invalide ou manquant." : reason === "access" ? "L'intégration n'a pas accès à la page : ajoute-la dans Notion (••• → Connexions) sur « " + (window.desktop && window.desktop.platform === "darwin" ? "Mon journal de Trading - WoodsFx" : "Mon temple") + " »." : "Synchro Notion impossible : " + reason;
       if (reason === "token") showSetup(true);
     }
     btns.forEach((b) => { b.disabled = false; b.textContent = "⟳ Synchroniser Notion"; }); render(); if (st.textContent && $("rvStampJ")) $("rvStampJ").textContent = st.textContent;

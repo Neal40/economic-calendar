@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.64.1] — 2026-11-18
+### Modifié
+- **Review › Connecter Notion (Mac)** : instructions avec les pages Notion de Woods (« Mon journal de Trading - WoodsFx », « What to focus on ? », liens directs), capacités à cocher (Lire / Mettre à jour / Insérer), message d'accès adapté.
+
 ## [1.64.0] — 2026-11-18
 ### Amélioré
 - **Excalidraw : Partager sur X** : le brouillon s'ouvre maintenant dans une fenêtre X de l'app avec le texte **et l'image déjà ajoutée** au post (connexion à X gardée après la 1re fois ; rien n'est publié sans toi). L'image est aussi copiée par le presse-papiers système (Ctrl+V de secours). Bouton « Dans Chrome (Ctrl+V) » pour passer par ton Chrome.
