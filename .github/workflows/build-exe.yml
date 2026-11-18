@@ -3,7 +3,7 @@ name: Build Windows .exe
 on:
   push:
     branches: [main]
-    paths: ["index.html", "desktop/**", ".github/workflows/build-exe.yml"]
+    paths: ["index.html", "vendor/**", "desktop/**", ".github/workflows/build-exe.yml"]
   workflow_dispatch:
 
 permissions:

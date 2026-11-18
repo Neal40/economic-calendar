@@ -3,9 +3,9 @@ name: Build macOS app
 on:
   push:
     branches: [main]
-    paths: ["index.html", "desktop/**", ".github/workflows/build-mac.yml"]
+    paths: ["index.html", "vendor/**", "desktop/**", ".github/workflows/build-mac.yml"]
   pull_request:
-    paths: ["index.html", "desktop/**", ".github/workflows/build-mac.yml"]
+    paths: ["index.html", "vendor/**", "desktop/**", ".github/workflows/build-mac.yml"]
   workflow_dispatch:
 
 permissions:

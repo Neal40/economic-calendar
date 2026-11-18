@@ -4,5 +4,6 @@ const root = path.join(__dirname, ".."), www = path.join(__dirname, "www");
 fs.rmSync(www, { recursive: true, force: true }); fs.mkdirSync(path.join(www, "pwa"), { recursive: true });
 fs.copyFileSync(path.join(root, "index.html"), path.join(www, "index.html"));
 fs.copyFileSync(path.join(root, "manifest.webmanifest"), path.join(www, "manifest.webmanifest"));
+fs.cpSync(path.join(root, "vendor"), path.join(www, "vendor"), { recursive: true }); // Excalidraw (bundle local)
 for (const f of fs.readdirSync(path.join(root, "pwa"))) fs.copyFileSync(path.join(root, "pwa", f), path.join(www, "pwa", f));
 console.log("www prêt :", fs.readdirSync(www).join(", "));

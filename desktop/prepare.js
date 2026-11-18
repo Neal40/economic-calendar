@@ -14,6 +14,8 @@ h=h.replace(/<link rel="preconnect"[^>]*>\n?/,"").replace(/<link href="https:\/\
 fs.copyFileSync("node_modules/d3/dist/d3.min.js","app/d3.min.js");
 h=h.replace(/<script src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/d3\/[^"]+"><\/script>/,'<script src="d3.min.js"></script>');
 fs.writeFileSync("app/index.html",h);
+// Excalidraw (Laboratoire › Excalidraw) : bundle local, chargé à la première ouverture de la page
+fs.rmSync("app/vendor",{recursive:true,force:true}); fs.cpSync(path.join(__dirname,"..","vendor"),"app/vendor",{recursive:true});
 fs.copyFileSync("build/icon.png","app/icon.png");
 // n° de build (GitHub Actions) : Paramètres › Profil › Application propose aussi une nouvelle build de la même version ; build locale = run 0
 const pkg=JSON.parse(fs.readFileSync(path.join(__dirname,"package.json"),"utf8"));

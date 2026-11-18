@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.60.0] — 2026-11-18
+### Ajouté
+- **Laboratoire › Excalidraw** : tableau blanc [Excalidraw](https://github.com/excalidraw/excalidraw) (SDK open source, MIT) intégré dans l'app, en français et en thème sombre. Plusieurs tableaux (Nouveau / Renommer / Dupliquer / Supprimer), sauvegarde automatique en local (IndexedDB, images comprises), export PNG / SVG / `.excalidraw` et import depuis le menu ☰. Bundle local dans `vendor/excalidraw` (chargé à la première ouverture, marche hors ligne dans l'exe) ; reconstruction : `cd tools/excalidraw && npm ci && npm run build`.
+
 ## [1.59.1] — 2026-11-18
 ### Corrigé
 - **Mac : mise à jour** : le remplacement de l'app écrit son résultat dans `~/Library/Logs/Inner Circle Trader/mise-a-jour.log` ; un échec (macOS qui refuse de remplacer l'app, copie ratée) n'est plus silencieux : notification au lancement + message dans Paramètres › Profil › Application.

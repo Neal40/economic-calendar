@@ -791,6 +791,17 @@ body.th-wallstreet.on-gr #thTicker{display:none}
 .gr-ivbuf{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:80;background:var(--gp);border:1px solid var(--gl);border-radius:8px;padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 10px 30px rgba(0,0,0,.45)}.gr-ivbuf b{font-size:28px}.gr-ivbuf span{color:var(--gm);font-size:12px}
 .gr-toasts{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);z-index:8000;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
 .gr-toast{background:var(--gp);border:1px solid var(--gl);color:var(--gt);border-radius:6px;padding:8px 14px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:opacity .4s,transform .4s;max-width:560px}.gr-toast.err{border-color:#f23645}.gr-toast.out{opacity:0;transform:translateY(8px)}
+/* ---------- Excalidraw : tableau blanc (SDK open source, vendor/excalidraw) ---------- */
+#v-excalidraw .exd{height:100vh;display:flex;flex-direction:column;background:#121212;color:#e6e6e6}
+.exd-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #26262b;background:#0c0c0e;flex:none;flex-wrap:wrap}
+.exd-bar b{font-size:14px;margin-right:6px}
+.exd-bar select,.exd-bar button{background:#18181c;color:#e6e6e6;border:1px solid #2c2c33;border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.exd-bar select{min-width:200px}.exd-bar button:hover,.exd-bar select:hover{border-color:#4a4a55}
+.exd-bar .exd-del:hover{border-color:#a33;color:#ff8080}
+.exd-bar .exd-st{margin-left:auto;font-size:12px;color:#8a8a94}
+.exd-cv{flex:1;min-height:0;position:relative}
+.exd-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#8a8a94;font-size:14px;text-align:center;padding:20px}
+@media (max-width:760px){#v-excalidraw .exd{height:calc(100dvh - 64px)}}
 @media (max-width:760px){#v-graphique .gr{height:calc(100dvh - 64px)}.gr-left,.gr-rstrip,.gr-rpanel,.gr-ictbar,.gr-mode span,.gr-tb span{display:none!important}.gr-top{overflow-x:auto}}
 
 /* ---------- Earnings tracker ---------- */
@@ -1564,6 +1575,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
       <button class="nav" data-go="skillia"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9.5 16h5M2 12v3M22 12v3"/></svg><span>Skill IA &amp; Coach IA</span></button>
+      <button class="nav" data-go="excalidraw"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span>Excalidraw</span></button>
     </div></div>
   <div class="grp" id="gAcc"><button class="gh" data-grp="gAcc"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Comptes</span><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><div class="items"><button class="nav" data-go="comptes"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M12 3l9 5H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg><span>Mes comptes</span></button><button class="nav" data-go="topstep"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000"/><path fill="#fff" transform="translate(8.208 3.776) scale(0.03676)" d="M55.6,82.2H0V6.1h206.3v76.1h-54.4c-3.9,0-7,3.1-7,7v352.1H62.7V89.2c0-3.9-3.1-7-7-7h-.1Z"/></svg><span>Topstep</span></button><button class="nav" data-go="apex"><svg class="ic pf" viewBox="0 0 24 24"><defs><linearGradient id="pfApG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0026ff"/><stop offset="1" stop-color="#050927"/></linearGradient></defs><rect width="24" height="24" rx="5" fill="url(#pfApG)"/><path fill="#fff" transform="translate(3 7.517) scale(0.07472)" d="M239.253 21.9472C240.662 19.169 241.252 15.9095 240.662 12.475C239.428 5.25594 233.015 -0.0434828 225.695 0.000268926C223.761 0.0112069 221.877 0.388565 220.063 1.13234L219.337 1.47142L116.857 49.3959L69.8091 17.3041L69.1044 16.8228C64.74 13.9571 59.6763 12.4367 54.4597 12.4367C44.2286 12.4367 34.7514 18.4197 30.3159 27.6787L0.136126 89.2756C-0.284479 90.1343 0.338235 91.1351 1.29416 91.1351C1.68745 91.1351 2.05889 90.9546 2.3047 90.6483L49.8221 30.9491L91.2381 61.3784L41.7323 84.5286C41.0714 84.8348 40.7764 85.6169 41.0659 86.2841C41.3445 86.9349 42.0819 87.2576 42.7538 87.0224L98.9838 67.0716L165.248 115.849L165.232 115.833C168.564 118.442 172.754 120 177.298 120C184.727 120 191.429 115.871 194.811 109.226L194.838 109.183L195.013 108.838L239.269 21.9308L239.253 21.9527V21.9472ZM127.787 56.8556L210.373 27.5529L175.25 89.2319L127.787 56.8556Z"/></svg><span>Apex</span></button><button class="nav" data-go="mffu"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#02040e"/><g transform="translate(3 3) scale(0.16677) translate(-19.82 -44)"><g><path d="M51.2 56.3476V44H58.7276V49.199H70.0189V44H77.5465V49.199H88.8378V44H96.3653V56.3476H51.2Z" fill="#3A82F7"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M30.099 63.2073C30.099 63.2073 29.8762 74.045 30.099 88.1987C30.1186 89.4424 30.1337 90.7064 30.149 91.9864C30.4666 118.543 30.8658 151.927 72.8883 151.927C116.936 151.927 117.565 128.81 117.565 85.0748L117.565 63.2073H30.099ZM110.265 70.5244H37.3154C37.2883 74.9567 37.289 81.1158 37.3987 88.0833C37.4176 89.2874 37.4334 90.4915 37.4492 91.6937C37.6193 104.663 37.7864 117.406 41.8895 127.429C44.0082 132.604 47.0759 136.71 51.6043 139.603C56.1834 142.529 62.8753 144.61 72.8883 144.61C83.3627 144.61 90.497 143.219 95.4292 140.971C100.13 138.828 103.125 135.779 105.227 131.605C107.451 127.19 108.793 121.268 109.508 113.315C110.22 105.384 110.265 96.0779 110.265 85.0748L110.265 70.5244Z" fill="url(#mffuG0)"></path><path d="M58.1131 106.652H44.287C44.287 106.652 44.3734 115.772 47.0522 122.659C49.731 129.545 58.1131 135.921 58.1131 135.921V106.652Z" fill="#F2CB80"></path><path d="M82.5392 94.3049H65.0262V137.75H82.5392V94.3049Z" fill="url(#mffuG1)"></path><path d="M103.739 82.4146H89.4523V135.921C89.4523 135.921 103.739 132.469 103.739 114.346V82.4146Z" fill="#D8AE5E"></path></g><defs><linearGradient id="mffuG0" x1="117.565" y1="61.4677" x2="30.5816" y2="148.161" gradientUnits="userSpaceOnUse"><stop stop-color="#DEB25F"></stop><stop offset="1" stop-color="#F3CC81"></stop></linearGradient><radialGradient id="mffuG1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(82.5392 94.3049) rotate(111.955) scale(46.8421 18.8419)"><stop stop-color="#D8AE5E"></stop><stop offset="1" stop-color="#F4CD83"></stop></radialGradient></defs></g></svg><span>My Funded Futures</span></button><button class="nav" data-go="tradeify"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#0b0f0c"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#3ee07f">T</text></svg><span>Tradeify</span></button><button class="nav" data-go="phidias"><svg class="ic pf" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#121212"/><text x="12" y="16.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#d9b46a">P</text></svg><span>Phidias</span></button><button class="nav" data-go="payouts"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6.5v11"/></svg><span>Payouts</span></button><button class="nav" data-go="recus"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Achats &amp; reçus</span></button></div></div>
 <div class="grp" id="gSet"><button class="gh" data-grp="gSet"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Paramètres</span><i class="updot" title="Mise à jour disponible"></i><svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -1834,6 +1846,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div id="rvBody"></div>
 </div></section>
+<section class="view" id="v-excalidraw"><div class="exd"><div class="exd-bar"><b>Excalidraw</b><select id="exSel" title="Tableau"></select><button id="exNew">＋ Nouveau</button><button id="exRen">Renommer</button><button id="exDup">Dupliquer</button><button class="exd-del" id="exDel">Supprimer</button><span class="exd-st" id="exSt"></span></div><div class="exd-cv" id="exCv"><div class="exd-msg">Chargement d'Excalidraw…</div></div></div></section>
 <section class="view" id="v-graphique"><div class="gr" id="grRoot"></div></section>
 <section class="view" id="v-backtest"><div class="tx">
   <div class="tx-top">
@@ -2499,7 +2512,7 @@ function navOrdDraw(keep){ const box=$("navOrd"); if(!box) return; if(!keep||!na
 })();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures","skillia"];
+const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures","skillia","excalidraw"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -2514,6 +2527,7 @@ function go(v){ if(!VIEWS.includes(v)) v="calendrier";
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
+  if(v==="excalidraw"&&window.exdShow) exdShow(); else if(window.exdHide) exdHide();
   if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
@@ -2700,7 +2714,7 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
   function step(d){ if(q.value!==last||stale()) { search(); return; } go(cur+d); }
   function open(){ bar.classList.add("on"); const s=String(getSelection()||"").trim(); if(s&&s.length<80&&!s.includes("\n")) q.value=s; q.focus(); q.select(); search(); }
   function close(){ bar.classList.remove("on","none"); clear(); }
-  document.addEventListener("keydown",(e)=>{ if((e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key==="f"||e.key==="F")){ e.preventDefault(); e.stopPropagation(); open(); }
+  document.addEventListener("keydown",(e)=>{ const ex=document.getElementById("v-excalidraw"); if(ex&&ex.classList.contains("on")) return; if((e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key==="f"||e.key==="F")){ e.preventDefault(); e.stopPropagation(); open(); }
     else if(e.key==="F3"&&bar.classList.contains("on")){ e.preventDefault(); step(e.shiftKey?-1:1); } },true);
   q.addEventListener("keydown",(e)=>{ e.stopPropagation(); if(e.key==="Enter"){ e.preventDefault(); step(e.shiftKey?-1:1); } else if(e.key==="Escape"){ e.preventDefault(); close(); } });
   q.addEventListener("input",()=>{ clearTimeout(t); t=setTimeout(search,140); });
@@ -11302,6 +11316,102 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
   addEventListener("popstate", () => { if (b.classList.contains("mdrawer")) b.classList.remove("mdrawer"); });
   // calendrier sur téléphone : faire défiler jusqu'à aujourd'hui
   if (matchMedia("(max-width:760px)").matches) setTimeout(() => { const t = document.querySelector(".day.today"); if (t && (location.hash || "#calendrier") === "#calendrier") t.scrollIntoView({ block: "start" }); }, 400);
+})();
+</script>
+<script>
+/* ---------- Excalidraw : tableau blanc (SDK open source Excalidraw, MIT ; bundle vendor/excalidraw construit par tools/excalidraw) ----------
+   Tableaux multiples : liste + tableau courant dans localStorage "econcal-excali" ; scènes et images dans IndexedDB "ict-excalidraw" (stores "boards", "files").
+   Chargé à la première ouverture de la page (≈ 8 Mo, local : marche hors ligne dans l'exe). */
+(function () {
+  const BASE = new URL("vendor/excalidraw/", location.href).href, MK = "econcal-excali";
+  const el = (id) => document.getElementById(id), cv = el("exCv"), st = el("exSt"), sel = el("exSel");
+  let lib = null, loading = null, root = null, api = null, cur = null, saveT = null, pending = null, savedFiles = new Set(), shown = false;
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const meta = () => { try { const m = JSON.parse(localStorage.getItem(MK) || "null"); if (m && Array.isArray(m.list) && m.list.length) return m; } catch (e) {} return { cur: null, list: [] }; };
+  const setMeta = (m) => { try { localStorage.setItem(MK, JSON.stringify(m)); } catch (e) {} };
+  const msg = (h) => { cv.innerHTML = `<div class="exd-msg">${h}</div>`; };
+  const status = (t) => { st.textContent = t || ""; };
+
+  /* IndexedDB */
+  let dbp = null;
+  const db = () => dbp || (dbp = new Promise((ok, ko) => { const r = indexedDB.open("ict-excalidraw", 1);
+    r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains("boards")) d.createObjectStore("boards"); if (!d.objectStoreNames.contains("files")) d.createObjectStore("files"); };
+    r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); }));
+  const tx = (store, mode, fn) => db().then((d) => new Promise((ok, ko) => { const t = d.transaction(store, mode), o = t.objectStore(store); const r = fn(o); t.oncomplete = () => ok(r && r.result); t.onerror = () => ko(t.error); }));
+  const idbGet = (store, k) => tx(store, "readonly", (o) => o.get(k));
+  const idbPut = (store, k, v) => tx(store, "readwrite", (o) => o.put(v, k));
+  const idbDel = (store, k) => tx(store, "readwrite", (o) => o.delete(k));
+
+  /* chargement du SDK (une seule fois) */
+  function load() {
+    if (lib) return Promise.resolve(lib); if (loading) return loading;
+    window.EXCALIDRAW_ASSET_PATH = BASE;
+    loading = new Promise((ok, ko) => {
+      const l = document.createElement("link"); l.rel = "stylesheet"; l.href = BASE + "excalidraw.css"; document.head.appendChild(l);
+      const s = document.createElement("script"); s.src = BASE + "excalidraw.js";
+      s.onload = () => (window.ICTExcalidraw ? ok((lib = window.ICTExcalidraw)) : ko(new Error("bundle invalide")));
+      s.onerror = () => ko(new Error("fichier introuvable : " + BASE + "excalidraw.js")); document.head.appendChild(s);
+    }).catch((e) => { loading = null; throw e; });
+    return loading;
+  }
+
+  /* sauvegarde (différée de 600 ms après la dernière modif) */
+  function queue(els, app, files) { pending = { id: cur, els, app, files }; status("Modifications…"); clearTimeout(saveT); saveT = setTimeout(flush, 600); }
+  async function flush() {
+    clearTimeout(saveT); const p = pending; pending = null; if (!p || !lib || !p.id) return;
+    try {
+      const json = lib.serializeAsJSON(p.els, p.app, {}, "local");
+      await idbPut("boards", p.id, { json, at: Date.now() });
+      for (const [fid, f] of Object.entries(p.files || {})) if (!savedFiles.has(fid)) { await idbPut("files", fid, f); savedFiles.add(fid); }
+      const m = meta(), b = m.list.find((x) => x.id === p.id); if (b) { b.at = Date.now(); setMeta(m); }
+      if (p.id === cur) status("Enregistré " + new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date()) + " (NY)");
+    } catch (e) { status("⚠ Enregistrement impossible : " + (e && e.message || e)); }
+  }
+  addEventListener("beforeunload", () => { if (pending) flush(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden && pending) flush(); });
+
+  function fillSel() {
+    const m = meta(); sel.innerHTML = m.list.map((b) => `<option value="${b.id}">${String(b.name).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]))}</option>`).join(""); sel.value = cur || "";
+    el("exDel").disabled = m.list.length < 2;
+  }
+  function ensure() { const m = meta(); if (!m.list.length) { const id = uid(); m.list.push({ id, name: "Tableau 1", at: Date.now() }); m.cur = id; setMeta(m); } if (!m.list.some((b) => b.id === m.cur)) { m.cur = m.list[0].id; setMeta(m); } return m; }
+
+  async function open(id) {
+    if (pending) await flush();
+    const m = ensure(); cur = id && m.list.some((b) => b.id === id) ? id : m.cur; m.cur = cur; setMeta(m); fillSel(); status("");
+    let data = { elements: [], appState: { theme: "dark" }, files: {} };
+    try {
+      const rec = await idbGet("boards", cur);
+      if (rec && rec.json) { const j = JSON.parse(rec.json); data.elements = j.elements || []; data.appState = Object.assign({ theme: "dark" }, j.appState || {}); }
+      const fids = [...new Set(data.elements.filter((e) => e.type === "image" && e.fileId).map((e) => e.fileId))];
+      for (const f of fids) { const v = await idbGet("files", f); if (v) { data.files[f] = v; savedFiles.add(f); } }
+    } catch (e) { status("⚠ Lecture impossible : " + (e && e.message || e)); }
+    const R = lib.React, h = R.createElement;
+    if (!root) { cv.innerHTML = ""; root = lib.createRoot(cv); }
+    const boardId = cur;
+    root.render(h(lib.Excalidraw, {
+      key: boardId, langCode: "fr-FR", initialData: Object.assign({ scrollToContent: true }, data),
+      excalidrawAPI: (a) => { api = a; },
+      onChange: (els, app, files) => { if (boardId === cur) queue(els, app, files); },
+      UIOptions: { canvasActions: { loadScene: true, saveToActiveFile: false, export: { saveFileToDisk: true }, toggleTheme: true } },
+    }, h(lib.MainMenu, null,
+      h(lib.MainMenu.DefaultItems.LoadScene), h(lib.MainMenu.DefaultItems.SaveAsImage), h(lib.MainMenu.DefaultItems.Export),
+      h(lib.MainMenu.DefaultItems.SearchMenu), h(lib.MainMenu.DefaultItems.Help), h(lib.MainMenu.DefaultItems.ClearCanvas),
+      h(lib.MainMenu.Separator), h(lib.MainMenu.DefaultItems.ToggleTheme), h(lib.MainMenu.DefaultItems.ChangeCanvasBackground)),
+      h(lib.WelcomeScreen, null)));
+  }
+
+  /* barre du haut */
+  sel.onchange = () => open(sel.value);
+  el("exNew").onclick = () => { const m = ensure(), id = uid(); m.list.push({ id, name: "Tableau " + (m.list.length + 1), at: Date.now() }); setMeta(m); open(id); };
+  el("exRen").onclick = () => { const m = ensure(), b = m.list.find((x) => x.id === cur); if (!b) return; const n = prompt("Nom du tableau", b.name); if (n && n.trim()) { b.name = n.trim().slice(0, 80); setMeta(m); fillSel(); } };
+  el("exDup").onclick = async () => { if (!api) return; await flush(); const m = ensure(), b = m.list.find((x) => x.id === cur), id = uid(); const rec = await idbGet("boards", cur); if (rec) await idbPut("boards", id, rec); m.list.push({ id, name: (b ? b.name : "Tableau") + " (copie)", at: Date.now() }); setMeta(m); open(id); };
+  el("exDel").onclick = async () => { const m = ensure(); if (m.list.length < 2) return; const b = m.list.find((x) => x.id === cur); if (!b || !confirm(`Supprimer le tableau « ${b.name} » ? (définitif)`)) return; pending = null; clearTimeout(saveT); await idbDel("boards", b.id).catch(() => {}); m.list = m.list.filter((x) => x.id !== b.id); m.cur = m.list[0].id; setMeta(m); cur = null; open(m.cur); };
+
+  window.exdShow = () => { shown = true; if (root) return; msg("Chargement d'Excalidraw…"); load().then(() => open()).catch((e) => msg(`Impossible de charger Excalidraw.<br><small>${e.message}</small>`)); };
+  window.exdHide = () => { if (shown && pending) flush(); shown = false; };
+  window.exdApi = () => api;
+  if (el("v-excalidraw").classList.contains("on")) exdShow();
 })();
 </script>
 </body>
