@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.63.0] — 2026-11-18
+### Ajouté
+- **Excalidraw : dessins enregistrés dans un dossier** : dans l'app, chaque tableau est un fichier `.excalidraw` dans `Bureau\Inner Circle Trader\Excalidraw\` (s'ouvre aussi sur excalidraw.com). Bouton « 📁 Dossier » pour l'ouvrir ; un tableau supprimé part dans `Excalidraw\_supprimés` (jamais effacé). Les tableaux déjà dessinés sont recopiés dans le dossier à la première ouverture. Sur le site web, ils restent dans le navigateur.
+- **Excalidraw : Exporter l'image avec Visualisation** : format PNG / SVG, échelle 1× à 4×, marge, arrière-plan, mode sombre, sélection uniquement, scène intégrée ; le bouton « 👁 Visualisation » montre le rendu exact (dimensions, poids) avant d'enregistrer (`Excalidraw\Exports\` dans l'app) ou de copier. Réglages gardés.
+- **Excalidraw : Partager sur X (brouillon)** : texte du post + aperçu ; l'image est copiée dans le presse-papiers et la fenêtre de rédaction de X s'ouvre dans Chrome avec le texte : Ctrl+V pour ajouter l'image, puis enregistrer en brouillon ou publier.
+### Corrigé
+- **Excalidraw : Renommer** ne faisait rien dans l'app (Electron n'a pas de fenêtre `prompt`) : nouvelle fenêtre de saisie, aussi pour Nouveau et Dupliquer. Le bandeau des news NEW YORK ne cache plus le bas du tableau.
+
 ## [1.62.0] — 2026-11-18
 ### Ajouté
 - **Bandeau des news « NEW YORK » sur tous les thèmes** (Classique, Noir, Matrix, Wall Street, ICT épuré) : prochaines news du calendrier sur 12 jours, couleurs adaptées à chaque thème, actualisé toutes les heures. Masqué dans le Backtesteur, la page Graphique et sur téléphone.

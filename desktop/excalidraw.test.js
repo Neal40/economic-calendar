@@ -1,0 +1,23 @@
+// node desktop/excalidraw.test.js
+const assert = require("assert"), fs = require("fs"), os = require("os"), path = require("path");
+const { make, safeName } = require("./excalidraw");
+assert.strictEqual(safeName('a/b:c*?"<>|'), "a b c");
+assert.strictEqual(safeName("  ..  "), "Sans titre");
+assert.strictEqual(safeName("CON"), "_CON");
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), "exd-")), X = make(path.join(dir, "Excalidraw"));
+assert.deepStrictEqual(X.list(), []);
+const a = X.create("Tableau 1"); assert.strictEqual(a, "Tableau 1");
+assert.strictEqual(X.create("Tableau 1"), "Tableau 1 (2)");
+X.write("Tableau 1", JSON.stringify({ type: "excalidraw", elements: [{ id: "x" }] }));
+assert.strictEqual(JSON.parse(X.read("Tableau 1")).elements[0].id, "x");
+assert.throws(() => X.write("Tableau 1", "{pas du json"));
+assert.strictEqual(X.rename("Tableau 1", "NWOG / 1st"), "NWOG 1st");
+assert.strictEqual(X.rename("NWOG 1st", "Tableau 1 (2)"), "Tableau 1 (2) (2)");
+assert.strictEqual(X.duplicate("Tableau 1 (2) (2)", "Copie"), "Copie");
+assert.ok(X.remove("Copie")); assert.strictEqual(fs.readdirSync(path.join(X.dir, "_supprimés")).length, 1);
+assert.deepStrictEqual(X.list().map((b) => b.name), ["Tableau 1 (2)", "Tableau 1 (2) (2)"]);
+const f = X.exportImage("Mon dessin", "png", Buffer.from("png").toString("base64")); assert.ok(fs.existsSync(f));
+assert.ok(X.exportImage("Mon dessin", "png", "AA==").endsWith("Mon dessin (2).png"));
+assert.throws(() => X.exportImage("x", "exe", "AA=="));
+fs.rmSync(dir, { recursive: true, force: true });
+console.log("✓ excalidraw.js OK");

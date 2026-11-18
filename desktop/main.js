@@ -282,6 +282,29 @@ ipcMain.handle("tsx:openChrome", async (e, what) => {
     return { ok: true };
   } catch (err) { await shell.openExternal(url); return { ok: true }; }
 });
+/* Excalidraw : dessins dans Bureau\Inner Circle Trader\Excalidraw\ (un .excalidraw par tableau), exports dans Excalidraw\Exports\ */
+const exd = () => require("./excalidraw").make(path.join(ICT(), "Excalidraw"));
+const exdTry = (fn) => { try { return { ok: true, data: fn(exd()) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } };
+ipcMain.handle("excali:list", () => exdTry((x) => ({ dir: x.dir, list: x.list() })));
+ipcMain.handle("excali:read", (e, n) => exdTry((x) => x.read(n)));
+ipcMain.handle("excali:write", (e, n, json) => exdTry((x) => x.write(n, json)));
+ipcMain.handle("excali:create", (e, n) => exdTry((x) => x.create(n)));
+ipcMain.handle("excali:rename", (e, a, b) => exdTry((x) => x.rename(a, b)));
+ipcMain.handle("excali:duplicate", (e, a, b) => exdTry((x) => x.duplicate(a, b)));
+ipcMain.handle("excali:remove", (e, n) => exdTry((x) => x.remove(n)));
+ipcMain.handle("excali:export", (e, n, ext, b64) => exdTry((x) => { const f = x.exportImage(n, ext, b64); shell.showItemInFolder(f); return f; }));
+ipcMain.handle("excali:openDir", () => { const x = exd(); fs.mkdirSync(x.dir, { recursive: true }); return shell.openPath(x.dir); });
+// post X en brouillon : ouvre la fenêtre de rédaction de x.com dans Chrome (où l'utilisateur est connecté), texte prérempli ; l'image est collée par l'utilisateur (Ctrl+V)
+ipcMain.handle("excali:openX", (e, text) => {
+  const url = "https://x.com/intent/post?text=" + encodeURIComponent(String(text || "").slice(0, 2000));
+  const { spawn } = require("child_process");
+  try {
+    if (process.platform === "darwin") spawn("open", ["-a", "Google Chrome", url], { detached: true, stdio: "ignore" }).on("error", () => shell.openExternal(url)).unref();
+    else if (process.platform === "win32") spawn("cmd.exe", ["/c", "start", "", "chrome", url], { detached: true, stdio: "ignore", windowsHide: true }).on("exit", (c) => { if (c) shell.openExternal(url); }).unref();
+    else shell.openExternal(url);
+  } catch (err) { shell.openExternal(url); }
+  return { ok: true };
+});
 ipcMain.handle("tsx:chromeLinked", () => !!getChromeToken());
 
 function createWindow() {

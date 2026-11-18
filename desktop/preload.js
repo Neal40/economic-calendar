@@ -49,6 +49,17 @@ contextBridge.exposeInMainWorld("desktop", {
   tvShow: (r) => ipcRenderer.invoke("tv:show", r),
   tvHide: () => ipcRenderer.invoke("tv:hide"),
   tvNav: (what) => ipcRenderer.invoke("tv:nav", what),
+  // Excalidraw : dessins en fichiers .excalidraw dans Bureau\Inner Circle Trader\Excalidraw\
+  excaliList: () => ipcRenderer.invoke("excali:list"),
+  excaliRead: (n) => ipcRenderer.invoke("excali:read", n),
+  excaliWrite: (n, json) => ipcRenderer.invoke("excali:write", n, json),
+  excaliCreate: (n) => ipcRenderer.invoke("excali:create", n),
+  excaliRename: (a, b) => ipcRenderer.invoke("excali:rename", a, b),
+  excaliDuplicate: (a, b) => ipcRenderer.invoke("excali:duplicate", a, b),
+  excaliRemove: (n) => ipcRenderer.invoke("excali:remove", n),
+  excaliExport: (n, ext, b64) => ipcRenderer.invoke("excali:export", n, ext, b64),
+  excaliOpenDir: () => ipcRenderer.invoke("excali:openDir"),
+  excaliOpenX: (text) => ipcRenderer.invoke("excali:openX", text),
   newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),
   // Paramètres › Profil › Application : version, dernière release GitHub, mise à jour lancée par l'utilisateur
   appInfo: () => ipcRenderer.invoke("app:info"),

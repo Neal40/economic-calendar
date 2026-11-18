@@ -556,10 +556,10 @@ body.th-wallstreet .kpi b,body.th-wallstreet .num{font-variant-numeric:tabular-n
 #thTicker b{color:var(--tkacc,#1d1d1f);font-weight:700}
 #thTicker i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 6px 1px 0}
 #thTicker .lbl{position:absolute;left:0;top:0;bottom:0;z-index:2;padding:0 14px;background:var(--tklbl,#1d1d1f);color:var(--tklblink,#fff);font-family:Georgia,serif;letter-spacing:.16em}
-body.on-bt #thTicker,body.on-gr #thTicker{display:none}
-body.noir:not(.on-bt):not(.on-gr) .main{padding-bottom:34px}
-body.noir:not(.on-bt):not(.on-gr) .app .side{top:calc(50% - 15px);max-height:calc(100vh - 58px)}
-body:not(.noir):not(.on-bt):not(.on-gr) .app{height:calc(100vh - 30px)}
+body.on-bt #thTicker,body.on-gr #thTicker,body.on-ex #thTicker{display:none}
+body.noir:not(.on-bt):not(.on-gr):not(.on-ex) .main{padding-bottom:34px}
+body.noir:not(.on-bt):not(.on-gr):not(.on-ex) .app .side{top:calc(50% - 15px);max-height:calc(100vh - 58px)}
+body:not(.noir):not(.on-bt):not(.on-gr):not(.on-ex) .app{height:calc(100vh - 30px)}
 body.noir{--tkbg:rgba(10,10,12,.86);--tkline:rgba(255,255,255,.14);--tkink:#ececf1;--tkacc:#fff;--tklbl:#fff;--tklblink:#0a0a0c}
 body.th-wallstreet{--tkbg:linear-gradient(180deg,#0b1730,#060e1f);--tkline:rgba(212,175,55,.55);--tkink:#f3ead3;--tkacc:#d4af37;--tklbl:#d4af37;--tklblink:#0a1324}
 body.th-matrix{--tkbg:rgba(0,0,0,.9);--tkline:rgba(0,255,102,.4);--tkink:#b9ffcf;--tkacc:#00ff66;--tklbl:#00ff66;--tklblink:#000}
@@ -808,6 +808,29 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .exd-bar .exd-st{margin-left:auto;font-size:12px;color:#8a8a94}
 .exd-cv{flex:1;min-height:0;position:relative}
 .exd-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#8a8a94;font-size:14px;text-align:center;padding:20px}
+.exd-ov{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px}
+.exd-dlg{background:#141418;border:1px solid #2c2c33;border-radius:14px;padding:18px 20px;max-width:100%;max-height:100%;overflow:auto;color:#e6e6e6;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.exd-dlg h3{margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:6px}.exd-dlg h3 small{color:#8a8a94;font-weight:400}
+.exd-x{margin-left:auto;background:none;border:0;color:#8a8a94;font-size:16px;cursor:pointer}
+.exd-in{width:100%;box-sizing:border-box;background:#0c0c0e;color:#e6e6e6;border:1px solid #2c2c33;border-radius:8px;padding:8px 10px;font:inherit;font-size:14px}
+.exd-in:focus{outline:none;border-color:#5b6cff}.exd-num{width:80px}.exd-ta{min-height:96px;resize:vertical}
+.exd-act{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.exd-act.col{flex-direction:column;align-items:stretch}
+.exd-b{background:#1d1d23;color:#e6e6e6;border:1px solid #2c2c33;border-radius:8px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}.exd-b:hover{border-color:#4a4a55}
+.exd-pri{background:#3b4cdb;border-color:#3b4cdb;color:#fff}.exd-pri:hover{background:#4a5aea}
+.exd-exp{width:1000px}.exd-ebody{display:grid;grid-template-columns:300px 1fr;gap:18px}
+.exd-opts{display:flex;flex-direction:column;gap:10px}.exd-row{display:flex;align-items:center;gap:10px;font-size:13px}.exd-row>span:first-child{width:62px;color:#8a8a94}
+.exd-seg{display:inline-flex;border:1px solid #2c2c33;border-radius:8px;overflow:hidden}.exd-seg button{background:#0c0c0e;color:#bbb;border:0;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.exd-seg button.on{background:#3b4cdb;color:#fff}.exd-ck{font-size:13px;display:flex;gap:8px;align-items:center;cursor:pointer}.exd-ck.dis{color:#666;cursor:default}
+.exd-viz{margin-top:4px;font-size:14px;padding:10px}
+.exd-prev{display:flex;flex-direction:column;gap:8px;min-width:0}
+.exd-pv{flex:1;min-height:380px;border:1px dashed #2c2c33;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:12px;color:#8a8a94;font-size:13px;text-align:center;overflow:auto}
+.exd-pv.sm{min-height:180px;max-height:260px;margin-top:10px}
+.exd-pv img{max-width:100%;max-height:60vh;box-shadow:0 4px 18px rgba(0,0,0,.5)}.exd-pv.sm img{max-height:230px}
+.exd-pv img.tr{background:repeating-conic-gradient(#2a2a30 0 25%,#1a1a1f 0 50%) 0 0/16px 16px}
+.exd-pinfo{font-size:12px;color:#8a8a94;min-height:16px}.exd-stale{color:#e0a43a;font-weight:500}
+.exd-note{font-size:12px;color:#8ad18a;min-height:16px;word-break:break-all}.exd-help{font-size:12px;color:#9a9aa4;line-height:1.5}.exd-cnt{font-size:11px;color:#8a8a94;text-align:right;margin-top:4px}
+#v-excalidraw .exd{position:relative}
+@media (max-width:900px){.exd-ebody{grid-template-columns:1fr}}
 @media (max-width:760px){#v-excalidraw .exd{height:calc(100dvh - 64px)}}
 @media (max-width:760px){#v-graphique .gr{height:calc(100dvh - 64px)}.gr-left,.gr-rstrip,.gr-rpanel,.gr-ictbar,.gr-mode span,.gr-tb span{display:none!important}.gr-top{overflow-x:auto}}
 
@@ -1853,7 +1876,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div id="rvBody"></div>
 </div></section>
-<section class="view" id="v-excalidraw"><div class="exd"><div class="exd-bar"><b>Excalidraw</b><select id="exSel" title="Tableau"></select><button id="exNew">＋ Nouveau</button><button id="exRen">Renommer</button><button id="exDup">Dupliquer</button><button class="exd-del" id="exDel">Supprimer</button><span class="exd-st" id="exSt"></span></div><div class="exd-cv" id="exCv"><div class="exd-msg">Chargement d'Excalidraw…</div></div></div></section>
+<section class="view" id="v-excalidraw"><div class="exd"><div class="exd-bar"><b>Excalidraw</b><select id="exSel" title="Tableau"></select><button id="exNew">＋ Nouveau</button><button id="exRen">Renommer</button><button id="exDup">Dupliquer</button><button class="exd-del" id="exDel">Supprimer</button><button id="exExp">🖼 Exporter l'image</button><button id="exX">𝕏 Partager</button><button id="exDir" hidden>📁 Dossier</button><span class="exd-st" id="exSt"></span></div><div class="exd-cv" id="exCv"><div class="exd-msg">Chargement d'Excalidraw…</div></div></div></section>
 <section class="view" id="v-graphique"><div class="gr" id="grRoot"></div></section>
 <section class="view" id="v-backtest"><div class="tx">
   <div class="tx-top">
@@ -11336,98 +11359,233 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
 </script>
 <script>
 /* ---------- Excalidraw : tableau blanc (SDK open source Excalidraw, MIT ; bundle vendor/excalidraw construit par tools/excalidraw) ----------
-   Tableaux multiples : liste + tableau courant dans localStorage "econcal-excali" ; scènes et images dans IndexedDB "ict-excalidraw" (stores "boards", "files").
-   Chargé à la première ouverture de la page (≈ 8 Mo, local : marche hors ligne dans l'exe). */
+   Stockage : app desktop = un fichier .excalidraw par tableau dans Bureau\Inner Circle Trader\Excalidraw\ (desktop.excali*) ;
+   web = IndexedDB "ict-excalidraw" (store "boards", ancien store "files") + liste dans localStorage "econcal-excali".
+   Tableau courant : localStorage "econcal-excali-cur" ; réglages d'export : "econcal-excali-exp". Fenêtres internes : ask() (Electron n'a pas window.prompt), exportDlg(), xDlg(). */
 (function () {
-  const BASE = new URL("vendor/excalidraw/", location.href).href, MK = "econcal-excali";
-  const el = (id) => document.getElementById(id), cv = el("exCv"), st = el("exSt"), sel = el("exSel");
-  let lib = null, loading = null, root = null, api = null, cur = null, saveT = null, pending = null, savedFiles = new Set(), shown = false;
-  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  const meta = () => { try { const m = JSON.parse(localStorage.getItem(MK) || "null"); if (m && Array.isArray(m.list) && m.list.length) return m; } catch (e) {} return { cur: null, list: [] }; };
-  const setMeta = (m) => { try { localStorage.setItem(MK, JSON.stringify(m)); } catch (e) {} };
-  const msg = (h) => { cv.innerHTML = `<div class="exd-msg">${h}</div>`; };
+  const BASE = new URL("vendor/excalidraw/", location.href).href, MK = "econcal-excali", CK = "econcal-excali-cur", EK = "econcal-excali-exp";
+  const D = window.desktop && window.desktop.excaliList ? window.desktop : null;
+  const el = (id) => document.getElementById(id), cv = el("exCv"), st = el("exSt"), sel = el("exSel"), view = el("v-excalidraw");
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const nyTime = () => new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date());
+  let lib = null, loading = null, root = null, api = null, cur = null, list = [], saveT = null, pending = null, shown = false, busy = false;
   const status = (t) => { st.textContent = t || ""; };
+  const msg = (h) => { root && root.unmount(); root = null; cv.innerHTML = `<div class="exd-msg">${h}</div>`; };
 
-  /* IndexedDB */
+  /* ---------- IndexedDB (web, et migration vers les fichiers) ---------- */
   let dbp = null;
   const db = () => dbp || (dbp = new Promise((ok, ko) => { const r = indexedDB.open("ict-excalidraw", 1);
-    r.onupgradeneeded = () => { const d = r.result; if (!d.objectStoreNames.contains("boards")) d.createObjectStore("boards"); if (!d.objectStoreNames.contains("files")) d.createObjectStore("files"); };
+    r.onupgradeneeded = () => { const d = r.result; ["boards", "files"].forEach((n) => { if (!d.objectStoreNames.contains(n)) d.createObjectStore(n); }); };
     r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); }));
-  const tx = (store, mode, fn) => db().then((d) => new Promise((ok, ko) => { const t = d.transaction(store, mode), o = t.objectStore(store); const r = fn(o); t.oncomplete = () => ok(r && r.result); t.onerror = () => ko(t.error); }));
-  const idbGet = (store, k) => tx(store, "readonly", (o) => o.get(k));
-  const idbPut = (store, k, v) => tx(store, "readwrite", (o) => o.put(v, k));
-  const idbDel = (store, k) => tx(store, "readwrite", (o) => o.delete(k));
+  const tx = (store, mode, fn) => db().then((d) => new Promise((ok, ko) => { const t = d.transaction(store, mode), r = fn(t.objectStore(store)); t.oncomplete = () => ok(r && r.result); t.onerror = () => ko(t.error); }));
+  const idb = { get: (s, k) => tx(s, "readonly", (o) => o.get(k)), put: (s, k, v) => tx(s, "readwrite", (o) => o.put(v, k)), del: (s, k) => tx(s, "readwrite", (o) => o.delete(k)) };
+  async function webJson(id) { // ancien format : images dans le store "files" → réinjectées dans le JSON
+    const rec = await idb.get("boards", id); if (!rec || !rec.json) return null; const j = JSON.parse(rec.json); j.files = j.files || {};
+    for (const e of j.elements || []) if (e.type === "image" && e.fileId && !j.files[e.fileId]) { const f = await idb.get("files", e.fileId); if (f) j.files[e.fileId] = f; }
+    return JSON.stringify(j);
+  }
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const ok = (r) => { if (!r || !r.ok) throw new Error((r && r.reason) || "erreur"); return r.data; };
 
-  /* chargement du SDK (une seule fois) */
+  /* ---------- stockage : même interface pour les fichiers (desktop) et IndexedDB (web) ; id = nom du fichier (desktop) ou identifiant (web) ---------- */
+  const store = D ? {
+    async list() { const d = ok(await D.excaliList()); store.dir = d.dir; return d.list.map((b) => ({ id: b.name, name: b.name })); },
+    async read(id) { return ok(await D.excaliRead(id)); },
+    async write(id, json) { ok(await D.excaliWrite(id, json)); },
+    async create(name) { return ok(await D.excaliCreate(name)); },
+    async rename(id, name) { return ok(await D.excaliRename(id, name)); },
+    async duplicate(id, name) { return ok(await D.excaliDuplicate(id, name)); },
+    async remove(id) { ok(await D.excaliRemove(id)); },
+  } : {
+    async list() { const m = lsGet(MK, null); return m && Array.isArray(m.list) ? m.list.map((b) => ({ id: b.id, name: b.name })) : []; },
+    async read(id) { return webJson(id); },
+    async write(id, json) { await idb.put("boards", id, { json, at: Date.now() }); },
+    async create(name) { const m = lsGet(MK, { list: [] }), id = uid(); m.list = m.list || []; m.list.push({ id, name }); lsSet(MK, m); return id; },
+    async rename(id, name) { const m = lsGet(MK, { list: [] }), b = (m.list || []).find((x) => x.id === id); if (b) { b.name = name; lsSet(MK, m); } return id; },
+    async duplicate(id, name) { const j = await webJson(id), n = await store.create(name); if (j) await store.write(n, j); return n; },
+    async remove(id) { const m = lsGet(MK, { list: [] }); m.list = (m.list || []).filter((x) => x.id !== id); lsSet(MK, m); await idb.del("boards", id).catch(() => {}); },
+  };
+  // 1re ouverture dans l'app : les tableaux déjà faits dans la version précédente (IndexedDB) deviennent des fichiers
+  async function migrate() {
+    if (!D || lsGet("econcal-excali-migr", false)) return; const m = lsGet(MK, null);
+    try { if (m && m.list) for (const b of m.list) { const j = await webJson(b.id); if (!j) continue; const n = await store.create(b.name); await store.write(n, j); }
+      lsSet("econcal-excali-migr", true); } catch (e) { status("⚠ Migration des anciens tableaux : " + e.message); }
+  }
+
+  /* ---------- SDK ---------- */
   function load() {
     if (lib) return Promise.resolve(lib); if (loading) return loading;
     window.EXCALIDRAW_ASSET_PATH = BASE;
-    loading = new Promise((ok, ko) => {
+    loading = new Promise((res, rej) => {
       const l = document.createElement("link"); l.rel = "stylesheet"; l.href = BASE + "excalidraw.css"; document.head.appendChild(l);
       const s = document.createElement("script"); s.src = BASE + "excalidraw.js";
-      s.onload = () => (window.ICTExcalidraw ? ok((lib = window.ICTExcalidraw)) : ko(new Error("bundle invalide")));
-      s.onerror = () => ko(new Error("fichier introuvable : " + BASE + "excalidraw.js")); document.head.appendChild(s);
+      s.onload = () => (window.ICTExcalidraw ? res((lib = window.ICTExcalidraw)) : rej(new Error("bundle invalide")));
+      s.onerror = () => rej(new Error("fichier introuvable : " + BASE + "excalidraw.js")); document.head.appendChild(s);
     }).catch((e) => { loading = null; throw e; });
     return loading;
   }
 
-  /* sauvegarde (différée de 600 ms après la dernière modif) */
+  /* ---------- sauvegarde automatique (600 ms après la dernière modif) ---------- */
   function queue(els, app, files) { pending = { id: cur, els, app, files }; status("Modifications…"); clearTimeout(saveT); saveT = setTimeout(flush, 600); }
   async function flush() {
     clearTimeout(saveT); const p = pending; pending = null; if (!p || !lib || !p.id) return;
-    try {
-      const json = lib.serializeAsJSON(p.els, p.app, {}, "local");
-      await idbPut("boards", p.id, { json, at: Date.now() });
-      for (const [fid, f] of Object.entries(p.files || {})) if (!savedFiles.has(fid)) { await idbPut("files", fid, f); savedFiles.add(fid); }
-      const m = meta(), b = m.list.find((x) => x.id === p.id); if (b) { b.at = Date.now(); setMeta(m); }
-      if (p.id === cur) status("Enregistré " + new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date()) + " (NY)");
-    } catch (e) { status("⚠ Enregistrement impossible : " + (e && e.message || e)); }
+    try { await store.write(p.id, lib.serializeAsJSON(p.els, p.app, p.files || {}, "local")); if (p.id === cur) status("Enregistré à " + nyTime() + " (NY)" + (D ? " · dossier Excalidraw" : "")); }
+    catch (e) { status("⚠ Enregistrement impossible : " + e.message); }
   }
   addEventListener("beforeunload", () => { if (pending) flush(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden && pending) flush(); });
 
-  function fillSel() {
-    const m = meta(); sel.innerHTML = m.list.map((b) => `<option value="${b.id}">${String(b.name).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]))}</option>`).join(""); sel.value = cur || "";
-    el("exDel").disabled = m.list.length < 2;
+  /* ---------- petite fenêtre de saisie (remplace window.prompt, absent d'Electron) ---------- */
+  function ask(title, value, okTxt) {
+    return new Promise((res) => {
+      const o = document.createElement("div"); o.className = "exd-ov";
+      o.innerHTML = `<div class="exd-dlg" style="width:420px"><h3>${esc(title)}</h3><input class="exd-in" maxlength="80" value="${esc(value || "")}"><div class="exd-act"><button class="exd-b" data-a="no">Annuler</button><button class="exd-b exd-pri" data-a="ok">${esc(okTxt || "OK")}</button></div></div>`;
+      view.appendChild(o); const i = o.querySelector("input"); i.focus(); i.select();
+      const end = (v) => { o.remove(); res(v); };
+      o.addEventListener("click", (e) => { const a = e.target.closest("[data-a]"); if (a) end(a.dataset.a === "ok" && i.value.trim() ? i.value.trim() : null); else if (e.target === o) end(null); });
+      i.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") end(i.value.trim() || null); if (e.key === "Escape") end(null); });
+    });
   }
-  function ensure() { const m = meta(); if (!m.list.length) { const id = uid(); m.list.push({ id, name: "Tableau 1", at: Date.now() }); m.cur = id; setMeta(m); } if (!m.list.some((b) => b.id === m.cur)) { m.cur = m.list[0].id; setMeta(m); } return m; }
 
+  /* ---------- liste + ouverture ---------- */
+  function fillSel() { sel.innerHTML = list.map((b) => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join(""); sel.value = cur || ""; el("exDel").disabled = list.length < 2; }
+  async function refresh() {
+    list = await store.list();
+    if (!list.length) { await store.create("Tableau 1"); list = await store.list(); }
+    return list;
+  }
   async function open(id) {
     if (pending) await flush();
-    const m = ensure(); cur = id && m.list.some((b) => b.id === id) ? id : m.cur; m.cur = cur; setMeta(m); fillSel(); status("");
+    try { await refresh(); } catch (e) { msg(`Impossible de lire les tableaux.<br><small>${esc(e.message)}</small>`); return; }
+    cur = id && list.some((b) => b.id === id) ? id : list.some((b) => b.id === lsGet(CK, null)) ? lsGet(CK, null) : list[0].id; lsSet(CK, cur); fillSel(); status(D && store.dir ? "Dossier : " + store.dir : "");
     let data = { elements: [], appState: { theme: "dark" }, files: {} };
-    try {
-      const rec = await idbGet("boards", cur);
-      if (rec && rec.json) { const j = JSON.parse(rec.json); data.elements = j.elements || []; data.appState = Object.assign({ theme: "dark" }, j.appState || {}); }
-      const fids = [...new Set(data.elements.filter((e) => e.type === "image" && e.fileId).map((e) => e.fileId))];
-      for (const f of fids) { const v = await idbGet("files", f); if (v) { data.files[f] = v; savedFiles.add(f); } }
-    } catch (e) { status("⚠ Lecture impossible : " + (e && e.message || e)); }
-    const R = lib.React, h = R.createElement;
+    try { const j = await store.read(cur); if (j) { const r = lib.restore(JSON.parse(j), null, null); data = { elements: r.elements, appState: Object.assign({ theme: "dark" }, r.appState, { collaborators: new Map() }), files: r.files || {} }; } }
+    catch (e) { status("⚠ Lecture impossible : " + e.message); }
+    const h = lib.React.createElement, M = lib.MainMenu, I = M.DefaultItems, board = cur;
     if (!root) { cv.innerHTML = ""; root = lib.createRoot(cv); }
-    const boardId = cur;
     root.render(h(lib.Excalidraw, {
-      key: boardId, langCode: "fr-FR", initialData: Object.assign({ scrollToContent: true }, data),
+      key: board, langCode: "fr-FR", initialData: Object.assign({ scrollToContent: true }, data),
       excalidrawAPI: (a) => { api = a; },
-      onChange: (els, app, files) => { if (boardId === cur) queue(els, app, files); },
-      UIOptions: { canvasActions: { loadScene: true, saveToActiveFile: false, export: { saveFileToDisk: true }, toggleTheme: true } },
-    }, h(lib.MainMenu, null,
-      h(lib.MainMenu.DefaultItems.LoadScene), h(lib.MainMenu.DefaultItems.SaveAsImage), h(lib.MainMenu.DefaultItems.Export),
-      h(lib.MainMenu.DefaultItems.SearchMenu), h(lib.MainMenu.DefaultItems.Help), h(lib.MainMenu.DefaultItems.ClearCanvas),
-      h(lib.MainMenu.Separator), h(lib.MainMenu.DefaultItems.ToggleTheme), h(lib.MainMenu.DefaultItems.ChangeCanvasBackground)),
+      onChange: (els, app, files) => { if (board === cur) queue(els, app, files); },
+      UIOptions: { canvasActions: { loadScene: true, saveToActiveFile: false, saveAsImage: false, export: { saveFileToDisk: true }, toggleTheme: true } },
+    }, h(M, null,
+      h(I.LoadScene), h(M.Item, { onSelect: () => exportDlg(), icon: "🖼" }, "Exporter l'image…"), h(M.Item, { onSelect: () => xDlg(), icon: "𝕏" }, "Partager sur X…"), h(I.Export),
+      D ? h(M.Item, { onSelect: () => D.excaliOpenDir(), icon: "📁" }, "Ouvrir le dossier des dessins") : null,
+      h(I.SearchMenu), h(I.Help), h(I.ClearCanvas), h(M.Separator), h(I.ToggleTheme), h(I.ChangeCanvasBackground)),
       h(lib.WelcomeScreen, null)));
   }
+  const act = (fn) => async () => { if (busy) return; busy = true; try { await fn(); } catch (e) { status("⚠ " + e.message); } finally { busy = false; } };
+  const nameOf = (id) => (list.find((b) => b.id === id) || {}).name || "Tableau";
 
-  /* barre du haut */
   sel.onchange = () => open(sel.value);
-  el("exNew").onclick = () => { const m = ensure(), id = uid(); m.list.push({ id, name: "Tableau " + (m.list.length + 1), at: Date.now() }); setMeta(m); open(id); };
-  el("exRen").onclick = () => { const m = ensure(), b = m.list.find((x) => x.id === cur); if (!b) return; const n = prompt("Nom du tableau", b.name); if (n && n.trim()) { b.name = n.trim().slice(0, 80); setMeta(m); fillSel(); } };
-  el("exDup").onclick = async () => { if (!api) return; await flush(); const m = ensure(), b = m.list.find((x) => x.id === cur), id = uid(); const rec = await idbGet("boards", cur); if (rec) await idbPut("boards", id, rec); m.list.push({ id, name: (b ? b.name : "Tableau") + " (copie)", at: Date.now() }); setMeta(m); open(id); };
-  el("exDel").onclick = async () => { const m = ensure(); if (m.list.length < 2) return; const b = m.list.find((x) => x.id === cur); if (!b || !confirm(`Supprimer le tableau « ${b.name} » ? (définitif)`)) return; pending = null; clearTimeout(saveT); await idbDel("boards", b.id).catch(() => {}); m.list = m.list.filter((x) => x.id !== b.id); m.cur = m.list[0].id; setMeta(m); cur = null; open(m.cur); };
+  el("exNew").onclick = act(async () => { const n = await ask("Nouveau tableau", "Tableau " + (list.length + 1), "Créer"); if (!n) return; await flush(); const id = await store.create(n); await open(id); });
+  el("exRen").onclick = act(async () => { const old = nameOf(cur), n = await ask("Renommer le tableau", old, "Renommer"); if (!n || n === old) return; await flush(); const id = await store.rename(cur, n); await open(id); status("Renommé en « " + nameOf(id) + " »"); });
+  el("exDup").onclick = act(async () => { const n = await ask("Dupliquer le tableau", nameOf(cur) + " (copie)", "Dupliquer"); if (!n) return; await flush(); const id = await store.duplicate(cur, n); await open(id); });
+  el("exDel").onclick = act(async () => { if (list.length < 2) return; const n = nameOf(cur); if (!confirm(`Supprimer le tableau « ${n} » ?` + (D ? "\n(le fichier est déplacé dans Excalidraw\\_supprimés)" : "\n(définitif)"))) return; pending = null; clearTimeout(saveT); await store.remove(cur); cur = null; lsSet(CK, null); await open(); });
+  el("exExp").onclick = () => exportDlg();
+  el("exX").onclick = () => xDlg();
+  if (D) { el("exDir").hidden = false; el("exDir").onclick = () => D.excaliOpenDir(); }
 
-  window.exdShow = () => { shown = true; if (root) return; msg("Chargement d'Excalidraw…"); load().then(() => open()).catch((e) => msg(`Impossible de charger Excalidraw.<br><small>${e.message}</small>`)); };
-  window.exdHide = () => { if (shown && pending) flush(); shown = false; };
+  /* ---------- export de l'image avec Visualisation ---------- */
+  const EDEF = { fmt: "png", bg: true, dark: true, scale: 2, pad: 16, sel: false, embed: false };
+  const opts = () => Object.assign({}, EDEF, lsGet(EK, {}));
+  async function render(o) {
+    if (!api) throw new Error("tableau pas encore chargé");
+    const s = api.getAppState(); let els = api.getSceneElements();
+    if (o.sel) { const pick = els.filter((e) => s.selectedElementIds && s.selectedElementIds[e.id]); if (pick.length) els = pick; }
+    if (!els.length) throw new Error("le tableau est vide");
+    const appState = Object.assign({}, s, { exportBackground: o.bg, exportWithDarkMode: o.dark, exportScale: o.scale, exportEmbedScene: o.embed });
+    if (o.fmt === "svg") { const svg = await lib.exportToSvg({ elements: els, appState, files: api.getFiles(), exportPadding: o.pad }); return new Blob([svg.outerHTML], { type: "image/svg+xml" }); }
+    return lib.exportToBlob({ elements: els, appState, files: api.getFiles(), mimeType: "image/png", exportPadding: o.pad, getDimensions: (w, h) => ({ width: w * o.scale, height: h * o.scale, scale: o.scale }) });
+  }
+  const b64 = (blob) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
+  async function saveBlob(blob, ext) {
+    const name = nameOf(cur);
+    if (D) return ok(await D.excaliExport(name, ext, await b64(blob)));
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name + "." + ext; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); return a.download;
+  }
+  async function copyBlob(blob, fmt) {
+    if (fmt === "svg") return navigator.clipboard.writeText(await blob.text());
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+  }
+  const kb = (n) => (n > 1048576 ? (n / 1048576).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1024)) + " Ko");
+  const imgSize = (url) => new Promise((res) => { const i = new Image(); i.onload = () => res([i.naturalWidth, i.naturalHeight]); i.onerror = () => res([0, 0]); i.src = url; });
+
+  function exportDlg() {
+    if (!api) return; const o = opts(), hasSel = Object.keys(api.getAppState().selectedElementIds || {}).length > 0;
+    const ov = document.createElement("div"); ov.className = "exd-ov";
+    const seg = (k, vals) => `<span class="exd-seg" data-k="${k}">${vals.map(([v, t]) => `<button data-v="${v}" class="${String(o[k]) === String(v) ? "on" : ""}">${t}</button>`).join("")}</span>`;
+    const chk = (k, t, dis) => `<label class="exd-ck${dis ? " dis" : ""}"><input type="checkbox" data-k="${k}" ${o[k] ? "checked" : ""} ${dis ? "disabled" : ""}> ${t}</label>`;
+    ov.innerHTML = `<div class="exd-dlg exd-exp"><h3>Exporter l'image <small>· ${esc(nameOf(cur))}</small><button class="exd-x" data-a="close">✕</button></h3>
+      <div class="exd-ebody"><div class="exd-opts">
+        <div class="exd-row"><span>Format</span>${seg("fmt", [["png", "PNG"], ["svg", "SVG"]])}</div>
+        <div class="exd-row"><span>Échelle</span>${seg("scale", [[1, "1×"], [2, "2×"], [3, "3×"], [4, "4×"]])}</div>
+        <div class="exd-row"><span>Marge</span><input type="number" class="exd-in exd-num" data-k="pad" min="0" max="200" step="4" value="${o.pad}"> px</div>
+        ${chk("bg", "Arrière-plan")}${chk("dark", "Mode sombre")}${chk("sel", "Sélection uniquement" + (hasSel ? "" : " (rien n'est sélectionné)"), !hasSel)}${chk("embed", "Intégrer la scène (réouvrable dans Excalidraw)")}
+        <button class="exd-b exd-pri exd-viz" data-a="viz">👁 Visualisation</button>
+        <div class="exd-act col"><button class="exd-b" data-a="save">${D ? "Enregistrer dans Excalidraw\\Exports" : "Télécharger"}</button><button class="exd-b" data-a="copy">Copier l'image</button><button class="exd-b" data-a="x">𝕏 Partager sur X…</button></div>
+        <div class="exd-note" id="exNote"></div>
+      </div><div class="exd-prev"><div class="exd-pv" id="exPv"><span>Règle les paramètres puis clique sur <b>Visualisation</b> pour voir le rendu exact.</span></div><div class="exd-pinfo" id="exPi"></div></div></div></div>`;
+    view.appendChild(ov);
+    let url = null, rendered = null; const note = (t) => { ov.querySelector("#exNote").textContent = t || ""; };
+    const persist = () => { lsSet(EK, o); if (rendered) { ov.querySelector("#exPi").innerHTML = `<b class="exd-stale">Paramètres modifiés : clique sur Visualisation pour mettre à jour l'aperçu.</b>`; rendered = null; } };
+    const close = () => { if (url) URL.revokeObjectURL(url); ov.remove(); document.removeEventListener("keydown", kd, true); };
+    const kd = (e) => { if (e.key === "Escape") { e.stopPropagation(); close(); } }; document.addEventListener("keydown", kd, true);
+    const get = async () => rendered && rendered.key === JSON.stringify(o) ? rendered.blob : render(o);
+    ov.addEventListener("click", async (e) => {
+      if (e.target === ov) return close();
+      const sb = e.target.closest(".exd-seg button"); if (sb) { const k = sb.parentNode.dataset.k; o[k] = k === "scale" ? +sb.dataset.v : sb.dataset.v; sb.parentNode.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b === sb)); persist(); return; }
+      const a = e.target.closest("[data-a]"); if (!a) return; const w = a.dataset.a;
+      if (w === "close") return close();
+      if (w === "x") { close(); return xDlg(); }
+      try {
+        note(w === "viz" ? "Rendu en cours…" : ""); const blob = await get();
+        if (w === "viz") {
+          if (url) URL.revokeObjectURL(url); url = URL.createObjectURL(blob); rendered = { key: JSON.stringify(o), blob };
+          const [iw, ih] = await imgSize(url);
+          ov.querySelector("#exPv").innerHTML = `<img src="${url}" alt="Aperçu" class="${o.bg ? "" : "tr"}">`;
+          ov.querySelector("#exPi").textContent = `${o.fmt.toUpperCase()} · ${iw && ih ? iw + " × " + ih + " px" : ""} · ${kb(blob.size)} · échelle ${o.scale}× · marge ${o.pad} px · ${o.bg ? "avec" : "sans"} arrière-plan · ${o.dark ? "sombre" : "clair"}${o.sel ? " · sélection" : ""}${o.embed ? " · scène intégrée" : ""}`;
+          note("");
+        } else if (w === "save") { const f = await saveBlob(blob, o.fmt); note("✓ Enregistré : " + f); }
+        else if (w === "copy") { await copyBlob(blob, o.fmt); note("✓ Image copiée dans le presse-papiers"); }
+      } catch (err) { note("⚠ " + err.message); }
+    });
+    ov.addEventListener("change", (e) => { const k = e.target.dataset.k; if (!k) return; o[k] = e.target.type === "checkbox" ? e.target.checked : Math.max(0, Math.min(200, +e.target.value || 0)); persist(); });
+    ov.addEventListener("keydown", (e) => e.stopPropagation());
+  }
+
+  /* ---------- partage sur X : brouillon de post (texte prérempli + image copiée à coller) ---------- */
+  function xDlg() {
+    if (!api) return; const o = Object.assign(opts(), { fmt: "png" });
+    const ov = document.createElement("div"); ov.className = "exd-ov";
+    ov.innerHTML = `<div class="exd-dlg" style="width:560px"><h3>𝕏 Partager sur X <small>· brouillon</small><button class="exd-x" data-a="close">✕</button></h3>
+      <textarea class="exd-in exd-ta" maxlength="2000" placeholder="Texte du post (facultatif)…">${esc(lsGet("econcal-excali-xtxt", ""))}</textarea><div class="exd-cnt" id="exCnt"></div>
+      <div class="exd-pv sm" id="exXpv"><span>Aperçu de l'image…</span></div>
+      <p class="exd-help">X ne permet pas à une app d'ajouter une image à un post sans ton compte développeur : l'image (réglages d'export actuels, en PNG) est <b>copiée dans le presse-papiers</b> et la fenêtre de rédaction de X s'ouvre ${D ? "dans Chrome" : "dans un nouvel onglet"} avec le texte. Fais <b>Ctrl+V</b> dans le post pour ajouter l'image, puis ferme avec ✕ → <b>Enregistrer</b> pour le garder en brouillon (rien n'est publié sans toi).</p>
+      <div class="exd-note" id="exXn"></div>
+      <div class="exd-act"><button class="exd-b" data-a="close">Annuler</button><button class="exd-b exd-pri" data-a="go">Copier l'image et ouvrir le brouillon</button></div></div>`;
+    view.appendChild(ov);
+    const ta = ov.querySelector("textarea"), cnt = () => { const n = [...ta.value].length; ov.querySelector("#exCnt").textContent = n + " / 280" + (n > 280 ? " (au-delà : compte X Premium)" : ""); }; cnt(); ta.oninput = () => { cnt(); lsSet("econcal-excali-xtxt", ta.value); };
+    let url = null, blob = null; const close = () => { if (url) URL.revokeObjectURL(url); ov.remove(); };
+    render(o).then((b) => { blob = b; url = URL.createObjectURL(b); ov.querySelector("#exXpv").innerHTML = `<img src="${url}" alt="Aperçu" class="${o.bg ? "" : "tr"}">`; }).catch((e) => { ov.querySelector("#exXpv").innerHTML = `<span>⚠ ${esc(e.message)}</span>`; });
+    ov.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Escape") close(); });
+    ov.addEventListener("click", async (e) => {
+      if (e.target === ov) return close(); const a = e.target.closest("[data-a]"); if (!a) return;
+      if (a.dataset.a === "close") return close();
+      const n = ov.querySelector("#exXn");
+      try { if (!blob) blob = await render(o); await copyBlob(blob, "png"); }
+      catch (err) { n.textContent = "⚠ Copie de l'image impossible (" + err.message + ") : le brouillon s'ouvre quand même, ajoute l'image depuis Exporter l'image."; }
+      if (D) await D.excaliOpenX(ta.value); else window.open("https://x.com/intent/post?text=" + encodeURIComponent(ta.value), "_blank", "noopener");
+      if (!n.textContent) n.textContent = "✓ Image copiée, brouillon ouvert sur X : Ctrl+V dans le post pour ajouter l'image.";
+    });
+  }
+
+  window.exdShow = () => { shown = true; document.body.classList.add("on-ex"); if (root) return; msg("Chargement d'Excalidraw…"); load().then(() => migrate()).then(() => open()).catch((e) => msg(`Impossible de charger Excalidraw.<br><small>${esc(e.message)}</small>`)); };
+  window.exdHide = () => { document.body.classList.remove("on-ex"); if (shown && pending) flush(); shown = false; };
   window.exdApi = () => api;
-  if (el("v-excalidraw").classList.contains("on")) exdShow();
+  if (view.classList.contains("on")) exdShow();
 })();
 </script>
 </body>
