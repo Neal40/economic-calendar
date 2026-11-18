@@ -1554,7 +1554,7 @@ table.tbl:has(#subT){min-width:900px}
 .navord{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 12px}.navord-g>b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8b8e98;margin:0 0 6px}
 .navord-l{min-height:44px;border:1px dashed #2a2a32;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px}
 .navord-i{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:#15151a;border:1px solid #24242b;cursor:grab;user-select:none}.navord-i.drag{opacity:.45}
-.navord-h{color:#6f727c;font-size:12px;letter-spacing:-2px}.navord-t{flex:1}.navord-i button{background:none;border:1px solid #2a2a32;color:#c9cbd2;border-radius:6px;width:24px;height:22px;cursor:pointer;padding:0}.navord-i button:disabled{opacity:.3;cursor:default}
+.navord-h{color:#6f727c;font-size:12px;letter-spacing:-2px}.navord-t{flex:1}.navord-i button{background:none;border:1px solid #2a2a32;color:#c9cbd2;border-radius:6px;width:24px;height:22px;cursor:pointer;padding:0}.navord-i button:disabled{opacity:.3;cursor:default}.navord-i button.navord-vis{width:auto;padding:0 9px;font-size:12px}.navord-i.off{opacity:.55;border-style:dashed}.navord-i.off .navord-t{text-decoration:line-through;text-decoration-color:#6f727c}.navord-hid{font-style:normal;font-size:11px;color:#8b8d98;margin-left:6px;text-decoration:none;display:inline-block}
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -1672,7 +1672,7 @@ table.tbl:has(#subT){min-width:900px}
   </div>
   <div class="row2"><button class="btn" id="bSave">Enregistrer</button><button class="btn gray" id="bCancel">Annuler</button><span id="bOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel" id="navOrdBox"><div class="ptitle">Menu latéral · ordre des pages</div>
-    <div class="hintd" style="margin:0 0 10px">Glisse une page (poignée ⋮⋮) pour la déplacer dans sa section ou vers une autre section, ou utilise ↑ / ↓. Clique sur « Enregistrer » : l'ordre est gardé au prochain lancement de l'app.</div>
+    <div class="hintd" style="margin:0 0 10px">Glisse une page (poignée ⋮⋮) pour la déplacer dans sa section ou vers une autre section, ou utilise ↑ / ↓. « Enlever » retire une page du menu (« Remettre » la fait revenir). Clique sur « Enregistrer » : l'ordre et les pages enlevées sont gardés au prochain lancement de l'app.</div>
     <div class="navord" id="navOrd"></div>
     <div class="row2"><button class="btn" id="navOrdSave" type="button">Enregistrer</button><button class="btn gray" id="navOrdCancel" type="button">Annuler</button><button class="btn gray" id="navOrdReset" type="button">Ordre par défaut</button><span id="navOrdOk" class="hintd" style="margin:0"></span></div></div>
   <div class="panel"><div class="ptitle">Apparence</div><div class="pform">
@@ -2488,18 +2488,23 @@ const navBtn=go=>document.querySelector('.side .items > .nav[data-go="'+go+'"]')
 function navOrdGet(){ try{ const o=JSON.parse(localStorage.getItem(NAVKEY)||"null"); if(o&&typeof o==="object") return o; }catch(e){} return null; }
 function navOrdApply(o){ o=o||NAVDEF; const seen=new Set();
   NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); if(!it) return; (o[g]||[]).forEach(go=>{ const b=navBtn(go); if(b&&!seen.has(go)){ seen.add(go); it.appendChild(b); } }); });
-  NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); if(!it) return; NAVDEF[g].forEach(go=>{ if(!seen.has(go)){ const b=navBtn(go); if(b){ seen.add(go); it.appendChild(b); } } }); }); }
+  NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); if(!it) return; NAVDEF[g].forEach(go=>{ if(!seen.has(go)){ const b=navBtn(go); if(b){ seen.add(go); it.appendChild(b); } } }); });
+  /* pages masquées (Profil reste toujours visible : c'est là qu'on les remet) ; section sans page visible = masquée */
+  const H=new Set(Array.isArray(o.hidden)?o.hidden:[]); H.delete("profil");
+  document.querySelectorAll(".side .items > .nav[data-go]").forEach(b=>{ b.hidden=H.has(b.dataset.go); });
+  NAVGRP.forEach(g=>{ const el=$(g), it=el&&el.querySelector(".items"); if(it) el.hidden=![...it.querySelectorAll(":scope > .nav[data-go]")].some(b=>!b.hidden); }); }
 navOrdApply(navOrdGet());
 let navDraft=null;
-function navOrdCur(){ const o={}; NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); o[g]=it?[...it.querySelectorAll(":scope > .nav[data-go]")].map(b=>b.dataset.go):[]; }); return o; }
+function navOrdCur(){ const o={}; NAVGRP.forEach(g=>{ const it=$(g)&&$(g).querySelector(".items"); o[g]=it?[...it.querySelectorAll(":scope > .nav[data-go]")].map(b=>b.dataset.go):[]; }); o.hidden=[...document.querySelectorAll(".side .items > .nav[data-go]")].filter(b=>b.hidden).map(b=>b.dataset.go); return o; }
 function navOrdDraw(keep){ const box=$("navOrd"); if(!box) return; if(!keep||!navDraft) navDraft=navOrdCur();
   const lbl=go=>{ const b=navBtn(go); return b?(b.querySelector("span")||b).textContent.trim():go; };
   box.innerHTML=NAVGRP.map(g=>{ const t=($(g).querySelector(".gh span")||{}).textContent||g;
-    return `<div class="navord-g"><b>${esc(t)}</b><div class="navord-l" data-g="${g}">${navDraft[g].map((go,i)=>`<div class="navord-i" draggable="true" data-go="${go}"><span class="navord-h">⋮⋮</span><span class="navord-t">${esc(lbl(go))}</span><button type="button" data-mv="-1" title="Monter"${i?"":" disabled"}>↑</button><button type="button" data-mv="1" title="Descendre"${i<navDraft[g].length-1?"":" disabled"}>↓</button></div>`).join("")||'<div class="hintd navord-empty" style="margin:0">Dépose une page ici</div>'}</div></div>`; }).join("");
+    return `<div class="navord-g"><b>${esc(t)}</b><div class="navord-l" data-g="${g}">${navDraft[g].map((go,i)=>`<div class="navord-i${(navDraft.hidden||[]).includes(go)?" off":""}" draggable="true" data-go="${go}"><span class="navord-h">⋮⋮</span><span class="navord-t">${esc(lbl(go))}</span><button type="button" class="navord-vis" data-vis="1" title="${go==="profil"?"Profil reste toujours visible (c'est ici qu'on remet les pages)":(navDraft.hidden||[]).includes(go)?"Remettre la page dans le menu":"Enlever la page du menu"}"${go==="profil"?" disabled":""}>${(navDraft.hidden||[]).includes(go)?"Remettre":"Enlever"}</button><button type="button" data-mv="-1" title="Monter"${i?"":" disabled"}>↑</button><button type="button" data-mv="1" title="Descendre"${i<navDraft[g].length-1?"":" disabled"}>↓</button></div>`).join("")||'<div class="hintd navord-empty" style="margin:0">Dépose une page ici</div>'}</div></div>`; }).join("");
   $("navOrdOk").textContent=""; }
 (function(){ const box=$("navOrd"); if(!box) return; let drag=null;
-  const fromDom=()=>{ const o={}; box.querySelectorAll(".navord-l").forEach(l=>o[l.dataset.g]=[...l.querySelectorAll(".navord-i")].map(x=>x.dataset.go)); navDraft=o; };
-  box.addEventListener("click",e=>{ const b=e.target.closest("[data-mv]"); if(!b) return; const it=b.closest(".navord-i"), g=it.parentNode.dataset.g, L=navDraft[g], i=L.indexOf(it.dataset.go), j=i+ +b.dataset.mv; if(j<0||j>=L.length) return; [L[i],L[j]]=[L[j],L[i]]; navOrdDraw(true); });
+  const fromDom=()=>{ const o={hidden:(navDraft&&navDraft.hidden)||[]}; box.querySelectorAll(".navord-l").forEach(l=>o[l.dataset.g]=[...l.querySelectorAll(".navord-i")].map(x=>x.dataset.go)); navDraft=o; };
+  box.addEventListener("click",e=>{ const v=e.target.closest("[data-vis]"); if(v){ const go=v.closest(".navord-i").dataset.go; if(go==="profil") return; const H=new Set(navDraft.hidden||[]); H.has(go)?H.delete(go):H.add(go); navDraft.hidden=[...H]; navOrdDraw(true); $("navOrdOk").textContent="Clique sur « Enregistrer » pour appliquer."; return; }
+    const b=e.target.closest("[data-mv]"); if(!b) return; const it=b.closest(".navord-i"), g=it.parentNode.dataset.g, L=navDraft[g], i=L.indexOf(it.dataset.go), j=i+ +b.dataset.mv; if(j<0||j>=L.length) return; [L[i],L[j]]=[L[j],L[i]]; navOrdDraw(true); });
   box.addEventListener("dragstart",e=>{ const it=e.target.closest(".navord-i"); if(!it) return; drag=it; it.classList.add("drag"); try{ e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",it.dataset.go); }catch(x){} });
   box.addEventListener("dragend",()=>{ if(drag) drag.classList.remove("drag"); drag=null; fromDom(); navOrdDraw(true); });
   box.addEventListener("dragover",e=>{ if(!drag) return; const l=e.target.closest(".navord-l"); if(!l) return; e.preventDefault();

@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.61.0] — 2026-11-18
+### Ajouté
+- **Menu latéral : enlever / remettre des pages** (Paramètres › Profil › Menu latéral) : bouton « Enlever » / « Remettre » sur chaque page, gardé avec l'ordre (`econcal-navorder.hidden`). Une section sans page visible disparaît du menu. Profil reste toujours visible.
+
 ## [1.60.0] — 2026-11-18
 ### Ajouté
 - **Laboratoire › Excalidraw** : tableau blanc [Excalidraw](https://github.com/excalidraw/excalidraw) (SDK open source, MIT) intégré dans l'app, en français et en thème sombre. Plusieurs tableaux (Nouveau / Renommer / Dupliquer / Supprimer), sauvegarde automatique en local (IndexedDB, images comprises), export PNG / SVG / `.excalidraw` et import depuis le menu ☰. Bundle local dans `vendor/excalidraw` (chargé à la première ouverture, marche hors ligne dans l'exe) ; reconstruction : `cd tools/excalidraw && npm ci && npm run build`.
