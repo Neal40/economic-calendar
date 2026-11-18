@@ -34,4 +34,15 @@ function xAttachScript(b64) {
     inp.files = dt.files; inp.dispatchEvent(new Event("input", { bubbles: true })); inp.dispatchEvent(new Event("change", { bubbles: true }));
     window.__ictImg = 1; return "ok"; } catch (e) { return "err:" + e.message; } })()`;
 }
-module.exports = { make, safeName, EXT, xAttachScript };
+// Fenêtre X de l'app : "wait" (rédaction pas prête), "attached" (une image est déjà dans le post) ou "ready" (zone de texte prête, curseur placé à la fin → on colle)
+const X_PROBE = `(() => { const ta = document.querySelector('[data-testid="tweetTextarea_0"]'); if (!ta) return "wait";
+  if (document.querySelector('[data-testid="attachments"]')) return "attached";
+  ta.focus(); try { const r = document.createRange(); r.selectNodeContents(ta); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
+  return "ready"; })()`;
+// Chrome (Windows) : attend l'onglet X au premier plan puis envoie Ctrl+V pour coller l'image du presse-papiers dans le post (rien d'autre n'est tapé)
+const CHROME_PASTE_PS = `$ws = New-Object -ComObject WScript.Shell; $t0 = Get-Date
+while (((Get-Date) - $t0).TotalSeconds -lt 30) { Start-Sleep -Milliseconds 700
+  $p = Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -match '(^|/ )X - Google Chrome$' } | Select-Object -First 1
+  if ($p) { Start-Sleep -Milliseconds 2200; if ($ws.AppActivate($p.Id)) { Start-Sleep -Milliseconds 400; $ws.SendKeys('^v') }; break } }`;
+const psEncoded = (s) => Buffer.from(s, "utf16le").toString("base64");
+module.exports = { make, safeName, EXT, xAttachScript, X_PROBE, CHROME_PASTE_PS, psEncoded };

@@ -11568,9 +11568,9 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
     ov.innerHTML = `<div class="exd-dlg" style="width:560px"><h3>𝕏 Partager sur X <small>· brouillon</small><button class="exd-x" data-a="close">✕</button></h3>
       <textarea class="exd-in exd-ta" maxlength="2000" placeholder="Texte du post (facultatif)…">${esc(lsGet("econcal-excali-xtxt", ""))}</textarea><div class="exd-cnt" id="exCnt"></div>
       <div class="exd-pv sm" id="exXpv"><span>Aperçu de l'image…</span></div>
-      <p class="exd-help">${D ? `La fenêtre de rédaction de X s'ouvre <b>dans l'app</b> avec le texte et <b>l'image déjà ajoutée</b> (réglages d'export actuels, en PNG). La 1re fois, connecte-toi à X dans cette fenêtre : la connexion est gardée et l'image s'ajoute juste après. Ferme ensuite avec ✕ → <b>Enregistrer</b> pour le garder en brouillon, ou Poster : rien n'est publié sans toi.<br>L'image est aussi copiée : si elle n'apparaît pas, fais <b>Ctrl+V</b> dans le post.` : `L'image (réglages d'export actuels, en PNG) est <b>copiée dans le presse-papiers</b> et la rédaction de X s'ouvre dans un nouvel onglet avec le texte : fais <b>Ctrl+V</b> dans le post pour ajouter l'image (un site web ne peut pas l'ajouter tout seul ; l'app de bureau, si), puis ✕ → <b>Enregistrer</b> pour le brouillon.`}</p>
+      <p class="exd-help">${D ? `La rédaction de X s'ouvre avec le texte et l'image (réglages d'export actuels, en PNG) <b>collée directement dans le post</b>, dans l'app ou dans ton Chrome. Dans l'app, connecte-toi à X la 1re fois (connexion gardée) : l'image se colle juste après. Ferme ensuite avec ✕ → <b>Enregistrer</b> pour le garder en brouillon, ou Poster : rien n'est publié sans toi. Si l'image n'apparaît pas, <b>Ctrl+V</b> dans le post.` : `L'image (réglages d'export actuels, en PNG) est <b>copiée dans le presse-papiers</b> et la rédaction de X s'ouvre dans un nouvel onglet avec le texte : fais <b>Ctrl+V</b> dans le post pour ajouter l'image (un site web ne peut pas l'ajouter tout seul ; l'app de bureau, si), puis ✕ → <b>Enregistrer</b> pour le brouillon.`}</p>
       <div class="exd-note" id="exXn"></div>
-      <div class="exd-act"><button class="exd-b" data-a="close">Annuler</button>${D ? `<button class="exd-b" data-a="chrome" title="Ouvre X dans ton Chrome ; l'image est copiée, à coller avec Ctrl+V">Dans Chrome (Ctrl+V)</button>` : ""}<button class="exd-b exd-pri" data-a="go">${D ? "Ouvrir le brouillon avec l'image" : "Copier l'image et ouvrir le brouillon"}</button></div></div>`;
+      <div class="exd-act"><button class="exd-b" data-a="close">Annuler</button>${D ? `<button class="exd-b" data-a="chrome" title="Ouvre X dans ton Chrome (déjà connecté) et colle l'image dans le post">Ouvrir dans Chrome</button>` : ""}<button class="exd-b exd-pri" data-a="go">${D ? "Ouvrir le brouillon avec l'image" : "Copier l'image et ouvrir le brouillon"}</button></div></div>`;
     view.appendChild(ov);
     const ta = ov.querySelector("textarea"), cnt = () => { const n = [...ta.value].length; ov.querySelector("#exCnt").textContent = n + " / 280" + (n > 280 ? " (au-delà : compte X Premium)" : ""); }; cnt(); ta.oninput = () => { cnt(); lsSet("econcal-excali-xtxt", ta.value); };
     let url = null, blob = null; const close = () => { if (url) URL.revokeObjectURL(url); ov.remove(); };
@@ -11583,9 +11583,9 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
       try { if (!blob) blob = await render(o); } catch (err) { n.textContent = "⚠ Image impossible : " + err.message; return; }
       if (D) {
         const data = await b64(blob);
-        if (a.dataset.a === "chrome") { await D.excaliOpenX(ta.value, data); n.textContent = "✓ Image copiée, X ouvert dans Chrome : Ctrl+V dans le post pour ajouter l'image."; return; }
+        if (a.dataset.a === "chrome") { await D.excaliOpenX(ta.value, data); n.textContent = "✓ X s'ouvre dans Chrome : l'image se colle dans le post dès que la page est prête (sinon Ctrl+V). Ne touche pas au clavier quelques secondes."; return; }
         const r = await D.excaliPostX(ta.value, data);
-        n.textContent = r && r.ok ? "✓ Brouillon ouvert : l'image s'ajoute dès que la rédaction de X est prête (connecte-toi la 1re fois)." : "⚠ " + ((r && r.reason) || "ouverture impossible");
+        n.textContent = r && r.ok ? "✓ Brouillon ouvert : l'image se colle dans le post dès que la rédaction de X est prête (connecte-toi la 1re fois)." : "⚠ " + ((r && r.reason) || "ouverture impossible");
         return;
       }
       try { await copyBlob(blob, "png"); } catch (err) { n.textContent = "⚠ Copie de l'image impossible (" + err.message + ") : utilise Exporter l'image."; }
