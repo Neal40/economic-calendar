@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.62.0] — 2026-11-18
+### Ajouté
+- **Bandeau des news « NEW YORK » sur tous les thèmes** (Classique, Noir, Matrix, Wall Street, ICT épuré) : prochaines news du calendrier sur 12 jours, couleurs adaptées à chaque thème, actualisé toutes les heures. Masqué dans le Backtesteur, la page Graphique et sur téléphone.
+
 ## [1.61.1] — 2026-11-18
 ### Corrigé
 - **Menu latéral** : les pages enlevées restaient affichées avec le thème Noir (le style du menu passait par-dessus le masquage).

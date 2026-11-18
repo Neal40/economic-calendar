@@ -548,15 +548,23 @@ body.th-wallstreet .btn,body.th-wallstreet .nav.on,body.th-wallstreet .side .nav
 body.th-wallstreet .btn{border-radius:4px;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700}
 body.th-wallstreet .side .who .av{box-shadow:0 0 0 1px #d4af37,0 0 0 4px rgba(212,175,55,.18)}
 body.th-wallstreet .kpi b,body.th-wallstreet .num{font-variant-numeric:tabular-nums}
-body.th-wallstreet .main{padding-bottom:34px}
-#thTicker{display:none}
-body.th-wallstreet #thTicker{display:block;position:fixed;left:0;right:0;bottom:0;height:30px;z-index:55;background:linear-gradient(180deg,#0b1730,#060e1f);border-top:1px solid rgba(212,175,55,.55);overflow:hidden;white-space:nowrap;font:600 12px/30px "Space Mono",monospace;color:#f3ead3;pointer-events:none}
-body.th-wallstreet #thTicker .tk{display:inline-block;padding-left:100%;animation:thTick var(--tkd,90s) linear infinite}
-body.th-wallstreet #thTicker .tk span{margin-right:38px}
-body.th-wallstreet #thTicker b{color:#d4af37;font-weight:700}
-body.th-wallstreet #thTicker i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 6px 1px 0}
-body.th-wallstreet #thTicker .lbl{position:absolute;left:0;top:0;bottom:0;z-index:2;padding:0 14px;background:#d4af37;color:#0a1324;font-family:Georgia,serif;letter-spacing:.16em}
-body.th-wallstreet.on-bt #thTicker{display:none}
+/* bandeau des prochaines news (tous les thèmes ; couleurs par thème via --tk*) */
+#thTicker{display:block;position:fixed;left:0;right:0;bottom:0;height:30px;z-index:55;background:var(--tkbg,#fbfaf6);border-top:1px solid var(--tkline,rgba(0,0,0,.14));overflow:hidden;white-space:nowrap;font:600 12px/30px "Space Mono",monospace;color:var(--tkink,#1d1d1f);pointer-events:none;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+#thTicker:empty{display:none}
+#thTicker .tk{display:inline-block;padding-left:100%;animation:thTick var(--tkd,90s) linear infinite}
+#thTicker .tk span{margin-right:38px}
+#thTicker b{color:var(--tkacc,#1d1d1f);font-weight:700}
+#thTicker i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 6px 1px 0}
+#thTicker .lbl{position:absolute;left:0;top:0;bottom:0;z-index:2;padding:0 14px;background:var(--tklbl,#1d1d1f);color:var(--tklblink,#fff);font-family:Georgia,serif;letter-spacing:.16em}
+body.on-bt #thTicker,body.on-gr #thTicker{display:none}
+body.noir:not(.on-bt):not(.on-gr) .main{padding-bottom:34px}
+body.noir:not(.on-bt):not(.on-gr) .app .side{top:calc(50% - 15px);max-height:calc(100vh - 58px)}
+body:not(.noir):not(.on-bt):not(.on-gr) .app{height:calc(100vh - 30px)}
+body.noir{--tkbg:rgba(10,10,12,.86);--tkline:rgba(255,255,255,.14);--tkink:#ececf1;--tkacc:#fff;--tklbl:#fff;--tklblink:#0a0a0c}
+body.th-wallstreet{--tkbg:linear-gradient(180deg,#0b1730,#060e1f);--tkline:rgba(212,175,55,.55);--tkink:#f3ead3;--tkacc:#d4af37;--tklbl:#d4af37;--tklblink:#0a1324}
+body.th-matrix{--tkbg:rgba(0,0,0,.9);--tkline:rgba(0,255,102,.4);--tkink:#b9ffcf;--tkacc:#00ff66;--tklbl:#00ff66;--tklblink:#000}
+body.th-ict{--tkbg:rgba(0,0,0,.9);--tkline:rgba(255,255,255,.22);--tkink:#f2f2f2;--tkacc:#d4af37;--tklbl:#fff;--tklblink:#000}
+@media (max-width:760px){#thTicker{display:none!important}body .app{height:100dvh!important}body .main{padding-bottom:calc(68px + env(safe-area-inset-bottom))!important}}
 @keyframes thTick{to{transform:translateX(-100%)}}
 /* ICT épuré : noir et blanc, éclipse, spirale d'or */
 body.th-ict{--acc:#fff;--acc-ink:#000;--acc-soft:rgba(255,255,255,.16);--glass:rgba(0,0,0,.55);--line:rgba(255,255,255,.14);--ink:#f7f7f7;--muted:#8d8d8d;--faint:#4d4d4d;--title:#d8d8d8;--side:rgba(0,0,0,.78);--barbg:rgba(0,0,0,.78);--modal:rgba(6,6,6,.97);--field:rgba(255,255,255,.03);--up:#e9fff4;--dn:#ff9b9b;--teal:#fff;--hand:#e8e8e8;background:#000;color:#f7f7f7;font-family:"Space Grotesk",-apple-system,"Inter",system-ui,sans-serif}
@@ -637,7 +645,6 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 #v-graphique .gr{--gb:#131722;--gp:#1e222d;--gl:#2a2e39;--gt:#d1d4dc;--gm:#787b86;--ga:#2962ff;--gh:#2a2e39;--grbg:#131722;--gup:#089981;--gdn:#f23645;
   height:100vh;display:flex;flex-direction:column;background:var(--gb);color:var(--gt);font:13px/1.35 -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif;overflow:hidden;position:relative;user-select:none;-webkit-user-select:none}
 #v-graphique .gr.light{--gb:#ffffff;--gp:#f8f9fd;--gl:#e0e3eb;--gt:#131722;--gm:#6a6d78;--gh:#f0f3fa}
-body.th-wallstreet.on-gr #thTicker{display:none}
 :where(.gr) *{box-sizing:border-box}:where(.gr) button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0;margin:0;min-width:0;height:auto;line-height:inherit;text-transform:none;letter-spacing:normal;box-shadow:none}:where(.gr) input,:where(.gr) select,:where(.gr) textarea{font:inherit;color:inherit}
 :where(.gr) svg{display:block;flex:none}.gr .gr-fill{flex:1}.gr [hidden]{display:none!important}
 .gr .up{color:var(--gup)}.gr .dn{color:var(--gdn)}.gr .gr-mut{color:var(--gm);font-size:12px;line-height:1.45}
@@ -4620,7 +4627,7 @@ function payoutCalc(a, fk, pays) {
   const isMac = (window.desktop && window.desktop.platform === "darwin") || !!window.Capacitor || matchMedia("(max-width:760px)").matches;
   const get = (k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:v }catch(e){ return d } };
   const set = (k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v) }catch(e){ alert("Image trop lourde pour être enregistrée."); } };
-  const THEMES = [["classique","Classique","Clair, papier"],["noir","Noir","Verre, pilules blanches"],["matrix","Matrix","Pluie de code, vert phosphore"],["wallstreet","Wall Street","Marine, or, ticker des news"],["ict","ICT épuré","Noir & blanc, éclipse, spirale d'or"]];
+  const THEMES = [["classique","Classique","Clair, papier"],["noir","Noir","Verre, pilules blanches"],["matrix","Matrix","Pluie de code, vert phosphore"],["wallstreet","Wall Street","Marine, or, rosaces"],["ict","ICT épuré","Noir & blanc, éclipse, spirale d'or"]];
   const DARK = ["noir","matrix","wallstreet","ict"], SIG = ["matrix","wallstreet","ict"];
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fx = document.createElement("div"); fx.id="thFx"; fx.setAttribute("aria-hidden","true"); document.body.prepend(fx);
@@ -4648,12 +4655,15 @@ function payoutCalc(a, fk, pays) {
       <path d="${rosette(1330,170,96,35,62,1400)}" stroke-opacity=".16"/><path d="${rosette(1330,170,130,48,70,1600)}" stroke-opacity=".09"/>
       <path d="${rosette(180,880,110,41,58,1500)}" stroke-opacity=".12"/><path d="${rosette(180,880,150,56,80,1700)}" stroke-opacity=".06"/>
       ${Array.from({length:14},(_,i)=>`<path d="M0 ${560+i*16} C 400 ${500+i*16}, 1000 ${640+i*16}, ${W} ${560+i*16}" stroke-opacity="${.035+.004*i}"/>`).join("")}</g></svg>`;
+    return null;
+  }
+  // --- bandeau des prochaines news du calendrier (12 jours, heure de New York) : tous les thèmes
+  function fillTick(){
     const ny=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date()), until=new Date(Date.now()+12*864e5).toISOString().slice(0,10);
     const C={high:"#e5545c",med:"#f0a33a",low:"#d9c86a"}, L=[];
     try{ Object.keys(S.events||{}).sort().forEach(k=>{ if(k<ny||k>until) return; const d=new Date(k+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"}).toUpperCase();
       (S.events[k]||[]).forEach(e=>L.push(`<span><b>${esc(d)}</b> ${esc(e.t||"")} <i style="background:${e.k&&e.k!=="ev"?"#d4af37":C[e.i]||"#888"}"></i>${esc(e.n)}</span>`)); }); }catch(e){}
     tick.innerHTML=`<div class="lbl">NEW YORK</div><div class="tk" style="--tkd:${Math.max(40,L.length*7)}s">${L.length?L.join(""):"<span><b>MARCHÉS</b> Aucune news dans les 12 prochains jours</span>"}</div>`;
-    return ()=>{ tick.innerHTML=""; };
   }
   // --- ICT épuré : spirale d'or (rectangles φ), éclipse à l'œil de la spirale, niveaux de Fibonacci
   function goldenSVG(x,y,h,n){ const P=1.6180339887; let w=h*P, d=`M${x} ${y+h}`, rects=""; for(let i=0,dir=0;i<n;i++,dir=(dir+1)%4){ let s;
@@ -4678,7 +4688,7 @@ function payoutCalc(a, fk, pays) {
     const w=get("econcal-wall",""), b=document.body;
     b.classList.toggle("noir", DARK.includes(th)); b.classList.toggle("thx", SIG.includes(th)); SIG.forEach(k=>b.classList.toggle("th-"+k, th===k));
     b.classList.toggle("wall", !!w && th==="noir"); b.style.setProperty("--wall", w?`url("${w}")`:"none");
-    if(stopFx){ stopFx(); stopFx=null; } fx.innerHTML=""; tick.innerHTML="";
+    if(stopFx){ stopFx(); stopFx=null; } fx.innerHTML=""; fillTick();
     if(th==="matrix") stopFx=matrix(); else if(th==="wallstreet") stopFx=wallstreet(); else if(th==="ict") stopFx=ict();
     if(DARK.includes(th)) set("econcal-theme-dark", th);
     const s=document.getElementById("thSel"); if(s) s.value=th;
@@ -4701,7 +4711,8 @@ function payoutCalc(a, fk, pays) {
   hot.addEventListener("mouseenter",show); side.addEventListener("mouseenter",show); side.addEventListener("mouseleave",hide);
   side.addEventListener("click",e=>{ if(e.target.closest(".nav")) hide(); });
   apply();
-  window.themeRefresh=()=>{ if(document.body.classList.contains("th-wallstreet")) apply(); };
+  window.themeRefresh=()=>fillTick();
+  setInterval(fillTick, 60*60*1000); // nouvelles news du jour / jours suivants
   document.getElementById("thBtn").onclick=()=>{ set("econcal-theme", document.body.classList.contains("noir")?"classique":get("econcal-theme-dark","noir")); apply(); };
   document.getElementById("thSel").onchange=e=>{ set("econcal-theme", e.target.value); apply(); };
   document.getElementById("thNoWall").onclick=()=>{ set("econcal-wall", null); apply(); };
