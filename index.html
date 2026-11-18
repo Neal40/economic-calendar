@@ -4532,7 +4532,7 @@ function payoutCalc(a, fk, pays) {
     const can = (ST.info && ST.info.install) || null;
     const hint = avail() && !ST.phase ? (can && can.ok ? "L'app se ferme, installe la nouvelle version et se relance toute seule. Tes données sont gardées." : can ? reasonText(can.reason) : "") : "";
     b.innerHTML = head() + status() + news() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
-      + (D.platform === "win32" && !ST.phase ? `<p class="hintd">La mise à jour automatique reste active.</p>` : "");
+      + (D.platform === "win32" && !ST.phase ? `<p class="hintd">La mise à jour automatique reste active.</p>` : D.platform === "darwin" && !ST.phase ? `<p class="hintd">Mise à jour automatique : l'app télécharge les nouvelles versions en arrière-plan et les installe quand tu la fermes (ou si le Mac reste inactif 10 min).</p>` : "");
   }
 
   /* ---------- actions ---------- */

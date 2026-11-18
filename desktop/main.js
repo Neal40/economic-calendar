@@ -462,6 +462,8 @@ ipcMain.handle("app:updInstall", async () => {
       updSend({ phase: "install" }); updInstallWin(dest);
       return { ok: true };
     }
+    if (macStaged && macStaged.version === ((r.latest && r.latest.version) || "")) { updSend({ phase: "install" }); if (macAutoSwap(true)) { updQuit(); return { ok: true }; } return { ok: false, reason: "busy" }; }
+    macStaged = null; // version préparée plus ancienne : remplacée par celle-ci
     const bundle = updater.macBundle(process.execPath), zip = path.join(app.getPath("temp"), "Inner-Circle-Trader-mac.zip");
     await updater.download(net.fetch, r.dl, zip, prog);
     updSend({ phase: "install" });
@@ -476,12 +478,47 @@ ipcMain.handle("app:updInstall", async () => {
   finally { updDl = false; }
 });
 
+/* ---------- Mac : maj automatique (comme sur Windows) ----------
+   Vérifie GitHub 2 min après le lancement puis toutes les 30 min, télécharge et prépare la nouvelle version en arrière-plan (taille + SHA-256 vérifiés),
+   puis l'installe quand l'app est fermée (sans la relancer) ou, si l'ordinateur reste inactif 10 min, en relançant l'app. Jamais pendant le Trade copier en réel. */
+let macStaged = null; // { stage, app, bundle, version } : nouvelle version prête à côté de l'app
+async function macAutoPrep() {
+  if (process.platform !== "darwin" || !app.isPackaged || macStaged || updDl || updBusy) return;
+  if (!updCanInstall().ok) return;
+  let r; try { r = await updCheck(false); } catch (e) { return; }
+  if (!r || !r.ok || !r.available || !r.ready || !r.dl) return;
+  const bundle = updater.macBundle(process.execPath), zip = path.join(app.getPath("temp"), "Inner-Circle-Trader-mac-auto.zip");
+  updDl = true;
+  try {
+    await updater.download(net.fetch, r.dl, zip, () => {});
+    const { execFile } = require("child_process");
+    const run = (cmd, args) => new Promise((ok, ko) => execFile(cmd, args, { maxBuffer: 1 << 20 }, (err) => (err ? ko(err) : ok())));
+    let st; try { st = await updater.macStage(run, zip, bundle); } finally { fs.rmSync(zip, { force: true }); }
+    macStaged = { ...st, bundle, version: (r.latest && r.latest.version) || "" };
+    updNotify(`Mise à jour ${macStaged.version} prête : elle s'installe quand tu fermes l'app (ou toute seule si le Mac reste inactif 10 min).`);
+  } catch (e) { /* réessai au prochain passage */ }
+  finally { updDl = false; }
+}
+function macAutoSwap(relaunch) { // lance le remplacement détaché ; l'app doit quitter juste après
+  if (!macStaged || updBusy || liveCopier()) return false;
+  updBusy = true; const s = macStaged;
+  require("child_process").spawn("/bin/sh", ["-c", relaunch ? updater.MAC_SWAP : updater.MAC_SWAP_QUIT, "sh", s.bundle, s.stage, s.app, String(process.pid)], { detached: true, stdio: "ignore" }).unref();
+  return true;
+}
+function macAutoUpdate() {
+  if (process.platform !== "darwin" || !app.isPackaged) return;
+  setTimeout(macAutoPrep, 2 * 60 * 1000); setInterval(macAutoPrep, 30 * 60 * 1000);
+  const { powerMonitor } = require("electron");
+  setInterval(() => { try { if (macStaged && !updBusy && !updDl && powerMonitor.getSystemIdleTime() >= 600 && macAutoSwap(true)) { updNotify("Installation de la mise à jour…"); updQuit(); } } catch (e) { /* ignore */ } }, 60 * 1000);
+  app.on("before-quit", () => { if (macStaged && !updBusy) macAutoSwap(false); });
+}
+
 app.whenReady().then(() => {
   if (!LOCK) return;
   try { backup.run({ userData: app.getPath("userData"), dataDir: md().dir, root: path.join(ICT(), "backups") }); } // avant la fenêtre : Local Storage / IndexedDB pas encore ouverts
   catch (e) { try { new Notification({ title: "Inner Circle Trader", body: "Sauvegarde impossible : " + (e.message || e) }).show(); } catch (x) { /* ignore */ } }
-  createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch();
-  if (process.platform === "darwin" && app.isPackaged) setTimeout(() => { const b = updater.macBundle(process.execPath); if (b && !updBusy && !updDl) try { fs.rmSync(path.join(path.dirname(b), updater.MAC_STAGE), { recursive: true, force: true }); } catch (e) { /* reste d'une mise à jour Mac interrompue */ } }, 60 * 1000);
+  createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch(); macAutoUpdate();
+  if (process.platform === "darwin" && app.isPackaged) setTimeout(() => { const b = updater.macBundle(process.execPath); if (b && !updBusy && !updDl && !macStaged) try { fs.rmSync(path.join(path.dirname(b), updater.MAC_STAGE), { recursive: true, force: true }); } catch (e) { /* reste d'une mise à jour Mac interrompue */ } }, 60 * 1000);
   setTimeout(() => { const st = md().status(); const last = st.lastSync ? new Date(st.lastSync) : null; if (!last || Date.now() - last > 20 * 3600 * 1000) mdSync(false); }, 90 * 1000); });
 app.on("before-quit", () => { app.isQuitting = true; });
 app.on("window-all-closed", () => app.quit());

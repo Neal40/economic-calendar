@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.59.0] — 2026-11-18
+### Ajouté
+- **Mac : mise à jour automatique** (comme sur Windows) : l'app vérifie GitHub 2 min après le lancement puis toutes les 30 min, télécharge et prépare la nouvelle version en arrière-plan (taille + SHA-256 vérifiés), puis l'installe à la fermeture de l'app (sans relance) ou après 10 min d'inactivité du Mac (avec relance). Jamais pendant le Trade copier en réel. Le bouton « Mettre à jour » du Profil installe tout de suite la version déjà prête.
+
 ## [1.58.0] — 2026-11-18
 ### Ajouté
 - Laboratoire : nouvelle page **Skill IA & Coach IA** (`#skillia`) — le Skill IA « Profil prop firm » et le coach IA quittent Paramètres › Profil.

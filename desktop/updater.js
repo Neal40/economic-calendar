@@ -115,4 +115,7 @@ async function macStage(run, zip, bundle) {
 const MAC_SWAP = 'n=0; while kill -0 "$4" 2>/dev/null && [ $n -lt 300 ]; do sleep 0.2; n=$((n+1)); done; ' +
   'if mv "$1" "$2/old.app"; then mv "$3" "$1" || mv "$2/old.app" "$1"; fi; open "$1"; sleep 2; rm -rf "$2"';
 
-module.exports = { REPO, TARGETS, parseVer, cmpVer, parseMeta, parseRelease, isNewer, check, download, winScript, macBundle, macStage, MAC_STAGE, MAC_SWAP };
+/* Mac, maj automatique installée à la fermeture de l'app : même remplacement, sans relancer l'app */
+const MAC_SWAP_QUIT = MAC_SWAP.replace('open "$1"; ', "");
+
+module.exports = { REPO, TARGETS, parseVer, cmpVer, parseMeta, parseRelease, isNewer, check, download, winScript, macBundle, macStage, MAC_STAGE, MAC_SWAP, MAC_SWAP_QUIT };
