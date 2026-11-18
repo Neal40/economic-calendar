@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.65.1] — 2026-11-19
+### Corrigé
+- **Excalidraw : l'app gelait** en cliquant sur Visualisation ou Partager sur X (plus d'une minute sur un grand tableau en mode sombre : le filtre sombre d'Excalidraw sur un très grand canvas). Mode sombre recalculé par blocs (même rendu, moins de 2 s, l'interface reste fluide), aperçu réduit (2 000 px), image pour X limitée à 4 096 px, export limité à 16 384 px / 40 Mpx (échelle réduite automatiquement et signalée), boutons bloqués pendant le rendu.
+
 ## [1.65.0] — 2026-11-18
 ### Amélioré
 - **Excalidraw : Partager sur X** : l'image est maintenant **collée directement dans le post** (vrai collage, comme Ctrl+V) dès que la rédaction de X est prête, dans la fenêtre X de l'app et aussi avec « Ouvrir dans Chrome » (Windows : l'onglet X est mis au premier plan et l'image y est collée). Ajout par le champ fichier en secours.

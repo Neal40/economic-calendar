@@ -11496,14 +11496,50 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
   /* ---------- export de l'image avec Visualisation ---------- */
   const EDEF = { fmt: "png", bg: true, dark: true, scale: 2, pad: 16, sel: false, embed: false };
   const opts = () => Object.assign({}, EDEF, lsGet(EK, {}));
-  async function render(o) {
+  /* rendu d'export. mode "preview" (aperçu rapide, 2 000 px max), "x" (4 096 px max, limite de X) ou "full" (16 384 px / 40 Mpx max).
+     Mode sombre fait ici (inversion par blocs, l'interface reste fluide) : le filtre CSS d'Excalidraw sur un grand canvas gelait l'app plusieurs minutes. */
+  const LIM = { preview: [2000, 6e6], x: [4096, 16e6], full: [16384, 40e6] }, tick = () => new Promise((r) => setTimeout(r, 0));
+  async function darken(cv) { // = filter: invert(93%) hue-rotate(180deg), pixel par pixel
+    const ctx = cv.getContext("2d", { willReadFrequently: true }), W = cv.width, H = cv.height, rows = Math.max(1, Math.floor(1.5e6 / W));
+    for (let y = 0; y < H; y += rows) {
+      const h = Math.min(rows, H - y), id = ctx.getImageData(0, y, W, h), d = id.data;
+      for (let i = 0; i < d.length; i += 4) {
+        if (!d[i + 3]) continue;
+        const r = 237.15 - 0.86 * d[i], g = 237.15 - 0.86 * d[i + 1], b = 237.15 - 0.86 * d[i + 2];
+        d[i] = -0.574 * r + 1.43 * g + 0.144 * b; d[i + 1] = 0.426 * r + 0.43 * g + 0.144 * b; d[i + 2] = 0.426 * r + 1.43 * g - 0.856 * b; // Uint8Clamped : borné 0-255
+      }
+      ctx.putImageData(id, 0, y); await tick();
+    }
+  }
+  async function render(o, mode) {
     if (!api) throw new Error("tableau pas encore chargé");
     const s = api.getAppState(); let els = api.getSceneElements();
     if (o.sel) { const pick = els.filter((e) => s.selectedElementIds && s.selectedElementIds[e.id]); if (pick.length) els = pick; }
     if (!els.length) throw new Error("le tableau est vide");
-    const appState = Object.assign({}, s, { exportBackground: o.bg, exportWithDarkMode: o.dark, exportScale: o.scale, exportEmbedScene: o.embed });
-    if (o.fmt === "svg") { const svg = await lib.exportToSvg({ elements: els, appState, files: api.getFiles(), exportPadding: o.pad }); return new Blob([svg.outerHTML], { type: "image/svg+xml" }); }
-    return lib.exportToBlob({ elements: els, appState, files: api.getFiles(), mimeType: "image/png", exportPadding: o.pad, getDimensions: (w, h) => ({ width: w * o.scale, height: h * o.scale, scale: o.scale }) });
+    await tick();
+    const [maxSide, maxPx] = LIM[mode] || LIM.full, [fSide, fPx] = LIM.full, files = api.getFiles();
+    const meta = { scale: o.scale };
+    const dims = (w, h) => { const cap = (sd, px) => Math.min(o.scale, sd / Math.max(w, h), Math.sqrt(px / (w * h)));
+      const k = cap(maxSide, maxPx), kf = cap(fSide, fPx); Object.assign(meta, { w: Math.round(w * k), h: Math.round(h * k), fw: Math.round(w * kf), fh: Math.round(h * kf), fullScale: kf, reduced: kf < o.scale - 1e-6 });
+      return { width: Math.round(w * k), height: Math.round(h * k), scale: k }; };
+    let blob;
+    if (o.fmt === "svg") {
+      const svg = await lib.exportToSvg({ elements: els, appState: Object.assign({}, s, { exportBackground: o.bg, exportWithDarkMode: o.dark, exportScale: o.scale, exportEmbedScene: o.embed }), files, exportPadding: o.pad });
+      const w = parseFloat(svg.getAttribute("width")) || 0, h = parseFloat(svg.getAttribute("height")) || 0; Object.assign(meta, { w, h, fw: w, fh: h, fullScale: o.scale, reduced: false });
+      blob = new Blob([svg.outerHTML], { type: "image/svg+xml" });
+    } else {
+      // images collées dans le tableau ou scène intégrée : rendu d'Excalidraw (son mode sombre ne retourne pas les photos), sinon rendu clair + inversion maison
+      const own = o.dark && !o.embed && !els.some((e) => e.type === "image");
+      const appState = Object.assign({}, s, { exportBackground: o.bg, exportWithDarkMode: o.dark && !own, exportScale: o.scale, exportEmbedScene: o.embed && mode !== "preview" });
+      if (!own) blob = await lib.exportToBlob({ elements: els, appState, files, mimeType: "image/png", exportPadding: o.pad, getDimensions: dims });
+      else {
+        const cv = await lib.exportToCanvas({ elements: els, appState, files, exportPadding: o.pad, getDimensions: dims });
+        await tick(); await darken(cv);
+        blob = await new Promise((res, rej) => cv.toBlob((b) => (b ? res(b) : rej(new Error("image trop grande"))), "image/png"));
+        cv.width = cv.height = 0;
+      }
+    }
+    blob.meta = meta; return blob;
   }
   const b64 = (blob) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
   async function saveBlob(blob, ext) {
@@ -11538,24 +11574,27 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
     const persist = () => { lsSet(EK, o); if (rendered) { ov.querySelector("#exPi").innerHTML = `<b class="exd-stale">Paramètres modifiés : clique sur Visualisation pour mettre à jour l'aperçu.</b>`; rendered = null; } };
     const close = () => { if (url) URL.revokeObjectURL(url); ov.remove(); document.removeEventListener("keydown", kd, true); };
     const kd = (e) => { if (e.key === "Escape") { e.stopPropagation(); close(); } }; document.addEventListener("keydown", kd, true);
-    const get = async () => rendered && rendered.key === JSON.stringify(o) ? rendered.blob : render(o);
+    let running = false;
     ov.addEventListener("click", async (e) => {
       if (e.target === ov) return close();
       const sb = e.target.closest(".exd-seg button"); if (sb) { const k = sb.parentNode.dataset.k; o[k] = k === "scale" ? +sb.dataset.v : sb.dataset.v; sb.parentNode.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b === sb)); persist(); return; }
       const a = e.target.closest("[data-a]"); if (!a) return; const w = a.dataset.a;
       if (w === "close") return close();
       if (w === "x") { close(); return xDlg(); }
+      if (running) return; running = true; ov.querySelectorAll("[data-a=viz],[data-a=save],[data-a=copy]").forEach((x) => (x.disabled = true));
       try {
-        note(w === "viz" ? "Rendu en cours…" : ""); const blob = await get();
+        note(w === "viz" ? "Rendu de l'aperçu…" : "Rendu de l'image en taille réelle…"); await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+        const blob = await render(o, w === "viz" ? "preview" : "full"), m = blob.meta || {};
         if (w === "viz") {
-          if (url) URL.revokeObjectURL(url); url = URL.createObjectURL(blob); rendered = { key: JSON.stringify(o), blob };
+          if (url) URL.revokeObjectURL(url); url = URL.createObjectURL(blob); rendered = true;
           const [iw, ih] = await imgSize(url);
           ov.querySelector("#exPv").innerHTML = `<img src="${url}" alt="Aperçu" class="${o.bg ? "" : "tr"}">`;
-          ov.querySelector("#exPi").textContent = `${o.fmt.toUpperCase()} · ${iw && ih ? iw + " × " + ih + " px" : ""} · ${kb(blob.size)} · échelle ${o.scale}× · marge ${o.pad} px · ${o.bg ? "avec" : "sans"} arrière-plan · ${o.dark ? "sombre" : "clair"}${o.sel ? " · sélection" : ""}${o.embed ? " · scène intégrée" : ""}`;
+          ov.querySelector("#exPi").innerHTML = esc(`${o.fmt.toUpperCase()} · image finale ${m.fw || iw} × ${m.fh || ih} px · échelle ${o.scale}× · marge ${o.pad} px · ${o.bg ? "avec" : "sans"} arrière-plan · ${o.dark ? "sombre" : "clair"}${o.sel ? " · sélection" : ""}${o.embed ? " · scène intégrée" : ""}`) + (m.reduced ? `<br><b class="exd-stale">Tableau très grand : l'image sera enregistrée à l'échelle ${m.fullScale.toFixed(2)}× (limite 16 384 px / 40 Mpx).</b>` : "") + (o.fmt === "png" && m.w && m.w < m.fw ? ` <span>(aperçu réduit à ${m.w} × ${m.h} px)</span>` : "");
           note("");
-        } else if (w === "save") { const f = await saveBlob(blob, o.fmt); note("✓ Enregistré : " + f); }
+        } else if (w === "save") { const f = await saveBlob(blob, o.fmt); note("✓ Enregistré (" + kb(blob.size) + ") : " + f); }
         else if (w === "copy") { await copyBlob(blob, o.fmt); note("✓ Image copiée dans le presse-papiers"); }
       } catch (err) { note("⚠ " + err.message); }
+      finally { running = false; ov.querySelectorAll("[data-a=viz],[data-a=save],[data-a=copy]").forEach((x) => (x.disabled = false)); }
     });
     ov.addEventListener("change", (e) => { const k = e.target.dataset.k; if (!k) return; o[k] = e.target.type === "checkbox" ? e.target.checked : Math.max(0, Math.min(200, +e.target.value || 0)); persist(); });
     ov.addEventListener("keydown", (e) => e.stopPropagation());
@@ -11574,13 +11613,13 @@ window.grApi = { state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, 
     view.appendChild(ov);
     const ta = ov.querySelector("textarea"), cnt = () => { const n = [...ta.value].length; ov.querySelector("#exCnt").textContent = n + " / 280" + (n > 280 ? " (au-delà : compte X Premium)" : ""); }; cnt(); ta.oninput = () => { cnt(); lsSet("econcal-excali-xtxt", ta.value); };
     let url = null, blob = null; const close = () => { if (url) URL.revokeObjectURL(url); ov.remove(); };
-    render(o).then((b) => { blob = b; url = URL.createObjectURL(b); ov.querySelector("#exXpv").innerHTML = `<img src="${url}" alt="Aperçu" class="${o.bg ? "" : "tr"}">`; }).catch((e) => { ov.querySelector("#exXpv").innerHTML = `<span>⚠ ${esc(e.message)}</span>`; });
+    new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30))).then(() => render(o, "x")).then((b) => { blob = b; url = URL.createObjectURL(b); ov.querySelector("#exXpv").innerHTML = `<img src="${url}" alt="Aperçu" class="${o.bg ? "" : "tr"}">`; }).catch((e) => { ov.querySelector("#exXpv").innerHTML = `<span>⚠ ${esc(e.message)}</span>`; });
     ov.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Escape") close(); });
     ov.addEventListener("click", async (e) => {
       if (e.target === ov) return close(); const a = e.target.closest("[data-a]"); if (!a) return;
       if (a.dataset.a === "close") return close();
       const n = ov.querySelector("#exXn"); n.textContent = "";
-      try { if (!blob) blob = await render(o); } catch (err) { n.textContent = "⚠ Image impossible : " + err.message; return; }
+      try { if (!blob) blob = await render(o, "x"); } catch (err) { n.textContent = "⚠ Image impossible : " + err.message; return; }
       if (D) {
         const data = await b64(blob);
         if (a.dataset.a === "chrome") { await D.excaliOpenX(ta.value, data); n.textContent = "✓ X s'ouvre dans Chrome : l'image se colle dans le post dès que la page est prête (sinon Ctrl+V). Ne touche pas au clavier quelques secondes."; return; }
