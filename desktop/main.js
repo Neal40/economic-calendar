@@ -295,7 +295,8 @@ ipcMain.handle("excali:remove", (e, n) => exdTry((x) => x.remove(n)));
 ipcMain.handle("excali:export", (e, n, ext, b64) => exdTry((x) => { const f = x.exportImage(n, ext, b64); shell.showItemInFolder(f); return f; }));
 ipcMain.handle("excali:openDir", () => { const x = exd(); fs.mkdirSync(x.dir, { recursive: true }); return shell.openPath(x.dir); });
 // post X en brouillon : ouvre la fenêtre de rédaction de x.com dans Chrome (où l'utilisateur est connecté), texte prérempli ; l'image est collée par l'utilisateur (Ctrl+V)
-ipcMain.handle("excali:openX", (e, text) => {
+ipcMain.handle("excali:openX", (e, text, b64) => {
+  if (b64 && /^[A-Za-z0-9+/=]+$/.test(b64)) try { const { clipboard, nativeImage } = require("electron"); clipboard.writeImage(nativeImage.createFromBuffer(Buffer.from(b64, "base64"))); } catch (err) { /* ignore */ }
   const url = "https://x.com/intent/post?text=" + encodeURIComponent(String(text || "").slice(0, 2000));
   const { spawn } = require("child_process");
   try {
@@ -304,6 +305,33 @@ ipcMain.handle("excali:openX", (e, text) => {
     else shell.openExternal(url);
   } catch (err) { shell.openExternal(url); }
   return { ok: true };
+});
+// post X en brouillon avec l'image déjà ajoutée : fenêtre x.com dans l'app (session persist:x, connexion gardée ; rien n'est publié sans l'utilisateur)
+let xWin = null;
+ipcMain.handle("excali:postX", async (e, text, b64) => {
+  try {
+    const { clipboard, nativeImage } = require("electron"), { xAttachScript } = require("./excalidraw");
+    if (!/^[A-Za-z0-9+/=]+$/.test(String(b64 || "")) || b64.length > 40e6) return { ok: false, reason: "image invalide" };
+    clipboard.writeImage(nativeImage.createFromBuffer(Buffer.from(b64, "base64"))); // secours : Ctrl+V
+    const url = "https://x.com/intent/post?text=" + encodeURIComponent(String(text || "").slice(0, 2000));
+    if (xWin && !xWin.isDestroyed()) xWin.close();
+    const w = xWin = new BrowserWindow({ width: 820, height: 860, parent: win || undefined, title: "X — brouillon (Inner Circle Trader)", autoHideMenuBar: true, backgroundColor: "#000000",
+      webPreferences: { partition: "persist:x", contextIsolation: true, sandbox: true, nodeIntegration: false } });
+    w.webContents.setWindowOpenHandler(({ url: u }) => { if (/^https?:/i.test(u)) shell.openExternal(u); return { action: "deny" }; });
+    let done = false, relaunched = false; const script = xAttachScript(b64);
+    // après une connexion, X renvoie sur l'accueil : on rouvre la rédaction une fois
+    const back = (ev, u) => { if (!done && !relaunched && /x\.com\/home/.test(u)) { relaunched = true; w.loadURL(url); } };
+    w.webContents.on("did-navigate", back); w.webContents.on("did-navigate-in-page", back);
+    const t0 = Date.now(), tick = async () => {
+      if (done || w.isDestroyed()) return;
+      try { const r = await w.webContents.executeJavaScript(script, true); if (r === "ok" || r === "done") { done = true; return; } } catch (err) { /* page en chargement */ }
+      if (Date.now() - t0 < 10 * 60e3) setTimeout(tick, 1000);
+    };
+    w.webContents.on("did-finish-load", () => setTimeout(tick, 800));
+    w.on("closed", () => { if (xWin === w) xWin = null; });
+    await w.loadURL(url);
+    return { ok: true };
+  } catch (err) { return { ok: false, reason: String(err.message || err) }; }
 });
 ipcMain.handle("tsx:chromeLinked", () => !!getChromeToken());
 

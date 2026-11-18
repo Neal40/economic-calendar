@@ -59,7 +59,8 @@ contextBridge.exposeInMainWorld("desktop", {
   excaliRemove: (n) => ipcRenderer.invoke("excali:remove", n),
   excaliExport: (n, ext, b64) => ipcRenderer.invoke("excali:export", n, ext, b64),
   excaliOpenDir: () => ipcRenderer.invoke("excali:openDir"),
-  excaliOpenX: (text) => ipcRenderer.invoke("excali:openX", text),
+  excaliOpenX: (text, b64) => ipcRenderer.invoke("excali:openX", text, b64),
+  excaliPostX: (text, b64) => ipcRenderer.invoke("excali:postX", text, b64),
   newWindow: (view) => ipcRenderer.invoke("app:newWindow", view),
   // Paramètres › Profil › Application : version, dernière release GitHub, mise à jour lancée par l'utilisateur
   appInfo: () => ipcRenderer.invoke("app:info"),

@@ -24,4 +24,14 @@ function make(dir) {
     exportImage(name, ext, b64) { if (!/^(png|svg)$/.test(ext)) throw new Error("format invalide"); const d = ensure(path.join(dir, "Exports")); const n = free(name, d, "." + ext); const f = path.join(d, n + "." + ext); fs.writeFileSync(f, Buffer.from(String(b64), "base64")); return f; },
   };
 }
-module.exports = { make, safeName, EXT };
+// Script injecté dans la fenêtre de rédaction de x.com : ajoute l'image au post via le champ fichier du compositeur (comme un glisser-déposer). Renvoie "ok", "wait" (compositeur pas encore là) ou "done".
+function xAttachScript(b64) {
+  return `(() => { try { if (window.__ictImg) return "done";
+    const inp = document.querySelector('input[data-testid="fileInput"]') || [...document.querySelectorAll('input[type="file"]')].find((i) => /image/.test(i.accept || ""));
+    if (!inp) return "wait";
+    const bin = atob(${JSON.stringify(String(b64))}), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    const dt = new DataTransfer(); dt.items.add(new File([u], "excalidraw.png", { type: "image/png" }));
+    inp.files = dt.files; inp.dispatchEvent(new Event("input", { bubbles: true })); inp.dispatchEvent(new Event("change", { bubbles: true }));
+    window.__ictImg = 1; return "ok"; } catch (e) { return "err:" + e.message; } })()`;
+}
+module.exports = { make, safeName, EXT, xAttachScript };

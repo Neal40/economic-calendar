@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.64.0] — 2026-11-18
+### Amélioré
+- **Excalidraw : Partager sur X** : le brouillon s'ouvre maintenant dans une fenêtre X de l'app avec le texte **et l'image déjà ajoutée** au post (connexion à X gardée après la 1re fois ; rien n'est publié sans toi). L'image est aussi copiée par le presse-papiers système (Ctrl+V de secours). Bouton « Dans Chrome (Ctrl+V) » pour passer par ton Chrome.
+
 ## [1.63.0] — 2026-11-18
 ### Ajouté
 - **Excalidraw : dessins enregistrés dans un dossier** : dans l'app, chaque tableau est un fichier `.excalidraw` dans `Bureau\Inner Circle Trader\Excalidraw\` (s'ouvre aussi sur excalidraw.com). Bouton « 📁 Dossier » pour l'ouvrir ; un tableau supprimé part dans `Excalidraw\_supprimés` (jamais effacé). Les tableaux déjà dessinés sont recopiés dans le dossier à la première ouverture. Sur le site web, ils restent dans le navigateur.
