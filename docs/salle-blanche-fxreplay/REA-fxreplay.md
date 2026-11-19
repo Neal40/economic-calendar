@@ -4,7 +4,7 @@
 
 ## Résumé
 
-Ce REA décrit en 118 exigences tout ce que fait FX Replay d'après sa documentation publique, et les compare à l'app ICT : 43 sont déjà là (dont les 9 de la phase 1, livrée en v1.66.0), 50 en partie, 19 manquent et 6 sont hors périmètre.
+Ce REA décrit en 118 exigences tout ce que fait FX Replay d'après sa documentation publique, et les compare à l'app ICT : 44 sont déjà là (dont 10 livrées par la phase 1 en v1.66.0), 49 en partie, 19 manquent et 6 sont hors périmètre.
 
 Les 17 priorités P1 portent sur cinq chantiers : un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. La phase 1 (v1.66.0) en a livré 8 ; il en reste 9 (exécution, journal, filtres).
 
@@ -135,7 +135,7 @@ Le replay fait avancer le marché sans jamais montrer le futur, et le retour arr
 | REP-09 | Menu « Aller à » vers l'avant : prochaine séance (Asie, Londres, New York), ouverture du jour suivant, fenêtres Silver Bullet, prochaine news, date et heure futures, prix touché avec durée de recherche maximale | 🟡 v1.51, avec macros ICT et premarket en plus ; pas de durée maximale pour le saut au prix | P3 |
 | REP-10 | Personnaliser ce menu : favoris, heures modifiables en heure de New York, jours exclus, retour aux défauts, raccourci par entrée | ✅ | — |
 | REP-11 | Clic droit dans la zone vide à droite de la dernière bougie : avancer jusqu'à ce point | ❌ | P2 |
-| REP-12 | Arrêter le replay à la date de fin de session, avec un message clair | 🟡 message « Fin des données », pas de date de fin de session | P2 |
+| REP-12 | Arrêter le replay à la date de fin de session, avec un message clair | ✅ v1.66 : en session, arrêt à la date de fin (clôture 17:00 New York) avec message « Fin de la session » ; hors session, « Fin des données » comme avant | P2 |
 | REP-13 | Pendant un saut, exécuter les ordres sur toutes les bougies traversées | ✅ | — |
 
 Sources : [Rejouer le marché](https://support.fxreplay.com/articles/mastering-the-replay-feature), [Revenir en arrière](https://support.fxreplay.com/articles/how-to-use-bar-replay---right-click-replay), [Avancer « Aller à »](https://support.fxreplay.com/articles/how-to-skip-ahead-go-to-sessions-future-date-price).
@@ -442,13 +442,13 @@ Points d'attention relevés dans le code :
 
 ## Matrice d'écart
 
-Sur 118 exigences, 43 sont présentes (36 %), 50 partielles (42 %), 19 absentes (16 %) et 6 hors périmètre. Après la phase 1 (v1.66.0), 8 des 17 priorités P1 sont livrées ; les 9 restantes tiennent dans 3 modules (ORD, JRN, ANA).
+Sur 118 exigences, 44 sont présentes (37 %), 49 partielles (42 %), 19 absentes (16 %) et 6 hors périmètre. Après la phase 1 (v1.66.0), 8 des 17 priorités P1 sont livrées ; les 9 restantes tiennent dans 3 modules (ORD, JRN, ANA).
 
 | Module | Exigences | ✅ | 🟡 | ❌ | ⛔ | dont P1 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Ordres et exécution (ORD) | 16 | 4 | 8 | 4 | 0 | 5 |
 | Sessions (SES) | 12 | 5 | 3 | 3 | 1 | 4 |
-| Replay (REP) | 13 | 9 | 3 | 1 | 0 | 3 |
+| Replay (REP) | 13 | 10 | 2 | 1 | 0 | 3 |
 | Journal de backtest (JRN) | 9 | 0 | 4 | 5 | 0 | 3 |
 | Prop firm (PRO) | 6 | 3 | 3 | 0 | 0 | 1 |
 | Analytique (ANA) | 15 | 6 | 8 | 1 | 0 | 1 |
@@ -460,7 +460,7 @@ Sur 118 exigences, 43 sont présentes (36 %), 50 partielles (42 %), 19 absentes 
 | Stratégies (STR) | 3 | 0 | 2 | 0 | 1 | 0 |
 | Données (DAT) | 3 | 1 | 1 | 0 | 1 | 0 |
 | Compétitions (BAT) | 2 | 0 | 0 | 1 | 1 | 0 |
-| **Total** | **118** | **43** | **50** | **19** | **6** | **17** |
+| **Total** | **118** | **44** | **49** | **19** | **6** | **17** |
 
 Les 17 priorités P1, par thème :
 
