@@ -2,6 +2,19 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.66.0] — 2026-11-19
+Backtesteur, phase 1 de la salle blanche (`docs/salle-blanche-fxreplay/REA-fxreplay.md` : REP-04 → 07, SES-01 / 02 / 03 / 12, PRO-02). Tout s'ajoute : sans ces nouveautés, le Backtesteur se comporte comme en 1.65.1 (compte `bt-acc`, dessins, raccourcis et sessions enregistrées inchangés).
+### Ajouté
+- **Rejouer depuis une bougie** : clic droit sur une bougie déjà rejouée › « Rejouer depuis ici », ou bouton ⤺ dans la barre de replay puis clic sur la bougie (Échap annule). Un avertissement liste les trades et ordres qui seront annulés, puis compte, ordres, solde et règles redeviennent exactement ceux de ce moment (bougie affichée, avant tes actions sur elle). Impossible avant le début du replay ou de la session.
+- **Journal du replay** : chaque changement du compte (ordre posé, déplacé, annulé, exécuté, SL / TP déplacés, breakeven, début de séance) est noté avec un instantané ; revenir à un moment restaure le dernier instantané puis rejoue les bougies, d'où le même état qu'un replay direct (testé dans `tools/check.js` avec le vrai code du compte).
+- **Sessions isolées** (Sessions de backtest › « ＋ Nouvelle session… ») : assistant avec nom, type (backtest libre ou challenge prop firm, case « mode strict »), solde de départ (10K / 50K / 100K / 250K / libre ; en challenge 50K / 100K / 150K avec les règles du type Prop, modifiables), stratégie, actifs (NQ, ES, MNQ, MES), départ choisi ou tiré au hasard parmi les jours disponibles (bornes des données affichées), fin automatique ou date (+1 jour / +1 semaine / +1 mois), frais et slippage repris du type de compte. Chaque session a son compte, ses ordres, ses trades, ses notes, ses dessins et son heure de replay ; elle est enregistrée en continu (toutes les 5 s, à chaque ordre, à la fermeture de l'app ou en changeant de session) et rouverte telle quelle au lancement. Badge de la session dans la barre du compte (× = enregistrer et revenir au Backtesteur de base). À la date de fin, le replay s'arrête avec un message.
+- **Challenge strict** : dans une session créée en mode strict, aucun bouton ni raccourci ne recule (bougie précédente, curseur, Recommencer, Rejouer depuis ici, date antérieure) ; lecture, vitesse et sauts vers l'avant restent permis.
+- **Paramètres › Replay › Autoriser le retour arrière** (activé par défaut).
+- **Panneau Règles** dans le dock (onglet « Règles », Alt+U, raccourci libre) : objectif, DLL, MLL trailing et consistance du type de compte Prop, avec limite, valeur actuelle, marge restante et barre de progression, à jour à chaque bougie ; « Compte sans règles » en Classique.
+### Modifié
+- **Bougie précédente** (← / J) : s'il n'y a ni trade ni ordre après le point, elle recule comme avant ; sinon elle demande « Annuler ce qui suit » ou « Reculer l'affichage seul (comme avant) ».
+- **Sessions de backtest** : les sessions isolées s'affichent au-dessus des instantanés, qui marchent comme avant (ouvrir un instantané enregistre d'abord la session isolée ouverte).
+
 ## [1.65.1] — 2026-11-19
 ### Corrigé
 - **Excalidraw : l'app gelait** en cliquant sur Visualisation ou Partager sur X (plus d'une minute sur un grand tableau en mode sombre : le filtre sombre d'Excalidraw sur un très grand canvas). Mode sombre recalculé par blocs (même rendu, moins de 2 s, l'interface reste fluide), aperçu réduit (2 000 px), image pour X limitée à 4 096 px, export limité à 16 384 px / 40 Mpx (échelle réduite automatiquement et signalée), boutons bloqués pendant le rendu.

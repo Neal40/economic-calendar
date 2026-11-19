@@ -103,9 +103,9 @@ Une session est un backtest nommé et isolé, avec son solde, ses actifs, sa pé
 
 | ID | Exigence | App ICT | Prio |
 | --- | --- | --- | --- |
-| SES-01 | Créer une session par un assistant : nom, type (backtest libre ou challenge), solde de départ (préréglages 10K / 50K / 100K / 250K ou libre), stratégie liée ou à créer, un ou plusieurs actifs, mise en page optionnelle | 🟡 la session est un instantané de l'état courant (nom, stratégie, description) ; solde via le type de compte global | P1 |
-| SES-02 | Choisir la période : date de départ fixée ou tirée au hasard ; fin automatique (la session s'étend en rejouant) ou date de fin avec raccourcis +1 jour / +1 semaine / +1 mois ; bornes de données min / max affichées par actif | ❌ | P1 |
-| SES-03 | Isoler chaque session : position du replay, compte, ordres, position, trades, notes et dessins propres (dessins partagés en option) | 🟡 l'instantané contient tout cela, mais ouvrir une session remplace l'état courant | P1 |
+| SES-01 | Créer une session par un assistant : nom, type (backtest libre ou challenge), solde de départ (préréglages 10K / 50K / 100K / 250K ou libre), stratégie liée ou à créer, un ou plusieurs actifs, mise en page optionnelle | ✅ v1.66 : assistant « Nouvelle session » (nom, libre ou challenge + mode strict, solde 10K / 50K / 100K / 250K / libre, challenge 50K / 100K / 150K aux règles Prop, stratégie, actifs) ; la mise en page reste celle du chart | P1 |
+| SES-02 | Choisir la période : date de départ fixée ou tirée au hasard ; fin automatique (la session s'étend en rejouant) ou date de fin avec raccourcis +1 jour / +1 semaine / +1 mois ; bornes de données min / max affichées par actif | ✅ v1.66 : départ choisi ou tiré au hasard, fin auto ou datée (arrêt à 17:00 NY avec message), bornes par actif (app desktop) | P1 |
+| SES-03 | Isoler chaque session : position du replay, compte, ordres, position, trades, notes et dessins propres (dessins partagés en option) | ✅ v1.66 : compte, ordres, trades, notes, dessins et heure du replay propres à chaque session ; dessins partagés via la synchro globale | P1 |
 | SES-04 | Activer commissions et spreads par actif ; désactivés, l'exécution se fait au prix brut | 🟡 frais par contrat dans le type de compte, communs à tout le Backtesteur | P2 |
 | SES-05 | Régler le slippage sur 4 niveaux : aucun, léger, moyen, fixe | 🟡 slippage en ticks (marché et stops), global | P2 |
 | SES-06 | Choisir netting (un ordre opposé réduit ou ferme) ou hedging, fixé à la création ; netting par défaut sur futures | ✅ netting, une position à la fois (le hedging est inutile sur futures) | — |
@@ -114,7 +114,7 @@ Une session est un backtest nommé et isolé, avec son solde, ses actifs, sa pé
 | SES-09 | Enregistrer une configuration de session en preset et la réappliquer | ❌ | P2 |
 | SES-10 | Liste des sessions : recherche, filtre, tri, reprise en un clic, renommer, dupliquer, supprimer, ouvrir l'analytique | 🟡 liste avec P&L, win rate, filtre par stratégie, ouvrir / écraser / renommer / supprimer | P2 |
 | SES-11 | Corbeille : restaurer une session supprimée, ou la supprimer définitivement | ❌ | P3 |
-| SES-12 | Sauvegarder la session en continu, sans action de l'utilisateur | 🟡 dessins toutes les 5 s et compte en local ; la session nommée s'écrase à la main | P1 |
+| SES-12 | Sauvegarder la session en continu, sans action de l'utilisateur | ✅ v1.66 : session enregistrée toutes les 5 s, à chaque ordre, à la fermeture et au changement de session ; rouverte au lancement | P1 |
 
 Sources : [Créer sa première session](https://support.fxreplay.com/articles/setting-up-your-first-backtesting-session), [Tableau de bord](https://support.fxreplay.com/articles/exploring-the-trader-dashboard-overview), [Spreads et commissions](https://support.fxreplay.com/articles/understanding-spreads-and-commissions), [Offres](https://support.fxreplay.com/articles/what-are-the-differences-between-fx-replay-plans-and-their-pricing), [Bougies lissées](https://support.fxreplay.com/articles/what-is-the-smoothing-candle-feature).
 
@@ -127,10 +127,10 @@ Le replay fait avancer le marché sans jamais montrer le futur, et le retour arr
 | REP-01 | Barre de replay : lecture / pause, pas suivant, pas précédent, vitesse au curseur, raccourcis | ✅ vitesse temps réel → 300× | — |
 | REP-02 | Pas du replay indépendant de l'unité du chart, avec « synchroniser avec le chart » activé par défaut | ✅ v1.51 | — |
 | REP-03 | Tous les charts avancent ensemble sur la même horloge | ✅ | — |
-| REP-04 | Revenir à une bougie choisie (clic, ou clic droit « rejouer depuis ici »), après un avertissement | ❌ seulement la bougie précédente | P1 |
-| REP-05 | Le retour arrière annule tout ce qui suit ce point : trades, ordres, solde, règles ; impossible avant la date de départ ; si des trades ou ordres suivent, « bougie précédente » propose d'annuler ce qui suit ou de reculer seulement l'affichage, comme aujourd'hui | ❌ la bougie précédente recule l'affichage sans annuler les trades (incohérence possible) | P1 |
-| REP-06 | Retour arrière interdit dans une session challenge créée en mode strict ; lecture, vitesse et sauts avant restent permis ; le compte Prop actuel garde son comportement | ❌ | P1 |
-| REP-07 | Option pour désactiver le retour arrière dans les réglages (activé par défaut, comme aujourd'hui) | ❌ | P2 |
+| REP-04 | Revenir à une bougie choisie (clic, ou clic droit « rejouer depuis ici »), après un avertissement | ✅ v1.66 : clic droit « Rejouer depuis ici » ou bouton de la barre de replay puis clic, avertissement listant trades et ordres annulés | P1 |
+| REP-05 | Le retour arrière annule tout ce qui suit ce point : trades, ordres, solde, règles ; impossible avant la date de départ ; si des trades ou ordres suivent, « bougie précédente » propose d'annuler ce qui suit ou de reculer seulement l'affichage, comme aujourd'hui | ✅ v1.66 : journal d'événements + instantané à chaque début de séance ; bougie précédente : comme avant, ou « Annuler ce qui suit » / « Reculer l'affichage seul » | P1 |
+| REP-06 | Retour arrière interdit dans une session challenge créée en mode strict ; lecture, vitesse et sauts avant restent permis ; le compte Prop actuel garde son comportement | ✅ v1.66 : aucun bouton ni raccourci ne recule en challenge strict | P1 |
+| REP-07 | Option pour désactiver le retour arrière dans les réglages (activé par défaut, comme aujourd'hui) | ✅ v1.66 : Paramètres › Replay › Autoriser le retour arrière | P2 |
 | REP-08 | « Voir une date » : déplace la vue sans changer la position du replay | 🟡 « Aller à une date » recharge le replay à cette date | P3 |
 | REP-09 | Menu « Aller à » vers l'avant : prochaine séance (Asie, Londres, New York), ouverture du jour suivant, fenêtres Silver Bullet, prochaine news, date et heure futures, prix touché avec durée de recherche maximale | 🟡 v1.51, avec macros ICT et premarket en plus ; pas de durée maximale pour le saut au prix | P3 |
 | REP-10 | Personnaliser ce menu : favoris, heures modifiables en heure de New York, jours exclus, retour aux défauts, raccourci par entrée | ✅ | — |
@@ -201,7 +201,7 @@ Les règles du challenge existent déjà et vont plus loin que FX Replay (consis
 | ID | Exigence | App ICT | Prio |
 | --- | --- | --- | --- |
 | PRO-01 | Session challenge : objectif de profit, perte maximale journalière, perte maximale totale | ✅ type de compte Prop (50K / 100K / 150K, MLL trailing fin de journée, DLL, objectif, consistance, payout) | — |
-| PRO-02 | Panneau des règles ouvrable au clavier : chaque règle, sa limite et la marge restante, mis à jour à chaque bougie | 🟡 barre BAL / MLL / RP&L / UP&L / DLL ; objectif et consistance calculés seulement à la clôture | P1 |
+| PRO-02 | Panneau des règles ouvrable au clavier : chaque règle, sa limite et la marge restante, mis à jour à chaque bougie | ✅ v1.66 : onglet Règles du dock (Alt+U) : objectif, DLL, MLL, consistance avec limite, valeur, marge et progression à chaque bougie | P1 |
 | PRO-03 | Échec : coupure immédiate, écran d'échec avec « recommencer » et « voir l'analytique » | 🟡 MLL : compte cramé et Reset ; DLL : arrêt jusqu'à la séance suivante | P2 |
 | PRO-04 | Réussite détectée en direct, avec un certificat image partageable | 🟡 objectif calculé à la clôture, pas de certificat | P3 |
 | PRO-05 | Indicateurs personnels autorisés pendant un challenge | ✅ | — |
