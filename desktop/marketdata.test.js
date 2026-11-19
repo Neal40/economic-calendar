@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert");
 const fs = require("fs"), os = require("os"), path = require("path");
-const { create, parseCsv, parseNY, mergeRows } = require("./marketdata");
+const { create, parseCsv, parseNY, mergeRows, csvEdges } = require("./marketdata");
 
 test("parseNY : date sans fuseau = heure de New York (hiver et été)", () => {
   assert.strictEqual(parseNY("2026-11-06 09:30:00"), Date.parse("2026-11-06T14:30:00Z") / 1000); // EST, UTC-5
@@ -52,5 +52,33 @@ test("dossier data_csv : un fichier par unité, trous du m1 comblés par la sync
     assert.strictEqual(await S.readTf("NQ", "m15", 0, 2e9), null);
     assert.deepStrictEqual(await S.span("NQ", "5s"), [t, t + 10]);
     assert.deepStrictEqual(S.status().csv.syms.NQ.sort(), ["5s", "D", "m1"]);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("v1.67 assets / csvEdges : actifs des dossiers data_csv et data avec leurs bornes, sans lire les fichiers en entier", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "md-")), csv = path.join(dir, "data_csv"); fs.mkdirSync(csv);
+  try {
+    const H = "time_ny,ts,open,high,low,close,volume", t = Date.parse("2026-11-06T14:30:00Z") / 1000, line = (s) => `x,${s},1,2,0,1,5`;
+    // data_csv : NQ m1 (gros fichier : la fin est lue à part), ES 1 s ; un fichier d'une autre unité n'est pas un actif de replay
+    const big = [H]; for (let i = 0; i < 6000; i++) big.push(line(t + i * 60)); big.push("");
+    fs.writeFileSync(path.join(csv, "NQ_m1.csv"), big.join("\r\n"));
+    fs.writeFileSync(path.join(csv, "ES_1s.csv"), [H, line(t), line(t + 1), ""].join("\n"));
+    fs.writeFileSync(path.join(csv, "YM_D.csv"), [H, line(t), ""].join("\n"));
+    // data (synchro) : NQ un fichier par an, ES m1 avec des heures en texte de New York ; fichiers vides ou sans colonne ts ignorés
+    fs.writeFileSync(path.join(dir, "NQ_m1_2025.csv"), [H, line(t - 400 * 86400), line(t - 300 * 86400), ""].join("\n"));
+    fs.writeFileSync(path.join(dir, "ES_m1_2026.csv"), ["time,open,high,low,close", "2026-11-05 09:30:00,1,2,0,1", "2026-11-05 09:31:00,1,2,0,1", ""].join("\n"));
+    fs.writeFileSync(path.join(dir, "ES_1s_2026-11.csv"), "");
+    fs.writeFileSync(path.join(dir, "MES_m1_2026.csv"), "date,open\n2026-11-05,1\n");
+    const S = create(dir, { csvDirs: [csv] }), a = await S.assets();
+    assert.strictEqual(a.csvDir, csv);
+    assert.deepStrictEqual(Object.keys(a.syms).sort(), ["ES", "NQ"]);
+    assert.deepStrictEqual(a.syms.NQ.m1, [t - 400 * 86400, t + 5999 * 60]);
+    assert.deepStrictEqual(a.syms.NQ.src.sort(), ["data", "data_csv"]);
+    assert.strictEqual(a.syms.NQ.s1, null);
+    assert.deepStrictEqual(a.syms.ES.s1, [t, t + 1]);
+    assert.deepStrictEqual(a.syms.ES.m1, [parseNY("2026-11-05 09:30:00"), parseNY("2026-11-05 09:31:00")]);
+    assert.deepStrictEqual(await csvEdges(path.join(csv, "NQ_m1.csv"), 4096), [t, t + 5999 * 60]); // lecture par petits blocs : même résultat
+    assert.strictEqual(await csvEdges(path.join(dir, "absent.csv")), null);
+    assert.deepStrictEqual(await create(path.join(dir, "vide")).assets().then((x) => x.syms), {});
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

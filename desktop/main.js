@@ -367,7 +367,7 @@ ipcMain.handle("app:newWindow", (e, view) => {
   const w = new BrowserWindow({ width: 1400, height: 900, minWidth: 900, minHeight: 600, backgroundColor: "#060607", title: "Inner Circle Trader",
     icon: path.join(__dirname, "app", "icon.png"), autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, sandbox: true, preload: path.join(__dirname, "preload.js") } });
-  w.loadFile(path.join(__dirname, "app", "index.html"), { hash: /^[a-z]+$/.test(view || "") ? view : "backtest" });
+  w.loadFile(path.join(__dirname, "app", "index.html"), { hash: /^[a-z]+(\/[a-z0-9-]+)*$/.test(view || "") ? view : "backtest" }); // v1.67 : sous-page (ex. backtest/chart)
   w.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });
   return true;
 });
@@ -402,6 +402,8 @@ ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
 ipcMain.handle("data:read", async (e, sym, from, to, res) => { try { return { ok: true, data: await md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+// v1.67 : actifs ayant des bougies (data_csv puis data) et leurs bornes, pour la fenêtre « Nouvelle session » des pages du Backtesteur (lecture légère : début et fin des CSV)
+ipcMain.handle("data:assets", async () => { try { return { ok: true, data: await md().assets() }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 ipcMain.handle("data:readTf", async (e, sym, tf, from, to) => { try { const d = await md().readTf(sym, tf, from, to); return d ? { ok: true, data: d, span: await md().span(sym, tf) } : { ok: false, reason: "missing" }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 ipcMain.handle("data:openDir", () => shell.openPath(md().dir));
 ipcMain.handle("data:import", async () => {
