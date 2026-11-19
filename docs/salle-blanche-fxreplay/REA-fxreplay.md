@@ -4,9 +4,9 @@
 
 ## Résumé
 
-Ce REA décrit en 118 exigences tout ce que fait FX Replay d'après sa documentation publique, et les compare à l'app ICT : 44 sont déjà là (dont 10 livrées par la phase 1 en v1.66.0), 49 en partie, 19 manquent et 6 sont hors périmètre.
+Ce REA décrit en 126 exigences tout ce que fait FX Replay d'après sa documentation publique et les demandes de Rudy, et les compare à l'app ICT : 45 sont déjà là (dont 10 livrées par la phase 1 en v1.66.0), 53 en partie, 22 manquent et 6 sont hors périmètre.
 
-Les 17 priorités P1 portent sur cinq chantiers : un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. La phase 1 (v1.66.0) en a livré 8 ; il en reste 9 (exécution, journal, filtres).
+Les 25 priorités P1 portent sur six chantiers : l'arborescence des pages du Backtesteur (module NAV, demandée par Rudy le 19/11), un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. 9 sont déjà là (la phase 1 en v1.66.0 et l'absence de limites d'offre) ; la phase 1b code l'arborescence, avant la phase 2.
 
 Après les 5 phases de la roadmap, le Backtesteur aura l'équivalent fonctionnel de FX Replay pour le backtest NQ / ES, adapté aux règles ICT et prop firm de Rudy, sans rien copier de son expression. Base de travail : 84 articles d'aide sur 87, 7 pages produit, le code de la v1.65.1 et la spécification du 12/11 déjà dans le repo, que ce document remplace.
 
@@ -28,6 +28,7 @@ Règles appliquées dans tout le document :
 - **Traçabilité** : chaque exigence porte un identifiant (ex. REP-03) et renvoie à la page lue dans la section Sources.
 - **Choix propres à l'app ICT** : stack, style TopstepX, données m1 TopstepX en CSV, comptes prop firm de Rudy. Là où FX Replay et l'app ICT diffèrent, c'est l'app ICT qui décide. Tout ce qui est repris s'ajoute au Backtesteur existant : rien n'est retiré ni remplacé, et les comportements par défaut comme les données déjà enregistrées restent inchangés.
 - **Questions des devs** : elles passent par un commentaire sur ce document ; la réponse est écrite ici, jamais transmise oralement depuis FX Replay.
+- **Captures de l'arbitre (19/11/2026)** : Rudy a montré l'organisation des pages de son compte FX Replay. La salle d'analyse les a lues et reformulées dans le module NAV ; elles ne sont ni dans le repo ni montrées aux implémenteurs.
 
 Ce document décrit une méthode de travail ; ce n'est pas un avis juridique.
 
@@ -93,7 +94,7 @@ Dans l'app ICT, aucune limite n'est reprise : tout est au niveau « Pro », et s
 
 ## Inventaire fonctionnel par module
 
-L'inventaire compte 118 exigences réparties en 14 modules ; chacune décrit ce que l'utilisateur peut faire, avec son statut dans l'app ICT et une priorité.
+L'inventaire compte 126 exigences réparties en 15 modules ; chacune décrit ce que l'utilisateur peut faire, avec son statut dans l'app ICT et une priorité.
 
 Légende — **Statut app ICT** : ✅ présent · 🟡 partiel · ❌ absent · ⛔ hors périmètre. **Priorité** : P1 gros gain pour le backtest ICT sur NQ / ES · P2 utile · P3 confort. Statuts établis en lisant le code de la v1.65.1 (`index.html`) et le CHANGELOG ; à confirmer en usage.
 
@@ -329,6 +330,49 @@ Source : [Actifs et historique](https://support.fxreplay.com/articles/what-asset
 
 Sources : [Raccourcis](https://support.fxreplay.com/articles/available-hotkeys-for-fx-replay), [Info-bulles](https://support.fxreplay.com/articles/how-to-use-keyboard-shortcuts-tooltips), [Réinitialiser le compte](https://support.fxreplay.com/articles/how-to-reset-your-account-data).
 
+### 15. Arborescence des pages (NAV)
+
+Demande de l'arbitre du 19/11/2026 : le Backtesteur s'organise en pages, avec son propre menu à gauche dans la page. Trois pages seulement ; l'habillage reste celui de l'app.
+
+```text
+Backtesteur (menu dans la page)
+├── Testing ...... accueil : Tableau de bord · Sessions · Trades · Analytique
+│     └── fenêtre « Nouvelle session » : Backtesting | Prop firm
+├── Stratégies ... cartes → fiche : Vue d'ensemble · Règles · Docs · Trades
+├── Paramètres ... Backtesting · Spreads & commissions · Journal · Sessions supprimées · Modèles
+└── Chart ........ une session ou le Backtesteur de base (replay actuel), avec retour aux pages
+    (pas de pages live, compétitions ni formation)
+```
+
+| ID | Exigence | App ICT | Prio |
+| --- | --- | --- | --- |
+| NAV-01 | Menu propre au Backtesteur, dans la page, à gauche du contenu : Testing, Stratégies, Paramètres ; le menu de l'app ne change pas ; pas de pages live, compétitions ni formation | ❌ | P1 |
+| NAV-02 | Cliquer sur Backtesteur ouvre Testing › Tableau de bord ; ouvrir une session ou le Backtesteur de base affiche le chart actuel, avec un retour vers les pages ; la dernière page vue est retenue | ❌ | P1 |
+| NAV-03 | Testing a quatre onglets : Tableau de bord, Sessions, Trades, Analytique ; le tableau de bord propose trois départs : session de backtesting, session prop firm, Backtesteur de base | ❌ | P1 |
+| NAV-04 | Créer une session dans une fenêtre à deux onglets (Backtesting, Prop firm) et deux étapes : Essentiel (nom, solde par préréglage ou libre, stratégie choisie ou créée sur place, actifs, modèle de chart, dates), puis Options (spreads, commissions, slippage) ; presets en tête de fenêtre | 🟡 assistant de la v1.66 dans la fenêtre Sessions du chart | P1 |
+| NAV-05 | Les actifs proposés sont ceux qui ont des bougies dans les CSV de l'app (dossiers `data_csv` et `data`), avec leurs bornes de dates ; aucun actif sans données | 🟡 liste fixe NQ / ES / MNQ / MES, bornes affichées en v1.66 | P1 |
+| NAV-06 | Stratégies : une carte par stratégie (win rate, trades, drawdown max, R:R moyen, mini-courbe d'équité, ou mention sans données ; alerte si aucune règle), recherche, filtre, nouvelle stratégie ; fiche avec nom, auteur, description, menu renommer / dupliquer / supprimer, bouton « Tester » qui ouvre la création de session avec elle, onglets Vue d'ensemble, Règles, Docs, Trades | 🟡 champ stratégie en texte libre par session | P1 |
+| NAV-07 | Paramètres a cinq onglets : Backtesting (réglages actuels du Backtesteur), Spreads & commissions (par actif, repris à chaque nouvelle session), Journal (groupes de tags), Sessions supprimées (corbeille), Modèles (modèles de notes) | 🟡 réglages dans une fenêtre du chart | P1 |
+| NAV-08 | Aucune limite d'offre : tout ce que FX Replay réserve à sa formule la plus haute est inclus sans plafond (stratégies, analytique de stratégie, données à la seconde, Monte Carlo, simulateur R:R, futures CME, captures et checklists, durée de conservation des données) | ✅ rien n'est bridé ; règle à garder pour chaque ajout | P1 |
+
+Contenu attendu de chaque page :
+
+| Page › onglet | Ce que l'utilisateur y fait | Exigences |
+| --- | --- | --- |
+| Testing › Tableau de bord | Lancer une session (backtesting, prop firm) ou le Backtesteur de base ; voir sa progression (temps passé, temps de marché rejoué, trades, win rate), sa série de jours et ses sessions récentes | NAV-03, TDB-01 à 03 |
+| Testing › Sessions | Chercher, filtrer, trier, reprendre, renommer, dupliquer une session ; la supprimer vers la corbeille ; ouvrir son analytique ; anciennes sessions-instantanés à part | SES-10, SES-11 |
+| Testing › Trades | Tous les trades backtest dans une table : sessions choisies, tri, colonnes, filtres ; résultat en $, % et R | JRN-01, JRN-04 |
+| Testing › Analytique | L'analytique actuelle, dans la page, filtrable par session et par stratégie | ANA-01 à 15, STR-02 |
+| Fenêtre « Nouvelle session » | Backtesting ou Prop firm, presets, actifs des CSV, coûts repris des Paramètres | NAV-04, NAV-05, SES-01, 02, 04, 05, 09 |
+| Stratégies › liste et fiche | Vue d'ensemble (P&L net, win rate, R:R moyen, trades gagnants / perdants, breakeven, mention « backtest seulement », courbe d'équité) ; Règles (liste ; vide : invitation à en définir) ; Docs (notes et images) ; Trades (table filtrable par session, ajout de trades, compteur) | NAV-06, STR-01, STR-02, JRN-07 |
+| Paramètres › Backtesting | Les réglages actuels du Backtesteur (ceux de la fenêtre Paramètres du chart) | NAV-07 |
+| Paramètres › Spreads & commissions | Une ligne par actif (spread, commission), ajout, suppression, enregistrement ; valeurs reprises à chaque nouvelle session | SES-04, SES-05 |
+| Paramètres › Journal | Groupes de tags colorés, réordonnables, recherche | JRN-08 |
+| Paramètres › Sessions supprimées | Table (période, nom, solde de départ et actuel, stratégie, actifs, heure du replay, date de création), restaurer ou supprimer définitivement, pagination | SES-11 |
+| Paramètres › Modèles | Modèles de notes : recherche, favoris, modèles intégrés à dupliquer pour les modifier, date de dernière modification | JRN-07 |
+
+Source : captures de l'arbitre (son compte FX Replay, 19/11/2026), lues par la salle d'analyse seulement et non versées au repo. Les textes, libellés et modèles intégrés de l'app sont écrits par nous.
+
 ## Spécification d'implémentation
 
 L'implémentation repose sur trois briques : une session isolée qui enregistre chaque événement, un moteur qui rejoue ces événements pour revenir en arrière sans incohérence, et des calculs purs testés dans `tools/check.js`. Les valeurs ci-dessous sont celles de l'app ICT ; celles de FX Replay ne sont pas publiques.
@@ -344,6 +388,9 @@ L'implémentation repose sur trois briques : une session isolée qui enregistre 
 | Modèle | id, nom, type (note ou checklist), contenu, défaut pour (backtest ou live) | Les cases cochées d'une checklist sont stockées dans le trade. |
 | Preset | nom, type (ordre ou session), valeurs, actif (oui ou non) | Un seul preset d'ordre actif à la fois, utilisé par les boutons rapides. |
 | Mise en page | nom, état, 10 dernières versions | Restaurer = copier une version dans l'état courant. |
+| Stratégie | id, nom, auteur, description, règles (liste), docs (notes, images), dates de création et de modification | Ses chiffres se calculent à partir des trades des sessions liées et des trades ajoutés à la main ; rien n'est recopié. |
+| Groupe de tags | id, nom, tags (nom, couleur, ordre) | Les tags libres déjà posés restent valides. |
+| Coûts par actif | actif, spread (ticks), commission ($ par contrat) | Proposés à la création d'une session, modifiables dans la session. |
 
 ### Replay, sauts et retour arrière
 
@@ -417,7 +464,8 @@ Le style reste celui de l'app (thème TopstepX, variables `--tx-*`) :
 - **Dock de droite** : onglets Ordre, Journal, News, Règles (PRO-02) et Objets.
 - **Ticket** : une ligne par TP, « TP n · quantité · prix » (ORD-05).
 - **Clic droit sur le chart** : en tête du menu, les deux ordres possibles au prix cliqué (ORD-09), puis les actions de dessin.
-- **Journal de trading › Journal backtest** : nouvelle vue « Trades » (JRN-01) avec la fiche trade (JRN-05).
+- **Testing › Trades** (NAV-03) : la table de tous les trades (JRN-01) avec la fiche trade (JRN-05) ; le Journal de trading peut y renvoyer.
+- **Pages du Backtesteur** (NAV) : menu propre à gauche dans la page ; le chart s'ouvre en plein écran pour une session ou le Backtesteur de base, avec un bouton de retour vers les pages.
 
 ## État actuel du Backtesteur (v1.65.1)
 
@@ -442,10 +490,11 @@ Points d'attention relevés dans le code :
 
 ## Matrice d'écart
 
-Sur 118 exigences, 44 sont présentes (37 %), 49 partielles (42 %), 19 absentes (16 %) et 6 hors périmètre. Après la phase 1 (v1.66.0), 8 des 17 priorités P1 sont livrées ; les 9 restantes tiennent dans 3 modules (ORD, JRN, ANA).
+Sur 126 exigences, 45 sont présentes (36 %), 53 partielles (42 %), 22 absentes (17 %) et 6 hors périmètre. 9 des 25 priorités P1 sont livrées (phase 1 et NAV-08) ; les 16 restantes tiennent dans 4 modules (NAV, ORD, JRN, ANA).
 
 | Module | Exigences | ✅ | 🟡 | ❌ | ⛔ | dont P1 |
 | --- | --- | --- | --- | --- | --- | --- |
+| Arborescence des pages (NAV) | 8 | 1 | 4 | 3 | 0 | 8 |
 | Ordres et exécution (ORD) | 16 | 4 | 8 | 4 | 0 | 5 |
 | Sessions (SES) | 12 | 5 | 3 | 3 | 1 | 4 |
 | Replay (REP) | 13 | 10 | 2 | 1 | 0 | 3 |
@@ -460,10 +509,11 @@ Sur 118 exigences, 44 sont présentes (37 %), 49 partielles (42 %), 19 absentes 
 | Stratégies (STR) | 3 | 0 | 2 | 0 | 1 | 0 |
 | Données (DAT) | 3 | 1 | 1 | 0 | 1 | 0 |
 | Compétitions (BAT) | 2 | 0 | 0 | 1 | 1 | 0 |
-| **Total** | **118** | **44** | **49** | **19** | **6** | **17** |
+| **Total** | **126** | **45** | **53** | **22** | **6** | **25** |
 
-Les 17 priorités P1, par thème :
+Les 25 priorités P1, par thème :
 
+- **Arborescence des pages** : NAV-01 à 08 (menu dans la page, Testing, création de session, actifs des CSV, Stratégies, Paramètres ; NAV-08 ✅).
 - **Retour arrière fiable** (✅ v1.66.0) : REP-04 rejouer depuis une bougie, REP-05 tout annuler après ce point, REP-06 interdit en challenge.
 - **Sessions isolées** (✅ v1.66.0) : SES-01 assistant de création, SES-02 période (départ aléatoire, fin), SES-03 isolation, SES-12 sauvegarde continue.
 - **Exécution** : ORD-01 outil position → ticket, ORD-02 ticket complet, ORD-05 TP multiples, ORD-09 ordre au clic droit, ORD-12 prise de partiels.
@@ -475,11 +525,11 @@ Les partiels (ORD-05, ORD-12) collent à la règle de Rudy : 50 % à 2R puis bre
 
 ## Roadmap et critères d'acceptation
 
-La roadmap tient en 5 phases : les P1 d'abord (intégrité et sessions, exécution, journal), puis l'analytique, puis le confort. Chaque phase se termine par des critères vérifiables, et la matrice d'écart est mise à jour. Toutes les phases sont des ajouts : sans utiliser les nouveautés, le Backtesteur doit se comporter exactement comme en v1.65.1.
+La roadmap tient en 5 phases : les P1 d'abord (intégrité et sessions, exécution, journal), puis l'analytique, puis le confort. Chaque phase se termine par des critères vérifiables, et la matrice d'écart est mise à jour. Toutes les phases sont des ajouts : sans utiliser les nouveautés, le Backtesteur doit se comporter exactement comme en v1.65.1. La phase 1b, demandée par Rudy le 19/11, s'intercale avant la phase 2.
 
 ![Roadmap : 5 phases et 4 critères de passage](rea-roadmap.png)
 
-Les trois premières phases livrent les 17 priorités P1 ; chaque losange est un critère vérifiable avant de passer à la suite.
+Les phases 1, 1b, 2 et 3 livrent les 25 priorités P1 ; chaque losange est un critère vérifiable avant de passer à la suite.
 
 **Phase 1 — Intégrité et sessions** (REP-04 à 07, SES-01 / 02 / 03 / 12, PRO-02) — ✅ livrée en v1.66.0 le 19/11/2026
 
@@ -488,6 +538,16 @@ Les trois premières phases livrent les 17 priorités P1 ; chaque losange est un
 - [ ] Fermer l'app au milieu d'une session puis la rouvrir retrouve l'heure du replay, les ordres et les dessins. *(codé ; à vérifier par Rudy dans l'exe avec de vraies bougies)*
 - [ ] Deux sessions ne partagent ni trades, ni solde, ni dessins (sauf option). *(clés de stockage séparées par session ; à vérifier par Rudy dans l'exe)*
 - [x] Le panneau des règles affiche objectif, DLL, MLL et consistance à jour à chaque bougie.
+
+**Phase 1b — Arborescence des pages** (NAV-01 à 08, avec SES-04, 05, 09, 10, 11, TDB-01 / 03, JRN-01 / 07 / 08, STR-01 / 02) — demandée par Rudy le 19/11/2026
+
+- [ ] Cliquer sur Backtesteur ouvre Testing › Tableau de bord ; le Backtesteur de base s'ouvre en un clic et se comporte comme en v1.66 (compte démo, raccourcis, données `bt-*` inchangés).
+- [ ] Une session créée depuis Testing, en Backtesting ou en Prop firm, ne propose que les actifs présents dans les CSV et reprend les spreads et commissions des Paramètres.
+- [ ] Supprimer une session l'envoie dans Paramètres › Sessions supprimées ; la restaurer rend son compte, ses trades, ses dessins et l'heure du replay.
+- [ ] Une stratégie affiche ses chiffres et sa courbe d'après les trades de ses sessions ; « Tester » ouvre la création de session avec elle.
+- [ ] Aucune limite de nombre ni de durée ; `tools/check.js` couvre les calculs purs (chiffres d'une stratégie, corbeille, actifs disponibles).
+
+Les exigences SES, TDB, JRN et STR listées ici sortent des phases 3 à 5 ; la phase 2 suit.
 
 **Phase 2 — Exécution pro** (ORD-01, 02, 05 à 12, 16)
 
@@ -525,7 +585,8 @@ On reprend des fonctions, jamais leur expression : ni nom, ni logo, ni textes, n
 | Textes du centre d'aide, captures, vidéos | Rien n'est repris ; ce document reformule | Droit d'auteur |
 | Disposition visuelle exacte de leurs écrans | Style TopstepX déjà en place | Habillage distinctif |
 | Compétitions multijoueurs, bibliothèque de stratégies, publication de scripts, assistant d'aide | Hors périmètre (BAT-01, STR-03, GRA-13, IA-03) | App personnelle sans serveur |
-| Offres payantes et limites d'usage | Non reprises | Pas de modèle commercial |
+| Offres payantes et limites d'usage | Non reprises : tout est inclus sans limite (NAV-08) | Pas de modèle commercial |
+| Pages live, compétitions et formation | Absentes du Backtesteur ; le live reste dans le Journal de trading de l'app | Demande de Rudy du 19/11 |
 | Plus de 300 actifs et order flow | Hors périmètre tant que les données manquent | Données TopstepX : NQ, ES, MNQ, MES |
 
 Actions recommandées :
@@ -534,7 +595,7 @@ Actions recommandées :
 - [ ] Ne citer FX Replay dans aucun texte visible de l'app ; les commentaires du code peuvent renvoyer à ce document.
 - [x] Remplacer `docs/salle-blanche-fxreplay/SPEC-backtesteur.md` par ce REA, pour que les sessions de code partent d'une seule référence.
 
-À vérifier : les conditions d'utilisation de FX Replay (non lues ici) peuvent encadrer l'usage de leur service. Une app personnelle, non commercialisée et construite sur une spécification reformulée limite l'enjeu, sans le supprimer. Ce point n'est pas un avis juridique.
+À vérifier : les conditions d'utilisation de FX Replay (non lues ici) peuvent encadrer l'usage de leur service. Une app personnelle, non commercialisée et construite sur une spécification reformulée limite l'enjeu, sans le supprimer. FX Replay affiche aussi une page de marquage de brevets : la salle blanche protège du droit d'auteur, pas d'un éventuel brevet, point à regarder avant toute diffusion de l'app. Ce point n'est pas un avis juridique.
 
 ## Sources
 
