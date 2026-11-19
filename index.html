@@ -10243,6 +10243,9 @@ const ROOT = document.getElementById("grRoot");
 if (!ROOT || !window.LightweightCharts) return;
 const LW = window.LightweightCharts, D = window.desktop || null;
 const HAS_TSX = !!(D && D.grBars), HAS_FF = !!(D && D.marcheBars), HAS_CSV = !!(D && D.dataReadTf);
+/* session TopstepX reçue du navigateur (favori « → ICT ») : même session que l'onglet TopstepX, rien n'est déconnecté -> recharger les graphiques en attente de connexion */
+if (D && D.onTsxPushed) D.onTsxPushed((r) => { if (!r || !r.ok) return; try { localStorage.setItem("econcal-tsx-mode", "chrome"); const sel = document.getElementById("tsxModeSel"); if (sel) sel.value = "chrome"; } catch (e) { /* */ }
+  FEEDS.forEach((f) => { if (f.err === "login") { f.err = ""; f.ready = false; } }); CELLS.forEach((c) => c.bind()); });
 const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* stockage plein */ } } };
 const E = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -11221,10 +11224,13 @@ class Cell {
   syncPaneRange(p) { const r = this.main.chart.timeScale().getVisibleLogicalRange(); if (r) try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }
   msg(k) { const m = this.msgEl; if (!k) { m.hidden = true; return; } m.hidden = false; const sp = this.spec;
     if (k === "loading") m.innerHTML = `<div class="gr-spin"></div><span>Chargement de ${E(symCode(this.st.sym))} · ${E(ivLabel(this.st.iv, true))}…</span>`;
-    else if (k === "login") m.innerHTML = `<b>Connexion TopstepX requise</b><span>Les bougies en direct viennent de ta session TopstepX.</span><button class="gr-btn gr-pri" data-act="login">Se connecter à TopstepX</button>`;
+    else if (k === "login") m.innerHTML = D && D.onTsxPushed
+      ? `<b>Connexion TopstepX requise</b><span>Les bougies en direct viennent de ta session TopstepX. TopstepX n'accepte qu'une session à la fois : pour garder TopstepX ouvert dans ton navigateur, donne-lui ta session au lieu de te reconnecter ici.</span><span>Sur l'onglet topstepx.com (Chrome, Brave…), clique sur le favori <b>→ ICT</b> : le graphique se charge tout seul.</span><span class="gr-row"><button class="gr-btn gr-pri" data-act="bm">Installer le favori → ICT</button><button class="gr-btn" data-act="login">Connexion dans l'app</button></span><span style="opacity:.6;font-size:11px">« Connexion dans l'app » déconnecte TopstepX de ton navigateur.</span>`
+      : `<b>Connexion TopstepX requise</b><span>Les bougies en direct viennent de ta session TopstepX.</span><button class="gr-btn gr-pri" data-act="login">Se connecter à TopstepX</button>`;
     else if (k === "empty") m.innerHTML = sp.src === "tsx" && !HAS_TSX ? `<b>${E(symCode(this.st.sym))} : données dans l'app Windows</b><span>Sur le web, choisis un symbole Forex Factory (EUR/USD, SPX/USD, Or…), importe un CSV, ou passe en mode TradingView.</span><span class="gr-row"><button class="gr-btn" data-act="sym">Changer de symbole</button><button class="gr-btn gr-pri" data-act="tv">Mode TradingView</button></span>` : `<b>Aucune bougie</b><span>Pas de données pour ${E(symCode(this.st.sym))} en ${E(ivLabel(this.st.iv, true))}.</span>`;
     else m.innerHTML = `<b>Données indisponibles</b><span>${E(k.slice(4))}</span><button class="gr-btn" data-act="retry">Réessayer</button>`;
     m.onclick = (e) => { const a = e.target.closest("[data-act]"); if (!a) return; const act = a.dataset.act;
+      if (act === "bm" && D && D.tsxOpenChrome) D.tsxOpenChrome("help");
       if (act === "login" && D && D.journalSync) { m.innerHTML = `<div class="gr-spin"></div><span>Fenêtre de connexion TopstepX ouverte…</span>`; D.journalSync(true).then(() => { FEEDS.forEach((f) => { if (f.err === "login") { f.err = ""; f.ready = false; } }); CELLS.forEach((c) => c.bind()); }); }
       if (act === "retry") { this.feed.ready = false; this.feed.load(true); } if (act === "sym") openSymbolSearch(); if (act === "tv") setMode("tv"); };
   }

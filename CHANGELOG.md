@@ -19,6 +19,10 @@ Backtesteur, phase 1b de la salle blanche, livraison A (`docs/salle-blanche-fxre
 - Sessions créées depuis la nouvelle fenêtre : commission et spread propres à chaque actif (`A.cfg.fees` / `A.cfg.spreads`) ; sans eux (Backtesteur de base, sessions d'avant), frais et exécution au marché (dernier prix ± 1 tick) inchangés. Une session clôturée garde sa stratégie dans le Journal backtest.
 - Raccourcis du chart sans effet quand les pages sont affichées.
 
+## [1.66.1] — 2026-11-19
+### Corrigé
+- **Graphique + TopstepX en même temps** : TopstepX n'accepte qu'une session à la fois, donc se connecter dans l'app déconnectait l'onglet TopstepX du navigateur (et inversement). L'écran « Connexion TopstepX requise » propose maintenant d'abord le favori **→ ICT** : cliqué sur l'onglet topstepx.com (Chrome, Brave…), il donne la session du navigateur à l'app, qui recharge le graphique tout seul sans rien déconnecter. La connexion dans l'app reste possible (avec l'avertissement). Recevoir une session par le favori passe aussi la connexion du Profil en mode « Chrome ».
+
 ## [1.66.0] — 2026-11-19
 Backtesteur, phase 1 de la salle blanche (`docs/salle-blanche-fxreplay/REA-fxreplay.md` : REP-04 → 07, SES-01 / 02 / 03 / 12, PRO-02). Tout s'ajoute : sans ces nouveautés, le Backtesteur se comporte comme en 1.65.1 (compte `bt-acc`, dessins, raccourcis et sessions enregistrées inchangés).
 ### Ajouté
