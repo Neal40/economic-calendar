@@ -26,7 +26,7 @@ Règles appliquées dans tout le document :
 - **On décrit des comportements, pas des expressions** : entrées, sorties, règles, limites. Aucun texte, capture, icône, nom de fonctionnalité déposé ni design distinctif de FX Replay n'est repris ; tout est reformulé.
 - **Savoir public** : les formules de trading standard (win rate, profit factor, drawdown, expectancy…) sont définies par nous, avec nos propres conventions.
 - **Traçabilité** : chaque exigence porte un identifiant (ex. REP-03) et renvoie à la page lue dans la section Sources.
-- **Choix propres à l'app ICT** : stack, style TopstepX, données m1 TopstepX en CSV, comptes prop firm de Rudy. Là où FX Replay et l'app ICT diffèrent, c'est l'app ICT qui décide.
+- **Choix propres à l'app ICT** : stack, style TopstepX, données m1 TopstepX en CSV, comptes prop firm de Rudy. Là où FX Replay et l'app ICT diffèrent, c'est l'app ICT qui décide. Tout ce qui est repris s'ajoute au Backtesteur existant : rien n'est retiré ni remplacé, et les comportements par défaut comme les données déjà enregistrées restent inchangés.
 - **Questions des devs** : elles passent par un commentaire sur ce document ; la réponse est écrite ici, jamais transmise oralement depuis FX Replay.
 
 Ce document décrit une méthode de travail ; ce n'est pas un avis juridique.
@@ -128,9 +128,9 @@ Le replay fait avancer le marché sans jamais montrer le futur, et le retour arr
 | REP-02 | Pas du replay indépendant de l'unité du chart, avec « synchroniser avec le chart » activé par défaut | ✅ v1.51 | — |
 | REP-03 | Tous les charts avancent ensemble sur la même horloge | ✅ | — |
 | REP-04 | Revenir à une bougie choisie (clic, ou clic droit « rejouer depuis ici »), après un avertissement | ❌ seulement la bougie précédente | P1 |
-| REP-05 | Le retour arrière annule tout ce qui suit ce point : trades, ordres, solde, règles ; impossible avant la date de départ | ❌ la bougie précédente recule l'affichage sans annuler les trades (incohérence possible) | P1 |
-| REP-06 | Retour arrière interdit en challenge ; lecture, vitesse et sauts avant restent permis | ❌ | P1 |
-| REP-07 | Activer le retour arrière dans les réglages (désactivé par défaut) | ❌ | P2 |
+| REP-05 | Le retour arrière annule tout ce qui suit ce point : trades, ordres, solde, règles ; impossible avant la date de départ ; si des trades ou ordres suivent, « bougie précédente » propose d'annuler ce qui suit ou de reculer seulement l'affichage, comme aujourd'hui | ❌ la bougie précédente recule l'affichage sans annuler les trades (incohérence possible) | P1 |
+| REP-06 | Retour arrière interdit dans une session challenge créée en mode strict ; lecture, vitesse et sauts avant restent permis ; le compte Prop actuel garde son comportement | ❌ | P1 |
+| REP-07 | Option pour désactiver le retour arrière dans les réglages (activé par défaut, comme aujourd'hui) | ❌ | P2 |
 | REP-08 | « Voir une date » : déplace la vue sans changer la position du replay | 🟡 « Aller à une date » recharge le replay à cette date | P3 |
 | REP-09 | Menu « Aller à » vers l'avant : prochaine séance (Asie, Londres, New York), ouverture du jour suivant, fenêtres Silver Bullet, prochaine news, date et heure futures, prix touché avec durée de recherche maximale | 🟡 v1.51, avec macros ICT et premarket en plus ; pas de durée maximale pour le saut au prix | P3 |
 | REP-10 | Personnaliser ce menu : favoris, heures modifiables en heure de New York, jours exclus, retour aux défauts, raccourci par entrée | ✅ | — |
@@ -350,8 +350,8 @@ L'implémentation repose sur trois briques : une session isolée qui enregistre 
 1. L'horloge avance sur la bougie fine : 1 s si disponible, sinon m1. Le pas vaut une bougie du chart (synchro) ou N minutes alignées sur l'horloge de New York.
 2. « Aller à » avance bougie fine par bougie fine, ordres compris, jusqu'à la première bougie égale ou postérieure à la cible, un jour non exclu. « Prix » s'arrête au premier croisement, ou après la durée maximale avec un message.
 3. Retour arrière vers t : afficher la liste des trades et ordres qui seront annulés, puis repartir du dernier point de contrôle antérieur à t (instantané pris à chaque début de séance) et rejouer les événements jusqu'à t. Les événements postérieurs à t sont supprimés.
-4. Retour arrière refusé avant le début de la session, dans un challenge, ou si l'option est désactivée.
-5. « Bougie précédente » suit la même règle : l'affichage ne recule jamais seul quand des événements existent après le point.
+4. Retour arrière refusé avant le début de la session, dans une session challenge en mode strict, ou si l'option est désactivée.
+5. « Bougie précédente » : sans trade ni ordre après le point, elle recule comme aujourd'hui ; sinon elle demande « annuler ce qui suit » ou « reculer l'affichage seul » (comportement actuel, conservé).
 
 Le journal d'événements garantit qu'un retour arrière donne exactement l'état d'un replay direct, ce qui se teste automatiquement.
 
@@ -438,7 +438,7 @@ Points d'attention relevés dans le code :
 2. **Ordres non validés** : un achat limite posé au-dessus du prix est accepté et s'exécute à la bougie suivante comme un ordre au marché. Corrigé par ORD-10.
 3. **Simulateur R:R tronqué** : `simRR` s'arrête à la sortie réelle ; une cible plus lointaine n'est jamais testée, et l'ordre cible / SL initial n'est pas vérifié quand le SL a été déplacé. Corrigé par la formule de la section précédente.
 4. **Sessions = instantanés** : ouvrir une session remplace l'état courant, et rien n'est sauvegardé dans la session tant qu'on ne l'écrase pas. Corrigé par SES-03 et SES-12.
-5. **Captures de FX Replay dans un repo public** : `docs/salle-blanche-fxreplay/captures/` contient 24 images de leur interface. Voir la section « Ce qu'on ne reprend pas ».
+5. **Captures de FX Replay dans un repo public** : `docs/salle-blanche-fxreplay/captures/` contenait 24 images de leur interface ; dossier retiré le 19/11/2026 (il reste dans l'historique git).
 
 ## Matrice d'écart
 
@@ -475,7 +475,7 @@ Les partiels (ORD-05, ORD-12) collent à la règle de Rudy : 50 % à 2R puis bre
 
 ## Roadmap et critères d'acceptation
 
-La roadmap tient en 5 phases : les P1 d'abord (intégrité et sessions, exécution, journal), puis l'analytique, puis le confort. Chaque phase se termine par des critères vérifiables, et la matrice d'écart est mise à jour.
+La roadmap tient en 5 phases : les P1 d'abord (intégrité et sessions, exécution, journal), puis l'analytique, puis le confort. Chaque phase se termine par des critères vérifiables, et la matrice d'écart est mise à jour. Toutes les phases sont des ajouts : sans utiliser les nouveautés, le Backtesteur doit se comporter exactement comme en v1.65.1.
 
 ![Roadmap : 5 phases et 4 critères de passage](rea-roadmap.png)
 
@@ -484,7 +484,7 @@ Les trois premières phases livrent les 17 priorités P1 ; chaque losange est un
 **Phase 1 — Intégrité et sessions** (REP-04 à 07, SES-01 / 02 / 03 / 12, PRO-02)
 
 - [ ] Rejouer jusqu'à t, revenir à t0 et rejouer à nouveau donne un état identique (trades, solde, MLL), vérifié par un test dans `tools/check.js`.
-- [ ] En challenge, aucun bouton ni raccourci ne permet de reculer.
+- [ ] Dans une session challenge en mode strict, aucun bouton ni raccourci ne permet de reculer ; sessions, compte et raccourcis existants marchent comme avant.
 - [ ] Fermer l'app au milieu d'une session puis la rouvrir retrouve l'heure du replay, les ordres et les dessins.
 - [ ] Deux sessions ne partagent ni trades, ni solde, ni dessins (sauf option).
 - [ ] Le panneau des règles affiche objectif, DLL, MLL et consistance à jour à chaque bougie.
@@ -530,9 +530,9 @@ On reprend des fonctions, jamais leur expression : ni nom, ni logo, ni textes, n
 
 Actions recommandées :
 
-- [ ] Retirer du repo **public** le dossier `docs/salle-blanche-fxreplay/captures/` (24 captures de l'interface FX Replay) et le garder en privé, hors de la vue des implémenteurs. L'historique git les conserve : seule une réécriture de l'historique les effacerait complètement.
+- [x] Retirer du repo **public** le dossier `docs/salle-blanche-fxreplay/captures/` (24 captures de l'interface FX Replay) et le garder en privé, hors de la vue des implémenteurs. L'historique git les conserve : seule une réécriture de l'historique les effacerait complètement.
 - [ ] Ne citer FX Replay dans aucun texte visible de l'app ; les commentaires du code peuvent renvoyer à ce document.
-- [ ] Remplacer `docs/salle-blanche-fxreplay/SPEC-backtesteur.md` par ce REA, pour que les sessions de code partent d'une seule référence.
+- [x] Remplacer `docs/salle-blanche-fxreplay/SPEC-backtesteur.md` par ce REA, pour que les sessions de code partent d'une seule référence.
 
 À vérifier : les conditions d'utilisation de FX Replay (non lues ici) peuvent encadrer l'usage de leur service. Une app personnelle, non commercialisée et construite sur une spécification reformulée limite l'enjeu, sans le supprimer. Ce point n'est pas un avis juridique.
 
