@@ -165,6 +165,109 @@ try {
   eq("v40 sans niveau traversé", String(F.v40([...day(9, [[100, 103, 97, 100]]), ...day(12, [[100.5, 101, 100, 100.5]])], sk, {}).trades.length), "0");
 } catch (e) { errors.push("fmCore : " + e.message); }
 
+// v1.66 · Phase 1 salle blanche : retour arrière déterministe (btRewind + vrai code du compte btAcc / btPro + btCore), règles du challenge (btRules), période de session (btSes)
+const grab = (k) => { const m = new RegExp(`\\/\\* ${k}:start[\\s\\S]*?\\*\\/\\r?\\n([\\s\\S]*?)\\/\\* ${k}:end \\*\\/`).exec(html); if (!m) throw new Error(`marqueurs ${k}:start / ${k}:end introuvables`); return m[1]; };
+const NYP = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const nyT = (d, h, m) => { const [Y, M, Dd] = d.split("-").map(Number), want = Date.UTC(Y, M - 1, Dd, h, m); let g = want; for (let i = 0; i < 3; i++) { const o = {}; NYP.formatToParts(new Date(g)).forEach((x) => (o[x.type] = x.value)); g += want - Date.UTC(+o.year, +o.month - 1, +o.day, +o.hour, +o.minute); } return Math.floor(g / 1000); };
+try {
+  const core = new Function(grab("btCore") + "; return btCore;")(), RW = new Function(grab("btRewind") + "; return btRewind;")(), accSrc = grab("btAcc"), proSrc = grab("btPro");
+  const T0 = nyT("2026-01-05", 9, 0); // 9:00 New York, bougies m1 ; la séance change à 18:00 (clé de séance = jour de NY à +6 h)
+  const bars = Array.from({ length: 720 }, (_, i) => { const t = T0 + i * 60, p = (k) => 20000 + 30 * Math.sin(k / 17) + 9 * Math.sin(k / 5) + 0.04 * k, o = p(i - 1), c = p(i); return [t, +o.toFixed(2), +(Math.max(o, c) + 1.5).toFixed(2), +(Math.min(o, c) - 1.5).toFixed(2), +c.toFixed(2), 1]; });
+  const sk = (t) => { const o = {}; NYP.formatToParts(new Date((t + 6 * 3600) * 1000)).forEach((x) => (o[x.type] = x.value)); return `${o.year}-${o.month}-${o.day}`; };
+  const fresh = () => ({ cfg: { type: "prop", size: 50000, target: 3000, mll: 2000, dll: 1000, cons: 50, payDays: 5, payMin: 150 }, bal: 50000, mll: 48000, eodHigh: 50000, day: null, rpDay: 0, dllHit: false, blown: false, pos: null, orders: [], trades: [], seq: 1 });
+  // un « moteur » = le code du compte de index.html (fill, processBar, newDay, proTrack…) exécuté tel quel avec un environnement minimal
+  const engine = (beOn) => {
+    const ctx = { A: fresh(), S: { raw: bars, cur: 0 }, P: { beOn, beR: 1 }, TICK: 0.25, btCore: core, curSes: null, msg: () => {}, saveAcc: () => {}, sessionKey: sk, slipT: () => 0, curTags: () => [],
+      CTR: { NQ: { pv: 20, und: "NQ", fee: 2.8, name: "NQZ26" }, MNQ: { pv: 2, und: "NQ", fee: 0.74, name: "MNQZ26" } }, rnd: (p) => Math.round(p / 0.25) * 0.25,
+      isProp: () => ctx.A.cfg.type === "prop", last: () => ctx.S.raw[ctx.S.cur][4], feeOf: (c) => ctx.CTR[c].fee, dom: { oBr: { value: "1" }, oSl: { value: "24" }, oTp: { value: "60" } }, $: (id) => ctx.dom[id] || { value: "" } };
+    const api = new Function("ctx", `with (ctx) {\n${accSrc}\n${proSrc}\nreturn { fill, processBar, flatten, syncBrackets, M: () => markers, setM: (v) => { markers = v; } }; }`)(ctx);
+    const J = { evs: [], seq: 0 };
+    return { ctx, api, J, start(i) { ctx.S.cur = i; RW.start(J, ctx.A, 0, bars[i][0], 0, "origine"); }, commit(t, src) { return RW.commit(J, ctx.A, api.M().length, t, src, 0); } };
+  };
+  // actions de l'utilisateur, faites après la bougie i (comme dans l'app : on regarde la bougie, puis on agit)
+  const pend = (E, type, qty, px) => { const A = E.ctx.A; A.orders.push({ id: A.seq++, ctr: "NQ", type, qty, px: E.ctx.rnd(px), at: bars[E.ctx.S.cur][0] }); };
+  const mv = (E, br, d) => { const o = E.ctx.A.orders.find((x) => x.bracket === br); if (o && E.ctx.A.pos) o.px = E.ctx.rnd(o.px + d * Math.sign(E.ctx.A.pos.qty)); }; // glisser le SL / TP (d > 0 = vers le gain)
+  const SCRIPT = {
+    30: (E) => { E.api.fill("NQ", 2, E.ctx.last() + 0.25, bars[30][0], "Market"); E.api.syncBrackets(); },
+    32: (E) => mv(E, "TP", -3),
+    120: (E) => pend(E, "Limit", 1, E.ctx.last() - 6),
+    180: (E) => pend(E, "Stop", -1, E.ctx.last() - 12),
+    260: (E) => { E.ctx.A.orders = E.ctx.A.orders.filter((o) => o.bracket || o.type !== "Stop"); },
+    330: (E) => { E.api.fill("NQ", -1, E.ctx.last() - 0.25, bars[330][0], "Market"); E.api.syncBrackets(); },
+    331: (E) => mv(E, "SL", -2),
+    470: (E) => pend(E, "Limit", 2, E.ctx.last() - 4),
+    528: (E) => { if (!E.ctx.A.pos) { E.api.fill("MNQ", 3, E.ctx.last() + 0.25, bars[528][0], "Market"); E.api.syncBrackets(); } },
+    529: (E) => { mv(E, "SL", -25); mv(E, "TP", 25); },
+    640: (E) => { if (E.ctx.A.pos) E.api.flatten("Flatten"); },
+  };
+  const run = (E, from, to, skipLast) => { for (let i = from + 1; i <= to; i++) { E.ctx.S.cur = i; E.api.processBar(bars[i]); E.commit(bars[i][0], "bar"); if (SCRIPT[i] && !(skipLast && i === to)) { SCRIPT[i](E); E.commit(bars[i][0], "user"); } } };
+  const rewind = (E, i0) => { const t = bars[i0][0], r = RW.back(E.J, t, E.ctx.A); if (!r) return null; E.ctx.A = r.acc; E.api.setM(E.api.M().slice(0, r.nM)); const be = E.ctx.P.beOn; E.ctx.P.beOn = false;
+    try { RW.resim(bars, r.from, t, (b, i) => { E.ctx.S.cur = i; E.api.processBar(b); E.commit(b[0], "bar"); }); } finally { E.ctx.P.beOn = be; } E.ctx.S.cur = i0; return r; };
+  const state = (E) => JSON.stringify({ a: (({ bal, mll, eodHigh, day, rpDay, dllHit, blown, pos, orders, trades, seq }) => ({ bal, mll, eodHigh, day, rpDay, dllHit, blown, pos, orders, trades, seq }))(E.ctx.A), m: E.api.M() });
+  const S0 = 10, I1 = 700, direct = engine(true); direct.start(S0); run(direct, S0, I1);
+  const D = JSON.parse(state(direct)).a;
+  if (!(D.trades.length >= 3 && D.trades.some((t) => t.be) && direct.J.evs.some((e) => e.type === "seance") && direct.J.evs.some((e) => e.src === "user"))) errors.push("btRewind : scénario de test trop pauvre " + JSON.stringify({ n: D.trades.length, be: D.trades.map((t) => t.be), types: [...new Set(direct.J.evs.map((e) => e.type))] }));
+  for (const i0 of [S0, 11, 30, 31, 32, 90, 151, 200, 330, 331, 515, 529, 535, 540, 541, 650, I1]) {
+    const E = engine(true); E.start(S0); run(E, S0, I1);
+    const ref = engine(true); ref.start(S0); run(ref, S0, i0, true); // replay direct jusqu'à t0 (sans l'action faite sur la bougie t0)
+    if (!rewind(E, i0)) { errors.push(`btRewind : retour à la bougie ${i0} refusé`); continue; }
+    if (state(E) !== state(ref)) errors.push(`btRewind : revenir à t0 (bougie ${i0}) ≠ replay direct jusqu'à t0`);
+    if (E.J.evs.some((e) => e.t > bars[i0][0] || (e.t === bars[i0][0] && e.src === "user"))) errors.push(`btRewind : événements après t0 (bougie ${i0}) non supprimés`);
+    if (SCRIPT[i0]) { SCRIPT[i0](E); E.commit(bars[i0][0], "user"); } // l'utilisateur refait son action sur t0, puis rejoue jusqu'à t1
+    run(E, i0, I1);
+    if (state(E) !== state(direct)) errors.push(`btRewind : rejouer jusqu'à t1, revenir à t0 (bougie ${i0}), rejouer jusqu'à t1 ≠ replay direct ` + JSON.stringify({ got: JSON.parse(state(E)).a.bal, want: D.bal }));
+  }
+  // breakeven auto activé après coup : la reprise ne l'invente pas (il aurait été un événement du journal)
+  for (const i0 of [35, 37, 40, 300, 532, 536]) {
+    const E2 = engine(false); E2.start(S0); run(E2, S0, I1); E2.ctx.P.beOn = true; rewind(E2, i0);
+    const R2 = engine(false); R2.start(S0); run(R2, S0, i0, true);
+    if (state(E2) !== state(R2)) { errors.push(`btRewind : la reprise (bougie ${i0}) a appliqué un breakeven qui n'avait pas eu lieu`); break; }
+  }
+  // avant le début du journal : refusé ; aperçu de ce qui sera annulé ; plafond du stockage
+  const E3 = engine(true); E3.start(100); run(E3, 100, 400);
+  if (RW.back(E3.J, bars[50][0], E3.ctx.A) !== null || RW.pick(E3.J.evs, bars[99][0]) !== -1) errors.push("btRewind : retour avant le début du journal accepté");
+  const k3 = RW.pick(E3.J.evs, bars[130][0]), d3 = RW.diff(E3.ctx.A, RW.restore(E3.J.evs, k3, E3.ctx.A));
+  if (!(d3.n > 0 && d3.trades.length === E3.ctx.A.trades.length - RW.restore(E3.J.evs, k3, E3.ctx.A).trades.length)) errors.push("btRewind.diff : " + JSON.stringify({ n: d3.n, t: d3.trades.length }));
+  const J4 = JSON.parse(JSON.stringify(E3.J)), n4 = J4.evs.length; RW.cap(J4, 5);
+  if (!(J4.evs.length === 5 && J4.evs[0].src === "origin" && RW.cfgAt(J4.evs, 0) && n4 > 5)) errors.push("btRewind.cap : " + JSON.stringify({ n: J4.evs.length, src: J4.evs[0] && J4.evs[0].src }));
+} catch (e) { errors.push("btRewind : " + e.message); }
+
+try {
+  const rules = new Function(grab("btRules") + "; return btRules;")(), near = (a, b) => Math.abs(a - b) < 1e-9;
+  const cfg = { type: "prop", size: 50000, target: 3000, mll: 2000, dll: 1000, cons: 50 };
+  const acc = { cfg, bal: 51500, mll: 48500, rpDay: -200, dllHit: false, blown: false, trades: [{ day: "a", pnl: 1000 }, { day: "b", pnl: 700 }, { day: "c", pnl: -200 }] };
+  const R = rules(acc, -300, "c"), by = (id) => R.rows.find((r) => r.id === id);
+  // équité 51 200, cumul 1 200, jour −500 ; meilleur jour 1 000 = 83 % du cumul (> 50 %) : il manque 800 $ de profit
+  if (!(R.prop && near(R.eq, 51200) && near(by("target").value, 1200) && near(by("target").margin, 1800) && near(by("target").prog, 0.4) && by("target").st === "run")) errors.push("btRules objectif : " + JSON.stringify(by("target")));
+  if (!(near(by("dll").value, -500) && near(by("dll").margin, 500) && near(by("dll").prog, 0.5) && by("dll").st === "run")) errors.push("btRules DLL : " + JSON.stringify(by("dll")));
+  if (!(near(by("mll").margin, 2700) && by("mll").prog === 0 && by("mll").st === "run")) errors.push("btRules MLL : " + JSON.stringify(by("mll")));
+  if (!(by("cons").st === "warn" && near(by("cons").value, 1000 / 1200 * 100) && near(by("cons").need, 800) && near(by("cons").margin, 600 - 1000) && by("cons").prog === 1 && !R.pass)) errors.push("btRules consistance : " + JSON.stringify(by("cons")));
+  const R2 = rules({ ...acc, bal: 49000, mll: 48500, rpDay: -900 }, -150, "c"), m2 = R2.rows.find((r) => r.id === "mll"), d2 = R2.rows.find((r) => r.id === "dll");
+  if (!(near(m2.margin, 350) && near(m2.prog, 1650 / 2000) && m2.st === "warn" && d2.st === "ko" && near(d2.margin, -50))) errors.push("btRules MLL / DLL proches : " + JSON.stringify({ m2, d2 }));
+  const R3 = rules({ cfg, bal: 53400, mll: 50000, rpDay: 0, trades: [{ day: "a", pnl: 1200 }, { day: "b", pnl: 1100 }, { day: "c", pnl: 1100 }] }, 0, "d");
+  if (!(R3.pass && R3.rows.every((r) => r.st !== "ko") && R3.rows.find((r) => r.id === "cons").st === "ok" && near(R3.rows.find((r) => r.id === "cons").margin, 1700 - 1200))) errors.push("btRules réussite : " + JSON.stringify(R3));
+  if (rules({ ...acc, blown: true }, 0, "c").rows.find((r) => r.id === "mll").st !== "ko") errors.push("btRules : compte cramé non signalé");
+  const C = rules({ ...acc, cfg: { ...cfg, type: "classic" } }, 0, "c"); if (C.prop || C.rows.length) errors.push("btRules : compte classique avec des règles");
+} catch (e) { errors.push("btRules : " + e.message); }
+
+try {
+  const SS = new Function(grab("btSes") + "; return btSes;")(), eq = (n, a, b) => { if (JSON.stringify(a) !== JSON.stringify(b)) errors.push(`btSes.${n} : ${JSON.stringify(a)} au lieu de ${JSON.stringify(b)}`); };
+  eq("+1 jour", SS.addPeriod("2026-01-05", "d"), "2026-01-06"); eq("+1 semaine", SS.addPeriod("2026-01-05", "w"), "2026-01-12"); eq("+1 mois", SS.addPeriod("2026-12-15", "m"), "2027-01-15");
+  eq("+1 mois fin de mois", SS.addPeriod("2026-01-31", "m"), "2026-02-28"); eq("+1 mois bissextile", SS.addPeriod("2028-01-31", "m"), "2028-02-29"); eq("date invalide", SS.addPeriod("x", "d"), null);
+  eq("fin automatique", SS.period({ start: "2026-01-05", auto: true, end: "2026-01-09" }), { ok: true, start: "2026-01-05", end: null });
+  eq("fin datée", SS.period({ start: "2026-01-05", end: "2026-02-05" }), { ok: true, start: "2026-01-05", end: "2026-02-05" });
+  eq("fin avant le départ", SS.period({ start: "2026-01-05", end: "2026-01-02" }).ok, false);
+  eq("départ hors des données", SS.period({ start: "2023-01-05", min: "2023-07-03", max: "2026-11-18", auto: true }).ok, false);
+  const days = SS.weekdays("2026-01-01", "2026-01-31");
+  eq("jours ouvrés", [days.length, days[0], days[1], days[days.length - 1]], [22, "2026-01-01", "2026-01-02", "2026-01-30"]);
+  eq("tirage borne basse", SS.pickDay(days, "2026-01-10", "2026-01-20", () => 0), "2026-01-12"); eq("tirage borne haute", SS.pickDay(days, "2026-01-10", "2026-01-20", () => 0.9999999), "2026-01-20");
+  eq("tirage sans jour", SS.pickDay(days, "2026-02-01", null, Math.random), null);
+  let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647), drawn = new Set();
+  for (let i = 0; i < 300; i++) { const d = SS.pickDay(days, "2026-01-08", "2026-01-23", rnd); drawn.add(d); if (!(d >= "2026-01-08" && d <= "2026-01-23" && days.includes(d))) { errors.push("btSes.pickDay hors bornes : " + d); break; } }
+  if (drawn.size !== 12) errors.push("btSes.pickDay : tous les jours des bornes devraient sortir (" + drawn.size + " / 12)");
+  eq("fin de session (17:00 NY)", [SS.endT("2026-01-06", nyT) === nyT("2026-01-06", 17, 0), SS.over(nyT("2026-01-06", 16, 59), "2026-01-06", nyT), SS.over(nyT("2026-01-06", 18, 0), "2026-01-06", nyT), SS.over(nyT("2026-03-01", 9, 0), null, nyT), SS.endT(null, nyT)], [true, false, true, false, null]);
+} catch (e) { errors.push("btSes : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);

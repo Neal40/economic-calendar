@@ -1315,6 +1315,14 @@ table.tbl:has(#subT){min-width:900px}
 .an-kv{display:grid;grid-template-columns:1fr auto;gap:4px 10px}.an-kv span{color:var(--tx-txt3,#bfc3cb)}.an-bars{display:flex;flex-direction:column;gap:4px}.an-b{display:grid;grid-template-columns:90px 1fr 90px;gap:8px;align-items:center}.an-b span{color:var(--tx-txt3,#bfc3cb);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.an-b i{height:10px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}.an-b i b{display:block;height:100%}.an-b i b.up{background:#26a69a}.an-b i b.dn{background:#ef5350}.an-b em{font-style:normal;text-align:right}
 .an-hist{display:flex;align-items:flex-end;gap:4px;height:150px}.an-hist div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:2px}.an-hist i{width:100%;background:#ef5350;border-radius:3px 3px 0 0;min-height:1px}.an-hist span{font-size:10px;color:var(--tx-mut,#7d818a)}.an-hist em{font-style:normal;font-size:10px}
 #btModal .up{color:#26a69a}#btModal .dn{color:#ef5350}
+/* v1.66 : règles du challenge (dock), session isolée (badge, assistant), rejouer depuis une bougie */
+.rl-r{border:1px solid var(--tx-hov,#2d2f32);border-radius:6px;padding:7px 8px;display:flex;flex-direction:column;gap:5px}.rl-h{display:flex;justify-content:space-between;gap:6px}.rl-h b{font-weight:600}.rl-h span{color:var(--tx-mut,#7d818a);white-space:nowrap}
+.rl-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}.rl-bar i{display:block;height:100%;background:var(--tx-acc,#ebbc4d)}.rl-r.ok .rl-bar i{background:#26a69a}.rl-r.warn .rl-bar i{background:#ff9800}.rl-r.ko .rl-bar i{background:#ef5350}.rl-r.ko{border-color:#ef5350}
+.rl-v{display:flex;justify-content:space-between;gap:6px;color:var(--tx-txt3,#bfc3cb)}.rl-v b{font-weight:600;color:var(--tx-tvfg,#e6e8ef)}.rl-st{border-radius:6px;padding:6px 8px;background:rgba(255,255,255,.04);color:var(--tx-txt3,#bfc3cb)}.rl-st.ok{color:#26a69a}.rl-st.ko{color:#ef5350}
+.tx-sesb{display:flex;align-items:center;gap:6px;height:30px;padding:0 6px 0 10px;border:1px solid var(--tx-acc,#ebbc4d);border-radius:15px;color:var(--tx-txt2,#cfd2da);font-size:12px;cursor:pointer;white-space:nowrap;max-width:340px;overflow:hidden}.tx-sesb[hidden]{display:none}.tx-sesb b{color:var(--tx-acc,#ebbc4d);overflow:hidden;text-overflow:ellipsis}.tx-sesb span{color:var(--tx-mut,#7d818a)}.tx-sesb i{font-style:normal;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--tx-mut,#7d818a)}.tx-sesb i:hover{background:var(--tx-hov,#2d2f32);color:#fff}
+.tx-mbox.wz-wide{width:min(760px,96vw)}.wz-g{display:grid;grid-template-columns:150px 1fr;gap:9px 12px;align-items:center}.wz-g>span{color:var(--tx-txt3,#bfc3cb)}.wz-c{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.wz-c label{display:flex;align-items:center;gap:5px;cursor:pointer}.wz-c input[type=text],.wz-c input[type=date],.wz-c input[type=time],.wz-c input[type=number]{background:var(--tx-in,#131722);border:1px solid var(--tx-line,#4a4d54);color:#fff;border-radius:4px;padding:5px 8px;font:inherit;color-scheme:dark}.wz-c input[type=text]{flex:1;min-width:180px}.wz-c input[type=number]{width:96px}
+.wz-c button.wz-b{background:var(--tx-hov,#2d2f32);border:1px solid transparent;color:var(--tx-txt2,#cfd2da);border-radius:4px;height:28px;padding:0 10px;cursor:pointer;font:inherit}.wz-c button.wz-b.on{border-color:var(--tx-acc,#ebbc4d);color:var(--tx-acc,#ebbc4d)}.wz-c button.wz-b:disabled{opacity:.45;cursor:default}.wz-n{grid-column:1/-1;color:var(--tx-mut,#7d818a);font-size:12px}.wz-err{color:#ff8a8a;min-height:16px}.wz-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;width:100%}.wz-rules label{display:flex;flex-direction:column;gap:3px;color:var(--tx-mut,#7d818a);font-size:12px;cursor:default}.wz-rules input{width:100%!important;box-sizing:border-box}
+.tx-ctx .ci.dis{opacity:.5;cursor:default}.tx-ctx .ci.dis:hover{background:none}.tx-chartwrap.tx-pick,.tx-chartwrap.tx-pick canvas{cursor:copy!important}.tx-rbar .tx-hb.dis{opacity:.35}.rh-l{margin:6px 0 10px;padding-left:18px;display:flex;flex-direction:column;gap:4px}.rh-ev{margin-top:8px;color:var(--tx-mut,#7d818a);font-size:12px;display:flex;flex-direction:column;gap:2px}.rh-ev div:first-child{color:var(--tx-txt3,#bfc3cb)}
 .tx-grid.h{flex-direction:column}.tx-grid.h .tx-cw2{border-left:none;border-top:2px solid var(--tx-hov)}
 .tx-pop{position:fixed;z-index:60;background:#131417;border:1px solid #2a2e39;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);color:#e0e0e0;font:14px Roboto,sans-serif;padding:6px 0;min-width:220px}
 .tx-pop .gp-row{display:flex;align-items:center;gap:6px;padding:8px 16px;border-bottom:1px solid #24262d}
@@ -1931,7 +1939,7 @@ table.tbl:has(#subT){min-width:900px}
             <div class="tx-favbar" id="btFavBar" hidden></div>
           </div>
           <div class="tx-chartwrap tx-cw2" id="btWrap2" hidden><div id="btChart2"></div><canvas id="btDraw2"></canvas><div class="tx-legend" id="btLegend2"></div><div class="tx-al"><button data-al="A" title="Auto (ajuste les données à l'écran) — Alt+R">A</button><button data-al="L" title="Échelle logarithmique">L</button></div><div class="tx-cd" hidden></div><div class="tx-nav"><button data-nv="out" title="Zoom arrière">−</button><button data-nv="in" title="Zoom avant">+</button><button data-nv="l" title="Défiler à gauche">‹</button><button data-nv="r" title="Défiler à droite">›</button><button data-nv="reset" title="Recentrer (Alt+R)">⟲</button></div></div></div>
-          <div class="tx-rdock" id="btDock" hidden><div class="dk-tabs" id="btDockTabs"></div><div class="dk-body" id="btDockBody"><div id="btDockJ" class="dk-p" hidden></div><div id="btDockN" class="dk-p" hidden></div></div></div>
+          <div class="tx-rdock" id="btDock" hidden><div class="dk-tabs" id="btDockTabs"></div><div class="dk-body" id="btDockBody"><div id="btDockJ" class="dk-p" hidden></div><div id="btDockN" class="dk-p" hidden></div><div id="btDockR" class="dk-p" hidden></div></div></div>
           <div class="tx-tree tx-otree" id="btTree" hidden><div class="tx-th" id="btTreeHead"><span>Arborescence des objets</span><button id="btNewF" title="Créer un groupe de dessins (avec la sélection)"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><path d="M4.5 8.5v13h19v-11h-9l-2-2z"/><path d="M14 13.5v6M11 16.5h6"/></g></svg></button><button id="btTreeX" title="Fermer"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><path d="M7.5 7.5l13 13M20.5 7.5l-13 13"/></g></svg></button></div><div id="btTreeList"></div></div>
         </div>
         <div class="tx-foot"><span class="tx-rng" id="btRng" title="Plage affichée"><button data-r="365">1yr</button><button data-r="91">3m</button><button data-r="30">1m</button><button data-r="5">5d</button><button data-r="3">3d</button><button data-r="1">1d</button></span><button class="tx-fb tx-fbi" id="btGoBtn2" title="Aller à une date (Ctrl+G)"><svg viewBox="0 0 28 28" width="24" height="24"><g fill="none" stroke="currentColor"><rect x="5.5" y="7.5" width="15" height="14" rx="1.5"/><path d="M5.5 11.5h15M9.5 5.5v4M16.5 5.5v4M18.5 18.5h5M21 16l2.5 2.5L21 21"/></g></svg></button><i class="tx-vs"></i><span id="btMsg" class="tx-msg"></span><span class="tx-sp"></span><span id="btClock" class="tx-clock"></span><button class="tx-fb" id="btEth" title="Séance : ETH (complète) / RTH (9:30 - 16:14 NY) — Alt+Maj+E">ETH</button><i class="tx-vs"></i><button class="tx-fb" id="btPct">%</button><button class="tx-fb" id="btLog">log</button><button class="tx-fb on" id="btAuto">auto</button><button class="tx-fb tx-fbi" id="btFull2" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M15.5 6.5h6v6M21.5 6.5l-7 7M12.5 21.5h-6v-6M6.5 21.5l7-7"/></g></svg></button></div>
@@ -1943,7 +1951,7 @@ table.tbl:has(#subT){min-width:900px}
           <button class="tx-hb" id="btPrev" title="Bougie précédente (←)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="currentColor" d="M18 8v12l-9-6z"/></svg></button>
           <button class="tx-hb tx-play" id="btPlay" title="Lecture / pause (Espace)">▶</button>
           <select id="btSpeed" class="rb-sp" hidden><option value="0.0167">Temps réel</option><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option><option value="5">5×</option><option value="10">10×</option><option value="20">20×</option><option value="30">30×</option><option value="60">60×</option><option value="100">100×</option><option value="300">300×</option></select><span class="rb-spd"><input type="range" id="btSpeedR" min="0" max="12" step="1" value="3"><b id="btSpeedL">1×</b></span>
-          <button class="tx-hb" id="btNext" title="Bougie suivante / pas suivant (→)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="currentColor" d="M8 8v12l9-6zM18 8h2v12h-2z"/></svg></button><button class="tx-tb rb-step" id="btStepBtn">Bougie ▾</button>
+          <button class="tx-hb" id="btNext" title="Bougie suivante / pas suivant (→)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="currentColor" d="M8 8v12l9-6zM18 8h2v12h-2z"/></svg></button><button class="tx-tb rb-step" id="btStepBtn">Bougie ▾</button><button class="tx-hb" id="btHere" title="Rejouer depuis une bougie : clique ensuite sur la bougie (ou clic droit sur une bougie › Rejouer depuis ici). Ce qui suit est annulé, après un avertissement."><svg viewBox="0 0 28 28" width="26" height="26"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="17.5" y="9.5" width="4" height="9" rx=".5"/><path d="M19.5 6.5v3M19.5 18.5v3"/><path d="M13.5 9.5H9a3.5 3.5 0 0 0 0 7h5"/><path d="M11.5 6.5l-3 3 3 3"/></g></svg></button>
           <button class="tx-hb" id="btGoBtn" title="Aller à une date (Ctrl+G)"><svg viewBox="0 0 28 28" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M6 17a8 8 0 0 1 14-5.3M20 6v6h-6"/></svg></button>
           <div class="rb-go" id="btGo" hidden><span>Aller au</span><input type="date" id="btDate" class="tx-hin"><input type="time" id="btStart" value="09:30" class="tx-hin" title="Heure de départ (New York)"><button class="tx-hbtn" id="btLoad">Charger</button></div>
         </div>
@@ -6040,7 +6048,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const next = () => { const t = todo.shift(); if (!t) return; readTf(t[0], t[1], to).finally(() => (preTimer = setTimeout(next, 30))); };
     preTimer = setTimeout(next, 300);
   }
-  async function load() {
+  async function loadRaw() { // chargement de la v1.65.1 (appelé par load() : journal du replay, session isolée)
     play(false); S.gen++; S.more = false; S.end = false;
     const d = $("btDate").value || lastTradingDay(), sym = $("btSym").value; S.sym = sym; S.day = d;
     const days = S.tf >= 129600 ? 3 : S.tf >= 43200 ? 35 : S.tf >= 10080 ? 9 : 3, from = ny(addDays(d, -days), 18, 0), to = ny(d, 17, 0);
@@ -6111,7 +6119,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   /* ---------------- compte démo 50K (règles Topstep : MLL 2 000 $ trailing fin de journée, DLL 1 000 $) ---------------- */
   const freshAcc = (cfg = A ? A.cfg : defCfg()) => ({ cfg: { ...cfg }, bal: cfg.size, mll: cfg.size - cfg.mll, eodHigh: cfg.size, day: null, rpDay: 0, dllHit: false, blown: false, pos: null, orders: [], trades: [], seq: 1 });
   let A = null; A = fixAcc(LS.get("bt-acc", null) || freshAcc(defCfg()));
-  const saveAcc = () => LS.set("bt-acc", A);
+  let curSes = null; // v1.66 : session isolée ouverte (null = Backtesteur de base : compte bt-acc et dessins de la mise en page, comme avant)
+  const saveAcc = () => { if (curSes) sesSaveAcc(); else LS.set("bt-acc", A); evMark(); }; // v1.66 : + journal du replay (retour arrière)
+  /* btAcc:start — compte du replay (fill, ordres, règles MLL / DLL) ; extrait tel quel par tools/check.js pour tester le retour arrière (btRewind) */
   const upl = () => { if (!A.pos) return 0; const p = last(); return p == null ? 0 : (p - A.pos.avg) * A.pos.qty * CTR[A.pos.ctr].pv; };
   function newDay(t) {
     const k = sessionKey(t); if (A.day === k) return;
@@ -6165,7 +6175,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     else if (A.pos && !A.dllHit && day <= -A.cfg.dll) { flatten("DLL"); A.dllHit = true; saveAcc(); msg("Daily Loss Limit atteinte : positions fermées, plus de trade jusqu'à la prochaine session.", true); }
   }
   function flatten(why) { if (A.pos) fill(A.pos.ctr, -A.pos.qty, last(), S.raw[S.cur][0], why || "Flatten"); A.orders = []; saveAcc(); }
-  function canTrade() { if (!S.raw.length) { msg("Charge d'abord une journée.", true); return false; } if (A.blown) { msg("Compte cramé (MLL) — Reset.", true); return false; } if (A.dllHit) { msg("DLL atteinte : attends la session suivante.", true); return false; } return true; }
+  function canTrade() { if (!S.raw.length) { msg("Charge d'abord une journée.", true); return false; } if (A.blown) { msg("Compte cramé (MLL) — Reset.", true); return false; } if (A.dllHit) { msg("DLL atteinte : attends la session suivante.", true); return false; }
+    if (curSes && !curSes.assets.includes($("oCtr").value)) { msg(`${$("oCtr").value} n'est pas dans les actifs de la session « ${curSes.name} » (${curSes.assets.join(", ")}).`, true); return false; } return true; }
+  /* btAcc:end */
   function order(side) {
     if (!canTrade()) return;
     const ctr = $("oCtr").value, c = CTR[ctr];
@@ -6250,7 +6262,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   window.btJournal = renderJournal;
 
   /* ---------------- v1.6 : préférences, sessions de backtest, mises en page ---------------- */
-  const PDEF = { syncCross: true, splitDir: "v", syncSym: false, syncTf: true, syncTime: true, syncRange: true, tf2: 15, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8, titleMode: "both", mkt: true, vol: false, indTitles: true, indInputs: false, indValues: false, slBg: false, slBgOp: 50, prevColor: false, prec: "def", scaleAL: "hover", noOverlap: true, plusBtn: true, countdown: true, symLbl: "vl", prevClose: "l", pcColor: "#555555", hiLo: "hidden", hlColor: "#7a3e48", bgType: "solid", bg2: "#ffffff", sessBreaks: false, sbColor: "#3d6bb3", crossStyle: 3, wm: false, wmColor: "#000000", lines: "#000000", navBtns: "hover", paneBtns: "hover", dow: true, h24: true };
+  const PDEF = { syncCross: true, splitDir: "v", syncSym: false, syncTf: true, syncTime: true, syncRange: true, tf2: 15, sec: true, rth: false, line: false, invert: false, body: true, up: "#4caf50", down: "#000000", border: true, bUp: "#000000", bDn: "#000000", wick: true, wUp: "#000000", wDn: "#000000", title: true, ohlc: true, chg: true, lastLbl: true, lastLine: true, txt: "#000000", fs: 12, right: 15, bg: "#e8e3d1", grid: "none", gridC: "#c9c3ae", cross: "#000000", mTop: 8, mBot: 8, titleMode: "both", mkt: true, vol: false, indTitles: true, indInputs: false, indValues: false, slBg: false, slBgOp: 50, prevColor: false, prec: "def", scaleAL: "hover", noOverlap: true, plusBtn: true, countdown: true, symLbl: "vl", prevClose: "l", pcColor: "#555555", hiLo: "hidden", hlColor: "#7a3e48", bgType: "solid", bg2: "#ffffff", sessBreaks: false, sbColor: "#3d6bb3", crossStyle: 3, wm: false, wmColor: "#000000", lines: "#000000", navBtns: "hover", paneBtns: "hover", dow: true, h24: true, allowBack: true };
   let P = { ...PDEF, ...LS.get("bt-prefs", {}) };
   // décalage UTC de New York (UTC-5 / UTC-4) et clé de séance (18h NY -> 17h NY)
   const offFmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", timeZoneName: "shortOffset" }), offDay = new Map();
@@ -6323,7 +6335,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
         + sh("Échelles") + r(lb("Texte"), col("txt") + sel("fs", FS)) + r(lb("Lignes"), col("lines"))
         + sh("Boutons") + r(lb("Navigation"), sel("navBtns", VIS)) + r(lb("Volet"), sel("paneBtns", VIS))
         + sh("Marges") + r(lb("Haut"), num("mTop") + " %") + r(lb("Bas"), num("mBot") + " %") + r(lb("Droite"), num("right") + " barres"),
-      replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full"),
+      replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full")
+        + sh("Retour arrière") + r(cb("allowBack", "Autoriser le retour arrière : bougie précédente (← / J), curseur vers l'arrière, Recommencer, Rejouer depuis ici"), "", "full") + (curSes && curSes.strict ? r(`<span class="lb">Session « ${esc(curSes.name)} » en challenge strict : retour arrière interdit quel que soit ce réglage.</span>`, "", "full") : ""),
     };
     const m = modal("Paramètres", `<div class="snav">${PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("")}</div><div class="sbody">${tab === "ind" ? indPrefsBody() : BODY[tab]}</div>`,
       `<div class="tpl"><button class="ghost" data-m="tpl">Modèle<i class="tx-car"></i></button><div class="tx-hmenu" data-tplm hidden style="position:absolute;bottom:42px;left:0"><div class="mi" data-m="def">Appliquer les réglages par défaut</div><div class="mi" data-m="savedef">Enregistrer comme modèle par défaut</div></div></div><span class="tx-sp"></span><button data-m="all" class="ghost" title="Applique ces réglages à toutes les mises en page">Appliquer à tous</button><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
@@ -6351,12 +6364,13 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     play(false); $("btSym").value = s.sym; S.sym = s.sym; $("btDate").value = s.day; $("btStart").value = s.start || "09:30"; S.tf = s.tf || 1; setTfBtns();
     A = fixAcc(JSON.parse(JSON.stringify(s.acc))); markers = s.markers || []; saveAcc(); LS.set(dkey(1), s.shapes || []); LS.set(dkey(1) + "-f", s.folders || []);
     await load(); if (s.t != null && S.raw.length) { const i = S.raw.findIndex((b) => b[0] >= s.t); if (i >= 0) { S.cur = S.done = i; } }
+    evStart("Instantané « " + s.name + " » ouvert"); // v1.66 : le journal du replay repart de l'heure de l'instantané
     draw(true); ui(); msg(`Session « ${s.name} » ouverte (${s.day} ${s.t != null ? hm(s.t) : ""}).`);
   }
   function openSessions() {
     const L = sessions(), sst = (s) => { const T = (s.acc.trades || []), w = T.filter((t) => t.pnl > 0).length, pl = T.reduce((a, t) => a + t.pnl, 0); return T.length ? ` · <span class="${pl >= 0 ? "up" : "dn"}">${usd(pl)}</span> · win ${Math.round((w / T.length) * 100)} %` : ""; };
     const row = (s) => `<div class="tx-li" data-id="${s.id}"><div><b>${esc(s.name)}</b>${s.strat ? ` <span class="tsx-chip" style="margin-left:6px">${esc(s.strat)}</span>` : ""}${s.desc ? `<small>${esc(s.desc)}</small>` : ""}<small>${s.sym} · ${tfName(s.tf)} · ${s.day}${s.t != null ? " " + hm(s.t) : ""} · solde ${usd(s.acc.bal)} · ${s.acc.trades.length} trade(s)${sst(s)} · ${(s.shapes || []).length} dessin(s) · ${new Date(s.savedAt).toLocaleString("fr-FR")}</small></div><span><button data-a="open">Ouvrir</button><button data-a="save" title="Écraser avec l'état actuel">💾</button><button data-a="ren" title="Renommer">✎</button><button data-a="del" title="Supprimer">🗑</button></span></div>`;
-    const m = modal("Sessions de backtest", `<div class="tx-row"><input id="btSessName" placeholder="Nom de la session" value="${esc(S.sym + " " + ($("btDate").value || ""))}"><button data-m="new">Enregistrer la session actuelle</button></div>
+    const m = modal("Sessions de backtest", sesSection() + `<div class="tx-row"><input id="btSessName" placeholder="Nom de la session" value="${esc(S.sym + " " + ($("btDate").value || ""))}"><button data-m="new">Enregistrer la session actuelle</button></div>
       <div class="tx-row"><input id="btSessStrat" placeholder="Stratégie (ex. Silver Bullet AM, NWOG)" list="btStratList" value="${esc(LS.get("bt-strat-last", ""))}"><datalist id="btStratList">${[...new Set(L.map((x) => x.strat).filter(Boolean))].map((x) => `<option value="${esc(x)}">`).join("")}</datalist><input id="btSessDesc" placeholder="Description (optionnelle)"></div>
       <div class="tx-row" style="margin-top:-4px"><select id="btSessF"><option value="">Toutes les stratégies</option>${[...new Set(L.map((x) => x.strat).filter(Boolean))].map((x) => `<option>${esc(x)}</option>`).join("")}</select></div><div class="tx-list">${L.map(row).join("") || '<div class="tx-empty">Aucune session enregistrée</div>'}</div>`);
     m.onchange = (e) => { if (e.target.id === "btSessF") m.querySelectorAll(".tx-list .tx-li").forEach((r) => { const x = L.find((q) => q.id === r.dataset.id); r.hidden = !!e.target.value && (!x || x.strat !== e.target.value); }); };
@@ -6364,18 +6378,19 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       const mm = e.target.dataset.m, a = e.target.dataset.a; if (mm === "x") return closeModal();
       if (mm === "new") { if (!S.raw.length) return msg("Charge d'abord une journée.", true); const strat = $("btSessStrat").value.trim(); LS.set("bt-strat-last", strat); if (saveList("bt-sessions", [snapshot($("btSessName").value.trim() || "Session " + (L.length + 1), { strat, desc: $("btSessDesc").value.trim() }), ...sessions()])) openSessions(); return; }
       const r = e.target.closest(".tx-li"); if (!r || !a) return; const all = sessions(), s = all.find((x) => x.id === r.dataset.id); if (!s) return;
-      if (a === "open") { if (!confirm(`Ouvrir « ${s.name} » ? Le compte démo et les dessins ${s.sym} actuels seront remplacés.`)) return; closeModal(); await openSession(s); }
+      if (a === "open") { if (!confirm(`Ouvrir « ${s.name} » ? Le compte démo et les dessins ${s.sym} actuels seront remplacés.${curSes ? `\n(La session isolée « ${curSes.name} » est d'abord enregistrée, puis le Backtesteur de base reprend.)` : ""}`)) return; closeModal(); if (curSes) await sesLeave(true); await openSession(s); }
       else if (a === "save") { if (!confirm(`Écraser « ${s.name} » avec l'état actuel ?`)) return; const n = snapshot(s.name, { strat: s.strat, desc: s.desc }); n.id = s.id; if (saveList("bt-sessions", all.map((x) => (x.id === s.id ? n : x)))) openSessions(); }
       else if (a === "ren") { const n = await ask("Renommer la session", s.name); if (n) { s.name = n; saveList("bt-sessions", all); openSessions(); } }
       else if (a === "del" && confirm(`Supprimer la session « ${s.name} » ?`)) { saveList("bt-sessions", all.filter((x) => x !== s)); openSessions(); }
     };
+    const old = m.onclick; m.onclick = (e) => (sesListClick(e) ? undefined : old(e)); // v1.66 : boutons des sessions isolées (data-sa), le reste comme avant
   }
   // mises en page : symbole, intervalle, préférences, dessins et groupes ; 5 modèles vides au départ
   const LDEF = [["NWOG & 1st Matrix", "NQ"], ["NQ", "NQ"], ["ES", "ES"], ["RTH ORG Matrix", "NQ"], ["STDV Matrix", "NQ"]];
   const layouts = () => LS.get("bt-layouts", null) || LDEF.map(([name, sym], i) => ({ id: "l" + i, name, sym, tf: 1 }));
   let curLay = LS.get("bt-layout-cur", null);
   const layName = () => { const l = layouts().find((x) => x.id === curLay); if ($("btLayName")) $("btLayName").textContent = l ? l.name : "Mise en page"; };
-  const layoutSnap = (l) => ({ ...l, sym: S.sym, tf: S.tf, prefs: { ...P }, shapes: JSON.parse(JSON.stringify(shapes1().shapes)), folders: JSON.parse(JSON.stringify(shapes1().folders)), savedAt: new Date().toISOString() });
+  const layoutSnap = (l) => ({ ...l, sym: S.sym, tf: S.tf, prefs: { ...P }, shapes: curSes ? l.shapes : JSON.parse(JSON.stringify(shapes1().shapes)), folders: curSes ? l.folders : JSON.parse(JSON.stringify(shapes1().folders)), savedAt: new Date().toISOString() }); // v1.66 : en session isolée, les dessins de la mise en page restent les siens
   const setCur = (id) => { curLay = id; LS.set("bt-layout-cur", id); layName(); };
   async function saveLayout(asNew) {
     const L = layouts(), i = L.findIndex((x) => x.id === curLay);
@@ -7126,13 +7141,17 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     saveAcc(); draw(); ui();
   }
   /* moteur : chaque bougie jouée passe par le bus (« bar » : ordres + règles du compte, alertes), puis « tick » redessine */
+  BUS.on("bar", (b) => evPre(b)); // v1.66 : journal du replay (actions de l'utilisateur en attente, avant la bougie)
   BUS.on("bar", (b) => processBar(b));
   BUS.on("bar", (b) => { if (window.btAlertCheck) window.btAlertCheck(b); });
+  BUS.on("bar", (b) => evPost(b)); // v1.66 : journal du replay (instantané si la bougie a changé le compte, début de séance)
   BUS.on("tick", () => { draw(); ui(); });
+  BUS.on("tick", () => rulesTick()); // v1.66 : panneau Règles du dock mis à jour à chaque bougie
   BUS.on("end", () => { play(false); msg("Fin des données disponibles : plus de séance à rejouer après celle-ci."); });
   function step(k) {
     if (!S.raw.length) return;
-    const to = Math.max(0, Math.min(S.raw.length - 1, S.cur + k));
+    let to = Math.max(0, Math.min(S.raw.length - 1, S.cur + k));
+    if (curSes && curSes.endT && S.raw[to][0] > curSes.endT) { to = Math.max(S.cur, idxAtOrBefore(curSes.endT)); sesEnded(); } // v1.66 : date de fin de la session (SES-02)
     for (let i = S.done + 1; i <= to; i++) { S.cur = i; BUS.emit("bar", S.raw[i]); }
     S.done = Math.max(S.done, to); S.cur = to; BUS.emit("tick", S.raw[S.cur]);
     if (btCore.needsMore(S.raw, S.cur, AHEAD)) more();
@@ -7164,7 +7183,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === cb) { while (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === cb) j++; }
     else if (j + 1 < S.raw.length) { const nb = bucket(S.raw[++j][0]); while (j + 1 < S.raw.length && bucket(S.raw[j + 1][0]) === nb) j++; }
     if (j > S.cur) step(j - S.cur); else if (!S.end) { msg("Chargement de la séance suivante…"); more().then(() => { if (S.cur < S.raw.length - 1) stepCandle(); }); } }
-  function back() { if (!S.raw.length) return; const cb = bucket(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && bucket(S.raw[j][0]) === cb) j--; S.cur = Math.max(0, j); draw(); ui(); }
+  function back() { if (!S.raw.length) return; const cb = bucket(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && bucket(S.raw[j][0]) === cb) j--; backTo(Math.max(0, j)); } // v1.66 : backTo = recule comme avant, ou propose d'annuler ce qui suit (REP-05)
   // lecture : horloge du marché (btCore.clockAdvance), 1× = 1 minute par seconde, mesurée sur le temps réel écoulé -> la bougie se forme en direct avec les données 1 s
   function play(on) {
     if (on === undefined) on = !S.playing; clearInterval(S.playing); S.playing = null; if ($("btPlay")) $("btPlay").textContent = on ? "⏸" : "▶";
@@ -7315,7 +7334,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (j > S.cur) step(j - S.cur); else if (!S.end) { msg("Chargement de la séance suivante…"); more().then(() => { if (S.cur < S.raw.length - 1) stepWith(fb); }); }
   }
   const stepNext = () => (P.stepSync !== false ? stepCandle() : stepWith(stepBk));
-  function backStep() { if (P.stepSync !== false) return back(); if (!S.raw.length) return; const cb = stepBk(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && stepBk(S.raw[j][0]) === cb) j--; S.cur = Math.max(0, j); draw(); ui(); }
+  function backStep() { if (P.stepSync !== false) return back(); if (!S.raw.length) return; const cb = stepBk(S.raw[S.cur][0]); let j = S.cur; while (j > 0 && stepBk(S.raw[j][0]) === cb) j--; backTo(Math.max(0, j)); }
   const stepUI = () => { const b = $("btStepBtn"); if (b) { b.textContent = stepName() + " ▾"; b.title = P.stepSync !== false ? "Pas du replay : une bougie de l'unité du chart (Alt+Maj+← / → pour changer)" : `Pas du replay : ${tfName(P.stepMin || 1)}, indépendant de l'unité du chart`; } };
   function setStep(min, sync) { if (sync != null) P.stepSync = sync; if (min) P.stepMin = min; LS.set("bt-prefs", P); stepUI(); msg(P.stepSync !== false ? "Pas du replay : une bougie du chart." : `Pas du replay : ${tfName(P.stepMin)} (bougie suivante = +${tfName(P.stepMin)}).`); }
   const stepMove = (d) => { if (P.stepSync !== false) { P.stepSync = false; P.stepMin = d > 0 ? Math.max(STEPS.find((s) => s >= Math.min(S.tf, 240)) || 1, 1) : 1; return setStep(); }
@@ -7353,6 +7372,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const presets = () => LS.get("bt-presets", []);
   function presetUI() { const s = $("oPreset"); if (!s) return; const v = s.value; s.innerHTML = `<option value="">Presets…</option>` + presets().map((p, i) => `<option value="${i}">${esc(p.name)}</option>`).join(""); s.value = v; }
   function tagList() { const d = $("oTagList"); if (!d) return; const all = new Set(); (A.trades || []).forEach((t) => (t.tags || []).forEach((x) => all.add(x))); journal().forEach((r) => r.trades.forEach((t) => (t.tags || []).forEach((x) => all.add(x)))); d.innerHTML = [...all].map((x) => `<option value="${esc(x)}">`).join(""); }
+  /* btPro:start — suivi de la position (extrait par tools/check.js avec btAcc) */
   // suivi de la position pendant le replay : MAE / MFE (en points), risque initial (distance du stop), breakeven auto
   function proTrack(b) {
     const p = A.pos; if (!p || b[0] <= p.t) return; const dir = Math.sign(p.qty), sl = A.orders.find((o) => o.bracket === "SL");
@@ -7362,6 +7382,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (P.beOn && p.r0 && !p.be && fav >= (+P.beR || 1) * p.r0) { p.be = true;
       if (sl && (dir > 0 ? sl.px < p.avg : sl.px > p.avg)) { sl.px = rnd(p.avg + dir * TICK); sl.at = b[0]; msg(`Breakeven auto (${+P.beR || 1} R) : stop remonté à ${sl.px.toFixed(2)}.`); } }
   }
+  /* btPro:end */
 
   /* ---- 4. analytique du backtest ---- */
   const SESS = [["Asie", 18 * 60, 26 * 60], ["Londres", 2 * 60, 7 * 60], ["NY AM", 7 * 60, 12 * 60], ["NY PM", 12 * 60, 16 * 60 + 15]];
@@ -7436,14 +7457,14 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
 
   /* ---- 6. dock à onglets à droite : Journal (trades + notes), News (jusqu'à l'heure du replay) ---- */
-  const DOCKT = { jrn: "Journal", news: "News" };
+  const DOCKT = { jrn: "Journal", news: "News", rules: "Règles" }; // v1.66 : Règles du challenge (PRO-02)
   let dock = { open: [], on: null, ...LS.get("bt-dock", {}) };
   const dockSave = () => LS.set("bt-dock", dock);
   function dockRender() {
     const d = $("btDock"); if (!d) return; dock.open = dock.open.filter((k) => DOCKT[k]); if (!dock.open.includes(dock.on)) dock.on = dock.open[0] || null;
     const was = d.hidden; d.hidden = !dock.open.length;
     $("btDockTabs").innerHTML = dock.open.map((k) => `<button class="dk-t ${k === dock.on ? "on" : ""}" data-dk="${k}">${DOCKT[k]}<i data-dx="${k}" title="Fermer">×</i></button>`).join("") + `<button class="dk-add" data-dadd="1" title="Ajouter un panneau">＋</button><span class="tx-sp"></span><button class="dk-add" data-dhide="1" title="Masquer le dock">›</button>`;
-    $("btDockJ").hidden = dock.on !== "jrn"; $("btDockN").hidden = dock.on !== "news";
+    $("btDockJ").hidden = dock.on !== "jrn"; $("btDockN").hidden = dock.on !== "news"; if ($("btDockR")) $("btDockR").hidden = dock.on !== "rules";
     if ($("btDockBtn")) $("btDockBtn").classList.toggle("on", !d.hidden && dock.on === "jrn");
     jrnKey = ""; newsKey = ""; dockTick(true);
     if (was !== d.hidden && chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0);
@@ -7467,7 +7488,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     el.innerHTML = `<div class="dj-s"><b>${JOURS[dowOf(day)]} ${day.slice(8)}/${day.slice(5, 7)}</b><span>News USD · heure NY</span></div>` + (evs.map((e) => { const past = t != null && e.ts <= t;
       return `<div class="dn-r ${past ? "" : "fut"}"><i class="tx-imp" style="background:${IMPC[e.i || "med"]}"></i><span>${hm(e.ts)}</span><b>${esc(e.n)}</b>${!past && t != null ? `<button data-ngo="${e.ts}" title="Avancer jusqu'à juste avant">▶</button>` : ""}</div>`; }).join("") || '<div class="tx-empty">Aucune news ce jour-là.</div>');
   }
-  function dockTick(force) { if (force) { jrnKey = ""; newsKey = ""; } const d = $("btDock"); if (!d || d.hidden) return; if (dock.on === "jrn") jrnRender(); else if (dock.on === "news") newsRender(); }
+  function dockTick(force) { if (force) { jrnKey = ""; newsKey = ""; rulesKey = ""; } const d = $("btDock"); if (!d || d.hidden) return; if (dock.on === "jrn") jrnRender(); else if (dock.on === "news") newsRender(); else if (dock.on === "rules") rulesRender(); }
 
   function initPro() {
     // 1. Aller à
@@ -7504,6 +7525,515 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       if (b.dataset.dj === "ana") openAnalytics(); if (b.dataset.dj === "end") endSession(); });
     $("btDockBody").addEventListener("input", (e) => { const t = e.target; if (t.dataset.dj === "notes") { A.notes = t.value; saveAcc(); } else if (t.dataset.note) { const tr = A.trades.find((x) => String(x.id) === t.dataset.note); if (tr) { tr.note = t.value; saveAcc(); } } });
     dockRender(); setInterval(() => dockTick(false), 600);
+  }
+
+  /* ---------------- v1.66 : Phase 1 de la salle blanche (spec : docs/salle-blanche-fxreplay/REA-fxreplay.md) ----------------
+     REP-04 rejouer depuis une bougie · REP-05 le retour arrière annule ce qui suit (journal d'événements + instantanés) · REP-06 challenge strict · REP-07 option
+     SES-01 assistant « Nouvelle session » · SES-02 période · SES-03 session isolée · SES-12 sauvegarde continue · PRO-02 panneau des règles (dock)
+     Tout s'ajoute au Backtesteur : sans session isolée ouverte, compte bt-acc, dessins, raccourcis et sessions-instantanés marchent comme en v1.65.1. */
+
+  /* btRewind:start — retour arrière fiable (REP-04 / REP-05) : journal d'événements en ajout seul + instantanés du compte ; fonctions pures, testées par tools/check.js
+     Événement = { seq, t (heure du chart, s), at (heure réelle, ms), src ("origin" | "bar" | "user"), type, label, snap } ; snap = compte APRÈS l'événement, sans
+     les trades (ils ne font que s'ajouter : on garde leur nombre nT) ni les notes ; nM = nombre de marqueurs du chart ; cfg seulement quand elle change.
+     État « à t » = après la bougie t, avant les actions faites en regardant cette bougie : on garde les événements t' < t et ceux de la bougie t (src ≠ "user"),
+     puis on rejoue les bougies jusqu'à t ; entre deux événements rien ne change le compte (seuls MAE / MFE bougent), d'où le même état qu'un replay direct. */
+  const btRewind = (() => {
+    const clone = (o) => (o == null ? o : JSON.parse(JSON.stringify(o)));
+    const money = (x) => (x < 0 ? "-$" : "+$") + Math.abs(+x || 0).toFixed(2);
+    const px2 = (p) => (+p).toFixed(2);
+    // signatures : rapide (après chaque bougie) et complète (après une action de l'utilisateur : prix des ordres, frais)
+    function qsig(a) { const p = a.pos; return [a.bal, a.mll, a.day, a.dllHit ? 1 : 0, a.blown ? 1 : 0, (a.trades || []).length, (a.orders || []).length, p ? `${p.ctr}:${p.qty}:${p.avg}:${p.be ? 1 : 0}` : ""].join("|"); }
+    function fsig(a) { return qsig(a) + "#" + (a.orders || []).map((o) => `${o.id}:${o.type}:${o.bracket || ""}:${o.qty}:${o.px}`).join(",") + "#" + JSON.stringify(a.cfg || {}); }
+    function snap(a, nM, lastCfg) {
+      const o = {}; for (const k in a) if (k !== "trades" && k !== "notes" && k !== "cfg") o[k] = a[k];
+      const s = { acc: clone(o), nT: (a.trades || []).length, nM: nM || 0 }, c = JSON.stringify(a.cfg || {});
+      if (c !== lastCfg) s.cfg = JSON.parse(c);
+      return s;
+    }
+    function cfgAt(evs, i) { for (let k = Math.min(i, evs.length - 1); k >= 0; k--) if (evs[k].snap && evs[k].snap.cfg) return evs[k].snap.cfg; return null; }
+    // compte restauré depuis l'événement i : champs de l'instantané, trades = les nT premiers du compte actuel (leurs notes gardées), notes de session gardées
+    function restore(evs, i, cur) { const s = evs[i].snap, a = clone(s.acc); a.cfg = clone(cfgAt(evs, i) || (cur && cur.cfg) || {}); a.trades = ((cur && cur.trades) || []).slice(0, s.nT); if (cur && cur.notes != null) a.notes = cur.notes; return a; }
+    // dernier événement gardé pour revenir à t (-1 = avant le début du journal)
+    function pick(evs, t) { for (let i = evs.length - 1; i >= 0; i--) { const e = evs[i]; if (e.t < t || (e.t === t && e.src !== "user")) return i; } return -1; }
+    function after(evs, t) { return evs.slice(pick(evs, t) + 1); }
+    // type et libellé d'un événement (différence entre l'instantané précédent ps et le compte a)
+    function kind(ps, a, lastCfg) {
+      const L = [], pa = (ps && ps.acc) || {}, po = pa.orders || [], no = a.orders || [], tr = (a.trades || []).slice(ps ? ps.nT : 0), pp = pa.pos, np = a.pos;
+      const o2 = (o) => `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty} ${o.ctr} @ ${px2(o.px)}`, filled = tr.length > 0 || (!!np !== !!pp) || (np && pp && np.qty !== pp.qty);
+      if (ps && a.day && pa.day !== a.day) L.push(["seance", "Début de séance " + a.day]);
+      tr.forEach((x) => L.push(["execute", `Trade ${x.side} ${x.qty} ${x.ctr} ${x.entry} → ${x.exit}${x.why ? " (" + x.why + ")" : ""} ${money(x.pnl)}`]));
+      if (np && (!pp || pp.qty !== np.qty || pp.avg !== np.avg || pp.ctr !== np.ctr)) L.push(["execute", `Position ${np.qty > 0 ? "+" : ""}${np.qty} ${np.ctr} @ ${px2(np.avg)}`]);
+      if (np && np.be && !(pp && pp.be)) L.push(["breakeven", "Breakeven auto : stop au prix d'entrée"]);
+      const byId = new Map(po.map((o) => [o.id, o])), ids = new Set(no.map((o) => o.id));
+      no.forEach((o) => { const p = byId.get(o.id); if (!p) L.push(["pose", "Ordre posé : " + o2(o)]); else if (p.px !== o.px || p.qty !== o.qty) L.push(["modifie", `${o.bracket ? o.bracket + " déplacé" : "Ordre modifié"} : ${px2(p.px)} → ${px2(o.px)}`]); });
+      po.forEach((o) => { if (ids.has(o.id)) return; if (!filled) L.push(["annule", "Ordre annulé : " + o2(o)]); else if (!o.bracket) L.push(["execute", "Ordre exécuté : " + o2(o)]); });
+      if (a.blown && !pa.blown) L.push(["mll", "MLL atteinte : compte cramé"]);
+      if (a.dllHit && !pa.dllHit) L.push(["dll", "DLL atteinte"]);
+      if (lastCfg && JSON.stringify(a.cfg || {}) !== lastCfg) L.push(["couts", "Type de compte / frais modifiés"]);
+      return L.length ? { type: L[0][0], label: L.map((x) => x[1]).join(" · ") } : { type: "etat", label: "Compte mis à jour" };
+    }
+    // nouveau journal (origine = état actuel à l'heure t)
+    function start(J, a, nM, t, at, label) {
+      J.evs = [{ seq: (J.seq = (J.seq || 0) + 1), t, at: at || 0, src: "origin", type: "origine", label: label || "Début du replay", snap: snap(a, nM, null) }];
+      J.cfg = JSON.stringify(a.cfg || {}); J.q = qsig(a); J.f = fsig(a); return J.evs[0];
+    }
+    // ajoute un événement si le compte a changé (src "bar" : signature rapide, "user" : complète) ; "reset" si l'heure recule sans retour arrière
+    function commit(J, a, nM, t, src, at) {
+      if (!J.evs || !J.evs.length) return null;
+      if (src === "bar" ? qsig(a) === J.q : fsig(a) === J.f) return null;
+      const last = J.evs[J.evs.length - 1]; if (t < last.t) return "reset";
+      const k = kind(last.snap, a, J.cfg), s = snap(a, nM, J.cfg), e = { seq: (J.seq = (J.seq || 0) + 1), t, at: at || 0, src, type: k.type, label: k.label, snap: s };
+      if (s.cfg) J.cfg = JSON.stringify(s.cfg);
+      J.evs.push(e); J.q = qsig(a); J.f = fsig(a); return e;
+    }
+    // retour à t : supprime les événements suivants et renvoie le compte restauré + l'heure d'où rejouer les bougies (null = avant le début du journal)
+    function back(J, t, cur) {
+      const k = pick(J.evs, t); if (k < 0) return null;
+      const e = J.evs[k], acc = restore(J.evs, k, cur), removed = J.evs.splice(k + 1);
+      J.cfg = JSON.stringify(cfgAt(J.evs, k) || acc.cfg || {}); J.q = qsig(acc); J.f = fsig(acc);
+      return { acc, nM: e.snap.nM, from: e.t, removed, k };
+    }
+    // aperçu de ce qui sera annulé (cur = compte actuel, prev = compte restauré) : trades retirés, position, ordres annulés / remis / déplacés
+    function diff(cur, prev) {
+      const out = { trades: (cur.trades || []).slice((prev.trades || []).length), pos: null, gone: [], back: [], moved: [] }, a = cur.pos, b = prev.pos;
+      if ((a || b) && !(a && b && a.qty === b.qty && a.avg === b.avg && a.ctr === b.ctr)) out.pos = { from: a || null, to: b || null };
+      const Pm = new Map((prev.orders || []).map((o) => [o.id, o])), Cm = new Map((cur.orders || []).map((o) => [o.id, o]));
+      Cm.forEach((o, id) => { const p = Pm.get(id); if (!p) out.gone.push(o); else if (p.px !== o.px || p.qty !== o.qty) out.moved.push({ from: o, to: p }); });
+      Pm.forEach((o, id) => { if (!Cm.has(id)) out.back.push(o); });
+      out.n = out.trades.length + (out.pos ? 1 : 0) + out.gone.length + out.back.length + out.moved.length; return out;
+    }
+    // bougies triées par heure : 1re d'heure > t ; rejouer celles d'heure dans ]from, t]
+    function idxAfter(bars, t) { let lo = 0, hi = bars.length; while (lo < hi) { const m = (lo + hi) >> 1; if (bars[m][0] <= t) lo = m + 1; else hi = m; } return lo; }
+    function resim(bars, from, t, fn) { let n = 0; for (let i = idxAfter(bars, from); i < bars.length && bars[i][0] <= t; i++, n++) fn(bars[i], i); return n; }
+    // stockage : au plus max événements, le plus ancien gardé devient l'origine (sa cfg est recopiée)
+    function cap(J, max) { if (J.evs.length <= max) return 0; const cut = J.evs.length - max, c = cfgAt(J.evs, cut); J.evs = J.evs.slice(cut); const f = J.evs[0]; f.snap = { ...f.snap }; if (!f.snap.cfg && c) f.snap.cfg = c; f.src = "origin"; return cut; }
+    return { qsig, fsig, snap, cfgAt, restore, pick, after, kind, start, commit, back, diff, idxAfter, resim, cap };
+  })();
+  /* btRewind:end */
+
+  /* btRules:start — panneau des règles du challenge (PRO-02) : pour chaque règle du type de compte Prop, limite, valeur actuelle, marge restante et progression ;
+     fonction pure, testée par tools/check.js. acc = { cfg, bal, mll (seuil), rpDay, dllHit, blown, trades: [{ day, pnl }] } ; upl = P&L latent ; today = séance du replay.
+     Sur l'équité (solde + latent) : objectif = cumul ≥ objectif ; DLL = P&L du jour > −DLL ; MLL = équité > seuil ; consistance = meilleur jour ≤ cons % du cumul */
+  function btRules(acc, upl, today) {
+    const c = acc.cfg || {}, u = +upl || 0; if (c.type !== "prop") return { prop: false, rows: [] };
+    const eq = acc.bal + u, cum = eq - c.size, day = (acc.rpDay || 0) + u, by = {};
+    (acc.trades || []).forEach((t) => { by[t.day] = (by[t.day] || 0) + t.pnl; });
+    if (today != null) by[today] = (by[today] || 0) + u;
+    const best = Math.max(0, ...Object.values(by)), k = (+c.cons || 0) / 100, cl = (x) => Math.max(0, Math.min(1, x));
+    const loss = Math.max(0, -day), room = eq - acc.mll, ratio = cum > 0 ? best / cum : null;
+    const rows = [
+      { id: "target", name: "Objectif de profit", limit: c.target, value: cum, margin: c.target - cum, prog: c.target > 0 ? cl(cum / c.target) : 0, st: cum >= c.target ? "ok" : "run" },
+      { id: "dll", name: "Perte max. du jour (DLL)", limit: c.dll, value: day, margin: c.dll - loss, prog: c.dll > 0 ? cl(loss / c.dll) : 0, st: acc.dllHit || loss >= c.dll ? "ko" : loss >= 0.75 * c.dll ? "warn" : "run" },
+      { id: "mll", name: "Perte max. (MLL trailing)", limit: acc.mll, value: eq, margin: room, prog: c.mll > 0 ? cl((c.mll - room) / c.mll) : 0, st: acc.blown || room <= 0 ? "ko" : room <= 0.25 * c.mll ? "warn" : "run" },
+      { id: "cons", name: `Consistance (meilleur jour ≤ ${c.cons} %)`, limit: c.cons, value: ratio == null ? null : ratio * 100, best, margin: ratio == null ? null : k * cum - best,
+        need: ratio != null && k > 0 && ratio > k ? best / k - cum : 0, prog: ratio == null || !k ? 0 : cl(ratio / k), st: ratio == null ? "run" : ratio <= k ? "ok" : "warn" }];
+    return { prop: true, rows, eq, cum, day, best, pass: cum >= c.target && ratio != null && ratio <= k && !acc.blown, fail: !!acc.blown };
+  }
+  /* btRules:end */
+
+  /* btSes:start — période d'une session (SES-02) : fin automatique ou date (+1 jour / +1 semaine / +1 mois), départ tiré au hasard parmi les jours disponibles ;
+     fonctions pures, testées par tools/check.js. Dates « AAAA-MM-JJ » ; ny(d, h, m) = heure unix de New York, fournie par l'appelant */
+  const btSes = (() => {
+    const D0 = (s) => new Date(s + "T12:00:00Z"), S0 = (d) => d.toISOString().slice(0, 10), ok = (s) => /^\d{4}-\d\d-\d\d$/.test(s || "") && !isNaN(D0(s));
+    function addPeriod(day, k) {
+      if (!ok(day)) return null; const d = D0(day);
+      if (k === "d") d.setUTCDate(d.getUTCDate() + 1); else if (k === "w") d.setUTCDate(d.getUTCDate() + 7);
+      else if (k === "m") { const m = (d.getUTCMonth() + 1) % 12; d.setUTCMonth(d.getUTCMonth() + 1); if (d.getUTCMonth() !== m) d.setUTCDate(0); } // 31 janv. + 1 mois = fin février
+      return S0(d);
+    }
+    function weekdays(from, to) { const out = []; if (!ok(from) || !ok(to)) return out; for (const d = D0(from); S0(d) <= to && out.length < 20000; d.setUTCDate(d.getUTCDate() + 1)) { const w = d.getUTCDay(); if (w >= 1 && w <= 5) out.push(S0(d)); } return out; }
+    function pickDay(days, from, to, rnd) { const L = (days || []).filter((d) => (!from || d >= from) && (!to || d <= to)); if (!L.length) return null; const r = Math.max(0, Math.min(0.999999, +rnd() || 0)); return L[Math.floor(r * L.length)]; }
+    function period(o) {
+      if (!ok(o.start)) return { ok: false, msg: "Date de départ invalide." };
+      if ((o.min && o.start < o.min) || (o.max && o.start > o.max)) return { ok: false, msg: `Date de départ hors des données (${o.min || "?"} → ${o.max || "?"}).` };
+      if (o.auto || !o.end) return { ok: true, start: o.start, end: null };
+      if (!ok(o.end)) return { ok: false, msg: "Date de fin invalide." };
+      if (o.end < o.start) return { ok: false, msg: "La date de fin doit être le jour de départ ou après." };
+      return { ok: true, start: o.start, end: o.end };
+    }
+    const endT = (end, ny) => (end ? ny(end, 17, 0) : null); // la séance CME datée « end » finit à 17:00 New York
+    const over = (t, end, ny) => !!end && t > ny(end, 17, 0);
+    return { addPeriod, weekdays, pickDay, period, endT, over };
+  })();
+  /* btSes:end */
+
+  /* ---- journal du replay : Backtesteur de base = en mémoire (un segment par chargement) ; session isolée = localStorage bt-ses-<id>-ev ---- */
+  const RJ = { evs: [], q: "", f: "", seq: 0, cfg: null, acc: null, keep: false };
+  const EVMAX = 1000; // événements gardés par session (≈ 0,6 Mo de localStorage ; au-delà, le plus ancien gardé devient le début du retour arrière)
+  let evQ = false, evUser = false, rvView = false;
+  const evNow = () => (S.raw.length ? S.raw[Math.min(S.raw.length - 1, Math.max(S.cur, S.done))][0] : null); // heure du compte = dernière bougie jouée
+  const evOrigin = () => (RJ.evs.length ? RJ.evs[0].t : null);
+  function idxAtOrBefore(t) { return btRewind.idxAfter(S.raw, t) - 1; }
+  const hmS = (t) => `${hm(t)}${t % 60 ? ":" + String(t % 60).padStart(2, "0") : ""}`;
+  const fmtD = (d) => (d ? `${d.slice(8, 10)}/${d.slice(5, 7)}/${d.slice(0, 4)}` : "");
+  function evStart(label) { const t = evNow(); RJ.acc = A; rvView = false; if (t == null) { RJ.evs = []; return; } btRewind.start(RJ, A, markers.length, t, Date.now(), label); sesEvDirty(true); }
+  function evCommit(t, src) {
+    if (!RJ.evs.length || RJ.acc !== A) return evStart(RJ.acc && RJ.acc !== A ? "Nouveau compte" : "Début du replay");
+    const r = btRewind.commit(RJ, A, markers.length, t, src, Date.now());
+    if (r === "reset") return evStart(`Replay repris plus tôt (${dstr(t)} ${hm(t)}) : journal recommencé`);
+    if (r) { rvView = false; if (!curSes && RJ.evs.length > EVMAX + 200) btRewind.cap(RJ, EVMAX); sesEvDirty(src === "user"); }
+  }
+  function evMark() { evUser = true; if (!evQ) { evQ = true; queueMicrotask(() => evFlush()); } } // appelé par saveAcc : l'instantané est pris une fois l'action terminée
+  function evFlush(t) { evQ = false; if (!evUser) return; evUser = false; const tt = t != null ? t : evNow(); if (tt != null) evCommit(tt, "user"); }
+  function evPre() { if (evUser) { const p = S.raw[S.cur - 1]; evFlush(p ? p[0] : evNow()); } } // action faite avant cette bougie : datée de la bougie précédente
+  function evPost(b) { evCommit(b[0], "bar"); }
+  // retour arrière refusé : session challenge stricte (REP-06) ou option désactivée (REP-07)
+  function backBlock() {
+    if (curSes && curSes.strict) return `Session challenge stricte « ${curSes.name} » : retour arrière interdit (lecture, vitesse et sauts vers l'avant restent permis).`;
+    if (P.allowBack === false) return "Retour arrière désactivé (Paramètres › Replay › Autoriser le retour arrière).";
+    return "";
+  }
+  // aperçu de ce qui serait annulé en revenant à t
+  function undoPreview(t) { const k = btRewind.pick(RJ.evs, t); if (k < 0) return null; const prev = btRewind.restore(RJ.evs, k, A); return { k, d: btRewind.diff(A, prev), evs: RJ.evs.slice(k + 1) }; }
+  function undoHtml(pv) {
+    const d = pv.d, cn = (c) => (CTR[c] ? CTR[c].name : c), o2 = (o) => `${o.bracket || o.type} ${o.qty > 0 ? "+" : ""}${o.qty} ${cn(o.ctr)} @ ${(+o.px).toFixed(2)}`, ps = (p) => (p ? `${p.qty > 0 ? "+" : ""}${p.qty} ${cn(p.ctr)} @ ${(+p.avg).toFixed(2)}` : "aucune"), li = [];
+    d.trades.forEach((x) => li.push(`<li>Trade ${x.side} ${x.qty} ${cn(x.ctr)} · ${dstr(x.tIn)} ${hm(x.tIn)} → ${hm(x.tOut)} · ${x.entry} → ${x.exit} · <span class="${x.pnl >= 0 ? "up" : "dn"}">${usd(x.pnl)}</span> : annulé</li>`));
+    if (d.pos) li.push(`<li>Position : ${ps(d.pos.from)} → ${ps(d.pos.to)}</li>`);
+    d.gone.forEach((o) => li.push(`<li>Ordre ${o2(o)} : annulé</li>`));
+    d.back.forEach((o) => li.push(`<li>Ordre ${o2(o)} : remis comme à ce moment</li>`));
+    d.moved.forEach((x) => li.push(`<li>${x.from.bracket || x.from.type} : ${(+x.from.px).toFixed(2)} → ${(+x.to.px).toFixed(2)}</li>`));
+    const ev = pv.evs.filter((e) => e.type !== "seance" && e.type !== "etat"), evH = ev.length ? `<div class="rh-ev"><div>${ev.length} événement(s) du journal supprimé(s), dont :</div>${ev.slice(-6).reverse().map((e) => `<span>${dstr(e.t)} ${hmS(e.t)} · ${esc(e.label)}</span>`).join("")}${ev.length > 6 ? "<span>…</span>" : ""}</div>` : "";
+    return (li.length ? `<ul class="rh-l">${li.join("")}</ul>` : '<div class="tx-empty">Aucun trade ni ordre à annuler.</div>') + evH;
+  }
+  // retour à t, dans les bougies chargées : instantané gardé puis bougies rejouées (sans breakeven : il aurait été un événement du journal)
+  function rewindTo(t) {
+    if (ffBusy) { msg("Saut « Aller à » en cours : attends qu'il se termine.", true); return null; }
+    play(false); evFlush();
+    const r = btRewind.back(RJ, t, A); if (!r) return null;
+    A = r.acc; RJ.acc = A; markers = markers.slice(0, r.nM); rvView = false;
+    const be = P.beOn; P.beOn = false; let j = -1;
+    try { btRewind.resim(S.raw, r.from, t, (b, i) => { S.cur = i; processBar(b); evCommit(b[0], "bar"); j = i; }); } finally { P.beOn = be; }
+    if (j < 0) j = idxAtOrBefore(t);
+    S.cur = S.done = Math.max(0, j); evUser = false;
+    saveAcc(); sesEvDirty(true); draw(true); ui(); dockTick(true);
+    return r;
+  }
+  // retour à t, en chargeant la journée de t si besoin (session isolée)
+  async function rewindAt(t) {
+    const k = btRewind.pick(RJ.evs, t); if (k < 0) return null;
+    const from = RJ.evs[k].t;
+    if (!S.raw.length || from < S.raw[0][0] || t > S.raw[S.raw.length - 1][0]) {
+      if (!curSes) return null;
+      sesSetInputs(t); await loadRaw(); if (!S.raw.length) loadDrawings();
+      if (!S.raw.length || from < S.raw[0][0]) { msg("Bougies indisponibles pour revenir à ce moment.", true); return null; }
+    }
+    return rewindTo(t);
+  }
+  const undoDone = (r, t) => msg(`Replay revenu au ${dstr(t)} ${hmS(t)} : ${r.removed.filter((e) => e.type !== "seance").length} événement(s) annulé(s) (trades, ordres, solde et règles comme à ce moment).`);
+  // « Bougie précédente » (REP-05) : sans trade ni ordre après le point, recule comme avant ; sinon demande
+  function backTo(j) {
+    const why = backBlock(); if (why) return msg(why, true);
+    const go = () => { S.cur = j; draw(); ui(); };
+    if (S.cur >= S.done) rvView = false;
+    if (rvView && j < S.cur) return go(); // revue en cours : « reculer l'affichage seul » déjà choisi
+    const t = S.raw[j][0], pv = undoPreview(t);
+    if (!pv || !pv.d.n) return go();
+    const m = modal(`Revenir au ${dstr(t)} ${hmS(t)} ?`, `<p style="margin-top:0">Des trades ou des ordres suivent ce point :</p>${undoHtml(pv)}<p class="rv-mut">« Annuler ce qui suit » remet le compte, les ordres et les règles exactement comme à ce moment (journal du replay). « Reculer l'affichage seul » recule le chart sans rien annuler, comme avant.</p>`,
+      `<button data-m="view" class="ghost">Reculer l'affichage seul (comme avant)</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="undo">Annuler ce qui suit</button>`);
+    m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; if (a.m === "x") return closeModal();
+      if (a.m === "view") { closeModal(); rvView = true; go(); } else if (a.m === "undo") { closeModal(); const r = rewindTo(t); if (r) undoDone(r, t); } };
+  }
+  // « Rejouer depuis ici » (REP-04) : revenir à une bougie choisie, après un avertissement qui liste ce qui sera annulé
+  function replayHere(t, opts) {
+    const why = backBlock(); if (why) return msg(why, true);
+    if (!S.raw.length) return msg("Charge d'abord une journée.", true);
+    const o = evOrigin(), what = curSes ? "de la session" : "du replay";
+    if (o == null || t < o) return msg(`Impossible de revenir avant le début ${what}${o != null ? ` (${dstr(o)} ${hmS(o)})` : ""}.`, true);
+    if (t > evNow()) return msg("Choisis une bougie déjà rejouée.", true);
+    const pv = undoPreview(t); if (!pv) return msg(`Impossible de revenir avant le début ${what}.`, true);
+    const run = async () => { const r = await rewindAt(t); if (r) { if (pv.d.n) undoDone(r, t); else msg(`Replay repris au ${dstr(t)} ${hmS(t)} : rien à annuler.`); } };
+    if (!pv.d.n) return run();
+    const m = modal((opts && opts.title) || `Rejouer depuis le ${dstr(t)} ${hmS(t)} ?`, `<p style="margin-top:0">Le replay revient à cette bougie (bougie affichée, avant tes actions sur elle) ; tout ce qui suit est annulé :</p>${undoHtml(pv)}`,
+      `<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="go">${(opts && opts.ok) || "Rejouer depuis ici"}</button>`);
+    m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; closeModal(); if (a.m === "go") run(); };
+  }
+  // bougie du chart principal sous le pointeur -> sa dernière bougie fine déjà jouée (null : historique hors replay, ou à droite de la dernière bougie)
+  function candleAt(clientX) {
+    if (!chart || !S.B || !S.B.length || !S.raw.length) return null;
+    const r = $("btWrap").getBoundingClientRect(), l = chart.timeScale().coordinateToLogical(clientX - r.left); if (l == null) return null;
+    const i = Math.round(l); if (i < 0 || i >= S.B.length) return null;
+    const nb = S.B[i + 1] ? S.B[i + 1][0] : Infinity, j = Math.min(S.cur, (nb === Infinity ? S.raw.length : btRewind.idxAfter(S.raw, nb - 1)) - 1);
+    if (j < 0 || S.raw[j][0] < S.B[i][0]) return null;
+    return { j, t: S.raw[j][0], c: S.B[i][0] };
+  }
+  let hereOn = false;
+  function toggleHere(on) {
+    hereOn = on == null ? !hereOn : !!on;
+    if (hereOn) { const why = backBlock(); if (why) { hereOn = false; msg(why, true); } else if (!S.raw.length) { hereOn = false; msg("Charge d'abord une journée.", true); } else msg("Rejouer depuis… : clique sur la bougie (Échap pour annuler)."); }
+    if ($("btHere")) $("btHere").classList.toggle("on", hereOn); if ($("btWrap")) $("btWrap").classList.toggle("tx-pick", hereOn);
+  }
+
+  /* ---- sessions isolées (SES-01 / 02 / 03 / 12) : bt-ses = liste, bt-ses-<id> = compte + heure du replay, bt-ses-<id>-ev = journal, dessins bt-draw-ses-<id>-* ---- */
+  const SESK = "bt-ses", sesKey = (id) => "bt-ses-" + id, sesList = () => LS.get(SESK, []) || [];
+  const lsPut = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+  let sesEvD = false, sesEvWarn = false, sesFullWarn = false, sesInKey = "", sesEndShown = false, sesResumed = false, baseCtx = null, sesUIKey = "", sesBusy = false;
+  const sesT = () => { const t = evNow(); return t != null ? t : curSes ? curSes.lastT : null; };
+  const sesStartT = (s) => { const [h, m] = String(s.time || "09:30").split(":").map(Number); return ny(s.from, h || 0, m || 0); };
+  const sesType = (s) => (s.type === "challenge" ? (s.strict ? "Challenge strict" : "Challenge") : "Libre");
+  function sesEvDirty(now) { if (!curSes) return; sesEvD = true; if (now) sesEvSave(); }
+  function sesEvSave() {
+    if (!curSes || !sesEvD) return; sesEvD = false; btRewind.cap(RJ, EVMAX);
+    let ok = lsPut(sesKey(curSes.id) + "-ev", RJ.evs);
+    while (!ok && RJ.evs.length > 50) { btRewind.cap(RJ, Math.floor(RJ.evs.length / 2)); ok = lsPut(sesKey(curSes.id) + "-ev", RJ.evs); }
+    if (!ok && !sesEvWarn) { sesEvWarn = true; msg("Stockage plein : le journal de la session n'est plus enregistré (retour arrière limité à cette ouverture).", true); }
+  }
+  function sesSaveAcc() {
+    if (!curSes) return; const t = sesT(); if (t != null) curSes.lastT = t;
+    if (!lsPut(sesKey(curSes.id), { acc: A, markers, sym: S.sym, tf: S.tf, t, t0: curSes.t0 || null, savedAt: new Date().toISOString() }) && !sesFullWarn) { sesFullWarn = true; msg("Stockage plein : supprime d'anciennes sessions ou mises en page.", true); }
+  }
+  function sesSave() {
+    if (!curSes || sesBusy) return; sesSaveAcc(); sesEvSave();
+    const L = sesList(), r = L.find((x) => x.id === curSes.id);
+    if (r) { Object.assign(r, { savedAt: new Date().toISOString(), bal: A.bal, nT: A.trades.length, t: curSes.lastT, sym: S.sym, tf: S.tf, cfg: { ...A.cfg } }); lsPut(SESK, L); }
+    sesSetInputs(curSes.lastT, true);
+  }
+  const sesSaveNow = () => { try { evFlush(); sesSave(); } catch (e) { /* fermeture */ } };
+  // champs « Aller au » = heure de la session (un rechargement d'unité de temps ou de symbole repart de là)
+  function sesSetInputs(t, soft) {
+    const dEl = $("btDate"), sEl = $("btStart"); if (t == null || !dEl || !sEl) return;
+    if (soft && (document.activeElement === dEl || document.activeElement === sEl || ($("btGo") && !$("btGo").hidden))) return;
+    const o = parts(t * 1000); dEl.value = sessionKey(t); sEl.value = +o.hour >= 18 ? "00:00" : `${o.hour}:${o.minute}`; sesInKey = dEl.value + "|" + sEl.value;
+  }
+  const inputsT = () => { const d = $("btDate").value, [h, m] = ($("btStart").value || "09:30").split(":").map(Number); return /^\d{4}-\d\d-\d\d$/.test(d) ? ny(d, h || 0, m || 0) : null; };
+  function sesCtr(sym) { const c = $("oCtr"); if (c && curSes && !curSes.assets.includes(c.value)) c.value = curSes.assets.includes(sym) ? sym : curSes.assets[0]; }
+  // load() : Backtesteur de base = chargement de la v1.65.1 (+ journal) ; session isolée = rechargement à l'heure de la session, ou saut avant / retour arrière
+  async function load() {
+    const keep = RJ.keep; RJ.keep = false;
+    if (!curSes) { await loadRaw(); if (!keep || !RJ.evs.length || RJ.acc !== A) evStart("Début du replay"); return; }
+    const sym = $("btSym").value;
+    if (!curSes.assets.includes(sym)) { $("btSym").value = S.sym && curSes.assets.includes(S.sym) ? S.sym : curSes.assets[0]; await sesLoadAt(sesT(), false); sesCtr($("btSym").value); return msg(`${sym} n'est pas dans les actifs de la session « ${curSes.name} » (${curSes.assets.join(", ")}).`, true); }
+    const tCur = sesT(), key = $("btDate").value + "|" + $("btStart").value;
+    if (keep || key === sesInKey || tCur == null) return sesLoadAt(tCur, false);
+    const target = inputsT(); sesSetInputs(tCur); if (target == null) return;
+    const t0 = curSes.t0 || sesStartT(curSes);
+    if (target < t0) return msg(`Impossible : avant le début de la session (${dstr(t0)} ${hm(t0)}).`, true);
+    if (target > tCur) { // saut vers l'avant : les bougies sont rejouées (ordres exécutés pendant le saut)
+      if (curSes.endT && target > curSes.endT) msg(`La session finit le ${fmtD(curSes.end)} : le saut s'arrêtera à la fin de la session.`, true);
+      return ffTo(() => { const i = firstAt(target); return i < 0 ? -1 : i; }, () => `Session : replay avancé au ${dstr(S.raw[S.cur][0])} ${hm(S.raw[S.cur][0])} (bougies rejouées, ordres compris).`);
+    }
+    const why = backBlock(); if (why) return msg(why, true); // retour à une date antérieure = retour arrière (REP-05)
+    replayHere(target, { title: `Revenir au ${dstr(target)} ${hm(target)} ?`, ok: "Revenir à cette date" });
+  }
+  async function sesLoadAt(t, fresh) {
+    if (t != null) sesSetInputs(t);
+    await loadRaw(); if (!curSes) return;
+    if (S.raw.length && t != null) { const i = fresh ? S.raw.findIndex((b) => b[0] >= t) : idxAtOrBefore(t); if (i >= 0) S.cur = S.done = i; }
+    if (!S.raw.length) loadDrawings();
+    if (S.raw.length) { if (!curSes.t0) curSes.t0 = S.raw[S.done][0]; if (!RJ.evs.length || RJ.acc !== A) evStart(fresh ? "Début de la session" : "Reprise de la session"); sesSaveAcc(); }
+    sesInKey = $("btDate").value + "|" + $("btStart").value;
+    draw(true); ui(); dockTick(true);
+  }
+  function baseSave() { baseCtx = { sym: S.sym || $("btSym").value, tf: S.tf, day: $("btDate").value, start: $("btStart").value, t: S.raw.length ? S.raw[S.cur][0] : null }; LS.set("bt-ses-base", baseCtx); }
+  async function sesOpen(id, resume) {
+    const rec = sesList().find((x) => x.id === id); if (!rec) { msg("Session introuvable.", true); return false; }
+    if (curSes && curSes.id === id) { msg(`Session « ${rec.name} » déjà ouverte.`); return true; }
+    if (sesBusy) return false; play(false); evFlush();
+    if (curSes) sesSave(); else if (!resume && S.raw.length) baseSave();
+    sesBusy = true;
+    try {
+      const st = LS.get(sesKey(id), null) || {};
+      curSes = { ...rec, assets: rec.assets && rec.assets.length ? rec.assets : ["NQ"], t0: st.t0 || null, lastT: st.t != null ? st.t : null, endT: btSes.endT(rec.end, ny) };
+      LS.set("bt-ses-cur", id); sesEndShown = false; sesEvD = false; sesEvWarn = false; sesFullWarn = false; sesUIKey = ""; rvView = false; toggleHere(false);
+      A = fixAcc(st.acc ? st.acc : freshAcc({ ...defCfg(), ...(rec.cfg || {}) })); markers = Array.isArray(st.markers) ? st.markers : [];
+      RJ.evs = LS.get(sesKey(id) + "-ev", []) || []; RJ.acc = A;
+      if (RJ.evs.length) { // journal en retard sur le compte (fermeture brutale) : on repart de l'état enregistré
+        const k = RJ.evs.length - 1; RJ.seq = RJ.evs[k].seq || RJ.evs.length; RJ.cfg = JSON.stringify(btRewind.cfgAt(RJ.evs, k) || A.cfg || {});
+        if (btRewind.fsig(btRewind.restore(RJ.evs, k, A)) !== btRewind.fsig(A)) RJ.evs = []; else { RJ.q = btRewind.qsig(A); RJ.f = btRewind.fsig(A); }
+      }
+      S.raw = []; S.B = []; S.cur = 0; S.done = -1;
+      const sym = curSes.assets.includes(st.sym) ? st.sym : curSes.assets[0]; $("btSym").value = sym; S.sym = sym; if (st.tf || rec.tf) { S.tf = st.tf || rec.tf; setTfBtns(); } sesCtr(sym);
+      msg(`Ouverture de la session « ${rec.name} »…`);
+    } finally { sesBusy = false; }
+    await sesLoadAt(curSes.lastT != null ? curSes.lastT : sesStartT(curSes), curSes.lastT == null);
+    if (curSes && curSes.id === id) { sesSave(); msg(`Session « ${curSes.name} » ouverte (${sesType(curSes)}${curSes.lastT != null ? `, replay au ${dstr(curSes.lastT)} ${hm(curSes.lastT)}` : ""}) : compte, ordres, trades et dessins propres, enregistrés en continu.`); }
+    return true;
+  }
+  async function sesLeave(quiet) {
+    if (!curSes || sesBusy) return; play(false); evFlush(); sesSave(); const nm = curSes.name;
+    curSes = null; LS.set("bt-ses-cur", null); sesUIKey = ""; toggleHere(false);
+    A = fixAcc(LS.get("bt-acc", null) || freshAcc(defCfg())); markers = []; RJ.evs = []; RJ.acc = null; rvView = false;
+    const b = baseCtx || LS.get("bt-ses-base", null); baseCtx = null;
+    S.raw = []; S.B = []; S.cur = 0; S.done = -1;
+    if (b) { if (b.sym) $("btSym").value = b.sym; if (b.tf) { S.tf = b.tf; setTfBtns(); } if (b.day) $("btDate").value = b.day; if (b.start) $("btStart").value = b.start; }
+    if ($("btSym").value !== "CSV" || S.csv) {
+      await load();
+      if (b && b.t != null && S.raw.length) { const i = S.raw.findIndex((x) => x[0] >= b.t); if (i >= 0) { S.cur = S.done = i; evStart("Retour au Backtesteur de base"); } }
+    }
+    if (!S.raw.length) loadDrawings();
+    draw(true); ui(); dockTick(true);
+    if (!quiet) msg(`Session « ${nm} » enregistrée. Retour au Backtesteur de base (compte ${accName(A.cfg)}).`);
+  }
+  // « Recommencer » en session isolée = retour au départ de la session
+  function sesRestart() { const o = evOrigin(); if (o == null) return msg("Rien à recommencer.", true); replayHere(o, { title: `Revenir au départ de la session (${dstr(o)} ${hmS(o)}) ?`, ok: "Recommencer la session" }); }
+  async function sesDelete(id) {
+    if (curSes && curSes.id === id) await sesLeave(true);
+    const keys = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (k.startsWith("bt-draw-ses-" + id + "-") || k.startsWith("bt-draw2-ses-" + id + "-"))) keys.push(k); }
+    [sesKey(id), sesKey(id) + "-ev", ...keys].forEach((k) => { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } });
+    lsPut(SESK, sesList().filter((x) => x.id !== id)); openSessions();
+  }
+  function sesEnded() {
+    play(false);
+    setTimeout(() => {
+      if (!curSes) return; msg(`🏁 Fin de la session « ${curSes.name} » : date de fin atteinte (${fmtD(curSes.end)}, clôture 17:00 New York).`, true);
+      if (sesEndShown || ($("btModal") && !$("btModal").hidden)) return; sesEndShown = true;
+      const m = modal("Fin de la session", `<p style="margin-top:0">La session « ${esc(curSes.name)} » s'arrête ici : sa date de fin est atteinte (${fmtD(curSes.end)}, clôture de 17:00 à New York).</p><p class="rv-mut">Le replay ne va pas plus loin. Tu peux clôturer la session (récapitulatif dans le Journal backtest) ou ouvrir l'analytique.</p>`,
+        `<button data-m="ana" class="ghost">📊 Analytique</button><button data-m="end" class="ghost">🏁 Clôturer</button><span class="tx-sp"></span><button data-m="x">OK</button>`);
+      m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; closeModal(); if (a.m === "ana") openAnalytics(); else if (a.m === "end") endSession(); };
+    }, 0);
+  }
+  function sesResume() { if (sesResumed) return false; sesResumed = true; const id = LS.get("bt-ses-cur", null); if (!id) return false; if (!sesList().some((x) => x.id === id)) { LS.set("bt-ses-cur", null); return false; } sesOpen(id, true); return true; }
+  // badge de la session dans la barre du compte + boutons de retour arrière grisés quand il est interdit
+  function sesUI() {
+    const top = $("btAcc"); if (!top) return; let b = $("btSesBadge");
+    if (!b) { b = document.createElement("span"); b.id = "btSesBadge"; b.className = "tx-sesb"; b.hidden = true; top.after(b); b.onclick = (e) => { if (e.target.closest("[data-sx]")) sesLeave(); else openSessions(); }; }
+    const off = !!backBlock(), key = curSes ? [curSes.id, curSes.name, curSes.end, off].join("|") : "none|" + off; if (key === sesUIKey) return; sesUIKey = key;
+    b.hidden = !curSes; b.title = curSes ? "Session isolée : compte, ordres, trades, dessins et heure du replay propres, enregistrés en continu. Clic : sessions · × : enregistrer et revenir au Backtesteur de base" : "";
+    if (curSes) b.innerHTML = `<b>${esc(curSes.name)}</b><span>${sesType(curSes)} · ${curSes.end ? "fin " + fmtD(curSes.end) : "fin auto"}</span><i data-sx="1" title="Enregistrer et revenir au Backtesteur de base">×</i>`;
+    [["btPrev", "Bougie précédente (←)"], ["btReset", "Recommencer au départ"], ["btHere", null]].forEach(([id, t0]) => { const el = $(id); if (!el) return; el.classList.toggle("dis", off); if (t0) el.title = off ? backBlock() : t0; });
+  }
+  // fenêtre « Sessions de backtest » : sessions isolées au-dessus des instantanés (inchangés)
+  function sesSection() {
+    const L = sesList(), row = (s) => { const cur = curSes && curSes.id === s.id, start = (s.cfg && s.cfg.size) || 0;
+      return `<div class="tx-li tx-sesr${cur ? " cur" : ""}" data-sid="${esc(s.id)}"><div><b>${esc(s.name)}</b> <span class="tsx-chip" style="margin-left:6px">${sesType(s)}</span>${s.strat ? ` <span class="tsx-chip">${esc(s.strat)}</span>` : ""}${cur ? ' <span class="tsx-chip" style="color:var(--tx-acc)">ouverte</span>' : ""}
+        <small>${esc((s.assets || []).join(" · "))} · départ ${fmtD(s.from)} ${esc(s.time || "")} → ${s.end ? "fin " + fmtD(s.end) : "fin automatique"} · solde ${usd(s.bal != null ? s.bal : start)} (départ ${usd(start)}) · ${s.nT || 0} trade(s)${s.t != null ? ` · replay au ${dstr(s.t)} ${hm(s.t)}` : ""}${s.savedAt ? " · enregistrée " + new Date(s.savedAt).toLocaleString("fr-FR") : ""}</small>${s.desc ? `<small>${esc(s.desc)}</small>` : ""}</div>
+        <span>${cur ? '<button data-sa="leave" title="Enregistrer et revenir au Backtesteur de base">Quitter</button>' : '<button data-sa="open">Ouvrir</button>'}<button data-sa="ren" title="Renommer">✎</button><button data-sa="del" title="Supprimer">🗑</button></span></div>`; };
+    return `<div class="an-h" style="margin-top:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">Sessions isolées <small class="rv-mut" style="font-weight:400">compte, ordres, trades, dessins et heure du replay propres · enregistrées en continu</small><span style="flex:1"></span><button data-sa="new" class="tx-hbtn">＋ Nouvelle session…</button></div>
+      <div class="tx-list">${L.map(row).join("") || '<div class="tx-empty">Aucune session isolée. « Nouvelle session… » ouvre l\'assistant : nom, type (libre ou challenge), solde, stratégie, actifs, période et coûts.</div>'}</div>
+      <div class="an-h">Instantanés de l'état actuel</div>`;
+  }
+  function sesListClick(e) {
+    const b = e.target.closest("[data-sa]"); if (!b) return false; const a = b.dataset.sa;
+    if (a === "new") { sesWizard(); return true; }
+    const r = b.closest("[data-sid]"), s = r && sesList().find((x) => x.id === r.dataset.sid); if (!s) return true;
+    if (a === "open") { closeModal(); sesOpen(s.id); }
+    else if (a === "leave") { closeModal(); sesLeave(); }
+    else if (a === "ren") ask("Renommer la session", s.name).then((n) => { if (!n) return; const L = sesList(), x = L.find((q) => q.id === s.id); if (x) { x.name = n; lsPut(SESK, L); } if (curSes && curSes.id === s.id) { curSes.name = n; sesUIKey = ""; sesUI(); } openSessions(); });
+    else if (a === "del" && confirm(`Supprimer la session « ${s.name} » (compte, trades, dessins et journal) ?`)) sesDelete(s.id);
+    return true;
+  }
+  // bornes des données par actif (fichier D de data_csv, sinon dernière bougie m1 de la synchro)
+  const sesSpan = {};
+  async function sesBounds(sym) {
+    if (sesSpan[sym] !== undefined) return sesSpan[sym];
+    let out = null;
+    try {
+      if (D && D.dataReadTf) { const r = await D.dataReadTf(sym, "D", 0, Math.floor(Date.now() / 1000) + 86400); if (r && r.ok && r.data && r.data.length) { const days = [...new Set(r.data.map((b) => sessionKey(b[0])))].sort(); out = { min: days[0], max: days[days.length - 1], days }; } }
+      if (!out && D && D.dataStatus) { const s = await D.dataStatus(), k = und(sym), last = s && s.ok && s.data[k] && s.data[k].m1Last ? s.data[k].m1Last.slice(0, 10) : null; if (last) out = { min: "2023-07-03", max: last, days: null }; }
+    } catch (e) { out = null; }
+    return (sesSpan[sym] = out);
+  }
+  async function dayHasData(sym, day) { if (!D || !D.dataRead) return true; try { const r = await D.dataRead(sym, ny(addDays(day, -1), 18, 0), ny(day, 17, 0), "m1"); return !!(r && r.ok && r.data && r.data.length > 30); } catch (e) { return false; } }
+  // assistant « Nouvelle session » (SES-01 / 02) : nom, type, solde, stratégie, actifs, période, coûts
+  const WZBAL = [10000, 50000, 100000, 250000], WZPROP = [50000, 100000, 150000];
+  function sesWizard(draft) {
+    const c0 = A.cfg, d = draft || { name: `Session ${sesList().length + 1}`, type: "free", strict: false, bal: 50000, free: "", size: 50000, rules: { ...PROP[50000], cons: +c0.cons || 50, payDays: +c0.payDays || 5, payMin: +c0.payMin || 150 },
+      strat: LS.get("bt-strat-last", ""), desc: "", assets: [CTR[S.sym] ? S.sym : "NQ"], from: S.raw.length ? sessionKey(S.raw[S.cur][0]) : lastTradingDay(), time: "09:30", endMode: "auto", end: "", rel: null,
+      feeBig: feeOf("NQ"), feeMic: feeOf("MNQ"), slip: slipT(), err: "" };
+    const ch = d.type === "challenge", bal = ch ? d.size : d.free !== "" ? +d.free : d.bal;
+    const btn = (k, v, lab, on, dis) => `<button class="wz-b ${on ? "on" : ""}" data-wk="${k}" data-wv="${v}"${dis ? " disabled" : ""}>${lab}</button>`;
+    const strats = [...new Set([...sesList().map((x) => x.strat), ...sessions().map((x) => x.strat)].filter(Boolean))];
+    const rl = (k, lab) => `<label>${lab}<input type="number" data-wr="${k}" value="${esc(d.rules[k])}"></label>`;
+    const body = `<div class="wz-g">
+      <span>Nom</span><div class="wz-c"><input type="text" data-w="name" value="${esc(d.name)}"></div>
+      <span>Type</span><div class="wz-c">${btn("type", "free", "Backtest libre", !ch)}${btn("type", "challenge", "Challenge prop firm", ch)}<label title="Retour arrière interdit pendant toute la session (lecture, vitesse et sauts vers l'avant restent permis)"><input type="checkbox" data-w="strict" ${d.strict && ch ? "checked" : ""} ${ch ? "" : "disabled"}> Mode strict : pas de retour arrière</label></div>
+      <span>Solde de départ</span><div class="wz-c">${ch ? WZPROP.map((v) => btn("size", v, v / 1000 + "K", d.size === v)).join("") : WZBAL.map((v) => btn("bal", v, v / 1000 + "K", d.free === "" && d.bal === v)).join("") + `<label>Libre <input type="number" data-w="free" min="100" step="100" placeholder="ex. 25000" value="${esc(d.free)}"></label>`}</div>
+      ${ch ? `<span>Règles (type Prop)</span><div class="wz-c"><div class="wz-rules">${rl("target", "Objectif ($)")}${rl("mll", "MLL trailing ($)")}${rl("dll", "DLL ($)")}${rl("cons", "Consistance (%)")}${rl("payDays", "Payout : jours gagnants")}${rl("payMin", "Payout : gain min. / jour ($)")}</div></div>` : ""}
+      <span>Stratégie</span><div class="wz-c"><input type="text" data-w="strat" list="btWzStrat" placeholder="ex. Silver Bullet AM, NWOG" value="${esc(d.strat)}"><datalist id="btWzStrat">${strats.map((x) => `<option value="${esc(x)}">`).join("")}</datalist></div>
+      <span>Description</span><div class="wz-c"><input type="text" data-w="desc" placeholder="optionnelle" value="${esc(d.desc)}"></div>
+      <span>Actifs</span><div class="wz-c">${["NQ", "ES", "MNQ", "MES"].map((k) => `<label><input type="checkbox" data-wa="${k}" ${d.assets.includes(k) ? "checked" : ""}> ${CTR[k].name}</label>`).join("")}</div>
+      <span>Départ (heure NY)</span><div class="wz-c"><input type="date" data-w="from" value="${esc(d.from)}"><input type="time" data-w="time" value="${esc(d.time)}"><button class="wz-b" data-wk="rand" data-wv="1" title="Tirer au hasard un jour disponible dans les données">🎲 Au hasard</button></div>
+      <div class="wz-n" id="btWzB">Bornes des données : …</div>
+      <span>Fin</span><div class="wz-c">${btn("endMode", "auto", "Automatique", d.endMode === "auto")}${btn("endMode", "date", "Date", d.endMode === "date")}<input type="date" data-w="end" value="${esc(d.end)}" ${d.endMode === "date" ? "" : "disabled"}>${btn("rel", "d", "+1 jour", d.rel === "d", d.endMode !== "date")}${btn("rel", "w", "+1 semaine", d.rel === "w", d.endMode !== "date")}${btn("rel", "m", "+1 mois", d.rel === "m", d.endMode !== "date")}</div>
+      <div class="wz-n">${d.endMode === "auto" ? "Fin automatique : la session s'étend tant que tu rejoues." : "Le replay s'arrête à la clôture de 17:00 (New York) du jour de fin, avec un message."}</div>
+      <span>Coûts</span><div class="wz-c"><label>Frais NQ / ES <input type="number" step="0.01" data-w="feeBig" value="${esc(d.feeBig)}"></label><label>MNQ / MES <input type="number" step="0.01" data-w="feeMic" value="${esc(d.feeMic)}"></label><label>Slippage <select data-w="slip">${[[0, "Aucun"], [1, "Léger · 1 tick"], [2, "Moyen · 2 ticks"], [4, "Fort · 4 ticks"]].map(([v, t]) => `<option value="${v}" ${(+d.slip || 0) === v ? "selected" : ""}>${t}</option>`).join("")}</select></label></div>
+      <div class="wz-n">Frais aller-retour par contrat et slippage repris du type de compte actuel. La session a son propre compte (${usd(bal || 0)}${ch ? ", règles Prop" : ", sans règles"}), ses ordres, ses trades, ses dessins et son heure de replay ; le Backtesteur de base n'est pas touché.</div>
+      <div class="wz-n wz-err" id="btWzErr">${esc(d.err || "")}</div></div>`;
+    const m = modal("Nouvelle session de backtest", body, `<button data-m="back" class="ghost">‹ Sessions</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Créer et ouvrir</button>`);
+    m.querySelector(".tx-mbox").classList.add("wz-wide");
+    const err = (t) => { d.err = t; const e = $("btWzErr"); if (e) e.textContent = t; };
+    const bounds = async () => { const el = () => $("btWzB"); if (!D || !D.dataRead) { if (el()) el().textContent = "Version web : pas de bougies TopstepX (les sessions se rejouent dans l'app Windows) ; le tirage au hasard prend un jour ouvré."; return; }
+      const R = await Promise.all(d.assets.map(async (k) => [k, await sesBounds(k)])); if (el()) el().textContent = "Bornes des données : " + (R.map(([k, b]) => `${k} ${b ? fmtD(b.min) + " → " + fmtD(b.max) : "inconnues"}`).join(" · ") || "choisis au moins un actif"); };
+    bounds();
+    m.oninput = (e) => { const t = e.target;
+      if (t.dataset.w) { const k = t.dataset.w; d[k] = t.type === "checkbox" ? t.checked : t.value; if (k === "from" && d.rel) { d.end = btSes.addPeriod(d.from, d.rel) || d.end; const ee = m.querySelector('[data-w="end"]'); if (ee) ee.value = d.end; } if (k === "end") { d.rel = null; m.querySelectorAll('[data-wk="rel"]').forEach((x) => x.classList.remove("on")); } if (k === "free" && t.value !== "") m.querySelectorAll('[data-wk="bal"]').forEach((x) => x.classList.remove("on")); err(""); }
+      else if (t.dataset.wr) d.rules[t.dataset.wr] = Math.max(0, +t.value || 0);
+      else if (t.dataset.wa) { d.assets = ["NQ", "ES", "MNQ", "MES"].filter((k) => (k === t.dataset.wa ? t.checked : d.assets.includes(k))); bounds(); } };
+    m.onclick = async (e) => {
+      const w = e.target.closest("[data-wk]"), a = (e.target.closest("[data-m]") || {}).dataset;
+      if (w && !w.disabled) { const k = w.dataset.wk, v = w.dataset.wv;
+        if (k === "type") { d.type = v; if (v !== "challenge") d.strict = false; return sesWizard(d); }
+        if (k === "size") { d.size = +v; d.rules = { ...d.rules, ...PROP[+v] }; return sesWizard(d); }
+        if (k === "bal") { d.bal = +v; d.free = ""; return sesWizard(d); }
+        if (k === "endMode") { d.endMode = v; if (v === "date" && !d.end) { d.rel = d.rel || "w"; d.end = btSes.addPeriod(d.from, d.rel) || ""; } return sesWizard(d); }
+        if (k === "rel") { d.rel = v; d.end = btSes.addPeriod(d.from, v) || d.end; return sesWizard(d); }
+        if (k === "rand") { const sym = d.assets[0] || "NQ"; w.disabled = true; w.textContent = "Tirage…"; err("");
+          const b = await sesBounds(sym), days = b && b.days ? b.days : btSes.weekdays(b ? b.min : "2023-07-03", b ? b.max : lastTradingDay()), to = d.endMode === "date" && d.end && !d.rel ? d.end : null;
+          for (let n = 0; n < 12; n++) { const day = btSes.pickDay(days, b ? b.min : null, to || (b ? b.max : null), Math.random); if (!day) break;
+            if (await dayHasData(sym, day)) { d.from = day; if (d.rel) d.end = btSes.addPeriod(day, d.rel) || d.end; return sesWizard(d); } }
+          w.disabled = false; w.textContent = "🎲 Au hasard"; return err(`Aucun jour avec des bougies ${sym} trouvé.`); }
+        return; }
+      if (!a) return;
+      if (a.m === "x") return closeModal();
+      if (a.m === "back") return openSessions();
+      if (a.m !== "ok") return;
+      const name = String(d.name || "").trim() || `Session ${sesList().length + 1}`, assets = d.assets.filter((k) => CTR[k]), size = ch ? d.size : d.free !== "" ? Math.round(+d.free) : d.bal;
+      if (!assets.length) return err("Choisis au moins un actif.");
+      if (!(size >= 100)) return err("Solde de départ invalide (100 $ minimum).");
+      if (ch && !(d.rules.target > 0 && d.rules.mll > 0 && d.rules.dll > 0)) return err("Règles du challenge : objectif, MLL et DLL doivent être positifs.");
+      if (!/^\d\d:\d\d$/.test(d.time || "")) return err("Heure de départ invalide (HH:MM, heure de New York).");
+      const b = await sesBounds(assets[0]), pr = btSes.period({ start: d.from, end: d.endMode === "date" ? d.end : null, auto: d.endMode !== "date", min: b ? b.min : null, max: b ? b.max : null });
+      if (!pr.ok) return err(pr.msg);
+      const wd = new Date(pr.start + "T12:00:00Z").getUTCDay(); if (b && b.days ? !b.days.includes(pr.start) : wd === 0 || wd === 6) return err(`Pas de séance le ${fmtD(pr.start)} : choisis un jour de cotation.`);
+      if (D && D.dataRead && !(await dayHasData(assets[0], pr.start))) return err(`Pas de bougies ${assets[0]} le ${fmtD(pr.start)} (« Synchro données » ou un autre jour).`);
+      const cfg = { ...defCfg(ch ? "prop" : "classic", ch ? size : 50000), ...(ch ? { ...d.rules } : {}), size, feeBig: +d.feeBig >= 0 && d.feeBig !== "" ? +d.feeBig : feeOf("NQ"), feeMic: +d.feeMic >= 0 && d.feeMic !== "" ? +d.feeMic : feeOf("MNQ"), slip: +d.slip || 0 };
+      const rec = { id: "x" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36), name, type: ch ? "challenge" : "free", strict: !!(ch && d.strict), cfg, assets, strat: String(d.strat || "").trim(), desc: String(d.desc || "").trim(),
+        from: pr.start, time: d.time, end: pr.end, created: new Date().toISOString(), savedAt: null, bal: size, nT: 0, t: null, sym: assets[0], tf: S.tf };
+      if (!lsPut(SESK, [rec, ...sesList()])) return err("Stockage plein : supprime d'anciennes sessions ou mises en page.");
+      if (rec.strat) LS.set("bt-strat-last", rec.strat);
+      closeModal(); await sesOpen(rec.id);
+    };
+  }
+
+  /* ---- panneau Règles du dock (PRO-02) ---- */
+  let rulesKey = "";
+  function rulesRender() {
+    const el = $("btDockR"); if (!el || el.hidden) return;
+    const u = upl(), R = btRules({ cfg: A.cfg, bal: A.bal, mll: A.mll, rpDay: A.rpDay, dllHit: A.dllHit, blown: A.blown, trades: A.trades.map((t) => ({ day: sessionKey(t.tOut), pnl: t.pnl })) }, u, A.day);
+    const key = JSON.stringify([A.cfg.type, curSes ? curSes.id : "", R.prop ? R.rows.map((r) => [r.value, r.margin, r.st]) : 0, A.blown, A.dllHit, A.trades.length]); if (key === rulesKey) return; rulesKey = key;
+    const head = `<div class="dj-s"><b>Règles du challenge</b><span>${esc(accName(A.cfg))}${curSes ? " · session « " + esc(curSes.name) + " »" : ""} · à jour à chaque bougie</span></div>`;
+    if (!R.prop) { el.innerHTML = head + `<div class="tx-empty">Compte sans règles (type Classique) : ni objectif, ni DLL, ni MLL, ni consistance.</div>`; return; }
+    const pc = (x) => Math.round(x * 100) + " %", row = (r) => {
+      let lim, val, mar;
+      if (r.id === "target") { lim = usd(r.limit); val = `P&amp;L cumulé <b>${usd(r.value)}</b>`; mar = r.margin <= 0 ? '<b class="up">atteint ✓</b>' : `reste <b>${usd(r.margin)}</b>`; }
+      else if (r.id === "dll") { lim = usd(r.limit); val = `P&amp;L du jour <b class="${r.value < 0 ? "dn" : r.value > 0 ? "up" : ""}">${usd(r.value)}</b>`; mar = `marge <b>${usd(Math.max(0, r.margin))}</b>`; }
+      else if (r.id === "mll") { lim = "seuil " + usd(r.limit); val = `équité <b>${usd(r.value)}</b>`; mar = `marge <b class="${r.margin <= 0 ? "dn" : ""}">${usd(Math.max(0, r.margin))}</b>`; }
+      else { lim = r.limit + " %"; val = r.value == null ? "pas encore de profit" : `meilleur jour <b>${usd(r.best)}</b> = ${Math.round(r.value)} %`; mar = r.value == null ? "—" : r.st === "ok" ? `marge <b>${usd(r.margin)}</b>` : `manque <b>${usd(r.need)}</b> de profit`; }
+      return `<div class="rl-r ${r.st}"><div class="rl-h"><b>${esc(r.name)}</b><span>${lim}</span></div><div class="rl-bar" title="${pc(r.prog)}"><i style="width:${(r.prog * 100).toFixed(1)}%"></i></div><div class="rl-v"><span>${val}</span><span>${mar}</span></div></div>`; };
+    const st = A.blown ? '<div class="rl-st ko">⛔ Compte cramé : MLL atteinte.</div>' : A.dllHit ? '<div class="rl-st ko">DLL atteinte : plus de trade jusqu\'à la séance suivante (18:00 New York).</div>' : R.pass ? '<div class="rl-st ok">✅ Objectif atteint avec la consistance : challenge réussi.</div>' : "";
+    el.innerHTML = head + R.rows.map(row).join("") + st + (curSes && curSes.strict ? '<div class="rl-st">Session challenge stricte : retour arrière interdit.</div>' : "");
+  }
+  function rulesTick() { const d = $("btDock"); if (d && !d.hidden && dock.on === "rules") rulesRender(); }
+
+  function initPhase1() {
+    $("btHere").onclick = (e) => { e.stopPropagation(); toggleHere(); };
+    // clic droit sur une bougie (outil curseur, hors dessin) : « Rejouer depuis ici » ; le clic droit sur un dessin ou sur l'échelle des prix ne change pas
+    $("btWrap").addEventListener("contextmenu", (e) => {
+      if (tool !== "cross" || e.defaultPrevented) return; const c = candleAt(e.clientX); if (!c) return;
+      e.preventDefault(); const why = backBlock(), o = evOrigin(), m = $("btCtx"); if (!m) return;
+      const off = why ? "interdit" : o == null || c.t < o ? "avant le début " + (curSes ? "de la session" : "du replay") : "";
+      m.innerHTML = `<div class="ci${off ? " dis" : ""}"${off ? "" : ` data-rh="${c.t}"`} title="${esc(why || (off ? "Impossible de revenir avant le début" : "Revenir à cette bougie : ce qui suit est annulé (avertissement avant)"))}">⤺ Rejouer depuis ici<span>${off || `${dstr(c.t)} ${hmS(c.t)}`}</span></div>`;
+      m.dataset.fid = ""; m.hidden = false; m.style.left = Math.min(e.clientX, innerWidth - 240) + "px"; m.style.top = Math.max(8, Math.min(e.clientY, innerHeight - m.offsetHeight - 8)) + "px";
+    });
+    $("btCtx").addEventListener("click", (e) => { const x = e.target.closest("[data-rh]"); if (!x) return; $("btCtx").hidden = true; replayHere(+x.dataset.rh); });
+    // mode « choisir la bougie » : le clic est pris avant les dessins et le chart
+    $("btGrid").addEventListener("mousedown", (e) => { if (!hereOn || e.button !== 0 || !e.target.closest("#btWrap")) return; e.preventDefault(); e.stopPropagation();
+      const c = candleAt(e.clientX); toggleHere(false); if (!c) return msg("Choisis une bougie déjà rejouée.", true); replayHere(c.t); }, true);
+    document.addEventListener("keydown", (e) => { if (hereOn && e.key === "Escape") { e.preventDefault(); e.stopPropagation(); toggleHere(false); msg("Choix de la bougie annulé."); } }, true);
+    // sauvegarde continue de la session isolée : toutes les 5 s, à la fermeture et quand l'app passe en arrière-plan
+    setInterval(() => { if (curSes) sesSave(); sesUI(); }, 5000);
+    addEventListener("beforeunload", sesSaveNow); addEventListener("pagehide", sesSaveNow);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) sesSaveNow(); });
+    sesUI();
   }
 
   /* ---------------- dessins ---------------- */
@@ -7697,7 +8227,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const magLevels = () => [...shapes.filter((s) => visible(s) && (s.type === "hline" || s.type === "hray")).map((s) => s.p[0].price), ...(pane === 1 && A.pos ? [A.pos.avg] : []), ...(pane === 1 ? A.orders.map((o) => o.px) : []), ...(pane === 1 ? extraLevels : [])];
   let extraLevels = [];
   // chaque mise en page a ses propres dessins ; le 2e chart a les siens (clé du symbole du 2e chart)
-  const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curLay ? curLay + "-" : "") + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ"));
+  const dkey = (n = pane) => (n === 2 ? "bt-draw2-" : "bt-draw-") + (curSes ? "ses-" + curSes.id + "-" : curLay ? curLay + "-" : "") + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ")); // v1.66 : session isolée = ses propres dessins
   /* 2 charts : pane = chart dont les dessins sont dans shapes/folders/sel ; act = chart actif (dernier cliqué) ; other = état de l'autre chart */
   let pane = 1, act = 1, other = { shapes: [], folders: [], sel: null, msel: new Set() };
   function swapPane() { const cur = { shapes, folders, sel, msel }; ({ shapes, folders, sel, msel } = other); other = cur; pane = 3 - pane; }
@@ -8203,6 +8733,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (tab === "ord") $("btBottom").innerHTML = t(A.orders.map((o) => `<tr><td>${CTR[o.ctr].name}</td><td>${o.bracket || o.type}</td><td>${o.qty > 0 ? "Buy" : "Sell"}</td><td>${Math.abs(o.qty)}</td><td>${o.px.toFixed(2)}</td><td><button data-x="cxl" data-id="${o.id}">Cancel</button></td></tr>`), ["Contrat", "Type", "Sens", "Qté", "Prix", ""]);
     if (tab === "trd") { const tot = A.trades.reduce((a, x) => a + x.pnl, 0), wins = A.trades.filter((x) => x.pnl > 0).length;
       $("btBottom").innerHTML = `<div style="padding:4px 10px;color:#9aa0aa">${A.trades.length} trades · win rate ${A.trades.length ? Math.round(wins / A.trades.length * 100) : 0}% · total ${usd(tot)}</div>` + t([...A.trades].reverse().map((x) => `<tr><td>${dstr(x.tIn)} ${hm(x.tIn)}</td><td>${hm(x.tOut)}</td><td>${CTR[x.ctr].name}</td><td>${x.side}</td><td>${x.qty}</td><td>${x.entry}</td><td>${x.exit}</td><td>${esc(x.why)}</td><td style="color:${x.pnl >= 0 ? "#26a69a" : "#ef5350"}">${usd(x.pnl)}</td></tr>`), ["Entrée", "Sortie", "Contrat", "Sens", "Qté", "Prix in", "Prix out", "Sortie par", "P&L (frais inclus)"]); }
+    sesUI(); // v1.66 : badge de la session isolée, boutons de retour arrière grisés en challenge strict
   }
 
   async function importCsv() {
@@ -8224,7 +8755,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (ready || !$("btLoad")) return; ready = true;
     $("btDate").value = lastTradingDay();
     $("btLoad").onclick = load; $("btPlay").onclick = () => play(); $("btNext").onclick = () => stepCandle(); $("btPrev").onclick = back;
-    $("btReset").onclick = () => { play(false); load(); };
+    $("btReset").onclick = () => { const why = backBlock(); if (why) return msg(why, true); play(false); if (curSes) return sesRestart(); load(); }; // v1.66 : refusé en challenge strict / retour arrière désactivé ; en session = retour au départ de la session
     $("btSpeed").onchange = () => { if (S.playing) play(true); };
     const ordPanel = (show) => { document.querySelector(".tx-orderp").classList.toggle("off", !show); $("btOrdShow").hidden = show; LS.set("bt-ordpanel", show); if (chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0); };
     $("oDot").onclick = () => ordPanel(false); $("btOrdShow").onclick = () => ordPanel(true); if (LS.get("bt-ordpanel", true) === false) ordPanel(false);
@@ -8233,6 +8764,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       const old = S.tf; S.tf = tfOf(b.dataset.tf); document.querySelectorAll("#btTfs [data-tf]").forEach((x) => x.classList.toggle("on", x === b));
       if (S.raw.length) { // historique de la nouvelle unité de temps : on recharge en gardant l'heure du replay
         const cur = S.raw[S.cur][0];
+        RJ.keep = true; // v1.66 : même replay, autre unité de temps -> le journal du replay continue
         load().then(() => { const i = S.raw.findIndex((x) => x[0] >= cur); if (i >= 0) { S.cur = i; S.done = Math.max(S.done, i); } draw(true); ui(); });
         return;
       }
@@ -8291,7 +8823,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       const mv = (ev) => { T.style.left = Math.max(0, Math.min(M.width - r.width, ev.clientX - M.left - ox)) + "px"; T.style.top = Math.max(0, Math.min(M.height - 40, ev.clientY - M.top - oy)) + "px"; T.style.right = "auto"; };
       const up = () => { removeEventListener("mousemove", mv); removeEventListener("mouseup", up); LS.set("bt-treepos", { x: parseFloat(T.style.left), y: parseFloat(T.style.top) }); }; addEventListener("mousemove", mv); addEventListener("mouseup", up); });
     $("btPrefBtn").onclick = () => openPrefs(); $("btIndBtn").onclick = () => openIde(); $("btSessBtn").onclick = openSessions; $("btLayBtn").onclick = openLayouts; $("btNewsBtn").onclick = () => openNews(); $("btSplitBtn").onclick = openGrid; $("btMoreBtn").onclick = openMore; gridUI(); layName(); $("btTreeBtn2").onclick = () => $("btTreeBtn").click();
-    setInterval(() => { if (!curLay) return; const L = layouts(), i = L.findIndex((x) => x.id === curLay); if (i >= 0) { L[i] = layoutSnap(L[i]); saveList("bt-layouts", L); } }, 5000); // sauvegarde auto de la mise en page
+    setInterval(() => { if (!curLay || curSes) return; const L = layouts(), i = L.findIndex((x) => x.id === curLay); if (i >= 0) { L[i] = layoutSnap(L[i]); saveList("bt-layouts", L); } }, 5000); // sauvegarde auto de la mise en page (v1.66 : pas pendant une session isolée)
     TL.onclick = (e) => {
       const r = e.target.closest(".row"); if (!r || e.target.tagName === "INPUT") return; const a = (e.target.closest("[data-a]") || {}).dataset ? (e.target.closest("[data-a]") || { dataset: {} }).dataset.a : undefined;
       if (r.dataset.k) { if (r.dataset.k === "news" && a === "news") { P.news = P.news === false; LS.set("bt-prefs", P); tree(); } return; }
@@ -8400,7 +8932,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         ["stepDn", "Diminuer le pas du replay", ["Alt+Shift+←"], () => stepMove(-1)], ["stepUp", "Augmenter le pas du replay", ["Alt+Shift+→"], () => stepMove(1)], ["stepSync", "Pas du replay = bougie du chart", ["Alt+Shift+↓"], () => setStep(null, P.stepSync === false)],
         ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"], () => goFav(2)], ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"], () => goFav(3)], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"], () => goFav(4)], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"], () => goFav(5)], ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"], () => goFav(6)], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"], () => goFav(7)], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"], () => goFav(8)], ["goFav10", "Aller à : 10e favori (ordre des heures)", ["Alt+0"], () => goFav(9)], ["goMacro", "Aller à la prochaine macro (étoilées)", ["Alt+Shift+M"], () => goMacro()],
         ["faster", "Accélérer le replay", ["↑"], () => speed(1)], ["slower", "Ralentir le replay", ["↓"], () => speed(-1)],
-        ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }]]],
+        ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }],
+        ["replayHere", "Rejouer depuis une bougie (clic sur la bougie ensuite)", [], () => toggleHere()]]],
       ["Ordres", [
         ["buyMkt", "Achat au marché", ["Shift+B"], () => ORD("Market", "buy")], ["sellMkt", "Vente au marché", ["Shift+S"], () => ORD("Market", "sell")],
         ["buyLmt", "Ordre limite achat", ["Alt+B"], () => ORD("Limit", "buy")], ["sellLmt", "Ordre limite vente", ["Alt+S"], () => ORD("Limit", "sell")],
@@ -8419,9 +8952,11 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         ["curDot", "Curseur : point", ["Ctrl+Alt+D"], () => setTool("dot")], ["curEraser", "Curseur : gomme", ["Ctrl+Alt+E"], () => setTool("eraser")]]],
       ["Interface", [
         ["full", "Plein écran", ["F11", "Shift+F"], fullscreen], ["dockJ", "Journal du backtest (dock)", ["Alt+K"], () => dockToggle("jrn")], ["dockN", "News du jour (dock)", ["Alt+N"], () => dockToggle("news")], ["ana", "Analytique du backtest", ["Alt+Y"], () => openAnalytics()], ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout(false)],
-        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Ctrl+Shift+S"], () => shot(true)]]]];
+        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Ctrl+Shift+S"], () => shot(true)],
+        ["dockR", "Règles du challenge (dock)", ["Alt+U"], () => dockToggle("rules")]]]];
     const KDEF = {}, KRUN = {}; KEYS.forEach(([, L]) => L.forEach(([id, , d, fn]) => { KDEF[id] = d; KRUN[id] = fn; }));
     let KMAP = { ...KDEF, ...LS.get("bt-keys", {}) };
+    { const saved = LS.get("bt-keys", {}) || {}, used = new Set(Object.entries(saved).filter(([id]) => id !== "dockR").flatMap(([, L]) => L || [])); if (!saved.dockR) KMAP.dockR = (KDEF.dockR || []).filter((c) => !used.has(c)); } // v1.66 : le raccourci du panneau Règles ne prend jamais une touche déjà réglée
     const KNAME = { " ": "Espace", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Échap", Enter: "Entrée", Tab: "Tab", Backspace: "Retour", Delete: "Suppr" };
     const comboOf = (e) => { let k = /^Key[A-Z]$/.test(e.code) ? e.code.slice(3) : /^Digit\d$/.test(e.code) ? e.code.slice(5) : KNAME[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
       if (["Control", "Alt", "Shift", "Meta"].includes(e.key)) return null; return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && "Shift", k].filter(Boolean).join("+"); };
@@ -8541,7 +9076,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     // curseur de progression : position du replay dans les séances chargées (avancer = rejouer les bougies, reculer = revoir)
     const prog = () => { const n = S.raw.length, p = $("btProg"); if (p && document.activeElement !== p) p.value = n > 1 ? Math.round((S.cur / (n - 1)) * 1000) : 0; $("btPosT").textContent = A.pos || A.orders.length ? `Positions (${(A.pos ? 1 : 0) + A.orders.length})` : "Positions"; };
     BUS.on("tick", prog); BUS.on("buffer", prog); setInterval(() => { if ($("v-backtest").classList.contains("on")) prog(); }, 400); // aussi après un chargement, un ordre, un reset
-    $("btProg").oninput = () => { const n = S.raw.length; if (n < 2) return; const i = Math.round(($("btProg").value / 1000) * (n - 1)); if (i > S.cur) { play(false); step(i - S.cur); } else if (i < S.cur) { S.cur = i; draw(); ui(); } };
+    $("btProg").oninput = () => { const n = S.raw.length; if (n < 2) return; const i = Math.round(($("btProg").value / 1000) * (n - 1)); if (i > S.cur) { play(false); step(i - S.cur); } else if (i < S.cur) { const why = backBlock(); if (why) return msg(why, true); S.cur = i; draw(); ui(); } }; // v1.66 : reculer refusé en challenge strict / retour arrière désactivé
     $("btProg").onchange = () => $("btProg").blur();
     // plages de temps affichées (comme 1D / 5D / 1M… sous le chart)
     $("btRng").onclick = (e) => { const b = e.target.closest("[data-r]"); if (!b || !chart || !S.raw.length) return; const d = +b.dataset.r, T = S.raw[S.cur][0];
@@ -8814,8 +9349,9 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     $("btPct").onclick = () => { $("btPct").classList.toggle("on"); $("btLog").classList.remove("on"); scale(); };
     $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
     bindDrawing(); bindDrawing(2); bindSettings(); loadDrawings(); ui();
+    initPhase1(); // v1.66 : rejouer depuis une bougie, sessions isolées (sauvegarde continue), panneau Règles
   }
-  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { init(); status(); if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { init(); status(); if (sesResume()) return; if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office (v1.66 : ou la session isolée laissée ouverte)
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
 })();
 </script>
