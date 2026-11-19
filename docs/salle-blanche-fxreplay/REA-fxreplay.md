@@ -4,9 +4,9 @@
 
 ## Résumé
 
-Ce REA décrit en 118 exigences tout ce que fait FX Replay d'après sa documentation publique, et les compare à l'app ICT : 34 sont déjà là, 54 en partie, 24 manquent et 6 sont hors périmètre.
+Ce REA décrit en 118 exigences tout ce que fait FX Replay d'après sa documentation publique, et les compare à l'app ICT : 43 sont déjà là (dont les 9 de la phase 1, livrée en v1.66.0), 50 en partie, 19 manquent et 6 sont hors périmètre.
 
-Les 17 priorités P1 portent sur cinq chantiers : un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist.
+Les 17 priorités P1 portent sur cinq chantiers : un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. La phase 1 (v1.66.0) en a livré 8 ; il en reste 9 (exécution, journal, filtres).
 
 Après les 5 phases de la roadmap, le Backtesteur aura l'équivalent fonctionnel de FX Replay pour le backtest NQ / ES, adapté aux règles ICT et prop firm de Rudy, sans rien copier de son expression. Base de travail : 84 articles d'aide sur 87, 7 pages produit, le code de la v1.65.1 et la spécification du 12/11 déjà dans le repo, que ce document remplace.
 
@@ -437,20 +437,20 @@ Points d'attention relevés dans le code :
 1. **Retour arrière incohérent** : « bougie précédente » (`back()`) recule l'affichage sans annuler les trades ni les ordres postérieurs, et reste permis en compte Prop. Corrigé par REP-05 et REP-06.
 2. **Ordres non validés** : un achat limite posé au-dessus du prix est accepté et s'exécute à la bougie suivante comme un ordre au marché. Corrigé par ORD-10.
 3. **Simulateur R:R tronqué** : `simRR` s'arrête à la sortie réelle ; une cible plus lointaine n'est jamais testée, et l'ordre cible / SL initial n'est pas vérifié quand le SL a été déplacé. Corrigé par la formule de la section précédente.
-4. **Sessions = instantanés** : ouvrir une session remplace l'état courant, et rien n'est sauvegardé dans la session tant qu'on ne l'écrase pas. Corrigé par SES-03 et SES-12.
+4. **Sessions = instantanés** : ouvrir une session remplace l'état courant, et rien n'est sauvegardé dans la session tant qu'on ne l'écrase pas. Corrigé par SES-03 et SES-12 (livrés en v1.66.0).
 5. **Captures de FX Replay dans un repo public** : `docs/salle-blanche-fxreplay/captures/` contenait 24 images de leur interface ; dossier retiré le 19/11/2026 (il reste dans l'historique git).
 
 ## Matrice d'écart
 
-Sur 118 exigences, 34 sont présentes (29 %), 54 partielles (46 %), 24 absentes (20 %) et 6 hors périmètre ; les 17 priorités P1 tiennent dans 6 modules.
+Sur 118 exigences, 43 sont présentes (36 %), 50 partielles (42 %), 19 absentes (16 %) et 6 hors périmètre. Après la phase 1 (v1.66.0), 8 des 17 priorités P1 sont livrées ; les 9 restantes tiennent dans 3 modules (ORD, JRN, ANA).
 
 | Module | Exigences | ✅ | 🟡 | ❌ | ⛔ | dont P1 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Ordres et exécution (ORD) | 16 | 4 | 8 | 4 | 0 | 5 |
-| Sessions (SES) | 12 | 1 | 6 | 4 | 1 | 4 |
-| Replay (REP) | 13 | 5 | 3 | 5 | 0 | 3 |
+| Sessions (SES) | 12 | 5 | 3 | 3 | 1 | 4 |
+| Replay (REP) | 13 | 9 | 3 | 1 | 0 | 3 |
 | Journal de backtest (JRN) | 9 | 0 | 4 | 5 | 0 | 3 |
-| Prop firm (PRO) | 6 | 2 | 4 | 0 | 0 | 1 |
+| Prop firm (PRO) | 6 | 3 | 3 | 0 | 0 | 1 |
 | Analytique (ANA) | 15 | 6 | 8 | 1 | 0 | 1 |
 | Graphique (GRA) | 20 | 6 | 11 | 2 | 1 | 0 |
 | Tableau de bord (TDB) | 3 | 0 | 1 | 2 | 0 | 0 |
@@ -460,14 +460,14 @@ Sur 118 exigences, 34 sont présentes (29 %), 54 partielles (46 %), 24 absentes 
 | Stratégies (STR) | 3 | 0 | 2 | 0 | 1 | 0 |
 | Données (DAT) | 3 | 1 | 1 | 0 | 1 | 0 |
 | Compétitions (BAT) | 2 | 0 | 0 | 1 | 1 | 0 |
-| **Total** | **118** | **34** | **54** | **24** | **6** | **17** |
+| **Total** | **118** | **43** | **50** | **19** | **6** | **17** |
 
 Les 17 priorités P1, par thème :
 
-- **Retour arrière fiable** : REP-04 rejouer depuis une bougie, REP-05 tout annuler après ce point, REP-06 interdit en challenge.
-- **Sessions isolées** : SES-01 assistant de création, SES-02 période (départ aléatoire, fin), SES-03 isolation, SES-12 sauvegarde continue.
+- **Retour arrière fiable** (✅ v1.66.0) : REP-04 rejouer depuis une bougie, REP-05 tout annuler après ce point, REP-06 interdit en challenge.
+- **Sessions isolées** (✅ v1.66.0) : SES-01 assistant de création, SES-02 période (départ aléatoire, fin), SES-03 isolation, SES-12 sauvegarde continue.
 - **Exécution** : ORD-01 outil position → ticket, ORD-02 ticket complet, ORD-05 TP multiples, ORD-09 ordre au clic droit, ORD-12 prise de partiels.
-- **Challenge** : PRO-02 panneau des règles en direct.
+- **Challenge** (✅ v1.66.0) : PRO-02 panneau des règles en direct.
 - **Journal** : JRN-01 table des trades backtest, JRN-05 fiche trade, JRN-07 modèles et checklists.
 - **Analytique** : ANA-01 filtres complets.
 
@@ -481,13 +481,13 @@ La roadmap tient en 5 phases : les P1 d'abord (intégrité et sessions, exécuti
 
 Les trois premières phases livrent les 17 priorités P1 ; chaque losange est un critère vérifiable avant de passer à la suite.
 
-**Phase 1 — Intégrité et sessions** (REP-04 à 07, SES-01 / 02 / 03 / 12, PRO-02)
+**Phase 1 — Intégrité et sessions** (REP-04 à 07, SES-01 / 02 / 03 / 12, PRO-02) — ✅ livrée en v1.66.0 le 19/11/2026
 
-- [ ] Rejouer jusqu'à t, revenir à t0 et rejouer à nouveau donne un état identique (trades, solde, MLL), vérifié par un test dans `tools/check.js`.
-- [ ] Dans une session challenge en mode strict, aucun bouton ni raccourci ne permet de reculer ; sessions, compte et raccourcis existants marchent comme avant.
-- [ ] Fermer l'app au milieu d'une session puis la rouvrir retrouve l'heure du replay, les ordres et les dessins.
-- [ ] Deux sessions ne partagent ni trades, ni solde, ni dessins (sauf option).
-- [ ] Le panneau des règles affiche objectif, DLL, MLL et consistance à jour à chaque bougie.
+- [x] Rejouer jusqu'à t, revenir à t0 et rejouer à nouveau donne un état identique (trades, solde, MLL), vérifié par un test dans `tools/check.js`.
+- [x] Dans une session challenge en mode strict, aucun bouton ni raccourci ne permet de reculer ; sessions, compte et raccourcis existants marchent comme avant.
+- [ ] Fermer l'app au milieu d'une session puis la rouvrir retrouve l'heure du replay, les ordres et les dessins. *(codé ; à vérifier par Rudy dans l'exe avec de vraies bougies)*
+- [ ] Deux sessions ne partagent ni trades, ni solde, ni dessins (sauf option). *(clés de stockage séparées par session ; à vérifier par Rudy dans l'exe)*
+- [x] Le panneau des règles affiche objectif, DLL, MLL et consistance à jour à chaque bougie.
 
 **Phase 2 — Exécution pro** (ORD-01, 02, 05 à 12, 16)
 
