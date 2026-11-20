@@ -2,6 +2,18 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.71.0] — 2026-11-21
+Page Graphique : arborescence des objets façon TopstepX, modèles et mises en page réordonnables, éditeur Pine à droite, trait des news.
+### Ajouté
+- **Arborescence des objets** : groupes (créer, renommer, replier, masquer, verrouiller, supprimer avec leurs dessins), glisser-déposer pour changer l'ordre d'affichage ou ranger dans un groupe, renommer un dessin (double-clic), sélection multiple (Ctrl / Maj) pour masquer, verrouiller, supprimer ou grouper, recherche, tout masquer / verrouiller, paramètres par ligne.
+- **Modèles de dessins** : triés par numéro (1, 2 … 10, 11), et « Gérer et réordonner les modèles… » (glisser, renommer, supprimer, appliquer).
+- **Mises en page** : « Gérer et réordonner les mises en page… » (glisser, renommer, supprimer, ouvrir) ; le menu suit cet ordre.
+- **Fibonacci** : niveaux masqués des modèles TopstepX remis (à cocher), case Ligne de tendance, étiquettes Coefficients / Prix / Texte des niveaux / En %, position et taille, style des lignes, texte et couleur hex de chaque niveau.
+- **Actualités · calendrier USD** : case « Trait sur le graphique à l'heure des news » (aussi dans Paramètres › Événements).
+### Modifié
+- **Éditeur Pine** à droite du graphique ; tirer son bord gauche pour l'agrandir, double-clic sur le bord = grand / normal (largeur gardée).
+- Le bouton Disposition montre l'icône de la disposition en cours.
+
 ## [1.70.0] — 2026-11-20
 Page Graphique : modèles de dessins et mises en page de TopstepX, avec les mêmes noms.
 ### Ajouté
