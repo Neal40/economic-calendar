@@ -2,7 +2,7 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
-## [1.67.0] — 2026-11-19
+## [1.67.0] — 2026-11-20
 Backtesteur, phase 1b de la salle blanche, livraison A (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV : NAV-01 → 05, SES-04 / 05 / 09 / 10 / 11, TDB-03, JRN-04, STR-02 ; TDB-01, JRN-01, STR-01, NAV-06 et NAV-07 en partie). Tout s'ajoute : le chart (Backtesteur de base, sessions isolées, fenêtres du chart, raccourcis) marche comme en 1.66.0 et les données `bt-*` existantes ne sont ni renommées ni migrées.
 ### Ajouté
 - **Pages du Backtesteur** avec leur propre menu à gauche dans la page : **Testing**, **Stratégies**, **Paramètres**, et un raccourci **Chart** (session ouverte ou Backtesteur de base). Le chart s'ouvre en plein écran ; le bouton **Pages** (en haut à gauche du chart) met le replay en pause, enregistre la session et ramène à la dernière page vue. Adresses : `#backtest` (tableau de bord), `#backtest/sessions`, `/trades`, `/analytique`, `#backtest/strategies[/<id>]`, `#backtest/parametres/<onglet>`, `#backtest/chart`.
@@ -18,6 +18,10 @@ Backtesteur, phase 1b de la salle blanche, livraison A (`docs/salle-blanche-fxre
 - **Cliquer sur Backtesteur** dans le menu de l'app ouvre Testing › Tableau de bord au lieu du chart (le compte démo des pages Comptes, le Replay de la page Graphique et « Ouvrir une nouvelle fenêtre » ouvrent toujours le chart).
 - Sessions créées depuis la nouvelle fenêtre : commission et spread propres à chaque actif (`A.cfg.fees` / `A.cfg.spreads`) ; sans eux (Backtesteur de base, sessions d'avant), frais et exécution au marché (dernier prix ± 1 tick) inchangés. Une session clôturée garde sa stratégie dans le Journal backtest.
 - Raccourcis du chart sans effet quand les pages sont affichées.
+
+## [1.66.2] — 2026-11-20
+### Modifié
+- **Favori de connexion TopstepX** renommé « Synchro App & TopstepX » (au lieu de « → ICT ») dans l'app et sur la page `tsx-chrome.html`, qui prend le logo ICT (icône d'onglet, titre et bouton à glisser).
 
 ## [1.66.1] — 2026-11-19
 ### Corrigé

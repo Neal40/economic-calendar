@@ -54,7 +54,7 @@ async function readToken(w) {
   try { await new Promise((ok) => (w.webContents.isLoading() ? w.webContents.once("did-stop-loading", ok) : ok())); } catch (e) {}
   try { return await w.webContents.executeJavaScript('localStorage.getItem("token")', true); } catch (e) { return null; }
 }
-/* Jeton TopstepX envoyé depuis Chrome (favori « → ICT » sur topstepx.com) : chiffré avec safeStorage, jamais loggué ni renvoyé au renderer */
+/* Jeton TopstepX envoyé depuis Chrome (favori « Synchro App & TopstepX » sur topstepx.com) : chiffré avec safeStorage, jamais loggué ni renvoyé au renderer */
 const TSXFILE = () => path.join(app.getPath("userData"), "tsx-token.bin");
 function getChromeToken() { try { const b = fs.readFileSync(TSXFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; } }
 function setChromeToken(t) { try { if (!t) { fs.rmSync(TSXFILE(), { force: true }); return; } fs.writeFileSync(TSXFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, "utf8")); } catch (e) { /* ignore */ } }
@@ -251,7 +251,7 @@ ipcMain.handle("store:set", (e, d) => { try {
     if (n(d, "bills") < n(old, "bills") || n(d, "subs") < n(old, "subs")) fs.copyFileSync(STORE(), STORE().replace(/\.json$/, "-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json")); } catch (err) { /* pas encore de fichier */ } const tmp = STORE() + ".tmp"; fs.writeFileSync(tmp, JSON.stringify({ ...d, savedAt: new Date().toISOString() }, null, 1)); fs.renameSync(tmp, STORE()); return true; } catch (err) { return false; } });
 
 /* ---------- main window ---------- */
-/* ---------- Connexion TopstepX via Chrome : lien innercircletrader://tsx?token=… envoyé par le favori « → ICT » ---------- */
+/* ---------- Connexion TopstepX via Chrome : lien innercircletrader://tsx?token=… envoyé par le favori « Synchro App & TopstepX » ---------- */
 const PROTO = "innercircletrader";
 const LOCK = app.requestSingleInstanceLock(); // une seule app : le lien ouvert par Chrome arrive dans la fenêtre déjà ouverte
 if (!LOCK) app.quit();
