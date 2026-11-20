@@ -9701,7 +9701,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   function bpGo(p) { const h = "#backtest" + (p ? "/" + p : ""); if (location.hash === h) bpRoute(p); else location.hash = h; }
   // ouvre le chart ; then = action une fois le chart affiché (ouvrir une session, le Backtesteur de base…), sinon comportement de la v1.66
   function toChart(then) { pg.pend = then || null; if (location.hash === "#backtest/chart") bpRoute("chart"); else location.hash = "#backtest/chart"; }
-  function leaveChart() { if (S.playing) play(false); if (curSes) sesSaveNow(); tmFlush(); pg.shown = false; }
+  function leaveChart() { if (S.playing) play(false); if (curSes) sesSaveNow(); tmFlush(); pg.shown = false; const m = $("btModal"); if (m && !m.hidden) { const x = m.querySelector('[data-m="x"]'); if (x) x.click(); else m.hidden = true; } } // fenêtre du chart encore ouverte : fermée comme avec sa croix (réglages non enregistrés annulés)
   function chartOpen(then) {
     const was = chartOn() && pg.shown; BPV.classList.remove("bp-on"); pg.shown = true;
     init(); status(); tmTick = tmInput = Date.now();
