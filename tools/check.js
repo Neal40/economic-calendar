@@ -329,6 +329,43 @@ try {
   const pw = N.progress(log, TT, "week", "2026-11-19"), pm = N.progress(log, TT, "month", "2026-11-19"), pa = N.progress(log, TT, "all", "2026-11-19");
   eq("progress", [[pw.real, pw.market, pw.days, pw.n, pw.buys, pw.sells], [pm.real, pm.market, pm.days, pm.n], [pa.real, pa.n, pa.wr]], [[360, 3660, 1, 2, 1, 1], [960, 4860, 2, 2], [960, 3, 2 / 3]]);
   eq("marketStep", [N.marketStep(null, 60), N.marketStep(60, 120), N.marketStep(60, 61), N.marketStep(60, 86400), N.marketStep(120, 60)], [0, 60, 1, 60, 0]);
+  // v1.68 (livraison B) · TDB-01 / 02 : filtre d'activité, jours d'entraînement (au moins 5 min), série, objectif, win rate dans le temps, trades par actif
+  const ck = (c) => (c === "base" ? "backtest" : c === "x1" ? "challenge" : null), TK = TT.map((t, i) => ({ ...t, kind: i === 1 ? "challenge" : "backtest" }));
+  const pk = N.progress(log, TK, "all", "2026-11-19", { kind: "challenge", ctxKind: ck }), pb = N.progress(log, TK, "all", "2026-11-19", { kind: "backtest", ctxKind: ck });
+  eq("progress activité", [[pk.real, pk.market, pk.days, pk.n], [pb.real, pb.market, pb.days, pb.n]], [[360, 3600, 1, 1], [600, 1260, 1, 2]]);
+  eq("kindOf", [N.kindOf("challenge"), N.kindOf("free"), N.kindOf(undefined), N.kindOf(null)], ["challenge", "backtest", "backtest", "backtest"]);
+  eq("dayAdd", [N.dayAdd("2026-11-30", 1), N.dayAdd("2026-03-01", -1), N.dayAdd("2026-11-08", 7)], ["2026-12-01", "2026-02-28", "2026-11-15"]);
+  eq("daily", N.daily(log, "2026-11-16", "2026-11-19").map((x) => [x.day.slice(8), x.real, x.market]), [["16", 0, 0], ["17", 360, 3600], ["18", 0, 60], ["19", 0, 0]]);
+  const lg = { d: {} }; ["2026-11-10", "2026-11-11", "2026-11-12", "2026-11-16", "2026-11-17", "2026-11-18"].forEach((d) => N.addTime(lg, d, "base", 400, 0)); N.addTime(lg, "2026-11-13", "base", 120, 0); N.addTime(lg, "2026-11-19", "x1", 900, 0);
+  const sk = (today, o) => { const r = N.streak(lg, today, o); return [r.cur, r.best, r.today]; };
+  eq("streak", [sk("2026-11-19"), sk("2026-11-20"), sk("2026-11-21"), sk("2026-11-18"), sk("2026-11-19", { kind: "backtest", ctxKind: ck })], [[4, 4, true], [4, 4, false], [0, 4, false], [3, 3, true], [3, 3, false]]);
+  const gd = N.goal(lg, { mode: "day", h: 0.5 }, "2026-11-19"), gw = N.goal(lg, { mode: "week", h: 1 }, "2026-11-19"), g0 = N.goal(lg, null, "2026-11-19");
+  eq("goal", [[gd.mode, gd.done, gd.target, +gd.pct.toFixed(3)], [gw.mode, gw.from, gw.done, gw.target, +gw.pct.toFixed(3)], [g0.mode, g0.target, g0.pct]], [["day", 900, 1800, 0.5], ["week", "2026-11-16", 2100, 3600, 0.583], ["day", 0, 0]]);
+  eq("goal sans effet sur la série", [N.streak(lg, "2026-11-19").cur], [4]);
+  const W3 = [{ ...TK[0], tk: "a" }, { ...TK[1], tk: "b" }, { ...TK[2], tk: "c" }, { ...TK[0], tk: "d" }];
+  eq("wrSeries", N.wrSeries(W3, { a: "2026-11-17", b: "2026-11-17", c: "2026-11-18" }, null, "2026-11-19").map((x) => [x.day.slice(8), x.n, x.w, x.l, x.wr, x.cum]), [["17", 2, 1, 1, 0.5, 0.5], ["18", 1, 1, 0, 1, 2 / 3]]);
+  eq("wrSeries période", N.wrSeries(W3, { a: "2026-11-17", c: "2026-11-18" }, "2026-11-18", "2026-11-19").map((x) => x.day), ["2026-11-18"]);
+  const BA = N.byAsset([{ ...TK[0], ctr: "ES" }, TK[1], TK[2], { ...TK[2], ctr: "YM" }, { ...TK[0], ctr: "MNQ" }], ["NQ", "ES", "MNQ", "MES"]);
+  eq("byAsset", BA.map((x) => [x.ctr, x.n, x.wins, x.losses, x.wr]), [["NQ", 2, 1, 1, 0.5], ["ES", 1, 1, 0, 1], ["MNQ", 1, 1, 0, 1], ["YM", 1, 1, 0, 1]]);
+  // STR-01 : trades d'une stratégie (nom de la session ou ajout à la main), checklist des règles
+  const sA = N.strategies({ list: [{ id: "st1", name: "SB AM", manual: [T[2].tk] }] }, [])[0];
+  eq("stratTrades", N.stratTrades(T, sA).map((t) => [t.key, t.via]), [["ses:x1:1", "nom"], ["ses:x1:2", "nom"], ["base:base:3", "ajout"]]);
+  eq("checks", [N.checks({ checks: { r1: true, r3: true, rx: true } }, [{ id: "r1" }, { id: "r2" }, { id: "r3" }]), N.checks({}, []), N.checks(null, [{ id: "r1" }])], [{ done: 2, total: 3 }, { done: 0, total: 0 }, { done: 0, total: 1 }]);
+  eq("rulesBy", N.rulesBy([{ id: "a", cat: "sortie", text: "TP" }, { id: "b", cat: "entree", text: "FVG" }, { id: "c", cat: "zz", text: "?" }, { id: "d", cat: "entree", text: "MSS" }]).map((g) => [g.k, g.rules.map((r) => r.id)]), [["entree", ["b", "d"]], ["sortie", ["a"]], ["autre", ["c"]]]);
+  // JRN-08 : groupes de tags, tags libres, recherche, ordre
+  const TG = [{ id: "g1", name: "Setups", color: "#2962ff", tags: [{ name: "FVG" }, { name: "OB", color: "#ff9800" }] }, { id: "g2", name: "Erreurs", color: "#ef5350", tags: [{ name: "Trop tôt" }, { name: "fvg" }] }];
+  const TM = N.tagMap(TG); eq("tagMap", [TM.get("fvg"), TM.get("ob").color, TM.get("trop tôt").group, TM.has("x")], [{ name: "FVG", color: "#2962ff", group: "g1" }, "#ff9800", "g2", false]);
+  eq("tagsFree", N.tagsFree(["fvg", "News ", "news", "A+", "OB"], TG), ["A+", "News"]);
+  eq("tagFind", [N.tagFind(TG, "err").map((g) => [g.id, g.tags.length]), N.tagFind(TG, "fv").map((g) => [g.id, g.tags.map((t) => t.name)]), N.tagFind(TG, "").length, N.tagFind(TG, "zz")], [[["g2", 2]], [["g1", ["FVG"]], ["g2", ["fvg"]]], 2, []]);
+  eq("move", [N.move([1, 2, 3], 0, 1), N.move([1, 2, 3], 2, -1), N.move([1, 2, 3], 0, -1), N.move([1, 2, 3], 2, 1)], [[2, 1, 3], [1, 3, 2], [1, 2, 3], [1, 2, 3]]);
+  // JRN-07 : modèles (champs remplacés, ajout à la note), checklists posées sur un trade, liste filtrée
+  eq("tplFill", N.tplFill("{contrat} {sens} {date} {session} {strategie} {resultat} {autre}", { contrat: "NQZ26", sens: "Long", date: "17/11/2026 09:31", session: "S1", strategie: "SB", resultat: "+$100.00" }), "NQZ26 Long 17/11/2026 09:31 S1 SB +$100.00 {autre}");
+  eq("noteApply", [N.noteApply("", "B"), N.noteApply("A  \n", "B"), N.noteApply("A", ""), N.noteApply(null, null)], ["B", "A\n\nB", "A", ""]);
+  const LA = N.listAdd([{ id: "c1", name: "X", items: [{ t: "a", ok: true }] }], { id: "c2", name: "Contrôle", items: ["DLL ok", " ", "Taille ok"] });
+  eq("listAdd", [LA.map((x) => [x.id, x.items.length]), N.listAdd(LA, { id: "c2", items: ["z"] }).length, N.listAdd(null, null)], [[["c1", 1], ["c2", 2]], 2, []]);
+  eq("listCount", [N.listCount(LA), N.listCount(null)], [{ done: 1, total: 3 }, { done: 0, total: 0 }]);
+  const TP = [{ id: "b1", name: "Review", type: "note", content: "Plan respecté", fav: false }, { id: "b2", name: "Contrôle prop", type: "checklist", items: ["DLL"], fav: true }, { id: "u1", name: "Ma note", type: "note", content: "x", fav: false }];
+  eq("tplList", [N.tplList(TP, {}).map((t) => t.id), N.tplList(TP, { q: "dll" }).map((t) => t.id), N.tplList(TP, { fav: true }).map((t) => t.id), N.tplList(TP, { type: "note" }).map((t) => t.id), N.tplList(TP, { q: "PLAN" }).map((t) => t.id)], [["b2", "u1", "b1"], ["b2"], ["b2"], ["u1", "b1"], ["b1"]]);
   // 8. presets de session : sans le nom ni la date de départ ; appliqués sur le brouillon
   const pv = N.presetOf({ kind: "prop", name: "X", from: "2026-01-05", size: 100000, rules: { target: 6000 }, assets: ["NQ"], fee: false, slipLvl: "fix", slipN: 3, err: "!" });
   eq("presetOf", pv, { kind: "prop", size: 100000, rules: { target: 6000 }, assets: ["NQ"], fee: false, slipLvl: "fix", slipN: 3 });
@@ -336,6 +373,7 @@ try {
   eq("presetApply", [dr.kind, dr.name, dr.from, dr.assets, dr.fee, dr.rules.target], ["prop", "Ma session", "2026-11-17", ["NQ"], false, 6000]);
   // 9. routage
   eq("route", ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres", "parametres/spreads", "parametres/zz", "chart", "zz"].map((p) => N.path(N.route(p))), ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres/backtesting", "parametres/spreads", "parametres/backtesting", "chart", ""]);
+  eq("route v1.68", ["strategies/st1/regles", "strategies/st1/docs", "strategies/st1/trades", "strategies/st1/zz", "parametres/journal", "parametres/modeles"].map((p) => N.path(N.route(p))), ["strategies/st1/regles", "strategies/st1/docs", "strategies/st1/trades", "strategies/st1", "parametres/journal", "parametres/modeles"]);
 } catch (e) { errors.push("btNav : " + e.message); }
 
 // v1.67.1 : heures à droite de la dernière bougie (btFut) — créneaux des bougies à venir, marché CME fermé sauté, aucune donnée

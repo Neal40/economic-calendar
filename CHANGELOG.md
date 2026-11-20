@@ -2,6 +2,21 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.68.0] — 2026-11-20
+Backtesteur, phase 1b de la salle blanche, livraison B (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV : NAV-06, NAV-07, STR-01, JRN-07, JRN-08, TDB-01, TDB-02). Tout s'ajoute : chart, sessions, trades et données `bt-*` existantes inchangés ; les nouvelles clés (`bt-tags`, `bt-tpls`, `bt-goal`) ne s'écrivent qu'après une action, les images des documents vont dans IndexedDB (`ict-backtest`).
+### Ajouté
+- **Fiche stratégie complète** : bouton **▶ Tester** (fenêtre Nouvelle session avec la stratégie choisie) et onglets **Règles** (règles par catégorie : contexte, entrée, sortie, gestion du risque, réordonnables ; vide : invitation à en définir, avec un exemple ICT ; paramètres de la stratégie), **Docs** (notes et images : fichiers ou capture collée, agrandissement, sans limite ; images en IndexedDB) et **Trades** (trades des sessions reliées et trades ajoutés à la main depuis n'importe quelle session, filtre par session, compteur, actualiser, checklist et note de chaque trade). Les trades ajoutés comptent dans les chiffres, la courbe, Testing › Trades et l'analytique par stratégie. Dupliquer une stratégie copie ses règles, paramètres et documents (images comprises).
+- **Note du trade** (✎ dans Testing › Trades et dans l'onglet Trades d'une stratégie) : détails, tags (groupes colorés, tag nouveau rangé dans un groupe à la volée), checklist (règles de la stratégie et checklists des modèles, cases enregistrées dans le trade), note avec insertion d'un modèle ; le modèle par défaut est proposé quand la note est vide. Écrite là où le trade est enregistré (session, compte de base, instantané ou session clôturée).
+- **Testing › Trades** : cases à cocher et « Appliquer un modèle » à plusieurs trades (note ajoutée à la fin de chaque note, ou checklist posée), tags colorés par groupe, colonne note et checklist.
+- **Paramètres › Journal** : groupes de tags colorés, réordonnables, recherche ; créer, renommer, supprimer un groupe ; ajouter, colorer, déplacer, renommer, retirer un tag ; tags libres déjà posés listés et rangés dans un groupe ; groupes de départ (setups ICT, séances, erreurs, état d'esprit). Les tags des trades ne sont jamais modifiés.
+- **Paramètres › Modèles** : modèles de note et checklists, avec recherche, filtre, favoris, modèles intégrés (review de trade ICT, plan de séance, bilan de session, Silver Bullet, checklist d'entrée ICT, contrôle prop firm) à dupliquer pour les modifier, date de dernière modification, un modèle par défaut pour le journal backtest. Champs remplis avec les valeurs du trade : {contrat}, {sens}, {date}, {session}, {strategie}, {resultat}.
+- **Tableau de bord** : filtre d'activité (toute l'activité, backtest, challenge = sessions prop firm), **série de jours d'entraînement** (au moins 5 minutes sur le chart, jour de New York ; série en cours et record) avec vues jour / semaine / année et **objectif d'heures** par jour ou par semaine modifiable sans toucher à la série, **win rate dans le temps** (cumulé et par jour) et **trades par actif**.
+### Modifié
+- Paramètres a cinq onglets : Backtesting, Spreads & commissions, Journal, Sessions supprimées, Modèles.
+- Fiche stratégie : les sessions reliées proposent aussi Dupliquer (tout copier ou seulement les réglages) et Supprimer (corbeille).
+- Ticket du chart : les tags des groupes sont proposés dans la liste des tags.
+- « Jours d'entraînement » du tableau de bord : un jour compte à partir de 5 minutes sur le chart (comme la série).
+
 ## [1.67.1] — 2026-11-20
 Backtesteur : décisions de l'arbitre du 20/11/2026 après la 1.67.0 (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV, tableau « Décisions de l'arbitre »).
 ### Ajouté
