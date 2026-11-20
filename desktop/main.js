@@ -374,11 +374,8 @@ ipcMain.handle("app:newWindow", (e, view) => {
 
 /* ---------- Market data (backtester): m1 + 1s bars -> CSV, auto-sync every evening at 23:01 ---------- */
 let mdStore = null;
-// dossier « data_csv » (un CSV par symbole et par unité de temps, téléchargé à la main) : dans le dossier ICT, ou dans le dépôt posé dans le dossier ICT
-const csvDirs = () => { const d = ICT(), out = [path.join(d, "data_csv")];
-  try { fs.readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).forEach((e) => out.push(path.join(d, e.name, "data_csv"))); } catch (e) { /* dossier ICT absent */ }
-  if (!app.isPackaged) out.push(path.join(__dirname, "..", "data_csv"));
-  return out; };
+// dossier « data_csv » (un CSV par symbole et par unité de temps, téléchargé à la main) : dans le dossier ICT, ou dans le dépôt posé dans le dossier ICT (marketdata.csvDirsOf, v1.67.1)
+const csvDirs = () => marketdata.csvDirsOf(ICT(), app.isPackaged ? [] : [path.join(__dirname, "..", "data_csv")]);
 const md = () => (mdStore = mdStore || marketdata.create(path.join(ICT(), "data"), { csvDirs: csvDirs() }));
 async function mdSync(interactive) {
   const token = await getToken(!!interactive);

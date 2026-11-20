@@ -338,6 +338,34 @@ try {
   eq("route", ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres", "parametres/spreads", "parametres/zz", "chart", "zz"].map((p) => N.path(N.route(p))), ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres/backtesting", "parametres/spreads", "parametres/backtesting", "chart", ""]);
 } catch (e) { errors.push("btNav : " + e.message); }
 
+// v1.67.1 : heures à droite de la dernière bougie (btFut) — créneaux des bougies à venir, marché CME fermé sauté, aucune donnée
+try {
+  const F = new Function(grab("btFut") + "; return btFut;")(), eq = (n, a, b) => { if (JSON.stringify(a) !== JSON.stringify(b)) errors.push(`btFut.${n} : ${JSON.stringify(a)} au lieu de ${JSON.stringify(b)}`); };
+  const at = (d0) => (n, h, m) => `+${n}j ${h}:${String(m).padStart(2, "0")}`; // heure absolue lisible pour les tests de reopen
+  eq("reopen CME", [[1, 10, 0], [1, 17, 30], [5, 16, 59], [5, 17, 0], [6, 12, 0], [0, 10, 0], [0, 18, 0], [4, 17, 0]].map(([wd, h, mi]) => F.reopen({ wd, h, mi }, false, at())), [null, "+0j 18:00", null, "+2j 18:00", "+1j 18:00", "+0j 18:00", null, "+0j 18:00"]);
+  eq("reopen RTH", [[1, 9, 0], [1, 9, 30], [1, 16, 14], [1, 16, 15], [5, 16, 20], [6, 10, 0], [0, 20, 0], [3, 12, 0]].map(([wd, h, mi]) => F.reopen({ wd, h, mi }, true, at())), ["+0j 9:30", null, null, "+1j 9:30", "+3j 9:30", "+2j 9:30", "+1j 9:30", null]);
+  // calendrier réel (heure de New York) construit comme futCal : m1, H4 aligné sur 18:00, séances quotidiennes ; marché fermé sauté d'un coup
+  const nyo = (t) => { const o = {}; NYP.formatToParts(new Date(t * 1000)).forEach((x) => (o[x.type] = x.value)); const d = `${o.year}-${o.month}-${o.day}`; return { d, wd: new Date(d + "T12:00:00Z").getUTCDay(), h: +o.hour, mi: +o.minute }; };
+  const addD = (d, n) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+  const reo = (rth) => (t) => { const o = nyo(t), r = F.reopen(o, rth, (n, h, mi) => nyT(addD(o.d, n), h, mi)); return r == null ? t : r; };
+  const cal = (s, bk, rth) => { const R = reo(rth), open = (b) => R(b) < b + s; return { open, next: (b) => { let nb = bk(b + s); if (nb <= b) nb = bk(b + 2 * s); if (!open(nb)) nb = bk(R(nb)); return nb; } }; };
+  const lbl = (t) => { const o = nyo(t); return `${o.d} ${String(o.h).padStart(2, "0")}:${String(o.mi).padStart(2, "0")}`; };
+  const m1 = cal(60, (t) => Math.floor(t / 60) * 60, false);
+  eq("slots m1 vendredi soir", F.slots(nyT("2026-11-20", 16, 58), 3, m1.next, m1.open).map(lbl), ["2026-11-20 16:59", "2026-11-22 18:00", "2026-11-22 18:01"]);
+  eq("slots m1 pause de 17:00", F.slots(nyT("2026-11-18", 16, 59), 2, m1.next, m1.open).map(lbl), ["2026-11-18 18:00", "2026-11-18 18:01"]);
+  const h4b = (t) => { const o = nyo(t), loc = Date.UTC(+o.d.slice(0, 4), +o.d.slice(5, 7) - 1, +o.d.slice(8, 10), o.h, o.mi) / 1000, off = loc - t, a = (18 * 3600) % 14400; return Math.floor((loc - a) / 14400) * 14400 + a - off; };
+  const h4 = cal(14400, h4b, false);
+  eq("slots H4 (alignées sur 18:00, week-end sauté)", F.slots(nyT("2026-11-20", 10, 0), 4, h4.next, h4.open).map(lbl), ["2026-11-20 14:00", "2026-11-22 18:00", "2026-11-22 22:00", "2026-11-23 02:00"]);
+  const m5r = cal(300, (t) => Math.floor(t / 300) * 300, true);
+  eq("slots m5 RTH", F.slots(nyT("2026-11-20", 16, 5), 3, m5r.next, m5r.open).map(lbl), ["2026-11-20 16:10", "2026-11-23 09:30", "2026-11-23 09:35"]);
+  const s1 = cal(1, (t) => t, false), t0 = Date.now();
+  eq("slots 1 s (week-end sauté sans tout parcourir)", F.slots(nyT("2026-11-20", 16, 59) + 58, 3, s1.next, s1.open).map((t) => lbl(t) + ":" + String(t % 60).padStart(2, "0")), ["2026-11-20 16:59:59", "2026-11-22 18:00:00", "2026-11-22 18:00:01"]);
+  if (Date.now() - t0 > 500) errors.push("btFut.slots 1 s : trop lent");
+  eq("slots : rien après la fin du calendrier", F.slots(10, 5, (b) => (b < 30 ? b + 10 : b), () => true), [20, 30]);
+  eq("step", [F.step([60, 120, 180], []), F.step([60, 120, 180], [60]), F.step([60, 120, 180], [60, 120]), F.step([60, 120, 180], [120]), F.step([60], [60, 120])], [{ op: "same", k: 0 }, { op: "shift", k: 1 }, { op: "shift", k: 2 }, { op: "rebuild", k: 0 }, { op: "rebuild", k: 0 }]);
+  eq("pairs (heures strictement croissantes, après la dernière bougie)", F.pairs([1, 2, 3, 4], (s) => [0, 10, 20, 20, 30][s], 5), [[1, 10], [2, 20], [4, 30]]);
+} catch (e) { errors.push("btFut : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);

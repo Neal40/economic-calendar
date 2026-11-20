@@ -2,6 +2,19 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.67.1] — 2026-11-20
+Backtesteur : décisions de l'arbitre du 20/11/2026 après la 1.67.0 (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV, tableau « Décisions de l'arbitre »).
+### Ajouté
+- **Heures à droite de la dernière bougie** : l'échelle de temps du chart du Backtesteur affiche aussi les heures dans la zone vide à droite de la dernière bougie, comme sur TopstepX (et l'heure sous le réticule quand la souris y passe). Ce sont les créneaux des bougies à venir, calculés d'après l'unité de temps et les heures de marché (séance CME 18:00 → 17:00 New York, week-end sauté, séance régulière en mode RTH), sans aucun prix ni donnée future ; recalculés quand le replay avance, quand l'unité de temps change et au retour arrière. Le chart suit le replay comme avant. Aussi sur le 2e chart (NQ + ES).
+- **Paramètres › Raccourcis** : les raccourcis clavier du chart se règlent dans un onglet des Paramètres, dans la fenêtre du chart (enregistrés avec OK, oubliés avec Annuler) et dans la page Paramètres › Backtesting (enregistrés à chaque changement), avec le même éditeur qu'avant (ajouter, retirer, raccourcis par défaut). Touches gardées dans `bt-keys` comme avant.
+- **Dupliquer une session** (Testing › Sessions) propose deux choix : **tout copier** (compte, trades, dessins, heure du replay, comme en 1.67.0) ou **seulement les réglages** (nouvelle session vierge : même type, solde, règles, actifs, stratégie, période et coûts, sans trade ni dessin).
+### Modifié
+- **Supprimer une session depuis la fenêtre Sessions du chart** l'envoie dans la corbeille (Backtesteur › Paramètres › Sessions supprimées), comme depuis Testing › Sessions ; elle se restaure avec son compte, ses trades, ses dessins et l'heure du replay.
+- **MNQ et MES utilisent leurs propres bougies** quand leurs fichiers existent (`data_csv`, cherché aussi comme `data_csv` d'un sous-dossier du dossier Inner Circle Trader, ex. `economic-calendar-main\data_csv`) : les trous d'un micro ne sont plus comblés avec les bougies du NQ / ES. Sans fichier du micro dans une résolution, ce sont celles de son sous-jacent (data_csv puis synchro), avec la mention « bougies du NQ / ES » dans la fenêtre Nouvelle session.
+- Le bouton engrenage « Raccourcis clavier » de la barre du chart est retiré (les raccourcis sont dans les Paramètres), à la demande de Rudy.
+- « Tout » (plages sous le chart) montre toutes les bougies et la marge de droite, sans les créneaux à venir au-delà.
+- Commissions par défaut inchangées : celles du compte de base (2,80 $ par contrat, 0,74 $ en micro) et 1 tick de spread.
+
 ## [1.67.0] — 2026-11-20
 Backtesteur, phase 1b de la salle blanche, livraison A (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV : NAV-01 → 05, SES-04 / 05 / 09 / 10 / 11, TDB-03, JRN-04, STR-02 ; TDB-01, JRN-01, STR-01, NAV-06 et NAV-07 en partie). Tout s'ajoute : le chart (Backtesteur de base, sessions isolées, fenêtres du chart, raccourcis) marche comme en 1.66.0 et les données `bt-*` existantes ne sont ni renommées ni migrées.
 ### Ajouté
