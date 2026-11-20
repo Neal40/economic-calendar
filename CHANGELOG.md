@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.69.0] — 2026-11-20
+Page Graphique : couleurs en hexadécimal, barre de dessins favoris réordonnable, modèles de dessins accessibles partout.
+### Ajouté
+- **Couleurs en hexadécimal** : chaque pastille de couleur (Paramètres du graphique › Symbole, Apparence…, paramètres des dessins et des indicateurs) a un champ hex à côté (`#RRGGBB`, ou `#RRGGBBAA` pour régler aussi l'opacité, `#RGB` accepté). Le champ suit la pastille et l'inverse ; une valeur invalide est encadrée en rouge et ignorée.
+- **Barre de dessins favoris** : glisser un outil pour changer sa place (ordre enregistré) ; clic droit sur un outil = déplacer à gauche / à droite, au début / à la fin, retirer des favoris.
+- **Modèles de dessins** : bouton **Modèle** dans la barre flottante du dessin sélectionné et **Modèle ▾** en bas de la fenêtre Paramètres du dessin (en plus du clic droit) : appliquer, enregistrer sous, remplacer, renommer, supprimer un modèle, style par défaut de l'outil.
+
 ## [1.68.0] — 2026-11-20
 Backtesteur, phase 1b de la salle blanche, livraison B (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV : NAV-06, NAV-07, STR-01, JRN-07, JRN-08, TDB-01, TDB-02). Tout s'ajoute : chart, sessions, trades et données `bt-*` existantes inchangés ; les nouvelles clés (`bt-tags`, `bt-tpls`, `bt-goal`) ne s'écrivent qu'après une action, les images des documents vont dans IndexedDB (`ict-backtest`).
 ### Ajouté

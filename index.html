@@ -746,7 +746,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-fc{position:relative;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer}.gr-fc:hover{background:var(--gh)}.gr-fc input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .gr-fc i{width:16px;height:16px;border-radius:3px;border:1px solid rgba(255,255,255,.3)}.gr-fc i.gr-ff{border-radius:50%}
 .gr-fs{height:26px;background:transparent;border:1px solid var(--gl);border-radius:4px;font-size:12px;padding:0 4px;color:var(--gt)}.gr-fs option{background:var(--gp)}
-.gr-fb{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-weight:700}.gr-fb:hover{background:var(--gh)}.gr-fb svg{width:20px;height:20px}
+.gr-fb{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-weight:700}.gr-fb.gr-ftpl{width:auto;padding:0 7px;font-weight:500;font-size:12px}.gr-fb:hover{background:var(--gh)}.gr-fb svg{width:20px;height:20px}
 .gr-favbar{position:absolute;left:60px;top:46px;z-index:39;display:flex;align-items:center;gap:1px;background:var(--gp);border:1px solid var(--gl);border-radius:6px;padding:2px 4px;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 .gr-favbar .gr-lt{width:32px;height:30px}
 /* menus, fenêtres */
@@ -771,7 +771,8 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-ta{width:100%;height:90px;padding:8px;resize:vertical;margin-bottom:8px}
 .gr-fr{display:flex;align-items:center;gap:10px;padding:5px 0;flex-wrap:wrap}.gr-fr>span:first-child{min-width:150px;color:var(--gm)}.gr-fr .gr-in:not(.sm){flex:1}
 .gr-chk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin-right:10px}.gr-chk input{accent-color:var(--ga);width:15px;height:15px}
-.gr-col{display:inline-flex;align-items:center;gap:6px}.gr-col input[type=color]{width:34px;height:26px;border:1px solid var(--gl);border-radius:4px;background:none;padding:1px;cursor:pointer}.gr-col input[type=range]{width:70px;accent-color:var(--ga)}
+.gr-col{display:inline-flex;align-items:center;gap:6px}.gr-col input[type=color]{width:34px;height:26px;border:1px solid var(--gl);border-radius:4px;background:none;padding:1px;cursor:pointer}.gr-col input[type=range]{width:70px;accent-color:var(--ga)}.gr-col .gr-hex{width:84px;height:26px;box-sizing:border-box;padding:0 6px;border:1px solid var(--gl);border-radius:4px;background:transparent;color:inherit;font:12px ui-monospace,Consolas,monospace;text-transform:uppercase}.gr-col .gr-hex:focus{outline:none;border-color:var(--ga)}.gr-col .gr-hex.bad{border-color:#f23645}
+.gr-favbar .gr-lt{touch-action:none}.gr-favbar .gr-lt.drag{opacity:.35}.gr-favbar.sorting,.gr-favbar.sorting .gr-lt{cursor:grabbing}.gr-favbar .gr-lt.ins-l{box-shadow:inset 2px 0 0 var(--ga)}.gr-favbar .gr-lt.ins-r{box-shadow:inset -2px 0 0 var(--ga)}
 .gr-tabs{display:flex;gap:2px;border-bottom:1px solid var(--gl);margin:0 -18px 10px;padding:0 18px;flex-wrap:wrap}.gr-tabs.sm{margin:0;padding:0 8px}
 .gr-tab{padding:8px 10px;font-size:13px;color:var(--gm);border-bottom:2px solid transparent;margin-bottom:-1px}.gr-tab.on{color:var(--gt);border-bottom-color:var(--ga)}
 .gr-empty{color:var(--gm);padding:16px;text-align:center;font-size:12.5px}.gr-err{color:#ff9800;font-size:12px;margin-top:8px}
@@ -12291,7 +12292,14 @@ function dlg(title, body, o = {}) {
   return { el: d, ov, close };
 }
 const tabs = (host, onTab) => { host.querySelectorAll(".gr-tab").forEach((t) => (t.onclick = () => { host.querySelectorAll(".gr-tab").forEach((x) => x.classList.toggle("on", x === t)); host.querySelectorAll(".gr-tpane").forEach((p) => (p.hidden = p.dataset.p !== t.dataset.p)); onTab && onTab(t.dataset.p); })); };
-const colorInput = (k, v) => `<span class="gr-col"><input type="color" data-k="${k}" value="${hex6(v)}"><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(opOf(v) * 100)}" title="Opacité"></span>`;
+const colorInput = (k, v) => `<span class="gr-col"><input type="color" data-k="${k}" value="${hex6(v)}"><input type="text" class="gr-hex" value="${hex6(v).toUpperCase()}" maxlength="9" spellcheck="false" title="Couleur en hexadécimal (#RRGGBB, ou #RRGGBBAA avec l'opacité)"><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(opOf(v) * 100)}" title="Opacité"></span>`;
+/* couleurs en hexadécimal : le champ texte à côté de chaque pastille pilote la couleur (et l'opacité si #RRGGBBAA) ; capture sur ROOT = avant les « apply » des fenêtres */
+const hexNorm = (v) => { const m = /^#?([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(String(v || "").trim()); if (!m) return null; let h = m[1]; if (h.length === 3) h = h.split("").map((x) => x + x).join(""); return { hex: "#" + h.slice(0, 6).toLowerCase(), a: h.length === 8 ? parseInt(h.slice(6), 16) / 255 : null }; };
+ROOT.addEventListener("input", (e) => { const t = e.target; if (!t || !t.closest) return; const box = t.closest(".gr-col"); if (!box) return;
+  if (t.classList.contains("gr-hex")) { const n = hexNorm(t.value); t.classList.toggle("bad", !n); if (!n) { e.stopPropagation(); return; } const c = box.querySelector("input[type=color]"); if (c) c.value = n.hex; if (n.a != null) { const o = box.querySelector("input[type=range]"); if (o) o.value = Math.round(n.a * 100); } }
+  else if (t.type === "color") { const h = box.querySelector(".gr-hex"); if (h) { h.value = t.value.toUpperCase(); h.classList.remove("bad"); } } }, true);
+ROOT.addEventListener("change", (e) => { const t = e.target; if (!t || !t.classList || !t.classList.contains("gr-hex")) return; const n = hexNorm(t.value), c = t.closest(".gr-col").querySelector("input[type=color]"); if (!n) { e.stopPropagation(); if (c) t.value = c.value.toUpperCase(); t.classList.remove("bad"); return; } t.value = n.hex.toUpperCase(); }, true);
+ROOT.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("gr-hex")) e.target.blur(); }, true);
 const readColor = (root, k) => { const c = root.querySelector(`[data-k="${k}"]`), o = root.querySelector(`[data-ko="${k}"]`); if (!c) return null; const a = o ? +o.value / 100 : 1; return a >= 0.999 ? c.value : alpha(c.value, +a.toFixed(2)); };
 
 /* ---------- grille de graphiques ---------- */
@@ -12478,10 +12486,21 @@ function flyout(g, btn) { const grp = TOOL_GROUPS.find((x) => x[0] === g); if (!
     f: () => { if (t === "emoji") { DS.last[g] = t; buildLeft(); emojiPick($r(`#grLeft [data-tool="emoji"]`)); return; } if (g !== "cur") DS.last[g] = t; LS.set("gr-lasttool", DS.last); setTool(t); buildLeft(); } }))], { cls: "gr-fly" }); }
 function emojiPick(btn) { const r = btn.getBoundingClientRect(); menu(r.right + 4, r.top, [{ html: `<div class="gr-emo">${EMOJIS.map((e) => `<button data-e="${e}">${e}</button>`).join("")}</div>`, init: (w) => w.onclick = (ev) => { const b = ev.target.closest("[data-e]"); if (!b) return; DS.emoji = b.dataset.e; closeMenu(); DS.last.note = "emoji"; setTool("emoji"); buildLeft(); } }]); }
 function toggleFavTool(t) { FAVTOOLS = FAVTOOLS.includes(t) ? FAVTOOLS.filter((x) => x !== t) : FAVTOOLS.concat(t); LS.set("gr-favtools", FAVTOOLS); renderFavBar(); }
+let favDragAt = 0;
+function moveFav(from, to) { const L = FAVTOOLS.filter((t) => T[t]), rest = FAVTOOLS.filter((t) => !T[t]); if (from < 0 || from >= L.length) return; to = clamp(to, 0, L.length - 1); if (to === from) { renderFavBar(); return; } const [m] = L.splice(from, 1); L.splice(to, 0, m); FAVTOOLS = L.concat(rest); LS.set("gr-favtools", FAVTOOLS); renderFavBar(); }
 function renderFavBar() { const b = $r("#grFavBar"); if (!b) return; b.hidden = !STATE.favbar || STATE.mode === "tv"; if (b.hidden) return;
   b.innerHTML = `<span class="gr-fgrip" title="Déplacer">⋮⋮</span>` + FAVTOOLS.filter((t) => T[t]).map((t) => `<button class="gr-lt${DS.tool === t ? " on" : ""}" data-ft="${t}" title="${E(T[t].n)}">${ICO[t]}</button>`).join("");
   const pos = LS.get("gr-favpos", null); if (pos) { b.style.left = pos[0] + "px"; b.style.top = pos[1] + "px"; }
-  b.onclick = (e) => { const x = e.target.closest("[data-ft]"); if (x) setTool(DS.tool === x.dataset.ft ? "cross" : x.dataset.ft); };
+  b.onclick = (e) => { if (favDragAt && Date.now() - favDragAt < 350) return; const x = e.target.closest("[data-ft]"); if (x) setTool(DS.tool === x.dataset.ft ? "cross" : x.dataset.ft); };
+  /* glisser un outil favori pour changer sa place (ordre gardé dans gr-favtools) ; clic droit = déplacer / retirer */
+  b.onpointerdown = (e) => { const x = e.target.closest("[data-ft]"); if (!x || e.button !== 0) return; const btns = [...b.querySelectorAll("[data-ft]")], from = btns.indexOf(x), sx = e.clientX; let on = false, tgt = from;
+    const mv = (ev) => { if (!on && Math.abs(ev.clientX - sx) < 5) return; if (!on) { on = true; x.classList.add("drag"); b.classList.add("sorting"); }
+      tgt = btns.length; for (let i = 0; i < btns.length; i++) { const r = btns[i].getBoundingClientRect(); if (ev.clientX < r.left + r.width / 2) { tgt = i; break; } }
+      const same = tgt === from || tgt === from + 1; btns.forEach((bb, i) => { bb.classList.toggle("ins-l", !same && i === tgt); bb.classList.toggle("ins-r", !same && tgt === btns.length && i === btns.length - 1); }); };
+    const up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); if (!on) return; favDragAt = Date.now(); moveFav(from, tgt > from ? tgt - 1 : tgt); };
+    addEventListener("pointermove", mv); addEventListener("pointerup", up); };
+  b.oncontextmenu = (e) => { const x = e.target.closest("[data-ft]"); if (!x) return; e.preventDefault(); const btns = [...b.querySelectorAll("[data-ft]")], i = btns.indexOf(x), t = x.dataset.ft;
+    menuAt(x, ["h:" + T[t].n, i > 0 && { t: "Déplacer à gauche", f: () => moveFav(i, i - 1) }, i < btns.length - 1 && { t: "Déplacer à droite", f: () => moveFav(i, i + 1) }, i > 0 && { t: "Mettre au début", f: () => moveFav(i, 0) }, i < btns.length - 1 && { t: "Mettre à la fin", f: () => moveFav(i, btns.length - 1) }, "-", { t: "Retirer des favoris", f: () => toggleFavTool(t) }].filter(Boolean)); };
   b.querySelector(".gr-fgrip").onpointerdown = (e) => { e.preventDefault(); const r = b.getBoundingClientRect(), pr = ROOT.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; const mv = (ev) => { const x = clamp(ev.clientX - pr.left - x0, 0, pr.width - 60), y = clamp(ev.clientY - pr.top - y0, 0, pr.height - 30); b.style.left = x + "px"; b.style.top = y + "px"; }, up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); LS.set("gr-favpos", [parseInt(b.style.left), parseInt(b.style.top)]); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); }; }
 function toggleLockAll() { DS.lockAll = !DS.lockAll; refreshTools(); toast(DS.lockAll ? "Dessins verrouillés" : "Dessins déverrouillés"); }
 function toggleHideAll() { DS.hideAll = !DS.hideAll; CELLS.forEach((c) => c.redraw()); refreshTools(); }
@@ -12496,14 +12515,14 @@ function showFloat(d) {
     ${hasF ? `<label class="gr-fc" title="Remplissage"><input type="color" data-fk="f" value="${hex6(s.f || s.tp)}"><i class="gr-ff" style="background:${E(s.f || s.tp)}"></i></label>` : ""}
     ${hasW ? `<select class="gr-fs" data-fk="w" title="Épaisseur">${[1, 2, 3, 4].map((w) => `<option value="${w}" ${s.w == w ? "selected" : ""}>${w}px</option>`).join("")}</select><select class="gr-fs" data-fk="d" title="Style">${[["0", "———"], ["2", "– – –"], ["1", "· · · ·"]].map(([v, n]) => `<option value="${v}" ${String(s.d || 0) === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : ""}
     ${def.txt || d.tool === "text" ? `<button class="gr-fb" data-fa="txt" title="Texte">T</button>` : ""}
-    <button class="gr-fb" data-fa="set" title="Paramètres">${ICO.gear}</button>${["hline", "hray", "trend", "ray", "ext"].includes(d.tool) ? `<button class="gr-fb" data-fa="alert" title="Alerte sur ce dessin">${ICO.bell}</button>` : ""}
+    <button class="gr-fb gr-ftpl" data-fa="tpl" title="Modèles de dessin">Modèle</button><button class="gr-fb" data-fa="set" title="Paramètres">${ICO.gear}</button>${["hline", "hray", "trend", "ray", "ext"].includes(d.tool) ? `<button class="gr-fb" data-fa="alert" title="Alerte sur ce dessin">${ICO.bell}</button>` : ""}
     <button class="gr-fb" data-fa="lock" title="${d.lock ? "Déverrouiller" : "Verrouiller"}">${d.lock ? ICO.lock : ICO.unlock}</button><button class="gr-fb" data-fa="clone" title="Cloner">${ICO.clone}</button><button class="gr-fb" data-fa="del" title="Supprimer (Suppr)">${ICO.trash}</button><button class="gr-fb" data-fa="more" title="Plus">${ICO.dots}</button>`;
   f.hidden = false; const pos = LS.get("gr-floatpos", null); if (pos) { f.style.left = pos[0] + "px"; f.style.top = pos[1] + "px"; f.style.transform = "none"; }
   f.oninput = (e) => { const k = e.target.dataset.fk; if (!k) return; snapOnce(d); const v = e.target.value; if (k === "c") { d.s.c = v; if (["text", "note"].includes(d.tool) && d.tool === "text") d.s.tc = v; } else if (k === "f") { if ("tp" in d.s) d.s.tp = alpha(v, opOf(d.s.tp)); else d.s.f = alpha(v, opOf(d.s.f) || 0.2); } else if (k === "w") d.s.w = +v; else if (k === "d") d.s.d = +v; drawChanged(); };
   f.onchange = () => { delete d._snap; showFloat(d); };
   f.onclick = (e) => { const a = e.target.closest("[data-fa]"); if (!a) return; const act = a.dataset.fa, c = CELLS.find((x) => undOf(x.st.sym) === d.sym) || activeCell();
     if (act === "set") openDrawSettings(d, c); if (act === "txt") editText(d, c); if (act === "lock") { d.lock = !d.lock; drawChanged(d); } if (act === "del") deleteSel(); if (act === "clone") cloneD(d, c); if (act === "alert") openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p });
-    if (act === "more") { const r = a.getBoundingClientRect(); drawMenu(d, c, r.left, r.bottom + 2); } };
+    if (act === "more") { const r = a.getBoundingClientRect(); drawMenu(d, c, r.left, r.bottom + 2); } if (act === "tpl") menuAt(a, tplItems(d, () => showFloat(d))); };
   f.querySelector(".gr-fgrip").onpointerdown = (e) => { e.preventDefault(); const r = f.getBoundingClientRect(), pr = ROOT.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; f.style.transform = "none";
     const mv = (ev) => { f.style.left = clamp(ev.clientX - pr.left - x0, 0, pr.width - 120) + "px"; f.style.top = clamp(ev.clientY - pr.top - y0, 0, pr.height - 30) + "px"; }, up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); LS.set("gr-floatpos", [parseInt(f.style.left), parseInt(f.style.top)]); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); };
 }
@@ -12511,14 +12530,26 @@ const snapOnce = (d) => { if (!d._snap) { snap(); d._snap = 1; } };
 function hideFloat() { const f = $r("#grFloat"); if (f) f.hidden = true; }
 function deleteSel() { const d = selD(); if (!d) return; if (d.lock || DS.lockAll) { toast("Dessin verrouillé"); return; } snap(); const f = findD(d.id); if (f) f.list.splice(f.i, 1); selectD(null); drawChanged(); }
 function cloneD(d, c) { snap(); const cp = JSON.parse(JSON.stringify(d)); cp.id = uid(); delete cp.lock; const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 5), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }
-function drawMenu(d, c, x, y) { const L = drawsOf(c.st.sym), i = L.indexOf(d); const tpl = LS.get("gr-tpl", {})[d.tool] || {};
+/* modèles de dessins : gr-tpl = { outil: { nom: style } } (style d.s complet), gr-tpldef = style par défaut d'un outil ; menu partagé par le clic droit, la barre flottante et la fenêtre Paramètres du dessin */
+const tplAll = () => LS.get("gr-tpl", {}), tplOf = (tool) => tplAll()[tool] || {};
+function tplSave(tool, name, st) { const all = tplAll(), had = !!(all[tool] && all[tool][name]); all[tool] = all[tool] || {}; all[tool][name] = JSON.parse(JSON.stringify(st)); LS.set("gr-tpl", all); toast((had ? "Modèle « " + name + " » remplacé" : "Modèle « " + name + " » enregistré") + " (" + (T[tool] ? T[tool].n : tool) + ")"); }
+function tplDel(tool, name) { const all = tplAll(); if (!all[tool]) return; delete all[tool][name]; if (!Object.keys(all[tool]).length) delete all[tool]; LS.set("gr-tpl", all); toast("Modèle « " + name + " » supprimé"); }
+function tplApply(d, st) { snap(); d.s = Object.assign({}, d.s, JSON.parse(JSON.stringify(st))); drawChanged(d); }
+function tplItems(d, after) { const tpl = tplOf(d.tool), names = Object.keys(tpl).sort((a, b) => a.localeCompare(b, "fr")), done = () => after && after();
+  return [names.length ? "h:Mes modèles" : null, ...names.map((n) => ({ t: n, f: () => { tplApply(d, tpl[n]); done(); } })), names.length ? "-" : null,
+    { t: "Enregistrer le modèle sous…", f: () => askText("Nom du modèle (" + T[d.tool].n + ")", names[0] || "Mon modèle", (n) => tplSave(d.tool, n, d.s)) },
+    names.length ? { t: "Remplacer un modèle", sub: names.map((n) => ({ t: n, f: () => tplSave(d.tool, n, d.s) })) } : null,
+    names.length ? { t: "Renommer un modèle", sub: names.map((n) => ({ t: n, f: () => askText("Renommer le modèle", n, (m) => { if (m === n) return; const all = tplAll(); all[d.tool][m] = all[d.tool][n]; delete all[d.tool][n]; LS.set("gr-tpl", all); toast("Modèle renommé"); }) })) } : null,
+    names.length ? { t: "Supprimer un modèle", sub: names.map((n) => ({ t: n, f: () => tplDel(d.tool, n) })) } : null,
+    "-", { t: "Utiliser comme style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); all[d.tool] = JSON.parse(JSON.stringify(d.s)); LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » mis à jour"); } },
+    { t: "Réinitialiser le style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); delete all[d.tool]; LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » réinitialisé"); } }].filter(Boolean); }
+function drawMenu(d, c, x, y) { const L = drawsOf(c.st.sym), i = L.indexOf(d);
   menu(x, y, [{ t: "Paramètres…", f: () => openDrawSettings(d, c) }, (T[d.tool].txt || d.tool === "text") && { t: "Modifier le texte…", f: () => editText(d, c) }, { t: "Cloner", k: "Alt + glisser", f: () => cloneD(d, c) }, { t: "Copier", k: "Ctrl+C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
     ["hline", "hray", "trend", "ray", "ext"].includes(d.tool) && { t: "Ajouter une alerte sur ce dessin", f: () => openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p }) },
     "-", { t: d.lock ? "Déverrouiller" : "Verrouiller", f: () => { d.lock = !d.lock; drawChanged(d); } }, { t: "Masquer", f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
     { t: "Ordre", sub: [{ t: "Premier plan", k: "Ctrl+Maj+↑", f: () => zMove(d, c, 1e9) }, { t: "Avancer", f: () => zMove(d, c, 1) }, { t: "Reculer", f: () => zMove(d, c, -1) }, { t: "Arrière-plan", k: "Ctrl+Maj+↓", f: () => zMove(d, c, -1e9) }] },
     { t: "Visibilité", sub: [["sec", "Secondes"], ["min", "Minutes"], ["hr", "Heures"], ["day", "Jours"], ["wk", "Semaines"], ["mo", "Mois"]].map(([k, n]) => ({ t: n, on: !(d.vis && d.vis[k] === false), keep: true, f: () => { d.vis = d.vis || {}; d.vis[k] = d.vis[k] === false; drawChanged(d); drawMenu(d, c, x, y); } })) },
-    { t: "Modèle", sub: [...Object.keys(tpl).map((n) => ({ t: n, f: () => { snap(); d.s = Object.assign({}, d.s, JSON.parse(JSON.stringify(tpl[n]))); drawChanged(d); } })), Object.keys(tpl).length ? "-" : null, { t: "Enregistrer le style sous…", f: () => askText("Nom du modèle", "Mon style", (n) => { const all = LS.get("gr-tpl", {}); all[d.tool] = all[d.tool] || {}; all[d.tool][n] = JSON.parse(JSON.stringify(d.s)); LS.set("gr-tpl", all); toast("Modèle enregistré"); }) },
-      { t: "Utiliser comme style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); all[d.tool] = JSON.parse(JSON.stringify(d.s)); LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » mis à jour"); } }, { t: "Réinitialiser le style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); delete all[d.tool]; LS.set("gr-tpldef", all); } }] },
+    { t: "Modèle", sub: tplItems(d) },
     "-", { t: "Supprimer", k: "Suppr", f: () => { selectD(d, c); deleteSel(); } }].filter(Boolean)); void i; }
 function zMove(d, c, k) { const L = drawsOf(c.st.sym), i = L.indexOf(d); if (i < 0) return; snap(); L.splice(i, 1); const j = clamp(i + k, 0, L.length); L.splice(k > 1e8 ? L.length : k < -1e8 ? 0 : j, 0, d); drawChanged(d); }
 function editText(d, c, isNew) {
@@ -12552,7 +12583,7 @@ function openDrawSettings(d, c) {
   const viT = [["sec", "Secondes"], ["min", "Minutes"], ["hr", "Heures"], ["day", "Jours"], ["wk", "Semaines"], ["mo", "Mois"]].map(([k, n]) => `<label class="gr-chk"><input type="checkbox" data-vi="${k}" ${d.vis && d.vis[k] === false ? "" : "checked"}><span>${n}</span></label>`).join("");
   const dd = dlg(def.n, `<div class="gr-tabs"><button class="gr-tab on" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button></div>
     <div class="gr-tpane" data-p="st">${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div>`,
-  { w: 500, cls: "gr-dset", onCancel: () => { const f = findD(d.id); if (f) { f.list[f.i] = JSON.parse(before); drawChanged(); } }, onOk: () => { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); } });
+  { w: 500, cls: "gr-dset", left: `<button class="gr-btn" data-tplb="1">Modèle ▾</button>`, onCancel: () => { const f = findD(d.id); if (f) { f.list[f.i] = JSON.parse(before); drawChanged(); } }, onOk: () => { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); } });
   tabs(dd.el); const root = dd.el;
   const apply = () => { root.querySelectorAll("[data-k]").forEach((e) => { const k = e.dataset.k; if (k.includes(":")) return; const v = readColor(root, k); if (v != null) s[k] = v; });
     root.querySelectorAll("[data-n]").forEach((e) => { const k = e.dataset.n; s[k] = e.tagName === "SELECT" && isNaN(+e.value) ? e.value : +e.value; });
@@ -12563,6 +12594,7 @@ function openDrawSettings(d, c) {
     d.vis = {}; root.querySelectorAll("[data-vi]").forEach((e) => { if (!e.checked) d.vis[e.dataset.vi] = false; });
     CELLS.forEach((x) => x.redraw()); };
   root.addEventListener("input", apply); root.addEventListener("change", apply);
+  dd.el.querySelector("[data-tplb]").onclick = (e) => menuAt(e.currentTarget, tplItems(d, () => { dd.close(true); openDrawSettings(d, c); }));
   root.addEventListener("click", (e) => { const em = e.target.closest("[data-emo]"); if (em) { s.e = em.dataset.emo; root.querySelectorAll("[data-emo]").forEach((b) => b.classList.toggle("on", b === em)); apply(); }
     const del = e.target.closest("[data-ldel]"); if (del) { s.lv.splice(+del.dataset.ldel, 1); dd.close(true); openDrawSettings(d, c); }
     if (e.target.id === "grLvAdd") { s.lv.push({ v: 1.272, c: "#9c27b0", on: true }); s.lv.sort((a, b) => a.v - b.v); dd.close(true); openDrawSettings(d, c); } });
