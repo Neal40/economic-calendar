@@ -1665,6 +1665,51 @@ table.tbl:has(#subT){min-width:900px}
 .bp-wza{display:flex;flex-direction:column;gap:4px;width:100%}.bp-wza label{display:flex;align-items:center;gap:8px;padding:5px 8px;border:1px solid #2e2e2e;border-radius:5px}.bp-wza label small{margin-left:auto;color:#8d8e8f;font-size:12px}
 .bp-wzc{width:100%;border-collapse:collapse}.bp-wzc th{color:#8d8e8f;font-weight:500;text-align:left;padding:4px 6px}.bp-wzc td{padding:4px 6px}.bp-wzc input{width:90px}.bp-wzc input:disabled{opacity:.4}
 .tx-top .bp-pgb{width:auto;padding:0 10px;gap:6px;font-size:13px;font-weight:600}.tx-top .bp-pgb svg{flex:none}
+/* v1.68 : livraison B (fiche stratégie, note du trade, Journal, Modèles, tableau de bord) ; classes globales : servent aussi dans les fenêtres (hors de .bp) */
+.bp-tag{margin:0 4px 2px 0!important}.bp-sel,.bp-tbl tr.sel td{background:rgba(255,255,255,.04)}
+.bp-selbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;padding:8px 12px;background:var(--tx-acc-sub);border:1px solid var(--tx-acc);border-radius:8px;color:#fff;font-size:13px}
+.bp-2col{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 16px}
+.bp-streak{display:grid;grid-template-columns:150px 230px 1fr;gap:20px;align-items:center}
+.bp-sk b{display:block;font-size:40px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}.bp-sk small{display:block;margin-top:4px;color:var(--tx-txt3);font-size:12.5px}.bp-sk em{display:block;margin-top:6px;font-style:normal;color:var(--tx-mut);font-size:12px}
+.bp-goal small,.bp-goal em{display:block;color:var(--tx-mut);font-size:12px;font-style:normal}.bp-goal small{color:var(--tx-txt3)}
+.bp-pbar{height:8px;margin:8px 0 6px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}.bp-pbar i{display:block;height:100%;background:var(--tx-acc);border-radius:4px}.bp-pbar i.ok{background:var(--tx-profit)}
+.bp-skv{min-width:0}.bp-skd b{font-size:22px;color:#fff}.bp-skd small{margin-left:8px;color:var(--tx-mut)}.bp-skr{display:flex;flex-direction:column;gap:3px;margin-top:8px;color:var(--tx-txt3);font-size:12.5px}
+.bp-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;height:120px}.bp-week>div{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}.bp-week>div.fut{opacity:.45}
+.bp-week span{position:relative;flex:1;width:100%;max-width:34px;background:rgba(255,255,255,.04);border-radius:4px;display:flex;align-items:flex-end;overflow:hidden}
+.bp-week span i{display:block;width:100%;background:rgba(255,255,255,.22);border-radius:4px 4px 0 0}.bp-week span i.ok{background:var(--tx-acc)}.bp-week span u{position:absolute;left:0;right:0;border-top:1px dashed var(--tx-profit)}
+.bp-week small{color:var(--tx-txt3);font-size:11.5px}.bp-week>div.on small{color:#fff;font-weight:600}.bp-week em{font-style:normal;color:var(--tx-mut);font-size:10.5px;white-space:nowrap}
+.bp-heat{overflow-x:auto}.bp-hm,.bp-hg{display:flex;gap:3px}.bp-hm i{width:11px;flex:none;font-style:normal;font-size:10px;color:var(--tx-mut);white-space:nowrap;overflow:visible}
+.bp-hg>div{display:flex;flex-direction:column;gap:3px}.bp-hg b,.bp-hl b{width:11px;height:11px;border-radius:2px;background:rgba(255,255,255,.06);display:inline-block}
+.bp-heat b.l1{background:rgba(255,255,255,.18)}.bp-heat b.l2{background:var(--tx-acc);opacity:.45}.bp-heat b.l3{background:var(--tx-acc);opacity:.7}.bp-heat b.l4{background:var(--tx-acc)}
+.bp-hl{display:flex;align-items:center;gap:4px;margin-top:8px;color:var(--tx-mut);font-size:11.5px}
+.bp-wr{display:block;width:100%;height:auto;max-height:260px}.bp-wr text{fill:var(--tx-mut);font-size:12px}
+.bp-assets{display:flex;flex-direction:column;gap:8px}.bp-assets>div{display:grid;grid-template-columns:80px 1fr 78px 72px 92px;gap:10px;align-items:center;font-size:13px}.bp-assets b{color:#fff}.bp-assets em{font-style:normal;color:var(--tx-txt3);text-align:right;font-variant-numeric:tabular-nums}
+.bp-abar{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}.bp-abar i{display:block;height:100%;background:var(--tx-acc)}
+.bp-invite{border:1px dashed var(--tx-hov);border-radius:8px;padding:18px;text-align:center}.bp-invite b{color:#fff}
+.bp-rule .bp-in{height:32px}.bp-rule input.bp-in{flex:1;min-width:200px}.bp-rn{width:22px;color:var(--tx-mut);font-size:12px;text-align:right;flex:none}
+.bp-docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}.bp-doc{display:flex;flex-direction:column;gap:8px;padding:14px;background:#15171c;border:1px solid var(--tx-hov);border-radius:10px}
+.bp-doch b{display:block;color:#fff;font-size:15px}.bp-doch small{color:var(--tx-mut);font-size:12px}.bp-doct{white-space:pre-wrap;color:var(--tx-txt2);font-size:13px;line-height:1.5;max-height:220px;overflow:auto}
+.bp-imgs{display:flex;flex-wrap:wrap;gap:8px}.bp-imgs img{width:96px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--tx-hov);cursor:zoom-in;background:#0c0e12}.bp-imgs img.bp-imgko{cursor:default;opacity:.5}
+.bp-imgw{position:relative}.bp-imgw button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;padding:0;border-radius:50%;border:1px solid #4a4d54;background:#1f1f1f;color:#f2f2f2;font-size:12px;line-height:1;cursor:pointer}
+.bp-imgadd{display:inline-flex;align-items:center;justify-content:center;width:96px;height:64px;border:1px dashed #4a4d54;border-radius:6px;color:#bfc3cb;font-size:13px;cursor:pointer}.bp-imgadd:hover{border-color:var(--tx-acc);color:#fff}
+.bp-lb{cursor:zoom-out}.bp-lb img{max-width:94vw;max-height:92vh;border-radius:6px;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.bp-tg{padding:12px 14px}.bp-tg+.bp-tg{margin-top:10px}.bp-tgh,.bp-tgr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bp-tgh b{color:#fff}.bp-tgh small,.bp-tgc{color:var(--tx-mut);font-size:12px}
+.bp-tgl{display:flex;flex-direction:column;gap:2px;margin-top:8px}.bp-tgr{padding:4px 0;border-top:1px solid #1e2026}.bp-tgr .bp-in{height:28px;font-size:12.5px}
+.bp-tg input[type=color]{width:26px;height:26px;padding:0;border:1px solid var(--tx-line);border-radius:5px;background:none;cursor:pointer}
+.bp-tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}.bp-tpl{display:flex;flex-direction:column;gap:8px;padding:14px;background:#15171c;border:1px solid var(--tx-hov);border-radius:10px}
+.bp-tplh{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.bp-tplh b{color:#fff;margin:0 4px}
+.bp-star{background:none;border:none;color:var(--tx-mut);font-size:17px;padding:0 2px;cursor:pointer}.bp-star.on{color:#ffc107}
+.bp-pre{margin:0;max-height:150px;overflow:auto;padding:8px 10px;background:#0c0e12;border:1px solid #1e2026;border-radius:6px;color:var(--tx-txt3);font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.tx-mbox.bp-ntw{width:min(820px,96vw)}.bp-ntop{padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid #2e2e2e;border-radius:6px;font-size:13px;line-height:1.6}.bp-ntop small{color:#8d8e8f}
+.bp-ntop .up,.bp-tpl .up{color:var(--tx-profit)}.bp-ntop .dn{color:var(--tx-loss)}
+.bp-ntags{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.bp-ntag{display:inline-flex;align-items:center}.bp-ntag button{background:none;border:none;color:#8d8e8f;cursor:pointer;padding:0 4px 0 0;font-size:14px}.bp-ntag button:hover{color:#f23645}
+.bp-nrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.bp-nrow input,.bp-nrow select{height:32px;background:#0c0e12;border:1px solid #4a4d54;color:#fff;border-radius:4px;padding:0 8px;font:inherit;color-scheme:dark}.bp-nrow input{flex:1;min-width:180px}
+.bp-nrow button{height:32px;padding:0 12px;border-radius:6px;font:inherit;cursor:pointer;background:none;border:1px solid #c9c9c9;color:#f2f2f2}.bp-nrow button:hover{background:#2e2e2e}
+.bp-ntg{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:4px 0}.bp-ntg small{min-width:110px;font-size:12px}
+.bp-ntq{height:24px;padding:0 9px;border-radius:12px;border:1px solid var(--c);background:none;color:#dbdbdb;font-size:12px;cursor:pointer}.bp-ntq.on{background:var(--c);color:#000}
+.bp-nck{display:flex;flex-direction:column;gap:5px;margin:8px 0;padding:8px 10px;border:1px solid #2e2e2e;border-radius:6px}.bp-nck small{color:#8d8e8f;font-size:12px}.bp-nck label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.bp-x0{background:none;border:none;color:#8d8e8f;cursor:pointer;font-size:14px;padding:0 4px}.bp-x0:hover{color:#f23645}.tx-mbox button.bp-mx{color:#ef5350;border-color:#ef5350}
+@media (max-width:1100px){.bp-streak{grid-template-columns:1fr 1fr}.bp-skv{grid-column:1/-1}}
 @media (max-width:900px){.bp{flex-direction:column}.bp-nav{width:auto;flex-direction:row;align-items:center;gap:4px;padding:8px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--tx-hov)}.bp-brand{padding:0 8px 0 4px}.bp-brand span{display:none}.bp-ni{width:auto}.bp-nchart{margin:0 0 0 auto;flex-direction:row;align-items:center}.bp-nchart small{display:none}.bp-main{padding:16px}.bp-prefs{flex-direction:column}.bp-prefs .snav{width:auto;display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid #2e2e2e}}
 /*TX-END*/
 .navord{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 12px}.navord-g>b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8b8e98;margin:0 0 6px}
@@ -7601,7 +7646,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   const presets = () => LS.get("bt-presets", []);
   function presetUI() { const s = $("oPreset"); if (!s) return; const v = s.value; s.innerHTML = `<option value="">Presets…</option>` + presets().map((p, i) => `<option value="${i}">${esc(p.name)}</option>`).join(""); s.value = v; }
-  function tagList() { const d = $("oTagList"); if (!d) return; const all = new Set(); (A.trades || []).forEach((t) => (t.tags || []).forEach((x) => all.add(x))); journal().forEach((r) => r.trades.forEach((t) => (t.tags || []).forEach((x) => all.add(x)))); d.innerHTML = [...all].map((x) => `<option value="${esc(x)}">`).join(""); }
+  function tagList() { const d = $("oTagList"); if (!d) return; const all = new Set(); (A.trades || []).forEach((t) => (t.tags || []).forEach((x) => all.add(x))); journal().forEach((r) => r.trades.forEach((t) => (t.tags || []).forEach((x) => all.add(x)))); /* v1.68 : + tags des groupes (Paramètres › Journal) */ tagStore().groups.forEach((g) => (g.tags || []).forEach((t) => all.add(t.name))); d.innerHTML = [...all].map((x) => `<option value="${esc(x)}">`).join(""); }
   /* btPro:start — suivi de la position (extrait par tools/check.js avec btAcc) */
   // suivi de la position pendant le replay : MAE / MFE (en points), risque initial (distance du stop), breakeven auto
   function proTrack(b) {
@@ -9605,7 +9650,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       (sources || []).forEach((s) => (s.trades || []).forEach((t, i) => {
         if (!t || t.tOut == null || t.tIn == null) return; const k = sig(t); if (seen.has(k)) return; seen.add(k);
         const pv = (ctr[t.ctr] || {}).pv || 1, pnl = +t.pnl || 0, r0 = +t.r0 || null, qty = Math.abs(+t.qty || 0) || 1, start = +s.start || 0;
-        out.push({ key: s.type + ":" + s.id + ":" + (t.id != null ? t.id : i), tk: hash(k), src: s.type, sid: s.id, sname: s.name, strat: s.strat || "", start,
+        out.push({ key: s.type + ":" + s.id + ":" + (t.id != null ? t.id : i), tk: hash(k), src: s.type, sid: s.id, sname: s.name, strat: s.strat || "", start, kind: s.kind || null,
           ctr: t.ctr, side: t.side, qty, entry: +t.entry, exit: +t.exit, tIn: t.tIn, tOut: t.tOut, dur: t.tOut - t.tIn, pnl, fee: t.fee != null ? +t.fee : null,
           r0, R: r0 ? pnl / (qty * r0 * pv) : null, pct: start ? pnl / start : null, tags: Array.isArray(t.tags) ? t.tags : [], note: t.note || "", why: t.why || "", raw: t });
       }));
@@ -9655,16 +9700,63 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     // 7. progression (TDB-01) : log = bt-time { d: { jour: { contexte: [secondes réelles, secondes de marché] } }, tr: { empreinte: jour } } ;
     //    période "week" (depuis le lundi) | "month" (depuis le 1er) | "all", jours réels de New York ; un trade d'avant le suivi (sans jour noté) ne compte que dans « Tout »
     function since(period, today) { if (period === "month") return today.slice(0, 8) + "01"; if (period !== "week") return null; const d = new Date(today + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); return d.toISOString().slice(0, 10); }
-    function progress(log, T, period, today) {
+    // v1.68 : o = { kind: "backtest" | "challenge" | "" (tout), ctxKind(contexte) -> type d'activité du temps noté } ; jour d'entraînement = au moins MINDAY s sur le chart
+    const MINDAY = 300;
+    const ctxOk = (o, c) => !o || !o.kind || (o.ctxKind && o.ctxKind(c) === o.kind);
+    function progress(log, T, period, today, o) {
       const from = since(period, today), D = (log && log.d) || {}, tr = (log && log.tr) || {}; let real = 0, market = 0, days = 0;
-      Object.keys(D).forEach((k) => { if ((from && k < from) || k > today) return; let r = 0; Object.values(D[k] || {}).forEach((v) => { r += +v[0] || 0; market += +v[1] || 0; }); real += r; if (r > 0) days++; });
-      const P = from ? (T || []).filter((t) => { const k = tr[t.tk]; return !!k && k >= from && k <= today; }) : T || [];
-      return { from, real, market, days, ...stats(P) };
+      Object.keys(D).forEach((k) => { if ((from && k < from) || k > today) return; let r = 0; Object.entries(D[k] || {}).forEach(([c, v]) => { if (!ctxOk(o, c)) return; r += +v[0] || 0; market += +v[1] || 0; }); real += r; if (r >= MINDAY) days++; });
+      const K = (T || []).filter((t) => !o || !o.kind || t.kind === o.kind), P = from ? K.filter((t) => { const k = tr[t.tk]; return !!k && k >= from && k <= today; }) : K;
+      return { from, real, market, days, trades: P, ...stats(P) };
     }
     function addTime(log, day, ctx, real, market) { log.d = log.d || {}; const D = (log.d[day] = log.d[day] || {}), v = (D[ctx] = D[ctx] || [0, 0]); v[0] += +real || 0; v[1] += +market || 0; return log; }
     function markTrades(log, trades, day) { log.tr = log.tr || {}; let n = 0; (trades || []).forEach((t) => { if (!t || t.tOut == null) return; const k = tkey(t); if (!(k in log.tr)) { log.tr[k] = day; n++; } }); return n; }
     // temps de marché rejoué entre deux bougies jouées : l'écart, plafonné à 60 s (marché fermé, week-end : rien de plus)
     const marketStep = (prev, t) => (prev != null && t > prev ? Math.min(t - prev, 60) : 0);
+
+    // v1.68 · TDB-02 série de jours : jours (New York) avec au moins MINDAY s sur le chart ; la série en cours vaut encore si le dernier jour actif est hier
+    const dayAdd = (d, n) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+    function daily(log, from, to, o) { const D = (log && log.d) || {}, out = []; for (let d = from, n = 0; d <= to && n < 4000; d = dayAdd(d, 1), n++) { let r = 0, m = 0; Object.entries(D[d] || {}).forEach(([c, v]) => { if (!ctxOk(o, c)) return; r += +v[0] || 0; m += +v[1] || 0; }); out.push({ day: d, real: r, market: m }); } return out; }
+    function streak(log, today, o) {
+      const D = (log && log.d) || {}, act = Object.keys(D).filter((d) => d <= today && Object.entries(D[d] || {}).reduce((a, [c, v]) => a + (ctxOk(o, c) ? +v[0] || 0 : 0), 0) >= MINDAY).sort();
+      let best = 0, run = 0, prev = null; act.forEach((d) => { run = prev && dayAdd(prev, 1) === d ? run + 1 : 1; best = Math.max(best, run); prev = d; });
+      const set = new Set(act); let cur = 0, d = set.has(today) ? today : dayAdd(today, -1); while (set.has(d)) { cur++; d = dayAdd(d, -1); }
+      return { cur, best, days: act, today: set.has(today) };
+    }
+    // objectif d'heures par jour ou par semaine (modifiable sans toucher à la série) : g = { mode: "day" | "week", h }
+    function goal(log, g, today, o) { const mode = g && g.mode === "week" ? "week" : "day", from = mode === "week" ? since("week", today) : today, done = daily(log, from, today, o).reduce((a, x) => a + x.real, 0), target = Math.max(0, +(g && g.h) || 0) * 3600; return { mode, done, target, pct: target ? Math.min(1, done / target) : 0, from }; }
+    // v1.68 · TDB-01 win rate dans le temps : par jour réel (trades suivis seulement), win rate du jour et cumulé
+    function wrSeries(T, tr, from, today) {
+      const by = {}; (T || []).forEach((t) => { const k = tr && tr[t.tk]; if (!k || (from && k < from) || k > today) return; const o = outcome(t), b = (by[k] = by[k] || { day: k, n: 0, w: 0, l: 0 }); b.n++; if (o === "w") b.w++; else if (o === "l") b.l++; });
+      let W = 0, L = 0; return Object.keys(by).sort().map((k) => { const b = by[k]; W += b.w; L += b.l; return { ...b, wr: b.w + b.l ? b.w / (b.w + b.l) : null, cum: W + L ? W / (W + L) : null }; });
+    }
+    // trades par actif (ordre des contrats, puis les autres)
+    function byAsset(T, order) { const m = {}; (T || []).forEach((t) => { (m[t.ctr] = m[t.ctr] || []).push(t); }); return [...(order || []).filter((k) => m[k]), ...Object.keys(m).filter((k) => !(order || []).includes(k)).sort()].map((k) => { const s = stats(m[k]); return { ctr: k, n: s.n, wins: s.wins, losses: s.losses, be: s.be, wr: s.wr, pnl: s.pnl }; }); }
+    // v1.68 · STR-01 trades d'une stratégie : reliés par le nom de leur session, ou ajoutés à la main (empreintes s.manual) ; rien n'est recopié
+    const stratTrades = (T, s) => (T || []).filter((t) => linked(s, t.strat) || (s.manual || []).includes(t.tk)).map((t) => ({ ...t, via: linked(s, t.strat) ? "nom" : "ajout" }));
+    // checklist : règles de la stratégie cochées dans le trade (t.checks = { id de règle: true })
+    const checks = (raw, rules) => { const R = (rules || []).filter((r) => r && r.id), c = (raw && raw.checks) || {}; return { done: R.filter((r) => c[r.id]).length, total: R.length }; };
+    // v1.68 · JRN-08 groupes de tags : nom (sans casse) -> { name, color, group } ; tags libres (posés sur des trades, hors groupe) restent valides
+    function tagMap(groups) { const m = new Map(); (groups || []).forEach((g) => (g.tags || []).forEach((t) => { const k = norm(t.name); if (k && !m.has(k)) m.set(k, { name: t.name, color: t.color || g.color, group: g.id }); })); return m; }
+    function tagsFree(names, groups) { const m = tagMap(groups), seen = new Map(); (names || []).forEach((n) => { const k = norm(n); if (k && !m.has(k) && !seen.has(k)) seen.set(k, String(n).trim()); }); return [...seen.values()].sort((a, b) => a.localeCompare(b)); }
+    const move = (a, i, d) => { const L = [...(a || [])], j = i + d; if (i < 0 || i >= L.length || j < 0 || j >= L.length) return L; [L[i], L[j]] = [L[j], L[i]]; return L; };
+    // v1.68 · JRN-07 modèles de notes : champs {contrat}, {sens}, {date}, {session}, {strategie}, {resultat} remplacés ; ajouté à la fin de la note (ou la remplace si elle est vide)
+    const tplFill = (c, v) => String(c || "").replace(/\{(contrat|sens|date|session|strategie|resultat)\}/g, (m, k) => (v && v[k] != null ? String(v[k]) : m));
+    const noteApply = (note, txt) => { const a = String(note || "").replace(/\s+$/, ""), b = String(txt || ""); return a ? (b ? a + "\n\n" + b : a) : b; };
+    // v1.68 · JRN-07 checklists (modèles de type checklist) posées sur un trade : copie des points du modèle, cases cochées stockées dans le trade (t.lists)
+    function listAdd(lists, tpl) { const L = Array.isArray(lists) ? lists.map((x) => ({ ...x, items: (x.items || []).map((i) => ({ ...i })) })) : []; if (!tpl || L.some((x) => x.id === tpl.id)) return L;
+      L.push({ id: tpl.id, name: tpl.name, items: (tpl.items || []).map((t) => String(t).trim()).filter(Boolean).map((t) => ({ t, ok: false })) }); return L; }
+    const listCount = (lists) => (lists || []).reduce((a, x) => { (x.items || []).forEach((i) => { a.total++; if (i.ok) a.done++; }); return a; }, { done: 0, total: 0 });
+    // modèles : recherche (nom, contenu), favoris seuls, type ; favoris d'abord puis par nom
+    function tplList(all, f) { const q = norm(f && f.q); return (all || []).filter((t) => (!q || norm([t.name, t.content || "", (t.items || []).join(" ")].join(" ")).includes(q)) && !(f && f.fav && !t.fav) && !(f && f.type && t.type !== f.type))
+      .sort((a, b) => (b.fav ? 1 : 0) - (a.fav ? 1 : 0) || String(a.name).localeCompare(String(b.name))); }
+    // v1.68 · JRN-08 recherche dans les groupes de tags : groupe dont le nom correspond (tous ses tags), sinon seulement les tags qui correspondent
+    function tagFind(groups, q) { q = norm(q); if (!q) return groups || []; return (groups || []).map((g) => (norm(g.name).includes(q) ? g : { ...g, tags: (g.tags || []).filter((t) => norm(t.name).includes(q)) })).filter((g) => norm(g.name).includes(q) || g.tags.length); }
+    // v1.68 · STR-01 règles d'une stratégie par catégorie (ordre de la liste gardé dans chaque catégorie) ; catégorie inconnue = Autres
+    const RCAT = [["contexte", "Contexte"], ["entree", "Entrée"], ["sortie", "Sortie"], ["risque", "Gestion du risque"], ["autre", "Autres"]];
+    const rulesBy = (rules) => RCAT.map(([k, n]) => ({ k, n, rules: (rules || []).filter((r) => r && (RCAT.some((c) => c[0] === r.cat) ? r.cat : "autre") === k) })).filter((g) => g.rules.length);
+    // v1.68 · TDB-01 type d'activité : challenge = session prop firm (type « challenge »), backtest = tout le reste (sessions de backtesting, Backtesteur de base, instantanés)
+    const kindOf = (type) => (type === "challenge" ? "challenge" : "backtest");
 
     // 8. presets de session (SES-09) : réglages de la fenêtre « Nouvelle session », sans le nom ni la date de départ
     const PRESETK = ["kind", "bal", "free", "size", "rules", "strict", "strat", "assets", "layout", "time", "endMode", "rel", "fee", "spread", "slipLvl", "slipN", "costs"];
@@ -9673,18 +9765,20 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const presetApply = (d, p) => { const o = { ...d }; PRESETK.forEach((k) => { if (p && p[k] !== undefined) o[k] = clone(p[k]); }); return o; };
 
     // 9. routage : « backtest/… » -> { page, tab, id } ; chemin inverse
-    const TABS = { testing: ["tableau", "sessions", "trades", "analytique"], parametres: ["backtesting", "spreads", "corbeille"] };
+    const TABS = { testing: ["tableau", "sessions", "trades", "analytique"], parametres: ["backtesting", "spreads", "journal", "corbeille", "modeles"], strategie: ["regles", "docs", "trades"] };
     function route(p) {
       const a = String(p || "").split("/").filter(Boolean);
       if (a[0] === "chart") return { page: "chart" };
       if (TABS.testing.includes(a[0])) return { page: "testing", tab: a[0] };
-      if (a[0] === "strategies") return { page: "strategies", id: a[1] || null };
+      if (a[0] === "strategies") return { page: "strategies", id: a[1] || null, sub: a[1] && TABS.strategie.includes(a[2]) ? a[2] : null };
       if (a[0] === "parametres") return { page: "parametres", tab: TABS.parametres.includes(a[1]) ? a[1] : "backtesting" };
       return { page: "testing", tab: "tableau" };
     }
-    const path = (r) => (r.page === "chart" ? "chart" : r.page === "strategies" ? "strategies" + (r.id ? "/" + r.id : "") : r.page === "parametres" ? "parametres/" + (r.tab || "backtesting") : r.tab && r.tab !== "tableau" ? r.tab : "");
+    const path = (r) => (r.page === "chart" ? "chart" : r.page === "strategies" ? "strategies" + (r.id ? "/" + r.id + (r.sub ? "/" + r.sub : "") : "") : r.page === "parametres" ? "parametres/" + (r.tab || "backtesting") : r.tab && r.tab !== "tableau" ? r.tab : "");
 
-    return { norm, hash, sig, tkey, assets, costRows, SLIP, slipOf, slipLvl, costCfg, trash, collect, outcome, filter, sort, stats, strategies, linked, uniqueName, since, progress, addTime, markTrades, marketStep, presetOf, presetApply, route, path, TABS };
+    return { norm, hash, sig, tkey, assets, costRows, SLIP, slipOf, slipLvl, costCfg, trash, collect, outcome, filter, sort, stats, strategies, linked, uniqueName, since, progress, addTime, markTrades, marketStep,
+      MINDAY, dayAdd, daily, streak, goal, wrSeries, byAsset, stratTrades, checks, tagMap, tagsFree, move, tplFill, noteApply, listAdd, listCount, tplList, tagFind, RCAT, rulesBy, kindOf,
+      presetOf, presetApply, route, path, TABS };
   })();
   /* btNav:end */
 
@@ -9722,10 +9816,11 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   // toutes les sources de trades backtest, dans l'ordre de priorité des doublons : sessions isolées, Backtesteur de base, instantanés, récapitulatifs clôturés
   function srcAll() {
     const out = [];
-    sesList().forEach((r) => { const acc = sesState(r.id).acc; out.push({ type: "ses", id: r.id, name: r.name, strat: r.strat || "", start: (r.cfg && r.cfg.size) || (acc && acc.cfg && acc.cfg.size) || 50000, trades: (acc && acc.trades) || [], rec: r }); });
-    const b = baseAcc(); out.push({ type: "base", id: "base", name: "Backtesteur de base", strat: "", start: (b.cfg && b.cfg.size) || 50000, trades: b.trades || [] });
-    sessions().forEach((s) => out.push({ type: "snap", id: s.id, name: s.name, strat: s.strat || "", start: (s.acc && s.acc.cfg && s.acc.cfg.size) || 50000, trades: (s.acc && s.acc.trades) || [] }));
-    journal().forEach((r) => out.push({ type: "rec", id: r.id, name: r.name, strat: r.strat || "", start: r.start || (r.cfg && r.cfg.size) || 50000, trades: r.trades || [] }));
+    const SK = new Map([...sesList(), ...binList()].map((r) => [r.id, r.type])); // v1.68 : kind = backtest | challenge (TDB-01) ; une session clôturée garde le type de sa session (champ ses)
+    sesList().forEach((r) => { const acc = sesState(r.id).acc; out.push({ type: "ses", id: r.id, name: r.name, strat: r.strat || "", start: (r.cfg && r.cfg.size) || (acc && acc.cfg && acc.cfg.size) || 50000, trades: (acc && acc.trades) || [], rec: r, kind: btNav.kindOf(r.type) }); });
+    const b = baseAcc(); out.push({ type: "base", id: "base", name: "Backtesteur de base", strat: "", start: (b.cfg && b.cfg.size) || 50000, trades: b.trades || [], kind: "backtest" });
+    sessions().forEach((s) => out.push({ type: "snap", id: s.id, name: s.name, strat: s.strat || "", start: (s.acc && s.acc.cfg && s.acc.cfg.size) || 50000, trades: (s.acc && s.acc.trades) || [], kind: "backtest" }));
+    journal().forEach((r) => out.push({ type: "rec", id: r.id, name: r.name, strat: r.strat || "", start: r.start || (r.cfg && r.cfg.size) || 50000, trades: r.trades || [], kind: btNav.kindOf(SK.get(r.ses)) }));
     return out;
   }
   const SRCN = { ses: "Sessions isolées", base: "Backtesteur de base", snap: "Instantanés (ancien format)", rec: "Clôturés (Journal backtest)" };
@@ -9781,7 +9876,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
      Dernière page vue et derniers onglets gardés en mémoire (bouton « Pages » du chart, menu de la page) ; rien n'est écrit en naviguant. */
   const pg = { r: { page: "testing", tab: "tableau" }, prev: "", last: { testing: "tableau", parametres: "backtesting" }, pend: null, shown: false, period: "week", prefTab: null,
     ses: { q: "", type: "", strat: "", sort: "recent" }, tr: { src: null, side: "", res: "", ctr: "", strat: "", from: "", to: "", q: "" }, trSort: { k: "date", dir: "desc" }, trPage: 0,
-    ana: { src: "", strat: "", side: "", res: "", sess: "", tag: "" }, st: { q: "", f: "" }, binPage: 0, costs: null };
+    ana: { src: "", strat: "", side: "", res: "", sess: "", tag: "" }, st: { q: "", f: "" }, binPage: 0, costs: null,
+    kind: "", sv: "week", sel: new Set(), stTr: { src: "" }, tg: { q: "" }, tp: { q: "", f: "" } }; // v1.68 : activité, vue de la série, trades cochés, filtres de la fiche stratégie, du journal et des modèles
   function bpGo(p) { const h = "#backtest" + (p ? "/" + p : ""); if (location.hash === h) bpRoute(p); else location.hash = h; }
   // ouvre le chart ; then = action une fois le chart affiché (ouvrir une session, le Backtesteur de base…), sinon comportement de la v1.66
   function toChart(then) { pg.pend = then || null; if (location.hash === "#backtest/chart") bpRoute("chart"); else location.hash = "#backtest/chart"; }
@@ -9844,25 +9940,6 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const sesChips = (r) => { const open = curSes && curSes.id === r.id, pend = !curSes && LS.get("bt-ses-cur", null) === r.id;
     return `<span class="bp-chip ${r.type === "challenge" ? "bp-cw" : "bp-ca"}">${sesKind(r)}</span>${r.strat ? `<span class="bp-chip">${esc(r.strat)}</span>` : ""}${open ? '<span class="bp-chip bp-co">ouverte</span>' : pend ? '<span class="bp-chip">reprise à l\'ouverture du chart</span>' : ""}`; };
   const resumeLbl = (r) => (curSes && curSes.id === r.id ? "Revenir au chart" : "Reprendre");
-  function tabDash(box) {
-    tmFlush(); // temps en attente compris
-    const T = btNav.collect(srcAll(), CTR), pr = btNav.progress(LS.get(TIMEK, null) || {}, T, pg.period, nyDay()), b = baseAcc(), ls = lastSes(), rec = [...sesList()].sort(byRecent).slice(0, 5);
-    const tip = (t) => `<i class="bp-i" title="${esc(t)}">i</i>`, kpi = (lab, t, val, sub) => `<div class="bp-kpi"><small>${lab} ${tip(t)}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
-    const resume = ls ? (() => { const x = sesInfo(ls); return `<div class="bp-card bp-resume"><div class="bp-rm"><b>${esc(ls.name)}</b>${sesChips(ls)}<small>${esc((ls.assets || []).join(" · "))} · ${sesPeriod(ls)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : " · pas encore rejouée"} · solde ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)</small></div><button class="bp-btn" data-bpa="open" data-id="${esc(ls.id)}">${curSes && curSes.id === ls.id ? "Revenir au chart" : "Reprendre la session"}</button></div>`; })() : "";
-    box.innerHTML = `<div class="bp-h2">Démarrer</div><div class="bp-grid">
-        <button class="bp-start" data-bpa="new" data-kind="bt">${BPI.play}<b>Session de backtesting</b><small>Backtest libre et isolé : solde au choix, actifs des CSV, période, coûts par actif.</small><em>Nouvelle session ›</em></button>
-        <button class="bp-start" data-bpa="new" data-kind="prop">${BPI.prop}<b>Session prop firm</b><small>Challenge aux règles prop firm : objectif, DLL, MLL trailing, consistance ; mode strict sans retour arrière.</small><em>Nouvelle session ›</em></button>
-        <button class="bp-start" data-bpa="base">${BPI.chart}<b>Backtesteur de base</b><small>Le replay habituel, avec le compte démo du Backtesteur et sans session.</small><em>${esc(accName(b.cfg))} · ${usd(b.bal)} · ${(b.trades || []).length} trade(s)</em></button></div>
-      ${resume ? `<div class="bp-h2">Reprendre</div>${resume}` : ""}
-      <div class="bp-h2">Progression <span class="bp-seg">${[["week", "Cette semaine"], ["month", "Ce mois-ci"], ["all", "Tout"]].map(([k, t]) => `<button data-bpa="period" data-v="${k}" class="${pg.period === k ? "on" : ""}">${t}</button>`).join("")}</span></div>
-      <div class="bp-kpis">${kpi("Temps passé sur le chart", "Temps réel passé devant le chart du Backtesteur (sessions et Backtesteur de base) : compté quand le chart est affiché, l'app au premier plan, et le replay en lecture ou utilisé depuis moins de 2 minutes. Suivi depuis la version 1.67.", durTxt(pr.real), pr.days ? `${pr.days} jour(s) d'entraînement` : "rien sur cette période")}
-        ${kpi("Temps de marché rejoué", "Durée de marché couverte par les bougies rejouées (lecture, pas à pas, sauts « Aller à ») ; marché fermé et week-ends ne comptent pas. Suivi depuis la version 1.67.", durTxt(pr.market))}
-        ${kpi("Trades", "Trades backtest clôturés : sessions isolées, Backtesteur de base, instantanés et sessions clôturées, sans doublon. Pour la semaine ou le mois : trades pris pendant la période (suivi depuis la version 1.67 ; les plus anciens ne comptent que dans « Tout »).", pr.n, `${pr.buys} achat(s) · ${pr.sells} vente(s)`)}
-        ${kpi("Win rate", "Gagnants / (gagnants + perdants) ; un trade au breakeven (|R| ≤ 0,1, ou moins de 1 $ sans stop initial) ne compte pas.", pctTxt(pr.wr), `${pr.wins} G · ${pr.losses} P · ${pr.be} BE`)}
-        ${kpi("P&L net", "Somme des résultats nets (frais compris) des trades de la période.", usdS(pr.pnl), pr.n ? `R:R moyen ${rrTxt(pr.rr)}` : "")}</div>
-      <div class="bp-h2">Sessions récentes${sesList().length > 5 ? ' <button class="bp-btn bp-g bp-s" data-bpgo="sessions">Toutes les sessions ›</button>' : ""}</div>
-      ${rec.length ? `<div class="bp-list">${rec.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : ""} · ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)${r.savedAt ? " · " + isoNY(r.savedAt) : ""}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button></div></div>`; }).join("")}</div>` : '<div class="bp-empty">Aucune session isolée pour l\'instant : « Session de backtesting » ou « Session prop firm » ci-dessus.</div>'}`;
-  }
 
   function tabSessions(box) {
     const L = sesList(), strats = [...new Set(L.map((r) => r.strat).filter(Boolean))].sort((a, b) => a.localeCompare(b)), f = pg.ses, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
@@ -9897,7 +9974,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const srcPick = (src, keys) => (Array.isArray(keys) ? src.filter((s) => keys.includes(s.type + ":" + s.id)) : src);
   function tabTrades(box) {
     const src = srcAll(), T = btNav.collect(src, CTR), cnt = srcCount(src), f = pg.tr, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
-    const SL = stratList().filter((s) => T.some((t) => btNav.linked(s, t.strat))), ctrs = CTRORD.filter((k) => T.some((t) => t.ctr === k));
+    const SL = stratList().filter((s) => btNav.stratTrades(T, s).length), ctrs = CTRORD.filter((k) => T.some((t) => t.ctr === k)); // v1.68 : stratégies avec des trades (session au nom ou ajoutés)
     const dd = ["ses", "base", "snap", "rec"].map((ty) => { const L = src.filter((s) => s.type === ty && cnt.get(ty + ":" + s.id)); return L.length ? `<div class="bp-ddh">${SRCN[ty]}</div>${L.map((s) => { const k = ty + ":" + s.id; return `<label><input type="checkbox" data-bpsrc="${esc(k)}" ${!f.src || f.src.includes(k) ? "checked" : ""}>${esc(s.name)}<small>${cnt.get(k)}</small></label>`; }).join("")}` : ""; }).join("");
     box.innerHTML = `<div class="bp-bar"><details class="bp-dd"><summary id="bpTrSrcL">${trSrcLbl(cnt)}</summary><div class="bp-ddm"><div class="bp-dda"><button class="bp-btn bp-g bp-s" data-bpa="trsrc" data-v="all">Toutes</button><button class="bp-btn bp-g bp-s" data-bpa="trsrc" data-v="none">Aucune</button></div>${dd || '<div class="bp-empty">Aucune session avec des trades.</div>'}</div></details>
       <select data-bpf="tr.side">${o("", "Long + short", f.side)}${o("Long", "Long", f.side)}${o("Short", "Short", f.side)}</select>
@@ -9909,24 +9986,26 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     trRes();
   }
   const trSrcLbl = (cnt) => { const n = cnt.size, k = pg.tr.src ? pg.tr.src.filter((x) => cnt.has(x)).length : n; return `Sessions : ${k === n ? "toutes" : k + " / " + n} ▾`; };
-  const trRow = (t) => `<tr><td>${dmy(t.tIn)} ${hm(t.tIn)}</td><td>${dstr(t.tOut)} ${hm(t.tOut)}</td><td class="bp-w">${esc(t.sname)}<small>${SRCL[t.src] || ""}</small></td><td>${t.strat ? esc(t.strat) : "—"}</td><td>${ctrName(t.ctr)}</td><td class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</td><td class="bp-r">${t.qty}</td><td class="bp-r">${t.entry.toFixed(2)} → ${t.exit.toFixed(2)}</td><td class="bp-r">${durTxt(t.dur)}</td><td class="bp-r">${usdS(t.pnl)}</td><td class="bp-r ${sgn(t.pct)}">${pctS(t.pct)}</td><td class="bp-r ${sgn(t.R)}">${rTxt(t.R)}</td><td>${t.tags.map((x) => `<span class="bp-chip" style="margin:0 4px 0 0">${esc(x)}</span>`).join("")}</td><td>${t.note ? `<span title="${esc(t.note)}">📝</span>` : ""}</td></tr>`;
+  const trRow = (t, M, SL) => { const st = stratOfTrade(t, SL), c = btNav.checks(t.raw, rulesOf(st)), l = btNav.listCount(t.raw.lists), tot = c.total + l.total; return `<tr class="${pg.sel.has(t.key) ? "sel" : ""}"><td><input type="checkbox" data-bptr="${esc(t.key)}" ${pg.sel.has(t.key) ? "checked" : ""} title="Choisir pour « Appliquer un modèle »"></td><td>${dmy(t.tIn)} ${hm(t.tIn)}</td><td>${dstr(t.tOut)} ${hm(t.tOut)}</td><td class="bp-w">${esc(t.sname)}<small>${SRCL[t.src] || ""}</small></td><td class="bp-w">${t.strat ? esc(t.strat) : st ? `${esc(st.name)}<small>trade ajouté</small>` : "—"}</td><td>${ctrName(t.ctr)}</td><td class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</td><td class="bp-r">${t.qty}</td><td class="bp-r">${t.entry.toFixed(2)} → ${t.exit.toFixed(2)}</td><td class="bp-r">${durTxt(t.dur)}</td><td class="bp-r">${usdS(t.pnl)}</td><td class="bp-r ${sgn(t.pct)}">${pctS(t.pct)}</td><td class="bp-r ${sgn(t.R)}">${rTxt(t.R)}</td><td class="bp-w">${t.tags.map((x) => tagChip(x, M)).join("")}</td><td class="bp-r">${tot ? `<span class="bp-chip ${c.done + l.done === tot ? "bp-co" : ""}" style="margin:0 4px 0 0" title="Règles et checklists cochées">${c.done + l.done} / ${tot}</span>` : ""}<button class="bp-btn bp-g bp-s" data-bpa="tnote" data-tkey="${esc(t.key)}" title="${t.note ? esc(t.note.slice(0, 300)) : "Note, tags et checklist du trade"}">✎${t.note ? " 📝" : ""}</button></td></tr>`; };
   function trRes() {
     const box = $("bpRes"); if (!box) return;
     const f = pg.tr, src = srcAll(), T = btNav.collect(srcPick(src, f.src), CTR), all = f.src ? btNav.collect(src, CTR).length : T.length, st = f.strat ? stratList().find((s) => s.id === f.strat) : null;
-    const F = btNav.filter(T, { side: f.side, res: f.res, ctr: f.ctr, strat: st ? st.names : null, from: f.from, to: f.to, q: f.q, dayOf: sessionKey });
+    let F = btNav.filter(T, { side: f.side, res: f.res, ctr: f.ctr, from: f.from, to: f.to, q: f.q, dayOf: sessionKey });
+    if (st) { const K = new Set(btNav.stratTrades(F, st).map((t) => t.key)); F = F.filter((t) => K.has(t.key)); } // v1.68 : trades de la stratégie = sessions à son nom + trades ajoutés
     const L = btNav.sort(F, pg.trSort.k, pg.trSort.dir), per = 100, pages = Math.max(1, Math.ceil(L.length / per)); pg.trPage = Math.max(0, Math.min(pg.trPage, pages - 1));
-    const rows = L.slice(pg.trPage * per, pg.trPage * per + per), sm = btNav.stats(F);
+    const rows = L.slice(pg.trPage * per, pg.trPage * per + per), sm = btNav.stats(F), M = tagM(), SL = stratList(), allOn = rows.length && rows.every((t) => pg.sel.has(t.key));
     const th = (k, t, num) => `<th data-sort="${k}" class="${pg.trSort.k === k ? "on" : ""}${num ? " bp-r" : ""}" title="Trier">${t}${pg.trSort.k === k ? (pg.trSort.dir === "asc" ? " ▲" : " ▼") : ""}</th>`;
-    box.innerHTML = `<div class="bp-note">${F.length} trade(s)${F.length !== all ? ` sur ${all}` : ""} · ${usdS(sm.pnl)} · win rate ${pctTxt(sm.wr)} (${sm.wins} G · ${sm.losses} P · ${sm.be} BE) · R moyen ${rTxt(sm.avgR)} · lecture seule ; un trade recopié dans un instantané ou une session clôturée n'apparaît qu'une fois. % = part du solde de départ de la session ; R = résultat net / risque initial (trades avec stop).</div>
-      <div class="bp-twrap"><table class="bp-tbl"><thead><tr>${th("date", "Entrée (NY)")}${th("out", "Sortie")}${th("src", "Session")}${th("strat", "Stratégie")}${th("ctr", "Contrat")}${th("side", "Sens")}${th("qty", "Qté", 1)}<th class="bp-r">Prix</th>${th("dur", "Durée", 1)}${th("pnl", "Résultat", 1)}${th("pct", "%", 1)}${th("R", "R", 1)}<th>Tags</th><th>Note</th></tr></thead><tbody>
-      ${rows.map(trRow).join("") || `<tr><td colspan="14" class="bp-empty">${all ? "Aucun trade pour ces filtres." : "Aucun trade backtest pour l'instant : ils apparaissent ici dès qu'une position est clôturée dans le chart."}</td></tr>`}</tbody></table></div>
+    box.innerHTML = `<div class="bp-note">${F.length} trade(s)${F.length !== all ? ` sur ${all}` : ""} · ${usdS(sm.pnl)} · win rate ${pctTxt(sm.wr)} (${sm.wins} G · ${sm.losses} P · ${sm.be} BE) · R moyen ${rTxt(sm.avgR)} · un trade recopié dans un instantané ou une session clôturée n'apparaît qu'une fois ; ✎ = note, tags et checklist du trade. % = part du solde de départ de la session ; R = résultat net / risque initial (trades avec stop).</div>
+      ${pg.sel.size ? `<div class="bp-selbar"><b>${pg.sel.size}</b> trade(s) coché(s)<button class="bp-btn bp-s" data-bpa="trtpl">Appliquer un modèle…</button><button class="bp-btn bp-g bp-s" data-bpa="trsel0">Tout décocher</button></div>` : ""}
+      <div class="bp-twrap"><table class="bp-tbl"><thead><tr><th><input type="checkbox" data-bptr="*" ${allOn ? "checked" : ""} title="Cocher / décocher les trades de cette page"></th>${th("date", "Entrée (NY)")}${th("out", "Sortie")}${th("src", "Session")}${th("strat", "Stratégie")}${th("ctr", "Contrat")}${th("side", "Sens")}${th("qty", "Qté", 1)}<th class="bp-r">Prix</th>${th("dur", "Durée", 1)}${th("pnl", "Résultat", 1)}${th("pct", "%", 1)}${th("R", "R", 1)}<th>Tags</th><th class="bp-r">Note · checklist</th></tr></thead><tbody>
+      ${rows.map((t) => trRow(t, M, SL)).join("") || `<tr><td colspan="15" class="bp-empty">${all ? "Aucun trade pour ces filtres." : "Aucun trade backtest pour l'instant : ils apparaissent ici dès qu'une position est clôturée dans le chart."}</td></tr>`}</tbody></table></div>
       ${pages > 1 ? `<div class="bp-pager"><button class="bp-btn bp-g bp-s" data-bpa="trpage" data-v="${pg.trPage - 1}" ${pg.trPage ? "" : "disabled"}>‹</button>Page ${pg.trPage + 1} / ${pages}<button class="bp-btn bp-g bp-s" data-bpa="trpage" data-v="${pg.trPage + 1}" ${pg.trPage < pages - 1 ? "" : "disabled"}>›</button></div>` : ""}`;
   }
 
   // Analytique dans la page : même calcul que la fenêtre du chart (anaView), sur les trades choisis par session et par stratégie
   function anaPick() {
     const src = srcAll(), f = pg.ana, T = btNav.collect(srcPick(src, f.src ? [f.src] : null), CTR), st = f.strat ? stratList().find((s) => s.id === f.strat) : null;
-    const F = btNav.filter(T, { strat: st ? st.names : null, side: f.side, dayOf: sessionKey });
+    const F = btNav.filter(st ? btNav.stratTrades(T, st) : T, { side: f.side, dayOf: sessionKey }); // v1.68 : stratégie = sessions à son nom + trades ajoutés
     const N = F.map((t) => ({ ...normT({ ...t.raw, why: t.raw.why || "" }), _start: t.start })).filter((t) => (!f.res || (f.res === "w" ? t.pnl > 0 : f.res === "l" ? t.pnl < 0 : Math.abs(t.pnl) < 1)) && (!f.sess || sessOf(t.tIn) === f.sess) && (!f.tag || t.tags.includes(f.tag)));
     const S1 = f.src ? src.find((s) => s.type + ":" + s.id === f.src) : null, cnt = {}; N.forEach((t) => { if (t._start) cnt[t._start] = (cnt[t._start] || 0) + 1; });
     const start = S1 ? +S1.start || 50000 : +(Object.entries(cnt).sort((a, b) => b[1] - a[1])[0] || [50000])[0] || 50000; // plusieurs sources : solde de départ le plus courant
@@ -9934,7 +10013,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   function tabAna(box) {
     const { src, tags } = anaPick(), T = btNav.collect(src, CTR), cnt = srcCount(src), f = pg.ana, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
-    const SL = stratList().filter((s) => T.some((t) => btNav.linked(s, t.strat)));
+    const SL = stratList().filter((s) => btNav.stratTrades(T, s).length);
     const srcSel = `<select data-bpf="ana.src">${o("", `Toutes les sessions (${T.length} trades)`, f.src)}${["ses", "base", "snap", "rec"].map((ty) => { const L = src.filter((s) => s.type === ty && cnt.get(ty + ":" + s.id)); return L.length ? `<optgroup label="${esc(SRCN[ty])}">${L.map((s) => o(ty + ":" + s.id, `${s.name} (${cnt.get(ty + ":" + s.id)})`, f.src)).join("")}</optgroup>` : ""; }).join("")}</select>`;
     box.innerHTML = `<div class="bp-bar">${srcSel}<select data-bpf="ana.strat">${o("", "Toutes les stratégies", f.strat)}${SL.map((s) => o(s.id, s.name, f.strat)).join("")}</select>
       <select data-bpf="ana.side">${o("", "Long + short", f.side)}${o("Long", "Long", f.side)}${o("Short", "Short", f.side)}</select>
@@ -9951,7 +10030,6 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
 
   /* ---- Stratégies (NAV-06, STR-01 / 02) : cartes + fiche (Vue d'ensemble) ; une stratégie est reliée aux sessions qui portent son nom (texte libre des sessions, non modifié) ---- */
-  function stratData() { const T = btNav.collect(srcAll(), CTR); return stratList().map((s) => { const Ts = T.filter((t) => btNav.linked(s, t.strat)); return { s, T: Ts, st: btNav.stats(Ts) }; }); }
   const spark = (c) => { if (!c || c.length < 2) return '<div class="bp-spark-e">Pas encore de trade backtest</div>';
     const w = 260, h = 46, lo = Math.min(0, ...c), hi = Math.max(0, ...c), sy = (v) => h - 4 - ((v - lo) / (hi - lo || 1)) * (h - 8), sx = (i) => (i / (c.length - 1)) * w;
     return `<svg class="bp-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="M0,${sy(0).toFixed(1)}H${w}" stroke="var(--tx-line)" stroke-dasharray="3 3"/><path d="${c.map((v, i) => `${i ? "L" : "M"}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join("")}" fill="none" stroke="${c[c.length - 1] >= 0 ? "var(--tx-profit)" : "var(--tx-loss)"}" stroke-width="1.8"/></svg>`; };
@@ -9968,20 +10046,6 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const box = $("bpRes"); if (!box) return; const q = btNav.norm(pg.st.q), f = pg.st.f;
     const L = stratData().filter(({ s, st }) => (!q || btNav.norm(s.name + " " + (s.alias || []).join(" ") + " " + (s.desc || "")).includes(q)) && (f !== "trades" || st.n) && (f !== "empty" || !st.n) && (f !== "norules" || !(s.rules || []).length) && (f !== "named" || !s.saved));
     box.innerHTML = L.length ? `<div class="bp-scards">${L.map(stCard).join("")}</div>` : `<div class="bp-empty">${stratList().length ? "Aucune stratégie pour cette recherche." : "Aucune stratégie : « ＋ Nouvelle stratégie », ou donne un nom de stratégie à une session (il apparaît ici, relié à ses trades)."}</div>`;
-  }
-  function pageStrat(el, id) {
-    const it = stratData().find((x) => x.s.id === id), back = '<button class="bp-back" data-bpgo="strategies">‹ Stratégies</button>';
-    if (!it) { el.innerHTML = back + bpHead("Stratégie introuvable") + '<div class="bp-empty">Cette stratégie n\'existe plus (supprimée, ou renommée depuis une autre fenêtre).</div>'; return; }
-    const { s, st } = it, ses = sesList().filter((r) => btNav.linked(s, r.strat)), snaps = sessions().filter((x) => btNav.linked(s, x.strat)), recs = journal().filter((r) => btNav.linked(s, r.strat));
-    const k = (lab, v, sub) => `<div class="bp-kpi"><small>${lab}</small><b>${v}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
-    const lead = `${s.saved ? "par " + esc(s.author || profileName()) + (s.created ? " · créée le " + isoNY(s.created) : "") + (s.updated && s.updated !== s.created ? " · modifiée le " + isoNY(s.updated) : "") : "Nom tapé dans tes sessions : la fiche est créée dès que tu la modifies."}${(s.alias || []).length ? " · aussi reliée aux sessions nommées " + s.alias.map((a) => "« " + esc(a) + " »").join(", ") : ""}`;
-    el.innerHTML = back + bpHead(esc(s.name), lead, `<button class="bp-btn bp-g bp-s" data-bpa="stren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="stdup" data-id="${esc(s.id)}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="stdel" data-id="${esc(s.id)}">Supprimer</button>`)
-      + `<div class="bp-h2">Description</div><textarea class="bp-desc" data-bpf="stdesc" data-id="${esc(s.id)}" placeholder="Idée du modèle, contexte, marchés et horaires visés… (enregistrée quand tu quittes le champ)">${esc(s.desc || "")}</textarea>`
-      + bpTabs([["overview", "Vue d'ensemble", "strategies/" + s.id]], "overview")
-      + `<div class="bp-note">Résultats de backtest uniquement : trades des sessions reliées à cette stratégie par son nom (sessions isolées, instantanés, sessions clôturées) ; aucun trade réel.</div>
-      <div class="bp-kpis">${k("P&amp;L net", usdS(st.pnl), st.n ? `drawdown max ${usd(-st.mdd)}` : "")}${k("Win rate", pctTxt(st.wr), "hors breakeven")}${k("R:R moyen", rrTxt(st.rr), "gain moyen / perte moyenne")}${k("Gagnants / perdants", `${st.wins} / ${st.losses}`)}${k("Breakeven", st.be, "|R| ≤ 0,1, ou moins de 1 $ sans stop")}${k("Trades", st.n, st.nR ? `R moyen ${rTxt(st.avgR)}` : "")}</div>
-      <div class="bp-h2">Courbe d'équité (P&amp;L cumulé)</div><div class="bp-card">${st.n ? svgCurve(st.curve.map((v, i) => [i, v])) : '<div class="bp-empty">Pas encore de trade backtest : crée une session avec cette stratégie (fenêtre « Nouvelle session », champ Stratégie).</div>'}</div>
-      <div class="bp-h2">Sessions reliées (${ses.length + snaps.length + recs.length})</div>${ses.length + snaps.length + recs.length ? `<div class="bp-list">${ses.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)} · ${x.n} trade(s) · ${usdS(x.pnl)}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button></div></div>`; }).join("")}${snaps.map((x) => `<div class="bp-row"><div class="bp-rm"><b>${esc(x.name)}</b><span class="bp-chip">Instantané</span><small>${esc(x.sym)} · ${fmtD(x.day)} · ${((x.acc && x.acc.trades) || []).length} trade(s)</small></div></div>`).join("")}${recs.map((r) => `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b><span class="bp-chip">Clôturée</span><small>${(r.trades || []).length} trade(s) · clôturée le ${isoNY(r.at)}</small></div></div>`).join("")}</div>` : '<div class="bp-empty">Aucune session ne porte ce nom pour l\'instant.</div>'}`;
   }
   function stratSave(store) { if (lsPut(STRK, store)) return true; bpToast("Stockage plein : stratégie non enregistrée.", true); return false; }
   const stNow = () => new Date().toISOString();
@@ -10011,24 +10075,27 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     r.alias = [...new Set([...(r.alias || []), old])].filter((a) => btNav.norm(a) !== btNav.norm(nm)); r.name = nm; r.updated = stNow(); unhide(store, nm);
     if (stratSave(store)) { bpToast(`Stratégie renommée « ${nm} » : les sessions nommées « ${old} » restent reliées.`); bpGo("strategies/" + r.id); }
   }
-  function stDup(id) {
+  async function stDup(id) {
     const L = stratList(), s = L.find((x) => x.id === id); if (!s) return;
-    const store = stratStore(), r = { ...stNew0(btNav.uniqueName(s.name + " (copie)", L.flatMap((x) => [x.name, ...(x.alias || [])]))), desc: s.desc || "", rules: JSON.parse(JSON.stringify(s.rules || [])), docs: JSON.parse(JSON.stringify(s.docs || [])) };
-    store.list.push(r); if (stratSave(store)) { bpToast(`Copie créée : « ${r.name} » (aucune session reliée).`); bpGo("strategies/" + r.id); }
+    const docs = JSON.parse(JSON.stringify(s.docs || [])); for (const d of docs) d.imgs = await imgCopy(d.imgs || []); // v1.68 : images copiées (chaque fiche garde les siennes)
+    const store = stratStore(), r = { ...stNew0(btNav.uniqueName(s.name + " (copie)", L.flatMap((x) => [x.name, ...(x.alias || [])]))), desc: s.desc || "", rules: JSON.parse(JSON.stringify(s.rules || [])), params: JSON.parse(JSON.stringify(s.params || [])), docs };
+    store.list.push(r); if (stratSave(store)) { bpToast(`Copie créée : « ${r.name} » (règles, paramètres et documents copiés ; aucune session ni trade relié).`); bpGo("strategies/" + r.id); } else imgDel(docs.flatMap((d) => d.imgs || []));
   }
   function stDel(id) {
     const s = stratList().find((x) => x.id === id); if (!s) return;
     if (!confirm(`Supprimer la stratégie « ${s.name} » ?${s.n ? `\nLes ${s.n} session(s) qui portent ce nom ne changent pas ; la stratégie disparaît seulement de la liste.` : ""}`)) return;
     const store = stratStore(); store.list = store.list.filter((x) => x.id !== id); store.hide = [...new Set([...(store.hide || []).map(btNav.norm), ...s.names])];
-    if (stratSave(store)) { bpToast(`Stratégie « ${s.name} » supprimée.`); bpGo("strategies"); }
+    if (stratSave(store)) { imgDel((s.docs || []).flatMap((d) => d.imgs || [])); bpToast(`Stratégie « ${s.name} » supprimée.`); bpGo("strategies"); } // v1.68 : images de ses documents effacées
   }
 
   /* ---- Paramètres (NAV-07) : Backtesting (réglages du chart, clé bt-prefs), Spreads & commissions (SES-04 / 05, bt-costs), Sessions supprimées (SES-11, bt-ses-trash) ---- */
   function pageParams(el, tab) {
-    el.innerHTML = bpHead("Paramètres", "Réglages du Backtesteur : chart et replay, coûts des nouvelles sessions, corbeille des sessions.")
-      + bpTabs([["backtesting", "Backtesting", "parametres/backtesting"], ["spreads", "Spreads & commissions", "parametres/spreads"], ["corbeille", "Sessions supprimées", "parametres/corbeille"]], tab) + '<div id="bpBody"></div>';
+    el.innerHTML = bpHead("Paramètres", "Réglages du Backtesteur : chart et replay, coûts des nouvelles sessions, journal des trades (tags, modèles), corbeille des sessions.")
+      + bpTabs([["backtesting", "Backtesting", "parametres/backtesting"], ["spreads", "Spreads & commissions", "parametres/spreads"], ["journal", "Journal", "parametres/journal"], ["corbeille", "Sessions supprimées", "parametres/corbeille"], ["modeles", "Modèles", "parametres/modeles"]], tab) + '<div id="bpBody"></div>';
     const box = $("bpBody");
     if (tab === "spreads") return tabCosts(box);
+    if (tab === "journal") return tabJournal(box); // v1.68 · JRN-08
+    if (tab === "modeles") return tabModeles(box); // v1.68 · JRN-07
     if (tab === "corbeille") return tabBin(box);
     return tabPrefs(box);
   }
@@ -10287,6 +10354,408 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     closeModal(); toChart(() => sesOpen(rec.id));
   }
 
+
+  /* ---------------- v1.68 : Phase 1b, livraison B (REA : NAV-06 / 07, STR-01, JRN-07 / 08, TDB-01 / 02) ----------------
+     Fiche stratégie complète (Règles, Docs avec images en IndexedDB, Trades, « Tester »), note du trade (modèle, checklist, tags groupés),
+     Paramètres › Journal (groupes de tags) et › Modèles (modèles de note et checklists), fin du tableau de bord (activité, win rate dans le temps, trades par actif, série de jours).
+     Nouvelles clés, écrites seulement après une action : bt-tags, bt-tpls, bt-goal ; images des documents : IndexedDB « ict-backtest » (magasin img). */
+  const TAGK = "bt-tags", TPLK = "bt-tpls", GOALK = "bt-goal";
+  const tagHex = (c) => (/^#[0-9a-f]{6}$/i.test(c || "") ? c : "#8d8e8f");
+  const TCOL = ["#2962ff", "#26a69a", "#ef5350", "#ff9800", "#ab47bc", "#00bcd4", "#8bc34a", "#f06292", "#8d8e8f"];
+  const tagStore = () => { const s = LS.get(TAGK, null); return s && Array.isArray(s.groups) ? s : { v: 1, groups: [] }; };
+  const tagSave = (st) => { if (lsPut(TAGK, st)) return true; bpToast("Stockage plein : tags non enregistrés.", true); return false; };
+  const tagM = () => btNav.tagMap(tagStore().groups);
+  function tagChip(n, M) { const g = (M || tagM()).get(btNav.norm(n)), c = g ? tagHex(g.color) : null;
+    return `<span class="bp-chip bp-tag"${c ? ` style="background:${hexA(c, 0.18)};color:${c}"` : ""}${g ? "" : ' title="Tag libre (dans aucun groupe)"'}>${esc(n)}</span>`; }
+  // tags posés sur les trades backtest (toutes les sources)
+  const tagsUsed = () => { const m = new Map(); srcAll().forEach((x) => (x.trades || []).forEach((t) => ((t && t.tags) || []).forEach((g) => { const v = String(g).trim(), k = btNav.norm(v); if (k && !m.has(k)) m.set(k, v); }))); return [...m.values()]; };
+
+  /* modèles intégrés (contenu propre à l'app : ICT, prop firm) : non modifiables, à dupliquer pour les adapter ; note = texte avec champs, checklist = un point par ligne */
+  const TPLB = [
+    { id: "b-review", type: "note", name: "Review de trade ICT", content: "Review — {contrat} {sens} · {date} · {resultat}\nContexte HTF (Daily / H4) :\nLiquidité prise avant l'entrée :\nModèle d'entrée (FVG, order block, breaker, MSS) :\nTiming : séance, macro, Silver Bullet :\nPlacement du stop :\nGestion : partiels, breakeven :\nSortie : cible / manuelle / stop\nPlan respecté : oui / non\nÉmotion dominante :\nÀ refaire ou à éviter :" },
+    { id: "b-plan", type: "note", name: "Plan de séance", content: "Plan de séance — {date}\nBiais du jour :\nLiquidité visée (draw on liquidity) :\nZones clés : FVG, order blocks, NWOG / NDOG, PDH / PDL :\nFenêtre de trading :\nNews à surveiller :\nScénario principal (si… alors…) :\nScénario alternatif :\nRisque maximum de la séance :" },
+    { id: "b-bilan", type: "note", name: "Bilan de session de backtest", content: "Bilan — {session} ({strategie})\nPériode rejouée :\nTrades pris, gagnants, perdants :\nCe qui a fonctionné :\nErreurs répétées :\nRègle à ajouter ou à préciser :\nObjectif de la prochaine session :" },
+    { id: "b-sb", type: "note", name: "Silver Bullet : fiche rapide", content: "Silver Bullet — {date}\nFenêtre (heure de New York) : 03:00-04:00 / 10:00-11:00 / 14:00-15:00\nLiquidité prise :\nFVG utilisé et unité de temps :\nEntrée, stop, cible :\nRésultat : {resultat}" },
+    { id: "b-entree", type: "checklist", name: "Checklist d'entrée ICT", items: ["Biais HTF défini (Daily / H4)", "Liquidité prise avant l'entrée", "Déplacement avec FVG ou MSS", "Entrée dans une fenêtre de temps (séance, macro)", "Stop derrière la structure", "Cible sur la liquidité opposée", "R:R d'au moins 2"] },
+    { id: "b-prop", type: "checklist", name: "Contrôle prop firm avant d'entrer", items: ["La perte possible reste sous la DLL", "Marge suffisante avant la MLL", "Taille conforme au risque prévu", "Consistance : le meilleur jour reste sous la limite", "Pas plus de trades que prévu aujourd'hui", "Pas de news rouge dans les minutes qui viennent"] },
+  ];
+  const tplStore = () => { const s = LS.get(TPLK, null); return s && Array.isArray(s.list) ? { v: 1, favs: [], def: null, ...s } : { v: 1, list: [], favs: [], def: null }; };
+  const tplSave = (st) => { if (lsPut(TPLK, st)) return true; bpToast("Stockage plein : modèle non enregistré.", true); return false; };
+  const tplAll = () => { const st = tplStore(), F = new Set(st.favs || []), mk = (t, b) => ({ ...t, type: t.type === "checklist" ? "checklist" : "note", builtin: b, fav: F.has(t.id), def: st.def === t.id });
+    return [...TPLB.map((t) => mk(t, true)), ...st.list.map((t) => mk(t, false))]; };
+  const tplTxt = (t) => (t.type === "checklist" ? (t.items || []).map((x) => "☐ " + x).join("\n") : t.content || "");
+  // champs d'un trade pour les modèles de note
+  const tradeVars = (t, st) => ({ contrat: CTR[t.ctr] ? CTR[t.ctr].name : t.ctr, sens: t.side, date: `${dmy(t.tIn)} ${hm(t.tIn)}`, session: t.sname, strategie: t.strat || (st ? st.name : ""), resultat: usd(t.pnl) + (t.R != null ? " (" + rTxt(t.R) + ")" : "") });
+  // stratégie d'un trade : reliée par le nom de sa session, ou trade ajouté à la main
+  const stratOfTrade = (t, L) => (L || stratList()).find((x) => btNav.linked(x, t.strat) || (x.manual || []).includes(t.tk)) || null;
+  // règles cochables d'une stratégie (texte non vide)
+  const rulesOf = (st) => (st ? (st.rules || []).filter((r) => r && r.id && String(r.text || "").trim()) : []);
+
+  /* images des documents de stratégie : IndexedDB « ict-backtest », magasin « img » ({ id, blob, type, name, size, created }) ; ouvert seulement quand une image sert */
+  const IDB = (() => {
+    let p = null; const open = () => p || (p = new Promise((ok, ko) => { const r = indexedDB.open("ict-backtest", 1); r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("img")) r.result.createObjectStore("img", { keyPath: "id" }); }; r.onsuccess = () => ok(r.result); r.onerror = () => { p = null; ko(r.error); }; }));
+    const tx = (mode, f) => open().then((db) => new Promise((ok, ko) => { const t = db.transaction("img", mode), q = f(t.objectStore("img")); t.oncomplete = () => ok(q ? q.result : undefined); t.onerror = () => ko(t.error); t.onabort = () => ko(t.error); }));
+    return { put: (rec) => tx("readwrite", (st) => st.put(rec)), get: (id) => tx("readonly", (st) => st.get(id)), del: (id) => tx("readwrite", (st) => st.delete(id)) };
+  })();
+  const imgURL = new Map();
+  async function imgSrc(id) { if (imgURL.has(id)) return imgURL.get(id); try { const r = await IDB.get(id); if (!r || !r.blob) return null; const u = URL.createObjectURL(r.blob); imgURL.set(id, u); return u; } catch (e) { return null; } }
+  function imgFill(root) { (root || document).querySelectorAll("img[data-imgid]:not([src])").forEach(async (im) => { const u = await imgSrc(im.dataset.imgid); if (u) im.src = u; else { im.alt = "Image introuvable sur cet appareil"; im.classList.add("bp-imgko"); } }); }
+  async function imgAdd(files) { const ids = []; for (const f of files || []) { if (!f || !/^image\//.test(f.type || "")) continue; const id = "im" + uid(); await IDB.put({ id, blob: f, type: f.type, name: f.name || "image", size: f.size || 0, created: new Date().toISOString() }); ids.push(id); } return ids; }
+  async function imgDel(ids) { for (const id of ids || []) { try { await IDB.del(id); } catch (e) { /* déjà absente */ } const u = imgURL.get(id); if (u) { URL.revokeObjectURL(u); imgURL.delete(id); } } }
+  async function imgCopy(ids) { const out = []; for (const id of ids || []) { try { const r = await IDB.get(id); if (!r) continue; const nid = "im" + uid(); await IDB.put({ ...r, id: nid, created: new Date().toISOString() }); out.push(nid); } catch (e) { /* ignorée */ } } return out; }
+  async function imgShow(id) { const u = await imgSrc(id); if (!u) return bpToast("Image introuvable sur cet appareil.", true);
+    const o = document.createElement("div"); o.className = "tx-mod bp-lb"; o.style.zIndex = 85; o.innerHTML = `<img src="${u}" alt="">`; o.title = "Fermer (clic ou Échap)"; document.body.append(o);
+    const end = () => { o.remove(); document.removeEventListener("keydown", key, true); }, key = (e) => { if (e.key === "Escape") { e.stopPropagation(); end(); } };
+    o.onclick = end; document.addEventListener("keydown", key, true); }
+
+  /* écriture dans les trades (note, tags, checklists) là où ils sont enregistrés : compte ouvert (en mémoire), session isolée, compte de base, instantané ou session clôturée ;
+     un trade se reconnaît à son id et à son heure de sortie (récapitulatifs sans id : empreinte) ; une écriture par source ; le journal du replay n'est pas touché (même signature du compte) */
+  function tradesEdit(list, fn) {
+    const same = (x, raw) => !!x && x.tOut === raw.tOut && (raw.id != null ? x.id === raw.id : btNav.sig(x) === btNav.sig(raw)), by = new Map(); let n = 0, fail = 0;
+    (list || []).forEach((t) => { const k = t.src + "\u0001" + t.sid; if (!by.has(k)) by.set(k, []); by.get(k).push(t); });
+    by.forEach((L, k) => {
+      const [src, sid] = k.split("\u0001"), apply = (arr) => L.forEach((t) => { const x = (arr || []).find((y) => same(y, t.raw)); if (x) { fn(x, t); n++; } else fail++; });
+      if ((src === "ses" && curSes && curSes.id === sid) || (src === "base" && !curSes)) { apply(A.trades); saveAcc(); dockTick(true); return; }
+      if (src === "ses" || src === "base") { const key = src === "ses" ? sesKey(sid) : "bt-acc", st = LS.get(key, null), acc = src === "ses" ? st && st.acc : st; if (!acc) { fail += L.length; return; } apply(acc.trades); if (!lsPut(key, st)) fail += L.length; return; }
+      const all = src === "snap" ? sessions() : journal(), r = all.find((x) => x.id === sid); if (!r) { fail += L.length; return; }
+      apply(src === "snap" ? r.acc && r.acc.trades : r.trades); if (!saveList(src === "snap" ? "bt-sessions" : "bt-journal", all)) fail += L.length;
+    });
+    return { n, fail };
+  }
+
+  /* fenêtre « Note du trade » (JRN-07 / JRN-08) : détails, tags (groupes colorés ; nouveau tag rangé dans un groupe à la volée), règles de la stratégie et checklists à cocher,
+     note avec modèle ; le modèle par défaut est proposé quand la note est vide (gardé seulement si on enregistre) */
+  function noteOpen(t, done) {
+    const SL = stratList(), st = stratOfTrade(t, SL), rules = rulesOf(st), TP = tplAll(), def = TP.find((x) => x.def && x.type === "note"), G = tagStore().groups, raw = t.raw;
+    const prop = !String(raw.note || "").trim() && def ? btNav.tplFill(def.content, tradeVars(t, st)) : null;
+    const d = { note: prop != null ? prop : raw.note || "", tags: [...(raw.tags || [])], checks: { ...(raw.checks || {}) }, lists: btNav.listAdd(raw.lists, null), add: {} }; // add : tag nouveau -> id du groupe
+    const known = [...new Set([...G.flatMap((g) => (g.tags || []).map((x) => x.name)), ...tagsUsed()])].sort((a, b) => a.localeCompare(b));
+    const sync = () => { const ta = $("bpNtTxt"); if (ta) d.note = ta.value; };
+    const draw = () => {
+      const M = btNav.tagMap(G.map((g) => ({ ...g, tags: [...(g.tags || []), ...Object.entries(d.add).filter(([, gid]) => gid === g.id).map(([name]) => ({ name }))] }))), cr = btNav.checks({ checks: d.checks }, rules), cl = btNav.listCount(d.lists);
+      const body = `<div class="bp-ntop">${esc(ctrName(t.ctr))} · <b class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</b> ${t.qty} · ${dmy(t.tIn)} ${hm(t.tIn)} → ${hm(t.tOut)} (New York) · ${t.entry.toFixed(2)} → ${t.exit.toFixed(2)} · <b class="${sgn(t.pnl)}">${usd(t.pnl)}</b>${t.R != null ? ` · ${rTxt(t.R)}` : ""}<br><small>${esc(t.sname)} · ${SRCL[t.src] || ""}${st ? ` · stratégie « ${esc(st.name)} »` : ""}</small></div>
+        <div class="an-h">Tags</div><div class="bp-ntags">${d.tags.map((x, i) => `<span class="bp-ntag">${tagChip(x, M)}<button data-ntdel="${i}" title="Retirer ce tag">×</button></span>`).join("") || '<span class="bp-note" style="margin:0">Aucun tag.</span>'}</div>
+        <div class="bp-nrow"><input id="bpNtIn" list="bpNtList" placeholder="Tag d'un groupe, ou nouveau tag"><datalist id="bpNtList">${known.map((x) => `<option value="${esc(x)}">`).join("")}</datalist>
+          <select id="bpNtGrp" title="Groupe d'un nouveau tag (création à la volée)"><option value="">Nouveau tag : sans groupe</option>${G.map((g) => `<option value="${esc(g.id)}">Nouveau tag dans « ${esc(g.name)} »</option>`).join("")}</select><button data-ntadd="1">Ajouter</button></div>
+        ${G.filter((g) => (g.tags || []).length).map((g) => `<div class="bp-ntg"><small style="color:${tagHex(g.color)}">${esc(g.name)}</small>${g.tags.map((x) => `<button class="bp-ntq${d.tags.some((y) => btNav.norm(y) === btNav.norm(x.name)) ? " on" : ""}" data-ntq="${esc(x.name)}" style="--c:${tagHex(x.color || g.color)}">${esc(x.name)}</button>`).join("")}</div>`).join("")}
+        <div class="an-h">Checklist <small class="bp-note">${cr.total + cl.total ? `${cr.done + cl.done} / ${cr.total + cl.total} cochée(s)` : ""}</small></div>
+        ${rules.length ? `<div class="bp-nck"><small>Règles de « ${esc(st.name)} »</small>${rules.map((r) => `<label><input type="checkbox" data-nck="${esc(r.id)}" ${d.checks[r.id] ? "checked" : ""}> ${esc(r.text)}</label>`).join("")}</div>`
+          : st ? `<div class="bp-note">La stratégie « ${esc(st.name)} » n'a pas encore de règles : définies dans sa fiche (onglet Règles), elles se cochent ici.</div>` : '<div class="bp-note">Trade sans stratégie : ses règles apparaîtraient ici (nom de stratégie de la session, ou trade ajouté dans l\'onglet Trades d\'une stratégie).</div>'}
+        ${d.lists.map((L, li) => `<div class="bp-nck"><small>${esc(L.name)} <button class="bp-x0" data-ntlrm="${li}" title="Retirer cette checklist du trade">×</button></small>${L.items.map((it, ii) => `<label><input type="checkbox" data-ntl="${li}:${ii}" ${it.ok ? "checked" : ""}> ${esc(it.t)}</label>`).join("")}</div>`).join("")}
+        ${TP.some((x) => x.type === "checklist") ? `<div class="bp-nrow"><select id="bpNtCl"><option value="">Ajouter une checklist…</option>${TP.filter((x) => x.type === "checklist" && !d.lists.some((L) => L.id === x.id)).map((x) => `<option value="${esc(x.id)}">${x.fav ? "★ " : ""}${esc(x.name)}${x.builtin ? " (intégrée)" : ""}</option>`).join("")}</select><button data-ntcl="1">Ajouter</button></div>` : ""}
+        <div class="an-h">Note</div>${prop != null && d.note === prop ? `<div class="bp-note" style="margin-top:0">Modèle par défaut « ${esc(def.name)} » proposé : enregistre pour le garder.</div>` : ""}
+        <div class="bp-nrow"><select id="bpNtTpl"><option value="">Insérer un modèle de note…</option>${TP.filter((x) => x.type === "note").map((x) => `<option value="${esc(x.id)}">${x.fav ? "★ " : ""}${esc(x.name)}${x.builtin ? " (intégré)" : ""}</option>`).join("")}</select><button data-nttpl="1">Insérer</button></div>
+        <textarea id="bpNtTxt" class="bp-desc" style="min-height:170px" placeholder="Ce que tu as vu, pourquoi tu es entré, ce que tu retiens…">${esc(d.note)}</textarea>`;
+      const m = modal("Note du trade", body, '<button data-m="x" class="ghost">Annuler</button><span class="tx-sp"></span><button data-m="ok">Enregistrer</button>');
+      m.querySelector(".tx-mbox").classList.add("wz-wide", "bp-ntw"); m.onchange = null;
+      const addTag = (v) => { v = String(v || "").trim().replace(/\s+/g, " "); if (!v) return; sync(); const k = btNav.norm(v), gsel = ($("bpNtGrp") || {}).value || "";
+        if (!d.tags.some((x) => btNav.norm(x) === k)) d.tags.push(v); if (gsel && !btNav.tagMap(G).has(k)) d.add[v] = gsel; draw(); const i = $("bpNtIn"); if (i) i.focus(); };
+      m.oninput = (e) => { const a = e.target.dataset;
+        if (e.target.id === "bpNtTxt") { d.note = e.target.value; return; }
+        if (a.nck) { if (e.target.checked) d.checks[a.nck] = true; else delete d.checks[a.nck]; sync(); return draw(); }
+        if (a.ntl) { const [li, ii] = a.ntl.split(":").map(Number); if (d.lists[li] && d.lists[li].items[ii]) d.lists[li].items[ii].ok = e.target.checked; sync(); return draw(); } };
+      m.querySelector("#bpNtIn").onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") { e.preventDefault(); addTag(e.target.value); } };
+      m.onclick = (e) => {
+        const b = e.target.closest("[data-ntdel],[data-ntadd],[data-ntq],[data-nttpl],[data-ntcl],[data-ntlrm],[data-m]"); if (!b) return; const a = b.dataset;
+        if (a.ntdel != null) { sync(); const v = d.tags.splice(+a.ntdel, 1)[0]; delete d.add[v]; return draw(); }
+        if (a.ntadd) return addTag(($("bpNtIn") || {}).value);
+        if (a.ntq) { sync(); const k = btNav.norm(a.ntq), i = d.tags.findIndex((x) => btNav.norm(x) === k); if (i >= 0) d.tags.splice(i, 1); else d.tags.push(a.ntq); return draw(); }
+        if (a.nttpl) { const x = TP.find((q) => q.id === ($("bpNtTpl") || {}).value); if (!x) return; sync(); d.note = btNav.noteApply(d.note, btNav.tplFill(x.content, tradeVars(t, st))); return draw(); }
+        if (a.ntcl) { const x = TP.find((q) => q.id === ($("bpNtCl") || {}).value); if (!x) return; sync(); d.lists = btNav.listAdd(d.lists, x); return draw(); }
+        if (a.ntlrm != null) { sync(); d.lists.splice(+a.ntlrm, 1); return draw(); }
+        if (a.m === "x") return closeModal();
+        if (a.m === "ok") { sync();
+          const ng = Object.entries(d.add).filter(([name]) => d.tags.includes(name)); if (ng.length) { const ts = tagStore(); ng.forEach(([name, gid]) => { const g = ts.groups.find((x) => x.id === gid); if (g && !btNav.tagMap([g]).has(btNav.norm(name))) (g.tags = g.tags || []).push({ name }); }); tagSave(ts); }
+          const r = tradesEdit([t], (x) => { x.note = d.note; x.tags = [...d.tags]; if (Object.keys(d.checks).length) x.checks = { ...d.checks }; else delete x.checks; if (d.lists.length) x.lists = btNav.listAdd(d.lists, null); else delete x.lists; });
+          closeModal(); if (r.n) bpToast("Note du trade enregistrée."); else bpToast("Trade introuvable : il a peut-être été annulé par un retour arrière.", true); if (done) done(); }
+      };
+    };
+    draw();
+  }
+  // un modèle (note : ajouté à la fin de chaque note ; checklist : posée sur chaque trade) appliqué à plusieurs trades
+  function tplBulk(list, done) {
+    if (!list.length) return bpToast("Sélectionne d'abord des trades (cases à gauche du tableau).", true);
+    const TP = tplAll(), def = TP.find((x) => x.def) || TP[0], SL = stratList();
+    const m = modal(`Appliquer un modèle à ${list.length} trade(s)`, `<div class="bp-nrow" style="margin-top:0"><select id="bpTbSel">${TP.map((x) => `<option value="${esc(x.id)}" ${def && x.id === def.id ? "selected" : ""}>${x.type === "checklist" ? "Checklist · " : "Note · "}${x.fav ? "★ " : ""}${esc(x.name)}${x.builtin ? " (intégré)" : ""}</option>`).join("")}</select></div><pre class="bp-pre" id="bpTbPrev"></pre><div class="bp-note" id="bpTbN"></div>`,
+      `<button data-m="x" class="ghost">Annuler</button><span class="tx-sp"></span><button data-m="ok">Appliquer à ${list.length} trade(s)</button>`);
+    m.onchange = null;
+    const prev = () => { const x = TP.find((q) => q.id === $("bpTbSel").value); $("bpTbPrev").textContent = x ? tplTxt(x) : ""; $("bpTbN").textContent = !x ? "" : x.type === "checklist" ? "La checklist est posée sur chaque trade (cases à cocher dans sa note) ; un trade qui l'a déjà la garde telle quelle." : "Le modèle est ajouté à la fin de la note de chaque trade, champs entre accolades remplis avec les valeurs du trade ; les notes existantes sont gardées."; };
+    prev(); m.oninput = (e) => { if (e.target.id === "bpTbSel") prev(); };
+    m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; if (a.m === "x") return closeModal();
+      if (a.m === "ok") { const x = TP.find((q) => q.id === $("bpTbSel").value); if (!x) return;
+        const r = tradesEdit(list, (y, t) => { if (x.type === "checklist") y.lists = btNav.listAdd(y.lists, x); else y.note = btNav.noteApply(y.note, btNav.tplFill(x.content, tradeVars(t, stratOfTrade(t, SL)))); });
+        closeModal(); bpToast(`« ${x.name} » appliqué à ${r.n} trade(s)${r.fail ? ` (${r.fail} introuvable(s))` : ""}.`, !!r.fail); if (done) done(); } };
+  }
+
+  /* ---- v1.68 · tableau de bord (TDB-01 / 02) : filtre d'activité, série de jours (vues jour / semaine / année, objectif d'heures), win rate dans le temps, trades par actif ---- */
+  // type d'activité d'un contexte du temps passé (bt-time) : « base » = backtest, id de session = type de la session (corbeille comprise), sinon inconnu
+  function ctxKindFn() { const m = new Map(); [...sesList(), ...binList()].forEach((r) => m.set(r.id, btNav.kindOf(r.type))); return (c) => (c === "base" ? "backtest" : m.get(c) || null); }
+  const goalGet = () => { const g = LS.get(GOALK, null); return g && +g.h > 0 ? { mode: g.mode === "week" ? "week" : "day", h: +g.h } : { mode: "day", h: 1 }; };
+  const hTxt = (h) => String(Math.round(h * 100) / 100).replace(".", ",") + " h";
+  const minTxt = (s) => (s >= 3600 ? durTxt(s) : Math.round(s / 60) + " min");
+  const JR = ["lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."], MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  const dLbl = (d) => `${JR[(new Date(d + "T12:00:00Z").getUTCDay() + 6) % 7]} ${d.slice(8)}/${d.slice(5, 7)}`;
+  function skView(log, o, g, today, names) {
+    if (pg.sv === "day") {
+      const D = (log.d && log.d[today]) || {}, rows = Object.entries(D).filter(([c, v]) => (!o || (o.ctxKind && o.ctxKind(c) === o.kind)) && (+v[0] || +v[1]));
+      return `<div class="bp-skd"><b>${minTxt(rows.reduce((a, [, v]) => a + (+v[0] || 0), 0))}</b><small>sur le chart aujourd'hui (${dLbl(today)})</small>${rows.length ? `<div class="bp-skr">${rows.map(([c, v]) => `<span>${esc(names(c))} · ${minTxt(+v[0] || 0)}${+v[1] ? ` · ${durTxt(+v[1])} de marché` : ""}</span>`).join("")}</div>` : '<div class="bp-note" style="margin:6px 0 0">Rien pour l\'instant aujourd\'hui.</div>'}</div>`;
+    }
+    if (pg.sv === "year") {
+      const from = btNav.dayAdd(btNav.since("week", today), -52 * 7), days = btNav.daily(log, from, today, o), lv = (r) => (r < 1 ? 0 : r < btNav.MINDAY ? 1 : r < 1800 ? 2 : r < 3600 ? 3 : 4);
+      const cols = []; for (let i = 0; i < days.length; i += 7) cols.push(days.slice(i, i + 7));
+      return `<div class="bp-heat"><div class="bp-hm">${cols.map((c) => `<i>${c[0].day.slice(8) <= "07" ? MOIS[+c[0].day.slice(5, 7) - 1] : ""}</i>`).join("")}</div><div class="bp-hg">${cols.map((c) => `<div>${c.map((x) => `<b class="l${lv(x.real)}" title="${dLbl(x.day)}/${x.day.slice(0, 4)} : ${minTxt(x.real)}"></b>`).join("")}</div>`).join("")}</div>
+        <div class="bp-hl">Moins <b class="l0"></b><b class="l1"></b><b class="l2"></b><b class="l3"></b><b class="l4"></b> Plus · 12 derniers mois, une colonne par semaine (lundi en haut)</div></div>`;
+    }
+    const from = btNav.since("week", today), days = btNav.daily(log, from, btNav.dayAdd(from, 6), o), tgt = g.mode === "day" ? g.h * 3600 : 0, mx = Math.max(tgt, ...days.map((x) => x.real), 600);
+    return `<div class="bp-week">${days.map((x) => `<div class="${x.day === today ? "on" : ""}${x.day > today ? " fut" : ""}" title="${dLbl(x.day)} : ${minTxt(x.real)}"><span><i class="${x.real >= btNav.MINDAY ? "ok" : ""}" style="height:${Math.round((x.real / mx) * 100)}%"></i>${tgt ? `<u style="bottom:${Math.round((tgt / mx) * 100)}%"></u>` : ""}</span><small>${JR[(new Date(x.day + "T12:00:00Z").getUTCDay() + 6) % 7]}</small><em>${x.real ? minTxt(x.real) : ""}</em></div>`).join("")}</div>`;
+  }
+  // win rate dans le temps : win rate cumulé (ligne) et du jour (points, taille = nombre de trades)
+  function wrSvg(S) {
+    if (!S.length) return '<div class="bp-empty">Pas encore de trade daté sur cette période : les trades sont datés à leur clôture depuis la version 1.67.</div>';
+    const w = 480, h = 170, l = 42, r = 12, t = 12, b = 26, n = S.length, x = (i) => (n === 1 ? (l + w - r) / 2 : l + (i / (n - 1)) * (w - l - r)), y = (v) => t + (1 - v) * (h - t - b), mx = Math.max(...S.map((s) => s.n));
+    const pts = S.map((s, i) => (s.cum == null ? null : `${x(i).toFixed(1)},${y(s.cum).toFixed(1)}`)).filter(Boolean);
+    return `<svg class="bp-wr" viewBox="0 0 ${w} ${h}">${[0, 0.5, 1].map((v) => `<path d="M${l},${y(v)}H${w - r}" stroke="var(--tx-line)" stroke-dasharray="${v === 0.5 ? "4 3" : "0"}" opacity=".6"/><text x="${l - 6}" y="${y(v) + 4}" text-anchor="end">${v * 100} %</text>`).join("")}
+      ${pts.length > 1 ? `<path d="M${pts.join("L")}" fill="none" stroke="var(--tx-acc)" stroke-width="2"/>` : ""}${S.map((s, i) => (s.wr == null ? "" : `<circle cx="${x(i).toFixed(1)}" cy="${y(s.wr).toFixed(1)}" r="${(2.5 + (s.n / mx) * 3.5).toFixed(1)}" fill="${s.wr >= 0.5 ? "var(--tx-profit)" : "var(--tx-loss)"}" opacity=".75"><title>${dLbl(s.day)} : ${s.n} trade(s), win rate du jour ${pctTxt(s.wr)}, cumulé ${pctTxt(s.cum)}</title></circle>`)).join("")}
+      <text x="${x(0)}" y="${h - 6}" text-anchor="${n === 1 ? "middle" : "start"}">${dLbl(S[0].day)}</text>${n > 1 ? `<text x="${x(n - 1)}" y="${h - 6}" text-anchor="end">${dLbl(S[n - 1].day)}</text>` : ""}</svg>`;
+  }
+  function tabDash(box) {
+    tmFlush(); // temps en attente compris
+    const src = srcAll(), T = btNav.collect(src, CTR), log = LS.get(TIMEK, null) || {}, today = nyDay(), ck = ctxKindFn(), o = pg.kind ? { kind: pg.kind, ctxKind: ck } : null;
+    const pr = btNav.progress(log, T, pg.period, today, o), b = baseAcc(), ls = lastSes(), rec = [...sesList()].sort(byRecent).slice(0, 5), g = goalGet(), sk = btNav.streak(log, today, o), go = btNav.goal(log, g, today, o);
+    const K = pg.kind ? T.filter((t) => t.kind === pg.kind) : T, WS = btNav.wrSeries(K, log.tr || {}, pr.from, today), BA = btNav.byAsset(pr.trades, CTRORD), bam = Math.max(1, ...BA.map((x) => x.n));
+    const SN = new Map([...sesList(), ...binList()].map((r) => [r.id, r.name])), names = (c) => (c === "base" ? "Backtesteur de base" : SN.get(c) || "Session supprimée");
+    const tip = (t) => `<i class="bp-i" title="${esc(t)}">i</i>`, kpi = (lab, t, val, sub) => `<div class="bp-kpi"><small>${lab} ${tip(t)}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
+    const seg = (a, L, cur) => `<span class="bp-seg">${L.map(([k, t]) => `<button data-bpa="${a}" data-v="${k}" class="${cur === k ? "on" : ""}">${t}</button>`).join("")}</span>`;
+    const resume = ls ? (() => { const x = sesInfo(ls); return `<div class="bp-card bp-resume"><div class="bp-rm"><b>${esc(ls.name)}</b>${sesChips(ls)}<small>${esc((ls.assets || []).join(" · "))} · ${sesPeriod(ls)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : " · pas encore rejouée"} · solde ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)</small></div><button class="bp-btn" data-bpa="open" data-id="${esc(ls.id)}">${curSes && curSes.id === ls.id ? "Revenir au chart" : "Reprendre la session"}</button></div>`; })() : "";
+    const act = pg.kind === "challenge" ? " (challenge)" : pg.kind === "backtest" ? " (backtest)" : "";
+    box.innerHTML = `<div class="bp-h2">Démarrer</div><div class="bp-grid">
+        <button class="bp-start" data-bpa="new" data-kind="bt">${BPI.play}<b>Session de backtesting</b><small>Backtest libre et isolé : solde au choix, actifs des CSV, période, coûts par actif.</small><em>Nouvelle session ›</em></button>
+        <button class="bp-start" data-bpa="new" data-kind="prop">${BPI.prop}<b>Session prop firm</b><small>Challenge aux règles prop firm : objectif, DLL, MLL trailing, consistance ; mode strict sans retour arrière.</small><em>Nouvelle session ›</em></button>
+        <button class="bp-start" data-bpa="base">${BPI.chart}<b>Backtesteur de base</b><small>Le replay habituel, avec le compte démo du Backtesteur et sans session.</small><em>${esc(accName(b.cfg))} · ${usd(b.bal)} · ${(b.trades || []).length} trade(s)</em></button></div>
+      ${resume ? `<div class="bp-h2">Reprendre</div>${resume}` : ""}
+      <div class="bp-h2">Progression ${seg("period", [["week", "Cette semaine"], ["month", "Ce mois-ci"], ["all", "Tout"]], pg.period)} ${seg("kind", [["", "Toute l'activité"], ["backtest", "Backtest"], ["challenge", "Challenge"]], pg.kind)}</div>
+      <div class="bp-kpis">${kpi("Temps passé sur le chart", "Temps réel passé devant le chart du Backtesteur (sessions et Backtesteur de base) : compté quand le chart est affiché, l'app au premier plan, et le replay en lecture ou utilisé depuis moins de 2 minutes. Suivi depuis la version 1.67. Activité : Challenge = sessions prop firm ; Backtest = sessions de backtesting et Backtesteur de base.", durTxt(pr.real), pr.days ? `${pr.days} jour(s) d'entraînement` : "rien sur cette période")}
+        ${kpi("Temps de marché rejoué", "Durée de marché couverte par les bougies rejouées (lecture, pas à pas, sauts « Aller à ») ; marché fermé et week-ends ne comptent pas. Suivi depuis la version 1.67.", durTxt(pr.market))}
+        ${kpi("Trades", "Trades backtest clôturés : sessions isolées, Backtesteur de base, instantanés et sessions clôturées, sans doublon. Pour la semaine ou le mois : trades pris pendant la période (suivi depuis la version 1.67 ; les plus anciens ne comptent que dans « Tout »).", pr.n, `${pr.buys} achat(s) · ${pr.sells} vente(s)`)}
+        ${kpi("Win rate", "Gagnants / (gagnants + perdants) ; un trade au breakeven (|R| ≤ 0,1, ou moins de 1 $ sans stop initial) ne compte pas.", pctTxt(pr.wr), `${pr.wins} G · ${pr.losses} P · ${pr.be} BE`)}
+        ${kpi("P&L net", "Somme des résultats nets (frais compris) des trades de la période.", usdS(pr.pnl), pr.n ? `R:R moyen ${rrTxt(pr.rr)}` : "")}</div>
+      <div class="bp-h2">Série de jours d'entraînement ${seg("sview", [["day", "Jour"], ["week", "Semaine"], ["year", "Année"]], pg.sv)}<span class="bp-sp"></span><button class="bp-btn bp-g bp-s" data-bpa="goal" title="Modifier l'objectif : la série ne change pas">Objectif : ${hTxt(g.h)} par ${g.mode === "week" ? "semaine" : "jour"} ✎</button></div>
+      <div class="bp-card bp-streak"><div class="bp-sk"><b>${sk.cur}</b><small>jour(s) d'affilée${act}</small><em>${sk.cur && !sk.today ? "Entraîne-toi aujourd'hui pour garder la série · " : ""}record : ${sk.best} jour(s)</em></div>
+        <div class="bp-goal"><small>Objectif ${g.mode === "week" ? "de la semaine" : "du jour"} : ${hTxt(g.h)}</small><div class="bp-pbar"><i style="width:${Math.round(go.pct * 100)}%" class="${go.pct >= 1 ? "ok" : ""}"></i></div><em>${minTxt(go.done)} sur ${minTxt(go.target)}${go.pct >= 1 ? " · atteint ✓" : ""}</em></div>
+        <div class="bp-skv">${skView(log, o, g, today, names)}</div></div>
+      <div class="bp-note">Un jour compte dans la série quand tu passes au moins 5 minutes sur le chart du Backtesteur (jour de New York) ; la série tient tant que le dernier jour d'entraînement est aujourd'hui ou hier. Changer l'objectif ne touche pas à la série.</div>
+      <div class="bp-2col"><div><div class="bp-h2">Win rate dans le temps${act}</div><div class="bp-card">${wrSvg(WS)}${WS.length ? '<div class="bp-note" style="margin-bottom:0">Ligne : win rate cumulé sur la période ; points : win rate de chaque jour (taille = nombre de trades). Trades datés à leur clôture, en heure de New York.</div>' : ""}</div></div>
+        <div><div class="bp-h2">Trades par actif${act}</div><div class="bp-card">${BA.length ? `<div class="bp-assets">${BA.map((x) => `<div><b>${ctrName(x.ctr)}</b><span class="bp-abar"><i style="width:${Math.round((x.n / bam) * 100)}%"></i></span><em>${x.n} trade(s)</em><em>WR ${pctTxt(x.wr)}</em><em>${usdS(x.pnl)}</em></div>`).join("")}</div>` : '<div class="bp-empty">Aucun trade sur cette période.</div>'}</div></div></div>
+      <div class="bp-h2">Sessions récentes${sesList().length > 5 ? ' <button class="bp-btn bp-g bp-s" data-bpgo="sessions">Toutes les sessions ›</button>' : ""}</div>
+      ${rec.length ? `<div class="bp-list">${rec.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : ""} · ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)${r.savedAt ? " · " + isoNY(r.savedAt) : ""}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button></div></div>`; }).join("")}</div>` : '<div class="bp-empty">Aucune session isolée pour l\'instant : « Session de backtesting » ou « Session prop firm » ci-dessus.</div>'}`;
+  }
+  // objectif d'heures (par jour ou par semaine) : bt-goal, écrit seulement ici
+  function goalOpen() {
+    const g = goalGet(), m = modal("Objectif d'entraînement", `<div class="bp-nrow" style="margin-top:0"><input id="bpGoH" class="bp-in" type="number" min="0.25" step="0.25" value="${g.h}" style="width:110px"><span>heure(s) par</span><select id="bpGoM"><option value="day" ${g.mode === "day" ? "selected" : ""}>jour</option><option value="week" ${g.mode === "week" ? "selected" : ""}>semaine</option></select></div><div class="bp-note">Temps passé sur le chart du Backtesteur. La série de jours ne dépend pas de l'objectif : le modifier ne la casse pas.</div>`,
+      '<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Enregistrer</button>');
+    m.onchange = null; m.oninput = null;
+    m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; if (a.m === "x") return closeModal();
+      if (a.m === "ok") { const h = Math.round((+$("bpGoH").value || 0) * 100) / 100; if (!(h > 0)) return bpToast("Objectif : un nombre d'heures positif.", true); if (!lsPut(GOALK, { v: 1, mode: $("bpGoM").value === "week" ? "week" : "day", h })) return bpToast("Stockage plein : objectif non enregistré.", true); closeModal(); bpToast("Objectif enregistré."); tabDash($("bpBody")); } };
+  }
+
+  /* ---- v1.68 · fiche stratégie (NAV-06, STR-01) : Vue d'ensemble, Règles (et paramètres), Docs (notes et images), Trades (filtre par session, ajout depuis les sessions), « Tester » ---- */
+  // modification d'une fiche (celle d'un nom tapé dans les sessions est créée) ; puis la même page, sous le nouvel id si la fiche vient d'être créée
+  function stEdit(id, fn, toast) {
+    const store = stratStore(), r = stratRec(id, store); if (!r) return false; fn(r); r.updated = stNow(); if (!stratSave(store)) return false;
+    if (toast) bpToast(toast); if (r.id !== id) bpGo(btNav.path({ page: "strategies", id: r.id, sub: pg.r.sub })); else bpRender(); return true;
+  }
+  const RULEX = [["contexte", "Biais HTF défini (Daily / H4) avant la séance"], ["contexte", "Pas de news rouge dans les 30 minutes qui viennent"], ["entree", "Prise de liquidité (PDH / PDL, sessions, égaux) avant l'entrée"],
+    ["entree", "Déplacement avec FVG ou cassure de structure (MSS)"], ["entree", "Entrée dans une fenêtre de temps : Londres, NY AM, Silver Bullet ou macro"], ["sortie", "Cible sur la liquidité opposée"], ["sortie", "Sortie si la structure qui justifie le trade est cassée"],
+    ["risque", "Risque par trade de 1 % du compte au plus"], ["risque", "Stop derrière le swing de la prise de liquidité"], ["risque", "50 % à 2R, puis stop au breakeven"]];
+  function stratData() { const T = btNav.collect(srcAll(), CTR); return stratList().map((s) => { const Ts = btNav.stratTrades(T, s); return { s, T: Ts, st: btNav.stats(Ts) }; }); }
+  function pageStrat(el, id) {
+    const it = stratData().find((x) => x.s.id === id), back = '<button class="bp-back" data-bpgo="strategies">‹ Stratégies</button>', sub = pg.r.sub || "";
+    if (!it) { el.innerHTML = back + bpHead("Stratégie introuvable") + '<div class="bp-empty">Cette stratégie n\'existe plus (supprimée, ou renommée depuis une autre fenêtre).</div>'; return; }
+    const { s, T } = it, p = (x) => "strategies/" + s.id + (x ? "/" + x : "");
+    const lead = `${s.saved ? "par " + esc(s.author || profileName()) + (s.created ? " · créée le " + isoNY(s.created) : "") + (s.updated && s.updated !== s.created ? " · modifiée le " + isoNY(s.updated) : "") : "Nom tapé dans tes sessions : la fiche est créée dès que tu la modifies."}${(s.alias || []).length ? " · aussi reliée aux sessions nommées " + s.alias.map((a) => "« " + esc(a) + " »").join(", ") : ""}`;
+    el.innerHTML = back + bpHead(esc(s.name), lead, `<button class="bp-btn" data-bpa="sttest" data-id="${esc(s.id)}" title="Nouvelle session avec cette stratégie">▶ Tester</button><button class="bp-btn bp-g bp-s" data-bpa="stren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="stdup" data-id="${esc(s.id)}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="stdel" data-id="${esc(s.id)}">Supprimer</button>`)
+      + `<div class="bp-h2">Description</div><textarea class="bp-desc" data-bpf="stdesc" data-id="${esc(s.id)}" placeholder="Idée du modèle, contexte, marchés et horaires visés… (enregistrée quand tu quittes le champ)">${esc(s.desc || "")}</textarea>`
+      + bpTabs([["", "Vue d'ensemble", p("")], ["regles", `Règles (${rulesOf(s).length})`, p("regles")], ["docs", `Docs (${(s.docs || []).length})`, p("docs")], ["trades", `Trades (${T.length})`, p("trades")]], sub) + '<div id="bpBody"></div>';
+    const box = $("bpBody");
+    if (sub === "regles") return stRules(box, it);
+    if (sub === "docs") return stDocs(box, it);
+    if (sub === "trades") return stTrades(box, it);
+    return stOverview(box, it);
+  }
+  function stOverview(box, { s, st, T }) {
+    const ses = sesList().filter((r) => btNav.linked(s, r.strat)), snaps = sessions().filter((x) => btNav.linked(s, x.strat)), recs = journal().filter((r) => btNav.linked(s, r.strat)), man = T.filter((t) => t.via === "ajout").length;
+    const k = (lab, v, sub) => `<div class="bp-kpi"><small>${lab}</small><b>${v}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
+    box.innerHTML = `<div class="bp-note">Résultats de backtest uniquement : trades des sessions reliées à cette stratégie par son nom (sessions isolées, instantanés, sessions clôturées)${man ? ` et ${man} trade(s) ajouté(s) à la main` : " et trades ajoutés à la main (onglet Trades)"} ; aucun trade réel.</div>
+      <div class="bp-kpis">${k("P&amp;L net", usdS(st.pnl), st.n ? `drawdown max ${usd(-st.mdd)}` : "")}${k("Win rate", pctTxt(st.wr), "hors breakeven")}${k("R:R moyen", rrTxt(st.rr), "gain moyen / perte moyenne")}${k("Gagnants / perdants", `${st.wins} / ${st.losses}`)}${k("Breakeven", st.be, "|R| ≤ 0,1, ou moins de 1 $ sans stop")}${k("Trades", st.n, st.nR ? `R moyen ${rTxt(st.avgR)}` : "")}</div>
+      <div class="bp-h2">Courbe d'équité (P&amp;L cumulé)</div><div class="bp-card">${st.n ? svgCurve(st.curve.map((v, i) => [i, v])) : '<div class="bp-empty">Pas encore de trade backtest : « ▶ Tester » ouvre une nouvelle session avec cette stratégie.</div>'}</div>
+      <div class="bp-h2">Sessions reliées (${ses.length + snaps.length + recs.length})</div>${ses.length + snaps.length + recs.length ? `<div class="bp-list">${ses.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)} · ${x.n} trade(s) · ${usdS(x.pnl)}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button><button class="bp-btn bp-g bp-s" data-bpa="sdup" data-id="${esc(r.id)}" title="Tout copier ou seulement les réglages">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="sdel" data-id="${esc(r.id)}" title="Envoyer dans la corbeille (Paramètres › Sessions supprimées)">Supprimer</button></div></div>`; }).join("")}${snaps.map((x) => `<div class="bp-row"><div class="bp-rm"><b>${esc(x.name)}</b><span class="bp-chip">Instantané</span><small>${esc(x.sym)} · ${fmtD(x.day)} · ${((x.acc && x.acc.trades) || []).length} trade(s)</small></div></div>`).join("")}${recs.map((r) => `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b><span class="bp-chip">Clôturée</span><small>${(r.trades || []).length} trade(s) · clôturée le ${isoNY(r.at)}</small></div></div>`).join("")}</div>` : '<div class="bp-empty">Aucune session ne porte ce nom pour l\'instant : « ▶ Tester » en crée une.</div>'}`;
+  }
+  function stRules(box, { s }) {
+    const R = s.rules || [], P = s.params || [], G = btNav.rulesBy(R.filter((r) => r && r.id)), sid = esc(s.id);
+    const cat = (v, attr) => `<select ${attr}>${btNav.RCAT.map(([k, n]) => `<option value="${k}" ${v === k ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+    box.innerHTML = `<div class="bp-note">Les règles servent de checklist : elles se cochent dans la note de chaque trade de la stratégie (✎ dans Testing › Trades ou dans l'onglet Trades). Une modification est enregistrée dès que tu quittes le champ.</div>
+      ${G.length ? G.map((g) => `<div class="bp-h2">${g.n} <small>${g.rules.length}</small></div><div class="bp-list">${g.rules.map((r) => { const i = R.indexOf(r); return `<div class="bp-row bp-rule"><span class="bp-rn">${i + 1}</span><input class="bp-in" data-bpf="rtxt" data-id="${sid}" data-r="${esc(r.id)}" value="${esc(r.text)}" maxlength="300">${cat(r.cat, `class="bp-in" data-bpf="rcat" data-id="${sid}" data-r="${esc(r.id)}"`)}<div class="bp-acts"><button class="bp-btn bp-g bp-s" data-bpa="rmove" data-id="${sid}" data-r="${esc(r.id)}" data-v="-1" title="Monter" ${i ? "" : "disabled"}>↑</button><button class="bp-btn bp-g bp-s" data-bpa="rmove" data-id="${sid}" data-r="${esc(r.id)}" data-v="1" title="Descendre" ${i < R.length - 1 ? "" : "disabled"}>↓</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="rdel" data-id="${sid}" data-r="${esc(r.id)}">Supprimer</button></div></div>`; }).join("")}</div>`).join("")
+        : `<div class="bp-empty bp-invite"><b>Aucune règle pour l'instant.</b><br>Définis ce qui doit être vrai avant d'entrer (contexte, entrée), comment tu sors et comment tu gères le risque : ces règles deviennent la checklist de chaque trade de la stratégie.<br><button class="bp-btn bp-g bp-s" data-bpa="rex" data-id="${sid}" style="margin-top:10px">Partir d'un exemple ICT</button></div>`}
+      <div class="bp-bar" style="margin-top:14px">${cat("entree", 'id="bpRcat" class="bp-in" title="Catégorie"')}<input id="bpRtxt" class="bp-in" style="flex:1;min-width:280px" maxlength="300" placeholder="Nouvelle règle (ex. : entrée seulement après une prise de liquidité)"><button class="bp-btn" data-bpa="radd" data-id="${sid}">＋ Ajouter la règle</button></div>
+      <div class="bp-h2">Paramètres</div><div class="bp-note" style="margin-top:0">Réglages de la stratégie : unités de temps, séances, actifs, risque par trade…</div>
+      ${P.length ? `<div class="bp-list">${P.map((x) => `<div class="bp-row"><input class="bp-in" style="width:230px" data-bpf="pk" data-id="${sid}" data-r="${esc(x.id)}" value="${esc(x.k)}"><input class="bp-in" style="flex:1" data-bpf="pv" data-id="${sid}" data-r="${esc(x.id)}" value="${esc(x.v)}"><div class="bp-acts"><button class="bp-btn bp-g bp-s bp-x" data-bpa="pdel" data-id="${sid}" data-r="${esc(x.id)}">Supprimer</button></div></div>`).join("")}</div>` : ""}
+      <div class="bp-bar" style="margin-top:10px"><input id="bpPk" class="bp-in" style="width:230px" placeholder="Paramètre (ex. : Unités de temps)"><input id="bpPv" class="bp-in" style="flex:1;min-width:220px" placeholder="Valeur (ex. : H1 pour le biais, M1 pour l'entrée)"><button class="bp-btn bp-g" data-bpa="padd" data-id="${sid}">＋ Ajouter</button></div>`;
+  }
+  function ruleAdd(id) { const t = ($("bpRtxt") || {}).value, c = ($("bpRcat") || {}).value || "entree", v = String(t || "").trim(); if (!v) return bpToast("Écris d'abord la règle.", true); stEdit(id, (r) => { r.rules = [...(r.rules || []), { id: "r" + uid(), cat: c, text: v }]; }, "Règle ajoutée."); }
+  function paramAdd(id) { const k = String(($("bpPk") || {}).value || "").trim(), v = String(($("bpPv") || {}).value || "").trim(); if (!k) return bpToast("Donne un nom au paramètre.", true); stEdit(id, (r) => { r.params = [...(r.params || []), { id: "p" + uid(), k, v }]; }, "Paramètre ajouté."); }
+  function stDocs(box, { s }) {
+    const L = [...(s.docs || [])].sort((a, b) => String(b.updated || b.created || "").localeCompare(String(a.updated || a.created || ""))), sid = esc(s.id);
+    box.innerHTML = `<div class="bp-bar"><span class="bp-note" style="margin:0">Notes et images de la stratégie : captures de setups, schémas, exemples. Les images restent sur cet appareil (IndexedDB), sans limite de nombre.</span><span class="bp-sp"></span><button class="bp-btn" data-bpa="docedit" data-id="${sid}">＋ Nouveau document</button></div>
+      ${L.length ? `<div class="bp-docs">${L.map((d) => `<div class="bp-doc"><div class="bp-doch"><b>${esc(d.title || "Sans titre")}</b><small>modifié le ${isoNY(d.updated || d.created)}</small></div>${d.text ? `<div class="bp-doct">${esc(d.text)}</div>` : ""}${(d.imgs || []).length ? `<div class="bp-imgs">${d.imgs.map((im) => `<img data-imgid="${esc(im)}" data-bpa="imgshow" data-v="${esc(im)}" alt="" title="Agrandir">`).join("")}</div>` : ""}<div class="bp-acts" style="justify-content:flex-start"><button class="bp-btn bp-g bp-s" data-bpa="docedit" data-id="${sid}" data-d="${esc(d.id)}">Modifier</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="docdel" data-id="${sid}" data-d="${esc(d.id)}">Supprimer</button></div></div>`).join("")}</div>`
+        : '<div class="bp-empty">Aucun document : ajoute des notes et des captures de setups pour cette stratégie.</div>'}`;
+    imgFill(box);
+  }
+  // éditeur d'un document : titre, notes, images (fichiers ou capture collée) ; images ajoutées puis annulées effacées, images retirées effacées à l'enregistrement
+  function docEdit(sid, did) {
+    const s0 = stratList().find((x) => x.id === sid); if (!s0) return; const d0 = did ? (s0.docs || []).find((x) => x.id === did) : null; if (did && !d0) return;
+    const d = { title: d0 ? d0.title || "" : "", text: d0 ? d0.text || "" : "", imgs: d0 ? [...(d0.imgs || [])] : [], added: [] };
+    const addFiles = async (files) => { try { const ids = await imgAdd(files); if (!ids.length) return bpToast("Aucune image dans ce que tu as ajouté.", true); d.imgs.push(...ids); d.added.push(...ids); draw(); } catch (e) { bpToast("Image non enregistrée : " + (e && e.message ? e.message : e), true); } };
+    const draw = () => {
+      const m = modal(d0 ? "Modifier le document" : "Nouveau document", `<div class="bp-nrow" style="margin-top:0"><input id="bpDocT" class="bp-in" style="flex:1" maxlength="160" placeholder="Titre (ex. : Setup Silver Bullet AM)" value="${esc(d.title)}"></div>
+        <textarea id="bpDocX" class="bp-desc" style="min-height:160px" placeholder="Notes : idée, conditions, exemples, erreurs à éviter…">${esc(d.text)}</textarea>
+        <div class="an-h">Images <small class="bp-note">fichiers, ou capture collée (Ctrl+V) dans cette fenêtre</small></div>
+        <div class="bp-imgs bp-imgsed">${d.imgs.map((im, i) => `<span class="bp-imgw"><img data-imgid="${esc(im)}" data-dshow="${esc(im)}" alt="" title="Agrandir"><button data-dimg="${i}" title="Retirer l'image">×</button></span>`).join("")}<label class="bp-imgadd" title="Ajouter des images">＋ Image<input type="file" id="bpDocF" accept="image/*" multiple hidden></label></div>`,
+        `${d0 ? '<button data-m="del" class="ghost bp-mx">Supprimer le document</button>' : ""}<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Enregistrer</button>`);
+      m.querySelector(".tx-mbox").classList.add("wz-wide"); imgFill(m);
+      m.onchange = (e) => { if (e.target.id === "bpDocF") addFiles([...e.target.files]); };
+      m.oninput = (e) => { if (e.target.id === "bpDocT") d.title = e.target.value; else if (e.target.id === "bpDocX") d.text = e.target.value; };
+      m.onpaste = (e) => { const f = [...((e.clipboardData && e.clipboardData.files) || [])].filter((x) => /^image\//.test(x.type || "")); if (f.length) { e.preventDefault(); addFiles(f); } };
+      m.onclick = (e) => { const b = e.target.closest("[data-dimg],[data-dshow],[data-m]"); if (!b) return; const a = b.dataset;
+        if (a.dimg != null) { d.imgs.splice(+a.dimg, 1); return draw(); }
+        if (a.dshow) return imgShow(a.dshow);
+        if (a.m === "x") { imgDel(d.added); return closeModal(); }
+        if (a.m === "del") { if (!confirm(`Supprimer le document « ${d0.title || "Sans titre"} » et ses images ?`)) return; const all = [...(d0.imgs || []), ...d.added];
+          if (stEdit(sid, (r) => { r.docs = (r.docs || []).filter((x) => x.id !== d0.id); }, "Document supprimé.")) { closeModal(); imgDel(all); } return; }
+        if (a.m === "ok") { const keep = new Set(d.imgs), drop = [...((d0 && d0.imgs) || []), ...d.added].filter((x) => !keep.has(x)), now = stNow(), title = d.title.trim();
+          if (!title && !d.text.trim() && !d.imgs.length) return bpToast("Document vide : un titre, des notes ou une image.", true);
+          if (stEdit(sid, (r) => { r.docs = r.docs || []; const x = d0 && r.docs.find((q) => q.id === d0.id); if (x) Object.assign(x, { title, text: d.text, imgs: [...d.imgs], updated: now }); else r.docs.push({ id: "d" + uid(), title, text: d.text, imgs: [...d.imgs], created: now, updated: now }); }, "Document enregistré.")) { closeModal(); imgDel(drop); } } };
+    };
+    draw();
+  }
+  function stTrades(box, { s, T }) {
+    const f = pg.stTr, sk = (t) => t.src + ":" + t.sid, srcs = [...new Map(T.map((t) => [sk(t), t.sname])).entries()], F = T.filter((t) => !f.src || sk(t) === f.src), L = btNav.sort(F, "date", "desc"), sm = btNav.stats(F), rules = rulesOf(s), M = tagM(), sid = esc(s.id);
+    box.innerHTML = `<div class="bp-bar"><select data-bpf="sttr.src"><option value="">Toutes les sessions (${T.length})</option>${srcs.map(([k, n]) => `<option value="${esc(k)}" ${f.src === k ? "selected" : ""}>${esc(n)} (${T.filter((t) => sk(t) === k).length})</option>`).join("")}</select>
+      <span class="bp-note" style="margin:0"><b>${F.length}</b> trade(s)${F.length !== T.length ? ` sur ${T.length}` : ""} · ${usdS(sm.pnl)} · win rate ${pctTxt(sm.wr)}</span><span class="bp-sp"></span><button class="bp-btn bp-g bp-s" data-bpa="sttrref" title="Relire les sessions">⟳ Actualiser</button><button class="bp-btn" data-bpa="sttradd" data-id="${sid}">＋ Ajouter des trades</button></div>
+      <div class="bp-twrap"><table class="bp-tbl"><thead><tr><th>Entrée (NY)</th><th>Session</th><th>Contrat</th><th>Sens</th><th class="bp-r">Qté</th><th class="bp-r">Résultat</th><th class="bp-r">R</th><th>Checklist</th><th>Tags</th><th>Lien</th><th></th></tr></thead><tbody>
+      ${L.map((t) => { const c = btNav.checks(t.raw, rules), l = btNav.listCount(t.raw.lists), tot = c.total + l.total, dn = c.done + l.done; return `<tr><td>${dmy(t.tIn)} ${hm(t.tIn)}</td><td class="bp-w">${esc(t.sname)}<small>${SRCL[t.src] || ""}</small></td><td>${ctrName(t.ctr)}</td><td class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</td><td class="bp-r">${t.qty}</td><td class="bp-r">${usdS(t.pnl)}</td><td class="bp-r ${sgn(t.R)}">${rTxt(t.R)}</td>
+        <td>${tot ? `<span class="bp-chip ${dn === tot ? "bp-co" : ""}" style="margin:0" title="Règles et checklists cochées">${dn} / ${tot}</span>` : "—"}</td><td class="bp-w">${t.tags.map((x) => tagChip(x, M)).join("")}</td><td>${t.via === "ajout" ? '<span class="bp-chip bp-ca" style="margin:0" title="Ajouté à la main depuis sa session">ajouté</span>' : '<span class="bp-chip" style="margin:0" title="Session au nom de la stratégie">session</span>'}</td>
+        <td class="bp-r"><button class="bp-btn bp-g bp-s" data-bpa="tnote" data-tkey="${esc(t.key)}" title="Note, tags et checklist du trade">✎${t.note ? " 📝" : ""}</button>${t.via === "ajout" ? ` <button class="bp-btn bp-g bp-s bp-x" data-bpa="sttrrm" data-id="${sid}" data-v="${esc(t.tk)}" title="Retirer de la stratégie (le trade reste dans sa session)">×</button>` : ""}</td></tr>`; }).join("")
+        || `<tr><td colspan="11" class="bp-empty">${T.length ? "Aucun trade pour cette session." : "Aucun trade : « ▶ Tester » crée une session avec cette stratégie, ou « ＋ Ajouter des trades » depuis tes sessions."}</td></tr>`}</tbody></table></div>`;
+  }
+  // ajouter à une stratégie des trades de n'importe quelle session (empreintes dans s.manual ; rien n'est recopié)
+  function stTrAdd(id) {
+    const s = stratList().find((x) => x.id === id); if (!s) return; const T = btNav.collect(srcAll(), CTR), have = new Set(btNav.stratTrades(T, s).map((t) => t.tk)), cand = T.filter((t) => !have.has(t.tk)), sel = new Set(), sk = (t) => t.src + ":" + t.sid;
+    let srcF = "";
+    const draw = () => {
+      const srcs = [...new Map(cand.map((t) => [sk(t), t.sname])).entries()], F = btNav.sort(cand.filter((t) => !srcF || sk(t) === srcF), "date", "desc");
+      const m = modal(`Ajouter des trades à « ${esc(s.name)} »`, cand.length ? `<div class="bp-nrow" style="margin-top:0"><select id="bpTaSrc"><option value="">Toutes les sessions (${cand.length})</option>${srcs.map(([k, n]) => `<option value="${esc(k)}" ${srcF === k ? "selected" : ""}>${esc(n)} (${cand.filter((t) => sk(t) === k).length})</option>`).join("")}</select><button data-ta="all" class="ghost">Tout cocher</button><button data-ta="none" class="ghost">Tout décocher</button></div>
+        <div class="bp-twrap" style="max-height:50vh"><table class="bp-tbl"><thead><tr><th></th><th>Entrée (NY)</th><th>Session</th><th>Contrat</th><th>Sens</th><th class="bp-r">Résultat</th><th>Stratégie de la session</th></tr></thead><tbody>${F.map((t) => `<tr><td><input type="checkbox" data-tac="${esc(t.tk)}" ${sel.has(t.tk) ? "checked" : ""}></td><td>${dmy(t.tIn)} ${hm(t.tIn)}</td><td class="bp-w">${esc(t.sname)}<small>${SRCL[t.src] || ""}</small></td><td>${ctrName(t.ctr)}</td><td class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</td><td class="bp-r">${usdS(t.pnl)}</td><td>${t.strat ? esc(t.strat) : "—"}</td></tr>`).join("")}</tbody></table></div>
+        <div class="bp-note" id="bpTaN"></div>` : '<div class="bp-empty">Tous tes trades backtest sont déjà dans cette stratégie, ou tu n\'as pas encore de trade.</div>',
+        `<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button>${cand.length ? '<button data-m="ok" id="bpTaOk">Ajouter</button>' : ""}`);
+      m.querySelector(".tx-mbox").classList.add("an-wide"); m.onchange = null;
+      const cnt = () => { const n = $("bpTaN"), o = $("bpTaOk"); if (n) n.textContent = `${sel.size} trade(s) coché(s). Le trade reste dans sa session : la stratégie le compte dans ses chiffres et ses règles se cochent dans sa note.`; if (o) o.textContent = sel.size ? `Ajouter ${sel.size} trade(s)` : "Ajouter"; }; cnt();
+      m.oninput = (e) => { if (e.target.id === "bpTaSrc") { srcF = e.target.value; return draw(); } const k = e.target.dataset.tac; if (k) { if (e.target.checked) sel.add(k); else sel.delete(k); cnt(); } };
+      m.onclick = (e) => { const b = e.target.closest("[data-ta],[data-m]"); if (!b) return; const a = b.dataset;
+        if (a.ta) { F.forEach((t) => (a.ta === "all" ? sel.add(t.tk) : sel.delete(t.tk))); m.querySelectorAll("[data-tac]").forEach((x) => (x.checked = sel.has(x.dataset.tac))); return cnt(); }
+        if (a.m === "x") return closeModal();
+        if (a.m === "ok") { if (!sel.size) return bpToast("Coche au moins un trade.", true); const n = sel.size; if (stEdit(id, (r) => { r.manual = [...new Set([...(r.manual || []), ...sel])]; }, `${n} trade(s) ajouté(s) à la stratégie.`)) closeModal(); } };
+    };
+    draw();
+  }
+  // trade affiché (clé type:id:trade) -> objet de collect, pour la fenêtre Note du trade
+  // (chaque source à part : une session choisie seule garde ses propres clés, même pour un trade recopié ailleurs)
+  const tradesByKeys = (keys) => { const K = new Set(keys), out = []; srcAll().forEach((s) => btNav.collect([s], CTR).forEach((t) => { if (K.has(t.key)) out.push(t); })); return out; };
+  const tradeByKey = (k) => tradesByKeys([k])[0] || null;
+
+  /* ---- v1.68 · Paramètres › Journal (JRN-08) : groupes de tags colorés, réordonnables, recherche ; tags libres rangés dans un groupe ---- */
+  const TGSTART = [
+    { name: "Setups ICT", color: "#2962ff", tags: ["FVG", "Order block", "Breaker", "NWOG", "Silver Bullet", "Turtle soup", "MSS"] },
+    { name: "Séances", color: "#26a69a", tags: ["Asie", "Londres", "NY AM", "NY PM", "Macro"] },
+    { name: "Erreurs", color: "#ef5350", tags: ["Entrée trop tôt", "Hors plan", "Stop déplacé", "FOMO", "Revenge", "Sortie trop tôt"] },
+    { name: "État d'esprit", color: "#ff9800", tags: ["Calme", "Hésitant", "Impatient", "Fatigué"] },
+  ];
+  function tabJournal(box) {
+    const st = tagStore();
+    box.innerHTML = `<div class="bp-note">Groupes de tags des trades backtest : couleurs, ordre et recherche. Ils servent dans la note de chaque trade (✎ dans Testing › Trades) et colorent les tags des tableaux. Un tag déjà posé sur des trades reste valide même hors groupe ; renommer ou retirer un tag ici ne modifie pas les trades.</div>
+      <div class="bp-bar"><input type="search" data-bpf="tg.q" placeholder="Rechercher un groupe ou un tag" value="${esc(pg.tg.q)}"><span class="bp-sp"></span>${st.groups.length ? "" : '<button class="bp-btn bp-g bp-s" data-bpa="tgstart" title="Setups ICT, Séances, Erreurs, État d\'esprit">Groupes de départ</button>'}<button class="bp-btn" data-bpa="tgnew">＋ Nouveau groupe</button></div><div id="bpRes"></div>`;
+    tgRes();
+  }
+  function tgRes() {
+    const box = $("bpRes"); if (!box) return; const st = tagStore(), q = pg.tg.q, G = btNav.tagFind(st.groups, q), M = btNav.tagMap(st.groups), T = btNav.collect(srcAll(), CTR), cnt = new Map();
+    T.forEach((t) => t.tags.forEach((x) => { const k = btNav.norm(x); cnt.set(k, (cnt.get(k) || 0) + 1); }));
+    const free = btNav.tagsFree(T.flatMap((t) => t.tags), st.groups).filter((x) => !q || btNav.norm(x).includes(btNav.norm(q))), n = (x) => `<small class="bp-tgc">${cnt.get(btNav.norm(x)) || 0} trade(s)</small>`;
+    box.innerHTML = (G.length ? G.map((g) => { const gi = st.groups.findIndex((x) => x.id === g.id), gid = esc(g.id), all = st.groups[gi].tags || [];
+      return `<div class="bp-card bp-tg" style="border-left:3px solid ${tagHex(g.color)}"><div class="bp-tgh"><input type="color" data-bpf="tgcol" data-g="${gid}" value="${tagHex(g.color)}" title="Couleur du groupe (et de ses tags sans couleur propre)"><b>${esc(g.name)}</b><small>${all.length} tag(s)</small><span class="bp-sp"></span>
+        <button class="bp-btn bp-g bp-s" data-bpa="tgmove" data-g="${gid}" data-v="-1" title="Monter le groupe" ${gi ? "" : "disabled"}>↑</button><button class="bp-btn bp-g bp-s" data-bpa="tgmove" data-g="${gid}" data-v="1" title="Descendre le groupe" ${gi < st.groups.length - 1 ? "" : "disabled"}>↓</button><button class="bp-btn bp-g bp-s" data-bpa="tgren" data-g="${gid}">Renommer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="tgdel" data-g="${gid}">Supprimer</button></div>
+        <div class="bp-tgl">${(g.tags || []).map((t) => { const ti = all.findIndex((x) => x.name === t.name); return `<div class="bp-tgr"><input type="color" data-bpf="tcol" data-g="${gid}" data-t="${ti}" value="${tagHex(t.color || g.color)}" title="Couleur du tag">${tagChip(t.name, M)}${n(t.name)}<span class="bp-sp"></span>
+          <button class="bp-btn bp-g bp-s" data-bpa="tmove" data-g="${gid}" data-t="${ti}" data-v="-1" title="Monter" ${ti ? "" : "disabled"}>↑</button><button class="bp-btn bp-g bp-s" data-bpa="tmove" data-g="${gid}" data-t="${ti}" data-v="1" title="Descendre" ${ti < all.length - 1 ? "" : "disabled"}>↓</button>
+          ${st.groups.length > 1 ? `<select class="bp-in" data-bpf="tgo" data-g="${gid}" data-t="${ti}"><option value="">Déplacer vers…</option>${st.groups.filter((x) => x.id !== g.id).map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join("")}</select>` : ""}
+          <button class="bp-btn bp-g bp-s" data-bpa="tren" data-g="${gid}" data-t="${ti}">Renommer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="tdel" data-g="${gid}" data-t="${ti}" title="Retirer du groupe (les trades gardent ce tag)">Retirer</button></div>`; }).join("") || `<div class="bp-note" style="margin:4px 0">${q ? "Aucun tag de ce groupe pour cette recherche." : "Groupe vide."}</div>`}</div>
+        <div class="bp-bar" style="margin:10px 0 0"><input class="bp-in" data-tgadd="${gid}" maxlength="60" placeholder="Nouveau tag dans « ${esc(g.name)} » (Entrée)"><button class="bp-btn bp-g bp-s" data-bpa="tadd" data-g="${gid}">＋ Ajouter</button></div></div>`; }).join("")
+      : `<div class="bp-empty">${st.groups.length ? "Aucun groupe ni tag pour cette recherche." : "Aucun groupe de tags : « ＋ Nouveau groupe », ou « Groupes de départ » (setups ICT, séances, erreurs, état d'esprit)."}</div>`)
+      + `<div class="bp-h2">Tags libres <small>${free.length}</small></div>`
+      + (free.length ? `<div class="bp-list">${free.map((x) => `<div class="bp-row">${tagChip(x, M)}${n(x)}<span class="bp-sp"></span>${st.groups.length ? `<select class="bp-in" data-bpf="tfree" data-v="${esc(x)}"><option value="">Ranger dans le groupe…</option>${st.groups.map((g) => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join("")}</select>` : '<small class="bp-note" style="margin:0">crée un groupe pour le ranger</small>'}</div>`).join("")}</div>`
+        : `<div class="bp-empty">${q ? "Aucun tag libre pour cette recherche." : "Aucun tag libre : les tags posés sur tes trades sont tous rangés dans un groupe (ou tu n'as pas encore posé de tag)."}</div>`);
+  }
+  // modification des groupes de tags : fn(store) ; false = rien à enregistrer
+  function tgEdit(fn, toast) { const st = tagStore(); if (fn(st) === false) return; if (tagSave(st)) { if (toast) bpToast(toast); tgRes(); } }
+  const tgOf = (st, id) => st.groups.find((g) => g.id === id);
+  const tagTaken = (st, name, except) => st.groups.some((g) => (g.tags || []).some((t) => t !== except && btNav.norm(t.name) === btNav.norm(name)));
+  async function tgNew() { const n = await ask("Nom du nouveau groupe de tags", ""); if (!n) return; tgEdit((st) => { st.groups.push({ id: "g" + uid(), name: n.trim(), color: TCOL[st.groups.length % TCOL.length], tags: [] }); }, `Groupe « ${n.trim()} » créé.`); }
+  function tgStart() { tgEdit((st) => { if (st.groups.length) return false; TGSTART.forEach((g) => st.groups.push({ id: "g" + uid(), name: g.name, color: g.color, tags: g.tags.map((name) => ({ name })) })); }, "Groupes de départ créés : modifie-les à ta façon."); }
+  function tagAdd(gid) {
+    const i = document.querySelector(`#bpRes [data-tgadd="${CSS.escape(gid)}"]`), v = String((i && i.value) || "").trim().replace(/\s+/g, " "); if (!v) return bpToast("Écris d'abord le nom du tag.", true);
+    tgEdit((st) => { const g = tgOf(st, gid); if (!g) return false; if (tagTaken(st, v)) { bpToast(`Le tag « ${v} » est déjà dans un groupe.`, true); return false; } (g.tags = g.tags || []).push({ name: v }); }, `Tag « ${v} » ajouté.`);
+    const j = document.querySelector(`#bpRes [data-tgadd="${CSS.escape(gid)}"]`); if (j) j.focus();
+  }
+
+  /* ---- v1.68 · Paramètres › Modèles (JRN-07) : modèles de note et checklists ; recherche, favoris, modèles intégrés à dupliquer, date de modification, modèle par défaut ---- */
+  function tabModeles(box) {
+    const f = pg.tp;
+    box.innerHTML = `<div class="bp-note">Modèles pour les trades backtest : dans la note d'un trade (✎), ou sur plusieurs trades à la fois (Testing › Trades : coche les trades, puis « Appliquer un modèle »). Une checklist devient des cases à cocher dans la note du trade. Champs remplis avec les valeurs du trade : {contrat}, {sens}, {date}, {session}, {strategie}, {resultat}.</div>
+      <div class="bp-bar"><input type="search" data-bpf="tp.q" placeholder="Rechercher un modèle" value="${esc(f.q)}"><select data-bpf="tp.f">${[["", "Tous les modèles"], ["note", "Modèles de note"], ["checklist", "Checklists"], ["fav", "Favoris"]].map(([v, t]) => `<option value="${v}" ${f.f === v ? "selected" : ""}>${t}</option>`).join("")}</select><span class="bp-sp"></span><button class="bp-btn bp-g" data-bpa="tpnew" data-v="checklist">＋ Nouvelle checklist</button><button class="bp-btn" data-bpa="tpnew" data-v="note">＋ Nouveau modèle de note</button></div><div id="bpRes"></div>`;
+    tpRes();
+  }
+  function tpRes() {
+    const box = $("bpRes"); if (!box) return; const f = pg.tp, L = btNav.tplList(tplAll(), { q: f.q, fav: f.f === "fav", type: f.f === "note" || f.f === "checklist" ? f.f : "" });
+    box.innerHTML = (L.length ? `<div class="bp-tpls">${L.map((t) => { const id = esc(t.id); return `<div class="bp-tpl"><div class="bp-tplh"><button class="bp-star${t.fav ? " on" : ""}" data-bpa="tpfav" data-v="${id}" title="${t.fav ? "Retirer des favoris" : "Mettre en favori (en tête des listes)"}">${t.fav ? "★" : "☆"}</button><b>${esc(t.name)}</b><span class="bp-chip">${t.type === "checklist" ? "Checklist" : "Note"}</span>${t.builtin ? '<span class="bp-chip bp-ca">intégré</span>' : ""}${t.def ? '<span class="bp-chip bp-co">par défaut</span>' : ""}</div>
+      <pre class="bp-pre">${esc(tplTxt(t))}</pre><small class="bp-note" style="margin:0">${t.builtin ? "Modèle intégré : duplique-le pour le modifier." : `Modifié le ${isoNY(t.updated || t.created)}`}</small>
+      <div class="bp-acts" style="justify-content:flex-start">${t.builtin ? `<button class="bp-btn bp-g bp-s" data-bpa="tpdup" data-v="${id}">Dupliquer pour modifier</button>` : `<button class="bp-btn bp-g bp-s" data-bpa="tpedit" data-v="${id}">Modifier</button><button class="bp-btn bp-g bp-s" data-bpa="tpdup" data-v="${id}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="tpdel" data-v="${id}">Supprimer</button>`}${t.type === "note" ? `<button class="bp-btn bp-g bp-s" data-bpa="tpdef" data-v="${id}" title="Proposé dans la note d'un trade quand elle est vide">${t.def ? "Retirer le défaut" : "Modèle par défaut"}</button>` : ""}</div></div>`; }).join("")}</div>`
+      : '<div class="bp-empty">Aucun modèle pour cette recherche ou ce filtre.</div>')
+      + '<div class="bp-note">Modèle par défaut (un seul, pour le journal backtest) : proposé dans la note d\'un trade quand elle est vide ; il n\'est gardé que si tu enregistres la note.</div>';
+  }
+  function tpEditor(t0, done) { // t0 = modèle enregistré (modifier) ou brouillon { type } (nouveau)
+    const st0 = tplStore(), isNew = !st0.list.some((x) => x.id === t0.id), d = { name: t0.name || "", type: t0.type === "checklist" ? "checklist" : "note" };
+    const m = modal(isNew ? (d.type === "checklist" ? "Nouvelle checklist" : "Nouveau modèle de note") : "Modifier le modèle", `<div class="bp-nrow" style="margin-top:0"><input id="bpTpN" class="bp-in" style="flex:1" maxlength="80" placeholder="Nom du modèle" value="${esc(d.name)}"><select id="bpTpT"><option value="note" ${d.type === "note" ? "selected" : ""}>Modèle de note</option><option value="checklist" ${d.type === "checklist" ? "selected" : ""}>Checklist</option></select></div>
+      <div class="bp-note" id="bpTpH"></div><textarea id="bpTpC" class="bp-desc" style="min-height:230px"></textarea><div class="bp-nrow" id="bpTpF"><small class="bp-note" style="margin:0">Insérer un champ :</small>${["contrat", "sens", "date", "session", "strategie", "resultat"].map((k) => `<button class="ghost" data-tpf="${k}">{${k}}</button>`).join("")}</div>`,
+      '<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Enregistrer</button>');
+    m.querySelector(".tx-mbox").classList.add("wz-wide"); m.onchange = null;
+    const ta = $("bpTpC"), ui = () => { const ck = $("bpTpT").value === "checklist"; $("bpTpH").textContent = ck ? "Un point par ligne : chaque ligne devient une case à cocher dans la note du trade." : "Texte libre ; les champs entre accolades sont remplis avec les valeurs du trade quand le modèle est inséré."; $("bpTpF").hidden = ck; ta.placeholder = ck ? "Biais HTF défini\nLiquidité prise avant l'entrée\n…" : "Review — {contrat} {sens} · {date}\nContexte :\n…"; };
+    ta.value = d.type === "checklist" ? (t0.items || []).join("\n") : t0.content || ""; ui();
+    m.oninput = (e) => { if (e.target.id === "bpTpT") ui(); };
+    m.onclick = (e) => { const b = e.target.closest("[data-tpf],[data-m]"); if (!b) return; const a = b.dataset;
+      if (a.tpf) { ta.focus(); ta.setRangeText("{" + a.tpf + "}", ta.selectionStart, ta.selectionEnd, "end"); return; }
+      if (a.m === "x") return closeModal();
+      if (a.m === "ok") { const name = $("bpTpN").value.trim(), type = $("bpTpT").value === "checklist" ? "checklist" : "note", txt = ta.value; if (!name) return bpToast("Donne un nom au modèle.", true);
+        const items = txt.split(/\r?\n/).map((x) => x.replace(/^\s*(?:☐|\[\s?\]|[-*•])\s*/, "").trim()).filter(Boolean); if (type === "checklist" ? !items.length : !txt.trim()) return bpToast(type === "checklist" ? "Une checklist a au moins un point (une ligne)." : "Le modèle est vide.", true);
+        const st = tplStore(), now = new Date().toISOString(), rec = { id: t0.id, name, type, ...(type === "checklist" ? { items } : { content: txt }), created: t0.created || now, updated: now };
+        st.list = isNew ? [...st.list, rec] : st.list.map((x) => (x.id === t0.id ? rec : x)); if (type !== "note" && st.def === rec.id) st.def = null;
+        if (!tplSave(st)) return; closeModal(); bpToast(isNew ? `Modèle « ${name} » créé.` : `Modèle « ${name} » enregistré.`); if (done) done(); } };
+  }
+  function tpDup(id) {
+    const t = tplAll().find((x) => x.id === id); if (!t) return; const names = tplAll().map((x) => x.name);
+    tpEditor({ id: "u" + uid(), name: btNav.uniqueName(t.name + " (copie)", names), type: t.type, content: t.content, items: t.items }, tpRes); // copie modifiable, créée à l'enregistrement
+  }
+  function tpDel(id) { const st = tplStore(), t = st.list.find((x) => x.id === id); if (!t || !confirm(`Supprimer le modèle « ${t.name} » ?\nLes notes et checklists déjà posées sur des trades ne changent pas.`)) return;
+    st.list = st.list.filter((x) => x !== t); st.favs = (st.favs || []).filter((x) => x !== id); if (st.def === id) st.def = null; if (tplSave(st)) { bpToast(`Modèle « ${t.name} » supprimé.`); tpRes(); } }
+  function tpFav(id) { const st = tplStore(), F = new Set(st.favs || []); if (F.has(id)) F.delete(id); else F.add(id); st.favs = [...F]; if (tplSave(st)) tpRes(); }
+  function tpDef(id) { const st = tplStore(), t = tplAll().find((x) => x.id === id); if (!t || t.type !== "note") return; st.def = st.def === id ? null : id; if (tplSave(st)) { bpToast(st.def ? `« ${t.name} » proposé dans les notes de trade vides.` : "Plus de modèle par défaut."); tpRes(); } }
+
   /* ---- interactions des pages (délégation sur #btPages) ---- */
   const BPACT = {
     new: (b) => nsOpen(b.dataset.kind), base: () => toChart(baseOpen), open: (b) => { const id = b.dataset.id; toChart(() => sesOpen(id)); },
@@ -10304,20 +10773,59 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     cdel: (b) => { if (!pg.costs) return; pg.costs.rows.splice(+b.dataset.i, 1); pg.costs.dirty = true; assetsGet().then(costsDraw); },
     cdef: () => assetsGet().then((AS) => { costsInit(AS, true); costsDraw(AS); }), crefresh: () => assetsGet(true).then(costsDraw), csave: () => costsSave(),
     brest: (b) => binRestore(b.dataset.id), bpurge: (b) => binPurge(b.dataset.id), bpage: (b) => { pg.binPage = Math.max(0, +b.dataset.v || 0); tabBin($("bpBody")); }, bempty: () => binEmpty(),
+    // v1.68 : tableau de bord
+    kind: (b) => { pg.kind = b.dataset.v || ""; tabDash($("bpBody")); }, sview: (b) => { pg.sv = b.dataset.v; tabDash($("bpBody")); }, goal: () => goalOpen(),
+    // v1.68 : fiche stratégie
+    sttest: (b) => { const s = stratList().find((x) => x.id === b.dataset.id); if (s) nsOpen("bt", { strat: s.name }); },
+    radd: (b) => ruleAdd(b.dataset.id), rex: (b) => stEdit(b.dataset.id, (r) => { r.rules = [...(r.rules || []), ...RULEX.map(([cat, text]) => ({ id: "r" + uid(), cat, text }))]; }, "Règles d'exemple ajoutées : adapte-les à ta stratégie."),
+    rmove: (b) => stEdit(b.dataset.id, (r) => { const i = (r.rules || []).findIndex((x) => x.id === b.dataset.r); r.rules = btNav.move(r.rules, i, +b.dataset.v); }),
+    rdel: (b) => stEdit(b.dataset.id, (r) => { r.rules = (r.rules || []).filter((x) => x.id !== b.dataset.r); }, "Règle supprimée (les cases déjà cochées dans les trades sont ignorées)."),
+    padd: (b) => paramAdd(b.dataset.id), pdel: (b) => stEdit(b.dataset.id, (r) => { r.params = (r.params || []).filter((x) => x.id !== b.dataset.r); }, "Paramètre supprimé."),
+    docedit: (b) => docEdit(b.dataset.id, b.dataset.d || null), imgshow: (b) => imgShow(b.dataset.v),
+    docdel: (b) => { const s = stratList().find((x) => x.id === b.dataset.id), d = s && (s.docs || []).find((x) => x.id === b.dataset.d); if (!d || !confirm(`Supprimer le document « ${d.title || "Sans titre"} » et ses images ?`)) return; if (stEdit(b.dataset.id, (r) => { r.docs = (r.docs || []).filter((x) => x.id !== d.id); }, "Document supprimé.")) imgDel(d.imgs || []); },
+    sttradd: (b) => stTrAdd(b.dataset.id), sttrref: () => { bpRender(); bpToast("Trades relus dans les sessions."); },
+    sttrrm: (b) => stEdit(b.dataset.id, (r) => { r.manual = (r.manual || []).filter((x) => x !== b.dataset.v); }, "Trade retiré de la stratégie (il reste dans sa session)."),
+    tnote: (b) => { const t = tradeByKey(b.dataset.tkey); if (!t) return bpToast("Trade introuvable : relis la page.", true); noteOpen(t, () => (pg.r.page === "testing" ? trRes() : bpRender())); },
+    // v1.68 : modèle sur les trades cochés (Testing › Trades)
+    trtpl: () => { const L = tradesByKeys([...pg.sel]); tplBulk(L, () => { pg.sel.clear(); trRes(); }); }, trsel0: () => { pg.sel.clear(); trRes(); },
+    // v1.68 : Paramètres › Journal (groupes de tags)
+    tgnew: () => tgNew(), tgstart: () => tgStart(), tadd: (b) => tagAdd(b.dataset.g),
+    tgmove: (b) => tgEdit((st) => { const i = st.groups.findIndex((g) => g.id === b.dataset.g); st.groups = btNav.move(st.groups, i, +b.dataset.v); }),
+    tgren: async (b) => { const g = tgOf(tagStore(), b.dataset.g); if (!g) return; const n = await ask("Renommer le groupe", g.name); if (!n || n.trim() === g.name) return; tgEdit((st) => { const x = tgOf(st, g.id); if (!x) return false; x.name = n.trim(); }, "Groupe renommé."); },
+    tgdel: (b) => { const g = tgOf(tagStore(), b.dataset.g); if (!g || !confirm(`Supprimer le groupe « ${g.name} » ?${(g.tags || []).length ? `\nSes ${g.tags.length} tag(s) restent sur les trades, comme tags libres.` : ""}`)) return; tgEdit((st) => { st.groups = st.groups.filter((x) => x.id !== g.id); }, `Groupe « ${g.name} » supprimé.`); },
+    tmove: (b) => tgEdit((st) => { const g = tgOf(st, b.dataset.g); if (!g) return false; g.tags = btNav.move(g.tags, +b.dataset.t, +b.dataset.v); }),
+    tren: async (b) => { const g = tgOf(tagStore(), b.dataset.g), t = g && (g.tags || [])[+b.dataset.t]; if (!t) return; const n = await ask("Renommer le tag (les trades gardent l'ancien nom)", t.name); if (!n || n.trim() === t.name) return;
+      tgEdit((st) => { const x = tgOf(st, g.id), y = x && x.tags[+b.dataset.t]; if (!y) return false; if (tagTaken(st, n.trim(), y)) { bpToast(`Le tag « ${n.trim()} » est déjà dans un groupe.`, true); return false; } y.name = n.trim(); }, "Tag renommé dans le groupe."); },
+    tdel: (b) => tgEdit((st) => { const g = tgOf(st, b.dataset.g); if (!g || !g.tags[+b.dataset.t]) return false; g.tags.splice(+b.dataset.t, 1); }, "Tag retiré du groupe (les trades le gardent)."),
+    // v1.68 : Paramètres › Modèles
+    tpnew: (b) => tpEditor({ id: "u" + uid(), type: b.dataset.v }, tpRes), tpedit: (b) => { const t = tplStore().list.find((x) => x.id === b.dataset.v); if (t) tpEditor(t, tpRes); },
+    tpdup: (b) => tpDup(b.dataset.v), tpdel: (b) => tpDel(b.dataset.v), tpfav: (b) => tpFav(b.dataset.v), tpdef: (b) => tpDef(b.dataset.v),
   };
   function bpInput(t, ch) {
     if (t.closest(".bp-prefs")) { if (t.dataset.p || t.dataset.ii) { const k = prefsInput(t); if (k) { LS.set("bt-prefs", P); if (k === "bgType") tabPrefs($("bpBody")); } } return; }
     if (t.dataset.bpsrc) { if (!ch) return; const cnt = srcCount(srcAll()), all = [...cnt.keys()], k = t.dataset.bpsrc; let L = pg.tr.src ? pg.tr.src.filter((x) => cnt.has(x)) : all.slice();
       L = t.checked ? [...new Set([...L, k])] : L.filter((x) => x !== k); pg.tr.src = L.length === all.length ? null : L; pg.trPage = 0; const l = $("bpTrSrcL"); if (l) l.textContent = trSrcLbl(cnt); return trRes(); }
     if (t.dataset.bc) { const r = pg.costs && pg.costs.rows[+t.dataset.i]; if (r) { r[t.dataset.bc] = Math.max(0, +t.value || 0); costDirty(); } return; }
+    if (t.dataset.bptr) { if (!ch) return; const k = t.dataset.bptr; // v1.68 : trades cochés (Testing › Trades)
+      if (k === "*") document.querySelectorAll("#bpRes [data-bptr]:not([data-bptr='*'])").forEach((x) => { if (t.checked) pg.sel.add(x.dataset.bptr); else pg.sel.delete(x.dataset.bptr); }); else if (t.checked) pg.sel.add(k); else pg.sel.delete(k);
+      return trRes(); }
     const f = t.dataset.bpf; if (!f) return;
     if (f === "stdesc") { if (ch) stDesc(t.dataset.id, t.value); return; }
+    // v1.68 : règles et paramètres d'une stratégie (enregistrés en quittant le champ), couleurs et rangement des tags
+    if (f === "rtxt" || f === "rcat" || f === "pk" || f === "pv") { if (!ch) return; const v = f === "rtxt" ? t.value.trim() : t.value; if (f === "rtxt" && !v) return bpToast("Une règle vide se supprime avec « Supprimer ».", true);
+      return stEdit(t.dataset.id, (r) => { const L = f === "pk" || f === "pv" ? r.params || [] : r.rules || [], x = L.find((q) => q.id === t.dataset.r); if (x) x[{ rtxt: "text", rcat: "cat", pk: "k", pv: "v" }[f]] = v; }); }
+    if (f === "tgcol" || f === "tcol") { if (!ch) return; return tgEdit((st) => { const g = tgOf(st, t.dataset.g); if (!g) return false; if (f === "tgcol") g.color = t.value; else if (g.tags[+t.dataset.t]) g.tags[+t.dataset.t].color = t.value; }); }
+    if (f === "tgo") { if (!ch || !t.value) return; return tgEdit((st) => { const g = tgOf(st, t.dataset.g), to = tgOf(st, t.value), x = g && g.tags[+t.dataset.t]; if (!x || !to) return false; g.tags.splice(+t.dataset.t, 1); (to.tags = to.tags || []).push(x); }, "Tag déplacé."); }
+    if (f === "tfree") { if (!ch || !t.value) return; const v = t.dataset.v; return tgEdit((st) => { const g = tgOf(st, t.value); if (!g || tagTaken(st, v)) return false; (g.tags = g.tags || []).push({ name: v }); }, `« ${v} » rangé dans un groupe.`); }
     if (t.type === "search" || t.type === "number" ? ch : !ch) return; // recherche et nombres : à la frappe ; listes et dates : à la validation
     const [g, k] = f.split(".");
     if (g === "ses") { pg.ses[k] = t.value; return sesRes(); }
     if (g === "tr") { pg.tr[k] = t.value; pg.trPage = 0; return trRes(); }
     if (g === "ana") { pg.ana[k] = t.value; if (k === "src" || k === "strat") pg.ana.tag = ""; return tabAna($("bpBody")); }
     if (g === "st") { pg.st[k] = t.value; return stRes(); }
+    if (g === "sttr") { pg.stTr[k] = t.value; return bpRender(); } // v1.68 : trades d'une stratégie, par session
+    if (g === "tg") { pg.tg[k] = t.value; return tgRes(); }
+    if (g === "tp") { pg.tp[k] = t.value; return tpRes(); }
     if (f === "cadd") { if (t.value && pg.costs) { pg.costs.rows.push({ sym: t.value, spread: 1, fee: defFee(t.value) }); pg.costs.dirty = true; } return assetsGet().then(costsDraw); }
     if (f === "cslip") { if (pg.costs) { pg.costs.slipLvl = t.value; pg.costs.dirty = true; } return assetsGet().then(costsDraw); }
     if (f === "cslipn") { if (pg.costs) pg.costs.slipN = Math.max(0, Math.round(+t.value || 0)); return costDirty(); }
@@ -10333,7 +10841,12 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       const a = e.target.closest("[data-bpa]"); if (a) { if (!a.disabled && BPACT[a.dataset.bpa]) BPACT[a.dataset.bpa](a, e); return; }
       const g = e.target.closest("[data-bpgo]"); if (g) bpGo(g.dataset.bpgo);
     });
-    root.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches && e.target.matches("[data-bpgo][role=button]")) bpGo(e.target.dataset.bpgo); });
+    root.addEventListener("keydown", (e) => { if (e.key !== "Enter" || !e.target.matches) return; const t = e.target;
+      if (t.matches("[data-bpgo][role=button]")) return bpGo(t.dataset.bpgo);
+      const st = pg.r.page === "strategies" && pg.r.id; // v1.68 : Entrée = ajouter (règle, paramètre, tag)
+      if (t.id === "bpRtxt" && st) { e.preventDefault(); return ruleAdd(pg.r.id); }
+      if ((t.id === "bpPk" || t.id === "bpPv") && st) { e.preventDefault(); return paramAdd(pg.r.id); }
+      if (t.dataset && t.dataset.tgadd) { e.preventDefault(); return tagAdd(t.dataset.tgadd); } });
     root.addEventListener("input", (e) => bpInput(e.target, false));
     root.addEventListener("change", (e) => bpInput(e.target, true));
     const pb = $("btPagesBtn"); if (pb) pb.onclick = () => bpGo(pg.prev);

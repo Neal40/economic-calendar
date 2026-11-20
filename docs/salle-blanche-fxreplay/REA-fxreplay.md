@@ -4,9 +4,9 @@
 
 ## Résumé
 
-Ce REA décrit en 126 exigences tout ce que fait FX Replay d'après sa documentation publique et les demandes de Rudy, et les compare à l'app ICT : 59 sont déjà là (dont 10 livrées par la phase 1 en v1.66.0 et 14 par la livraison A de la phase 1b en v1.67.0), 45 en partie, 16 manquent et 6 sont hors périmètre.
+Ce REA décrit en 126 exigences tout ce que fait FX Replay d'après sa documentation publique et les demandes de Rudy, et les compare à l'app ICT : 66 sont déjà là (dont 10 livrées par la phase 1 en v1.66.0, 14 par la livraison A de la phase 1b en v1.67.0 et 7 par la livraison B en v1.68.0), 40 en partie, 14 manquent et 6 sont hors périmètre.
 
-Les 25 priorités P1 portent sur six chantiers : l'arborescence des pages du Backtesteur (module NAV, demandée par Rudy le 19/11), un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. 14 sont déjà là (la phase 1 en v1.66.0, la livraison A de la phase 1b en v1.67.0 et l'absence de limites d'offre) ; la livraison B de la phase 1b termine l'arborescence (fiche stratégie, Paramètres › Journal et › Modèles), avant la phase 2.
+Les 25 priorités P1 portent sur six chantiers : l'arborescence des pages du Backtesteur (module NAV, demandée par Rudy le 19/11), un retour arrière qui annule vraiment ce qui suit, des sessions isolées et sauvegardées en continu, les partiels et l'ordre au clic droit, le panneau des règles du challenge, et un journal de backtest avec fiche trade et checklist. 17 sont déjà là (la phase 1 en v1.66.0, la phase 1b en v1.67.0 et v1.68.0, et l'absence de limites d'offre) ; restent les partiels et l'ordre au clic droit (phase 2), la table des trades complète, la fiche trade et les filtres de l'analytique (phases 3 et 4).
 
 Après les 5 phases de la roadmap, le Backtesteur aura l'équivalent fonctionnel de FX Replay pour le backtest NQ / ES, adapté aux règles ICT et prop firm de Rudy, sans rien copier de son expression. Base de travail : 84 articles d'aide sur 87, 7 pages produit, le code de la v1.65.1 et la spécification du 12/11 déjà dans le repo, que ce document remplace.
 
@@ -220,10 +220,10 @@ C'est le module le moins couvert : les trades backtest n'ont ni table dédiée, 
 | JRN-02 | Lister aussi les ordres annulés, sans résultat | ❌ | P3 |
 | JRN-03 | Deux horodatages par trade : heure réelle de saisie et heure du chart | ❌ | P3 |
 | JRN-04 | Résultat de chaque trade en $, en % du solde et en R | ✅ v1.67 : Testing › Trades ($ net, % du solde de départ de la session, R = P/L net / risque initial) | P2 |
-| JRN-05 | Fiche trade : détails (actif, sens, type d'entrée, entrées et sorties, taille, SL, TP, P/L brut, commission, P/L net), tags, médias ; trade précédent / suivant | 🟡 note et tags par trade dans le dock | P1 |
+| JRN-05 | Fiche trade : détails (actif, sens, type d'entrée, entrées et sorties, taille, SL, TP, P/L brut, commission, P/L net), tags, médias ; trade précédent / suivant | 🟡 note et tags par trade dans le dock ; v1.68 : fenêtre « Note du trade » (✎ dans Testing › Trades et la fiche stratégie : détails, tags, checklist, note) ; manquent SL / TP, P/L brut, médias, trade précédent / suivant | P1 |
 | JRN-06 | Notes riches avec commandes « / » : insérer une capture du chart courant, appliquer un modèle | ❌ | P2 |
-| JRN-07 | Modèles de note et checklists de règles à cocher, appliqués à un ou plusieurs trades ; un modèle par défaut par journal | ❌ | P1 |
-| JRN-08 | Groupes de tags (catégories colorées), création à la volée | 🟡 tags façon Notion dans le Journal TopstepX ; tags libres dans le Backtesteur | P2 |
+| JRN-07 | Modèles de note et checklists de règles à cocher, appliqués à un ou plusieurs trades ; un modèle par défaut par journal | ✅ v1.68 : Paramètres › Modèles (modèles de note et checklists, intégrés à dupliquer, favoris, recherche, date de modification), appliqués dans la note d'un trade ou à plusieurs trades cochés (Testing › Trades), règles de la stratégie à cocher, un modèle par défaut pour le journal backtest | P1 |
+| JRN-08 | Groupes de tags (catégories colorées), création à la volée | ✅ v1.68 : Paramètres › Journal (groupes colorés, réordonnables, recherche, tags libres rangés) ; nouveau tag rangé dans un groupe depuis la note du trade ; tags façon Notion dans le Journal TopstepX | P2 |
 | JRN-09 | Modifier les tags de plusieurs trades à la fois | ❌ | P3 |
 
 Sources : [Journal de backtest](https://support.fxreplay.com/articles/tracking-your-trades-with-the-journal-feature), [Checklist](https://support.fxreplay.com/articles/creating-your-checklist-in-fx-replay), [Tags en backtest](https://support.fxreplay.com/articles/how-to-use-tags-when-backtesting).
@@ -256,8 +256,8 @@ Sources : [Analytique](https://support.fxreplay.com/articles/analyzing-your-trad
 
 | ID | Exigence | App ICT | Prio |
 | --- | --- | --- | --- |
-| TDB-01 | Cartes de progression avec info-bulles : temps réel passé à backtester, temps de marché rejoué, trades (achats / ventes), win rate global et dans le temps, trades par actif ; filtres activité (backtest / challenge) et période (semaine / mois / tout) | 🟡 v1.67 : temps réel sur le chart, temps de marché rejoué, trades achats / ventes, win rate, P&L, période semaine / mois / tout ; manquent win rate dans le temps, trades par actif, filtre backtest / challenge | P2 |
-| TDB-02 | Série de jours d'entraînement, vues jour / semaine / année, objectif d'heures par jour ou par semaine modifiable sans casser la série | ❌ | P3 |
+| TDB-01 | Cartes de progression avec info-bulles : temps réel passé à backtester, temps de marché rejoué, trades (achats / ventes), win rate global et dans le temps, trades par actif ; filtres activité (backtest / challenge) et période (semaine / mois / tout) | ✅ v1.67 : temps réel sur le chart, temps de marché rejoué, trades achats / ventes, win rate, P&L, période semaine / mois / tout ; v1.68 : win rate dans le temps, trades par actif, filtre d'activité (backtest / challenge) | P2 |
+| TDB-02 | Série de jours d'entraînement, vues jour / semaine / année, objectif d'heures par jour ou par semaine modifiable sans casser la série | ✅ v1.68 : série de jours (au moins 5 min sur le chart, jour de New York), vues jour / semaine / année, objectif d'heures par jour ou par semaine indépendant de la série | P3 |
 | TDB-03 | Sessions récentes avec reprise en un clic | ✅ v1.67 : Testing › Tableau de bord (dernière session + 5 sessions récentes) | P2 |
 
 Source : [Tableau de bord](https://support.fxreplay.com/articles/exploring-the-trader-dashboard-overview).
@@ -293,7 +293,7 @@ Sources : [Mentor IA](https://fxreplay.com/ai-trading-mentor), [Mises à jour de
 
 | ID | Exigence | App ICT | Prio |
 | --- | --- | --- | --- |
-| STR-01 | Fiche stratégie (règles d'entrée et de sortie, paramètres) liée aux sessions et aux trades | 🟡 v1.67 : fiche (auteur, description, chiffres, courbe, sessions reliées par le nom) ; règles, docs et trades ajoutés à la main en livraison B | P2 |
+| STR-01 | Fiche stratégie (règles d'entrée et de sortie, paramètres) liée aux sessions et aux trades | ✅ v1.68 : fiche avec règles par catégorie (contexte, entrée, sortie, gestion du risque) servant de checklist, paramètres, documents (notes et images en IndexedDB), trades des sessions reliées par le nom et trades ajoutés à la main | P2 |
 | STR-02 | Analytique filtrée par stratégie | ✅ v1.67 : Testing › Analytique filtrable par stratégie (et par session) | P2 |
 | STR-03 | Bibliothèque de stratégies partagées entre utilisateurs | ⛔ | — |
 
@@ -351,8 +351,8 @@ Backtesteur (menu dans la page)
 | NAV-03 | Testing a quatre onglets : Tableau de bord, Sessions, Trades, Analytique ; le tableau de bord propose trois départs : session de backtesting, session prop firm, Backtesteur de base | ✅ v1.67 | P1 |
 | NAV-04 | Créer une session dans une fenêtre à deux onglets (Backtesting, Prop firm) et deux étapes : Essentiel (nom, solde par préréglage ou libre, stratégie choisie ou créée sur place, actifs, modèle de chart, dates), puis Options (spreads, commissions, slippage) ; presets en tête de fenêtre | ✅ v1.67 : fenêtre « Nouvelle session » des pages (même moteur que l'assistant v1.66, toujours disponible dans la fenêtre Sessions du chart) | P1 |
 | NAV-05 | Les actifs proposés sont ceux qui ont des bougies dans les CSV de l'app (dossiers `data_csv` et `data`), avec leurs bornes de dates ; aucun actif sans données | ✅ v1.67 : canal `data:assets` (bougies m1 de `data_csv` puis `data`, bornes lues au début et à la fin des fichiers) ; micro sans fichier = bougies de son sous-jacent ; web : aucun actif ; v1.67.1 : un micro avec ses fichiers n'utilise que ses propres bougies | P1 |
-| NAV-06 | Stratégies : une carte par stratégie (win rate, trades, drawdown max, R:R moyen, mini-courbe d'équité, ou mention sans données ; alerte si aucune règle), recherche, filtre, nouvelle stratégie ; fiche avec nom, auteur, description, menu renommer / dupliquer / supprimer, bouton « Tester » qui ouvre la création de session avec elle, onglets Vue d'ensemble, Règles, Docs, Trades | 🟡 v1.67 : cartes, recherche, filtre, nouvelle stratégie, fiche (auteur, description, renommer / dupliquer / supprimer, Vue d'ensemble) ; « Tester », Règles, Docs et Trades en livraison B | P1 |
-| NAV-07 | Paramètres a cinq onglets : Backtesting (réglages actuels du Backtesteur), Spreads & commissions (par actif, repris à chaque nouvelle session), Journal (groupes de tags), Sessions supprimées (corbeille), Modèles (modèles de notes) | 🟡 v1.67 : Backtesting, Spreads & commissions, Sessions supprimées ; Journal et Modèles en livraison B | P1 |
+| NAV-06 | Stratégies : une carte par stratégie (win rate, trades, drawdown max, R:R moyen, mini-courbe d'équité, ou mention sans données ; alerte si aucune règle), recherche, filtre, nouvelle stratégie ; fiche avec nom, auteur, description, menu renommer / dupliquer / supprimer, bouton « Tester » qui ouvre la création de session avec elle, onglets Vue d'ensemble, Règles, Docs, Trades | ✅ v1.67 : cartes, recherche, filtre, nouvelle stratégie, fiche (auteur, description, renommer / dupliquer / supprimer, Vue d'ensemble) ; v1.68 : « Tester » (fenêtre Nouvelle session avec la stratégie), onglets Règles (et paramètres), Docs (notes et images), Trades | P1 |
+| NAV-07 | Paramètres a cinq onglets : Backtesting (réglages actuels du Backtesteur), Spreads & commissions (par actif, repris à chaque nouvelle session), Journal (groupes de tags), Sessions supprimées (corbeille), Modèles (modèles de notes) | ✅ v1.67 : Backtesting, Spreads & commissions, Sessions supprimées ; v1.68 : Journal (groupes de tags) et Modèles (modèles de note et checklists) | P1 |
 | NAV-08 | Aucune limite d'offre : tout ce que FX Replay réserve à sa formule la plus haute est inclus sans plafond (stratégies, analytique de stratégie, données à la seconde, Monte Carlo, simulateur R:R, futures CME, captures et checklists, durée de conservation des données) | ✅ rien n'est bridé ; règle à garder pour chaque ajout | P1 |
 
 Contenu attendu de chaque page :
@@ -503,35 +503,35 @@ Points d'attention relevés dans le code :
 
 ## Matrice d'écart
 
-Sur 126 exigences, 59 sont présentes (47 %), 45 partielles (36 %), 16 absentes (13 %) et 6 hors périmètre. 14 des 25 priorités P1 sont livrées (phase 1, livraison A de la phase 1b et NAV-08) ; les 11 restantes tiennent dans 4 modules (NAV, ORD, JRN, ANA).
+Sur 126 exigences, 66 sont présentes (52 %), 40 partielles (32 %), 14 absentes (11 %) et 6 hors périmètre. 17 des 25 priorités P1 sont livrées (phase 1, phase 1b en v1.67.0 et v1.68.0, NAV-08) ; les 8 restantes tiennent dans 3 modules (ORD, JRN, ANA).
 
 | Module | Exigences | ✅ | 🟡 | ❌ | ⛔ | dont P1 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Arborescence des pages (NAV) | 8 | 6 | 2 | 0 | 0 | 8 |
+| Arborescence des pages (NAV) | 8 | 8 | 0 | 0 | 0 | 8 |
 | Ordres et exécution (ORD) | 16 | 4 | 8 | 4 | 0 | 5 |
 | Sessions (SES) | 12 | 10 | 0 | 1 | 1 | 4 |
 | Replay (REP) | 13 | 10 | 2 | 1 | 0 | 3 |
-| Journal de backtest (JRN) | 9 | 1 | 3 | 5 | 0 | 3 |
+| Journal de backtest (JRN) | 9 | 3 | 2 | 4 | 0 | 3 |
 | Prop firm (PRO) | 6 | 3 | 3 | 0 | 0 | 1 |
 | Analytique (ANA) | 15 | 6 | 8 | 1 | 0 | 1 |
 | Graphique (GRA) | 20 | 6 | 11 | 2 | 1 | 0 |
-| Tableau de bord (TDB) | 3 | 1 | 1 | 1 | 0 | 0 |
+| Tableau de bord (TDB) | 3 | 3 | 0 | 0 | 0 | 0 |
 | Journal live (LIV) | 8 | 7 | 1 | 0 | 0 | 0 |
 | Ergonomie (UX) | 5 | 2 | 3 | 0 | 0 | 0 |
 | Coach IA (IA) | 3 | 0 | 2 | 0 | 1 | 0 |
-| Stratégies (STR) | 3 | 1 | 1 | 0 | 1 | 0 |
+| Stratégies (STR) | 3 | 2 | 0 | 0 | 1 | 0 |
 | Données (DAT) | 3 | 2 | 0 | 0 | 1 | 0 |
 | Compétitions (BAT) | 2 | 0 | 0 | 1 | 1 | 0 |
-| **Total** | **126** | **59** | **45** | **16** | **6** | **25** |
+| **Total** | **126** | **66** | **40** | **14** | **6** | **25** |
 
 Les 25 priorités P1, par thème :
 
-- **Arborescence des pages** : NAV-01 à 08 (menu dans la page, Testing, création de session, actifs des CSV, Stratégies, Paramètres) ; NAV-01 à 05 ✅ v1.67.0 (livraison A), NAV-08 ✅ ; NAV-06 (fiche stratégie complète) et NAV-07 (Journal, Modèles) en livraison B.
+- **Arborescence des pages** (✅ v1.67.0 et v1.68.0) : NAV-01 à 08 (menu dans la page, Testing, création de session, actifs des CSV, Stratégies, Paramètres) ; NAV-01 à 05 en livraison A, NAV-06 (fiche stratégie complète) et NAV-07 (Journal, Modèles) en livraison B, NAV-08 sans limite.
 - **Retour arrière fiable** (✅ v1.66.0) : REP-04 rejouer depuis une bougie, REP-05 tout annuler après ce point, REP-06 interdit en challenge.
 - **Sessions isolées** (✅ v1.66.0) : SES-01 assistant de création, SES-02 période (départ aléatoire, fin), SES-03 isolation, SES-12 sauvegarde continue.
 - **Exécution** : ORD-01 outil position → ticket, ORD-02 ticket complet, ORD-05 TP multiples, ORD-09 ordre au clic droit, ORD-12 prise de partiels.
 - **Challenge** (✅ v1.66.0) : PRO-02 panneau des règles en direct.
-- **Journal** : JRN-01 table des trades backtest, JRN-05 fiche trade, JRN-07 modèles et checklists.
+- **Journal** : JRN-01 table des trades backtest, JRN-05 fiche trade, JRN-07 modèles et checklists (✅ v1.68.0).
 - **Analytique** : ANA-01 filtres complets.
 
 Les partiels (ORD-05, ORD-12) collent à la règle de Rudy : 50 % à 2R puis breakeven. La checklist (JRN-07) peut reprendre les attributs de sa base Notion « Respect du plan ».
@@ -552,12 +552,12 @@ Les phases 1, 1b, 2 et 3 livrent les 25 priorités P1 ; chaque losange est un cr
 - [ ] Deux sessions ne partagent ni trades, ni solde, ni dessins (sauf option). *(clés de stockage séparées par session ; à vérifier par Rudy dans l'exe)*
 - [x] Le panneau des règles affiche objectif, DLL, MLL et consistance à jour à chaque bougie.
 
-**Phase 1b — Arborescence des pages** (NAV-01 à 08, avec SES-04, 05, 09, 10, 11, TDB-01 / 03, JRN-01 / 07 / 08, STR-01 / 02) — demandée par Rudy le 19/11/2026 ; livraison A en v1.67.0 le 19/11/2026 (NAV-01 à 05, SES-04 / 05 / 09 / 10 / 11, TDB-03, JRN-04, STR-02 ✅ ; TDB-01, JRN-01, STR-01, NAV-06, NAV-07 en partie) ; livraison B à suivre (fiche stratégie : Règles, Docs, Trades, « Tester » ; Paramètres › Journal et › Modèles ; reste du tableau de bord)
+**Phase 1b — Arborescence des pages** (NAV-01 à 08, avec SES-04, 05, 09, 10, 11, TDB-01 / 03, JRN-01 / 07 / 08, STR-01 / 02) — demandée par Rudy le 19/11/2026 ; livraison A en v1.67.0 le 19/11/2026 (NAV-01 à 05, SES-04 / 05 / 09 / 10 / 11, TDB-03, JRN-04, STR-02 ✅), décisions de l'arbitre en v1.67.1, livraison B en v1.68.0 le 20/11/2026 (NAV-06, NAV-07, STR-01, JRN-07, JRN-08, TDB-01, TDB-02 ✅ ; JRN-01 reste en partie pour la phase 3)
 
 - [x] Cliquer sur Backtesteur ouvre Testing › Tableau de bord ; le Backtesteur de base s'ouvre en un clic et se comporte comme en v1.66 (compte démo, raccourcis, données `bt-*` inchangés). *(v1.67.0 ; vérifié dans Chrome headless, y compris avec des données v1.66 ; à confirmer par Rudy dans l'exe)*
 - [x] Une session créée depuis Testing, en Backtesting ou en Prop firm, ne propose que les actifs présents dans les CSV et reprend les spreads et commissions des Paramètres. *(v1.67.0 ; lecture des CSV testée par `desktop/marketdata.test.js`, fenêtre testée avec `window.desktop` simulé ; à vérifier dans l'exe avec les vrais dossiers `data_csv` et `data`)*
 - [x] Supprimer une session l'envoie dans Paramètres › Sessions supprimées ; la restaurer rend son compte, ses trades, ses dessins et l'heure du replay. *(v1.67.0 depuis Testing › Sessions ; v1.67.1 aussi depuis la fenêtre Sessions du chart, décision de l'arbitre du 20/11/2026)*
-- [ ] Une stratégie affiche ses chiffres et sa courbe d'après les trades de ses sessions ; « Tester » ouvre la création de session avec elle. *(chiffres et courbe livrés en v1.67.0 ; « Tester » en livraison B)*
+- [x] Une stratégie affiche ses chiffres et sa courbe d'après les trades de ses sessions ; « Tester » ouvre la création de session avec elle. *(chiffres et courbe v1.67.0 ; « Tester », trades ajoutés à la main, règles, documents v1.68.0 ; vérifié dans Chrome headless)*
 - [x] Aucune limite de nombre ni de durée ; `tools/check.js` couvre les calculs purs (chiffres d'une stratégie, corbeille, actifs disponibles). *(v1.67.0 : bloc `btNav` — actifs, coûts par défaut, corbeille, trades sans doublon, chiffres d'une stratégie, temps passé, presets, routage)*
 
 Les exigences SES, TDB, JRN et STR listées ici sortent des phases 3 à 5 ; la phase 2 suit.
