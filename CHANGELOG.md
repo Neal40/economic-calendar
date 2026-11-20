@@ -2,6 +2,17 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.70.0] — 2026-11-20
+Page Graphique : modèles de dessins et mises en page de TopstepX, avec les mêmes noms.
+### Ajouté
+- **102 modèles de dessins TopstepX** (rectangle, ligne de tendance, rayon horizontal, Fibonacci, positions longue / courte, courbe, ligne horizontale, ligne verticale, canal parallèle, extension de Fibonacci), ajoutés une seule fois au lancement, sans remplacer un modèle du même nom.
+- **9 mises en page TopstepX** : NQ1!, ES1!, NWOG & 1st Matrix, RTH ORG Matrix, STDV Matrix, Naked H4 to m15, Premarket, Naked, First Hour of Trading (grille, symboles, unités, sessions, synchronisations). Les dessins ne sont pas repris.
+- Mises en page › « Réimporter mes mises en page et modèles TopstepX » pour remettre ceux qui ont été supprimés.
+- Barre de dessins favoris dans l'ordre de TopstepX ; tes autres favoris restent après.
+### Modifié
+- Rendu des dessins au niveau des réglages TopstepX : texte placé au début / milieu / fin et au-dessus / sur / sous la ligne (tendance, rayons, lignes, rectangle), couleur / épaisseur / style de la ligne médiane du rectangle, libellés Fibonacci avec coefficient, prix et texte de chaque niveau (taille, position, en % au besoin), ligne de tendance du Fibonacci masquable, flèche au début d'une ligne.
+- Un modèle garde aussi le texte du dessin, et les modèles de position posent le stop et l'objectif à leurs distances en ticks.
+
 ## [1.69.0] — 2026-11-20
 Page Graphique : couleurs en hexadécimal, barre de dessins favoris réordonnable, modèles de dessins accessibles partout.
 ### Ajouté
