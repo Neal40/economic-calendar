@@ -1588,6 +1588,83 @@ table.tbl:has(#subT){min-width:900px}
 @container (max-width:1180px){.tx-tfsep{display:none!important}#btLayName{max-width:70px}.tx-head .tx-vs{margin:0 2px}}
 @container (max-width:1100px){.tx-head .tx-hb{width:30px!important}.tx-head .tx-hb svg{width:24px;height:24px}#btLayName{max-width:56px}}
 @container (max-width:1060px){#btTfs [data-tf="2"],#btTfs [data-tf="3"],#btTfs [data-tf="15s"],#btTfs [data-tf="30s"]{display:none}}
+/* ---------- v1.67 : pages du Backtesteur (module NAV du REA) : menu propre dans la page (Testing, Stratégies, Paramètres), chart en plein écran avec retour aux pages ; style TopstepX (variables --tx-*) ---------- */
+#v-backtest>.bp{display:none}#v-backtest.bp-on>.bp{display:flex}#v-backtest.bp-on>.tx{display:none}
+.bp{height:100vh;position:relative;min-width:0;background:var(--tx-menu);color:var(--tx-fg);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Trebuchet MS",Roboto,sans-serif}
+.bp button{font:inherit;cursor:pointer}.bp .up{color:var(--tx-profit)}.bp .dn{color:var(--tx-loss)}
+.bp-nav{width:212px;flex:none;display:flex;flex-direction:column;gap:2px;padding:16px 10px 12px;background:var(--tx-notch);border-right:1px solid var(--tx-hov);overflow-y:auto}
+.bp-brand{display:flex;align-items:center;gap:10px;padding:2px 8px 18px;font-size:16px;font-weight:700;color:#fff}.bp-brand svg{width:24px;height:24px;color:var(--tx-acc);flex:none}
+.bp-ni{display:flex;align-items:center;gap:11px;width:100%;height:40px;padding:0 12px;border:none;border-radius:6px;background:none;color:var(--tx-txt3);text-align:left;font-weight:500}
+.bp-ni svg{width:20px;height:20px;flex:none}.bp-ni:hover{background:var(--tx-hov);color:#fff}.bp-ni.on{background:var(--tx-acc-sub);color:var(--tx-acc)}
+.bp-nchart{display:flex;flex-direction:column;gap:4px;margin-top:auto;padding:10px 12px;border:1px solid var(--tx-hov);border-radius:8px;background:none;color:var(--tx-txt2);text-align:left}
+.bp-nchart b{display:flex;align-items:center;gap:8px;color:#fff;font-weight:600}.bp-nchart b svg{width:18px;height:18px;color:var(--tx-acc)}.bp-nchart small{color:var(--tx-mut);font-size:12px;line-height:1.35}.bp-nchart:hover{border-color:var(--tx-acc)}
+.bp-main{flex:1;min-width:0;overflow:auto;padding:22px 28px 70px}
+.bp-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.bp-head h1{margin:0;font-size:22px;font-weight:700;color:#fff}.bp-head .bp-lead{color:var(--tx-mut);font-size:13px;flex-basis:100%;margin-top:2px}
+.bp-back{background:none;border:none;color:var(--tx-txt3);padding:0;font-size:13px}.bp-back:hover{color:#fff}
+.bp-sp{flex:1}
+.bp-tabs{display:flex;gap:22px;border-bottom:1px solid var(--tx-hov);margin:14px 0 18px;flex-wrap:wrap}
+.bp-tabs button{background:none;border:none;border-bottom:2px solid transparent;color:var(--tx-txt3);padding:9px 0;font-size:14px}.bp-tabs button:hover{color:#fff}.bp-tabs button.on{color:#fff;border-bottom-color:var(--tx-acc)}
+.bp-btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:6px;border:1px solid #fff;background:#fff;color:#000;font-weight:500;white-space:nowrap}
+.bp-btn:hover{background:#e6e6e6}.bp-btn.bp-g{background:none;border-color:var(--tx-line);color:var(--tx-txt2)}.bp-btn.bp-g:hover{background:var(--tx-hov);color:#fff}
+.bp-btn.bp-s{height:28px;padding:0 10px;font-size:13px}.bp-btn.bp-x{color:var(--tx-loss)}.bp-btn:disabled{opacity:.45;cursor:default}
+.bp-card{background:#15171c;border:1px solid var(--tx-hov);border-radius:8px;padding:16px}.bp-card+.bp-card{margin-top:14px}
+.bp-h2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 10px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-mut);font-weight:600}
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.bp-start{display:flex;flex-direction:column;gap:8px;min-height:138px;padding:16px;text-align:left;background:#15171c;border:1px solid var(--tx-hov);border-radius:10px;color:var(--tx-txt2)}
+.bp-start:hover{border-color:var(--tx-acc)}.bp-start svg{width:28px;height:28px;color:var(--tx-acc)}.bp-start b{color:#fff;font-size:15px}.bp-start small{color:var(--tx-mut);font-size:12.5px;line-height:1.45}.bp-start em{margin-top:auto;font-style:normal;color:var(--tx-txt3);font-size:12px}
+.bp-resume{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.bp-resume .bp-rm{flex:1;min-width:220px}
+.bp-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.bp-kpi{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:#15171c;border:1px solid var(--tx-hov);border-radius:8px}
+.bp-kpi small{display:flex;align-items:center;gap:6px;color:var(--tx-mut);font-size:12px}.bp-kpi b{font-size:22px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}.bp-kpi em{font-style:normal;color:var(--tx-txt3);font-size:12px}
+.bp-i{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--tx-mut);color:var(--tx-mut);font:600 10px/1 inherit;font-style:normal;cursor:help}
+.bp-seg{display:inline-flex;border:1px solid var(--tx-line);border-radius:6px;overflow:hidden;text-transform:none;letter-spacing:0;font-weight:400}
+.bp-seg button{height:28px;padding:0 12px;background:none;border:none;color:var(--tx-txt3);font-size:13px}.bp-seg button+button{border-left:1px solid var(--tx-line)}.bp-seg button.on{background:var(--tx-acc-sub);color:var(--tx-acc)}
+.bp-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.bp-in,.bp-bar input,.bp-bar select{height:32px;background:#0c0e12;border:1px solid var(--tx-line);color:#fff;border-radius:6px;padding:0 10px;font:inherit;font-size:13px;color-scheme:dark}
+.bp-bar input[type=search]{min-width:230px}.bp-in:focus,.bp-bar input:focus,.bp-bar select:focus{outline:none;border-color:var(--tx-acc)}
+.bp-dd{position:relative}.bp-dd>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--tx-line);border-radius:6px;background:#0c0e12;color:#fff;font-size:13px;cursor:pointer;user-select:none}
+.bp-dd>summary::-webkit-details-marker{display:none}.bp-dd[open]>summary{border-color:var(--tx-acc)}
+.bp-ddm{position:absolute;z-index:15;top:36px;left:0;min-width:280px;max-height:340px;overflow:auto;padding:6px;background:#1f1f1f;border:1px solid #2e2e2e;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.55)}
+.bp-ddm label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;color:var(--tx-txt2);font-size:13px;cursor:pointer}.bp-ddm label:hover{background:#2a2a2a}.bp-ddm small{color:var(--tx-mut);margin-left:auto;padding-left:10px}
+.bp-ddm .bp-ddh{padding:8px 8px 4px;color:var(--tx-mut);font-size:11px;letter-spacing:.05em;text-transform:uppercase}.bp-ddm .bp-dda{display:flex;gap:6px;padding:4px 8px 8px}
+.bp-twrap{overflow:auto;max-height:calc(100vh - 290px);background:#15171c;border:1px solid var(--tx-hov);border-radius:8px}
+.bp-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.bp-tbl th{position:sticky;top:0;z-index:1;background:#15171c;color:var(--tx-mut);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--tx-hov);white-space:nowrap}
+.bp-tbl th[data-sort]{cursor:pointer}.bp-tbl th[data-sort]:hover{color:#fff}.bp-tbl th.on{color:var(--tx-acc)}
+.bp-tbl td{padding:8px 10px;border-bottom:1px solid #1e2026;font-variant-numeric:tabular-nums;vertical-align:middle;white-space:nowrap}.bp-tbl tr:hover td{background:rgba(255,255,255,.025)}
+.bp-tbl .bp-r{text-align:right}.bp-tbl td.bp-w{white-space:normal;min-width:140px}.bp-tbl td small{display:block;color:var(--tx-mut);font-size:11.5px}
+.bp-list{background:#15171c;border:1px solid var(--tx-hov);border-radius:8px}
+.bp-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #1e2026}.bp-row:last-child{border-bottom:none}
+.bp-rm{flex:1;min-width:0}.bp-rm b{color:#fff;font-weight:600}.bp-rm small{display:block;margin-top:3px;color:var(--tx-mut);font-size:12px;line-height:1.45}
+.bp-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.bp-chip{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;margin-left:6px;border-radius:10px;background:rgba(255,255,255,.06);color:var(--tx-txt3);font-size:11.5px;font-weight:500;white-space:nowrap;vertical-align:middle}
+.bp-chip.bp-ca{background:var(--tx-acc-sub);color:var(--tx-acc)}.bp-chip.bp-cw{background:rgba(255,152,0,.14);color:#ffb74d}.bp-chip.bp-co{background:rgba(122,200,128,.12);color:var(--tx-profit)}
+.bp-empty{padding:18px 6px;color:var(--tx-mut);line-height:1.55}.bp-note{margin:8px 0;color:var(--tx-mut);font-size:12.5px;line-height:1.55}
+.bp-pager{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px;color:var(--tx-mut);font-size:13px}
+.bp-scards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.bp-sc{display:flex;flex-direction:column;gap:10px;padding:14px;background:#15171c;border:1px solid var(--tx-hov);border-radius:10px;color:var(--tx-txt2);cursor:pointer}.bp-sc:hover{border-color:var(--tx-acc)}
+.bp-sc h3{margin:0;font-size:15px;font-weight:600;color:#fff}.bp-sc>small{color:var(--tx-mut);font-size:12px}
+.bp-scm{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.bp-scm div{display:flex;flex-direction:column;gap:2px;min-width:0}.bp-scm small{color:var(--tx-mut);font-size:11px;white-space:nowrap}.bp-scm b{color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
+.bp-spark{display:block;width:100%;height:46px}.bp-spark-e{display:flex;align-items:center;justify-content:center;height:46px;border:1px dashed var(--tx-hov);border-radius:6px;color:var(--tx-mut);font-size:12px}
+.bp-desc{width:100%;min-height:70px;box-sizing:border-box;padding:10px;background:#0c0e12;border:1px solid var(--tx-line);border-radius:6px;color:var(--tx-fg);font:inherit;resize:vertical}.bp-desc:focus{outline:none;border-color:var(--tx-acc)}
+.bp-prefs{display:flex;min-height:440px;background:#1f1f1f;border:1px solid var(--tx-hov);border-radius:8px;overflow:hidden}
+.bp-prefs .snav{width:210px;flex:none;padding:6px 0;border-right:1px solid #2e2e2e}.bp-prefs .sbody{flex:1;overflow:auto;max-height:calc(100vh - 270px);padding:6px 22px 20px}
+.bp-costs input{width:96px}.bp-costs select{min-width:160px}
+.bp-toasts{position:absolute;right:18px;bottom:18px;z-index:20;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.bp-toast{max-width:440px;padding:10px 14px;background:#1f1f1f;border:1px solid #2e2e2e;border-left:3px solid var(--tx-acc);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5);color:#f2f2f2;font-size:13px;transition:opacity .3s}.bp-toast.err{border-left-color:var(--tx-loss)}.bp-toast.out{opacity:0}
+.tx-mbox.bp-wz{width:min(820px,96vw)}
+.bp-wzt{display:flex;gap:6px;margin:-6px 0 12px;border-bottom:1px solid #2e2e2e}.bp-wzt button{background:none;border:none;border-bottom:2px solid transparent;color:#bfc3cb;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}.bp-wzt button.on{color:#fff;border-bottom-color:var(--tx-acc)}
+.bp-wzp{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #2e2e2e;border-radius:6px;color:#bfc3cb}
+.bp-wzp select{height:30px;min-width:200px;background:#0c0e12;border:1px solid #4a4d54;color:#fff;border-radius:4px;padding:0 8px;font:inherit}
+.bp-wzp button,.bp-wzs button{background:none;border:1px solid #4a4d54;color:#dbdbdb;border-radius:4px;height:30px;padding:0 10px;font:inherit;font-size:13px;cursor:pointer}.bp-wzp button:hover,.bp-wzs button:hover{background:#2e2e2e}
+.bp-wzs{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:#8d8e8f;font-size:13px}.bp-wzs span{display:inline-flex;align-items:center;gap:6px}.bp-wzs span.on{color:#fff}
+.bp-wzs i{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#2e2e2e;color:#bfc3cb;font:600 11px/1 inherit;font-style:normal}.bp-wzs span.on i{background:var(--tx-acc);color:#000}
+.bp-wzg input[type=text],.bp-wzg input[type=date],.bp-wzg input[type=time],.bp-wzg input[type=number],.bp-wzg select,.bp-wzg textarea{background:#0c0e12;border:1px solid #4a4d54;color:#fff;border-radius:4px;padding:5px 8px;font:inherit;color-scheme:dark}
+.bp-wzg input[type=text]{min-width:260px}.bp-wzg textarea{width:100%;min-height:54px;box-sizing:border-box;resize:vertical}
+.bp-wza{display:flex;flex-direction:column;gap:4px;width:100%}.bp-wza label{display:flex;align-items:center;gap:8px;padding:5px 8px;border:1px solid #2e2e2e;border-radius:5px}.bp-wza label small{margin-left:auto;color:#8d8e8f;font-size:12px}
+.bp-wzc{width:100%;border-collapse:collapse}.bp-wzc th{color:#8d8e8f;font-weight:500;text-align:left;padding:4px 6px}.bp-wzc td{padding:4px 6px}.bp-wzc input{width:90px}.bp-wzc input:disabled{opacity:.4}
+.tx-top .bp-pgb{width:auto;padding:0 10px;gap:6px;font-size:13px;font-weight:600}.tx-top .bp-pgb svg{flex:none}
+@media (max-width:900px){.bp{flex-direction:column}.bp-nav{width:auto;flex-direction:row;align-items:center;gap:4px;padding:8px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--tx-hov)}.bp-brand{padding:0 8px 0 4px}.bp-brand span{display:none}.bp-ni{width:auto}.bp-nchart{margin:0 0 0 auto;flex-direction:row;align-items:center}.bp-nchart small{display:none}.bp-main{padding:16px}.bp-prefs{flex-direction:column}.bp-prefs .snav{width:auto;display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid #2e2e2e}}
 /*TX-END*/
 .navord{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 12px}.navord-g>b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8b8e98;margin:0 0 6px}
 .navord-l{min-height:44px;border:1px dashed #2a2a32;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px}
@@ -1886,8 +1963,9 @@ table.tbl:has(#subT){min-width:900px}
 </div></section>
 <section class="view" id="v-excalidraw"><div class="exd"><div class="exd-bar"><b>Excalidraw</b><select id="exSel" title="Tableau"></select><button id="exNew">＋ Nouveau</button><button id="exRen">Renommer</button><button id="exDup">Dupliquer</button><button class="exd-del" id="exDel">Supprimer</button><button id="exExp">🖼 Exporter l'image</button><button id="exX">𝕏 Partager</button><button id="exDir" hidden>📁 Dossier</button><span class="exd-st" id="exSt"></span></div><div class="exd-cv" id="exCv"><div class="exd-msg">Chargement d'Excalidraw…</div></div></div></section>
 <section class="view" id="v-graphique"><div class="gr" id="grRoot"></div></section>
-<section class="view" id="v-backtest"><div class="tx">
+<section class="view bp-on" id="v-backtest"><div class="bp" id="btPages"><nav class="bp-nav" id="bpNav"></nav><div class="bp-main" id="bpMain"></div><div class="bp-toasts" id="bpToasts"></div></div><div class="tx">
   <div class="tx-top">
+    <button class="tx-kpi tx-lk bp-pgb" id="btPagesBtn" title="Pages du Backtesteur : Testing, Stratégies, Paramètres (le replay est mis en pause et la session enregistrée)"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h7v7H4zm9 0h7v4h-7zM4 13h7v7H4zm9-3h7v10h-7z" fill="currentColor"/></svg><span>Pages</span></button>
     <button class="tx-acc" id="btAcc" title="Type de compte du backtest (prop firm / classique)"><b>50K Démo Backtest</b><span></span><svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg></button>
     <div class="tx-kpi"><span>BAL:</span><b id="kBal">$50,000.00</b></div>
     <div class="tx-kpi" id="kMllW"><span>MLL:</span><b id="kMll">$48,000.00</b></div>
@@ -2565,14 +2643,14 @@ let fjLoaded=false;
 function loadFJ(){ if(fjLoaded) return; fjLoaded=true; const box=$("fjBox"); const w=Math.max(320,box.clientWidth), h=Math.max(400,box.clientHeight);
   const qs=`wtype=news&mode=Dark&container=fjBox&width=${w}px&height=${h}px&backC=0e1116&fontC=e6e6e6&affurl=`;
   box.innerHTML=`<iframe scrolling="yes" src="https://feed.financialjuice.com/widgets/headlines.aspx?${qs}" title="FinancialJuice news"></iframe>`; }
-function go(v){ if(!VIEWS.includes(v)) v="calendrier";
+function go(v){ v=String(v||""); let sub=""; { const i=v.indexOf("/"); if(i>0&&v.slice(0,i)==="backtest"){ sub=v.slice(i+1).replace(/[^a-z0-9/_-]/gi,""); v="backtest"; } } if(!VIEWS.includes(v)) v="calendrier"; // v1.67 : pages du Backtesteur (#backtest/sessions, #backtest/chart…)
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".nav[data-go]").forEach(x=>x.classList.toggle("on",x.dataset.go===v));
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
   if(v==="excalidraw"&&window.exdShow) exdShow(); else if(window.exdHide) exdHide();
-  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&bt.show(),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
-  try{ if(location.hash.slice(1)!==v) history.replaceState(null,"","#"+v) }catch(e){}
+  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&(bt.route?bt.route(sub):bt.show()),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  try{ const h=v+(sub?"/"+sub:""); if(location.hash.slice(1)!==h) history.replaceState(null,"","#"+h) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
 document.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>go(x.dataset.go)));
@@ -4480,8 +4558,8 @@ function payoutCalc(a, fk, pays) {
     const pen = e.target.closest(".ma-pen"); if (pen) { maEdit = pen.dataset.key; comptesPage(); return; }
     const nw = e.target.closest(".ma-new"); if (nw) { if (canSync()) propSync("all"); else { const i = nw.querySelector(".cpImp"); if (i && e.target !== i) i.click(); } return; }
     const b = e.target.closest(".ma-b"); if (!b || b.disabled) return; const key = b.dataset.key, [k, ...rest] = key.split(":"), id = rest.join(":");
-    if (b.classList.contains("ma-open")) { if (k === "demo") return go("backtest"); const fk = k === "tsx" ? null : k; if (!fk) return go("journal"); state["kind_" + fk] = "Tous"; state[fk] = id; go(fk); return; }
-    if (b.classList.contains("ma-sync")) { if (k === "demo") return go("backtest"); propSync(k === "tsx" ? "topstep" : k); return; }
+    if (b.classList.contains("ma-open")) { if (k === "demo") return go("backtest/chart"); const fk = k === "tsx" ? null : k; if (!fk) return go("journal"); state["kind_" + fk] = "Tous"; state[fk] = id; go(fk); return; }
+    if (b.classList.contains("ma-sync")) { if (k === "demo") return go("backtest/chart"); propSync(k === "tsx" ? "topstep" : k); return; }
     if (b.classList.contains("ma-hide")) { const H = new Set(maGet(MAK.hid, [])); if (H.has(key)) H.delete(key); else { if (!confirm("Masquer ce compte de « Mes comptes » ? Il reste dans l'app (pages Topstep / Apex / MFFU) et tu peux le réafficher avec « Voir les masqués »." )) return; H.add(key); } maSet(MAK.hid, [...H]); comptesPage(); }
   });
   function render(v) { if (v === "comptes") comptesPage(); else if (v === "topstep") firmPage("topstep", "Topstep"); else if (v === "apex") firmPage("apex", "Apex"); else if (v === "mffu") firmPage("mffu", "My Funded Futures"); else if (v === "tradeify") firmPage("tradeify", "Tradeify"); else if (v === "phidias") firmPage("phidias", "Phidias"); else if (v === "payouts") payoutsPage(); else if (v === "recus") recusPage(); }
@@ -6185,7 +6263,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const rk = riskInfo(), qty = rk.qty * side, type = $("oType").value, t = S.raw[S.cur][0];
     if (rk.under) msg(`Risque ${usd(rk.cash)} trop petit pour 1 contrat (${usd(rk.per)}) : ordre passé à 1 contrat.`, true);
     newDay(t);
-    if (type === "Market") { fill(ctr, qty, last() + side * TICK * (1 + slipT()), t, "Market"); syncBrackets(); } // exécution au ask / bid (+ slippage du compte)
+    if (type === "Market") { fill(ctr, qty, last() + side * TICK * (spreadT(ctr) + slipT()), t, "Market"); syncBrackets(); } // exécution au ask / bid (+ slippage du compte) ; v1.67 : spread de la session (1 tick hors session, comme avant)
     else { const px = rnd(+$("oPx").value || last()); A.orders.push({ id: A.seq++, ctr, type, qty, px, at: t }); saveAcc(); }
     draw(); ui(); if (P.oJrn) dockOpen("jrn");
   }
@@ -6220,7 +6298,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       <div class="an-h" style="margin-top:14px">Frais et slippage</div>
       <div class="r">Frais aller-retour par contrat NQ / ES ($)<input type="number" step="0.01" data-c="feeBig" value="${c.feeBig != null && c.feeBig !== "" ? c.feeBig : CTR.NQ.fee}" style="width:90px"></div>
       <div class="r">Frais aller-retour par contrat MNQ / MES ($)<input type="number" step="0.01" data-c="feeMic" value="${c.feeMic != null && c.feeMic !== "" ? c.feeMic : CTR.MNQ.fee}" style="width:90px"></div>
-      <div class="r">Slippage (ordres au marché et stops)<select data-c="slip">${[[0, "Aucun"], [1, "Léger · 1 tick"], [2, "Moyen · 2 ticks"], [4, "Fort · 4 ticks"]].map(([v, t]) => `<option value="${v}" ${(+c.slip || 0) === v ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+      <div class="r">Slippage (ordres au marché et stops)<select data-c="slip">${[[0, "Aucun"], [1, "Léger · 1 tick"], [2, "Moyen · 2 ticks"], [4, "Fort · 4 ticks"], ...([0, 1, 2, 4].includes(+c.slip || 0) ? [] : [[+c.slip, `Fixe · ${+c.slip} ticks`]])].map(([v, t]) => `<option value="${v}" ${(+c.slip || 0) === v ? "selected" : ""}>${t}</option>`).join("")}</select></div>${c.fees ? '<div class="tx-empty" style="text-align:left">Session aux frais par actif (Paramètres › Spreads &amp; commissions) : changer une valeur ici l\'applique aux contrats de cette taille.</div>' : ""}
       <div class="tx-empty" style="text-align:left">Appliquer remet le compte à zéro avec ces règles ; « Frais seulement » change les frais et le slippage sans toucher au compte (valable pour les prochains trades). Clôture d'abord la session (drapeau) pour garder son récapitulatif dans le Journal backtest.</div>`,
       `<button data-m="costs" class="ghost">Frais seulement</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">Appliquer</button>`);
     m.oninput = (e) => { const k = e.target.dataset.c; if (!k) return;
@@ -6228,7 +6306,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       else if (k === "slip") c.slip = +e.target.value;
       else if (k === "size") { Object.assign(c, PROP[+e.target.value], { size: +e.target.value }); m.querySelectorAll("#btAccProp [data-c]").forEach((i) => (i.value = c[i.dataset.c])); }
       else c[k] = Math.max(0, +e.target.value || 0); };
-    m.onclick = (e) => { const a = e.target.dataset.m; if (a === "costs") { Object.assign(A.cfg, { feeBig: c.feeBig, feeMic: c.feeMic, slip: c.slip }); saveAcc(); closeModal(); ui(); return msg(`Frais ${usd(feeOf("NQ"))} / ${usd(feeOf("MNQ"))} par contrat · slippage ${slipT()} tick(s).`); } if (a === "x") closeModal(); else if (a === "ok") { if (A.trades.length && !confirm("Le compte actuel et ses trades seront remis à zéro. Continuer ?")) return; A = freshAcc(c); markers = []; saveAcc(); closeModal(); draw(); ui(); msg(`${accName(A.cfg)} prêt.`); } };
+    // v1.67 : session aux frais par actif (cfg.fees) : une valeur changée ici s'applique aux contrats de sa taille (NQ / ES ou MNQ / MES) ; sans cfg.fees, rien ne change
+    const feesSync = () => { if (!c.fees) return; const f = { ...c.fees }; if (+c.feeBig !== +A.cfg.feeBig) ["NQ", "ES"].forEach((k) => { if (k in f) f[k] = +c.feeBig || 0; }); if (+c.feeMic !== +A.cfg.feeMic) ["MNQ", "MES"].forEach((k) => { if (k in f) f[k] = +c.feeMic || 0; }); c.fees = f; };
+    m.onclick = (e) => { const a = e.target.dataset.m; if (a === "costs") { feesSync(); Object.assign(A.cfg, { feeBig: c.feeBig, feeMic: c.feeMic, slip: c.slip }, c.fees ? { fees: c.fees } : {}); saveAcc(); closeModal(); ui(); return msg(`Frais ${usd(feeOf("NQ"))} / ${usd(feeOf("MNQ"))} par contrat · slippage ${slipT()} tick(s).`); } if (a === "x") closeModal(); else if (a === "ok") { if (A.trades.length && !confirm("Le compte actuel et ses trades seront remis à zéro. Continuer ?")) return; feesSync(); A = freshAcc(c); markers = []; saveAcc(); closeModal(); draw(); ui(); msg(`${accName(A.cfg)} prêt.`); } };
   }
   const journal = () => LS.get("bt-journal", []);
   async function endSession() {
@@ -6236,7 +6316,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (A.pos) { if (!confirm("Une position est ouverte : la clôturer au prix actuel ?")) return; flatten("Fin de session"); }
     const T = A.trades.map((t) => ({ day: sessionKey(t.tOut), pnl: +t.pnl.toFixed(2), dur: t.tOut - t.tIn, side: t.side, ctr: t.ctr, qty: t.qty, entry: t.entry, exit: t.exit, tIn: t.tIn, tOut: t.tOut, r0: t.r0 || null, mae: t.mae, mfe: t.mfe, tags: t.tags || [], note: t.note || "", fee: t.fee, why: t.why || "" }));
     const days = T.map((t) => t.day).sort(), name = await ask("Nom du récapitulatif", `${S.sym} ${days[0]}${days[days.length - 1] !== days[0] ? " → " + days[days.length - 1] : ""}`); if (!name) return;
-    const rec = { id: "j" + Date.now(), name, at: new Date().toISOString(), sym: S.sym, cfg: { ...A.cfg }, start: A.cfg.size, end: +A.bal.toFixed(2), blown: !!A.blown, trades: T, notes: A.notes || "" };
+    const rec = { id: "j" + Date.now(), name, at: new Date().toISOString(), sym: S.sym, cfg: { ...A.cfg }, start: A.cfg.size, end: +A.bal.toFixed(2), blown: !!A.blown, trades: T, notes: A.notes || "", ...(curSes ? { ses: curSes.id, strat: curSes.strat || "" } : {}) }; // v1.67 : session isolée et stratégie (pages Stratégies / Trades)
     if (!saveList("bt-journal", [rec, ...journal()])) return;
     if (confirm(`Récapitulatif « ${name} » enregistré dans le Journal backtest. Remettre le compte à zéro pour une nouvelle session ?`)) { A = freshAcc(); markers = []; saveAcc(); draw(); }
     ui(); msg(`Récapitulatif « ${name} » enregistré (Journal de trading › Journal backtest).`);
@@ -6311,8 +6391,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const SG2 = (d) => `<svg viewBox="0 0 28 28"><g fill="none" stroke="currentColor">${d}</g></svg>`;
   const PNAV = [["sym", "Symbole", SG2('<path d="M9.5 5.5v3M9.5 19.5v3M18.5 8.5v3M18.5 19.5v2"/><rect x="7.5" y="8.5" width="4" height="11"/><rect x="16.5" y="11.5" width="4" height="8"/>')], ["status", "Ligne d'état", SG2('<path d="M5.5 8.5h17M5.5 13.5h13M5.5 18.5h9"/>')],
     ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')], ["ind", "Indicateurs", SG2('<path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/>')]];
-  function openPrefs(tab, snap) {
-    tab = tab || LS.get("bt-prefs-tab", "sym"); LS.set("bt-prefs-tab", tab); snap = snap || { ...P };
+  // v1.67 : contenu d'un onglet des Paramètres (fenêtre du chart et page Paramètres › Backtesting : mêmes réglages, même clé bt-prefs)
+  const prefsNav = (tab) => PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("");
+  function prefsBody(tab) {
     const cb = (k, l, dis) => `<label class="${dis ? "dis" : ""}"><input type="checkbox" data-p="${k}" ${P[k] ? "checked" : ""}>${l}</label>`;
     const col = (k) => `<span class="sw" title="Couleur"><i style="background:${P[k]}"></i><input type="color" data-p="${k}" value="${hex7(P[k])}"></span>`;
     const sel = (k, opts) => `<select data-p="${k}">${opts.map(([v, n]) => `<option value="${v}" ${String(P[k]) === String(v) ? "selected" : ""}>${n}</option>`).join("")}</select>`;
@@ -6338,15 +6419,23 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full")
         + sh("Retour arrière") + r(cb("allowBack", "Autoriser le retour arrière : bougie précédente (← / J), curseur vers l'arrière, Recommencer, Rejouer depuis ici"), "", "full") + (curSes && curSes.strict ? r(`<span class="lb">Session « ${esc(curSes.name)} » en challenge strict : retour arrière interdit quel que soit ce réglage.</span>`, "", "full") : ""),
     };
-    const m = modal("Paramètres", `<div class="snav">${PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("")}</div><div class="sbody">${tab === "ind" ? indPrefsBody() : BODY[tab]}</div>`,
+    return tab === "ind" ? indPrefsBody() : BODY[tab] || "";
+  }
+  // v1.67 : une valeur modifiée (fenêtre et page) ; renvoie la clé changée
+  function prefsInput(t) {
+    if (t.dataset.ii) { indInput(t); return null; } const k = t.dataset.p; if (!k) return null; let v = t.type === "checkbox" ? t.checked : t.type === "number" || t.type === "range" ? +t.value : t.value;
+    if (v === "true" || v === "false") v = v === "true"; else if (t.tagName === "SELECT" && /^\d+$/.test(v) && k !== "prec") v = +v;
+    const was = P[k]; P[k] = v; if (t.type === "color") { const i = t.previousElementSibling; if (i) i.style.background = v; }
+    if (k === "rth" && was !== v) { offC.clear(); if (chart) draw(true); } else if (k === "prevColor" && chart) draw(true);
+    applyPrefs(); return k;
+  }
+  function openPrefs(tab, snap) {
+    tab = tab || LS.get("bt-prefs-tab", "sym"); LS.set("bt-prefs-tab", tab); snap = snap || { ...P };
+    const m = modal("Paramètres", `<div class="snav">${prefsNav(tab)}</div><div class="sbody">${prefsBody(tab)}</div>`,
       `<div class="tpl"><button class="ghost" data-m="tpl">Modèle<i class="tx-car"></i></button><div class="tx-hmenu" data-tplm hidden style="position:absolute;bottom:42px;left:0"><div class="mi" data-m="def">Appliquer les réglages par défaut</div><div class="mi" data-m="savedef">Enregistrer comme modèle par défaut</div></div></div><span class="tx-sp"></span><button data-m="all" class="ghost" title="Applique ces réglages à toutes les mises en page">Appliquer à tous</button><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
     m.querySelector(".tx-mbox").classList.add("tx-set2");
     const sb = m.querySelector(".sbody"); sb.scrollTop = 0;
-    m.oninput = (e) => { if (e.target.dataset.ii) return indInput(e.target); const k = e.target.dataset.p; if (!k) return; let v = e.target.type === "checkbox" ? e.target.checked : e.target.type === "number" || e.target.type === "range" ? +e.target.value : e.target.value;
-      if (v === "true" || v === "false") v = v === "true"; else if (e.target.tagName === "SELECT" && /^\d+$/.test(v) && k !== "prec") v = +v;
-      const was = P[k]; P[k] = v; if (e.target.type === "color") { const i = e.target.previousElementSibling; if (i) i.style.background = v; }
-      if (k === "rth" && was !== v) { offC.clear(); draw(true); } else if (k === "prevColor") draw(true);
-      applyPrefs(); if (k === "bgType") openPrefs(tab, snap); };
+    m.oninput = (e) => { const k = prefsInput(e.target); if (k === "bgType") openPrefs(tab, snap); };
     m.onclick = (e) => { const iel = e.target.closest("[data-ia]"); if (iel) return indAct(iel.dataset.ia, iel.dataset.id, () => openPrefs("ind", snap));
       const t = e.target.closest("[data-tab]"), a = (e.target.closest("[data-m]") || {}).dataset; const am = a && a.m; if (t) return openPrefs(t.dataset.tab, snap);
       const tm = m.querySelector("[data-tplm]"); if (am === "tpl") { tm.hidden = !tm.hidden; return; } if (tm) tm.hidden = true;
@@ -6550,8 +6639,8 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       <button class="gp-it" data-a="full">${ic('<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5M4 4l6 6M20 4l-6 6M20 20l-6-6M4 20l6-6"/>')}${document.fullscreenElement ? "Quitter le plein écran" : "Plein écran"}</button>`, (e) => {
       const a = e.target.closest("[data-a]"); if (!a) return; closeBtPop();
       if (a.dataset.a === "full") { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => msg("Plein écran refusé par le navigateur.", true)); }
-      else if (D && D.newWindow) D.newWindow("backtest");
-      else { const w = window.open(location.href.split("#")[0] + "#backtest", "_blank", "popup,width=1400,height=900"); if (!w) msg("Fenêtre bloquée par le navigateur : autorise les pop-ups pour ce site.", true); }
+      else if (D && D.newWindow) D.newWindow("backtest/chart"); // v1.67 : le chart (et plus les pages)
+      else { const w = window.open(location.href.split("#")[0] + "#backtest/chart", "_blank", "popup,width=1400,height=900"); if (!w) msg("Fenêtre bloquée par le navigateur : autorise les pop-ups pour ce site.", true); }
     }, true);
   }
 
@@ -7351,8 +7440,10 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (l) l.textContent = txt; r.title = `Vitesse : ${txt}${s.value === "0.0167" ? "" : ` (${+s.value} min de marché par seconde)`} · ↑ / ↓`; };
 
   /* ---- 2 & 5. ticket au risque %, breakeven auto, tags, presets ; frais et slippage du compte ---- */
-  const feeOf = (ctr) => { const v = /^M/.test(ctr) ? A.cfg.feeMic : A.cfg.feeBig; return v != null && v !== "" && !isNaN(+v) ? +v : CTR[ctr].fee; }; // frais par contrat (aller-retour), réglables dans le type de compte
+  const costNum = (o, k) => (o && o[k] != null && o[k] !== "" && !isNaN(+o[k]) ? +o[k] : null); // v1.67 : coût par actif d'une session (A.cfg.fees / A.cfg.spreads), absent = règle d'avant
+  const feeOf = (ctr) => { const f = costNum(A.cfg.fees, ctr); if (f != null) return f; const v = /^M/.test(ctr) ? A.cfg.feeMic : A.cfg.feeBig; return v != null && v !== "" && !isNaN(+v) ? +v : CTR[ctr].fee; }; // frais par contrat (aller-retour), réglables dans le type de compte
   const slipT = () => Math.max(0, +A.cfg.slip || 0); // slippage en ticks sur les ordres au marché et stop
+  const spreadT = (ctr) => { const s = costNum(A.cfg.spreads, ctr); return s != null ? Math.max(0, s) : 1; }; // v1.67 : écart au dernier prix d'un ordre au marché (ticks) ; 1 tick par défaut, comme avant
   const curTags = () => String(($("oTags") && $("oTags").value) || "").split(",").map((x) => x.trim()).filter(Boolean);
   const RKBASE = { init: "Solde initial", cur: "Solde actuel", mll: "Marge avant MLL" };
   function riskInfo() {
@@ -7423,37 +7514,45 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     return `<svg viewBox="0 0 ${w} ${h}" class="an-svg" preserveAspectRatio="none"><path d="M4,${z}H${w - 4}" stroke="var(--tx-line,#4a4d54)" stroke-dasharray="4 4"/><path d="${d}L${sx(xs.length - 1)},${h}L4,${h}Z" fill="var(--tx-acc-sub,rgba(235,188,77,.16))"/><path d="${d}" fill="none" stroke="var(--tx-acc,#ebbc4d)" stroke-width="2"/></svg>`; };
   const bars = (G, fmt) => { const mx = Math.max(1, ...G.map((g) => Math.abs(g.pnl))); return `<div class="an-bars">${G.map((g) => `<div class="an-b" title="${g.n} trade(s) · win ${Math.round(g.wr * 100)} %${g.R != null ? " · " + g.R.toFixed(2) + " R moyen" : ""}"><span>${esc(g.k)}</span><i><b class="${g.pnl >= 0 ? "up" : "dn"}" style="width:${(Math.abs(g.pnl) / mx) * 100}%"></b></i><em class="${g.pnl > 0 ? "up" : g.pnl < 0 ? "dn" : ""}">${g.n ? fmt(g) : "—"}</em></div>`).join("")}</div>`; };
   let anaSrc = "cur", anaF = { side: "", res: "", sess: "", tag: "" };
-  function openAnalytics() {
-    const L = journal(), all = anaTrades(anaSrc), tags = [...new Set(all.flatMap((t) => t.tags))];
-    const T = all.filter((t) => (!anaF.side || t.side === anaF.side) && (!anaF.res || (anaF.res === "w" ? t.pnl > 0 : anaF.res === "l" ? t.pnl < 0 : Math.abs(t.pnl) < 1)) && (!anaF.sess || sessOf(t.tIn) === anaF.sess) && (!anaF.tag || t.tags.includes(anaF.tag)));
-    const start = anaSrc === "cur" ? A.cfg.size : (L.find((r) => r.id === anaSrc) || {}).start || A.cfg.size, s = anaStats(T, start), pct = (x) => Math.round(x * 100) + " %", sg = (x) => `<span class="${x > 0 ? "up" : x < 0 ? "dn" : ""}">${usd(x)}</span>`;
+  // v1.67 : corps de l'analytique (onglets Performance / Drawdown / Simulation) pour des trades déjà filtrés : fenêtre du chart et page Testing › Analytique
+  // cur = trades du compte ouvert (marge avant MLL, MLL du Monte Carlo)
+  function anaView(T, start, cur) {
+    const s = anaStats(T, start), pct = (x) => Math.round(x * 100) + " %", sg = (x) => `<span class="${x > 0 ? "up" : x < 0 ? "dn" : ""}">${usd(x)}</span>`;
     const mn = (sec) => (sec >= 3600 ? (sec / 3600).toFixed(1) + " h" : Math.round(sec / 60) + " min"), r2 = (x) => (x == null || !isFinite(x) ? "—" : x.toFixed(2)), card = (l, v, sub) => `<div class="an-c"><small>${l}</small><b>${v}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
-    const sel = (k, opts) => `<select data-f="${k}">${opts.map(([v, t]) => `<option value="${v}" ${anaF[k] === v ? "selected" : ""}>${t}</option>`).join("")}</select>`;
     const sl = simSL(T), rr = simRR(T), mc = mcSim(T, start), noR = s.n && !s.nR ? `<div class="tx-empty" style="text-align:left">Les R, MAE et MFE se calculent pour les trades pris avec un stop (bracket) depuis cette version.</div>` : "";
-    const body = `<div class="an-f"><select data-f="src"><option value="cur" ${anaSrc === "cur" ? "selected" : ""}>Session en cours (${(A.trades || []).length} trades)</option><option value="all" ${anaSrc === "all" ? "selected" : ""}>Tous les backtests clôturés</option>${L.map((r) => `<option value="${r.id}" ${anaSrc === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>
-        ${sel("side", [["", "Long + short"], ["Long", "Long"], ["Short", "Short"]])}${sel("res", [["", "Tous les résultats"], ["w", "Gagnants"], ["l", "Perdants"], ["be", "Breakeven"]])}${sel("sess", [["", "Toutes les séances"], ...["Asie", "Londres", "NY AM", "NY PM", "Hors séance"].map((x) => [x, x])])}${sel("tag", [["", "Tous les tags"], ...tags.map((x) => [x, x])])}</div>
-      ${!T.length ? '<div class="tx-empty">Aucun trade pour ces filtres.</div>' : `
-      <div class="an-tabs"><button data-at="perf" class="on">Performance</button><button data-at="dd">Drawdown</button><button data-at="sim">Simulation</button></div>
+    return `<div class="an-tabs"><button data-at="perf" class="on">Performance</button><button data-at="dd">Drawdown</button><button data-at="sim">Simulation</button></div>
       <div data-ap="perf"><div class="an-g">${card("P&amp;L total", sg(s.pnl), `${pct(s.pnl / start)} du compte`)}${card("Win rate", pct(s.wr), `${s.wins} G · ${s.losses} P · ${s.n} trades`)}${card("Profit factor", s.pf === Infinity ? "∞" : r2(s.pf))}${card("Espérance / trade", sg(s.exp))}${card("R moyen", r2(s.nR ? s.avgR : null), `max ${r2(s.nR ? s.maxR : null)} R`)}${card("R idéal moyen (MFE)", r2(s.nR ? s.idealR : null), `max ${r2(s.nR ? s.maxIdeal : null)} R`)}${card("Perdants passés par +1 R", s.nR ? s.could : "—", "auraient pu finir au BE")}${card("Gain moyen / perte moyenne", `${sg(s.avgW)} / ${sg(-s.avgL)}`)}</div>${noR}
         <div class="an-h">Courbe d'équité</div>${svgCurve(s.curve)}
         <div class="an-2"><div class="an-box up-b"><div class="an-h">Gagnants</div><div class="an-kv"><span>Nombre</span><b>${s.wins}</b><span>Meilleur</span><b>${usd(s.best)}</b><span>Moyen</span><b>${usd(s.avgW)}</b><span>Durée moyenne</span><b>${mn(s.durW)}</b><span>Série max / moyenne</span><b>${s.sW.mx} / ${s.sW.avg.toFixed(1)}</b><span>MAE moyenne des gagnants</span><b>${s.nR ? s.avgMaeW.toFixed(2) + " R" : "—"}</b></div></div>
           <div class="an-box dn-b"><div class="an-h">Perdants</div><div class="an-kv"><span>Nombre</span><b>${s.losses}</b><span>Pire</span><b>${usd(s.worst)}</b><span>Moyen</span><b>${usd(-s.avgL)}</b><span>Durée moyenne</span><b>${mn(s.durL)}</b><span>Série max / moyenne</span><b>${s.sL.mx} / ${s.sL.avg.toFixed(1)}</b></div></div></div>
         <div class="an-2"><div><div class="an-h">Par séance (heure NY)</div>${bars(s.sess, (g) => usd(g.pnl))}</div><div><div class="an-h">Par sens</div>${bars(s.side, (g) => usd(g.pnl))}<div class="an-h">Par jour</div>${bars(s.dow, (g) => usd(g.pnl))}</div></div>
         <div class="an-2"><div><div class="an-h">Par heure d'entrée (NY)</div>${bars(s.hour, (g) => usd(g.pnl))}</div><div><div class="an-h">Par mois</div>${bars(s.month, (g) => usd(g.pnl))}<div class="an-h">Par tag (1er tag)</div>${bars(s.tag, (g) => usd(g.pnl))}</div></div></div>
-      <div data-ap="dd" hidden><div class="an-g">${card("Drawdown max", `<span class="dn">${usd(-s.mdd)}</span>`, pct(s.mddPct) + " du pic")}${card("Drawdown moyen", usd(-s.avgDd))}${card("Temps de récupération moyen", s.recov ? s.recov.toFixed(1) + " j" : "—")}${card("Marge avant MLL", anaSrc === "cur" && isProp() ? usd(A.bal - A.mll) : "—")}</div>
+      <div data-ap="dd" hidden><div class="an-g">${card("Drawdown max", `<span class="dn">${usd(-s.mdd)}</span>`, pct(s.mddPct) + " du pic")}${card("Drawdown moyen", usd(-s.avgDd))}${card("Temps de récupération moyen", s.recov ? s.recov.toFixed(1) + " j" : "—")}${card("Marge avant MLL", cur && isProp() ? usd(A.bal - A.mll) : "—")}</div>
         <div class="an-h">MAE des trades (en R : jusqu'où le prix est allé contre toi avant la sortie)</div>${s.nR ? `<div class="an-hist">${s.maeH.map((v, i) => `<div><i style="height:${(v / Math.max(1, ...s.maeH)) * 100}%"></i><span>${i === 10 ? "≥1" : (i / 10).toFixed(1)}</span><em>${v || ""}</em></div>`).join("")}</div>` : noR}</div>
       <div data-ap="sim" hidden><div class="tx-empty" style="text-align:left">Simulations sur les trades terminés ayant un stop initial (${sl[0].n}). Hypothèses : le stop plus serré est touché si la MAE l'atteint ; la cible est touchée si le MFE l'atteint (avant le stop).</div>
         <div class="an-2"><div><div class="an-h">Stop plus serré</div><table class="tx-jt"><tr><th>Stop</th><th>Win %</th><th>P&amp;L</th></tr>${sl.map((r) => `<tr><td>${r.x ? "-" + r.x + " %" : "actuel"}</td><td>${pct(r.wr)}</td><td>${sg(r.pnl)}</td></tr>`).join("")}</table></div>
           <div><div class="an-h">Cible fixe en R</div><table class="tx-jt"><tr><th>Cible</th><th>Win %</th><th>P&amp;L</th></tr>${rr.map((r) => `<tr><td>${r.k} R</td><td>${pct(r.wr)}</td><td>${sg(r.pnl)}</td></tr>`).join("")}</table></div></div>
-        <div class="an-h">Monte Carlo (${mc ? mc.runs : 0} tirages des ${s.n} trades dans le désordre)</div>${mc ? `<div class="an-g">${card("Résultat médian", sg(mc.p50))}${card("Pire 5 %", sg(mc.p5))}${card("Meilleur 5 %", sg(mc.p95))}${card("Probabilité de finir en perte", pct(mc.loss))}${card("Drawdown médian", `<span class="dn">${usd(-mc.dd50)}</span>`)}${card("Drawdown pire 5 %", `<span class="dn">${usd(-mc.dd95)}</span>`, anaSrc === "cur" && isProp() ? `MLL ${usd(A.cfg.mll)}` : "")}</div>` : '<div class="tx-empty">Il faut au moins 5 trades.</div>'}</div>`}`;
+        <div class="an-h">Monte Carlo (${mc ? mc.runs : 0} tirages des ${s.n} trades dans le désordre)</div>${mc ? `<div class="an-g">${card("Résultat médian", sg(mc.p50))}${card("Pire 5 %", sg(mc.p5))}${card("Meilleur 5 %", sg(mc.p95))}${card("Probabilité de finir en perte", pct(mc.loss))}${card("Drawdown médian", `<span class="dn">${usd(-mc.dd50)}</span>`)}${card("Drawdown pire 5 %", `<span class="dn">${usd(-mc.dd95)}</span>`, cur && isProp() ? `MLL ${usd(A.cfg.mll)}` : "")}</div>` : '<div class="tx-empty">Il faut au moins 5 trades.</div>'}</div>`;
+  }
+  function anaCsv(T) { // v1.67 : export CSV (fenêtre et page Testing › Analytique)
+    const rows = [["entree", "sortie", "contrat", "sens", "qte", "prix_in", "prix_out", "pnl", "r0_pts", "R", "mae_R", "mfe_R", "seance", "tags"]].concat(T.map((t) => [new Date(t.tIn * 1000).toISOString(), new Date(t.tOut * 1000).toISOString(), t.ctr, t.side, t.qty, t.entry, t.exit, t.pnl.toFixed(2), t.r0 || "", t.R != null ? t.R.toFixed(2) : "", t.maeR != null ? t.maeR.toFixed(2) : "", t.mfeR != null ? t.mfeR.toFixed(2) : "", sessOf(t.tIn), t.tags.join(" | ")]));
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map((r) => r.join(";")).join("\n")], { type: "text/csv" })); a.download = "backtest-trades.csv"; a.click();
+  }
+  function openAnalytics() {
+    const L = journal(), all = anaTrades(anaSrc), tags = [...new Set(all.flatMap((t) => t.tags))];
+    const T = all.filter((t) => (!anaF.side || t.side === anaF.side) && (!anaF.res || (anaF.res === "w" ? t.pnl > 0 : anaF.res === "l" ? t.pnl < 0 : Math.abs(t.pnl) < 1)) && (!anaF.sess || sessOf(t.tIn) === anaF.sess) && (!anaF.tag || t.tags.includes(anaF.tag)));
+    const start = anaSrc === "cur" ? A.cfg.size : (L.find((r) => r.id === anaSrc) || {}).start || A.cfg.size;
+    const sel = (k, opts) => `<select data-f="${k}">${opts.map(([v, t]) => `<option value="${v}" ${anaF[k] === v ? "selected" : ""}>${t}</option>`).join("")}</select>`;
+    const body = `<div class="an-f"><select data-f="src"><option value="cur" ${anaSrc === "cur" ? "selected" : ""}>Session en cours (${(A.trades || []).length} trades)</option><option value="all" ${anaSrc === "all" ? "selected" : ""}>Tous les backtests clôturés</option>${L.map((r) => `<option value="${r.id}" ${anaSrc === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>
+        ${sel("side", [["", "Long + short"], ["Long", "Long"], ["Short", "Short"]])}${sel("res", [["", "Tous les résultats"], ["w", "Gagnants"], ["l", "Perdants"], ["be", "Breakeven"]])}${sel("sess", [["", "Toutes les séances"], ...["Asie", "Londres", "NY AM", "NY PM", "Hors séance"].map((x) => [x, x])])}${sel("tag", [["", "Tous les tags"], ...tags.map((x) => [x, x])])}</div>
+      ${!T.length ? '<div class="tx-empty">Aucun trade pour ces filtres.</div>' : anaView(T, start, anaSrc === "cur")}`;
     const m = modal("📊 Analytique du backtest", body, `<button data-m="csv" class="ghost">Exporter CSV</button><span class="tx-sp"></span><button data-m="x">Fermer</button>`);
     m.querySelector(".tx-mbox").classList.add("an-wide");
     m.onchange = (e) => { const k = e.target.dataset.f; if (!k) return; if (k === "src") { anaSrc = e.target.value; anaF.tag = ""; } else anaF[k] = e.target.value; openAnalytics(); };
     m.onclick = (e) => { const b = e.target.closest("[data-at],[data-m]"); if (!b) return;
       if (b.dataset.at) { m.querySelectorAll("[data-at]").forEach((x) => x.classList.toggle("on", x === b)); m.querySelectorAll("[data-ap]").forEach((x) => (x.hidden = x.dataset.ap !== b.dataset.at)); return; }
       if (b.dataset.m === "x") return closeModal();
-      if (b.dataset.m === "csv") { const rows = [["entree", "sortie", "contrat", "sens", "qte", "prix_in", "prix_out", "pnl", "r0_pts", "R", "mae_R", "mfe_R", "seance", "tags"]].concat(T.map((t) => [new Date(t.tIn * 1000).toISOString(), new Date(t.tOut * 1000).toISOString(), t.ctr, t.side, t.qty, t.entry, t.exit, t.pnl.toFixed(2), t.r0 || "", t.R != null ? t.R.toFixed(2) : "", t.maeR != null ? t.maeR.toFixed(2) : "", t.mfeR != null ? t.mfeR.toFixed(2) : "", sessOf(t.tIn), t.tags.join(" | ")]));
-        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map((r) => r.join(";")).join("\n")], { type: "text/csv" })); a.download = "backtest-trades.csv"; a.click(); } };
+      if (b.dataset.m === "csv") anaCsv(T); };
   }
 
   /* ---- 6. dock à onglets à droite : Journal (trades + notes), News (jusqu'à l'heure du replay) ---- */
@@ -8269,7 +8368,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     return { t: Math.round(t), price: rnd(p) };
   }
   const cv = () => $(pane === 2 ? "btDraw2" : "btDraw");
-  function loop() { requestAnimationFrame(loop); const v = $("v-backtest"); if (v && v.classList.contains("on")) { render(); ordTags(); } }
+  function loop() { requestAnimationFrame(loop); if (chartOn()) { render(); ordTags(); } } // v1.67 : rien à dessiner quand les pages du Backtesteur sont affichées
   function floatBar() {
     const f = $("btFloat"); if (!f) return; const show = !!(sel && !hideAll && shapes.includes(sel) && !$("btSet").classList.contains("show"));
     if (f.hidden === show) f.hidden = !show;
@@ -8723,7 +8822,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     $("kRpW").className = "tx-kpi " + (rp > 0 ? "pos" : rp < 0 ? "neg" : ""); $("kUpW").className = "tx-kpi " + (u > 0 ? "pos" : u < 0 ? "neg" : "");
     $("kDlBar").style.width = Math.min(100, (dayLoss / A.cfg.dll) * 100) + "%"; $("kDlMax").textContent = usd(A.cfg.dll);
     const pr = isProp(); $("kMllW").hidden = !pr; $("kDlW").hidden = !pr; $("btAcc").querySelector("b").textContent = accName(A.cfg);
-    const p = last(); $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - TICK).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + TICK).toFixed(2) : "—"; $("oSpr").textContent = p != null ? (2 * TICK).toFixed(2) : "";
+    const p = last(), sp = spreadT($("oCtr").value) * TICK; $("oLast").textContent = p != null ? p.toFixed(2) : "—"; $("oBid").textContent = p != null ? (p - sp).toFixed(2) : "—"; $("oAsk").textContent = p != null ? (p + sp).toFixed(2) : "—"; $("oSpr").textContent = p != null ? (2 * sp).toFixed(2) : ""; // v1.67 : spread de la session (1 tick par défaut)
     $("oPos").textContent = A.pos ? `${A.pos.qty > 0 ? "+" : ""}${A.pos.qty} ${CTR[A.pos.ctr].name} @ ${A.pos.avg.toFixed(2)} · ${usd(u)}` : A.blown ? "Compte cramé (MLL)" : A.dllHit ? "DLL atteinte" : "No Active Position";
     const q = Math.max(1, parseInt($("oQty").value, 10) || 1), ty = $("oType").value.toUpperCase();
     riskUI(); const q2 = P.rkOn ? riskInfo().qty : q; $("oBuy").textContent = `BUY +${q2} @ ${ty}`; $("oSell").textContent = `SELL -${q2} @ ${ty}`;
@@ -8968,7 +9067,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         || (/^H\d+$/.test(buf) ? parseInt(buf.slice(1), 10) * 60 : /H$/.test(buf) ? parseInt(buf, 10) * 60 : /S$/.test(buf) ? buf.toLowerCase() : parseInt(buf, 10)),
         b = document.querySelector(`#btTfs [data-tf="${tf}"]`); if (b) b.click(); else msg("Timeframe non disponible : " + buf, true); };
     document.addEventListener("keydown", (e) => {
-      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || $("btSet").classList.contains("show") || ($("btModal") && !$("btModal").hidden) || ($("btIde") && !$("btIde").hidden) || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+      const v = $("v-backtest"); if (!v || !v.classList.contains("on") || v.classList.contains("bp-on") || $("btSet").classList.contains("show") || ($("btModal") && !$("btModal").hidden) || ($("btIde") && !$("btIde").hidden) || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
       // pavé numérique (avec ou sans Verr. Num) : 1 = m1, 5 = m5, 15, 60 = H1, 240 = H4… validé par Entrée ou après une courte pause
       if (/^Numpad\d$/.test(e.code) && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); tfBuf = (tfBuf + e.code.slice(6)).slice(-8); clearTimeout(tfTimer);
         tfTimer = setTimeout(() => { const b = tfBuf; tfBuf = ""; if (TFRE.test(b)) applyTf(b); }, 1200); msg("Timeframe : " + tfBuf + " (Entrée)"); return; }
@@ -9075,7 +9174,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     document.addEventListener("mousedown", (e) => { const g = $("btGo"); if (g && !g.hidden && !g.contains(e.target) && !e.target.closest("#btGoBtn")) g.hidden = true; }, true);
     // curseur de progression : position du replay dans les séances chargées (avancer = rejouer les bougies, reculer = revoir)
     const prog = () => { const n = S.raw.length, p = $("btProg"); if (p && document.activeElement !== p) p.value = n > 1 ? Math.round((S.cur / (n - 1)) * 1000) : 0; $("btPosT").textContent = A.pos || A.orders.length ? `Positions (${(A.pos ? 1 : 0) + A.orders.length})` : "Positions"; };
-    BUS.on("tick", prog); BUS.on("buffer", prog); setInterval(() => { if ($("v-backtest").classList.contains("on")) prog(); }, 400); // aussi après un chargement, un ordre, un reset
+    BUS.on("tick", prog); BUS.on("buffer", prog); setInterval(() => { if (chartOn()) prog(); }, 400); // aussi après un chargement, un ordre, un reset
     $("btProg").oninput = () => { const n = S.raw.length; if (n < 2) return; const i = Math.round(($("btProg").value / 1000) * (n - 1)); if (i > S.cur) { play(false); step(i - S.cur); } else if (i < S.cur) { const why = backBlock(); if (why) return msg(why, true); S.cur = i; draw(); ui(); } }; // v1.66 : reculer refusé en challenge strict / retour arrière désactivé
     $("btProg").onchange = () => $("btProg").blur();
     // plages de temps affichées (comme 1D / 5D / 1M… sous le chart)
@@ -9351,8 +9450,785 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     bindDrawing(); bindDrawing(2); bindSettings(); loadDrawings(); ui();
     initPhase1(); // v1.66 : rejouer depuis une bougie, sessions isolées (sauvegarde continue), panneau Règles
   }
-  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { init(); status(); if (sesResume()) return; if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); } }; // 1re ouverture : NQ m1 du dossier data chargé d'office (v1.66 : ou la session isolée laissée ouverte)
-  if ($("v-backtest") && $("v-backtest").classList.contains("on")) window.bt.show();
+  /* ---------------- v1.67 : Phase 1b de la salle blanche — pages du Backtesteur (spec : docs/salle-blanche-fxreplay/REA-fxreplay.md, module NAV) ----------------
+     NAV-01 menu dans la page (Testing, Stratégies, Paramètres) · NAV-02 routage #backtest[/onglet | /strategies/<id> | /parametres/<onglet>] et #backtest/chart
+     NAV-03 Testing (Tableau de bord, Sessions, Trades, Analytique) · NAV-04 / 05 fenêtre « Nouvelle session » (Backtesting | Prop firm, Essentiel puis Options, actifs des CSV)
+     NAV-06 Stratégies (cartes + fiche Vue d'ensemble) · NAV-07 Paramètres (Backtesting, Spreads & commissions, Sessions supprimées) · NAV-08 aucune limite
+     SES-04 / 05 coûts par actif · SES-09 presets de session · SES-10 liste · SES-11 corbeille · TDB-01 / 03 · JRN-01 / 04 table des trades · STR-01 / 02
+     Tout s'ajoute : le chart (Backtesteur de base, sessions isolées v1.66, fenêtres du chart) marche comme en v1.66 ; seul le clic sur Backtesteur ouvre les pages.
+     Ouvrir les pages n'écrit rien : bt-strats, bt-costs, bt-ses-presets et bt-ses-trash s'écrivent après une action, bt-time quand le chart sert. */
+
+  /* btNav:start — logique pure des pages du Backtesteur (aucun accès au DOM ni au stockage) ; testée par tools/check.js */
+  const btNav = (() => {
+    const num = (v, d) => (v != null && v !== "" && isFinite(+v) ? +v : d);
+    const norm = (s) => String(s == null ? "" : s).trim().replace(/\s+/g, " ").toLowerCase();
+    const hash = (s) => { let h = 2166136261; s = String(s); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+    // empreinte d'un trade : le même trade copié dans plusieurs sources (compte de base, instantané, récapitulatif clôturé) garde la même
+    const sig = (t) => [t.ctr, t.side, t.qty, (+t.entry).toFixed(2), (+t.exit).toFixed(2), t.tIn, t.tOut].join("|");
+    const tkey = (t) => hash(sig(t));
+
+    // 1. actifs proposés à la création d'une session (NAV-05) : raw = { syms: { NQ: { m1: [t0, t1], s1: [t0, t1] | null } } } (main process, data_csv puis data) ;
+    //    order = contrats du Backtesteur ; und(k) = sous-jacent (MNQ -> NQ) ; dayOf(t) = jour de séance New York. Un micro sans fichier reprend les bougies
+    //    de son sous-jacent (même repli que la lecture des CSV) ; un actif sans bougies m1 n'est jamais proposé.
+    function assets(raw, order, und, dayOf) {
+      const S = (raw && raw.syms) || {}, list = [];
+      order.forEach((k) => {
+        const own = S[k] && S[k].m1, u = und(k), via = !own && u !== k && S[u] && S[u].m1 ? u : null, sp = own || (via ? S[u].m1 : null); if (!sp) return;
+        const s1 = (S[k] && S[k].s1) || (via && S[u].s1) || null;
+        list.push({ sym: k, t0: sp[0], t1: sp[1], min: dayOf(sp[0]), max: dayOf(sp[1]), via, s1: s1 ? { min: dayOf(s1[0]), max: dayOf(s1[1]) } : null });
+      });
+      return { list, other: Object.keys(S).filter((k) => !order.includes(k) && S[k] && S[k].m1).sort() };
+    }
+
+    // 2. coûts par actif (SES-04 / SES-05) : saved = { rows: [{ sym, spread, fee }], slip } (Paramètres › Spreads & commissions) ou null ; syms = actifs des CSV ;
+    //    def(sym) = commission par défaut (frais du compte de base, sinon ceux du contrat). Spread = ticks d'écart au dernier prix d'un ordre au marché
+    //    (1 = règle d'avant), commission = aller-retour par contrat, imputée à la clôture (sémantique de feeOf).
+    function costRows(saved, syms, def) {
+      if (saved && Array.isArray(saved.rows)) return saved.rows.filter((r) => r && r.sym).map((r) => ({ sym: String(r.sym), spread: Math.max(0, num(r.spread, 1)), fee: Math.max(0, num(r.fee, num(def(r.sym), 0))) }));
+      return (syms || []).map((s) => ({ sym: s, spread: 1, fee: Math.max(0, num(def(s), 0)) }));
+    }
+    const SLIP = [["0", "Aucun"], ["1", "Léger · 1 tick"], ["2", "Moyen · 2 ticks"], ["fix", "Fixe"]];
+    const slipOf = (lvl, n) => (lvl === "fix" ? Math.max(0, Math.round(num(n, 0))) : Math.max(0, num(lvl, 0)));
+    const slipLvl = (n) => { n = Math.max(0, Math.round(num(n, 0))); return n <= 2 ? { lvl: String(n), n } : { lvl: "fix", n }; };
+    // coûts d'une nouvelle session (A.cfg) : commissions ou spreads désactivés = exécution au prix brut (0) ; feeBig / feeMic gardés pour la fenêtre « Type de compte »
+    function costCfg(rows, list, o) {
+      const fees = {}, spreads = {}, def = (o && o.def) || (() => 0), off = (k) => o && o[k] === false;
+      (list || []).forEach((s) => { const r = (rows || []).find((x) => x.sym === s); fees[s] = off("fee") ? 0 : r ? r.fee : num(def(s), 0); spreads[s] = off("spread") ? 0 : r ? r.spread : 1; });
+      const pick = (L, d) => { const k = L.find((s) => s in fees); return k ? fees[k] : off("fee") ? 0 : num(def(d), 0); };
+      return { fees, spreads, slip: Math.max(0, Math.round(num(o && o.slip, 0))), feeBig: pick(["NQ", "ES"], "NQ"), feeMic: pick(["MNQ", "MES"], "MNQ") };
+    }
+
+    // 3. corbeille (SES-11) : la session passe de la liste (bt-ses) à la corbeille (bt-ses-trash) ; compte, journal du replay et dessins restent dans leurs clés
+    const trash = {
+      del(list, bin, id, at) { const r = (list || []).find((x) => x.id === id); if (!r) return null; return { list: list.filter((x) => x !== r), bin: [{ ...r, deletedAt: at }, ...(bin || []).filter((x) => x.id !== id)] }; },
+      restore(list, bin, id) {
+        const r = (bin || []).find((x) => x.id === id); if (!r) return null; const rec = { ...r }; delete rec.deletedAt;
+        const L = (list || []).filter((x) => x.id !== id), i = L.findIndex((x) => String(x.created || "") < String(rec.created || "")); L.splice(i < 0 ? L.length : i, 0, rec); // remise à sa place (sessions les plus récentes d'abord)
+        return { list: L, bin: bin.filter((x) => x !== r) };
+      },
+      purge(bin, id) { return (bin || []).filter((x) => x.id !== id); },
+      // clés de stockage d'une session (état, journal du replay, dessins des 2 charts), sans toucher aux sessions dont l'id commence pareil
+      keys(id, all) { return (all || []).filter((k) => k === "bt-ses-" + id || k === "bt-ses-" + id + "-ev" || k.startsWith("bt-draw-ses-" + id + "-") || k.startsWith("bt-draw2-ses-" + id + "-")); },
+      rekey(k, id, nid) { return k === "bt-ses-" + id ? "bt-ses-" + nid : k === "bt-ses-" + id + "-ev" ? "bt-ses-" + nid + "-ev" : k.replace("-ses-" + id + "-", "-ses-" + nid + "-"); },
+      page(bin, p, per) { const L = [...(bin || [])].sort((a, b) => String(b.deletedAt || "").localeCompare(String(a.deletedAt || ""))), pages = Math.max(1, Math.ceil(L.length / per)), n = Math.max(0, Math.min(pages - 1, p | 0)); return { rows: L.slice(n * per, n * per + per), page: n, pages, total: L.length }; },
+    };
+
+    // 4. trades backtest (JRN-01 / JRN-04) : sources = [{ type: "ses" | "base" | "snap" | "rec", id, name, strat, start, trades }] dans l'ordre de priorité ;
+    //    ctr = contrats ({ NQ: { pv } }) ; un trade copié dans plusieurs sources n'est gardé qu'une fois (1re source).
+    //    $ = P&L net (frais inclus) ; % = P&L / solde de départ de la source ; R = P&L net / (qté × r0 × valeur du point), seulement avec un stop initial (r0)
+    function collect(sources, ctr) {
+      const seen = new Set(), out = [];
+      (sources || []).forEach((s) => (s.trades || []).forEach((t, i) => {
+        if (!t || t.tOut == null || t.tIn == null) return; const k = sig(t); if (seen.has(k)) return; seen.add(k);
+        const pv = (ctr[t.ctr] || {}).pv || 1, pnl = +t.pnl || 0, r0 = +t.r0 || null, qty = Math.abs(+t.qty || 0) || 1, start = +s.start || 0;
+        out.push({ key: s.type + ":" + s.id + ":" + (t.id != null ? t.id : i), tk: hash(k), src: s.type, sid: s.id, sname: s.name, strat: s.strat || "", start,
+          ctr: t.ctr, side: t.side, qty, entry: +t.entry, exit: +t.exit, tIn: t.tIn, tOut: t.tOut, dur: t.tOut - t.tIn, pnl, fee: t.fee != null ? +t.fee : null,
+          r0, R: r0 ? pnl / (qty * r0 * pv) : null, pct: start ? pnl / start : null, tags: Array.isArray(t.tags) ? t.tags : [], note: t.note || "", why: t.why || "", raw: t });
+      }));
+      return out;
+    }
+    // gagnant / perdant / breakeven : |R| ≤ 0,1 (seuil be), ou |P&L| < 1 $ pour un trade sans stop initial
+    const outcome = (t, be) => { be = be == null ? 0.1 : be; return t.R != null ? (Math.abs(t.R) <= be ? "be" : t.R > 0 ? "w" : "l") : Math.abs(t.pnl) < 1 ? "be" : t.pnl > 0 ? "w" : "l"; };
+    // filtres de base : f = { src: ["type:id"] (null = toutes, [] = aucune), side, res, ctr, strat: [noms], from, to (jours de séance), q (texte : notes, tags, source, stratégie), dayOf }
+    function filter(T, f) {
+      const q = norm(f.q), set = Array.isArray(f.src) ? new Set(f.src) : null, st = f.strat && f.strat.length ? new Set(f.strat.map(norm)) : null;
+      return (T || []).filter((t) => (!set || set.has(t.src + ":" + t.sid)) && (!f.side || t.side === f.side) && (!f.res || outcome(t, f.be) === f.res) && (!f.ctr || t.ctr === f.ctr)
+        && (!st || st.has(norm(t.strat))) && (!f.from || f.dayOf(t.tOut) >= f.from) && (!f.to || f.dayOf(t.tOut) <= f.to)
+        && (!q || norm([t.note, t.tags.join(" "), t.sname, t.strat, t.why].join(" ")).includes(q)));
+    }
+    const SORTK = { date: (t) => t.tIn, out: (t) => t.tOut, src: (t) => norm(t.sname), strat: (t) => norm(t.strat), ctr: (t) => t.ctr, side: (t) => t.side, qty: (t) => t.qty, dur: (t) => t.dur,
+      pnl: (t) => t.pnl, pct: (t) => (t.pct == null ? -Infinity : t.pct), R: (t) => (t.R == null ? -Infinity : t.R) };
+    function sort(T, k, dir) { const f = SORTK[k] || SORTK.date, d = dir === "asc" ? 1 : -1; return [...(T || [])].sort((a, b) => { const x = f(a), y = f(b); return (x < y ? -1 : x > y ? 1 : 0) * d || (a.tIn - b.tIn) * d; }); }
+
+    // 5. chiffres d'un groupe de trades (stratégie, tableau de bord) : win rate = G / (G + P) hors breakeven ; R:R moyen = gain moyen / perte moyenne ;
+    //    drawdown max = plus forte baisse du P&L cumulé depuis un sommet (trades triés par sortie, départ à 0)
+    function stats(T, be) {
+      const L = [...(T || [])].sort((a, b) => a.tOut - b.tOut || a.tIn - b.tIn), W = [], Lo = [], B = [];
+      L.forEach((t) => { const o = outcome(t, be); (o === "w" ? W : o === "l" ? Lo : B).push(t); });
+      const sum = (a) => a.reduce((x, t) => x + t.pnl, 0), gw = sum(W), gl = -sum(Lo), avgW = W.length ? gw / W.length : 0, avgL = Lo.length ? gl / Lo.length : 0;
+      let eq = 0, peak = 0, mdd = 0; const curve = [0];
+      L.forEach((t) => { eq += t.pnl; curve.push(eq); if (eq > peak) peak = eq; else mdd = Math.max(mdd, peak - eq); });
+      const wR = L.filter((t) => t.R != null);
+      return { n: L.length, wins: W.length, losses: Lo.length, be: B.length, wr: W.length + Lo.length ? W.length / (W.length + Lo.length) : null, pnl: sum(L), avgW, avgL,
+        rr: Lo.length ? avgW / avgL : W.length ? Infinity : null, mdd, curve, buys: L.filter((t) => t.side === "Long").length, sells: L.filter((t) => t.side === "Short").length,
+        nR: wR.length, avgR: wR.length ? wR.reduce((x, t) => x + t.R, 0) / wR.length : null };
+    }
+
+    // 6. stratégies (STR-01) : fiches enregistrées (bt-strats = { list, hide }) + noms déjà tapés dans les sessions (texte libre), reliés par le nom sans toucher
+    //    aux sessions ; une fiche renommée garde ses anciens noms (alias) ; hide = noms retirés de la liste. used = [{ name, n (sessions) }]
+    function strategies(store, used) {
+      const st = store && Array.isArray(store.list) ? store.list : [], hide = new Set(((store && store.hide) || []).map(norm)), byName = new Map();
+      const out = st.map((s) => ({ rules: [], alias: [], ...s, names: [s.name, ...(s.alias || [])].map(norm).filter(Boolean), saved: true, n: 0 }));
+      out.forEach((s) => s.names.forEach((k) => { if (!byName.has(k)) byName.set(k, s); }));
+      (used || []).forEach((u) => { const k = norm(u.name); if (!k) return; let s = byName.get(k);
+        if (!s && !hide.has(k)) { s = { id: "n" + hash(k), name: String(u.name).trim().replace(/\s+/g, " "), author: "", desc: "", rules: [], alias: [], names: [k], saved: false, n: 0 }; out.push(s); byName.set(k, s); }
+        if (s) s.n += u.n || 0; });
+      return out;
+    }
+    const linked = (s, name) => !!norm(name) && s.names.includes(norm(name));
+    function uniqueName(base, taken) { const T = new Set((taken || []).map(norm)); base = String(base || "").trim() || "Stratégie"; if (!T.has(norm(base))) return base; for (let i = 2; i < 10000; i++) { const n = `${base} ${i}`; if (!T.has(norm(n))) return n; } return base + " " + Date.now(); }
+
+    // 7. progression (TDB-01) : log = bt-time { d: { jour: { contexte: [secondes réelles, secondes de marché] } }, tr: { empreinte: jour } } ;
+    //    période "week" (depuis le lundi) | "month" (depuis le 1er) | "all", jours réels de New York ; un trade d'avant le suivi (sans jour noté) ne compte que dans « Tout »
+    function since(period, today) { if (period === "month") return today.slice(0, 8) + "01"; if (period !== "week") return null; const d = new Date(today + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); return d.toISOString().slice(0, 10); }
+    function progress(log, T, period, today) {
+      const from = since(period, today), D = (log && log.d) || {}, tr = (log && log.tr) || {}; let real = 0, market = 0, days = 0;
+      Object.keys(D).forEach((k) => { if ((from && k < from) || k > today) return; let r = 0; Object.values(D[k] || {}).forEach((v) => { r += +v[0] || 0; market += +v[1] || 0; }); real += r; if (r > 0) days++; });
+      const P = from ? (T || []).filter((t) => { const k = tr[t.tk]; return !!k && k >= from && k <= today; }) : T || [];
+      return { from, real, market, days, ...stats(P) };
+    }
+    function addTime(log, day, ctx, real, market) { log.d = log.d || {}; const D = (log.d[day] = log.d[day] || {}), v = (D[ctx] = D[ctx] || [0, 0]); v[0] += +real || 0; v[1] += +market || 0; return log; }
+    function markTrades(log, trades, day) { log.tr = log.tr || {}; let n = 0; (trades || []).forEach((t) => { if (!t || t.tOut == null) return; const k = tkey(t); if (!(k in log.tr)) { log.tr[k] = day; n++; } }); return n; }
+    // temps de marché rejoué entre deux bougies jouées : l'écart, plafonné à 60 s (marché fermé, week-end : rien de plus)
+    const marketStep = (prev, t) => (prev != null && t > prev ? Math.min(t - prev, 60) : 0);
+
+    // 8. presets de session (SES-09) : réglages de la fenêtre « Nouvelle session », sans le nom ni la date de départ
+    const PRESETK = ["kind", "bal", "free", "size", "rules", "strict", "strat", "assets", "layout", "time", "endMode", "rel", "fee", "spread", "slipLvl", "slipN", "costs"];
+    const clone = (v) => JSON.parse(JSON.stringify(v));
+    const presetOf = (d) => { const o = {}; PRESETK.forEach((k) => { if (d && d[k] !== undefined) o[k] = clone(d[k]); }); return o; };
+    const presetApply = (d, p) => { const o = { ...d }; PRESETK.forEach((k) => { if (p && p[k] !== undefined) o[k] = clone(p[k]); }); return o; };
+
+    // 9. routage : « backtest/… » -> { page, tab, id } ; chemin inverse
+    const TABS = { testing: ["tableau", "sessions", "trades", "analytique"], parametres: ["backtesting", "spreads", "corbeille"] };
+    function route(p) {
+      const a = String(p || "").split("/").filter(Boolean);
+      if (a[0] === "chart") return { page: "chart" };
+      if (TABS.testing.includes(a[0])) return { page: "testing", tab: a[0] };
+      if (a[0] === "strategies") return { page: "strategies", id: a[1] || null };
+      if (a[0] === "parametres") return { page: "parametres", tab: TABS.parametres.includes(a[1]) ? a[1] : "backtesting" };
+      return { page: "testing", tab: "tableau" };
+    }
+    const path = (r) => (r.page === "chart" ? "chart" : r.page === "strategies" ? "strategies" + (r.id ? "/" + r.id : "") : r.page === "parametres" ? "parametres/" + (r.tab || "backtesting") : r.tab && r.tab !== "tableau" ? r.tab : "");
+
+    return { norm, hash, sig, tkey, assets, costRows, SLIP, slipOf, slipLvl, costCfg, trash, collect, outcome, filter, sort, stats, strategies, linked, uniqueName, since, progress, addTime, markTrades, marketStep, presetOf, presetApply, route, path, TABS };
+  })();
+  /* btNav:end */
+
+  /* ---- outils des pages ---- */
+  function chartOn() { const v = document.getElementById("v-backtest"); return !!v && v.classList.contains("on") && !v.classList.contains("bp-on"); } // chart affiché (et pas les pages)
+  const BPV = $("v-backtest"), CTRORD = ["NQ", "ES", "MNQ", "MES"];
+  const STRK = "bt-strats", COSTK = "bt-costs", PRSK = "bt-ses-presets", BINK = "bt-ses-trash", TIMEK = "bt-time"; // v1.67 : nouvelles clés (écrites seulement après une action)
+  const NYD = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
+  const NYDT = new Intl.DateTimeFormat("fr-FR", { timeZone: "America/New_York", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  const nyDay = () => NYD.format(new Date()); // jour réel à New York (AAAA-MM-JJ)
+  const isoNY = (s) => { if (!s) return "—"; const d = new Date(s); return isNaN(d) ? "—" : NYDT.format(d).replace(",", ""); };
+  const durTxt = (sec) => { sec = Math.max(0, Math.round(+sec || 0)); if (sec < 60) return sec + " s"; if (sec < 3600) return Math.round(sec / 60) + " min"; if (sec < 172800) { const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60); return h + " h " + String(m).padStart(2, "0"); } return Math.floor(sec / 86400) + " j " + Math.round((sec % 86400) / 3600) + " h"; };
+  const pctTxt = (x, d) => (x == null || !isFinite(x) ? "—" : (x * 100).toFixed(d || 0).replace(".", ",") + " %");
+  const sgn = (x) => (x > 0 ? "up" : x < 0 ? "dn" : "");
+  const rTxt = (x) => (x == null || !isFinite(x) ? "—" : (x > 0 ? "+" : "") + x.toFixed(2).replace(".", ",") + " R");
+  const rrTxt = (x) => (x == null ? "—" : x === Infinity ? "∞" : x.toFixed(2).replace(".", ","));
+  const usdS = (x) => `<span class="${sgn(x)}">${usd(x)}</span>`;
+  const ctrName = (k) => (CTR[k] ? CTR[k].name : esc(k || ""));
+  const uid = () => Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+  const allKeys = () => { const o = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k) o.push(k); } return o; };
+  const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } };
+  const profileName = () => { const n = $("sName"); return (n && n.textContent.trim()) || "Trader"; };
+  const sesKind = (r) => (r.type === "challenge" ? "Prop firm" + (r.strict ? " · strict" : "") : "Backtesting");
+  const sesPeriod = (r) => `${fmtD(r.from)} ${esc(r.time || "")} → ${r.end ? fmtD(r.end) : "fin auto"}`;
+  const binList = () => LS.get(BINK, []) || [];
+  const stratStore = () => { const s = LS.get(STRK, null); return s && Array.isArray(s.list) ? { v: 1, hide: [], ...s } : { v: 1, list: [], hide: [] }; };
+  const presetsS = () => LS.get(PRSK, []) || [];
+  // compte du Backtesteur de base (bt-acc), même quand une session isolée est ouverte
+  const baseAcc = () => (curSes ? fixAcc(LS.get("bt-acc", null) || freshAcc(defCfg())) : A);
+  // commission par défaut d'un actif : frais du compte de base (Type de compte › Frais), sinon ceux du contrat
+  const defFee = (sym) => { const c = baseAcc().cfg, v = /^M/.test(sym) ? c.feeMic : c.feeBig; return v != null && v !== "" && !isNaN(+v) ? +v : CTR[sym] ? CTR[sym].fee : 0; };
+  function bpToast(t, bad) { const box = $("bpToasts"); if (!box) return; const e = document.createElement("div"); e.className = "bp-toast" + (bad ? " err" : ""); e.textContent = t; box.append(e); setTimeout(() => e.classList.add("out"), 4200); setTimeout(() => e.remove(), 4700); }
+  // état enregistré d'une session isolée (celle qui est ouverte : son compte en mémoire)
+  const sesState = (id) => (curSes && curSes.id === id ? { acc: A, t: sesT() } : LS.get(sesKey(id), null) || {});
+  // toutes les sources de trades backtest, dans l'ordre de priorité des doublons : sessions isolées, Backtesteur de base, instantanés, récapitulatifs clôturés
+  function srcAll() {
+    const out = [];
+    sesList().forEach((r) => { const acc = sesState(r.id).acc; out.push({ type: "ses", id: r.id, name: r.name, strat: r.strat || "", start: (r.cfg && r.cfg.size) || (acc && acc.cfg && acc.cfg.size) || 50000, trades: (acc && acc.trades) || [], rec: r }); });
+    const b = baseAcc(); out.push({ type: "base", id: "base", name: "Backtesteur de base", strat: "", start: (b.cfg && b.cfg.size) || 50000, trades: b.trades || [] });
+    sessions().forEach((s) => out.push({ type: "snap", id: s.id, name: s.name, strat: s.strat || "", start: (s.acc && s.acc.cfg && s.acc.cfg.size) || 50000, trades: (s.acc && s.acc.trades) || [] }));
+    journal().forEach((r) => out.push({ type: "rec", id: r.id, name: r.name, strat: r.strat || "", start: r.start || (r.cfg && r.cfg.size) || 50000, trades: r.trades || [] }));
+    return out;
+  }
+  const SRCN = { ses: "Sessions isolées", base: "Backtesteur de base", snap: "Instantanés (ancien format)", rec: "Clôturés (Journal backtest)" };
+  // noms de stratégie tapés dans les sessions (texte libre) : sessions isolées et instantanés (nombre de sessions), récapitulatifs clôturés (sans compter)
+  function usedNames() {
+    const m = new Map(), add = (n, c) => { const k = btNav.norm(n); if (!k) return; const o = m.get(k) || { name: String(n).trim(), n: 0 }; o.n += c; m.set(k, o); };
+    sesList().forEach((r) => add(r.strat, 1)); sessions().forEach((s) => add(s.strat, 1)); journal().forEach((r) => add(r.strat, 0));
+    return [...m.values()];
+  }
+  const stratList = () => btNav.strategies(stratStore(), usedNames());
+  // actifs des CSV (NAV-05) : desktop = data:assets (main process, lecture légère), web = aucun ; gardés pendant la session de l'app
+  let assetsC = null;
+  async function assetsGet(force) {
+    if (assetsC && !force) return assetsC;
+    if (!D) return (assetsC = { web: true, list: [], other: [] });
+    try {
+      if (D.dataAssets) { const r = await D.dataAssets(); assetsC = r && r.ok ? btNav.assets(r.data, CTRORD, und, sessionKey) : { list: [], other: [], err: (r && r.reason) || "lecture impossible" }; }
+      else { const list = []; for (const k of CTRORD) { const b = await sesBounds(k); if (b) list.push({ sym: k, min: b.min, max: b.max, via: null, s1: null }); } assetsC = { list, other: [] }; } // app desktop plus ancienne
+    } catch (e) { assetsC = { list: [], other: [], err: String(e.message || e) }; }
+    return assetsC;
+  }
+  const assetsMsg = (AS) => (AS.web ? "Version web : aucun actif. Les bougies des CSV (dossiers data_csv et data) sont lues par l'app Windows, où les sessions se rejouent." : AS.err ? "Lecture des actifs impossible : " + AS.err : "Aucun actif avec des bougies m1 dans les dossiers data_csv et data : « Synchro données » dans le chart, ou dépose les CSV dans data_csv.");
+
+  /* ---- suivi du temps (TDB-01) : temps réel passé sur le chart, temps de marché rejoué, jour réel de chaque nouveau trade ; bt-time n'est écrit que quand le chart sert ---- */
+  let tmLog = null, tmLastT = null, tmTick = 0, tmInput = 0, tmFlushAt = 0, tmDirty = false, tmBase = null;
+  const tmAcc = {}; // contexte (id de session ou « base ») -> [secondes réelles, secondes de marché] pas encore écrites
+  const tmGet = () => tmLog || (tmLog = LS.get(TIMEK, null) || { v: 1, d: {}, tr: {} });
+  const tmAdd = (i, v) => { if (!(v > 0)) return; const c = curSes ? curSes.id : "base", a = (tmAcc[c] = tmAcc[c] || [0, 0]); a[i] += v; };
+  BUS.on("bar", (b) => { tmAdd(1, btNav.marketStep(tmLastT, b[0])); tmLastT = b[0]; }); // chaque bougie jouée (lecture, pas, saut « Aller à ») ; rien au retour arrière
+  // trades apparus depuis la 1re observation de ce compte (un trade d'avant le suivi n'a pas de jour noté)
+  function tmTrades() {
+    if (!A || !A.trades) return;
+    if (!tmBase || tmBase.acc !== A) { tmBase = { acc: A, n: A.trades.length }; return; }
+    if (A.trades.length > tmBase.n && btNav.markTrades(tmGet(), A.trades.slice(tmBase.n), nyDay())) tmDirty = true;
+    tmBase.n = A.trades.length;
+  }
+  function tmFlush() {
+    tmFlushAt = Date.now(); tmTrades();
+    const keys = Object.keys(tmAcc).filter((c) => tmAcc[c][0] >= 1 || tmAcc[c][1] > 0); if (!keys.length && !tmDirty) return;
+    const log = tmGet(), day = nyDay();
+    keys.forEach((c) => { const a = tmAcc[c], r = Math.floor(a[0]); btNav.addTime(log, day, c, r, a[1]); a[0] -= r; a[1] = 0; });
+    if (lsPut(TIMEK, log)) tmDirty = false;
+  }
+  function tmBeat() { // toutes les 5 s : temps réel compté si le chart est affiché, l'app visible, et lecture en cours ou activité depuis moins de 2 min
+    const now = Date.now(), dt = tmTick ? Math.min(now - tmTick, 10000) : 0; tmTick = now;
+    if (dt > 0 && chartOn() && !document.hidden && (S.playing || now - tmInput < 120000)) tmAdd(0, dt / 1000);
+    tmTrades(); if (now - tmFlushAt > 30000) tmFlush();
+  }
+  ["pointerdown", "keydown", "wheel", "mousemove"].forEach((ev) => document.addEventListener(ev, () => { if (chartOn()) tmInput = Date.now(); }, { passive: true, capture: true }));
+  setInterval(tmBeat, 5000); addEventListener("pagehide", tmFlush); addEventListener("beforeunload", tmFlush); document.addEventListener("visibilitychange", () => { if (document.hidden) tmFlush(); });
+
+  /* ---- routage des pages (NAV-02) : #backtest = Testing › Tableau de bord, #backtest/<onglet>, #backtest/strategies[/<id>], #backtest/parametres/<onglet>, #backtest/chart ----
+     Dernière page vue et derniers onglets gardés en mémoire (bouton « Pages » du chart, menu de la page) ; rien n'est écrit en naviguant. */
+  const pg = { r: { page: "testing", tab: "tableau" }, prev: "", last: { testing: "tableau", parametres: "backtesting" }, pend: null, shown: false, period: "week", prefTab: null,
+    ses: { q: "", type: "", strat: "", sort: "recent" }, tr: { src: null, side: "", res: "", ctr: "", strat: "", from: "", to: "", q: "" }, trSort: { k: "date", dir: "desc" }, trPage: 0,
+    ana: { src: "", strat: "", side: "", res: "", sess: "", tag: "" }, st: { q: "", f: "" }, binPage: 0, costs: null };
+  function bpGo(p) { const h = "#backtest" + (p ? "/" + p : ""); if (location.hash === h) bpRoute(p); else location.hash = h; }
+  // ouvre le chart ; then = action une fois le chart affiché (ouvrir une session, le Backtesteur de base…), sinon comportement de la v1.66
+  function toChart(then) { pg.pend = then || null; if (location.hash === "#backtest/chart") bpRoute("chart"); else location.hash = "#backtest/chart"; }
+  function leaveChart() { if (S.playing) play(false); if (curSes) sesSaveNow(); tmFlush(); pg.shown = false; const m = $("btModal"); if (m && !m.hidden) { const x = m.querySelector('[data-m="x"]'); if (x) x.click(); else m.hidden = true; } } // fenêtre du chart encore ouverte : fermée comme avec sa croix (réglages non enregistrés annulés)
+  function chartOpen(then) {
+    const was = chartOn() && pg.shown; BPV.classList.remove("bp-on"); pg.shown = true;
+    init(); status(); tmTick = tmInput = Date.now();
+    if (then) { sesResumed = true; Promise.resolve().then(then).catch((e) => msg("Ouverture impossible : " + (e && e.message ? e.message : e), true)); }
+    else if (!was && !sesResume()) { if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") load(); else setTimeout(() => { draw(); ui(); }, 0); }
+    setTimeout(() => { window.dispatchEvent(new Event("resize")); if (chart) { draw(); ui(); } }, 30); // Lightweight Charts : taille recalculée quand le chart réapparaît
+  }
+  function bpRoute(p) {
+    const r = btNav.route(p);
+    if (r.page === "chart") { const f = pg.pend; pg.pend = null; return chartOpen(f); }
+    if (chartOn()) leaveChart(); BPV.classList.add("bp-on"); pg.shown = false;
+    if (r.tab && pg.last[r.page] !== undefined) pg.last[r.page] = r.tab;
+    pg.r = r; pg.prev = btNav.path(r); bpRender();
+  }
+  const bpIc = (d, w) => `<svg viewBox="0 0 24 24" width="${w || 20}" height="${w || 20}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const BPI = { logo: bpIc('<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'), testing: bpIc('<path d="M9 3h6M10 3v6l-5.2 9.1A2 2 0 0 0 6.5 21h11a2 2 0 0 0 1.7-2.9L14 9V3"/><path d="M7.5 15h9"/>'),
+    strategies: bpIc('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>'), parametres: bpIc('<circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>'),
+    chart: bpIc('<path d="M8 4v3M8 15v5M16 6v4M16 17v3"/><rect x="6" y="7" width="4" height="8" rx="1"/><rect x="14" y="10" width="4" height="7" rx="1"/>'),
+    play: bpIc('<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/>'), prop: bpIc('<path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>') };
+  function bpNav() {
+    const pend = !curSes && LS.get("bt-ses-cur", null), ps = pend && sesList().find((x) => x.id === pend);
+    const st = curSes ? `Session « ${esc(curSes.name)} » ouverte` : ps ? `Session « ${esc(ps.name)} » reprise à l'ouverture` : `Backtesteur de base · ${esc(accName(A.cfg))}`;
+    $("bpNav").innerHTML = `<div class="bp-brand">${BPI.logo}<span>Backtesteur</span></div>` + [["testing", "Testing"], ["strategies", "Stratégies"], ["parametres", "Paramètres"]].map(([k, t]) => `<button class="bp-ni${pg.r.page === k ? " on" : ""}" data-bpn="${k}">${BPI[k]}<span>${t}</span></button>`).join("")
+      + `<button class="bp-nchart" data-bpn="chart" title="Afficher le chart en plein écran (retour aux pages : bouton « Pages » en haut à gauche du chart)"><b>${BPI.chart}Chart</b><small>${st}</small></button>`;
+  }
+  const bpHead = (title, lead, right) => `<div class="bp-head"><h1>${title}</h1><span class="bp-sp"></span>${right || ""}${lead ? `<div class="bp-lead">${lead}</div>` : ""}</div>`;
+  const bpTabs = (L, on) => `<div class="bp-tabs">${L.map(([k, t, p]) => `<button class="${k === on ? "on" : ""}" data-bpgo="${p}">${t}</button>`).join("")}</div>`;
+  function bpRender() {
+    bpNav(); const r = pg.r, el = $("bpMain"); el.scrollTop = 0;
+    try {
+      if (r.page === "strategies") return r.id ? pageStrat(el, r.id) : pageStrats(el);
+      if (r.page === "parametres") return pageParams(el, r.tab);
+      return pageTesting(el, r.tab);
+    } catch (e) { el.innerHTML = `<div class="bp-empty">Affichage impossible : ${esc(e && e.message ? e.message : String(e))}</div>`; console.error(e); }
+  }
+
+  /* ---- Testing (NAV-03) : Tableau de bord (TDB-01 / 03), Sessions (SES-10 / 11), Trades (JRN-01 / 04), Analytique (ANA, STR-02) ---- */
+  function pageTesting(el, tab) {
+    el.innerHTML = bpHead("Testing", "Lance une session, reprends-la, puis étudie tes trades backtest.", `<button class="bp-btn" data-bpa="new" data-kind="bt">＋ Nouvelle session</button>`)
+      + bpTabs([["tableau", "Tableau de bord", ""], ["sessions", "Sessions", "sessions"], ["trades", "Trades", "trades"], ["analytique", "Analytique", "analytique"]], tab) + '<div id="bpBody"></div>';
+    const box = $("bpBody");
+    if (tab === "sessions") return tabSessions(box);
+    if (tab === "trades") return tabTrades(box);
+    if (tab === "analytique") return tabAna(box);
+    return tabDash(box);
+  }
+  const byRecent = (a, b) => String(b.savedAt || b.created || "").localeCompare(String(a.savedAt || a.created || ""));
+  // dernière session : celle qui est ouverte, sinon celle reprise à l'ouverture du chart, sinon la plus récemment enregistrée
+  function lastSes() { const L = sesList(); if (!L.length) return null; const id = curSes ? curSes.id : LS.get("bt-ses-cur", null); return (id && L.find((x) => x.id === id)) || [...L].sort(byRecent)[0]; }
+  // chiffres d'une session isolée : solde, P&L, trades, win rate (même règle que les stratégies), heure du replay
+  function sesInfo(r) {
+    const st = sesState(r.id), acc = st.acc, start = (r.cfg && r.cfg.size) || (acc && acc.cfg && acc.cfg.size) || 0, bal = acc ? acc.bal : r.bal != null ? r.bal : start;
+    const T = btNav.collect([{ type: "ses", id: r.id, name: r.name, start, trades: (acc && acc.trades) || [] }], CTR), s = btNav.stats(T);
+    return { start, bal, pnl: bal - start, n: s.n, wr: s.wr, t: st.t != null ? st.t : r.t };
+  }
+  const sesChips = (r) => { const open = curSes && curSes.id === r.id, pend = !curSes && LS.get("bt-ses-cur", null) === r.id;
+    return `<span class="bp-chip ${r.type === "challenge" ? "bp-cw" : "bp-ca"}">${sesKind(r)}</span>${r.strat ? `<span class="bp-chip">${esc(r.strat)}</span>` : ""}${open ? '<span class="bp-chip bp-co">ouverte</span>' : pend ? '<span class="bp-chip">reprise à l\'ouverture du chart</span>' : ""}`; };
+  const resumeLbl = (r) => (curSes && curSes.id === r.id ? "Revenir au chart" : "Reprendre");
+  function tabDash(box) {
+    tmFlush(); // temps en attente compris
+    const T = btNav.collect(srcAll(), CTR), pr = btNav.progress(LS.get(TIMEK, null) || {}, T, pg.period, nyDay()), b = baseAcc(), ls = lastSes(), rec = [...sesList()].sort(byRecent).slice(0, 5);
+    const tip = (t) => `<i class="bp-i" title="${esc(t)}">i</i>`, kpi = (lab, t, val, sub) => `<div class="bp-kpi"><small>${lab} ${tip(t)}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
+    const resume = ls ? (() => { const x = sesInfo(ls); return `<div class="bp-card bp-resume"><div class="bp-rm"><b>${esc(ls.name)}</b>${sesChips(ls)}<small>${esc((ls.assets || []).join(" · "))} · ${sesPeriod(ls)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : " · pas encore rejouée"} · solde ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)</small></div><button class="bp-btn" data-bpa="open" data-id="${esc(ls.id)}">${curSes && curSes.id === ls.id ? "Revenir au chart" : "Reprendre la session"}</button></div>`; })() : "";
+    box.innerHTML = `<div class="bp-h2">Démarrer</div><div class="bp-grid">
+        <button class="bp-start" data-bpa="new" data-kind="bt">${BPI.play}<b>Session de backtesting</b><small>Backtest libre et isolé : solde au choix, actifs des CSV, période, coûts par actif.</small><em>Nouvelle session ›</em></button>
+        <button class="bp-start" data-bpa="new" data-kind="prop">${BPI.prop}<b>Session prop firm</b><small>Challenge aux règles prop firm : objectif, DLL, MLL trailing, consistance ; mode strict sans retour arrière.</small><em>Nouvelle session ›</em></button>
+        <button class="bp-start" data-bpa="base">${BPI.chart}<b>Backtesteur de base</b><small>Le replay habituel, avec le compte démo du Backtesteur et sans session.</small><em>${esc(accName(b.cfg))} · ${usd(b.bal)} · ${(b.trades || []).length} trade(s)</em></button></div>
+      ${resume ? `<div class="bp-h2">Reprendre</div>${resume}` : ""}
+      <div class="bp-h2">Progression <span class="bp-seg">${[["week", "Cette semaine"], ["month", "Ce mois-ci"], ["all", "Tout"]].map(([k, t]) => `<button data-bpa="period" data-v="${k}" class="${pg.period === k ? "on" : ""}">${t}</button>`).join("")}</span></div>
+      <div class="bp-kpis">${kpi("Temps passé sur le chart", "Temps réel passé devant le chart du Backtesteur (sessions et Backtesteur de base) : compté quand le chart est affiché, l'app au premier plan, et le replay en lecture ou utilisé depuis moins de 2 minutes. Suivi depuis la version 1.67.", durTxt(pr.real), pr.days ? `${pr.days} jour(s) d'entraînement` : "rien sur cette période")}
+        ${kpi("Temps de marché rejoué", "Durée de marché couverte par les bougies rejouées (lecture, pas à pas, sauts « Aller à ») ; marché fermé et week-ends ne comptent pas. Suivi depuis la version 1.67.", durTxt(pr.market))}
+        ${kpi("Trades", "Trades backtest clôturés : sessions isolées, Backtesteur de base, instantanés et sessions clôturées, sans doublon. Pour la semaine ou le mois : trades pris pendant la période (suivi depuis la version 1.67 ; les plus anciens ne comptent que dans « Tout »).", pr.n, `${pr.buys} achat(s) · ${pr.sells} vente(s)`)}
+        ${kpi("Win rate", "Gagnants / (gagnants + perdants) ; un trade au breakeven (|R| ≤ 0,1, ou moins de 1 $ sans stop initial) ne compte pas.", pctTxt(pr.wr), `${pr.wins} G · ${pr.losses} P · ${pr.be} BE`)}
+        ${kpi("P&L net", "Somme des résultats nets (frais compris) des trades de la période.", usdS(pr.pnl), pr.n ? `R:R moyen ${rrTxt(pr.rr)}` : "")}</div>
+      <div class="bp-h2">Sessions récentes${sesList().length > 5 ? ' <button class="bp-btn bp-g bp-s" data-bpgo="sessions">Toutes les sessions ›</button>' : ""}</div>
+      ${rec.length ? `<div class="bp-list">${rec.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : ""} · ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)${r.savedAt ? " · " + isoNY(r.savedAt) : ""}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button></div></div>`; }).join("")}</div>` : '<div class="bp-empty">Aucune session isolée pour l\'instant : « Session de backtesting » ou « Session prop firm » ci-dessus.</div>'}`;
+  }
+
+  function tabSessions(box) {
+    const L = sesList(), strats = [...new Set(L.map((r) => r.strat).filter(Boolean))].sort((a, b) => a.localeCompare(b)), f = pg.ses, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
+    box.innerHTML = `<div class="bp-bar"><input type="search" data-bpf="ses.q" placeholder="Rechercher : nom, stratégie, description" value="${esc(f.q)}">
+      <select data-bpf="ses.type">${o("", "Tous les types", f.type)}${o("free", "Backtesting", f.type)}${o("challenge", "Prop firm", f.type)}</select>
+      <select data-bpf="ses.strat">${o("", "Toutes les stratégies", f.strat)}${strats.map((s) => o(s, s, f.strat)).join("")}</select>
+      <select data-bpf="ses.sort">${o("recent", "Plus récentes", f.sort)}${o("created", "Date de création", f.sort)}${o("name", "Nom", f.sort)}${o("pnl", "P&L", f.sort)}</select>
+      <span class="bp-sp"></span><button class="bp-btn" data-bpa="new" data-kind="bt">＋ Nouvelle session</button></div><div id="bpRes"></div>`;
+    sesRes();
+  }
+  function sesRes() {
+    const box = $("bpRes"); if (!box) return; const f = pg.ses, q = btNav.norm(f.q);
+    const L = sesList().filter((r) => (!f.type || r.type === f.type) && (!f.strat || r.strat === f.strat) && (!q || btNav.norm([r.name, r.strat, r.desc].join(" ")).includes(q))).map((r) => ({ r, x: sesInfo(r) }));
+    L.sort(f.sort === "name" ? (a, b) => a.r.name.localeCompare(b.r.name) : f.sort === "pnl" ? (a, b) => b.x.pnl - a.x.pnl : f.sort === "created" ? (a, b) => String(b.r.created || "").localeCompare(String(a.r.created || "")) : (a, b) => byRecent(a.r, b.r));
+    const row = ({ r, x }) => `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}
+        <small>${esc((r.assets || []).join(" · "))} · ${sesPeriod(r)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : " · pas encore rejouée"}</small>
+        <small>Solde ${usd(x.start)} → ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)${x.n ? ` · win rate ${pctTxt(x.wr)}` : ""} · créée le ${isoNY(r.created)}${r.savedAt ? ` · enregistrée le ${isoNY(r.savedAt)}` : ""}</small>${r.desc ? `<small>${esc(r.desc)}</small>` : ""}</div>
+      <div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button><button class="bp-btn bp-g bp-s" data-bpa="sren" data-id="${esc(r.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="sdup" data-id="${esc(r.id)}" title="Copie complète : compte, trades, dessins et heure du replay">Dupliquer</button><button class="bp-btn bp-g bp-s" data-bpa="sana" data-id="${esc(r.id)}">Analytique</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="sdel" data-id="${esc(r.id)}" title="Envoyer dans la corbeille (Paramètres › Sessions supprimées)">Supprimer</button></div></div>`;
+    const snaps = sessions(), snapRow = (s) => { const T = (s.acc && s.acc.trades) || [], pl = T.reduce((a, t) => a + (+t.pnl || 0), 0);
+      return `<div class="bp-row"><div class="bp-rm"><b>${esc(s.name)}</b>${s.strat ? `<span class="bp-chip">${esc(s.strat)}</span>` : ""}<small>${esc(s.sym)} · ${tfName(s.tf || 1)} · ${fmtD(s.day)}${s.t != null ? " " + hm(s.t) : ""} · solde ${usd(s.acc ? s.acc.bal : 0)} · ${T.length} trade(s)${T.length ? " · " + usdS(pl) : ""} · ${(s.shapes || []).length} dessin(s) · ${isoNY(s.savedAt)}</small>${s.desc ? `<small>${esc(s.desc)}</small>` : ""}</div>
+        <div class="bp-acts"><button class="bp-btn bp-s" data-bpa="nopen" data-id="${esc(s.id)}">Ouvrir</button><button class="bp-btn bp-g bp-s" data-bpa="nsave" data-id="${esc(s.id)}" title="Écraser avec l'état actuel du chart">Écraser</button><button class="bp-btn bp-g bp-s" data-bpa="nren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="ndel" data-id="${esc(s.id)}">Supprimer</button></div></div>`; };
+    box.innerHTML = (L.length ? `<div class="bp-list">${L.map(row).join("")}</div>` : `<div class="bp-empty">${sesList().length ? "Aucune session pour ces filtres." : "Aucune session isolée : « ＋ Nouvelle session » (compte, ordres, trades, dessins et heure du replay propres, enregistrés en continu)."}</div>`)
+      + `<div class="bp-note">${sesList().length} session(s) · supprimer envoie dans la corbeille (Paramètres › Sessions supprimées) ; rien n'est limité, ni en nombre ni en durée.</div>`
+      + (snaps.length ? `<div class="bp-h2">Instantanés (ancien format)</div><div class="bp-note">Copies de l'état du Backtesteur de base enregistrées depuis la fenêtre Sessions du chart : « Ouvrir » remplace le compte démo et les dessins actuels, « Écraser » y enregistre l'état actuel du chart, comme avant.</div><div class="bp-list">${snaps.map(snapRow).join("")}</div>` : "");
+  }
+
+  const SRCL = { ses: "Session isolée", base: "Backtesteur de base", snap: "Instantané", rec: "Clôturée" };
+  const pctS = (x) => (x == null || !isFinite(x) ? "—" : (x > 0 ? "+" : "") + pctTxt(x, 2));
+  // trades de chaque source (clé « type:id » -> nombre, sources sans trade absentes) ; les trades se dédoublonnent seulement entre les sources choisies :
+  // une session choisie seule montre tous ses trades, même ceux recopiés dans une autre source (copie de session, instantané, session clôturée)
+  const srcCount = (src) => { const m = new Map(); src.forEach((s) => { const n = (s.trades || []).filter((t) => t && t.tOut != null).length; if (n) m.set(s.type + ":" + s.id, n); }); return m; };
+  const srcPick = (src, keys) => (Array.isArray(keys) ? src.filter((s) => keys.includes(s.type + ":" + s.id)) : src);
+  function tabTrades(box) {
+    const src = srcAll(), T = btNav.collect(src, CTR), cnt = srcCount(src), f = pg.tr, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
+    const SL = stratList().filter((s) => T.some((t) => btNav.linked(s, t.strat))), ctrs = CTRORD.filter((k) => T.some((t) => t.ctr === k));
+    const dd = ["ses", "base", "snap", "rec"].map((ty) => { const L = src.filter((s) => s.type === ty && cnt.get(ty + ":" + s.id)); return L.length ? `<div class="bp-ddh">${SRCN[ty]}</div>${L.map((s) => { const k = ty + ":" + s.id; return `<label><input type="checkbox" data-bpsrc="${esc(k)}" ${!f.src || f.src.includes(k) ? "checked" : ""}>${esc(s.name)}<small>${cnt.get(k)}</small></label>`; }).join("")}` : ""; }).join("");
+    box.innerHTML = `<div class="bp-bar"><details class="bp-dd"><summary id="bpTrSrcL">${trSrcLbl(cnt)}</summary><div class="bp-ddm"><div class="bp-dda"><button class="bp-btn bp-g bp-s" data-bpa="trsrc" data-v="all">Toutes</button><button class="bp-btn bp-g bp-s" data-bpa="trsrc" data-v="none">Aucune</button></div>${dd || '<div class="bp-empty">Aucune session avec des trades.</div>'}</div></details>
+      <select data-bpf="tr.side">${o("", "Long + short", f.side)}${o("Long", "Long", f.side)}${o("Short", "Short", f.side)}</select>
+      <select data-bpf="tr.res">${o("", "Tous les résultats", f.res)}${o("w", "Gagnants", f.res)}${o("l", "Perdants", f.res)}${o("be", "Breakeven", f.res)}</select>
+      <select data-bpf="tr.ctr">${o("", "Tous les contrats", f.ctr)}${ctrs.map((k) => o(k, CTR[k].name, f.ctr)).join("")}</select>
+      <select data-bpf="tr.strat">${o("", "Toutes les stratégies", f.strat)}${SL.map((s) => o(s.id, s.name, f.strat)).join("")}</select>
+      <label class="bp-note" style="margin:0">Du</label><input type="date" data-bpf="tr.from" value="${esc(f.from)}" title="Jour de séance de la sortie (heure de New York)"><label class="bp-note" style="margin:0">au</label><input type="date" data-bpf="tr.to" value="${esc(f.to)}">
+      <input type="search" data-bpf="tr.q" placeholder="Notes, tags, session…" value="${esc(f.q)}"><button class="bp-btn bp-g bp-s" data-bpa="trreset">Effacer les filtres</button></div><div id="bpRes"></div>`;
+    trRes();
+  }
+  const trSrcLbl = (cnt) => { const n = cnt.size, k = pg.tr.src ? pg.tr.src.filter((x) => cnt.has(x)).length : n; return `Sessions : ${k === n ? "toutes" : k + " / " + n} ▾`; };
+  const trRow = (t) => `<tr><td>${dmy(t.tIn)} ${hm(t.tIn)}</td><td>${dstr(t.tOut)} ${hm(t.tOut)}</td><td class="bp-w">${esc(t.sname)}<small>${SRCL[t.src] || ""}</small></td><td>${t.strat ? esc(t.strat) : "—"}</td><td>${ctrName(t.ctr)}</td><td class="${t.side === "Long" ? "up" : "dn"}">${esc(t.side)}</td><td class="bp-r">${t.qty}</td><td class="bp-r">${t.entry.toFixed(2)} → ${t.exit.toFixed(2)}</td><td class="bp-r">${durTxt(t.dur)}</td><td class="bp-r">${usdS(t.pnl)}</td><td class="bp-r ${sgn(t.pct)}">${pctS(t.pct)}</td><td class="bp-r ${sgn(t.R)}">${rTxt(t.R)}</td><td>${t.tags.map((x) => `<span class="bp-chip" style="margin:0 4px 0 0">${esc(x)}</span>`).join("")}</td><td>${t.note ? `<span title="${esc(t.note)}">📝</span>` : ""}</td></tr>`;
+  function trRes() {
+    const box = $("bpRes"); if (!box) return;
+    const f = pg.tr, src = srcAll(), T = btNav.collect(srcPick(src, f.src), CTR), all = f.src ? btNav.collect(src, CTR).length : T.length, st = f.strat ? stratList().find((s) => s.id === f.strat) : null;
+    const F = btNav.filter(T, { side: f.side, res: f.res, ctr: f.ctr, strat: st ? st.names : null, from: f.from, to: f.to, q: f.q, dayOf: sessionKey });
+    const L = btNav.sort(F, pg.trSort.k, pg.trSort.dir), per = 100, pages = Math.max(1, Math.ceil(L.length / per)); pg.trPage = Math.max(0, Math.min(pg.trPage, pages - 1));
+    const rows = L.slice(pg.trPage * per, pg.trPage * per + per), sm = btNav.stats(F);
+    const th = (k, t, num) => `<th data-sort="${k}" class="${pg.trSort.k === k ? "on" : ""}${num ? " bp-r" : ""}" title="Trier">${t}${pg.trSort.k === k ? (pg.trSort.dir === "asc" ? " ▲" : " ▼") : ""}</th>`;
+    box.innerHTML = `<div class="bp-note">${F.length} trade(s)${F.length !== all ? ` sur ${all}` : ""} · ${usdS(sm.pnl)} · win rate ${pctTxt(sm.wr)} (${sm.wins} G · ${sm.losses} P · ${sm.be} BE) · R moyen ${rTxt(sm.avgR)} · lecture seule ; un trade recopié dans un instantané ou une session clôturée n'apparaît qu'une fois. % = part du solde de départ de la session ; R = résultat net / risque initial (trades avec stop).</div>
+      <div class="bp-twrap"><table class="bp-tbl"><thead><tr>${th("date", "Entrée (NY)")}${th("out", "Sortie")}${th("src", "Session")}${th("strat", "Stratégie")}${th("ctr", "Contrat")}${th("side", "Sens")}${th("qty", "Qté", 1)}<th class="bp-r">Prix</th>${th("dur", "Durée", 1)}${th("pnl", "Résultat", 1)}${th("pct", "%", 1)}${th("R", "R", 1)}<th>Tags</th><th>Note</th></tr></thead><tbody>
+      ${rows.map(trRow).join("") || `<tr><td colspan="14" class="bp-empty">${all ? "Aucun trade pour ces filtres." : "Aucun trade backtest pour l'instant : ils apparaissent ici dès qu'une position est clôturée dans le chart."}</td></tr>`}</tbody></table></div>
+      ${pages > 1 ? `<div class="bp-pager"><button class="bp-btn bp-g bp-s" data-bpa="trpage" data-v="${pg.trPage - 1}" ${pg.trPage ? "" : "disabled"}>‹</button>Page ${pg.trPage + 1} / ${pages}<button class="bp-btn bp-g bp-s" data-bpa="trpage" data-v="${pg.trPage + 1}" ${pg.trPage < pages - 1 ? "" : "disabled"}>›</button></div>` : ""}`;
+  }
+
+  // Analytique dans la page : même calcul que la fenêtre du chart (anaView), sur les trades choisis par session et par stratégie
+  function anaPick() {
+    const src = srcAll(), f = pg.ana, T = btNav.collect(srcPick(src, f.src ? [f.src] : null), CTR), st = f.strat ? stratList().find((s) => s.id === f.strat) : null;
+    const F = btNav.filter(T, { strat: st ? st.names : null, side: f.side, dayOf: sessionKey });
+    const N = F.map((t) => ({ ...normT({ ...t.raw, why: t.raw.why || "" }), _start: t.start })).filter((t) => (!f.res || (f.res === "w" ? t.pnl > 0 : f.res === "l" ? t.pnl < 0 : Math.abs(t.pnl) < 1)) && (!f.sess || sessOf(t.tIn) === f.sess) && (!f.tag || t.tags.includes(f.tag)));
+    const S1 = f.src ? src.find((s) => s.type + ":" + s.id === f.src) : null, cnt = {}; N.forEach((t) => { if (t._start) cnt[t._start] = (cnt[t._start] || 0) + 1; });
+    const start = S1 ? +S1.start || 50000 : +(Object.entries(cnt).sort((a, b) => b[1] - a[1])[0] || [50000])[0] || 50000; // plusieurs sources : solde de départ le plus courant
+    return { src, T, N, start, tags: [...new Set(F.flatMap((t) => t.tags))] };
+  }
+  function tabAna(box) {
+    const { src, tags } = anaPick(), T = btNav.collect(src, CTR), cnt = srcCount(src), f = pg.ana, o = (v, t, cur) => `<option value="${esc(v)}" ${cur === v ? "selected" : ""}>${esc(t)}</option>`;
+    const SL = stratList().filter((s) => T.some((t) => btNav.linked(s, t.strat)));
+    const srcSel = `<select data-bpf="ana.src">${o("", `Toutes les sessions (${T.length} trades)`, f.src)}${["ses", "base", "snap", "rec"].map((ty) => { const L = src.filter((s) => s.type === ty && cnt.get(ty + ":" + s.id)); return L.length ? `<optgroup label="${esc(SRCN[ty])}">${L.map((s) => o(ty + ":" + s.id, `${s.name} (${cnt.get(ty + ":" + s.id)})`, f.src)).join("")}</optgroup>` : ""; }).join("")}</select>`;
+    box.innerHTML = `<div class="bp-bar">${srcSel}<select data-bpf="ana.strat">${o("", "Toutes les stratégies", f.strat)}${SL.map((s) => o(s.id, s.name, f.strat)).join("")}</select>
+      <select data-bpf="ana.side">${o("", "Long + short", f.side)}${o("Long", "Long", f.side)}${o("Short", "Short", f.side)}</select>
+      <select data-bpf="ana.res">${o("", "Tous les résultats", f.res)}${o("w", "Gagnants", f.res)}${o("l", "Perdants", f.res)}${o("be", "Breakeven", f.res)}</select>
+      <select data-bpf="ana.sess">${o("", "Toutes les séances", f.sess)}${["Asie", "Londres", "NY AM", "NY PM", "Hors séance"].map((x) => o(x, x, f.sess)).join("")}</select>
+      <select data-bpf="ana.tag">${o("", "Tous les tags", f.tag)}${tags.map((x) => o(x, x, f.tag)).join("")}</select>
+      <span class="bp-sp"></span><button class="bp-btn bp-g bp-s" data-bpa="anacsv">Exporter CSV</button><button class="bp-btn bp-g bp-s" data-bpa="anawin" title="Fenêtre d'analytique du chart : session en cours et backtests clôturés">Fenêtre du chart</button></div><div id="bpRes"></div>`;
+    anaRes();
+  }
+  function anaRes() {
+    const box = $("bpRes"); if (!box) return; const { N, start } = anaPick();
+    box.innerHTML = N.length ? `<div class="bp-note">${N.length} trade(s) · même calcul que l'analytique du chart · courbe d'équité depuis ${usd(start)} · les trades recopiés (instantanés, sessions clôturées) ne comptent qu'une fois.</div><div class="bp-card">${anaView(N, start, false)}</div>`
+      : `<div class="bp-empty">${pg.ana.src || pg.ana.strat || pg.ana.side || pg.ana.res || pg.ana.sess || pg.ana.tag ? "Aucun trade pour ces filtres." : "Aucun trade backtest pour l'instant."}</div>`;
+  }
+
+  /* ---- Stratégies (NAV-06, STR-01 / 02) : cartes + fiche (Vue d'ensemble) ; une stratégie est reliée aux sessions qui portent son nom (texte libre des sessions, non modifié) ---- */
+  function stratData() { const T = btNav.collect(srcAll(), CTR); return stratList().map((s) => { const Ts = T.filter((t) => btNav.linked(s, t.strat)); return { s, T: Ts, st: btNav.stats(Ts) }; }); }
+  const spark = (c) => { if (!c || c.length < 2) return '<div class="bp-spark-e">Pas encore de trade backtest</div>';
+    const w = 260, h = 46, lo = Math.min(0, ...c), hi = Math.max(0, ...c), sy = (v) => h - 4 - ((v - lo) / (hi - lo || 1)) * (h - 8), sx = (i) => (i / (c.length - 1)) * w;
+    return `<svg class="bp-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="M0,${sy(0).toFixed(1)}H${w}" stroke="var(--tx-line)" stroke-dasharray="3 3"/><path d="${c.map((v, i) => `${i ? "L" : "M"}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join("")}" fill="none" stroke="${c[c.length - 1] >= 0 ? "var(--tx-profit)" : "var(--tx-loss)"}" stroke-width="1.8"/></svg>`; };
+  function pageStrats(el) {
+    const o = (v, t) => `<option value="${v}" ${pg.st.f === v ? "selected" : ""}>${t}</option>`;
+    el.innerHTML = bpHead("Stratégies", "Tes modèles de trading et leurs résultats en backtest : une stratégie reprend les trades des sessions qui portent son nom.", '<button class="bp-btn" data-bpa="stnew">＋ Nouvelle stratégie</button>')
+      + `<div class="bp-bar" style="margin-top:16px"><input type="search" data-bpf="st.q" placeholder="Rechercher une stratégie" value="${esc(pg.st.q)}"><select data-bpf="st.f">${o("", "Toutes")}${o("trades", "Avec des trades")}${o("empty", "Sans trade")}${o("norules", "Sans règle")}${o("named", "Noms tapés dans les sessions")}</select></div><div id="bpRes"></div>`;
+    stRes();
+  }
+  const stCard = ({ s, st }) => `<div class="bp-sc" data-bpgo="strategies/${esc(s.id)}" role="button" tabindex="0"><h3>${esc(s.name)}</h3><small>${s.saved ? "par " + esc(s.author || profileName()) : "nom tapé dans tes sessions"} · ${s.n} session(s) reliée(s)</small>
+    <div class="bp-scm"><div title="Gagnants / (gagnants + perdants), hors breakeven"><small>Win rate</small><b>${pctTxt(st.wr)}</b></div><div><small>Trades</small><b>${st.n}</b></div><div title="Drawdown maximal du P&amp;L cumulé"><small>DD max</small><b class="${st.mdd ? "dn" : ""}">${st.n ? usd(-st.mdd) : "—"}</b></div><div title="R:R moyen : gain moyen / perte moyenne"><small>R:R moyen</small><b>${rrTxt(st.rr)}</b></div></div>
+    ${spark(st.curve)}<div>${(s.rules || []).length ? "" : '<span class="bp-chip bp-cw" style="margin-left:0" title="Aucune règle d\'entrée ni de sortie définie pour cette stratégie">⚠ Aucune règle définie</span>'}${st.n ? `<span class="bp-chip ${st.pnl > 0 ? "bp-co" : ""}">P&amp;L ${usd(st.pnl)}</span>` : ""}${s.saved ? "" : '<span class="bp-chip">proposée</span>'}</div></div>`;
+  function stRes() {
+    const box = $("bpRes"); if (!box) return; const q = btNav.norm(pg.st.q), f = pg.st.f;
+    const L = stratData().filter(({ s, st }) => (!q || btNav.norm(s.name + " " + (s.alias || []).join(" ") + " " + (s.desc || "")).includes(q)) && (f !== "trades" || st.n) && (f !== "empty" || !st.n) && (f !== "norules" || !(s.rules || []).length) && (f !== "named" || !s.saved));
+    box.innerHTML = L.length ? `<div class="bp-scards">${L.map(stCard).join("")}</div>` : `<div class="bp-empty">${stratList().length ? "Aucune stratégie pour cette recherche." : "Aucune stratégie : « ＋ Nouvelle stratégie », ou donne un nom de stratégie à une session (il apparaît ici, relié à ses trades)."}</div>`;
+  }
+  function pageStrat(el, id) {
+    const it = stratData().find((x) => x.s.id === id), back = '<button class="bp-back" data-bpgo="strategies">‹ Stratégies</button>';
+    if (!it) { el.innerHTML = back + bpHead("Stratégie introuvable") + '<div class="bp-empty">Cette stratégie n\'existe plus (supprimée, ou renommée depuis une autre fenêtre).</div>'; return; }
+    const { s, st } = it, ses = sesList().filter((r) => btNav.linked(s, r.strat)), snaps = sessions().filter((x) => btNav.linked(s, x.strat)), recs = journal().filter((r) => btNav.linked(s, r.strat));
+    const k = (lab, v, sub) => `<div class="bp-kpi"><small>${lab}</small><b>${v}</b>${sub ? `<em>${sub}</em>` : ""}</div>`;
+    const lead = `${s.saved ? "par " + esc(s.author || profileName()) + (s.created ? " · créée le " + isoNY(s.created) : "") + (s.updated && s.updated !== s.created ? " · modifiée le " + isoNY(s.updated) : "") : "Nom tapé dans tes sessions : la fiche est créée dès que tu la modifies."}${(s.alias || []).length ? " · aussi reliée aux sessions nommées " + s.alias.map((a) => "« " + esc(a) + " »").join(", ") : ""}`;
+    el.innerHTML = back + bpHead(esc(s.name), lead, `<button class="bp-btn bp-g bp-s" data-bpa="stren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="stdup" data-id="${esc(s.id)}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="stdel" data-id="${esc(s.id)}">Supprimer</button>`)
+      + `<div class="bp-h2">Description</div><textarea class="bp-desc" data-bpf="stdesc" data-id="${esc(s.id)}" placeholder="Idée du modèle, contexte, marchés et horaires visés… (enregistrée quand tu quittes le champ)">${esc(s.desc || "")}</textarea>`
+      + bpTabs([["overview", "Vue d'ensemble", "strategies/" + s.id]], "overview")
+      + `<div class="bp-note">Résultats de backtest uniquement : trades des sessions reliées à cette stratégie par son nom (sessions isolées, instantanés, sessions clôturées) ; aucun trade réel.</div>
+      <div class="bp-kpis">${k("P&amp;L net", usdS(st.pnl), st.n ? `drawdown max ${usd(-st.mdd)}` : "")}${k("Win rate", pctTxt(st.wr), "hors breakeven")}${k("R:R moyen", rrTxt(st.rr), "gain moyen / perte moyenne")}${k("Gagnants / perdants", `${st.wins} / ${st.losses}`)}${k("Breakeven", st.be, "|R| ≤ 0,1, ou moins de 1 $ sans stop")}${k("Trades", st.n, st.nR ? `R moyen ${rTxt(st.avgR)}` : "")}</div>
+      <div class="bp-h2">Courbe d'équité (P&amp;L cumulé)</div><div class="bp-card">${st.n ? svgCurve(st.curve.map((v, i) => [i, v])) : '<div class="bp-empty">Pas encore de trade backtest : crée une session avec cette stratégie (fenêtre « Nouvelle session », champ Stratégie).</div>'}</div>
+      <div class="bp-h2">Sessions reliées (${ses.length + snaps.length + recs.length})</div>${ses.length + snaps.length + recs.length ? `<div class="bp-list">${ses.map((r) => { const x = sesInfo(r); return `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}<small>${sesPeriod(r)} · ${x.n} trade(s) · ${usdS(x.pnl)}</small></div><div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button></div></div>`; }).join("")}${snaps.map((x) => `<div class="bp-row"><div class="bp-rm"><b>${esc(x.name)}</b><span class="bp-chip">Instantané</span><small>${esc(x.sym)} · ${fmtD(x.day)} · ${((x.acc && x.acc.trades) || []).length} trade(s)</small></div></div>`).join("")}${recs.map((r) => `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b><span class="bp-chip">Clôturée</span><small>${(r.trades || []).length} trade(s) · clôturée le ${isoNY(r.at)}</small></div></div>`).join("")}</div>` : '<div class="bp-empty">Aucune session ne porte ce nom pour l\'instant.</div>'}`;
+  }
+  function stratSave(store) { if (lsPut(STRK, store)) return true; bpToast("Stockage plein : stratégie non enregistrée.", true); return false; }
+  const stNow = () => new Date().toISOString();
+  const stNew0 = (nm) => ({ id: "st" + uid(), name: nm, alias: [], author: profileName(), desc: "", rules: [], docs: [], created: stNow(), updated: stNow() });
+  const unhide = (store, nm) => { store.hide = (store.hide || []).filter((h) => btNav.norm(h) !== btNav.norm(nm)); };
+  // fiche enregistrée d'une stratégie dans store (crée celle d'un nom tapé dans les sessions) ; null si inconnue
+  function stratRec(id, store) {
+    const s = stratList().find((x) => x.id === id); if (!s) return null;
+    if (s.saved) return store.list.find((x) => x.id === id) || null;
+    const r = stNew0(s.name); store.list.push(r); unhide(store, s.name); return r;
+  }
+  // stratégie créée sur place (fenêtre « Nouvelle session ») : rien si elle existe déjà
+  function stratCreate(nm) { nm = String(nm || "").trim().replace(/\s+/g, " "); if (!nm || stratList().some((x) => x.saved && x.names.includes(btNav.norm(nm)))) return; const store = stratStore(); store.list.push(stNew0(nm)); unhide(store, nm); stratSave(store); }
+  async function stNew() {
+    const n = await ask("Nom de la nouvelle stratégie", ""); if (!n) return; const nm = n.trim().replace(/\s+/g, " "), ex = stratList().find((x) => x.saved && x.names.includes(btNav.norm(nm)));
+    if (ex) { bpToast(`« ${ex.name} » existe déjà.`, true); return bpGo("strategies/" + ex.id); }
+    const store = stratStore(), r = stNew0(nm); store.list.push(r); unhide(store, nm); if (stratSave(store)) bpGo("strategies/" + r.id);
+  }
+  function stDesc(id, v) {
+    const store = stratStore(), r = stratRec(id, store); if (!r) return; r.desc = String(v || ""); r.updated = stNow();
+    if (stratSave(store)) { bpToast("Description enregistrée."); if (r.id !== id) bpGo("strategies/" + r.id); }
+  }
+  async function stRen(id) {
+    const s = stratList().find((x) => x.id === id); if (!s) return; const n = await ask("Renommer la stratégie", s.name); if (!n) return; const nm = n.trim().replace(/\s+/g, " "); if (nm === s.name) return;
+    if (stratList().some((x) => x.saved && x.id !== id && x.names.includes(btNav.norm(nm)))) return bpToast(`Une stratégie s'appelle déjà « ${nm} ».`, true);
+    const store = stratStore(), r = stratRec(id, store); if (!r) return; const old = r.name;
+    r.alias = [...new Set([...(r.alias || []), old])].filter((a) => btNav.norm(a) !== btNav.norm(nm)); r.name = nm; r.updated = stNow(); unhide(store, nm);
+    if (stratSave(store)) { bpToast(`Stratégie renommée « ${nm} » : les sessions nommées « ${old} » restent reliées.`); bpGo("strategies/" + r.id); }
+  }
+  function stDup(id) {
+    const L = stratList(), s = L.find((x) => x.id === id); if (!s) return;
+    const store = stratStore(), r = { ...stNew0(btNav.uniqueName(s.name + " (copie)", L.flatMap((x) => [x.name, ...(x.alias || [])]))), desc: s.desc || "", rules: JSON.parse(JSON.stringify(s.rules || [])), docs: JSON.parse(JSON.stringify(s.docs || [])) };
+    store.list.push(r); if (stratSave(store)) { bpToast(`Copie créée : « ${r.name} » (aucune session reliée).`); bpGo("strategies/" + r.id); }
+  }
+  function stDel(id) {
+    const s = stratList().find((x) => x.id === id); if (!s) return;
+    if (!confirm(`Supprimer la stratégie « ${s.name} » ?${s.n ? `\nLes ${s.n} session(s) qui portent ce nom ne changent pas ; la stratégie disparaît seulement de la liste.` : ""}`)) return;
+    const store = stratStore(); store.list = store.list.filter((x) => x.id !== id); store.hide = [...new Set([...(store.hide || []).map(btNav.norm), ...s.names])];
+    if (stratSave(store)) { bpToast(`Stratégie « ${s.name} » supprimée.`); bpGo("strategies"); }
+  }
+
+  /* ---- Paramètres (NAV-07) : Backtesting (réglages du chart, clé bt-prefs), Spreads & commissions (SES-04 / 05, bt-costs), Sessions supprimées (SES-11, bt-ses-trash) ---- */
+  function pageParams(el, tab) {
+    el.innerHTML = bpHead("Paramètres", "Réglages du Backtesteur : chart et replay, coûts des nouvelles sessions, corbeille des sessions.")
+      + bpTabs([["backtesting", "Backtesting", "parametres/backtesting"], ["spreads", "Spreads & commissions", "parametres/spreads"], ["corbeille", "Sessions supprimées", "parametres/corbeille"]], tab) + '<div id="bpBody"></div>';
+    const box = $("bpBody");
+    if (tab === "spreads") return tabCosts(box);
+    if (tab === "corbeille") return tabBin(box);
+    return tabPrefs(box);
+  }
+  function tabPrefs(box) {
+    if (!box) return; const t = pg.prefTab || LS.get("bt-prefs-tab", "sym");
+    box.innerHTML = `<div class="bp-note">Les réglages du chart et du replay (les mêmes que dans sa fenêtre Paramètres), enregistrés dès qu'ils changent.</div>
+      <div class="bp-prefs tx-set2"><div class="snav">${prefsNav(t)}</div><div class="sbody">${t === "ind" ? '<p class="bp-note">Les indicateurs Pine Script / TypeScript se règlent dans le chart, où leur résultat s\'affiche (Paramètres › Indicateurs, éditeur de code).</p><button class="bp-btn" data-bpa="pind">Ouvrir le chart sur les indicateurs</button>' : prefsBody(t)}</div></div>
+      <div class="bp-bar" style="margin-top:12px"><button class="bp-btn bp-g bp-s" data-bpa="pdef">Appliquer les réglages par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="psavedef">Enregistrer comme modèle par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="pall" title="Copie ces réglages dans toutes les mises en page enregistrées">Appliquer à toutes les mises en page</button></div>`;
+  }
+  function prefsDef() { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; offC.clear(); if (chart) draw(true); applyPrefs(); LS.set("bt-prefs", P); tabPrefs($("bpBody")); bpToast("Réglages par défaut appliqués."); }
+  function prefsAll() { LS.set("bt-prefs", P); const L = layouts(); let n = 0; L.forEach((x) => { if (x && x.prefs) { x.prefs = { ...P }; n++; } }); if (n) saveList("bt-layouts", L); applyPrefs(); bpToast(n ? `Réglages copiés dans ${n} mise(s) en page.` : "Aucune mise en page enregistrée : réglages gardés pour le chart."); }
+
+  // coûts par actif : brouillon pg.costs (enregistré par « Enregistrer ») ; lignes proposées = actifs des CSV, frais du compte de base, spread 1 tick
+  function tabCosts(box) { box.innerHTML = '<div class="bp-empty">Lecture des actifs des CSV…</div>'; assetsGet().then((AS) => { if (pg.r.page === "parametres" && pg.r.tab === "spreads") costsDraw(AS); }); }
+  function costsInit(AS, reset) {
+    const sv = reset ? null : LS.get(COSTK, null), sl = sv && sv.slip ? sv.slip : btNav.slipLvl(baseAcc().cfg.slip);
+    pg.costs = { rows: btNav.costRows(sv, AS.list.map((a) => a.sym), defFee), slipLvl: sl.lvl, slipN: sl.n, dirty: !!reset };
+  }
+  function costsDraw(AS) {
+    const box = $("bpBody"); if (!box) return; if (!pg.costs) costsInit(AS);
+    const c = pg.costs, sv = LS.get(COSTK, null), inCsv = new Set(AS.list.map((a) => a.sym)), missing = CTRORD.filter((k) => !c.rows.some((r) => r.sym === k));
+    box.innerHTML = `<div class="bp-note">Repris à chaque nouvelle session (fenêtre « Nouvelle session › Options », modifiables pour la session). Le compte du Backtesteur de base garde ses propres frais (Type de compte › Frais et slippage).</div>${AS.list.length ? "" : `<div class="bp-note">${esc(assetsMsg(AS))}</div>`}
+      <div class="bp-twrap" style="max-height:none"><table class="bp-tbl bp-costs"><thead><tr><th>Actif</th><th>Spread (ticks)</th><th>Commission ($ par contrat, aller-retour)</th><th>Bougies dans les CSV</th><th></th></tr></thead><tbody>
+      ${c.rows.map((r, i) => { const a = AS.list.find((x) => x.sym === r.sym); return `<tr><td><b>${ctrName(r.sym)}</b></td><td><input class="bp-in" type="number" min="0" step="1" data-bc="spread" data-i="${i}" value="${r.spread}"></td><td><input class="bp-in" type="number" min="0" step="0.01" data-bc="fee" data-i="${i}" value="${r.fee}"></td><td>${a ? `${fmtD(a.min)} → ${fmtD(a.max)}${a.via ? ` (bougies du ${a.via})` : ""}` : '<span class="bp-note">aucune</span>'}</td><td class="bp-r"><button class="bp-btn bp-g bp-s bp-x" data-bpa="cdel" data-i="${i}">Supprimer</button></td></tr>`; }).join("") || '<tr><td colspan="5" class="bp-empty">Aucun actif : « Ajouter un actif ».</td></tr>'}</tbody></table></div>
+      <div class="bp-bar" style="margin-top:12px">${missing.length ? `<select data-bpf="cadd"><option value="">＋ Ajouter un actif…</option>${missing.map((k) => `<option value="${k}">${ctrName(k)}${inCsv.has(k) ? "" : " (pas de bougies dans les CSV)"}</option>`).join("")}</select>` : ""}
+        <span class="bp-note" style="margin:0 0 0 6px">Slippage par défaut</span><select data-bpf="cslip">${btNav.SLIP.map(([v, t]) => `<option value="${v}" ${c.slipLvl === v ? "selected" : ""}>${t}</option>`).join("")}</select>${c.slipLvl === "fix" ? `<input class="bp-in" type="number" min="0" step="1" data-bpf="cslipn" value="${c.slipN}" style="width:80px"><span class="bp-note" style="margin:0">ticks</span>` : ""}
+        <span class="bp-sp"></span><button class="bp-btn bp-g bp-s" data-bpa="cdef">Valeurs proposées</button><button class="bp-btn bp-g bp-s" data-bpa="crefresh" title="Relire les dossiers data_csv et data">Relire les actifs</button><button class="bp-btn" data-bpa="csave">Enregistrer</button></div>
+      <div class="bp-note">Spread : écart au dernier prix d'un ordre au marché, en ticks (1 tick = règle actuelle du Backtesteur). Commission : aller-retour par contrat, imputée à la clôture du trade. Slippage : ordres au marché et stops, toujours contre toi.${sv ? "" : " Valeurs proposées, pas encore enregistrées : frais du compte de base et spread de 1 tick."} <b id="bpCostDirty" style="color:var(--tx-acc)">${c.dirty ? "Modifications non enregistrées." : ""}</b></div>`;
+  }
+  const costDirty = () => { if (pg.costs) pg.costs.dirty = true; const e = $("bpCostDirty"); if (e) e.textContent = "Modifications non enregistrées."; };
+  function costsSave() {
+    const c = pg.costs; if (!c) return;
+    if (!lsPut(COSTK, { v: 1, rows: c.rows.map((r) => ({ sym: r.sym, spread: Math.max(0, +r.spread || 0), fee: Math.max(0, +r.fee || 0) })), slip: { lvl: c.slipLvl, n: btNav.slipOf(c.slipLvl, c.slipN) } })) return bpToast("Stockage plein : coûts non enregistrés.", true);
+    c.dirty = false; bpToast("Spreads et commissions enregistrés : ils seront proposés à chaque nouvelle session."); assetsGet().then(costsDraw);
+  }
+
+  // corbeille (SES-11)
+  function tabBin(box) {
+    const p = btNav.trash.page(binList(), pg.binPage, 20); pg.binPage = p.page;
+    const row = (r) => { const st = LS.get(sesKey(r.id), null) || {}, start = (r.cfg && r.cfg.size) || 0, bal = st.acc ? st.acc.bal : r.bal != null ? r.bal : start, t = st.t != null ? st.t : r.t;
+      return `<tr><td>${sesPeriod(r)}</td><td class="bp-w"><b>${esc(r.name)}</b><small>${sesKind(r)}</small></td><td class="bp-r">${usd(start)}</td><td class="bp-r">${usd(bal)}<small class="${sgn(bal - start)}">${usd(bal - start)}</small></td><td>${r.strat ? esc(r.strat) : "—"}</td><td>${esc((r.assets || []).join(" · "))}</td><td>${t != null ? `${dmy(t)} ${hm(t)}` : "—"}</td><td>${isoNY(r.created)}</td><td>${isoNY(r.deletedAt)}</td>
+        <td class="bp-r"><button class="bp-btn bp-s" data-bpa="brest" data-id="${esc(r.id)}">Restaurer</button> <button class="bp-btn bp-g bp-s bp-x" data-bpa="bpurge" data-id="${esc(r.id)}">Supprimer définitivement</button></td></tr>`; };
+    box.innerHTML = `<div class="bp-note">Une session supprimée arrive ici avec son compte, ses trades, ses dessins et l'heure du replay ; « Restaurer » la remet dans Testing › Sessions. Rien n'est effacé avant « Supprimer définitivement ».</div>
+      ${p.total ? `<div class="bp-twrap"><table class="bp-tbl"><thead><tr><th>Période</th><th>Nom</th><th class="bp-r">Solde de départ</th><th class="bp-r">Solde actuel</th><th>Stratégie</th><th>Actifs</th><th>Heure du replay (NY)</th><th>Créée le</th><th>Supprimée le</th><th></th></tr></thead><tbody>${p.rows.map(row).join("")}</tbody></table></div>
+      <div class="bp-pager">${p.total} session(s) dans la corbeille${p.pages > 1 ? ` · <button class="bp-btn bp-g bp-s" data-bpa="bpage" data-v="${p.page - 1}" ${p.page ? "" : "disabled"}>‹</button> Page ${p.page + 1} / ${p.pages} <button class="bp-btn bp-g bp-s" data-bpa="bpage" data-v="${p.page + 1}" ${p.page < p.pages - 1 ? "" : "disabled"}>›</button>` : ""}<span class="bp-sp"></span><button class="bp-btn bp-g bp-s bp-x" data-bpa="bempty">Vider la corbeille</button></div>` : '<div class="bp-empty">Aucune session supprimée.</div>'}`;
+  }
+  function binRestore(id) {
+    const r = binList().find((x) => x.id === id), o = btNav.trash.restore(sesList(), binList(), id); if (!o) return;
+    if (!lsPut(SESK, o.list)) return bpToast("Stockage plein : session non restaurée.", true);
+    lsPut(BINK, o.bin); bpToast(`« ${r.name} » restaurée : compte, trades, dessins et heure du replay comme avant (Testing › Sessions).`); bpRender();
+  }
+  const binErase = (id) => btNav.trash.keys(id, allKeys()).forEach(lsDel); // compte, journal du replay, dessins
+  function binPurge(id) {
+    const r = binList().find((x) => x.id === id); if (!r) return;
+    if (!confirm(`Supprimer définitivement la session « ${r.name} » ?\nSon compte, ses trades, son journal du replay et ses dessins seront effacés.`)) return;
+    binErase(id); lsPut(BINK, btNav.trash.purge(binList(), id)); bpToast(`« ${r.name} » supprimée définitivement.`); bpRender();
+  }
+  function binEmpty() {
+    const L = binList(); if (!L.length) return;
+    if (!confirm(`Supprimer définitivement les ${L.length} session(s) de la corbeille ?\nComptes, trades, journaux du replay et dessins seront effacés.`)) return;
+    L.forEach((r) => binErase(r.id)); lsPut(BINK, []); bpToast("Corbeille vidée."); bpRender();
+  }
+
+  // sessions isolées : supprimer (corbeille), renommer, dupliquer ; ouvrir le Backtesteur de base
+  async function sesTrash(id) {
+    const r = sesList().find((x) => x.id === id); if (!r) return;
+    if (!confirm(`Envoyer la session « ${r.name} » dans la corbeille ?\nCompte, trades, dessins et heure du replay sont gardés : Paramètres › Sessions supprimées permet de la restaurer.`)) return;
+    if (curSes && curSes.id === id) await sesLeave(true);
+    if (LS.get("bt-ses-cur", null) === id) LS.set("bt-ses-cur", null);
+    const o = btNav.trash.del(sesList(), binList(), id, new Date().toISOString()); if (!o) return;
+    if (!lsPut(BINK, o.bin)) return bpToast("Stockage plein : la session n'a pas pu aller dans la corbeille.", true);
+    lsPut(SESK, o.list); bpToast(`« ${r.name} » est dans la corbeille (Paramètres › Sessions supprimées).`); bpRender();
+  }
+  async function sesRen(id) {
+    const r = sesList().find((x) => x.id === id); if (!r) return; const n = await ask("Renommer la session", r.name); if (!n) return;
+    const L = sesList(), x = L.find((q) => q.id === id); if (!x) return; x.name = n;
+    if (!lsPut(SESK, L)) return bpToast("Stockage plein : nom non enregistré.", true);
+    if (curSes && curSes.id === id) { curSes.name = n; sesUIKey = ""; sesUI(); } bpRender();
+  }
+  function sesDup(id) {
+    const L = sesList(), r = L.find((x) => x.id === id); if (!r) return; if (curSes && curSes.id === id) sesSaveNow();
+    const nid = "x" + uid(), done = [], undo = () => done.forEach(lsDel);
+    for (const k of btNav.trash.keys(id, allKeys())) { const nk = btNav.trash.rekey(k, id, nid); try { localStorage.setItem(nk, localStorage.getItem(k)); done.push(nk); } catch (e) { undo(); return bpToast("Stockage plein : session non dupliquée.", true); } }
+    const now = new Date().toISOString(), copy = { ...JSON.parse(JSON.stringify(r)), id: nid, name: btNav.uniqueName(r.name + " (copie)", [...L, ...binList()].map((x) => x.name)), created: now, savedAt: now };
+    if (!lsPut(SESK, [copy, ...L])) { undo(); return bpToast("Stockage plein : session non dupliquée.", true); }
+    bpToast(`Copie créée : « ${copy.name} » (compte, trades, dessins et heure du replay copiés).`); bpRender();
+  }
+  // « Backtesteur de base » : la session ouverte est enregistrée puis quittée (comme le × de son badge) ; une session laissée ouverte n'est pas reprise
+  async function baseOpen() {
+    if (curSes) return sesLeave();
+    if (LS.get("bt-ses-cur", null)) {
+      LS.set("bt-ses-cur", null); const b = LS.get("bt-ses-base", null);
+      if (b) { if (b.sym) $("btSym").value = b.sym; if (b.tf) { S.tf = b.tf; setTfBtns(); } if (b.day) $("btDate").value = b.day; if (b.start) $("btStart").value = b.start; }
+      if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") { await load(); if (b && b.t != null && S.raw.length) { const i = S.raw.findIndex((x) => x[0] >= b.t); if (i >= 0) { S.cur = S.done = i; evStart("Retour au Backtesteur de base"); } } draw(true); ui(); dockTick(true); }
+      else { loadDrawings(); draw(true); ui(); }
+      return msg(`Backtesteur de base (compte ${accName(A.cfg)}).`);
+    }
+    if (!S.raw.length && D && D.dataRead && $("btSym").value !== "CSV") return load();
+    setTimeout(() => { draw(); ui(); }, 0);
+  }
+  // anciens instantanés (bt-sessions) : mêmes actions et mêmes messages que la fenêtre Sessions du chart
+  function snapOpen(id) {
+    const s = sessions().find((x) => x.id === id); if (!s) return;
+    if (!confirm(`Ouvrir « ${s.name} » ? Le compte démo et les dessins ${s.sym} actuels seront remplacés.${curSes ? `\n(La session isolée « ${curSes.name} » est d'abord enregistrée, puis le Backtesteur de base reprend.)` : ""}`)) return;
+    toChart(async () => { if (curSes) await sesLeave(true); else if (LS.get("bt-ses-cur", null)) LS.set("bt-ses-cur", null); await openSession(s); });
+  }
+  function snapSave(id) {
+    const all = sessions(), s = all.find((x) => x.id === id); if (!s) return;
+    if (!S.raw.length) return bpToast("Ouvre d'abord le chart : « Écraser » enregistre l'état actuel du replay dans l'instantané.", true);
+    if (!confirm(`Écraser « ${s.name} » avec l'état actuel ?`)) return;
+    const n = snapshot(s.name, { strat: s.strat, desc: s.desc }); n.id = s.id;
+    if (saveList("bt-sessions", all.map((x) => (x.id === s.id ? n : x)))) { bpToast(`Instantané « ${s.name} » écrasé avec l'état actuel du chart.`); bpRender(); } else bpToast("Stockage plein : instantané non enregistré.", true);
+  }
+  async function snapRen(id) { const all = sessions(), s = all.find((x) => x.id === id); if (!s) return; const n = await ask("Renommer la session", s.name); if (n) { s.name = n; saveList("bt-sessions", all); bpRender(); } }
+  function snapDel(id) { const all = sessions(), s = all.find((x) => x.id === id); if (!s) return; if (confirm(`Supprimer la session « ${s.name} » ?`)) { saveList("bt-sessions", all.filter((x) => x !== s)); bpRender(); } }
+
+  /* ---- fenêtre « Nouvelle session » (NAV-04 / 05, SES-01 / 02 / 04 / 05 / 09) : onglets Backtesting | Prop firm, étapes Essentiel puis Options, presets en tête ;
+     même moteur que l'assistant de la v1.66 (btSes, sesBounds, dayHasData, session isolée ouverte par sesOpen), actifs lus dans les CSV, coûts de Paramètres › Spreads & commissions ---- */
+  function nsOpen(kind, extra) {
+    const c0 = baseAcc().cfg, sv = LS.get(COSTK, null), sl = sv && sv.slip ? sv.slip : btNav.slipLvl(c0.slip), names = [...sesList(), ...binList()].map((r) => r.name);
+    const d = { kind: kind === "prop" ? "prop" : "bt", step: 1, name: btNav.uniqueName(`Session ${sesList().length + 1}`, names), bal: 50000, free: "", size: 50000,
+      rules: { ...PROP[50000], cons: +c0.cons || 50, payDays: +c0.payDays || 5, payMin: +c0.payMin || 150 }, strict: false, strat: LS.get("bt-strat-last", "") || "", stratNew: "",
+      assets: null, layout: "", from: lastTradingDay(), time: "09:30", endMode: "auto", end: "", rel: null, fee: true, spread: true, slipLvl: sl.lvl, slipN: sl.n, costs: null, desc: "", preset: "", err: "", AS: null, ...(extra || {}) };
+    nsRender(d);
+    assetsGet().then((AS) => { d.AS = AS; if (!d.assets) d.assets = AS.list.length ? [AS.list[0].sym] : []; if (!d.costs) d.costs = btNav.costRows(sv, AS.list.map((a) => a.sym), defFee); const m = $("btModal"); if (m && !m.hidden && m.querySelector(".bp-wz")) nsRender(d); });
+  }
+  // coûts d'un actif dans la fenêtre (ligne ajoutée avec les valeurs proposées si l'actif n'est pas dans Paramètres › Spreads & commissions)
+  function nsCost(d, k) { d.costs = d.costs || []; let r = d.costs.find((x) => x.sym === k); if (!r) { r = { sym: k, spread: 1, fee: defFee(k) }; d.costs.push(r); } return r; }
+  const nsBoundsTxt = (d) => { if (!d.AS) return "Bornes des données : …"; const L = (d.assets || []).map((k) => d.AS.list.find((a) => a.sym === k)).filter(Boolean);
+    return L.length ? "Bornes des données (heure de New York) : " + L.map((a) => `${a.sym} ${fmtD(a.min)} → ${fmtD(a.max)}`).join(" · ") : d.AS.list.length ? "Choisis au moins un actif." : ""; };
+  function nsRender(d) {
+    const ch = d.kind === "prop", AS = d.AS, AL = AS ? AS.list : [], cur = d.assets || [], PR = presetsS(), lays = layouts();
+    const btn = (k, v, lab, on, dis) => `<button class="wz-b ${on ? "on" : ""}" data-wk="${k}" data-wv="${v}"${dis ? " disabled" : ""}>${lab}</button>`;
+    const rl = (k, lab) => `<label>${lab}<input type="number" data-wr="${k}" value="${esc(d.rules[k])}"></label>`;
+    const names = stratList().map((s) => s.name); if (d.strat && d.strat !== "__new" && !names.some((n) => btNav.norm(n) === btNav.norm(d.strat))) names.push(d.strat);
+    const top = `<div class="bp-wzt"><button data-nk="bt" class="${ch ? "" : "on"}">Backtesting</button><button data-nk="prop" class="${ch ? "on" : ""}">Prop firm</button></div>
+      <div class="bp-wzp"><span>Preset</span><select data-np="1"><option value="">${PR.length ? "— Choisir un preset —" : "Aucun preset enregistré"}</option>${PR.map((p) => `<option value="${esc(p.id)}" ${d.preset === p.id ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select><button data-na="psave">Enregistrer ces réglages comme preset…</button>${d.preset ? '<button data-na="pdel">Supprimer ce preset</button>' : ""}</div>
+      <div class="bp-wzs"><span class="${d.step === 1 ? "on" : ""}"><i>1</i>Essentiel</span>›<span class="${d.step === 2 ? "on" : ""}"><i>2</i>Options</span></div>`;
+    const assetsH = !AS ? '<div class="wz-n">Lecture des actifs des CSV…</div>' : AL.length ? `<div class="bp-wza">${AL.map((a) => `<label><input type="checkbox" data-wa="${a.sym}" ${cur.includes(a.sym) ? "checked" : ""}> <b>${ctrName(a.sym)}</b><small>${fmtD(a.min)} → ${fmtD(a.max)}${a.via ? ` · bougies du ${a.via}` : ""}${a.s1 ? ` · 1 s : ${fmtD(a.s1.min)} → ${fmtD(a.s1.max)}` : ""}</small></label>`).join("")}</div>${AS.other && AS.other.length ? `<div class="wz-n">Aussi dans les CSV, mais pas rejouables par le Backtesteur : ${AS.other.map(esc).join(", ")}.</div>` : ""}` : `<div class="wz-n wz-err">${esc(assetsMsg(AS))}</div>`;
+    const s1 = `<span>Nom</span><div class="wz-c"><input type="text" data-w="name" value="${esc(d.name)}"></div>
+      <span>Solde de départ</span><div class="wz-c">${ch ? WZPROP.map((v) => btn("size", v, v / 1000 + "K", d.size === v)).join("") : WZBAL.map((v) => btn("bal", v, v / 1000 + "K", d.free === "" && d.bal === v)).join("") + `<label>Libre <input type="number" data-w="free" min="100" step="100" placeholder="ex. 25000" value="${esc(d.free)}"></label>`}</div>
+      ${ch ? `<span>Règles du challenge</span><div class="wz-c"><div class="wz-rules">${rl("target", "Objectif ($)")}${rl("mll", "MLL trailing ($)")}${rl("dll", "DLL ($)")}${rl("cons", "Consistance (%)")}${rl("payDays", "Payout : jours gagnants")}${rl("payMin", "Payout : gain min. / jour ($)")}</div></div>
+      <span>Mode strict</span><div class="wz-c"><label title="Retour arrière interdit pendant toute la session ; lecture, vitesse et sauts vers l'avant restent permis"><input type="checkbox" data-w="strict" ${d.strict ? "checked" : ""}> Pas de retour arrière, comme dans un vrai challenge</label></div>` : ""}
+      <span>Stratégie</span><div class="wz-c"><select data-w="strat"><option value="">— Aucune —</option>${names.map((n) => `<option value="${esc(n)}" ${d.strat !== "__new" && btNav.norm(n) === btNav.norm(d.strat) ? "selected" : ""}>${esc(n)}</option>`).join("")}<option value="__new" ${d.strat === "__new" ? "selected" : ""}>＋ Nouvelle stratégie…</option></select>${d.strat === "__new" ? `<input type="text" data-w="stratNew" placeholder="Nom de la nouvelle stratégie" value="${esc(d.stratNew)}">` : ""}</div>
+      <span>Actifs</span><div class="wz-c">${assetsH}</div>
+      <span>Modèle de chart</span><div class="wz-c"><select data-w="layout"><option value="">Mise en page actuelle</option>${lays.map((l) => `<option value="${esc(l.id)}" ${d.layout === l.id ? "selected" : ""}>${esc(l.name)} · ${esc(l.sym)} ${tfName(l.tf || 1)}${l.prefs ? "" : " (vide)"}</option>`).join("")}</select></div>
+      ${d.layout ? '<div class="wz-n">Le modèle applique à l\'ouverture les réglages d\'affichage et l\'unité de temps de cette mise en page (réglages communs au chart, comme « Mises en page ») ; les dessins restent propres à la session.</div>' : ""}
+      <span>Départ (heure NY)</span><div class="wz-c"><input type="date" data-w="from" value="${esc(d.from)}"><input type="time" data-w="time" value="${esc(d.time)}"><button class="wz-b" data-wk="rand" data-wv="1" title="Tirer au hasard un jour avec des bougies">🎲 Au hasard</button></div>
+      <div class="wz-n" id="bpWzB">${nsBoundsTxt(d)}</div>
+      <span>Fin</span><div class="wz-c">${btn("endMode", "auto", "Automatique", d.endMode === "auto")}${btn("endMode", "date", "Date", d.endMode === "date")}<input type="date" data-w="end" value="${esc(d.end)}" ${d.endMode === "date" ? "" : "disabled"}>${btn("rel", "d", "+1 jour", d.rel === "d", d.endMode !== "date")}${btn("rel", "w", "+1 semaine", d.rel === "w", d.endMode !== "date")}${btn("rel", "m", "+1 mois", d.rel === "m", d.endMode !== "date")}</div>
+      <div class="wz-n">${d.endMode === "auto" ? "Fin automatique : la session s'étend tant que tu rejoues." : "Le replay s'arrête à la clôture de 17:00 (New York) du jour de fin, avec un message."}</div>`;
+    const rows = cur.map((k) => { const r = nsCost(d, k); return `<tr><td><b>${ctrName(k)}</b></td><td><input type="number" min="0" step="1" data-wc="spread" data-ws="${k}" value="${r.spread}" ${d.spread ? "" : "disabled"}></td><td><input type="number" min="0" step="0.01" data-wc="fee" data-ws="${k}" value="${r.fee}" ${d.fee ? "" : "disabled"}></td></tr>`; }).join("");
+    const s2 = `<span>Commissions</span><div class="wz-c"><label><input type="checkbox" data-w="fee" ${d.fee ? "checked" : ""}> Activées (aller-retour par contrat, imputées à la clôture)</label></div>
+      <span>Spreads</span><div class="wz-c"><label><input type="checkbox" data-w="spread" ${d.spread ? "checked" : ""}> Activés (écart au dernier prix des ordres au marché)</label></div>
+      <span>Par actif</span><div class="wz-c">${rows ? `<table class="bp-wzc"><tr><th>Actif</th><th>Spread (ticks)</th><th>Commission ($ / contrat)</th></tr>${rows}</table>` : '<div class="wz-n">Choisis d\'abord les actifs (étape Essentiel).</div>'}</div>
+      <span>Slippage</span><div class="wz-c"><select data-w="slipLvl">${btNav.SLIP.map(([v, t]) => `<option value="${v}" ${d.slipLvl === v ? "selected" : ""}>${t}</option>`).join("")}</select>${d.slipLvl === "fix" ? `<input type="number" data-w="slipN" min="0" step="1" value="${esc(d.slipN)}" style="width:80px"> ticks` : ""}</div>
+      <span>Description</span><div class="wz-c" style="width:100%"><textarea data-w="desc" placeholder="Optionnelle : contexte, objectif de la session…">${esc(d.desc)}</textarea></div>
+      <div class="wz-n">Valeurs reprises de Paramètres › Spreads &amp; commissions, modifiables ici pour cette session seulement ; désactivées, l'exécution se fait au prix brut. Le slippage s'applique aux ordres au marché et aux stops, toujours contre toi. La session a son propre compte, ses ordres, ses trades, ses dessins et son heure de replay ; le Backtesteur de base n'est pas touché.</div>`;
+    const m = modal("Nouvelle session", top + `<div class="wz-g bp-wzg">${d.step === 2 ? s2 : s1}<div class="wz-n wz-err" id="bpWzErr">${esc(d.err || "")}</div></div>`,
+      `<button data-m="x" class="ghost">Annuler</button><span class="tx-sp"></span>${d.step === 1 ? '<button data-m="next" class="ghost">Options ›</button>' : '<button data-m="prev" class="ghost">‹ Essentiel</button>'}<button data-m="ok">Créer et ouvrir</button>`);
+    m.querySelector(".tx-mbox").classList.add("wz-wide", "bp-wz");
+    const err = (t) => { d.err = t; const e = $("bpWzErr"); if (e) e.textContent = t; };
+    m.onchange = null;
+    m.oninput = (e) => { const t = e.target;
+      if (t.dataset.np) return nsPreset(d, t.value);
+      if (t.dataset.w) { const k = t.dataset.w; d[k] = t.type === "checkbox" ? t.checked : t.value;
+        if (k === "from" && d.rel) { d.end = btSes.addPeriod(d.from, d.rel) || d.end; const ee = m.querySelector('[data-w="end"]'); if (ee) ee.value = d.end; }
+        if (k === "end") { d.rel = null; m.querySelectorAll('[data-wk="rel"]').forEach((x) => x.classList.remove("on")); }
+        if (k === "free" && t.value !== "") m.querySelectorAll('[data-wk="bal"]').forEach((x) => x.classList.remove("on"));
+        if (["strat", "slipLvl", "fee", "spread", "layout"].includes(k)) return nsRender(d);
+        return err(""); }
+      if (t.dataset.wr) { d.rules[t.dataset.wr] = Math.max(0, +t.value || 0); return; }
+      if (t.dataset.wa) { d.assets = AL.map((a) => a.sym).filter((k) => (k === t.dataset.wa ? t.checked : cur.includes(k))); return nsRender(d); }
+      if (t.dataset.wc) { nsCost(d, t.dataset.ws)[t.dataset.wc] = Math.max(0, +t.value || 0); } };
+    m.onclick = async (e) => {
+      const nk = e.target.closest("[data-nk]"), na = e.target.closest("[data-na]"), w = e.target.closest("[data-wk]"), a = (e.target.closest("[data-m]") || {}).dataset;
+      if (nk) { d.kind = nk.dataset.nk; if (d.kind !== "prop") d.strict = false; return nsRender(d); }
+      if (na) return na.dataset.na === "psave" ? nsPresetSave(d) : nsPresetDel(d);
+      if (w && !w.disabled) { const k = w.dataset.wk, v = w.dataset.wv;
+        if (k === "size") { d.size = +v; d.rules = { ...d.rules, ...PROP[+v] }; return nsRender(d); }
+        if (k === "bal") { d.bal = +v; d.free = ""; return nsRender(d); }
+        if (k === "endMode") { d.endMode = v; if (v === "date" && !d.end) { d.rel = d.rel || "w"; d.end = btSes.addPeriod(d.from, d.rel) || ""; } return nsRender(d); }
+        if (k === "rel") { d.rel = v; d.end = btSes.addPeriod(d.from, v) || d.end; return nsRender(d); }
+        if (k === "rand") { const sym = cur[0], A0 = AL.find((x) => x.sym === sym); if (!A0) return err(AS ? assetsMsg(AS) : "Lecture des actifs en cours…"); w.disabled = true; w.textContent = "Tirage…"; err("");
+          const b = await sesBounds(sym), days = b && b.days ? b.days : btSes.weekdays(A0.min, A0.max), to = d.endMode === "date" && d.end && !d.rel ? d.end : null;
+          for (let n = 0; n < 12; n++) { const day = btSes.pickDay(days, A0.min, to || A0.max, Math.random); if (!day) break; if (await dayHasData(sym, day)) { d.from = day; if (d.rel) d.end = btSes.addPeriod(day, d.rel) || d.end; return nsRender(d); } }
+          w.disabled = false; w.textContent = "🎲 Au hasard"; return err(`Aucun jour avec des bougies ${sym} trouvé.`); }
+        return; }
+      if (!a) return;
+      if (a.m === "x") return closeModal();
+      if (a.m === "next" || a.m === "prev") { d.step = a.m === "next" ? 2 : 1; d.err = ""; return nsRender(d); }
+      if (a.m === "ok") return nsCreate(d, err);
+    };
+  }
+  function nsPreset(d, id) {
+    const p = presetsS().find((x) => x.id === id); if (!p) { d.preset = ""; return nsRender(d); }
+    Object.assign(d, btNav.presetApply(d, p.vals)); d.preset = id; d.err = "";
+    const AL = d.AS ? d.AS.list : []; d.assets = (d.assets || []).filter((k) => AL.some((a) => a.sym === k)); if (!d.assets.length && AL.length) d.assets = [AL[0].sym];
+    if (d.endMode === "date" && d.rel) d.end = btSes.addPeriod(d.from, d.rel) || d.end; if (d.layout && !layouts().some((l) => l.id === d.layout)) d.layout = "";
+    nsRender(d);
+  }
+  async function nsPresetSave(d) {
+    const n = await ask("Nom du preset de session", d.kind === "prop" ? `Prop firm ${d.size / 1000}K` : `Backtesting ${(d.free !== "" ? +d.free : d.bal) / 1000}K`); if (!n) return;
+    const L = presetsS().filter((p) => btNav.norm(p.name) !== btNav.norm(n)), p = { id: "p" + uid(), name: n, vals: btNav.presetOf(d), at: new Date().toISOString() };
+    if (!lsPut(PRSK, [...L, p])) { d.err = "Stockage plein : preset non enregistré."; return nsRender(d); }
+    d.preset = p.id; d.err = ""; nsRender(d);
+  }
+  function nsPresetDel(d) { const p = presetsS().find((x) => x.id === d.preset); if (!p || !confirm(`Supprimer le preset « ${p.name} » ?`)) return; lsPut(PRSK, presetsS().filter((x) => x.id !== p.id)); d.preset = ""; nsRender(d); }
+  async function nsCreate(d, err) {
+    const ch = d.kind === "prop", AS = d.AS || (await assetsGet()), AL = AS.list, name = String(d.name || "").trim() || btNav.uniqueName(`Session ${sesList().length + 1}`, sesList().map((r) => r.name));
+    const assets = (d.assets || []).filter((k) => CTR[k] && AL.some((a) => a.sym === k)), size = ch ? d.size : d.free !== "" ? Math.round(+d.free) : d.bal;
+    if (!AL.length) return err(assetsMsg(AS));
+    if (!assets.length) return err("Choisis au moins un actif.");
+    if (!(size >= 100)) return err("Solde de départ invalide (100 $ minimum).");
+    if (ch && !(d.rules.target > 0 && d.rules.mll > 0 && d.rules.dll > 0)) return err("Règles du challenge : objectif, MLL et DLL doivent être positifs.");
+    if (!/^\d\d:\d\d$/.test(d.time || "")) return err("Heure de départ invalide (HH:MM, heure de New York).");
+    const strat = d.strat === "__new" ? String(d.stratNew || "").trim().replace(/\s+/g, " ") : String(d.strat || "").trim(); if (d.strat === "__new" && !strat) return err("Donne un nom à la nouvelle stratégie (ou choisis « Aucune »).");
+    const a0 = AL.find((a) => a.sym === assets[0]), pr = btSes.period({ start: d.from, end: d.endMode === "date" ? d.end : null, auto: d.endMode !== "date", min: a0.min, max: a0.max }); if (!pr.ok) return err(pr.msg);
+    const b = await sesBounds(assets[0]), wd = new Date(pr.start + "T12:00:00Z").getUTCDay();
+    if (b && b.days ? !b.days.includes(pr.start) : wd === 0 || wd === 6) return err(`Pas de séance le ${fmtD(pr.start)} : choisis un jour de cotation.`);
+    if (D && D.dataRead && !(await dayHasData(assets[0], pr.start))) return err(`Pas de bougies ${assets[0]} le ${fmtD(pr.start)} (« Synchro données » dans le chart, ou un autre jour).`);
+    const lay = d.layout ? layouts().find((l) => l.id === d.layout) : null, cc = btNav.costCfg(d.costs || [], assets, { fee: d.fee !== false, spread: d.spread !== false, slip: btNav.slipOf(d.slipLvl, d.slipN), def: defFee });
+    const cfg = { ...defCfg(ch ? "prop" : "classic", ch ? size : 50000), ...(ch ? { ...d.rules } : {}), size, ...cc };
+    const rec = { id: "x" + uid(), name, type: ch ? "challenge" : "free", strict: !!(ch && d.strict), cfg, assets, strat, desc: String(d.desc || "").trim(), from: pr.start, time: d.time, end: pr.end,
+      created: new Date().toISOString(), savedAt: null, bal: size, nT: 0, t: null, sym: assets[0], tf: lay ? lay.tf || 1 : S.tf, layout: lay ? lay.id : null, costs: { fee: d.fee !== false, spread: d.spread !== false } };
+    if (!lsPut(SESK, [rec, ...sesList()])) return err("Stockage plein : supprime d'anciennes sessions (corbeille comprise) ou mises en page.");
+    if (strat) { LS.set("bt-strat-last", strat); if (d.strat === "__new") stratCreate(strat); else { const st = stratStore(); if ((st.hide || []).some((h) => btNav.norm(h) === btNav.norm(strat))) { unhide(st, strat); stratSave(st); } } } // nom repris par une session : de nouveau proposé
+    if (lay && lay.prefs) { P = { ...PDEF, ...lay.prefs }; LS.set("bt-prefs", P); applyPrefs(); } // modèle de chart : réglages d'affichage de la mise en page (communs au chart)
+    closeModal(); toChart(() => sesOpen(rec.id));
+  }
+
+  /* ---- interactions des pages (délégation sur #btPages) ---- */
+  const BPACT = {
+    new: (b) => nsOpen(b.dataset.kind), base: () => toChart(baseOpen), open: (b) => { const id = b.dataset.id; toChart(() => sesOpen(id)); },
+    sren: (b) => sesRen(b.dataset.id), sdup: (b) => sesDup(b.dataset.id), sdel: (b) => sesTrash(b.dataset.id),
+    sana: (b) => { pg.ana = { src: "ses:" + b.dataset.id, strat: "", side: "", res: "", sess: "", tag: "" }; bpGo("analytique"); },
+    nopen: (b) => snapOpen(b.dataset.id), nsave: (b) => snapSave(b.dataset.id), nren: (b) => snapRen(b.dataset.id), ndel: (b) => snapDel(b.dataset.id),
+    period: (b) => { pg.period = b.dataset.v; tabDash($("bpBody")); },
+    trpage: (b) => { pg.trPage = Math.max(0, +b.dataset.v || 0); trRes(); $("bpMain").scrollTop = 0; },
+    trreset: () => { pg.tr = { src: null, side: "", res: "", ctr: "", strat: "", from: "", to: "", q: "" }; pg.trPage = 0; tabTrades($("bpBody")); },
+    trsrc: (b) => { pg.tr.src = b.dataset.v === "all" ? null : []; pg.trPage = 0; document.querySelectorAll("#btPages [data-bpsrc]").forEach((x) => (x.checked = b.dataset.v === "all")); const l = $("bpTrSrcL"); if (l) l.textContent = trSrcLbl(srcCount(srcAll())); trRes(); },
+    anacsv: () => { const { N } = anaPick(); if (!N.length) return bpToast("Aucun trade à exporter.", true); anaCsv(N); }, anawin: () => openAnalytics(),
+    stnew: () => stNew(), stren: (b) => stRen(b.dataset.id), stdup: (b) => stDup(b.dataset.id), stdel: (b) => stDel(b.dataset.id),
+    pdef: () => prefsDef(), psavedef: () => { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); bpToast("Modèle par défaut enregistré : « Appliquer les réglages par défaut » remet désormais ces réglages."); },
+    pall: () => prefsAll(), pind: () => { toChart(null); setTimeout(() => openPrefs("ind"), 80); },
+    cdel: (b) => { if (!pg.costs) return; pg.costs.rows.splice(+b.dataset.i, 1); pg.costs.dirty = true; assetsGet().then(costsDraw); },
+    cdef: () => assetsGet().then((AS) => { costsInit(AS, true); costsDraw(AS); }), crefresh: () => assetsGet(true).then(costsDraw), csave: () => costsSave(),
+    brest: (b) => binRestore(b.dataset.id), bpurge: (b) => binPurge(b.dataset.id), bpage: (b) => { pg.binPage = Math.max(0, +b.dataset.v || 0); tabBin($("bpBody")); }, bempty: () => binEmpty(),
+  };
+  function bpInput(t, ch) {
+    if (t.closest(".bp-prefs")) { if (t.dataset.p || t.dataset.ii) { const k = prefsInput(t); if (k) { LS.set("bt-prefs", P); if (k === "bgType") tabPrefs($("bpBody")); } } return; }
+    if (t.dataset.bpsrc) { if (!ch) return; const cnt = srcCount(srcAll()), all = [...cnt.keys()], k = t.dataset.bpsrc; let L = pg.tr.src ? pg.tr.src.filter((x) => cnt.has(x)) : all.slice();
+      L = t.checked ? [...new Set([...L, k])] : L.filter((x) => x !== k); pg.tr.src = L.length === all.length ? null : L; pg.trPage = 0; const l = $("bpTrSrcL"); if (l) l.textContent = trSrcLbl(cnt); return trRes(); }
+    if (t.dataset.bc) { const r = pg.costs && pg.costs.rows[+t.dataset.i]; if (r) { r[t.dataset.bc] = Math.max(0, +t.value || 0); costDirty(); } return; }
+    const f = t.dataset.bpf; if (!f) return;
+    if (f === "stdesc") { if (ch) stDesc(t.dataset.id, t.value); return; }
+    if (t.type === "search" || t.type === "number" ? ch : !ch) return; // recherche et nombres : à la frappe ; listes et dates : à la validation
+    const [g, k] = f.split(".");
+    if (g === "ses") { pg.ses[k] = t.value; return sesRes(); }
+    if (g === "tr") { pg.tr[k] = t.value; pg.trPage = 0; return trRes(); }
+    if (g === "ana") { pg.ana[k] = t.value; if (k === "src" || k === "strat") pg.ana.tag = ""; return tabAna($("bpBody")); }
+    if (g === "st") { pg.st[k] = t.value; return stRes(); }
+    if (f === "cadd") { if (t.value && pg.costs) { pg.costs.rows.push({ sym: t.value, spread: 1, fee: defFee(t.value) }); pg.costs.dirty = true; } return assetsGet().then(costsDraw); }
+    if (f === "cslip") { if (pg.costs) { pg.costs.slipLvl = t.value; pg.costs.dirty = true; } return assetsGet().then(costsDraw); }
+    if (f === "cslipn") { if (pg.costs) pg.costs.slipN = Math.max(0, Math.round(+t.value || 0)); return costDirty(); }
+  }
+  (function bpInit() {
+    const root = $("btPages"); if (!root) return;
+    root.addEventListener("click", (e) => {
+      const n = e.target.closest("[data-bpn]"); if (n) { const k = n.dataset.bpn; if (k === "chart") return toChart(null); if (k === "testing") return bpGo(btNav.path({ page: "testing", tab: pg.last.testing })); if (k === "strategies") return bpGo("strategies"); return bpGo("parametres/" + pg.last.parametres); }
+      const at = e.target.closest("[data-at]"); if (at) { const box = at.closest(".bp-card") || root; box.querySelectorAll("[data-at]").forEach((x) => x.classList.toggle("on", x === at)); box.querySelectorAll("[data-ap]").forEach((x) => (x.hidden = x.dataset.ap !== at.dataset.at)); return; }
+      const th = e.target.closest("th[data-sort]"); if (th) { const k = th.dataset.sort; pg.trSort = { k, dir: pg.trSort.k === k && pg.trSort.dir === "desc" ? "asc" : "desc" }; return trRes(); }
+      const tb = e.target.closest(".bp-prefs [data-tab]"); if (tb) { pg.prefTab = tb.dataset.tab; return tabPrefs($("bpBody")); }
+      const a = e.target.closest("[data-bpa]"); if (a) { if (!a.disabled && BPACT[a.dataset.bpa]) BPACT[a.dataset.bpa](a, e); return; }
+      const g = e.target.closest("[data-bpgo]"); if (g) bpGo(g.dataset.bpgo);
+    });
+    root.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches && e.target.matches("[data-bpgo][role=button]")) bpGo(e.target.dataset.bpgo); });
+    root.addEventListener("input", (e) => bpInput(e.target, false));
+    root.addEventListener("change", (e) => bpInput(e.target, true));
+    const pb = $("btPagesBtn"); if (pb) pb.onclick = () => bpGo(pg.prev);
+  })();
+
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { chartOpen(null); }, route: bpRoute, _nav: btNav }; // 1re ouverture du chart : NQ m1 du dossier data chargé d'office (v1.66 : ou la session isolée laissée ouverte) ; v1.67 : route() = pages du Backtesteur
+  if ($("v-backtest") && $("v-backtest").classList.contains("on")) { const h = location.hash.slice(1); window.bt.route(h.startsWith("backtest/") ? h.slice(9) : ""); } // v1.67 : page ou chart selon le hash
 })();
 </script>
 <script>
@@ -11273,8 +12149,8 @@ function toggleFull() { try { if (document.fullscreenElement) document.exitFulls
 document.addEventListener("fullscreenchange", () => { const b = $r("#grFullBtn"); if (b) b.innerHTML = document.fullscreenElement === ROOT ? ICO.fullx : ICO.full; });
 
 /* ---------- Replay (Backtesteur) ---------- */
-function openReplay(c) { if (!c) return; const s = c.st.sym; if (!["NQ", "ES", "MNQ", "MES"].includes(s)) { toast("Le Backtesteur rejoue NQ, ES, MNQ et MES : ouverture du Backtesteur."); location.hash = "#backtest"; return; }
-  const r = c.main.chart.timeScale().getVisibleLogicalRange(), mid = r && c.DB.length ? tOfLi(c.DB, c.st.iv, (r.from + r.to) / 2) : NOW(), ds = sessDate(mid); location.hash = "#backtest";
+function openReplay(c) { if (!c) return; const s = c.st.sym; if (!["NQ", "ES", "MNQ", "MES"].includes(s)) { toast("Le Backtesteur rejoue NQ, ES, MNQ et MES : ouverture du Backtesteur."); location.hash = "#backtest/chart"; return; }
+  const r = c.main.chart.timeScale().getVisibleLogicalRange(), mid = r && c.DB.length ? tOfLi(c.DB, c.st.iv, (r.from + r.to) / 2) : NOW(), ds = sessDate(mid); location.hash = "#backtest/chart";
   setTimeout(() => { try { const sel = document.getElementById("btSym"), dte = document.getElementById("btDate"), ld = document.getElementById("btLoad"); if (sel && [...sel.options || []].some((o) => o.value === s)) { sel.value = s; sel.dispatchEvent(new Event("change", { bubbles: true })); } if (dte) { dte.value = ds; dte.dispatchEvent(new Event("input", { bubbles: true })); dte.dispatchEvent(new Event("change", { bubbles: true })); } if (ld) ld.click(); } catch (e) { /* */ } }, 600); }
 
 /* ---------- raccourcis clavier (repris de ton doc « TO DO APP ICT », modifiables) ---------- */

@@ -2,6 +2,23 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.67.0] — 2026-11-20
+Backtesteur, phase 1b de la salle blanche, livraison A (`docs/salle-blanche-fxreplay/REA-fxreplay.md`, module NAV : NAV-01 → 05, SES-04 / 05 / 09 / 10 / 11, TDB-03, JRN-04, STR-02 ; TDB-01, JRN-01, STR-01, NAV-06 et NAV-07 en partie). Tout s'ajoute : le chart (Backtesteur de base, sessions isolées, fenêtres du chart, raccourcis) marche comme en 1.66.0 et les données `bt-*` existantes ne sont ni renommées ni migrées.
+### Ajouté
+- **Pages du Backtesteur** avec leur propre menu à gauche dans la page : **Testing**, **Stratégies**, **Paramètres**, et un raccourci **Chart** (session ouverte ou Backtesteur de base). Le chart s'ouvre en plein écran ; le bouton **Pages** (en haut à gauche du chart) met le replay en pause, enregistre la session et ramène à la dernière page vue. Adresses : `#backtest` (tableau de bord), `#backtest/sessions`, `/trades`, `/analytique`, `#backtest/strategies[/<id>]`, `#backtest/parametres/<onglet>`, `#backtest/chart`.
+- **Testing › Tableau de bord** : trois départs (session de backtesting, session prop firm, Backtesteur de base), reprise de la dernière session, progression (temps réel passé sur le chart, temps de marché rejoué, trades achats / ventes, win rate, P&L ; semaine, mois ou tout) et sessions récentes avec reprise en un clic.
+- **Testing › Sessions** : recherche, filtres (type, stratégie), tri, reprendre, renommer, dupliquer (compte, trades, dessins et heure du replay copiés), analytique de la session, supprimer vers la corbeille ; les anciens instantanés restent à part avec leurs actions (Ouvrir, Écraser, Renommer, Supprimer).
+- **Testing › Trades** : tous les trades backtest en lecture (sessions isolées, Backtesteur de base, instantanés, sessions clôturées, sans doublon), sessions choisies, tri par colonne, filtres de base (sens, résultat, contrat, stratégie, dates, texte), résultat en $, en % du solde de départ et en R.
+- **Testing › Analytique** : l'analytique du chart dans la page, filtrable par session et par stratégie (export CSV ; la fenêtre du chart reste disponible).
+- **Fenêtre « Nouvelle session »** : onglets Backtesting et Prop firm, étapes Essentiel (nom, solde, règles et mode strict en prop firm, stratégie choisie ou créée sur place, actifs, modèle de chart, dates) puis Options (commissions et spreads par actif activables, slippage aucun / léger / moyen / fixe, description), **presets de session** en tête. Les actifs proposés sont ceux qui ont des bougies m1 dans `data_csv` et `data`, avec leurs bornes (les micros sans fichier reprennent les bougies du NQ / ES) ; version web : aucun actif, message clair.
+- **Stratégies** : une carte par stratégie (win rate, trades, drawdown max, R:R moyen, mini-courbe, alerte sans règle), recherche, filtre, nouvelle stratégie ; fiche avec auteur, description, Renommer / Dupliquer / Supprimer et onglet Vue d'ensemble (P&L net, win rate, R:R moyen, gagnants / perdants, breakeven, courbe d'équité, sessions reliées). Les stratégies sont reliées aux sessions par leur nom, sans modifier les sessions ; les noms déjà tapés sont proposés comme stratégies.
+- **Paramètres** : Backtesting (les réglages du chart dans la page, même clé `bt-prefs`), Spreads & commissions (une ligne par actif des CSV, spread en ticks, commission par contrat, slippage par défaut, repris à chaque nouvelle session), Sessions supprimées (restaurer ou supprimer définitivement, pagination).
+- App Windows : canal `data:assets` (actifs et bornes lus dans les CSV : liste des fichiers puis début et fin de chacun, jamais le fichier entier).
+### Modifié
+- **Cliquer sur Backtesteur** dans le menu de l'app ouvre Testing › Tableau de bord au lieu du chart (le compte démo des pages Comptes, le Replay de la page Graphique et « Ouvrir une nouvelle fenêtre » ouvrent toujours le chart).
+- Sessions créées depuis la nouvelle fenêtre : commission et spread propres à chaque actif (`A.cfg.fees` / `A.cfg.spreads`) ; sans eux (Backtesteur de base, sessions d'avant), frais et exécution au marché (dernier prix ± 1 tick) inchangés. Une session clôturée garde sa stratégie dans le Journal backtest.
+- Raccourcis du chart sans effet quand les pages sont affichées.
+
 ## [1.66.2] — 2026-11-20
 ### Modifié
 - **Favori de connexion TopstepX** renommé « Synchro App & TopstepX » (au lieu de « → ICT ») dans l'app et sur la page `tsx-chrome.html`, qui prend le logo ICT (icône d'onglet, titre et bouton à glisser).

@@ -77,6 +77,32 @@ function bank(MAXB = 400 * 1048576) {
   }
   return { get, size: () => C.size };
 }
+/* ---------- v1.67 : bornes d'un CSV sans le lire en entier (actifs proposés à la création d'une session, NAV-05) ----------
+ * En-tête + 1re ligne (début du fichier), puis dernière ligne complète (fin du fichier) : deux lectures de 64 Ko au plus, même sur un fichier 1 s de 100 Mo. */
+function csvCols(head) {
+  const L = String(head || "").replace(/\r$/, ""), sep = L.includes(";") && !L.includes(",") ? ";" : ",", h = L.split(sep).map((x) => x.trim().toLowerCase());
+  const t = h.findIndex((x) => ["ts", "timestamp", "unix", "time"].includes(x));
+  return t < 0 ? null : { sep, t };
+}
+function tsOf(line, cols) {
+  const L = String(line || "").replace(/\r$/, ""); if (!L) return NaN;
+  const v = String(L.split(cols.sep)[cols.t] || "").trim(); if (!v) return NaN;
+  let t = /^\d+(\.\d+)?$/.test(v) ? +v : parseNY(v); if (t > 1e12) t = Math.floor(t / 1000);
+  return isFinite(t) ? t : NaN;
+}
+async function csvEdges(file, chunk = 65536) {
+  let fh; try { fh = await fs.promises.open(file, "r"); } catch (e) { return null; }
+  try {
+    const { size } = await fh.stat(); if (!size) return null;
+    const rd = async (pos, len) => { const b = Buffer.alloc(len), r = await fh.read(b, 0, len, pos); return b.toString("utf8", 0, r.bytesRead); };
+    const head = (await rd(0, Math.min(size, chunk))).split("\n"), cols = csvCols(head[0]); if (!cols) return null;
+    let first = NaN; for (let i = 1; i < head.length && !isFinite(first); i++) first = tsOf(head[i], cols);
+    const tail = size <= chunk ? head.slice(1) : (await rd(size - chunk, chunk)).split("\n").slice(1); // 1re ligne de la fin : peut-être coupée
+    let last = NaN; for (let i = tail.length - 1; i >= 0 && !isFinite(last); i--) last = tsOf(tail[i], cols);
+    return isFinite(first) && isFinite(last) ? [Math.min(first, last), Math.max(first, last)] : null;
+  } finally { await fh.close(); }
+}
+
 // 1re bougie dont l'heure est >= t (recherche dichotomique)
 function lowerBound(b, t) { let lo = 0, hi = b.n; while (lo < hi) { const m = (lo + hi) >> 1; if (b.a[m * 6] < t) lo = m + 1; else hi = m; } return lo; }
 // bougies [ts, o, h, l, c, v] d'une banque entre deux heures unix (bornes incluses)
@@ -275,7 +301,21 @@ function create(baseDir, opts = {}) {
   async function readTf(sym, tf, from, to) { const b = await tfBank(sym, tf); return b ? sliceRows(b, from, to) : null; }
   // [1re heure, dernière heure] couvertes par une unité de temps (pour dire à l'utilisateur ce qui existe)
   async function span(sym, tf) { const b = tf === "m1" || tf === "1s" ? await B.get(csvFile(sym, tf) || "") : await tfBank(sym, tf); return b && b.n ? [b.a[0], b.a[(b.n - 1) * 6]] : null; }
-  return { sync, status, read, readTf, span, buildAllTf, importAllTf, TFS, dir, csvDir, isRunning: () => running };
+  /* v1.67 : actifs ayant des bougies m1 / 1 s (NAV-05) : data_csv (NQ_m1.csv, NQ_1s.csv…) puis data (NQ_m1_2026.csv, NQ_1s_2026-11.csv…), avec la 1re et la dernière heure.
+     Lecture légère : liste des fichiers puis début et fin de chacun (csvEdges) ; les micros sans fichier sont repliés sur NQ / ES par l'app (même règle que read). */
+  async function assets() {
+    const syms = {}, scan = (d) => { try { return fs.readdirSync(d); } catch (e) { return []; } };
+    const add = async (sym, res, file, src) => {
+      const e = await csvEdges(file); if (!e) return;
+      const s = (syms[sym] = syms[sym] || { m1: null, s1: null, src: [] }), k = res === "1s" ? "s1" : "m1";
+      s[k] = s[k] ? [Math.min(s[k][0], e[0]), Math.max(s[k][1], e[1])] : e; if (!s.src.includes(src)) s.src.push(src);
+    };
+    const cd = csvDir();
+    for (const f of cd ? scan(cd) : []) { const m = /^([A-Za-z]+)_(m1|1s)\.csv$/i.exec(f); if (m) await add(m[1].toUpperCase(), m[2].toLowerCase(), path.join(cd, f), "data_csv"); }
+    for (const f of scan(dir)) { const m = /^([A-Za-z]+)_(m1|1s)_\d{4}(-\d\d)?\.csv$/i.exec(f); if (m) await add(m[1].toUpperCase(), m[2].toLowerCase(), path.join(dir, f), "data"); }
+    return { csvDir: cd, dataDir: dir, syms };
+  }
+  return { sync, status, read, readTf, span, assets, buildAllTf, importAllTf, TFS, dir, csvDir, isRunning: () => running };
 }
 
 // parse a CSV chosen by the user (time_ny,ts,open,high,low,close,volume or any CSV with ts/open/high/low/close[/volume])
@@ -305,4 +345,4 @@ function parseNY(s) {
   return g;
 }
 
-module.exports = { create, parseCsv, parseNY, mergeRows, SYMS, UND, SEC_TFS };
+module.exports = { create, parseCsv, parseNY, mergeRows, csvEdges, SYMS, UND, SEC_TFS };

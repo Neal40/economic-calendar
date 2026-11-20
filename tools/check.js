@@ -268,6 +268,76 @@ try {
   eq("fin de session (17:00 NY)", [SS.endT("2026-01-06", nyT) === nyT("2026-01-06", 17, 0), SS.over(nyT("2026-01-06", 16, 59), "2026-01-06", nyT), SS.over(nyT("2026-01-06", 18, 0), "2026-01-06", nyT), SS.over(nyT("2026-03-01", 9, 0), null, nyT), SS.endT(null, nyT)], [true, false, true, false, null]);
 } catch (e) { errors.push("btSes : " + e.message); }
 
+// v1.67 · Phase 1b salle blanche (pages du Backtesteur) : actifs des CSV, coûts par défaut, corbeille, trades backtest, chiffres d'une stratégie, temps passé, presets, routage
+try {
+  const N = new Function(grab("btNav") + "; return btNav;")(), eq = (n, a, b) => { if (JSON.stringify(a) !== JSON.stringify(b)) errors.push(`btNav.${n} : ${JSON.stringify(a)} au lieu de ${JSON.stringify(b)}`); };
+  const day = (t) => new Date(t * 1000).toISOString().slice(0, 10), U = { MNQ: "NQ", MES: "ES" }, und = (k) => U[k] || k, ORD = ["NQ", "ES", "MNQ", "MES"];
+  // 1. actifs : seulement ceux qui ont des bougies m1 ; micro sans fichier = bougies du sous-jacent ; autres symboles signalés à part
+  const t0 = Date.UTC(2023, 6, 3, 13) / 1000, t1 = Date.UTC(2026, 10, 18, 21) / 1000, s1 = [t1 - 4 * 86400, t1];
+  const A1 = N.assets({ syms: { NQ: { m1: [t0, t1], s1: null }, ES: { m1: [t0 + 86400, t1], s1 }, MES: { m1: null, s1 }, YM: { m1: [t0, t1] }, CL: { m1: null, s1 } } }, ORD, und, day);
+  eq("assets", A1.list.map((a) => [a.sym, a.min, a.max, a.via]), [["NQ", "2023-07-03", "2026-11-18", null], ["ES", "2023-07-04", "2026-11-18", null], ["MNQ", "2023-07-03", "2026-11-18", "NQ"], ["MES", "2023-07-04", "2026-11-18", "ES"]]);
+  eq("assets 1 s", [A1.list[1].s1, A1.list[3].s1, A1.list[0].s1], [{ min: "2026-11-14", max: "2026-11-18" }, { min: "2026-11-14", max: "2026-11-18" }, null]);
+  eq("assets autres symboles", A1.other, ["YM"]); eq("assets vides", [N.assets(null, ORD, und, day).list, N.assets({ syms: { ES: { s1 } } }, ORD, und, day).list], [[], []]);
+  // 2. coûts : lignes proposées (actifs des CSV, frais par défaut, 1 tick), enregistrées (nettoyées), coûts de la session (désactivés = prix brut)
+  const def = (k) => ({ NQ: 2.8, ES: 2.8, MNQ: 0.74, MES: 0.74 })[k];
+  eq("costRows proposées", N.costRows(null, ["NQ", "MES"], def), [{ sym: "NQ", spread: 1, fee: 2.8 }, { sym: "MES", spread: 1, fee: 0.74 }]);
+  eq("costRows enregistrées", N.costRows({ rows: [{ sym: "NQ", spread: 2, fee: 4 }, { sym: "ES", spread: -1, fee: "" }, null, { spread: 1 }] }, ["NQ"], def), [{ sym: "NQ", spread: 2, fee: 4 }, { sym: "ES", spread: 0, fee: 2.8 }]);
+  const R1 = [{ sym: "NQ", spread: 2, fee: 4 }, { sym: "MNQ", spread: 1, fee: 1.5 }];
+  eq("costCfg", N.costCfg(R1, ["NQ", "ES", "MNQ"], { slip: 2.6, def }), { fees: { NQ: 4, ES: 2.8, MNQ: 1.5 }, spreads: { NQ: 2, ES: 1, MNQ: 1 }, slip: 3, feeBig: 4, feeMic: 1.5 });
+  eq("costCfg prix brut", N.costCfg(R1, ["ES"], { fee: false, spread: false, def }), { fees: { ES: 0 }, spreads: { ES: 0 }, slip: 0, feeBig: 0, feeMic: 0 });
+  eq("costCfg micro absent", N.costCfg(R1, ["ES"], { def }).feeMic, 0.74);
+  eq("slippage", [N.slipOf("0"), N.slipOf("2"), N.slipOf("fix", 3.4), N.slipOf("fix", -2), N.slipLvl(1), N.slipLvl(4)], [0, 2, 3, 0, { lvl: "1", n: 1 }, { lvl: "fix", n: 4 }]);
+  // 3. corbeille : supprimer = déplacer (date gardée), restaurer à sa place, purger ; clés exactes de la session (x1 ≠ x12), copie de clés, pages
+  const L0 = [{ id: "x3", name: "c", created: "2026-11-03" }, { id: "x1", name: "a", created: "2026-11-01" }], d1 = N.trash.del(L0, [], "x3", "2026-11-19T10:00:00Z");
+  eq("trash.del", [d1.list.map((r) => r.id), d1.bin.map((r) => [r.id, r.deletedAt])], [["x1"], [["x3", "2026-11-19T10:00:00Z"]]]);
+  const r1 = N.trash.restore([{ id: "x4", created: "2026-11-04" }, ...d1.list], d1.bin, "x3");
+  eq("trash.restore", [r1.list.map((r) => r.id), r1.bin.length, "deletedAt" in r1.list[1]], [["x4", "x3", "x1"], 0, false]);
+  eq("trash.del inconnu", N.trash.del(L0, [], "zz", ""), null); eq("trash.purge", N.trash.purge(d1.bin, "x3"), []);
+  const K = ["bt-ses", "bt-ses-x1", "bt-ses-x1-ev", "bt-ses-x12", "bt-ses-x12-ev", "bt-draw-ses-x1-NQ", "bt-draw-ses-x1-NQ-f", "bt-draw2-ses-x1-ES", "bt-draw-ses-x12-NQ", "bt-ses-cur", "bt-acc"];
+  eq("trash.keys", N.trash.keys("x1", K), ["bt-ses-x1", "bt-ses-x1-ev", "bt-draw-ses-x1-NQ", "bt-draw-ses-x1-NQ-f", "bt-draw2-ses-x1-ES"]);
+  eq("trash.rekey", N.trash.keys("x1", K).map((k) => N.trash.rekey(k, "x1", "y9")), ["bt-ses-y9", "bt-ses-y9-ev", "bt-draw-ses-y9-NQ", "bt-draw-ses-y9-NQ-f", "bt-draw2-ses-y9-ES"]);
+  const B25 = Array.from({ length: 25 }, (_, i) => ({ id: "b" + i, deletedAt: "2026-11-" + String(i + 1).padStart(2, "0") })), pg2 = N.trash.page(B25, 9, 20);
+  eq("trash.page", [pg2.page, pg2.pages, pg2.total, pg2.rows.length, pg2.rows[0].id, N.trash.page(B25, 0, 20).rows[0].id, N.trash.page([], 3, 20).pages], [1, 2, 25, 5, "b4", "b24", 1]);
+  // 4. trades backtest : doublons (copie d'un compte) gardés une fois dans la 1re source, $ / % / R, filtres, tri
+  const CT = { NQ: { pv: 20 }, MNQ: { pv: 2 } }, tr = (id, side, entry, exit, tIn, pnl, r0, extra) => ({ id, ctr: "NQ", side, qty: 1, entry, exit, tIn, tOut: tIn + 600, pnl, r0, tags: [], ...(extra || {}) });
+  const ta = tr(1, "Long", 100, 110, 1e9, 197.2, 10), tb = tr(2, "Short", 120, 125, 1e9 + 3600, -102.8, 5, { tags: ["FVG"], note: "trop tôt" }), tc = tr(3, "Long", 130, 130.25, 1e9 + 7200, 2.2, null);
+  const SRC = [{ type: "ses", id: "x1", name: "Session A", strat: "SB AM", start: 50000, trades: [ta, tb] }, { type: "base", id: "base", name: "Base", strat: "", start: 100000, trades: [tc, { ...ta, id: 9 }] },
+    { type: "snap", id: "s1", name: "Snap", strat: "NWOG", start: 50000, trades: [{ ...tc, id: 7 }, { tOut: null }] }, { type: "rec", id: "j1", name: "Rec", start: 50000, trades: [{ ...tb, id: undefined, pnl: -102.8 }] }];
+  const T = N.collect(SRC, CT);
+  eq("collect doublons", T.map((t) => t.key), ["ses:x1:1", "ses:x1:2", "base:base:3"]);
+  eq("collect $ % R", [T[0].R, T[0].pct, T[1].R, T[2].R, T[2].pct], [197.2 / 200, 197.2 / 50000, -102.8 / 100, null, 2.2 / 100000]);
+  eq("outcome", T.map((t) => N.outcome(t)), ["w", "l", "w"]); eq("outcome sans stop", N.outcome({ R: null, pnl: 0.5 }), "be"); eq("outcome breakeven R", N.outcome({ R: 0.08, pnl: 16 }), "be");
+  const f = (o) => N.filter(T, { dayOf: day, ...o }).map((t) => t.key.split(":")[2]);
+  eq("filter", [f({}), f({ src: [] }), f({ src: ["base:base"] }), f({ side: "Short" }), f({ res: "w" }), f({ strat: ["sb am"] }), f({ q: "TROP" }), f({ q: "fvg" }), f({ from: day(1e9 + 7800), to: day(1e9 + 7800) })],
+    [["1", "2", "3"], [], ["3"], ["2"], ["1", "3"], ["1", "2"], ["2"], ["2"], ["1", "2", "3"]]);
+  eq("sort", [N.sort(T, "pnl", "desc").map((t) => t.pnl), N.sort(T, "R", "asc").map((t) => t.R === null ? null : +t.R.toFixed(3)), N.sort(T, "date", "asc").map((t) => t.tIn - 1e9)], [[197.2, 2.2, -102.8], [null, -1.028, 0.986], [0, 3600, 7200]]);
+  // 5. chiffres d'une stratégie : win rate hors breakeven, R:R moyen, drawdown max du P&L cumulé
+  const tz = (pnl, k, R) => ({ pnl, tIn: k, tOut: k + 1, R: R === undefined ? pnl / 100 : R, side: pnl > 0 ? "Long" : "Short" });
+  const S5 = N.stats([tz(300, 1), tz(-100, 2), tz(-200, 3), tz(5, 4), tz(400, 5), tz(-100, 6)]);
+  eq("stats", [S5.n, S5.wins, S5.losses, S5.be, S5.wr, S5.pnl, S5.avgW, S5.avgL, +S5.rr.toFixed(4), S5.mdd, S5.curve, S5.buys, S5.sells], [6, 2, 3, 1, 0.4, 305, 350, 400 / 3, 2.625, 300, [0, 300, 200, 0, 5, 405, 305], 3, 3]);
+  eq("stats vides", [N.stats([]).wr, N.stats([]).rr, N.stats([tz(50, 1)]).rr, N.stats([tz(-50, 1)]).mdd], [null, null, Infinity, 50]);
+  // 6. stratégies : fiches + noms tapés dans les sessions (reliés par le nom, alias après renommage, noms retirés)
+  const ST = N.strategies({ list: [{ id: "st1", name: "SB AM", alias: ["Silver Bullet"], rules: ["1st FVG"] }], hide: ["vieux modèle"] }, [{ name: "silver  bullet", n: 2 }, { name: "NWOG", n: 1 }, { name: "Vieux modèle", n: 3 }, { name: "  ", n: 1 }, { name: "nwog", n: 1 }]);
+  eq("strategies", ST.map((s) => [s.id, s.name, s.saved, s.n, s.names]), [["st1", "SB AM", true, 2, ["sb am", "silver bullet"]], ["n" + N.hash("nwog"), "NWOG", false, 2, ["nwog"]]]);
+  eq("linked", [N.linked(ST[0], "Silver Bullet"), N.linked(ST[0], "SB  AM"), N.linked(ST[0], ""), N.linked(ST[1], "SB AM")], [true, true, false, false]);
+  eq("uniqueName", [N.uniqueName("A (copie)", ["a (copie)", "A (copie) 2"]), N.uniqueName("B", ["A"]), N.uniqueName("", [])], ["A (copie) 3", "B", "Stratégie"]);
+  // 7. progression : semaine depuis le lundi, mois depuis le 1er (jours de New York) ; trades d'avant le suivi seulement dans « Tout »
+  eq("since", [N.since("week", "2026-11-19"), N.since("week", "2026-11-16"), N.since("week", "2026-11-22"), N.since("month", "2026-11-19"), N.since("all", "2026-11-19")], ["2026-11-16", "2026-11-16", "2026-11-16", "2026-11-01", null]);
+  const log = { d: {} }; N.addTime(log, "2026-11-10", "base", 600, 1200); N.addTime(log, "2026-11-17", "x1", 300, 3600); N.addTime(log, "2026-11-17", "x1", 60, 0); N.addTime(log, "2026-11-18", "base", 0, 60);
+  const TT = [{ ...T[0] }, { ...T[1] }, { ...T[2] }];
+  eq("markTrades", [N.markTrades(log, [ta], "2026-11-17"), N.markTrades(log, [ta, tb], "2026-11-18"), N.markTrades(log, [{ ...ta, id: 99 }], "2026-11-19")], [1, 1, 0]);
+  const pw = N.progress(log, TT, "week", "2026-11-19"), pm = N.progress(log, TT, "month", "2026-11-19"), pa = N.progress(log, TT, "all", "2026-11-19");
+  eq("progress", [[pw.real, pw.market, pw.days, pw.n, pw.buys, pw.sells], [pm.real, pm.market, pm.days, pm.n], [pa.real, pa.n, pa.wr]], [[360, 3660, 1, 2, 1, 1], [960, 4860, 2, 2], [960, 3, 2 / 3]]);
+  eq("marketStep", [N.marketStep(null, 60), N.marketStep(60, 120), N.marketStep(60, 61), N.marketStep(60, 86400), N.marketStep(120, 60)], [0, 60, 1, 60, 0]);
+  // 8. presets de session : sans le nom ni la date de départ ; appliqués sur le brouillon
+  const pv = N.presetOf({ kind: "prop", name: "X", from: "2026-01-05", size: 100000, rules: { target: 6000 }, assets: ["NQ"], fee: false, slipLvl: "fix", slipN: 3, err: "!" });
+  eq("presetOf", pv, { kind: "prop", size: 100000, rules: { target: 6000 }, assets: ["NQ"], fee: false, slipLvl: "fix", slipN: 3 });
+  const dr = N.presetApply({ kind: "bt", name: "Ma session", from: "2026-11-17", assets: ["ES"], fee: true }, pv); pv.rules.target = 1;
+  eq("presetApply", [dr.kind, dr.name, dr.from, dr.assets, dr.fee, dr.rules.target], ["prop", "Ma session", "2026-11-17", ["NQ"], false, 6000]);
+  // 9. routage
+  eq("route", ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres", "parametres/spreads", "parametres/zz", "chart", "zz"].map((p) => N.path(N.route(p))), ["", "sessions", "trades", "analytique", "strategies", "strategies/st1", "parametres/backtesting", "parametres/spreads", "parametres/backtesting", "chart", ""]);
+} catch (e) { errors.push("btNav : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);
