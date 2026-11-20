@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert");
 const fs = require("fs"), os = require("os"), path = require("path");
-const { create, parseCsv, parseNY, mergeRows, csvEdges } = require("./marketdata");
+const { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges } = require("./marketdata");
 
 test("parseNY : date sans fuseau = heure de New York (hiver et été)", () => {
   assert.strictEqual(parseNY("2026-11-06 09:30:00"), Date.parse("2026-11-06T14:30:00Z") / 1000); // EST, UTC-5
@@ -43,7 +43,7 @@ test("dossier data_csv : un fichier par unité, trous du m1 comblés par la sync
     const S = create(dir, { csvDirs: [path.join(dir, "absent"), csv] });
     assert.strictEqual(S.csvDir(), csv);
     assert.deepStrictEqual((await S.read("NQ", t, t + 120, "m1")).map((r) => [r[0] - t, r[4]]), [[0, 1], [60, 9], [120, 1]]);
-    assert.deepStrictEqual((await S.read("MNQ", t, t + 120, "m1")).map((r) => r[4]), [9, 9, 9]);                                       // MNQ sans fichier : synchro du NQ
+    assert.deepStrictEqual((await S.read("MNQ", t, t + 120, "m1")).map((r) => r[4]), [1, 9, 1]);                                       // MNQ sans fichier : bougies du NQ (data_csv + synchro), v1.67.1
     assert.deepStrictEqual((await S.readTf("NQ", "5s", 0, 2e9)).map((r) => r[0] - t), [0, 5, 10]);
     assert.deepStrictEqual((await S.readTf("NQ", "5s", t + 5, t + 5)).length, 1);
     assert.deepStrictEqual((await S.readTf("NQ", "3M", 0, 2e9)).map((r) => r.slice(1)), [[10, 21, 5, 16, 200], [12, 22, 7, 17, 100], [13, 23, 8, 18, 100]]);
@@ -81,4 +81,37 @@ test("v1.67 assets / csvEdges : actifs des dossiers data_csv et data avec leurs 
     assert.strictEqual(await csvEdges(path.join(dir, "absent.csv")), null);
     assert.deepStrictEqual(await create(path.join(dir, "vide")).assets().then((x) => x.syms), {});
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("v1.67.1 micros : leurs propres bougies dans le data_csv d'un sous-dossier du dossier ICT ; sous-jacent seulement si le fichier du micro manque", async () => {
+  const ict = fs.mkdtempSync(path.join(os.tmpdir(), "ict-"));
+  try {
+    const H = "time_ny,ts,open,high,low,close,volume", t = Date.parse("2026-11-06T14:30:00Z") / 1000, line = (s, c) => `x,${s},1,2,0,${c},5`;
+    const csv = path.join(ict, "economic-calendar-main", "data_csv"), data = path.join(ict, "data");
+    [csv, data, path.join(ict, "inner_circle_trader_main"), path.join(ict, "backups")].forEach((d) => fs.mkdirSync(d, { recursive: true }));
+    const put = (f, rows) => fs.writeFileSync(path.join(csv, f), [H, ...rows, ""].join("\n"));
+    put("NQ_m1.csv", [line(t, 1), line(t + 60, 1), line(t + 120, 1)]);
+    put("MNQ_m1.csv", [line(t, 2), line(t + 120, 2)]);                          // pas de bougie MNQ à t + 60
+    put("MNQ_1s.csv", [line(t, 22), line(t + 1, 22)]);
+    put("ES_m1.csv", [line(t, 3)]); put("ES_1s.csv", [line(t, 33)]); put("ES_m5.csv", [line(t, 7)]);
+    put("MES_m1.csv", [line(t, 4)]);                                            // MES : ni 1 s ni m5
+    put("NQ_m5.csv", [line(t, 5)]); put("MNQ_m5.csv", [line(t, 6)]);
+    fs.writeFileSync(path.join(data, "NQ_m1_2026.csv"), [H, line(t + 60, 9), line(t + 180, 9), ""].join("\n")); // synchro du NQ
+    const dirs = csvDirsOf(ict, ["extra"]);
+    assert.deepStrictEqual(dirs, [path.join(ict, "data_csv"), path.join(ict, "backups", "data_csv"), path.join(ict, "data", "data_csv"), csv, path.join(ict, "inner_circle_trader_main", "data_csv"), "extra"]);
+    const S = create(data, { csvDirs: dirs });
+    assert.strictEqual(S.csvDir(), csv);                                        // trouvé comme data_csv d'un sous-dossier
+    const a = await S.assets();
+    assert.deepStrictEqual(Object.keys(a.syms).sort(), ["ES", "MES", "MNQ", "NQ"]);
+    assert.deepStrictEqual(a.syms.MNQ.m1, [t, t + 120]); assert.deepStrictEqual(a.syms.MNQ.src, ["data_csv"]); assert.deepStrictEqual(a.syms.MNQ.s1, [t, t + 1]);
+    assert.strictEqual(a.syms.MES.s1, null);
+    const px = async (sym, res, f = t, to = t + 180) => (await S.read(sym, f, to, res)).map((r) => [r[0] - t, r[4]]);
+    assert.deepStrictEqual(await px("MNQ", "m1"), [[0, 2], [120, 2]]);          // seulement les bougies du MNQ : aucun trou comblé par le NQ
+    assert.deepStrictEqual(await px("NQ", "m1"), [[0, 1], [60, 1], [120, 1], [180, 9]]);
+    assert.deepStrictEqual(await px("MNQ", "1s", t, t + 1), [[0, 22], [1, 22]]);
+    assert.deepStrictEqual(await px("MES", "m1"), [[0, 4]]);
+    assert.deepStrictEqual(await px("MES", "1s", t, t + 1), [[0, 33]]);         // MES sans 1 s : bougies 1 s de l'ES
+    assert.deepStrictEqual((await S.readTf("MNQ", "m5", 0, 2e9)).map((r) => r[4]), [6]);
+    assert.deepStrictEqual((await S.readTf("MES", "m5", 0, 2e9)).map((r) => r[4]), [7]); // MES sans m5 : m5 de l'ES
+  } finally { fs.rmSync(ict, { recursive: true, force: true }); }
 });

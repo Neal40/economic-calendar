@@ -124,6 +124,14 @@ function mergeRows(main, fill) {
   return out;
 }
 
+// v1.67.1 : dossiers « data_csv » possibles, dans l'ordre : <dossier ICT>\data_csv, puis le data_csv de chaque sous-dossier du dossier ICT
+// (le dépôt posé là, ex. economic-calendar-main\data_csv ; ordre alphabétique), puis extra
+function csvDirsOf(ict, extra) {
+  const out = [path.join(ict, "data_csv")];
+  try { fs.readdirSync(ict, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).forEach((n) => out.push(path.join(ict, n, "data_csv"))); } catch (e) { /* dossier ICT absent */ }
+  return out.concat(extra || []);
+}
+
 // opts.csvDirs : dossiers « data_csv » possibles (le 1er qui existe et contient des CSV est utilisé)
 function create(baseDir, opts = {}) {
   const dir = baseDir, B = bank();
@@ -217,16 +225,17 @@ function create(baseDir, opts = {}) {
     if (res === "1s") { const a = ymOf(from), z = ymOf(to); let all; try { all = fs.readdirSync(dir); } catch (e) { return []; } return all.filter((f) => f.startsWith(`${sym}_1s_`) && f.slice(sym.length + 4, sym.length + 11) >= a && f.slice(sym.length + 4, sym.length + 11) <= z).sort().map((f) => path.join(dir, f)); }
     return Array.from({ length: Math.max(0, yearOf(to) - yearOf(from) + 1) }, (_, i) => fileM1(sym, yearOf(from) + i));
   }
-  // read bars of a symbol between two unix timestamps (m1 or 1s) : data_csv d'abord, trous comblés par la synchro (NQ / ES pour les micros)
+  // un symbole a-t-il ses propres bougies dans cette résolution (fichier data_csv, ou fichiers de la synchro) ?
+  const hasOwn = (sym, res) => { const f = csvFile(sym, res); if (f && fs.existsSync(f)) return true; try { return fs.readdirSync(dir).some((x) => x.startsWith(`${sym}_${res}_`) && x.endsWith(".csv")); } catch (e) { return false; } };
+  // read bars of a symbol between two unix timestamps (m1 or 1s) : data_csv d'abord, trous comblés par la synchro du même symbole.
+  // v1.67.1 (décision de l'arbitre du 20/11/2026) : un micro (MNQ, MES) n'utilise que ses propres bougies ; sans aucun fichier à lui dans cette résolution, il prend celles de son sous-jacent (NQ, ES)
   async function read(sym, from, to, res = "m1") {
     res = res === "1s" ? "1s" : "m1";
+    if (sym in UND && !hasOwn(sym, res)) return read(UND[sym], from, to, res);
     to = Math.min(to, Math.floor(Date.now() / 1000) + 86400); from = Math.max(from, 0);
     const main = await rowsOf(csvFile(sym, res), from, to);
     let fill = [];
-    for (const s of sym in UND ? [sym, UND[sym]] : [sym]) {
-      for (const f of syncFiles(s, from, to, res)) { const r = await rowsOf(f, from, to); if (r && r.length) fill = fill.length ? mergeRows(fill, r) : r; }
-      if (fill.length) break;
-    }
+    for (const f of syncFiles(sym, from, to, res)) { const r = await rowsOf(f, from, to); if (r && r.length) fill = fill.length ? mergeRows(fill, r) : r; }
     return mergeRows(main, fill);
   }
 
@@ -345,4 +354,4 @@ function parseNY(s) {
   return g;
 }
 
-module.exports = { create, parseCsv, parseNY, mergeRows, csvEdges, SYMS, UND, SEC_TFS };
+module.exports = { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges, SYMS, UND, SEC_TFS };

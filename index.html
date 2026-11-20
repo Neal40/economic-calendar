@@ -1650,6 +1650,7 @@ table.tbl:has(#subT){min-width:900px}
 .bp-prefs{display:flex;min-height:440px;background:#1f1f1f;border:1px solid var(--tx-hov);border-radius:8px;overflow:hidden}
 .bp-prefs .snav{width:210px;flex:none;padding:6px 0;border-right:1px solid #2e2e2e}.bp-prefs .sbody{flex:1;overflow:auto;max-height:calc(100vh - 270px);padding:6px 22px 20px}
 .bp-costs input{width:96px}.bp-costs select{min-width:160px}
+.bp-prefs .tx-kv button,.bp-prefs .tx-kdef{background:none;border:1px solid #c9c9c9;color:#f2f2f2;border-radius:6px;cursor:pointer}.bp-prefs .tx-kdef{height:32px;padding:0 14px}.bp-prefs .tx-kv button:hover,.bp-prefs .tx-kdef:hover{background:#2e2e2e}
 .bp-toasts{position:absolute;right:18px;bottom:18px;z-index:20;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .bp-toast{max-width:440px;padding:10px 14px;background:#1f1f1f;border:1px solid #2e2e2e;border-left:3px solid var(--tx-acc);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5);color:#f2f2f2;font-size:13px;transition:opacity .3s}.bp-toast.err{border-left-color:var(--tx-loss)}.bp-toast.out{opacity:0}
 .tx-mbox.bp-wz{width:min(820px,96vw)}
@@ -1990,7 +1991,7 @@ table.tbl:has(#subT){min-width:900px}
           <i class="tx-vs"></i>
           <span class="tx-tfs" id="btTfs"><button data-tf="1s" title="1 seconde (chargé au clic)">1s</button><button data-tf="5s" title="5 secondes (chargé au clic)">5s</button><button data-tf="15s" title="15 secondes (chargé au clic)">15s</button><button data-tf="30s" title="30 secondes (chargé au clic)">30s</button><i class="tx-tfsep"></i><button data-tf="1" class="on">1m</button><button data-tf="2" title="2 minutes (chargé au clic)">2m</button><button data-tf="3" title="3 minutes (chargé au clic)">3m</button><button data-tf="5">5m</button><button data-tf="15">15m</button><button data-tf="60">1h</button><button data-tf="240">4h</button><i class="tx-tfsep"></i><button data-tf="1440" title="1 jour">D</button><button data-tf="10080" title="1 semaine">W</button><button data-tf="43200" title="1 mois">M</button><button data-tf="129600" title="3 mois">3M</button><button data-tf="259200" title="6 mois">6M</button><button data-tf="518400" title="12 mois">12M</button></span><button class="tx-hb tx-tfmore" id="btTfMore" title="Toutes les unités de temps"><i class="tx-car"></i></button>
           <i class="tx-vs"></i>
-          <button class="tx-hb tx-dd" id="btTypeBtn" title="Type de graphique"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg><i class="tx-car"></i></button><i class="tx-vs"></i><button class="tx-hb" id="btFxBtn" title="Indicateurs : news, Jarvis, alertes, watchlist"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/></g></svg></button><button class="tx-hb" id="btSplitBtn" title="Disposition des charts (1 ou 2) et synchronisation"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M14 6.5v15M5.5 14h17"/></g></svg></button><button class="tx-tb tx-tbi" id="btPrefBtn" title="Paramètres du chart"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg><span>Paramètres</span></button><button class="tx-hb" id="btIndBtn" title="Éditeur d'indicateurs : coder et enregistrer des indicateurs Pine Script / TypeScript"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 9.5l-5 4.5 5 4.5M17.5 9.5l5 4.5-5 4.5M15.5 6.5l-3 15"/></g></svg></button><button class="tx-hb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><linearGradient id="alBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f05a12"/><stop offset="1" stop-color="#dd2a2a"/></linearGradient><linearGradient id="alBell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#fdf0c6"/></linearGradient></defs><rect width="32" height="32" rx="7.5" fill="url(#alBg)"/><path d="M16 5.4v1.8" stroke="#fffdf6" stroke-width="1.7" stroke-linecap="round"/><path d="M9.3 21V15a6.7 6.7 0 0 1 13.4 0v6l2.1 1.3c.6.4.3 1.4-.4 1.4H7.6c-.7 0-1-1-.4-1.4z" fill="url(#alBell)"/><circle cx="16" cy="26.4" r="1.9" fill="#fff"/><text x="16" y="19.6" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e8501a" font-family="Arial,sans-serif">$</text><circle cx="23.2" cy="8.8" r="3.7" fill="#ffd12a" stroke="#f3b200" stroke-width=".8"/><path d="M23.2 6.9v2.2" stroke="#e8501a" stroke-width="1.3" stroke-linecap="round"/><circle cx="23.2" cy="10.7" r=".7" fill="#e8501a"/></svg></button><button class="tx-tb tx-tbi" id="btSessBtn" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/></g></svg><span>Sessions</span></button><button class="tx-hb" id="btUndo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M9.5 9.5l-4 4 4 4M5.5 13.5h11a5 5 0 0 1 0 10h-3"/></g></svg></button><button class="tx-hb" id="btRedo" title="Rétablir (Ctrl+Y)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M18.5 9.5l4 4-4 4M22.5 13.5h-11a5 5 0 0 0 0 10h3"/></g></svg></button><span class="tx-sp"></span><button class="tx-hb" id="btOrdTgl" title="Afficher / masquer le panneau Order"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M16.5 6.5v15"/></g></svg></button><button class="tx-tb tx-dd" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)"><span id="btLayName">Mise en page</span><i class="tx-car"></i></button><button class="tx-hb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><radialGradient id="jvBg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0d4a73"/><stop offset=".7" stop-color="#072640"/><stop offset="1" stop-color="#020c18"/></radialGradient><filter id="jvGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="16" cy="16" r="16" fill="url(#jvBg)"/><g fill="none" stroke="#3fd0ff" stroke-linecap="round" filter="url(#jvGlow)"><circle cx="16" cy="16" r="13.6" stroke-width=".7" stroke-dasharray="14 2 5 2 1 2" opacity=".85"/><circle cx="16" cy="16" r="11.4" stroke-width="1.5" stroke-dasharray=".9 1.3" opacity=".7"/><path d="M16 6.8a9.2 9.2 0 0 1 9.2 9.2" stroke-width="1.5"/><path d="M6.8 16A9.2 9.2 0 0 0 16 25.2" stroke-width="1.5"/><path d="M8.6 10.4a9.2 9.2 0 0 1 2-1.9" stroke-width="2.2" stroke="#7fe6ff"/><circle cx="16" cy="16" r="5.9" stroke-width="1.9" stroke="#8ff0ff"/><circle cx="16" cy="16" r="3.4" stroke-width=".6" opacity=".7"/></g></svg></button><button class="tx-hb" id="btKeysBtn" title="Raccourcis clavier (personnalisables)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg></button><button class="tx-hb" id="btFullBtn" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M5.5 10.5v-5h5M17.5 5.5h5v5M22.5 17.5v5h-5M10.5 22.5h-5v-5"/></g></svg></button><button class="tx-hb" id="btShotBtn" title="Instantané du graphique"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M4.5 9.5h4l2-3h7l2 3h4v12h-19z"/><circle cx="14" cy="15" r="4"/></g></svg></button><button id="btNewsBtn" hidden></button><button class="tx-hb" id="btDockBtn" title="Journal du backtest : trades, notes, R, MFE (Alt+K) · Analytique : Alt+Y"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="7.5" y="5.5" width="13" height="17" rx="1.5"/><path d="M10.5 10.5h7M10.5 14h7M10.5 17.5h4"/></g></svg></button><button class="tx-hb" id="btMoreBtn" title="Plus : nouvelle fenêtre, plein écran">⋯</button><button class="tx-hb" id="btTreeBtn" hidden></button>
+          <button class="tx-hb tx-dd" id="btTypeBtn" title="Type de graphique"><svg viewBox="0 0 28 28" width="28" height="28"><path fill="currentColor" d="M9 6h1v3h2v10h-2v3H9v-3H7V9h2V6zm9 3h1v3h2v7h-2v3h-1v-3h-2v-7h2V9z"/></svg><i class="tx-car"></i></button><i class="tx-vs"></i><button class="tx-hb" id="btFxBtn" title="Indicateurs : news, Jarvis, alertes, watchlist"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/></g></svg></button><button class="tx-hb" id="btSplitBtn" title="Disposition des charts (1 ou 2) et synchronisation"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M14 6.5v15M5.5 14h17"/></g></svg></button><button class="tx-tb tx-tbi" id="btPrefBtn" title="Paramètres du chart"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M14 4.8l7.9 4.6v9.2L14 23.2l-7.9-4.6V9.4z"/><circle cx="14" cy="14" r="3"/></g></svg><span>Paramètres</span></button><button class="tx-hb" id="btIndBtn" title="Éditeur d'indicateurs : coder et enregistrer des indicateurs Pine Script / TypeScript"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 9.5l-5 4.5 5 4.5M17.5 9.5l5 4.5-5 4.5M15.5 6.5l-3 15"/></g></svg></button><button class="tx-hb" id="btALBtn" title="Alertes de prix (Alt+Maj+A)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><linearGradient id="alBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f05a12"/><stop offset="1" stop-color="#dd2a2a"/></linearGradient><linearGradient id="alBell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#fdf0c6"/></linearGradient></defs><rect width="32" height="32" rx="7.5" fill="url(#alBg)"/><path d="M16 5.4v1.8" stroke="#fffdf6" stroke-width="1.7" stroke-linecap="round"/><path d="M9.3 21V15a6.7 6.7 0 0 1 13.4 0v6l2.1 1.3c.6.4.3 1.4-.4 1.4H7.6c-.7 0-1-1-.4-1.4z" fill="url(#alBell)"/><circle cx="16" cy="26.4" r="1.9" fill="#fff"/><text x="16" y="19.6" text-anchor="middle" font-size="8.5" font-weight="800" fill="#e8501a" font-family="Arial,sans-serif">$</text><circle cx="23.2" cy="8.8" r="3.7" fill="#ffd12a" stroke="#f3b200" stroke-width=".8"/><path d="M23.2 6.9v2.2" stroke="#e8501a" stroke-width="1.3" stroke-linecap="round"/><circle cx="23.2" cy="10.7" r=".7" fill="#e8501a"/></svg></button><button class="tx-tb tx-tbi" id="btSessBtn" title="Sessions de backtest enregistrées"><svg viewBox="0 0 28 28" width="22" height="22"><g fill="none" stroke="currentColor"><path d="M12 16l4-4M10.4 13.1l-1.9 1.9a3 3 0 0 0 4.2 4.2l1.9-1.9M17.6 14.9l1.9-1.9a3 3 0 0 0-4.2-4.2l-1.9 1.9"/></g></svg><span>Sessions</span></button><button class="tx-hb" id="btUndo" title="Annuler (Ctrl+Z)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M9.5 9.5l-4 4 4 4M5.5 13.5h11a5 5 0 0 1 0 10h-3"/></g></svg></button><button class="tx-hb" id="btRedo" title="Rétablir (Ctrl+Y)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M18.5 9.5l4 4-4 4M22.5 13.5h-11a5 5 0 0 0 0 10h3"/></g></svg></button><span class="tx-sp"></span><button class="tx-hb" id="btOrdTgl" title="Afficher / masquer le panneau Order"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5"/><path d="M16.5 6.5v15"/></g></svg></button><button class="tx-tb tx-dd" id="btLayBtn" title="Mises en page (Ctrl+S = enregistrer)"><span id="btLayName">Mise en page</span><i class="tx-car"></i></button><button class="tx-hb" id="btJarvisBtn" title="Jarvis : niveaux du protocole (sessions, opens, NDOG / NWOG, 1st P.FVG) + rapport (Alt+Shift+J)"><svg class="tx-ico2" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><radialGradient id="jvBg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0d4a73"/><stop offset=".7" stop-color="#072640"/><stop offset="1" stop-color="#020c18"/></radialGradient><filter id="jvGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="16" cy="16" r="16" fill="url(#jvBg)"/><g fill="none" stroke="#3fd0ff" stroke-linecap="round" filter="url(#jvGlow)"><circle cx="16" cy="16" r="13.6" stroke-width=".7" stroke-dasharray="14 2 5 2 1 2" opacity=".85"/><circle cx="16" cy="16" r="11.4" stroke-width="1.5" stroke-dasharray=".9 1.3" opacity=".7"/><path d="M16 6.8a9.2 9.2 0 0 1 9.2 9.2" stroke-width="1.5"/><path d="M6.8 16A9.2 9.2 0 0 0 16 25.2" stroke-width="1.5"/><path d="M8.6 10.4a9.2 9.2 0 0 1 2-1.9" stroke-width="2.2" stroke="#7fe6ff"/><circle cx="16" cy="16" r="5.9" stroke-width="1.9" stroke="#8ff0ff"/><circle cx="16" cy="16" r="3.4" stroke-width=".6" opacity=".7"/></g></svg></button><button class="tx-hb" id="btFullBtn" title="Plein écran (F11)"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M5.5 10.5v-5h5M17.5 5.5h5v5M22.5 17.5v5h-5M10.5 22.5h-5v-5"/></g></svg></button><button class="tx-hb" id="btShotBtn" title="Instantané du graphique"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><path d="M4.5 9.5h4l2-3h7l2 3h4v12h-19z"/><circle cx="14" cy="15" r="4"/></g></svg></button><button id="btNewsBtn" hidden></button><button class="tx-hb" id="btDockBtn" title="Journal du backtest : trades, notes, R, MFE (Alt+K) · Analytique : Alt+Y"><svg viewBox="0 0 28 28" width="28" height="28"><g fill="none" stroke="currentColor"><rect x="7.5" y="5.5" width="13" height="17" rx="1.5"/><path d="M10.5 10.5h7M10.5 14h7M10.5 17.5h4"/></g></svg></button><button class="tx-hb" id="btMoreBtn" title="Plus : nouvelle fenêtre, plein écran">⋯</button><button class="tx-hb" id="btTreeBtn" hidden></button>
         </div>
         <div class="tx-mid">
           <div class="tx-tools" id="btTools">
@@ -6374,6 +6375,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     cs.applyOptions({ priceFormat: { type: "price", precision: dec, minMove: dec >= 2 ? 0.25 : Math.pow(10, -dec) } });
     const L = !!P.line, T0 = "rgba(0,0,0,0)";
     cs.applyOptions({ upColor: !L && P.body ? P.up : T0, downColor: !L && P.body ? P.down : T0, borderVisible: !L && !!P.border, borderUpColor: P.bUp, borderDownColor: P.bDn, wickVisible: !L && !!P.wick, wickUpColor: P.wUp, wickDownColor: P.wDn, priceLineVisible: !!P.lastLine, lastValueVisible: !!P.lastLbl });
+    if (S.B && S.B.length && ws) { futSet(S.B, true); if (chart2 && S.B2) futSet2(S.B2); } // v1.67.1 : marge de droite agrandie -> créneaux à venir complétés
     if (ls) ls.applyOptions({ visible: L });
     chart.priceScale("right").applyOptions({ invertScale: !!P.invert });
     legend(null); if (S.B && S.B.length) { priceLines(); hiLo(); }
@@ -6387,10 +6389,55 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   const ask = (label, val) => new Promise((ok) => { const o = document.createElement("div"); o.className = "tx-mod"; o.style.zIndex = 80; o.innerHTML = `<div class="tx-mbox" style="width:420px"><div class="tx-mh">${esc(label)}</div><div class="tx-mb"><div class="tx-row" style="margin:0"><input value="${esc(val || "")}"></div></div><div class="tx-mf"><span class="tx-sp"></span><button class="ghost" data-k="0">Annuler</button><button data-k="1">OK</button></div></div>`; document.body.append(o); const i = o.querySelector("input"), end = (v) => { o.remove(); ok(v); }; i.focus(); i.select(); i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") end(i.value.trim() || null); if (e.key === "Escape") end(null); }; o.onclick = (e) => { if (e.target.dataset.k) end(e.target.dataset.k === "1" ? i.value.trim() || null : null); }; });
   const hexA = (h, al) => { const m = /^#([0-9a-f]{6})$/i.exec(h || ""); if (!m) return h; const n = parseInt(m[1], 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${al})`; };
   const hex7 = (v) => (/^#[0-9a-f]{6}$/i.test(v || "") ? v : "#000000");
+  /* v1.67.1 : raccourcis clavier du chart, réglés dans les Paramètres (onglet « Raccourcis » de la fenêtre du chart et de la page Paramètres › Backtesting ;
+     le bouton engrenage de la barre du chart est retiré, décision de l'arbitre du 20/11/2026). Libellés et touches par défaut ici, lisibles sans ouvrir le chart ;
+     actions dans init() (KFN). Touches enregistrées dans localStorage « bt-keys » comme avant. [groupe, [[id, libellé, touches par défaut]]] */
+  const KEYMETA = [
+    ["Navigation & chart", [
+      ["recenter", "Recentrer le graphique", ["Alt+R"]], ["zoomIn", "Zoom avant", ["Ctrl+↑"]], ["zoomOut", "Zoom arrière", ["Ctrl+↓"]],
+      ["split", "Afficher / masquer le 2e chart (NQ + ES) — aussi Alt+clic", ["+", "Shift++"]], ["nextChart", "Chart suivant (en NQ + ES)", ["Tab"]], ["prevChart", "Chart précédent (en NQ + ES)", ["Shift+Tab"]],
+      ["maxChart", "Agrandir / restaurer le chart actif (en NQ + ES)", ["Alt+Entrée"]], ["search", "Rechercher un outil de dessin", ["/", "Shift+/"]], ["rth", "Mode ETH / RTH (9:30 - 16:14 NY)", ["Alt+Shift+E"]],
+      ["line", "Graphique en ligne / chandeliers", ["Alt+Shift+L"]], ["invert", "Inverser l'échelle des prix", ["Alt+I"]], ["lockScale", "Verrouiller / déverrouiller l'échelle des prix", []],
+      ["news", "Afficher / masquer les news", ["Alt+Shift+N"]], ["details", "Fenêtre News / détails", ["Alt+D"]], ["watchlist", "Watchlist (NQ / ES)", ["Alt+W"]], ["alerts", "Alertes de prix", ["Alt+Shift+A"]],
+      ["jarvis", "Lancer Jarvis (choix du protocole)", ["Alt+Shift+J"]], ["jarvisFM12", "Jarvis Fuck Model v1.2 (PDH / PDL)", []], ["jarvisFM40", "Jarvis Fuck Model v4.0 (NWOG)", []],
+      ["fmBacktest", "Backtest auto Fuck Model v1.2", []], ["fmBacktest40", "Backtest auto Fuck Model v4.0", []], ["nextNews", "Aller à la news suivante", ["Shift+W"]], ["log", "Échelle logarithmique", ["Alt+A"]],
+      ["pct", "Échelle en pourcentage", ["Alt+P"]]]],
+    ["Replay", [
+      ["play", "Lecture / pause", ["Espace"]], ["stepF", "Bougie / pas suivant", ["→", "L"]], ["stepB", "Bougie / pas précédent", ["←", "J"]], ["stepDn", "Diminuer le pas du replay", ["Alt+Shift+←"]],
+      ["stepUp", "Augmenter le pas du replay", ["Alt+Shift+→"]], ["stepSync", "Pas du replay = bougie du chart", ["Alt+Shift+↓"]], ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"]],
+      ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"]], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"]], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"]],
+      ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"]], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"]], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"]],
+      ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"]], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"]], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"]],
+      ["goFav10", "Aller à : 10e favori (ordre des heures)", ["Alt+0"]], ["goMacro", "Aller à la prochaine macro (étoilées)", ["Alt+Shift+M"]], ["faster", "Accélérer le replay", ["↑"]],
+      ["slower", "Ralentir le replay", ["↓"]], ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"]], ["replayHere", "Rejouer depuis une bougie (clic sur la bougie ensuite)", []]]],
+    ["Ordres", [
+      ["buyMkt", "Achat au marché", ["Shift+B"]], ["sellMkt", "Vente au marché", ["Shift+S"]], ["buyLmt", "Ordre limite achat", ["Alt+B"]], ["sellLmt", "Ordre limite vente", ["Alt+S"]],
+      ["escape", "Échap : désélectionner, sinon annuler le dernier ordre", ["Échap"]], ["flatten", "Fermer toutes les positions (Flatten)", ["Ctrl+Shift+C"]], ["riskTgl", "Taille au risque on / off", ["Alt+Q"]],
+      ["cancelAll", "Annuler tous les ordres", []]]],
+    ["Dessins", [
+      ["rect", "Rectangle", ["Alt+E", "Alt+Shift+R"]], ["trend", "Ligne de tendance", ["Alt+T"]], ["hline", "Ligne horizontale", ["Alt+H"]], ["hray", "Rayon horizontal", ["Alt+J"]],
+      ["vline", "Ligne verticale", ["Alt+V"]], ["xline", "Ligne croisée", ["Alt+C"]], ["fib", "Fibonacci", ["Alt+F"]], ["text", "Texte", ["Alt+X"]], ["measure", "Règle (mesurer)", ["Shift+M"]],
+      ["magnet", "Aimant (accroche OHLC)", ["Alt+M"]], ["lockAll", "Verrouiller tous les dessins", ["Alt+L"]], ["hideAll", "Masquer tous les dessins", ["Ctrl+Alt+H"]], ["tree", "Arborescence des objets", ["Alt+O"]],
+      ["favBar", "Barre de favoris de dessin", []], ["undo", "Annuler le dernier changement de dessin", ["Ctrl+Z"]], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"]],
+      ["front", "Dessin au premier plan", ["Ctrl+Shift+↑"]], ["backZ", "Dessin à l'arrière-plan", ["Ctrl+Shift+↓"]], ["curCross", "Curseur : croix", ["Ctrl+Alt+C"]], ["curArrow", "Curseur : flèche", ["Ctrl+Alt+A"]],
+      ["curDot", "Curseur : point", ["Ctrl+Alt+D"]], ["curEraser", "Curseur : gomme", ["Ctrl+Alt+E"]]]],
+    ["Interface", [
+      ["full", "Plein écran", ["F11", "Shift+F"]], ["dockJ", "Journal du backtest (dock)", ["Alt+K"]], ["dockN", "News du jour (dock)", ["Alt+N"]], ["ana", "Analytique du backtest", ["Alt+Y"]],
+      ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"]], ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"]], ["copyShot", "Copier le graphique (presse-papier)", ["Ctrl+Shift+S"]],
+      ["dockR", "Règles du challenge (dock)", ["Alt+U"]]]]
+  ];
+  const KDEF = {}; KEYMETA.forEach(([, E]) => E.forEach(([id, , d]) => { KDEF[id] = d; }));
+  let KMAP = { ...KDEF, ...LS.get("bt-keys", {}) };
+  { const saved = LS.get("bt-keys", {}) || {}, used = new Set(Object.entries(saved).filter(([id]) => id !== "dockR").flatMap(([, L]) => L || [])); if (!saved.dockR) KMAP.dockR = (KDEF.dockR || []).filter((c) => !used.has(c)); } // v1.66 : le raccourci du panneau Règles ne prend jamais une touche déjà réglée
+  const KNAME = { " ": "Espace", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Échap", Enter: "Entrée", Tab: "Tab", Backspace: "Retour", Delete: "Suppr" };
+  const comboOf = (e) => { let k = /^Key[A-Z]$/.test(e.code) ? e.code.slice(3) : /^Digit\d$/.test(e.code) ? e.code.slice(5) : KNAME[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
+    if (["Control", "Alt", "Shift", "Meta"].includes(e.key)) return null; return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && "Shift", k].filter(Boolean).join("+"); };
+  const label = (c) => /Mac/.test(navigator.platform) ? c.replace("Ctrl", "⌘").replace("Alt", "⌥").replace("Shift", "⇧") : c;
   /* Paramètres du chart = fenêtre « Settings » de TopstepX : Symbole, Ligne d'état, Échelles et lignes, Canevas (+ Replay, propre au backtesteur) */
   const SG2 = (d) => `<svg viewBox="0 0 28 28"><g fill="none" stroke="currentColor">${d}</g></svg>`;
   const PNAV = [["sym", "Symbole", SG2('<path d="M9.5 5.5v3M9.5 19.5v3M18.5 8.5v3M18.5 19.5v2"/><rect x="7.5" y="8.5" width="4" height="11"/><rect x="16.5" y="11.5" width="4" height="8"/>')], ["status", "Ligne d'état", SG2('<path d="M5.5 8.5h17M5.5 13.5h13M5.5 18.5h9"/>')],
-    ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')], ["ind", "Indicateurs", SG2('<path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/>')]];
+    ["scales", "Échelles et lignes", SG2('<path d="M7.5 4.5v16h16M7.5 20.5l-3 3M4.5 7.5l3-3 3 3M20.5 17.5l3 3-3 3"/>')], ["canvas", "Canevas", SG2('<path d="M7.5 20.5l1-4 9.5-9.5 3 3-9.5 9.5zM16 9l3 3"/>')], ["replay", "Replay", SG2('<circle cx="14" cy="14" r="8.5"/><path d="M12 10.5v7l5.5-3.5z"/>')], ["ind", "Indicateurs", SG2('<path d="M10.5 21.5l2.2-11.6c.4-2.1 1.6-3.4 3.8-3.4M8.5 12.5h7M17 13.5l5 7M22 13.5l-5 7"/>')],
+    ["keys", "Raccourcis", SG2('<rect x="4.5" y="8.5" width="19" height="11" rx="1.5"/><path d="M7.5 11.5h1M10.5 11.5h1M13.5 11.5h1M16.5 11.5h1M19.5 11.5h1M7.5 14.5h1M10.5 14.5h1M16.5 14.5h1M19.5 14.5h1M10 17h8"/>')]]; // v1.67.1 : onglet Raccourcis (éditeur des raccourcis du chart)
   // v1.67 : contenu d'un onglet des Paramètres (fenêtre du chart et page Paramètres › Backtesting : mêmes réglages, même clé bt-prefs)
   const prefsNav = (tab) => PNAV.map(([k, n, ic]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${ic}<span>${n}</span></button>`).join("");
   function prefsBody(tab) {
@@ -6419,7 +6466,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
       replay: sh("Replay") + r(cb("sec", "Bougies M1 formées seconde par seconde (données 1 s, app desktop)"), "", "full") + r(cb("invert", "Échelle des prix inversée"), "", "full") + r(cb("syncCross", "Lier les 2 charts : curseur et défilement synchronisés (NQ + ES)"), "", "full") + r(cb("line", "Graphique en ligne"), "", "full")
         + sh("Retour arrière") + r(cb("allowBack", "Autoriser le retour arrière : bougie précédente (← / J), curseur vers l'arrière, Recommencer, Rejouer depuis ici"), "", "full") + (curSes && curSes.strict ? r(`<span class="lb">Session « ${esc(curSes.name)} » en challenge strict : retour arrière interdit quel que soit ce réglage.</span>`, "", "full") : ""),
     };
-    return tab === "ind" ? indPrefsBody() : BODY[tab] || "";
+    return tab === "ind" ? indPrefsBody() : tab === "keys" ? keysBody(kDraft || KMAP) : BODY[tab] || "";
   }
   // v1.67 : une valeur modifiée (fenêtre et page) ; renvoie la clé changée
   function prefsInput(t) {
@@ -6429,7 +6476,31 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (k === "rth" && was !== v) { offC.clear(); if (chart) draw(true); } else if (k === "prevColor" && chart) draw(true);
     applyPrefs(); return k;
   }
+  /* v1.67.1 : onglet « Raccourcis » des Paramètres = éditeur des raccourcis du chart (l'ancienne fenêtre du bouton engrenage) ;
+     fenêtre du chart : brouillon kDraft enregistré par OK (Annuler l'oublie) ; page Paramètres › Backtesting : enregistré à chaque changement */
+  let kDraft = null, kCap = null;
+  const kClone = (m) => JSON.parse(JSON.stringify(m));
+  function keysBody(draft) {
+    const chip = (id, i, c) => `<span class="tx-kc">${esc(label(c))}<b data-k="del" data-id="${id}" data-i="${i}" title="Retirer">×</b></span>`;
+    return `<div class="sh">Raccourcis clavier du chart</div><div class="tx-keys" style="max-height:none">${KEYMETA.map(([g, E]) => `<div class="tx-kg">${g}</div>` + E.map(([id, n]) => `<div class="tx-kr"><span>${n}</span><span class="tx-kv">${(draft[id] || []).map((c, i) => chip(id, i, c)).join("")}<button data-k="add" data-id="${id}" class="ghost" title="Ajouter un raccourci">＋</button></span></div>`).join("")).join("")}
+      <div class="tx-kg">Fixes</div><div class="tx-kr rv-mut"><span>Échap : annuler / outil curseur · Suppr : effacer la sélection · Ctrl+D / C / V / Z : dupliquer, copier, coller, annuler · Tape 1, 5, 15, 60, 240, 1D, W ou M (clavier ou pavé numérique) puis Entrée : timeframe — au pavé numérique, validé tout seul après 1 s</span></div></div>
+      <div class="r"><button class="ghost tx-kdef" data-k="def">Raccourcis par défaut</button></div>`;
+  }
+  function keysCapStop() { if (kCap) document.removeEventListener("keydown", kCap, true); kCap = null; }
+  // clic dans l'onglet (× retirer, ＋ ajouter : la touche suivante, Échap annule ; « Raccourcis par défaut ») ; save = enregistré tout de suite (page), sinon brouillon (fenêtre)
+  function keysClick(el, save, redraw) {
+    const d = save ? kClone(KMAP) : (kDraft = kDraft || kClone(KMAP)), k = el.dataset.k, id = el.dataset.id;
+    const done = () => { if (save) { KMAP = d; LS.set("bt-keys", KMAP); } redraw(); };
+    if (k === "del") { (d[id] || []).splice(+el.dataset.i, 1); return done(); }
+    if (k === "def") { if (save && !confirm("Remettre tous les raccourcis clavier du chart par défaut ?")) return; Object.keys(d).forEach((x) => delete d[x]); Object.assign(d, kClone(KDEF)); return done(); }
+    if (k !== "add") return;
+    keysCapStop(); el.textContent = "Appuie sur les touches…"; el.classList.add("on");
+    kCap = (e) => { if (!el.isConnected) return keysCapStop(); e.preventDefault(); e.stopPropagation(); if (e.key === "Escape") { keysCapStop(); return redraw(); } const c = comboOf(e); if (!c) return;
+      Object.keys(d).forEach((x) => (d[x] = (d[x] || []).filter((y) => y !== c))); (d[id] = d[id] || []).push(c); keysCapStop(); done(); }; // un raccourci = une seule action
+    document.addEventListener("keydown", kCap, true);
+  }
   function openPrefs(tab, snap) {
+    keysCapStop(); if (!snap) kDraft = null; // v1.67.1 : nouvelle ouverture = pas de brouillon de raccourcis
     tab = tab || LS.get("bt-prefs-tab", "sym"); LS.set("bt-prefs-tab", tab); snap = snap || { ...P };
     const m = modal("Paramètres", `<div class="snav">${prefsNav(tab)}</div><div class="sbody">${prefsBody(tab)}</div>`,
       `<div class="tpl"><button class="ghost" data-m="tpl">Modèle<i class="tx-car"></i></button><div class="tx-hmenu" data-tplm hidden style="position:absolute;bottom:42px;left:0"><div class="mi" data-m="def">Appliquer les réglages par défaut</div><div class="mi" data-m="savedef">Enregistrer comme modèle par défaut</div></div></div><span class="tx-sp"></span><button data-m="all" class="ghost" title="Applique ces réglages à toutes les mises en page">Appliquer à tous</button><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
@@ -6437,13 +6508,14 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const sb = m.querySelector(".sbody"); sb.scrollTop = 0;
     m.oninput = (e) => { const k = prefsInput(e.target); if (k === "bgType") openPrefs(tab, snap); };
     m.onclick = (e) => { const iel = e.target.closest("[data-ia]"); if (iel) return indAct(iel.dataset.ia, iel.dataset.id, () => openPrefs("ind", snap));
+      const kel = e.target.closest("[data-k]"); if (kel) { const y = sb.scrollTop; return keysClick(kel, false, () => { openPrefs("keys", snap); const s2 = $("btModal").querySelector(".sbody"); if (s2) s2.scrollTop = y; }); } // v1.67.1
       const t = e.target.closest("[data-tab]"), a = (e.target.closest("[data-m]") || {}).dataset; const am = a && a.m; if (t) return openPrefs(t.dataset.tab, snap);
       const tm = m.querySelector("[data-tplm]"); if (am === "tpl") { tm.hidden = !tm.hidden; return; } if (tm) tm.hidden = true;
       if (am === "def") { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; offC.clear(); draw(true); applyPrefs(); openPrefs(tab, snap); }
       else if (am === "savedef") { LS.set("bt-prefs-def", { ...P }); LS.set("bt-prefs", P); msg("Modèle par défaut enregistré : « Appliquer les réglages par défaut » remet désormais ces réglages."); }
       else if (am === "all") { LS.set("bt-prefs", P); const L = typeof layouts === "function" ? layouts() : []; let n = 0; L.forEach((x) => { if (x && x.prefs) { x.prefs = { ...P }; n++; } }); if (n) saveList("bt-layouts", L); applyPrefs(); msg(`Réglages appliqués aux 2 charts${n ? ` et à ${n} mise(s) en page` : ""}.`); }
-      else if (am === "x") { const rth = P.rth !== snap.rth || P.prevColor !== snap.prevColor; P = snap; if (rth) { offC.clear(); draw(true); } applyPrefs(); closeModal(); }
-      else if (am === "ok") { LS.set("bt-prefs", P); closeModal(); msg("Paramètres enregistrés."); } };
+      else if (am === "x") { const rth = P.rth !== snap.rth || P.prevColor !== snap.prevColor; P = snap; if (rth) { offC.clear(); draw(true); } applyPrefs(); keysCapStop(); kDraft = null; closeModal(); }
+      else if (am === "ok") { LS.set("bt-prefs", P); keysCapStop(); if (kDraft) { KMAP = kDraft; LS.set("bt-keys", KMAP); } kDraft = null; closeModal(); msg("Paramètres enregistrés."); } };
   }
   // sessions : instantané complet (date, heure du replay, compte démo, trades, dessins, groupes)
   const sessions = () => LS.get("bt-sessions", []);
@@ -6561,8 +6633,9 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (S.tf < 1 && S.raw2.length) { const f = await fineBars(sym2(), ny(addDays(S.day, -1), 18, 0), to, true); if (f) S.raw2 = btCore.merge1s(S.raw2, f.rows); } } // unité en secondes : le 2e chart aussi
   function ensureChart2() {
     if (chart2) return;
-    chart2 = LightweightCharts.createChart($("btChart2"), { autoSize: true, layout: { attributionLogo: false }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#000000" }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, barSpacing: 7 }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) } });
+    chart2 = LightweightCharts.createChart($("btChart2"), { autoSize: true, layout: { attributionLogo: false }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#000000" }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, barSpacing: 7, allowShiftVisibleRangeOnWhitespaceReplacement: true }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) } });
     cs2 = chart2.addCandlestickSeries({ priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
+    ws2 = chart2.addLineSeries({ visible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); FUT2.key = ""; // v1.67.1 : créneaux à venir
     const link = (a, b) => a.timeScale().subscribeVisibleLogicalRangeChange(() => { if (sync2 || !P.split || P.syncTime === false) return; const r = a.timeScale().getVisibleRange(); if (!r) return; sync2 = true; try { b.timeScale().setVisibleRange(r); } catch (e) { /* plage hors données */ } sync2 = false; });
     link(chart, chart2); link(chart2, chart); applyPrefs();
     // réticule synchronisé : même heure sur l'autre chart, prix = clôture de sa bougie à cette heure
@@ -6579,6 +6652,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     S.B2 = out; // bougies du 2e chart : base des dessins de ce chart
     let tp = -Infinity; // passage à l'heure d'hiver : l'heure de New York se répète, on garde des temps croissants (sinon le chart plante)
     cs2.setData(out.reduce((a, b) => { const time = toNY(b[0]); if (time > tp) { tp = time; a.push({ time, open: b[1], high: b[2], low: b[3], close: b[4] }); } return a; }, []));
+    futSet2(out); // v1.67.1
     const key = sym2() + tf2() + (S.raw2 && S.raw2[0] ? S.raw2[0][0] : 0); if (key !== key2) { key2 = key; const r = chart.timeScale().getVisibleRange(); try { if (r) chart2.timeScale().setVisibleRange(r); else chart2.timeScale().scrollToRealTime(); } catch (e) { chart2.timeScale().scrollToRealTime(); } }
     const b = out[out.length - 1]; $("btLegend2").innerHTML = `<b>${SYMNAME[sym2()] || sym2()} · ${tfName(tf2())}</b>` + (b ? `<span class="v">C<span class="${b[4] >= b[1] ? "up" : "dn"}">${b[4].toFixed(2)}</span></span>` : (S.raw2 && S.raw2.length ? "" : " <span class=\"v\">aucune donnée</span>"));
   }
@@ -6671,20 +6745,60 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     } finally { olderBusy = false; }
   }
 
+  /* btFut:start — v1.67.1 : heures de l'échelle de temps à droite de la dernière bougie (créneaux des bougies à venir, sans prix ni donnée future) ; testé par tools/check.js */
+  const btFut = (() => {
+    // n débuts de bougie après `last` (début de la dernière bougie) : next(b) = début de la bougie suivante du calendrier de l'unité de temps, open(b) = bougie avec du marché ouvert
+    function slots(last, n, next, open) {
+      const out = []; let b = last;
+      for (let k = 0; out.length < n && k < n * 8 + 64; k++) { const nb = next(b); if (!(nb > b)) break; b = nb; if (open(b)) out.push(b); }
+      return out;
+    }
+    // nouvelles bougies (débuts après la dernière connue, dans l'ordre) face aux créneaux en place : "same" (aucune), "shift" (elles prennent les k premiers créneaux),
+    // "rebuild" (créneau sauté : minute sans bougie, séance écourtée, saut dans le replay)
+    function step(sl, news) { if (!news.length) return { op: "same", k: 0 }; for (let i = 0; i < news.length; i++) if (sl[i] !== news[i]) return { op: "rebuild", k: 0 }; return { op: "shift", k: news.length }; }
+    // [créneau, heure du chart] strictement croissants et après la dernière bougie (passage à l'heure d'hiver : l'heure de New York se répète)
+    function pairs(sl, toChart, after) { const out = []; let p = after; for (const s of sl) { const x = toChart(s); if (x > p) { out.push([s, x]); p = x; } } return out; }
+    // prochaine heure de marché ouvert à partir de t ; o = { wd (0 = dimanche), h, mi } heure de New York ; rth = séance 9:30 -> 16:15 du lundi au vendredi,
+    // sinon CME 18:00 -> 17:00, fermé du vendredi 17:00 au dimanche 18:00 ; at(jours en plus, h, mi) = heure absolue ce jour-là ; jours fériés non connus
+    function reopen(o, rth, at) {
+      const m = o.h * 60 + o.mi, wk = o.wd >= 1 && o.wd <= 5;
+      if (rth) { if (wk && m >= 570 && m < 975) return null; let d = wk && m < 570 ? 0 : 1; while ([0, 6].includes((o.wd + d) % 7)) d++; return at(d, 9, 30); }
+      if (o.wd === 6 || (o.wd === 5 && o.h >= 17) || (o.wd === 0 && o.h < 18)) return at((7 - o.wd) % 7, 18, 0);
+      return o.h === 17 ? at(0, 18, 0) : null;
+    }
+    return { slots, step, pairs, reopen };
+  })();
+  /* btFut:end */
+  // calendrier des bougies à venir d'une unité de temps tf (minutes) avec sa fonction de bougie bk (bucket / bucket2) : next(b) = bougie suivante ouverte, open(b)
+  function futCal(tf, bk) {
+    const s = Math.round(tf * 60), rth = !!P.rth && tf < 1440;
+    const reo = (t) => { const o = parts(t * 1000), d = `${o.year}-${o.month}-${o.day}`, r = btFut.reopen({ wd: dowOf(d), h: +o.hour, mi: +o.minute }, rth, (n, h, mi) => ny(addDays(d, n), h, mi)); return r == null ? t : r; };
+    if (tf >= 43200) { const q = tf >= 518400 ? 12 : tf >= 259200 ? 6 : tf >= 129600 ? 3 : 1; // mois, trimestre, semestre, année : 1er jour de la période suivante
+      return { open: () => true, next: (b) => { const k = sessionKey(b), mo = +k.slice(5, 7) - 1 + q, y = +k.slice(0, 4) + Math.floor(mo / 12); return ny(`${y}-${String((mo % 12) + 1).padStart(2, "0")}-01`, 0, 0); } }; }
+    if (tf >= 1440) { const open = (b) => tf >= 10080 || ![0, 6].includes(dowOf(sessionKey(b))); return { open, next: (b) => { let nb = bk(b + s); for (let k = 0; k < 7 && !open(nb); k++) nb = bk(nb + s); return nb; } }; }
+    const open = (b) => reo(b) < b + s;
+    return { open, next: (b) => { let nb = bk(b + s); if (nb <= b) nb = bk(b + 2 * s); if (!open(nb)) nb = bk(reo(nb)); return nb; } };
+  }
+
   /* ---------------- chart (TradingView Lightweight Charts) ---------------- */
   let chart = null, cs = null, vs = null, ls = null, lastKey = "", plines = [];
+  // v1.67.1 : série invisible de points vides (whitespace) aux créneaux des bougies à venir : l'échelle de temps montre les heures à droite de la dernière bougie, comme TopstepX.
+  // La bougie qui arrive prend le 1er créneau (timeScale.allowShiftVisibleRangeOnWhitespaceReplacement : le chart suit le replay comme avant) ; créneau sauté = points refaits.
+  let ws = null, ws2 = null; const FUT = { key: "", last: null, sl: [], tm: [], at: 0, timer: 0, acc: 0 }, FUT2 = { key: "" };
+  const futN = () => Math.max(120, (+P.right || 0) + 60);
   function ensureChart() {
     if (chart) return;
     chart = LightweightCharts.createChart($("btChart"), {
       autoSize: true, layout: { background: { type: "solid", color: "#e8e3d1" }, textColor: "#000000", fontSize: 12, fontFamily: "-apple-system,BlinkMacSystemFont,'Trebuchet MS',Roboto,Ubuntu,sans-serif", attributionLogo: true },
       grid: { vertLines: { color: "rgba(240,243,250,0.06)" }, horzLines: { color: "rgba(240,243,250,0.06)" } },
       crosshair: { mode: LightweightCharts.CrosshairMode.Normal, vertLine: { color: "#000000", style: 3, width: 1, labelBackgroundColor: "#000000" }, horzLine: { color: "#000000", style: 3, width: 1, labelBackgroundColor: "#000000" } },
-      rightPriceScale: { borderColor: "#000000", scaleMargins: { top: 0.08, bottom: 0.08 } }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, rightOffset: 15, barSpacing: 7 },
+      rightPriceScale: { borderColor: "#000000", scaleMargins: { top: 0.08, bottom: 0.08 } }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, rightOffset: 15, barSpacing: 7, allowShiftVisibleRangeOnWhitespaceReplacement: true },
       localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) },
     });
     cs = chart.addCandlestickSeries({ upColor: "#4caf50", downColor: "#000000", borderVisible: true, borderUpColor: "#000000", borderDownColor: "#000000", wickUpColor: "#000000", wickDownColor: "#000000", priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
     ls = chart.addLineSeries({ color: "#2962ff", lineWidth: 2, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: true, visible: false });
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
+    ws = chart.addLineSeries({ visible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); // v1.67.1 : créneaux à venir (points vides)
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
     chart.subscribeCrosshairMove((p) => { const d = p && p.time ? p.seriesData.get(cs) : null; if (d && vs) { const v = p.seriesData.get(vs); d.vol = v ? v.value : 0; } legend(d); });
     chart.timeScale().subscribeVisibleLogicalRangeChange(() => { if (!hlRaf) hlRaf = requestAnimationFrame(() => { hlRaf = 0; hiLo(); }); });
@@ -6703,18 +6817,43 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
   }
   // marché des futures CME : fermé de 17h à 18h NY et du vendredi 17h au dimanche 18h
   function mktOpen(t) { const o = parts(t * 1000), h = +o.hour, wd = new Date(Date.UTC(+o.year, +o.month - 1, +o.day)).getUTCDay(); if (wd === 6) return false; if (wd === 0) return h >= 18; if (wd === 5) return h < 17; return h !== 17; }
+  // v1.67.1 : créneaux à venir du chart principal ; full = refaire (nouvelles données, unité, retour arrière), sinon la bougie suivante prend le 1er créneau
+  function futSet(bars, full) {
+    if (!ws) return; const lb = bars.length && S.sym !== "CSV" ? bars[bars.length - 1][0] : null, key = [S.sym, S.tf, rthOn() ? "r" : "", futN()].join("|"); // CSV importé : marché inconnu, pas de créneaux
+    if (lb == null) { if (FUT.tm.length || FUT.acc) ws.setData([]); Object.assign(FUT, { key: "", last: null, sl: [], tm: [], acc: 0 }); return; }
+    if (!full && key === FUT.key && FUT.last != null) {
+      const news = []; for (let i = bars.length - 1; i >= 0 && bars[i][0] > FUT.last && news.length <= FUT.sl.length; i--) news.unshift(bars[i][0]);
+      const st = lb >= FUT.last ? btFut.step(FUT.sl, news) : { op: "rebuild" }; if (st.op === "same") return;
+      if (st.op === "shift") { FUT.sl.splice(0, st.k); FUT.tm.splice(0, st.k); FUT.last = lb; const c = futCal(S.tf, bucket), n = futN(); // créneaux ajoutés au bout (update : sans tout recalculer)
+        while (FUT.sl.length < n) { const b = FUT.sl.length ? FUT.sl[FUT.sl.length - 1] : lb, nb = btFut.slots(b, 1, c.next, c.open)[0], x = nb != null ? toNY(nb) : null; if (x == null || x <= (FUT.tm.length ? FUT.tm[FUT.tm.length - 1] : toNY(lb))) break; FUT.sl.push(nb); FUT.tm.push(x); ws.update({ time: x }); }
+        FUT.acc++; return; } // acc : points vides passés gardés par la série (sous des bougies), retirés au prochain setData
+      // créneaux sautés (minute sans bougie, séance écourtée) : on refait ; en lecture des unités en secondes, au plus toutes les 0,4 s (coût de setData)
+      if (S.playing && S.tf < 1 && Date.now() - FUT.at < 400) { if (!FUT.timer) FUT.timer = setTimeout(() => { FUT.timer = 0; futSet(S.B, true); }, 420); return; }
+    }
+    const c = futCal(S.tf, bucket), pr = btFut.pairs(btFut.slots(lb, futN(), c.next, c.open), toNY, toNY(lb)), tm = pr.map((x) => x[1]);
+    const same = key === FUT.key && !FUT.acc && lb === FUT.last && tm.length === FUT.tm.length && tm[0] === FUT.tm[0] && tm[tm.length - 1] === FUT.tm[FUT.tm.length - 1];
+    Object.assign(FUT, { key, last: lb, sl: pr.map((x) => x[0]), tm, at: Date.now() }); if (!same) { ws.setData(tm.map((time) => ({ time }))); FUT.acc = 0; }
+  }
+  // 2e chart (redessiné en entier à chaque fois) : points vides refaits quand sa dernière bougie ou son unité change
+  function futSet2(B) {
+    if (!ws2) return; const lb = B.length && S.sym !== "CSV" ? B[B.length - 1][0] : null, key = [sym2(), tf2(), P.rth ? "r" : "", futN(), lb].join("|"); if (key === FUT2.key) return; FUT2.key = key;
+    if (lb == null) { ws2.setData([]); return; }
+    const c = futCal(tf2(), bucket2), pr = btFut.pairs(btFut.slots(lb, futN(), c.next, c.open), toNY, toNY(lb)); ws2.setData(pr.map((x) => ({ time: x[1] })));
+  }
+  // « Tout » (plages sous le chart) : toutes les bougies et la marge de droite, sans les créneaux à venir au-delà (fitContent les compterait)
+  function fitAll(c) { const n = c === chart2 ? (S.B2 || []).length : S.B.length; if (n > 1) c.timeScale().setVisibleLogicalRange({ from: 0, to: n - 1 + (+P.right || 0) }); else c.timeScale().fitContent(); }
   function draw(full) {
     if (!$("btChart") || typeof LightweightCharts === "undefined") return;
     ensureChart();
     const bars = (S.B = aggregate()), key = S.sym + S.tf + (S.raw[0] ? S.raw[0][0] : 0);
-    if (!bars.length) { cs.setData([]); vs.setData([]); ls.setData([]); cs.setMarkers([]); return; }
+    if (!bars.length) { cs.setData([]); vs.setData([]); ls.setData([]); cs.setMarkers([]); futSet([], true); return; }
     const key2r = key + (P.rth ? "r" : ""), all = full || key2r !== lastKey || !S.lastLen || bars.length < S.lastLen;
     const c = [], v = []; // en lecture, seules les bougies nouvelles ou modifiées sont converties (un chart 1 s = plus de 100 000 bougies)
     for (let i = all ? 0 : Math.max(0, S.lastLen - 1); i < bars.length; i++) { const b = bars[i], time = toNY(b[0]), o = { time, open: b[1], high: b[2], low: b[3], close: b[4] };
       if (P.prevColor && i) { const up = b[4] >= bars[i - 1][4]; o.color = P.body ? (up ? P.up : P.down) : "rgba(0,0,0,0)"; o.borderColor = up ? P.bUp : P.bDn; o.wickColor = up ? P.wUp : P.wDn; } c.push(o); v.push({ time, value: b[5], color: b[4] >= b[1] ? "rgba(38,166,154,.3)" : "rgba(239,83,80,.3)" }); }
     if (all) { if (key2r !== lastKey) { const o = { timeScale: { secondsVisible: S.tf < 1 } }; chart.applyOptions(o); if (chart2) chart2.applyOptions(o); chart.applyOptions({ watermark: { text: `${(SYMNAME[S.sym] || S.sym || "").split(" · ")[0]}, ${tfName(S.tf)}` } }); }
-      cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
-    else for (let i = 0; i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); }
+      cs.setData(c); vs.setData(v); ls.setData(c.map((x) => ({ time: x.time, value: x.close }))); futSet(bars, true); if (key2r !== lastKey) chart.timeScale().scrollToRealTime(); lastKey = key2r; }
+    else { for (let i = 0; i < c.length; i++) { cs.update(c[i]); vs.update(v[i]); ls.update({ time: c[i].time, value: c[i].close }); } futSet(bars, false); }
     S.lastLen = bars.length;
     priceLines();
     const first = bars[0][0], lastT = S.raw[S.cur][0];
@@ -7964,12 +8103,6 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   // « Recommencer » en session isolée = retour au départ de la session
   function sesRestart() { const o = evOrigin(); if (o == null) return msg("Rien à recommencer.", true); replayHere(o, { title: `Revenir au départ de la session (${dstr(o)} ${hmS(o)}) ?`, ok: "Recommencer la session" }); }
-  async function sesDelete(id) {
-    if (curSes && curSes.id === id) await sesLeave(true);
-    const keys = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && (k.startsWith("bt-draw-ses-" + id + "-") || k.startsWith("bt-draw2-ses-" + id + "-"))) keys.push(k); }
-    [sesKey(id), sesKey(id) + "-ev", ...keys].forEach((k) => { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } });
-    lsPut(SESK, sesList().filter((x) => x.id !== id)); openSessions();
-  }
   function sesEnded() {
     play(false);
     setTimeout(() => {
@@ -7995,7 +8128,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const L = sesList(), row = (s) => { const cur = curSes && curSes.id === s.id, start = (s.cfg && s.cfg.size) || 0;
       return `<div class="tx-li tx-sesr${cur ? " cur" : ""}" data-sid="${esc(s.id)}"><div><b>${esc(s.name)}</b> <span class="tsx-chip" style="margin-left:6px">${sesType(s)}</span>${s.strat ? ` <span class="tsx-chip">${esc(s.strat)}</span>` : ""}${cur ? ' <span class="tsx-chip" style="color:var(--tx-acc)">ouverte</span>' : ""}
         <small>${esc((s.assets || []).join(" · "))} · départ ${fmtD(s.from)} ${esc(s.time || "")} → ${s.end ? "fin " + fmtD(s.end) : "fin automatique"} · solde ${usd(s.bal != null ? s.bal : start)} (départ ${usd(start)}) · ${s.nT || 0} trade(s)${s.t != null ? ` · replay au ${dstr(s.t)} ${hm(s.t)}` : ""}${s.savedAt ? " · enregistrée " + new Date(s.savedAt).toLocaleString("fr-FR") : ""}</small>${s.desc ? `<small>${esc(s.desc)}</small>` : ""}</div>
-        <span>${cur ? '<button data-sa="leave" title="Enregistrer et revenir au Backtesteur de base">Quitter</button>' : '<button data-sa="open">Ouvrir</button>'}<button data-sa="ren" title="Renommer">✎</button><button data-sa="del" title="Supprimer">🗑</button></span></div>`; };
+        <span>${cur ? '<button data-sa="leave" title="Enregistrer et revenir au Backtesteur de base">Quitter</button>' : '<button data-sa="open">Ouvrir</button>'}<button data-sa="ren" title="Renommer">✎</button><button data-sa="del" title="Supprimer : la session va dans la corbeille (Backtesteur › Paramètres › Sessions supprimées)">🗑</button></span></div>`; };
     return `<div class="an-h" style="margin-top:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">Sessions isolées <small class="rv-mut" style="font-weight:400">compte, ordres, trades, dessins et heure du replay propres · enregistrées en continu</small><span style="flex:1"></span><button data-sa="new" class="tx-hbtn">＋ Nouvelle session…</button></div>
       <div class="tx-list">${L.map(row).join("") || '<div class="tx-empty">Aucune session isolée. « Nouvelle session… » ouvre l\'assistant : nom, type (libre ou challenge), solde, stratégie, actifs, période et coûts.</div>'}</div>
       <div class="an-h">Instantanés de l'état actuel</div>`;
@@ -8007,7 +8140,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (a === "open") { closeModal(); sesOpen(s.id); }
     else if (a === "leave") { closeModal(); sesLeave(); }
     else if (a === "ren") ask("Renommer la session", s.name).then((n) => { if (!n) return; const L = sesList(), x = L.find((q) => q.id === s.id); if (x) { x.name = n; lsPut(SESK, L); } if (curSes && curSes.id === s.id) { curSes.name = n; sesUIKey = ""; sesUI(); } openSessions(); });
-    else if (a === "del" && confirm(`Supprimer la session « ${s.name} » (compte, trades, dessins et journal) ?`)) sesDelete(s.id);
+    else if (a === "del") sesBinChart(s); // v1.67.1 : corbeille, comme Testing › Sessions (décision de l'arbitre du 20/11/2026)
     return true;
   }
   // bornes des données par actif (fichier D de data_csv, sinon dernière bougie m1 de la synchro)
@@ -8970,7 +9103,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
     if (!D || !D.dataSync) { $("btSync").hidden = true; $("btDir").hidden = true; }
     if (D && D.onData) D.onData((k, p) => { if (k === "progress") msg(`Synchro ${p.sym} ${p.kind} : jusqu'au ${p.upTo} (+${p.added})`); if (k === "done") status(); });
-    // raccourcis clavier personnalisables (défauts FXReplay / TradingView) : bouton « ⌨ Raccourcis », enregistrés dans localStorage "bt-keys"
+    // raccourcis clavier personnalisables (défauts FXReplay / TradingView) : onglet Raccourcis des Paramètres (v1.67.1), enregistrés dans localStorage "bt-keys"
     const ORD = (type, side) => { const t = $("oType"); t.value = type; t.dispatchEvent(new Event("change", { bubbles: true }));
       if (type === "Market") { $(side === "buy" ? "oBuy" : "oSell").click(); return; }
       const last = parseFloat(String($("oLast").textContent).replace(/[^0-9.\-]/g, "")); if (isFinite(last)) $("oPx").value = last; $("oPx").focus(); $("oPx").select(); msg(`Ordre limite ${side === "buy" ? "achat" : "vente"} : ajuste le prix puis clique ${side === "buy" ? "BUY" : "SELL"}.`); };
@@ -9006,60 +9139,29 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       $(w).addEventListener("contextmenu", (e) => { const c = w === "btWrap" ? chart : chart2; if (!c) return; const r = $(w).getBoundingClientRect(); if (e.clientX - r.left > c.paneSize().width) { e.preventDefault(); e.stopPropagation(); lockScale(); } }, true);
     });
     const fullscreen = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
-    const KEYS = [
-      ["Navigation & chart", [
-        ["recenter", "Recentrer le graphique", ["Alt+R"], recenter],
-        ["zoomIn", "Zoom avant", ["Ctrl+↑"], () => zoom(1.25)], ["zoomOut", "Zoom arrière", ["Ctrl+↓"], () => zoom(0.8)],
-        ["split", "Afficher / masquer le 2e chart (NQ + ES) — aussi Alt+clic", ["+", "Shift++"], () => toggleSplit()],
-        ["nextChart", "Chart suivant (en NQ + ES)", ["Tab"], () => P.split && setActive(act === 1 ? 2 : 1)], ["prevChart", "Chart précédent (en NQ + ES)", ["Shift+Tab"], () => P.split && setActive(act === 1 ? 2 : 1)],
-        ["maxChart", "Agrandir / restaurer le chart actif (en NQ + ES)", ["Alt+Entrée"], () => maxChart()],
-        ["search", "Rechercher un outil de dessin", ["/", "Shift+/"], () => toolSearch()],
-        ["rth", "Mode ETH / RTH (9:30 - 16:14 NY)", ["Alt+Shift+E"], () => { P.rth = !P.rth; LS.set("bt-prefs", P); offC.clear(); draw(true); msg(P.rth ? "RTH : séance 9:30 - 16:14 NY uniquement." : "ETH : séance complète."); }],
-        ["line", "Graphique en ligne / chandeliers", ["Alt+Shift+L"], () => { P.line = !P.line; LS.set("bt-prefs", P); applyPrefs(); }],
-        ["invert", "Inverser l'échelle des prix", ["Alt+I"], () => { P.invert = !P.invert; LS.set("bt-prefs", P); applyPrefs(); msg(P.invert ? "Échelle inversée." : "Échelle normale."); }],
-        ["lockScale", "Verrouiller / déverrouiller l'échelle des prix", [], () => lockScale()],
-        ["news", "Afficher / masquer les news", ["Alt+Shift+N"], () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }],
-        ["details", "Fenêtre News / détails", ["Alt+D"], () => $("btNewsBtn").click()],
-        ["watchlist", "Watchlist (NQ / ES)", ["Alt+W"], () => togglePanel("btWL", wlRender)], ["alerts", "Alertes de prix", ["Alt+Shift+A"], () => togglePanel("btAL", alRender)],
-        ["jarvis", "Lancer Jarvis (choix du protocole)", ["Alt+Shift+J"], () => $("btJarvisBtn").click()],
-        ["jarvisFM12", "Jarvis Fuck Model v1.2 (PDH / PDL)", [], () => jarvisFM12()], ["jarvisFM40", "Jarvis Fuck Model v4.0 (NWOG)", [], () => jarvisFM40()],
-        ["fmBacktest", "Backtest auto Fuck Model v1.2", [], () => fmBacktest(12)], ["fmBacktest40", "Backtest auto Fuck Model v4.0", [], () => fmBacktest(40)],
-        ["nextNews", "Aller à la news suivante", ["Shift+W"], () => { nextNews(); }],
-        ["log", "Échelle logarithmique", ["Alt+A"], () => $("btLog").click()], ["pct", "Échelle en pourcentage", ["Alt+P"], () => $("btPct").click()]]],
-      ["Replay", [
-        ["play", "Lecture / pause", ["Espace"], () => play()], ["stepF", "Bougie / pas suivant", ["→", "L"], () => stepNext()], ["stepB", "Bougie / pas précédent", ["←", "J"], () => backStep()],
-        ["stepDn", "Diminuer le pas du replay", ["Alt+Shift+←"], () => stepMove(-1)], ["stepUp", "Augmenter le pas du replay", ["Alt+Shift+→"], () => stepMove(1)], ["stepSync", "Pas du replay = bougie du chart", ["Alt+Shift+↓"], () => setStep(null, P.stepSync === false)],
-        ["goMenu", "Aller à : séance, Silver Bullet, macro, news, prix", ["Ctrl+Alt+G"], () => openGoMenu()], ["goFav1", "Aller à : 1er favori (ordre des heures)", ["Alt+1"], () => goFav(0)], ["goFav2", "Aller à : 2e favori (ordre des heures)", ["Alt+2"], () => goFav(1)], ["goFav3", "Aller à : 3e favori (ordre des heures)", ["Alt+3"], () => goFav(2)], ["goFav4", "Aller à : 4e favori (ordre des heures)", ["Alt+4"], () => goFav(3)], ["goFav5", "Aller à : 5e favori (ordre des heures)", ["Alt+5"], () => goFav(4)], ["goFav6", "Aller à : 6e favori (ordre des heures)", ["Alt+6"], () => goFav(5)], ["goFav7", "Aller à : 7e favori (ordre des heures)", ["Alt+7"], () => goFav(6)], ["goFav8", "Aller à : 8e favori (ordre des heures)", ["Alt+8"], () => goFav(7)], ["goFav9", "Aller à : 9e favori (ordre des heures)", ["Alt+9"], () => goFav(8)], ["goFav10", "Aller à : 10e favori (ordre des heures)", ["Alt+0"], () => goFav(9)], ["goMacro", "Aller à la prochaine macro (étoilées)", ["Alt+Shift+M"], () => goMacro()],
-        ["faster", "Accélérer le replay", ["↑"], () => speed(1)], ["slower", "Ralentir le replay", ["↓"], () => speed(-1)],
-        ["goto", "Aller à une date (Go To)", ["Ctrl+G", "Alt+G"], () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }],
-        ["replayHere", "Rejouer depuis une bougie (clic sur la bougie ensuite)", [], () => toggleHere()]]],
-      ["Ordres", [
-        ["buyMkt", "Achat au marché", ["Shift+B"], () => ORD("Market", "buy")], ["sellMkt", "Vente au marché", ["Shift+S"], () => ORD("Market", "sell")],
-        ["buyLmt", "Ordre limite achat", ["Alt+B"], () => ORD("Limit", "buy")], ["sellLmt", "Ordre limite vente", ["Alt+S"], () => ORD("Limit", "sell")],
-        ["escape", "Échap : désélectionner, sinon annuler le dernier ordre", ["Échap"], () => escape()],
-        ["flatten", "Fermer toutes les positions (Flatten)", ["Ctrl+Shift+C"], () => $("oFlat").click()], ["riskTgl", "Taille au risque on / off", ["Alt+Q"], () => $("oRiskOn").click()], ["cancelAll", "Annuler tous les ordres", [], () => $("oCancel").click()]]],
-      ["Dessins", [
-        ["rect", "Rectangle", ["Alt+E", "Alt+Shift+R"], () => setTool("rect")], ["trend", "Ligne de tendance", ["Alt+T"], () => setTool("trend")],
-        ["hline", "Ligne horizontale", ["Alt+H"], () => setTool("hline")], ["hray", "Rayon horizontal", ["Alt+J"], () => setTool("hray")],
-        ["vline", "Ligne verticale", ["Alt+V"], () => setTool("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => setTool("xline")],
-        ["fib", "Fibonacci", ["Alt+F"], () => setTool("fib")], ["text", "Texte", ["Alt+X"], () => setTool("text")], ["measure", "Règle (mesurer)", ["Shift+M"], () => setTool("measure")],
-        ["magnet", "Aimant (accroche OHLC)", ["Alt+M"], () => $("btMagnet").click()], ["lockAll", "Verrouiller tous les dessins", ["Alt+L"], () => $("btLockAll").click()],
-        ["hideAll", "Masquer tous les dessins", ["Ctrl+Alt+H"], () => $("btHideAll").click()], ["tree", "Arborescence des objets", ["Alt+O"], () => $("btTreeBtn2").click()],
-        ["favBar", "Barre de favoris de dessin", [], () => $("btFavBtn").click()], ["undo", "Annuler le dernier changement de dessin", ["Ctrl+Z"], () => undoRedo(false)], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"], () => undoRedo(true)],
-        ["front", "Dessin au premier plan", ["Ctrl+Shift+↑"], () => zorder(1)], ["backZ", "Dessin à l'arrière-plan", ["Ctrl+Shift+↓"], () => zorder(-1)],
-        ["curCross", "Curseur : croix", ["Ctrl+Alt+C"], () => setTool("cross")], ["curArrow", "Curseur : flèche", ["Ctrl+Alt+A"], () => setTool("arrowc")],
-        ["curDot", "Curseur : point", ["Ctrl+Alt+D"], () => setTool("dot")], ["curEraser", "Curseur : gomme", ["Ctrl+Alt+E"], () => setTool("eraser")]]],
-      ["Interface", [
-        ["full", "Plein écran", ["F11", "Shift+F"], fullscreen], ["dockJ", "Journal du backtest (dock)", ["Alt+K"], () => dockToggle("jrn")], ["dockN", "News du jour (dock)", ["Alt+N"], () => dockToggle("news")], ["ana", "Analytique du backtest", ["Alt+Y"], () => openAnalytics()], ["saveLay", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout(false)],
-        ["shot", "Capture d'écran du graphique (PNG)", ["Ctrl+Alt+S"], () => shot(false)], ["copyShot", "Copier le graphique (presse-papier)", ["Ctrl+Shift+S"], () => shot(true)],
-        ["dockR", "Règles du challenge (dock)", ["Alt+U"], () => dockToggle("rules")]]]];
-    const KDEF = {}, KRUN = {}; KEYS.forEach(([, L]) => L.forEach(([id, , d, fn]) => { KDEF[id] = d; KRUN[id] = fn; }));
-    let KMAP = { ...KDEF, ...LS.get("bt-keys", {}) };
-    { const saved = LS.get("bt-keys", {}) || {}, used = new Set(Object.entries(saved).filter(([id]) => id !== "dockR").flatMap(([, L]) => L || [])); if (!saved.dockR) KMAP.dockR = (KDEF.dockR || []).filter((c) => !used.has(c)); } // v1.66 : le raccourci du panneau Règles ne prend jamais une touche déjà réglée
-    const KNAME = { " ": "Espace", ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", Escape: "Échap", Enter: "Entrée", Tab: "Tab", Backspace: "Retour", Delete: "Suppr" };
-    const comboOf = (e) => { let k = /^Key[A-Z]$/.test(e.code) ? e.code.slice(3) : /^Digit\d$/.test(e.code) ? e.code.slice(5) : KNAME[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
-      if (["Control", "Alt", "Shift", "Meta"].includes(e.key)) return null; return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && "Shift", k].filter(Boolean).join("+"); };
-    const label = (c) => /Mac/.test(navigator.platform) ? c.replace("Ctrl", "⌘").replace("Alt", "⌥").replace("Shift", "⇧") : c;
+    // v1.67.1 : libellés et touches par défaut dans KEYMETA (niveau du module, pour l'onglet Raccourcis des Paramètres) ; ici, l'action de chaque raccourci
+    const KFN = {
+      recenter, zoomIn: () => zoom(1.25), zoomOut: () => zoom(0.8), split: () => toggleSplit(), nextChart: () => P.split && setActive(act === 1 ? 2 : 1),
+      prevChart: () => P.split && setActive(act === 1 ? 2 : 1), maxChart: () => maxChart(), search: () => toolSearch(),
+      rth: () => { P.rth = !P.rth; LS.set("bt-prefs", P); offC.clear(); draw(true); msg(P.rth ? "RTH : séance 9:30 - 16:14 NY uniquement." : "ETH : séance complète."); },
+      line: () => { P.line = !P.line; LS.set("bt-prefs", P); applyPrefs(); },
+      invert: () => { P.invert = !P.invert; LS.set("bt-prefs", P); applyPrefs(); msg(P.invert ? "Échelle inversée." : "Échelle normale."); }, lockScale: () => lockScale(),
+      news: () => { P.news = P.news === false; LS.set("bt-prefs", P); msg(P.news ? "News affichées." : "News masquées."); }, details: () => $("btNewsBtn").click(),
+      watchlist: () => togglePanel("btWL", wlRender), alerts: () => togglePanel("btAL", alRender), jarvis: () => $("btJarvisBtn").click(), jarvisFM12: () => jarvisFM12(), jarvisFM40: () => jarvisFM40(),
+      fmBacktest: () => fmBacktest(12), fmBacktest40: () => fmBacktest(40), nextNews: () => { nextNews(); }, log: () => $("btLog").click(), pct: () => $("btPct").click(), play: () => play(),
+      stepF: () => stepNext(), stepB: () => backStep(), stepDn: () => stepMove(-1), stepUp: () => stepMove(1), stepSync: () => setStep(null, P.stepSync === false), goMenu: () => openGoMenu(),
+      goFav1: () => goFav(0), goFav2: () => goFav(1), goFav3: () => goFav(2), goFav4: () => goFav(3), goFav5: () => goFav(4), goFav6: () => goFav(5), goFav7: () => goFav(6), goFav8: () => goFav(7),
+      goFav9: () => goFav(8), goFav10: () => goFav(9), goMacro: () => goMacro(), faster: () => speed(1), slower: () => speed(-1),
+      goto: () => { $("btGo").hidden = false; const i = $("btDate"); i.focus(); try { i.showPicker(); } catch (err) {} }, replayHere: () => toggleHere(), buyMkt: () => ORD("Market", "buy"),
+      sellMkt: () => ORD("Market", "sell"), buyLmt: () => ORD("Limit", "buy"), sellLmt: () => ORD("Limit", "sell"), escape: () => escape(), flatten: () => $("oFlat").click(),
+      riskTgl: () => $("oRiskOn").click(), cancelAll: () => $("oCancel").click(), rect: () => setTool("rect"), trend: () => setTool("trend"), hline: () => setTool("hline"), hray: () => setTool("hray"),
+      vline: () => setTool("vline"), xline: () => setTool("xline"), fib: () => setTool("fib"), text: () => setTool("text"), measure: () => setTool("measure"), magnet: () => $("btMagnet").click(),
+      lockAll: () => $("btLockAll").click(), hideAll: () => $("btHideAll").click(), tree: () => $("btTreeBtn2").click(), favBar: () => $("btFavBtn").click(), undo: () => undoRedo(false),
+      redo: () => undoRedo(true), front: () => zorder(1), backZ: () => zorder(-1), curCross: () => setTool("cross"), curArrow: () => setTool("arrowc"), curDot: () => setTool("dot"),
+      curEraser: () => setTool("eraser"), full: fullscreen, dockJ: () => dockToggle("jrn"), dockN: () => dockToggle("news"), ana: () => openAnalytics(), saveLay: () => saveLayout(false),
+      shot: () => shot(false), copyShot: () => shot(true), dockR: () => dockToggle("rules")
+    };
+    const KRUN = {}; KEYMETA.forEach(([, E]) => E.forEach(([id]) => { KRUN[id] = KFN[id]; if (typeof KFN[id] !== "function") console.error("Raccourci sans action : " + id); }));
     let tfBuf = "", tfTimer = null;
     // 5 = 5 min · 5S = 5 s · 1D / D = Daily · 1W / W · 1M / M = mois · 3M / 6M / 12M · 1H / H1 = 60 · 4H / H4 = 240
     const TFRE = /^\d+[SMDWH]?$|^[DWM]$|^H\d+$/;
@@ -9088,24 +9190,6 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       else if ((e.ctrlKey || e.metaKey) && k === "v" && clip) { e.preventDefault(); ctxDo("paste"); }
       else if ((e.ctrlKey || e.metaKey) && k === "z") { if (shapes.length) { e.preventDefault(); shapes.pop(); sel = null; saveDrawings(); } }
     });
-    function openKeys(draft) {
-      draft = draft || JSON.parse(JSON.stringify(KMAP)); let cap = null;
-      const chip = (id, i, c) => `<span class="tx-kc">${esc(label(c))}<b data-k="del" data-id="${id}" data-i="${i}" title="Retirer">×</b></span>`;
-      const m = modal("Raccourcis clavier", `<div class="tx-keys">${KEYS.map(([g, L]) => `<div class="tx-kg">${g}</div>` + L.map(([id, n]) => `<div class="tx-kr"><span>${n}</span><span class="tx-kv">${(draft[id] || []).map((c, i) => chip(id, i, c)).join("")}<button data-k="add" data-id="${id}" class="ghost" title="Ajouter un raccourci">＋</button></span></div>`).join("")).join("")}
-        <div class="tx-kg">Fixes</div><div class="tx-kr rv-mut"><span>Échap : annuler / outil curseur · Suppr : effacer la sélection · Ctrl+D / C / V / Z : dupliquer, copier, coller, annuler · Tape 1, 5, 15, 60, 240, 1D, W ou M (clavier ou pavé numérique) puis Entrée : timeframe — au pavé numérique, validé tout seul après 1 s</span></div></div>`,
-        `<button data-m="def" class="ghost">Par défaut</button><span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button><button data-m="ok">OK</button>`);
-      m.onclick = (e) => { const t = e.target, a = t.dataset.m, ka = t.dataset.k;
-        if (ka === "del") { draft[t.dataset.id].splice(+t.dataset.i, 1); return openKeys(draft); }
-        if (ka === "add") { cap = t.dataset.id; t.textContent = "Appuie sur les touches…"; t.classList.add("on"); return; }
-        if (a === "def") return openKeys(JSON.parse(JSON.stringify(KDEF)));
-        if (a === "x") { closeModal(); document.removeEventListener("keydown", grab, true); }
-        if (a === "ok") { KMAP = draft; LS.set("bt-keys", KMAP); closeModal(); document.removeEventListener("keydown", grab, true); msg("Raccourcis enregistrés."); } };
-      const grab = (e) => { if (!cap || $("btModal").hidden) return; e.preventDefault(); e.stopPropagation(); if (e.key === "Escape") { cap = null; return openKeys(draft); } const c = comboOf(e); if (!c) return;
-        Object.keys(draft).forEach((id) => (draft[id] = (draft[id] || []).filter((x) => x !== c))); // un raccourci = une seule action
-        (draft[cap] = draft[cap] || []).push(c); cap = null; document.removeEventListener("keydown", grab, true); openKeys(draft); };
-      document.addEventListener("keydown", grab, true);
-    }
-    $("btKeysBtn").onclick = () => openKeys();
     // guide « Comment dessiner » : les raccourcis affichés sont ceux réellement configurés (⌨)
     function openHow() {
       const k = (id) => { const L = (KMAP[id] || []).map(label); return L.length ? L.map((x) => `<kbd>${esc(x)}</kbd>`).join(" ou ") : "<span class=\"rv-mut\">(aucun raccourci)</span>"; };
@@ -9181,7 +9265,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     $("btRng").onclick = (e) => { const b = e.target.closest("[data-r]"); if (!b || !chart || !S.raw.length) return; const d = +b.dataset.r, T = S.raw[S.cur][0];
       document.querySelectorAll("#btRng button").forEach((x) => x.classList.toggle("on", x === b));
       const two = P.split && chart2 && !$("btWrap2").hidden, cs_ = two ? (P.syncRange !== false ? [chart, chart2] : [act === 2 ? chart2 : chart]) : [chart];
-      cs_.forEach((c) => { if (!d) { c.timeScale().fitContent(); return; } try { c.timeScale().setVisibleRange({ from: toNY(T - d * 86400), to: toNY(T) }); } catch (err) { c.timeScale().fitContent(); } }); };
+      cs_.forEach((c) => { if (!d) { fitAll(c); return; } try { c.timeScale().setVisibleRange({ from: toNY(T - d * 86400), to: toNY(T) }); } catch (err) { fitAll(c); } }); }; // v1.67.1 : fitAll (sans les créneaux à venir)
     // panneau Positions / Orders / Trades : replié par défaut, comme le tiroir des positions
     const bottom = (show) => { document.querySelector(".tx-bottom").classList.toggle("hid", !show); $("btPosT").classList.toggle("on", show); LS.set("bt-bottom", show); if (chart) setTimeout(() => window.dispatchEvent(new Event("resize")), 0); };
     $("btPosT").onclick = () => bottom(document.querySelector(".tx-bottom").classList.contains("hid")); bottom(LS.get("bt-bottom", false));
@@ -9796,7 +9880,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const row = ({ r, x }) => `<div class="bp-row"><div class="bp-rm"><b>${esc(r.name)}</b>${sesChips(r)}
         <small>${esc((r.assets || []).join(" · "))} · ${sesPeriod(r)}${x.t != null ? ` · replay au ${dmy(x.t)} ${hm(x.t)}` : " · pas encore rejouée"}</small>
         <small>Solde ${usd(x.start)} → ${usd(x.bal)} (${usdS(x.pnl)}) · ${x.n} trade(s)${x.n ? ` · win rate ${pctTxt(x.wr)}` : ""} · créée le ${isoNY(r.created)}${r.savedAt ? ` · enregistrée le ${isoNY(r.savedAt)}` : ""}</small>${r.desc ? `<small>${esc(r.desc)}</small>` : ""}</div>
-      <div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button><button class="bp-btn bp-g bp-s" data-bpa="sren" data-id="${esc(r.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="sdup" data-id="${esc(r.id)}" title="Copie complète : compte, trades, dessins et heure du replay">Dupliquer</button><button class="bp-btn bp-g bp-s" data-bpa="sana" data-id="${esc(r.id)}">Analytique</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="sdel" data-id="${esc(r.id)}" title="Envoyer dans la corbeille (Paramètres › Sessions supprimées)">Supprimer</button></div></div>`;
+      <div class="bp-acts"><button class="bp-btn bp-s" data-bpa="open" data-id="${esc(r.id)}">${resumeLbl(r)}</button><button class="bp-btn bp-g bp-s" data-bpa="sren" data-id="${esc(r.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="sdup" data-id="${esc(r.id)}" title="Tout copier (compte, trades, dessins, heure du replay) ou seulement les réglages">Dupliquer</button><button class="bp-btn bp-g bp-s" data-bpa="sana" data-id="${esc(r.id)}">Analytique</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="sdel" data-id="${esc(r.id)}" title="Envoyer dans la corbeille (Paramètres › Sessions supprimées)">Supprimer</button></div></div>`;
     const snaps = sessions(), snapRow = (s) => { const T = (s.acc && s.acc.trades) || [], pl = T.reduce((a, t) => a + (+t.pnl || 0), 0);
       return `<div class="bp-row"><div class="bp-rm"><b>${esc(s.name)}</b>${s.strat ? `<span class="bp-chip">${esc(s.strat)}</span>` : ""}<small>${esc(s.sym)} · ${tfName(s.tf || 1)} · ${fmtD(s.day)}${s.t != null ? " " + hm(s.t) : ""} · solde ${usd(s.acc ? s.acc.bal : 0)} · ${T.length} trade(s)${T.length ? " · " + usdS(pl) : ""} · ${(s.shapes || []).length} dessin(s) · ${isoNY(s.savedAt)}</small>${s.desc ? `<small>${esc(s.desc)}</small>` : ""}</div>
         <div class="bp-acts"><button class="bp-btn bp-s" data-bpa="nopen" data-id="${esc(s.id)}">Ouvrir</button><button class="bp-btn bp-g bp-s" data-bpa="nsave" data-id="${esc(s.id)}" title="Écraser avec l'état actuel du chart">Écraser</button><button class="bp-btn bp-g bp-s" data-bpa="nren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="ndel" data-id="${esc(s.id)}">Supprimer</button></div></div>`; };
@@ -9949,10 +10033,10 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     return tabPrefs(box);
   }
   function tabPrefs(box) {
-    if (!box) return; const t = pg.prefTab || LS.get("bt-prefs-tab", "sym");
+    if (!box) return; const t = pg.prefTab || LS.get("bt-prefs-tab", "sym"); keysCapStop();
     box.innerHTML = `<div class="bp-note">Les réglages du chart et du replay (les mêmes que dans sa fenêtre Paramètres), enregistrés dès qu'ils changent.</div>
       <div class="bp-prefs tx-set2"><div class="snav">${prefsNav(t)}</div><div class="sbody">${t === "ind" ? '<p class="bp-note">Les indicateurs Pine Script / TypeScript se règlent dans le chart, où leur résultat s\'affiche (Paramètres › Indicateurs, éditeur de code).</p><button class="bp-btn" data-bpa="pind">Ouvrir le chart sur les indicateurs</button>' : prefsBody(t)}</div></div>
-      <div class="bp-bar" style="margin-top:12px"><button class="bp-btn bp-g bp-s" data-bpa="pdef">Appliquer les réglages par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="psavedef">Enregistrer comme modèle par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="pall" title="Copie ces réglages dans toutes les mises en page enregistrées">Appliquer à toutes les mises en page</button></div>`;
+      ${t === "keys" ? "" : `<div class="bp-bar" style="margin-top:12px"><button class="bp-btn bp-g bp-s" data-bpa="pdef">Appliquer les réglages par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="psavedef">Enregistrer comme modèle par défaut</button><button class="bp-btn bp-g bp-s" data-bpa="pall" title="Copie ces réglages dans toutes les mises en page enregistrées">Appliquer à toutes les mises en page</button></div>`}`; // v1.67.1 : onglet Raccourcis = son propre bouton « Raccourcis par défaut »
   }
   function prefsDef() { P = { ...PDEF, ...LS.get("bt-prefs-def", {}) }; offC.clear(); if (chart) draw(true); applyPrefs(); LS.set("bt-prefs", P); tabPrefs($("bpBody")); bpToast("Réglages par défaut appliqués."); }
   function prefsAll() { LS.set("bt-prefs", P); const L = layouts(); let n = 0; L.forEach((x) => { if (x && x.prefs) { x.prefs = { ...P }; n++; } }); if (n) saveList("bt-layouts", L); applyPrefs(); bpToast(n ? `Réglages copiés dans ${n} mise(s) en page.` : "Aucune mise en page enregistrée : réglages gardés pour le chart."); }
@@ -10009,14 +10093,25 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
 
   // sessions isolées : supprimer (corbeille), renommer, dupliquer ; ouvrir le Backtesteur de base
-  async function sesTrash(id) {
-    const r = sesList().find((x) => x.id === id); if (!r) return;
-    if (!confirm(`Envoyer la session « ${r.name} » dans la corbeille ?\nCompte, trades, dessins et heure du replay sont gardés : Paramètres › Sessions supprimées permet de la restaurer.`)) return;
+  // v1.67.1 : la corbeille sert aussi à la fenêtre Sessions du chart ; renvoie la session déplacée, false si le stockage est plein, null si elle n'existe plus
+  async function sesToBin(id) {
+    const r = sesList().find((x) => x.id === id); if (!r) return null;
     if (curSes && curSes.id === id) await sesLeave(true);
     if (LS.get("bt-ses-cur", null) === id) LS.set("bt-ses-cur", null);
-    const o = btNav.trash.del(sesList(), binList(), id, new Date().toISOString()); if (!o) return;
-    if (!lsPut(BINK, o.bin)) return bpToast("Stockage plein : la session n'a pas pu aller dans la corbeille.", true);
-    lsPut(SESK, o.list); bpToast(`« ${r.name} » est dans la corbeille (Paramètres › Sessions supprimées).`); bpRender();
+    const o = btNav.trash.del(sesList(), binList(), id, new Date().toISOString()); if (!o) return null;
+    if (!lsPut(BINK, o.bin)) return false;
+    lsPut(SESK, o.list); return r;
+  }
+  const binAsk = (r, where) => confirm(`Envoyer la session « ${r.name} » dans la corbeille ?\nCompte, trades, dessins et heure du replay sont gardés : ${where} permet de la restaurer.`);
+  async function sesTrash(id) {
+    const r = sesList().find((x) => x.id === id); if (!r || !binAsk(r, "Paramètres › Sessions supprimées")) return;
+    const o = await sesToBin(id); if (o === false) return bpToast("Stockage plein : la session n'a pas pu aller dans la corbeille.", true);
+    if (o) bpToast(`« ${r.name} » est dans la corbeille (Paramètres › Sessions supprimées).`); bpRender();
+  }
+  async function sesBinChart(s) { // fenêtre Sessions du chart
+    if (!binAsk(s, "Backtesteur › Paramètres › Sessions supprimées")) return;
+    const o = await sesToBin(s.id); openSessions();
+    if (o === false) msg("Stockage plein : la session n'a pas pu aller dans la corbeille.", true); else if (o) msg(`Session « ${s.name} » envoyée dans la corbeille (Backtesteur › Paramètres › Sessions supprimées).`);
   }
   async function sesRen(id) {
     const r = sesList().find((x) => x.id === id); if (!r) return; const n = await ask("Renommer la session", r.name); if (!n) return;
@@ -10031,6 +10126,22 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const now = new Date().toISOString(), copy = { ...JSON.parse(JSON.stringify(r)), id: nid, name: btNav.uniqueName(r.name + " (copie)", [...L, ...binList()].map((x) => x.name)), created: now, savedAt: now };
     if (!lsPut(SESK, [copy, ...L])) { undo(); return bpToast("Stockage plein : session non dupliquée.", true); }
     bpToast(`Copie créée : « ${copy.name} » (compte, trades, dessins et heure du replay copiés).`); bpRender();
+  }
+  // v1.67.1 : « Dupliquer » propose tout copier (sesDup) ou seulement les réglages (sesDupCfg : nouvelle session vierge), décision de l'arbitre du 20/11/2026
+  function sesDupAsk(id) {
+    const r = sesList().find((x) => x.id === id); if (!r) return;
+    const m = modal(`Dupliquer « ${esc(r.name)} »`, `<button class="ghost fm-ch" data-m="all"><b>Tout copier</b><span>Compte, trades, dessins et heure du replay : la copie reprend là où en est la session.</span></button>
+      <button class="ghost fm-ch" data-m="cfg"><b>Seulement les réglages</b><span>Nouvelle session vierge aux mêmes réglages (type, solde de départ, règles, actifs, stratégie, période, coûts) : ni trade, ni dessin, replay au départ.</span></button>`,
+      '<span class="tx-sp"></span><button data-m="x" class="ghost">Annuler</button>');
+    m.onclick = (e) => { const a = (e.target.closest("[data-m]") || {}).dataset; if (!a) return; closeModal(); if (a.m === "all") sesDup(id); else if (a.m === "cfg") sesDupCfg(id); };
+  }
+  function sesDupCfg(id) {
+    if (curSes && curSes.id === id) sesSaveNow(); // réglages à jour (type de compte, coûts) de la session ouverte
+    const L = sesList(), r = L.find((x) => x.id === id); if (!r) return;
+    const c = JSON.parse(JSON.stringify(r)), now = new Date().toISOString(), size = (c.cfg && c.cfg.size) || c.bal;
+    const copy = { ...c, id: "x" + uid(), name: btNav.uniqueName(r.name + " (vierge)", [...L, ...binList()].map((x) => x.name)), created: now, savedAt: null, bal: size, nT: 0, t: null, sym: (c.assets || [])[0] || c.sym };
+    if (!lsPut(SESK, [copy, ...L])) return bpToast("Stockage plein : session non créée.", true);
+    bpToast(`Session vierge « ${copy.name} » créée avec les réglages de « ${r.name} ».`); bpRender();
   }
   // « Backtesteur de base » : la session ouverte est enregistrée puis quittée (comme le × de son badge) ; une session laissée ouverte n'est pas reprise
   async function baseOpen() {
@@ -10179,7 +10290,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   /* ---- interactions des pages (délégation sur #btPages) ---- */
   const BPACT = {
     new: (b) => nsOpen(b.dataset.kind), base: () => toChart(baseOpen), open: (b) => { const id = b.dataset.id; toChart(() => sesOpen(id)); },
-    sren: (b) => sesRen(b.dataset.id), sdup: (b) => sesDup(b.dataset.id), sdel: (b) => sesTrash(b.dataset.id),
+    sren: (b) => sesRen(b.dataset.id), sdup: (b) => sesDupAsk(b.dataset.id), sdel: (b) => sesTrash(b.dataset.id),
     sana: (b) => { pg.ana = { src: "ses:" + b.dataset.id, strat: "", side: "", res: "", sess: "", tag: "" }; bpGo("analytique"); },
     nopen: (b) => snapOpen(b.dataset.id), nsave: (b) => snapSave(b.dataset.id), nren: (b) => snapRen(b.dataset.id), ndel: (b) => snapDel(b.dataset.id),
     period: (b) => { pg.period = b.dataset.v; tabDash($("bpBody")); },
@@ -10217,6 +10328,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       const n = e.target.closest("[data-bpn]"); if (n) { const k = n.dataset.bpn; if (k === "chart") return toChart(null); if (k === "testing") return bpGo(btNav.path({ page: "testing", tab: pg.last.testing })); if (k === "strategies") return bpGo("strategies"); return bpGo("parametres/" + pg.last.parametres); }
       const at = e.target.closest("[data-at]"); if (at) { const box = at.closest(".bp-card") || root; box.querySelectorAll("[data-at]").forEach((x) => x.classList.toggle("on", x === at)); box.querySelectorAll("[data-ap]").forEach((x) => (x.hidden = x.dataset.ap !== at.dataset.at)); return; }
       const th = e.target.closest("th[data-sort]"); if (th) { const k = th.dataset.sort; pg.trSort = { k, dir: pg.trSort.k === k && pg.trSort.dir === "desc" ? "asc" : "desc" }; return trRes(); }
+      const kb = e.target.closest(".bp-prefs [data-k]"); if (kb) { const y = (kb.closest(".sbody") || {}).scrollTop || 0; return keysClick(kb, true, () => { tabPrefs($("bpBody")); const s2 = document.querySelector("#bpBody .sbody"); if (s2) s2.scrollTop = y; }); } // v1.67.1 : raccourcis enregistrés à chaque changement
       const tb = e.target.closest(".bp-prefs [data-tab]"); if (tb) { pg.prefTab = tb.dataset.tab; return tabPrefs($("bpBody")); }
       const a = e.target.closest("[data-bpa]"); if (a) { if (!a.disabled && BPACT[a.dataset.bpa]) BPACT[a.dataset.bpa](a, e); return; }
       const g = e.target.closest("[data-bpgo]"); if (g) bpGo(g.dataset.bpgo);
@@ -10227,7 +10339,9 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const pb = $("btPagesBtn"); if (pb) pb.onclick = () => bpGo(pg.prev);
   })();
 
-  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { chartOpen(null); }, route: bpRoute, _nav: btNav }; // 1re ouverture du chart : NQ m1 du dossier data chargé d'office (v1.66 : ou la session isolée laissée ouverte) ; v1.67 : route() = pages du Backtesteur
+  window.bt = { _hit: (x, y) => { const h = hit(x, y); return h && { type: h.s.type, h: h.h }; }, _pts: () => shapes.map((s) => s.p.map((p) => [X(p.t), Y(p.price)])), _y: (p) => Y(p), _acc: () => A, show() { chartOpen(null); }, route: bpRoute, _nav: btNav,
+    _fut: (tf, t, n) => { if (tf == null) { const ts = chart && chart.timeScale(), lt = S.B.length ? toNY(S.B[S.B.length - 1][0]) : null; return { n: FUT.tm.length, tm: FUT.tm.slice(0, 3), last: FUT.last, acc: FUT.acc, B: S.B.length, sp: ts ? ts.scrollPosition() : null, li: ts && lt != null ? ts.coordinateToLogical(ts.timeToCoordinate(lt)) : null, x0: ts && FUT.tm.length ? ts.timeToCoordinate(FUT.tm[0]) : null, xl: ts && lt != null ? ts.timeToCoordinate(lt) : null, k2: FUT2.key, sp2: chart2 && !$("btWrap2").hidden ? chart2.timeScale().scrollPosition() : null }; }
+      const s0 = S.tf; S.tf = tf; try { const c = futCal(tf, (x) => bucket0(x)); return btFut.slots(bucket0(t), n || 3, c.next, c.open); } finally { S.tf = s0; } } }; // v1.67.1 : _fut() = créneaux à venir (débogage) // 1re ouverture du chart : NQ m1 du dossier data chargé d'office (v1.66 : ou la session isolée laissée ouverte) ; v1.67 : route() = pages du Backtesteur
   if ($("v-backtest") && $("v-backtest").classList.contains("on")) { const h = location.hash.slice(1); window.bt.route(h.startsWith("backtest/") ? h.slice(9) : ""); } // v1.67 : page ou chart selon le hash
 })();
 </script>
