@@ -371,6 +371,17 @@ Contenu attendu de chaque page :
 | Paramètres › Sessions supprimées | Table (période, nom, solde de départ et actuel, stratégie, actifs, heure du replay, date de création), restaurer ou supprimer définitivement, pagination | SES-11 |
 | Paramètres › Modèles | Modèles de notes : recherche, favoris, modèles intégrés à dupliquer pour les modifier, date de dernière modification | JRN-07 |
 
+Décisions de l'arbitre du 20/11/2026, après la v1.67.0 :
+
+| Question | Décision |
+| --- | --- |
+| Supprimer une session depuis la fenêtre Sessions du chart | Elle passe aussi par la corbeille (Paramètres › Sessions supprimées), comme depuis Testing |
+| Bougies de MNQ et MES | Chaque actif utilise ses propres bougies : Rudy a des fichiers NQ, ES, MNQ et MES dans `data_csv`. Les bougies du sous-jacent ne servent que si le fichier d'un micro manque, avec la mention |
+| Commissions par défaut | Celles du compte de base (2,80 $ par contrat, 0,74 $ en micro) et 1 tick de spread |
+| Dupliquer une session | Deux choix : tout copier (compte, trades, dessins, heure du replay) ou seulement les réglages |
+| Échelle de temps du chart | Les heures s'affichent aussi dans la zone vide à droite de la dernière bougie, comme sur TopstepX, sans montrer de données futures (amélioration du Backtesteur de base) |
+| Raccourcis clavier | Le bouton engrenage de la barre du chart disparaît ; les raccourcis se règlent dans les Paramètres (fenêtre du chart et Paramètres › Backtesting). Demande de Rudy, exception à la règle « ajouts seulement » |
+
 Source : captures de l'arbitre (son compte FX Replay, 19/11/2026), lues par la salle d'analyse seulement et non versées au repo. Les textes, libellés et modèles intégrés de l'app sont écrits par nous.
 
 ## Spécification d'implémentation
