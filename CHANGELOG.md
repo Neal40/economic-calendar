@@ -2,6 +2,19 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.76.0] — 2026-11-21
+Indicateurs : **nouveau moteur Pine Script v5 / v6** (Backtesteur et page Graphique).
+### Ajouté
+- Vrai parseur Pine (lignes logiques, indentation, continuations, plusieurs instructions par ligne) traduit en JavaScript : `type` (UDT) et `method`, `enum`, `switch`, `if` / `switch` / `for` en expression, `for … in`, tuples, fonctions à paramètres typés et valeurs par défaut, arguments nommés, génériques (`array.new<float>()`), surcharges.
+- Exécution fidèle à Pine : historique `x[n]` de toute variable (y compris dans les fonctions, par site d'appel), `var` / `varip`, état des `ta.*` propre à chaque appel de fonction, `request.security` sur le même symbole en unité supérieure (bougies reconstruites, lookahead on / off), `time()` / `time_close()` avec séances et fuseaux, `timestamp()`, `timeframe.change()`, `str.*`, `array.*`, `map.*`, couleurs.
+- **Objets de dessin** rendus sur le graphique : `box`, `line`, `label`, `table`, `linefill`, `polyline`, `chart.point`, ainsi que `fill()` et `bgcolor()` (limites `max_*_count` comme TradingView).
+- Stratégies : simulation simplifiée (ordres à l'ouverture de la bougie suivante, sorties stop / limite dans la bougie), flèches d'entrée / sortie et bilan dans la console de l'éditeur.
+- Le script tourne sur les 5 000 dernières bougies au plus ; la console de l'éditeur indique le moteur, les dessins et le bilan de stratégie.
+- `tools/check.js` teste le moteur (historique, var, fonctions, UDT / méthodes, tableaux, dessins, request.security).
+### Limites
+- `request.security` vers un autre symbole (FX, données économiques), bibliothèques `import`, `request.financial / economic` : non disponibles (valeur na, avertissement dans la console).
+- Les scripts v4 et plus anciens restent sur l'ancien moteur.
+
 ## [1.75.0] — 2026-11-21
 Indicateurs : import de **Mes scripts TradingView**.
 ### Ajouté

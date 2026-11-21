@@ -27,6 +27,30 @@ try {
   if (btStats([], { type: "classic" }).n !== 0) errors.push("btStats : liste vide");
 } catch (e) { errors.push("btStats : " + e.message); }
 
+// moteur Pine Script v5 / v6 (pineEngine, extrait d'index.html) : syntaxe v6, historique, var, fonctions, UDT / méthodes, tableaux, dessins, request.security
+try {
+  const src = /\/\* pineEngine:start[^\n]*\n([\s\S]*?)\/\* pineEngine:end \*\//.exec(html)[1], win = {};
+  const { PineEngine: PE } = new Function("window", src + "; return { PineEngine, PineDraw };")(win);
+  const bars = []; const t0 = Date.UTC(2026, 10, 2, 14, 30) / 1000; for (let i = 0; i < 300; i++) { const o = 100 + i; bars.push([t0 + i * 300, o, o + 2, o - 1, o + 1, 10]); }
+  const run = (code) => { const c = PE.compile(code); if (c.error) throw new Error(c.error); const r = PE.run(c, bars, { ny: (t) => t - 5 * 3600, tfSec: 300, sym: "NQ" }); if (r.error) throw new Error(r.error); return r; };
+  const last = (code, k = 0) => run(code).plots[k].data[bars.length - 1];
+  const T = [
+    ["historique", "//@version=5\nindicator(\"x\")\nplot(close[3])", 397],
+    ["var", "//@version=5\nindicator(\"x\")\nvar c = 0\nif bar_index % 2 == 0\n    c += 1\nplot(c[1])", 150],
+    ["ta dans une fonction (état par appel)", "//@version=5\nindicator(\"x\")\nf(x) => ta.sma(x, 2)\nplot(f(close) - f(open))", 1],
+    ["switch + if expression", "//@version=6\nindicator(\"x\")\ns = \"b\"\nv = switch s\n    \"a\" => 1\n    \"b\" => 2\n    => 3\nw = if close > 1000\n    10\nelse\n    20\nplot(v + w)", 22],
+    ["type + method", "//@version=6\nindicator(\"x\")\ntype P\n    float a = 1\n    float b\nmethod tot(P this, float k = 2) =>\n    this.a + nz(this.b) * k\np = P.new(b = 5)\nplot(p.tot(k = 3))", 16],
+    ["tableaux + for in", "//@version=6\nindicator(\"x\")\nvar a = array.new<float>()\na.push(close)\nif a.size() > 3\n    a.shift()\ns = 0.0\nfor v in a\n    s += v\nplot(s)", 400 + 399 + 398],
+    ["déclarations multiples", "//@version=5\nindicator(\"x\")\na = 1, b = 2\nvar float x = 0.0, y = 1.0\nplot(a + b + x + y)", 4],
+  ];
+  for (const [name, code, exp] of T) { const v = last(code); if (Math.abs(v - exp) > 1e-9) errors.push(`pineEngine ${name} : ${v} au lieu de ${exp}`); }
+  const d = run("//@version=5\nindicator(\"x\", overlay=true, max_lines_count=10)\nline.new(bar_index, close, bar_index + 1, close)\nif barstate.islast\n    label.new(bar_index, high, \"hi \" + str.tostring(close, \"#.00\"))\n    box.new(bar_index - 5, high, bar_index, low)\nplot(close)").draw;
+  if (d.lines.length !== 10 || d.labels.length !== 1 || d.labels[0].text !== "hi 400.00" || d.boxes.length !== 1) errors.push("pineEngine dessins : " + JSON.stringify({ l: d.lines.length, lb: d.labels.map((x) => x.text), b: d.boxes.length }));
+  const s = run("//@version=5\nindicator(\"x\")\nplot(request.security(syminfo.tickerid, \"60\", close[1], lookahead = barmerge.lookahead_on))").plots[0].data;
+  if (!Number.isFinite(s[bars.length - 1])) errors.push("pineEngine request.security : valeur na");
+  if (!PE.compile("//@version=4\nstudy(\"x\")\nplot(close)").error) errors.push("pineEngine : un script v4 doit être renvoyé vers l'ancien moteur");
+} catch (e) { errors.push("pineEngine : " + e.message); }
+
 // risque par position du Journal (riskCalc, fonction pure extraite d'index.html)
 try {
   const src = /\/\* riskCalc:start[\s\S]*?\*\/\r?\n([\s\S]*?)\/\* riskCalc:end \*\//.exec(html)[1], riskCalc = new Function(src + "; return riskCalc;")();
