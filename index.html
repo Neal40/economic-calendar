@@ -743,6 +743,27 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-sg{cursor:grab;color:var(--gm);letter-spacing:-2px}.gr-sn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-sb{font-size:11px;color:var(--ga)}.gr-sr.drag{opacity:.35}.gr-sr.ins-t{box-shadow:inset 0 2px 0 var(--ga)}.gr-sr.ins-b{box-shadow:inset 0 -2px 0 var(--ga)}
 .gr-lvl .gr-fr{flex-wrap:nowrap;gap:5px}.gr-lvl .gr-fr>*{flex:none}.gr-lvl input[data-lv]{width:76px}.gr-lvl .gr-col input[type=range]{width:46px}.gr-lvl .gr-col .gr-hex{width:76px}.gr-lvt{width:96px!important;flex:1 1 auto!important;min-width:60px}.gr-nline{display:flex;padding:6px 12px;border-bottom:1px solid var(--gl);font-size:12px}
 .gr-mdel{margin-left:8px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;opacity:.45;flex:none}.gr-mdel svg{width:18px;height:18px}.gr-mi:hover .gr-mdel{opacity:.8}.gr-mdel:hover{background:var(--gh);opacity:1}.gr-mdel.arm{background:#f23645;color:#fff;opacity:1}
+/* Réglages façon TradingView */
+.gr-tvset{border-radius:12px}.gr-tvset .gr-dh{padding:18px 22px 10px;font-size:20px}.gr-tvset .gr-dh b{font-size:20px;font-weight:700}.gr-tvset .gr-db{padding:0;min-height:520px;display:flex}
+.tv-wrap{display:flex;flex:1;min-height:0;max-height:calc(90vh - 140px)}.tv-nav{width:206px;flex:none;padding:8px 10px 8px 14px;display:flex;flex-direction:column;gap:2px}
+.tv-ni{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:8px;font-size:14px;color:var(--gt);text-align:left}.tv-ni svg{width:24px;height:24px;flex:none}.tv-ni:hover{background:var(--gh)}.tv-ni.on{background:var(--gh);font-weight:700}
+.tv-body{flex:1;overflow:auto;padding:0 24px 18px 14px}.tv-pane{max-width:520px}
+.tv-sec{font-size:11px;text-transform:uppercase;letter-spacing:.02em;color:var(--gm);margin:22px 0 8px;font-weight:500}.tv-pane>.tv-sec:first-child{margin-top:14px}
+.tv-r{display:flex;align-items:center;min-height:44px;gap:12px}.tv-l{flex:1;font-size:14px;display:flex;align-items:center}.tv-c{display:flex;align-items:center;gap:8px;flex:none}.tv-mut{font-size:12px;color:var(--gm)}
+.tv-h{font-size:12.5px;color:var(--gm);margin:-6px 0 6px}.tv-sub{padding-left:28px}
+.tv-ck{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:14px}.tv-ck input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid var(--gm);border-radius:4px;margin:0;display:grid;place-content:center;cursor:pointer;flex:none}
+.tv-ck input:checked{background:var(--gt);border-color:var(--gt)}.tv-ck input:checked::after{content:"";width:9px;height:5px;border:2px solid var(--gp);border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.tv-sel{height:34px;border-radius:8px;min-width:150px;padding:0 10px;font-size:13.5px}.tv-sel.sm{min-width:112px}.tv-num{width:100px;height:34px;border-radius:8px}.tv-u{font-size:13px;color:var(--gm);min-width:40px}.tv-rng{width:150px;accent-color:var(--ga)}
+.gr-tvset .gr-col input[type=color]{width:32px;height:32px;border-radius:7px;border:1px solid var(--gl);padding:2px}.gr-tvset .gr-col input[type=range]{display:none}.gr-tvset .gr-col .gr-hex{width:82px;height:32px;border-radius:7px}
+.gr-tvset .gr-df{border-top:0;padding:14px 22px 18px}.gr-tvset .gr-df .gr-btn{height:38px;padding:0 18px;border-radius:9px;font-size:14px;font-weight:600}
+.gr-tvset .gr-df [data-x=cancel]{background:transparent;border:1px solid var(--gt);color:var(--gt)}.gr-tvset .gr-df [data-x=ok]{background:var(--gt);color:var(--gp);border:1px solid var(--gt)}.gr-tvset .tv-tpl{border:1px solid var(--gl)!important;font-weight:500!important}
+.gr-llogo{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ga);color:#fff;font-size:9px;font-weight:700;margin-right:2px;align-self:center}
+.gr-pleg.gr-lbg .gr-lrow,.gr-pleg.gr-lbg .gr-lind{background:rgba(var(--lbgrgb,19,23,34),var(--lbga,.4));border-radius:4px;padding:1px 4px}
+#grRoot.light .gr-pleg.gr-lbg{--lbgrgb:255,255,255}
+.gr-cnav{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);display:flex;gap:4px;z-index:6;opacity:0;transition:opacity .15s;pointer-events:none}.gr-cnav button{width:30px;height:30px;border-radius:50%;background:rgba(120,123,134,.25);color:var(--gt);font-size:16px;line-height:1;backdrop-filter:blur(2px)}.gr-cnav button:hover{background:rgba(120,123,134,.45)}
+#grRoot.gr-nav-always .gr-cnav{opacity:1;pointer-events:auto}#grRoot.gr-nav-hover .gr-cell:hover .gr-cnav{opacity:1;pointer-events:auto}
+#grRoot.gr-scb-never #grBot [data-b=pct],#grRoot.gr-scb-never #grBot [data-b=log],#grRoot.gr-scb-never #grBot [data-b=auto]{display:none}#grRoot.gr-scb-hover #grBot [data-b=pct],#grRoot.gr-scb-hover #grBot [data-b=log],#grRoot.gr-scb-hover #grBot [data-b=auto]{opacity:0}#grRoot.gr-scb-hover #grBot:hover [data-b]{opacity:1}
+.gr-toast.sticky{display:flex;align-items:center;gap:10px}.gr-toast .gr-tx{font-size:16px;opacity:.7;color:inherit}
 .gr-tic{width:22px;height:22px;display:flex;align-items:center;justify-content:center}.gr-tic svg{width:22px;height:22px}.gr-tn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-tr .gr-ib{width:24px;height:24px;opacity:.7}
 /* panneau du bas (éditeur Pine) */
 .gr-bpanel{width:560px;min-width:320px;flex:none;border-left:1px solid var(--gl);display:flex;flex-direction:column;background:var(--gb);position:relative;min-height:0}
@@ -11683,18 +11704,33 @@ const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = L
 const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#089981", wickDn: "#f23645", bdUp: "#089981", bdDn: "#f23645", bg: "#131722", bg2: "", txt: "#b2b5be", fs: 12,
   vgrid: true, hgrid: true, gridC: "rgba(42,46,57,0.55)", crossC: "#9598a1", crossS: 3, crossMag: false, lastLbl: true, priceLine: true, countdown: true, hiLo: false, prevClose: false,
   wm: false, sess: true, sessC: "rgba(120,123,134,0.35)", events: true, evMed: true, evLine: false, trades: true, legSym: true, legOhlc: true, legChg: true, legVol: true, legArgs: true, legVals: true, legBg: false,
-  poll: 1000, rightOffset: 10, mTop: 10, mBot: 8, lineC: "#2962ff", lineW: 2, left: false, h24: true, rth: false, scaleW: 76, indLbl: true, symLbl: false };
+  poll: 1000, rightOffset: 10, mTop: 10, mBot: 8, lineC: "#2962ff", lineW: 2, left: false, h24: true, rth: false, scaleW: 76, indLbl: true, symLbl: false,
+  /* v1.73 : réglages façon TradingView */
+  colorPrev: false, bodyOn: true, borderOn: true, wickOn: true, ethBg: "rgba(0,0,0,0)", legLogo: false, legTitle: "sym", legDay: false, legBgA: 40,
+  scaleBtns: "always", scalePos: "right", symLine: "vl", pcMode: "h", pcC: "#787b86", hlMode: "h", hlC: "#9598a1", tsDow: true, dateFmt: "fr",
+  vgridC: "", hgridC: "", wmC: "", scaleLineC: "", navBtns: "hover", trLbl: true, trPL: true, trPLu: "money", alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
 const LIGHT = { bg: "#ffffff", bg2: "", txt: "#131722", gridC: "rgba(42,46,57,0.07)", crossC: "#9598a1", sessC: "rgba(120,123,134,0.30)" };
 let PR = Object.assign({}, PDEF, LS.get("gr-prefs", {}));
+/* anciennes cases -> nouveaux menus (une fois), puis valeurs dérivées gardées à jour pour le reste du code */
+(() => { const sv0 = LS.get("gr-prefs", {});
+  if (!("symLine" in sv0) && ("lastLbl" in sv0 || "priceLine" in sv0)) PR.symLine = PR.lastLbl && PR.priceLine ? "vl" : PR.lastLbl ? "v" : PR.priceLine ? "l" : "h";
+  if (!("pcMode" in sv0) && sv0.prevClose) PR.pcMode = "vl"; if (!("hlMode" in sv0) && sv0.hiLo) PR.hlMode = "v"; if (!("scalePos" in sv0) && sv0.left) PR.scalePos = "left"; })();
+function prDerive() { PR.left = PR.scalePos === "left"; PR.lastLbl = /v/.test(PR.symLine); PR.priceLine = /l/.test(PR.symLine); PR.prevClose = PR.pcMode !== "h"; PR.hiLo = PR.hlMode !== "h"; PR.h24 = PR.h24 !== false;
+  if (typeof ROOT !== "undefined" && ROOT) { ["always", "hover", "never"].forEach((v) => { ROOT.classList.toggle("gr-scb-" + v, PR.scaleBtns === v); ROOT.classList.toggle("gr-nav-" + v, PR.navBtns === v); }); } }
+prDerive();
 const PREF = () => PR;
 const savePrefs = () => LS.set("gr-prefs", PR);
 const fmtPx = (p, spec) => fin(p) ? (PR.prec != null && PR.prec !== "auto" ? (+p).toFixed(+PR.prec) : (+p).toFixed(decOf(spec.tick))) : "—";
 const fmtVol = (v) => !fin(v) ? "—" : v >= 1e9 ? (v / 1e9).toFixed(2) + " Md" : v >= 1e6 ? (v / 1e6).toFixed(2) + " M" : v >= 1e3 ? (v / 1e3).toFixed(2) + " K" : String(Math.round(v));
 const dispTZ = () => PR.tz || NYZ;
 const tzAbbr = () => { const t = NOW(), o = tzOff(dispTZ(), t) / 3600; return "UTC" + (o >= 0 ? "+" : "−") + Math.abs(o); };
-function fmtTimeLbl(ct, intra, secs) { // heure du graphique (déjà décalée) -> « lun. 13 nov. '26 09:30 »
-  const d = new Date(ct * 1000), s = `${JOURS[d.getUTCDay()]} ${d.getUTCDate()} ${MOIS[d.getUTCMonth()]} '${String(d.getUTCFullYear()).slice(2)}`;
-  return intra ? `${s}  ${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}${secs ? ":" + pad2(d.getUTCSeconds()) : ""}` : s; }
+const fmtHM = (d, secs) => { const h = d.getUTCHours(), m = pad2(d.getUTCMinutes()) + (secs ? ":" + pad2(d.getUTCSeconds()) : ""); return PR.h24 === false ? `${h % 12 || 12}:${m} ${h < 12 ? "AM" : "PM"}` : `${pad2(h)}:${m}`; };
+const fmtDate = (d) => { const D = d.getUTCDate(), M = d.getUTCMonth(), Y = d.getUTCFullYear(), f = PR.dateFmt || "fr", dow = PR.tsDow !== false ? JOURS[d.getUTCDay()] + " " : "";
+  if (f === "dmy") return dow + `${pad2(D)}/${pad2(M + 1)}/${Y}`; if (f === "mdy") return dow + `${pad2(M + 1)}/${pad2(D)}/${Y}`; if (f === "ymd") return dow + `${Y}-${pad2(M + 1)}-${pad2(D)}`; if (f === "long") return dow + `${D} ${MOIS[M]} ${Y}`; return dow + `${D} ${MOIS[M]} '${String(Y).slice(2)}`; };
+function fmtTimeLbl(ct, intra, secs) { // heure du graphique (déjà décalée) -> « lun. 13 nov. '26 09:30 » (format choisi dans Réglages › Échelles et lignes)
+  const d = new Date(ct * 1000), s = fmtDate(d); return intra ? `${s}  ${fmtHM(d, secs)}` : s; }
+function tickFmt(t, type) { const d = new Date((typeof t === "number" ? t : Date.UTC(t.year, t.month - 1, t.day) / 1000) * 1000); // étiquettes de l'échelle de temps
+  if (type === 0) return String(d.getUTCFullYear()); if (type === 1) return MOIS[d.getUTCMonth()]; if (type === 2) return (PR.tsDow !== false ? JOURS[d.getUTCDay()] + " " : "") + d.getUTCDate(); return fmtHM(d, type === 4); }
 
 /* ---------- position d'une heure dans les bougies (indice logique décimal) ---------- */
 function liOf(B, iv, t) {
@@ -11708,6 +11744,7 @@ function liOf(B, iv, t) {
 function tOfLi(B, iv, l) { const n = B.length, sec = ivSec(iv); if (!n) return NOW(); if (l >= n - 1) return Math.round(B[n - 1][0] + (l - (n - 1)) * sec); if (l <= 0) return Math.round(B[0][0] + l * sec); const i = Math.floor(l), f = l - i; return Math.round(B[i][0] + f * Math.min(B[i + 1][0] - B[i][0], sec)); }
 
 /* ---------- transformations : Heikin Ashi, Renko, cassure de lignes, barres de range, RTH ---------- */
+const alphaOf = (c) => { const m = /rgba\([^)]*,\s*([\d.]+)\)/.exec(String(c)); return m ? +m[1] : String(c).length === 9 && c[0] === "#" ? parseInt(c.slice(7), 16) / 255 : 1; };
 function rthOnly(B, iv) { if (!ivIntra(iv) || ivSec(iv) > 3600) return B; return B.filter((b) => { const m = nyMin(b[0]); return m >= 570 && m < 975; }); }
 function heikin(B) { const o = []; let po, pc; for (const b of B) { const c = (b[1] + b[2] + b[3] + b[4]) / 4, op = po == null ? (b[1] + b[4]) / 2 : (po + pc) / 2; o.push([b[0], op, Math.max(b[2], op, c), Math.min(b[3], op, c), c, b[5]]); po = op; pc = c; } return o; }
 function atrLast(B, n = 14) { const a = RMA(TR(B), n); for (let i = a.length - 1; i >= 0; i--) if (fin(a[i])) return a[i]; return 0; }
@@ -11753,7 +11790,11 @@ const LEGHOV = { id: null, t: 0 }; // indicateur survolé dans la légende
 class Cell {
   constructor(st, idx) {
     this.st = st; this.idx = idx; this.feed = null; this.unsub = null; this.DB = []; this.T = []; this.R = {}; this.IS = new Map(); this.cmpS = new Map(); this.panes = []; this.hl = []; this.syncing = false; this.cross = null; this.dead = false;
-    this.el = el("div", "gr-cell"); this.el.innerHTML = `<div class="gr-panes"></div><div class="gr-cmsg" hidden></div><div class="gr-ntip" hidden></div>`;
+    this.el = el("div", "gr-cell"); this.el.innerHTML = `<div class="gr-panes"></div><div class="gr-cmsg" hidden></div><div class="gr-ntip" hidden></div><div class="gr-cnav"><button data-nv="zo" title="Dézoomer">−</button><button data-nv="zi" title="Zoomer">+</button><button data-nv="l" title="Défiler vers la gauche">‹</button><button data-nv="r" title="Défiler vers la droite">›</button><button data-nv="rs" title="Revenir à la dernière bougie">⟲</button></div>`;
+    this.el.querySelector(".gr-cnav").addEventListener("click", (e) => { const b = e.target.closest("[data-nv]"); if (!b) return; const ts = this.main.chart.timeScale(), k = b.dataset.nv, sp0 = ts.options().barSpacing;
+      if (k === "zi" || k === "zo") { const r = ts.getVisibleLogicalRange(); if (!r) return; const mid = r.to, w = (r.to - r.from) * (k === "zi" ? 0.75 : 1.33); ts.setVisibleLogicalRange({ from: mid - w, to: mid }); }
+      if (k === "l" || k === "r") { const r = ts.getVisibleLogicalRange(); if (!r) return; const d = (r.to - r.from) * 0.25 * (k === "l" ? -1 : 1); ts.setVisibleLogicalRange({ from: r.from + d, to: r.to + d }); }
+      if (k === "rs") { ts.applyOptions({ barSpacing: sp0 }); ts.scrollToRealTime(); } });
     this.pEl = this.el.querySelector(".gr-panes"); this.msgEl = this.el.querySelector(".gr-cmsg"); this.tipEl = this.el.querySelector(".gr-ntip");
     this.main = this.mkPane(null); this.mkMain(); this.wire(); this.bind();
     this.el.addEventListener("pointerdown", () => { if (STATE.active !== this.idx) setActive(this.idx); }, true);
@@ -11763,13 +11804,13 @@ class Cell {
   opts(isMain, last) {
     const P = PR, intra = ivIntra(this.st.iv), sec = ivSec(this.st.iv) < 60, bg = P.bg2 ? { type: "gradient", topColor: P.bg, bottomColor: P.bg2 } : { type: "solid", color: P.bg };
     return { autoSize: true, layout: { background: bg, textColor: P.txt, fontSize: P.fs, fontFamily: '-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif', attributionLogo: isMain },
-      grid: { vertLines: { visible: P.vgrid, color: P.gridC }, horzLines: { visible: P.hgrid, color: P.gridC } },
+      grid: { vertLines: { visible: P.vgrid, color: P.vgridC || P.gridC }, horzLines: { visible: P.hgrid, color: P.hgridC || P.gridC } },
       crosshair: { mode: DS.cursor === "cross" ? (P.crossMag ? 1 : 0) : 2, vertLine: { color: P.crossC, style: P.crossS, width: 1, labelBackgroundColor: P.theme === "light" ? "#131722" : "#363a45" }, horzLine: { color: P.crossC, style: P.crossS, width: 1, labelBackgroundColor: P.theme === "light" ? "#131722" : "#363a45" } },
-      rightPriceScale: { visible: !P.left, borderColor: P.gridC, minimumWidth: P.scaleW, scaleMargins: isMain ? { top: P.mTop / 100, bottom: P.mBot / 100 } : { top: 0.1, bottom: 0.08 }, entireTextOnly: true },
-      leftPriceScale: { visible: !!P.left, borderColor: P.gridC, minimumWidth: P.scaleW },
-      timeScale: { visible: !!last, borderColor: P.gridC, timeVisible: intra, secondsVisible: sec, rightOffset: P.rightOffset, barSpacing: 7, minBarSpacing: 0.3, shiftVisibleRangeOnNewBar: true, lockVisibleTimeRangeOnResize: true },
+      rightPriceScale: { visible: !P.left, borderColor: P.scaleLineC || P.gridC, minimumWidth: P.scaleW, scaleMargins: isMain ? { top: P.mTop / 100, bottom: P.mBot / 100 } : { top: 0.1, bottom: 0.08 }, entireTextOnly: true },
+      leftPriceScale: { visible: !!P.left, borderColor: P.scaleLineC || P.gridC, minimumWidth: P.scaleW },
+      timeScale: { visible: !!last, borderColor: P.scaleLineC || P.gridC, tickMarkFormatter: tickFmt, timeVisible: intra, secondsVisible: sec, rightOffset: P.rightOffset, barSpacing: 7, minBarSpacing: 0.3, shiftVisibleRangeOnNewBar: true, lockVisibleTimeRangeOnResize: true },
       localization: { locale: "fr-FR", timeFormatter: (t) => fmtTimeLbl(typeof t === "number" ? t : Date.UTC(t.year, t.month - 1, t.day) / 1000, intra, sec), priceFormatter: isMain ? (p) => fmtPx(p, this.spec) : undefined },
-      watermark: { visible: isMain && !!P.wm, text: symCode(this.st.sym) + (P.wm === 2 ? "" : ", " + ivLabel(this.st.iv)), color: P.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)", fontSize: 56, horzAlign: "center", vertAlign: "center" },
+      watermark: { visible: isMain && !!P.wm, text: symCode(this.st.sym) + (P.wm === 2 ? "" : ", " + ivLabel(this.st.iv)), color: P.wmC || (P.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)"), fontSize: 56, horzAlign: "center", vertAlign: "center" },
       handleScale: { axisPressedMouseMove: { time: true, price: true }, mouseWheel: true, pinch: true }, handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true }, kineticScroll: { mouse: false, touch: true } };
   }
   mkPane(id) {
@@ -11795,7 +11836,7 @@ class Cell {
     if (this.series) { try { this.series.detachPrimitive(this.lay); this.series.detachPrimitive(this.ilay); } catch (e) { /* */ } ch.removeSeries(this.series); this.series = null; }
     if (this.hlc) { this.hlc.forEach((s) => ch.removeSeries(s)); this.hlc = null; }
     const base = { priceFormat: pf, priceScaleId: ps, lastValueVisible: P.lastLbl, priceLineVisible: P.priceLine, priceLineStyle: 2 };
-    const cnd = { upColor: P.up, downColor: P.dn, borderUpColor: P.bdUp, borderDownColor: P.bdDn, wickUpColor: P.wickUp, wickDownColor: P.wickDn };
+    const cnd = { upColor: P.bodyOn === false ? "rgba(0,0,0,0)" : P.up, downColor: P.bodyOn === false ? "rgba(0,0,0,0)" : P.dn, borderVisible: P.borderOn !== false, borderUpColor: P.bdUp, borderDownColor: P.bdDn, wickVisible: P.wickOn !== false, wickUpColor: P.wickUp, wickDownColor: P.wickDn };
     if (["candles", "heikin", "renko", "lb", "range"].includes(t)) this.series = ch.addCandlestickSeries({ ...base, ...cnd });
     else if (t === "hollow") this.series = ch.addCandlestickSeries({ ...base, ...cnd, upColor: "rgba(0,0,0,0)" });
     else if (t === "bars") this.series = ch.addBarSeries({ ...base, upColor: P.up, downColor: P.dn, thinBars: false, openVisible: true });
@@ -11842,14 +11883,15 @@ class Cell {
       if (t <= last) t = last + 1; out[i] = t; last = t; }
     return out;
   }
-  ptOf(b, t) { const ty = this.st.type;
+  ptOf(b, t, pv) { const ty = this.st.type;
+    if (PR.colorPrev && pv && ["candles", "hollow", "bars"].includes(ty)) { const u = b[4] >= pv[4], o = { time: t, open: b[1], high: b[2], low: b[3], close: b[4], color: PR.bodyOn === false || (ty === "hollow" && u) ? "rgba(0,0,0,0)" : u ? PR.up : PR.dn }; if (ty === "bars") { o.color = u ? PR.up : PR.dn; return o; } o.borderColor = u ? PR.bdUp : PR.bdDn; o.wickColor = u ? PR.wickUp : PR.wickDn; return o; }
     if (["line", "linemk", "step", "area", "baseline", "hlcarea"].includes(ty)) return { time: t, value: b[4] };
     if (ty === "columns") return { time: t, value: b[4], color: b[4] >= b[1] ? alpha(PR.up, 0.7) : alpha(PR.dn, 0.7) };
     if (ty === "hilo") return { time: t, open: b[2], high: b[2], low: b[3], close: b[3] };
     return { time: t, open: b[1], high: b[2], low: b[3], close: b[4] }; }
   full(fit) {
     const B = this.disp(); this.DB = B; this.T = this.toTimes(B);
-    const data = B.map((b, i) => this.ptOf(b, this.T[i]));
+    const data = B.map((b, i) => this.ptOf(b, this.T[i], B[i - 1]));
     if (this.st.type === "baseline" && B.length) { const vis = B.slice(-300); this.series.applyOptions({ baseValue: { type: "price", price: (Math.max(...vis.map((b) => b[2])) + Math.min(...vis.map((b) => b[3]))) / 2 } }); }
     this.series.setData(data);
     if (this.hlc) { this.hlc[0].setData(B.map((b, i) => ({ time: this.T[i], value: b[2] }))); this.hlc[1].setData(B.map((b, i) => ({ time: this.T[i], value: b[3] }))); }
@@ -11865,7 +11907,7 @@ class Cell {
     const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (PR.rth && B.length !== B0.length)) { this.full(false); return; }
     const T = this.toTimes(B); const from = Math.max(0, Math.min(B0.length - 1, info && info.from != null ? info.from : B.length - 2));
     this.DB = B; this.T = T;
-    try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
+    try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i], B[i - 1])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
       if (B.length > B0.length) this.panes.forEach((p) => { for (let i = B0.length; i < B.length; i++) p.anchor.update({ time: T[i] }); }); }
     catch (e) { this.full(false); return; }
     this.inds(false, from); this.legend(); this.redraw(); checkAlerts(this.st.sym, B[B.length - 1]);
@@ -11919,7 +11961,7 @@ class Cell {
   markers() { const out = []; for (const x of this.st.inds) { const r = this.R[x.id]; if (r && r._marks) r._marks.forEach((m) => { if (this.T[m.i] != null) out.push({ time: this.T[m.i], position: m.position, shape: m.shape, color: m.color, text: m.text }); }); }
     (this.trades || []).forEach((m) => out.push(m)); out.sort((a, b) => a.time - b.time); try { this.series.setMarkers(out); } catch (e) { /* */ } }
   prevCloseLine() { if (this.pcl) { try { this.series.removePriceLine(this.pcl); } catch (e) { /* */ } this.pcl = null; } if (!PR.prevClose || !ivIntra(this.st.iv)) return;
-    const g = dayGroups(this.DB); if (g.length < 2) return; const pc = this.DB[g[g.length - 2].i1][4]; this.pcl = this.series.createPriceLine({ price: pc, color: "#787b86", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "Clôture préc." }); }
+    const g = dayGroups(this.DB); if (g.length < 2) return; const pc = this.DB[g[g.length - 2].i1][4]; this.pcl = this.series.createPriceLine({ price: pc, color: PR.pcC || "#787b86", lineWidth: 1, lineStyle: 2, lineVisible: /l/.test(PR.pcMode || "vl"), axisLabelVisible: /v/.test(PR.pcMode || "vl"), title: "Clôture préc." }); }
   /* ----- événements économiques et trades TopstepX sur le graphique ----- */
   loadEvents() { this.evs = []; if (!(PR.events || PR.evLine) || !window.calEvents || !this.DB.length || !ivIntra(this.st.iv) && ivParse(this.st.iv).u !== "D") return;
     const B = this.DB, d0 = sessDate(B[Math.max(0, B.length - 6000)][0]), d1 = addDays(sessDate(B[B.length - 1][0]), 7);
@@ -11929,18 +11971,23 @@ class Cell {
     let rows = []; try { const d = window.jdash && window.jdash.data("trades"); if (d && d.status === "ok") rows = d.data; else if (D && D.journalGet) { if (!Cell.jcache || Date.now() - Cell.jcache.at > 60000) Cell.jcache = { at: Date.now(), p: D.journalGet() }; const db = await Cell.jcache.p; rows = (db && db.trades) || []; } } catch (e) { rows = []; }
     const u = undOf(this.st.sym), B = this.DB, t0 = B[0][0], t1 = B[B.length - 1][0] + ivSec(this.st.iv), out = [], snapT = (t) => { const i = Math.round(liOf(B, this.st.iv, t)); return this.T[clamp(i, 0, B.length - 1)]; };
     rows.forEach((r) => { const s = String(r.Symbol || r.Contract || "").replace(/[FGHJKMNQUVXZ]\d{1,2}$/, ""); if (undOf(s) !== u) return; const te = Date.parse(r.Entry) / 1000, tx = Date.parse(r.Exit) / 1000; if (!(te >= t0 && te <= t1)) return; const long = r.Direction === "Long", pnl = +r["Net P&L"] || 0;
-      out.push({ time: snapT(te), position: long ? "belowBar" : "aboveBar", shape: long ? "arrowUp" : "arrowDown", color: long ? "#2962ff" : "#e91e63", text: `${long ? "Achat" : "Vente"} ${r.Size || 1} @ ${r["Entry Price"]}` });
-      if (fin(tx) && tx <= t1) out.push({ time: snapT(tx), position: long ? "aboveBar" : "belowBar", shape: "circle", color: pnl >= 0 ? "#089981" : "#f23645", text: `${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} $` }); });
+      out.push({ time: snapT(te), position: long ? "belowBar" : "aboveBar", shape: long ? "arrowUp" : "arrowDown", color: long ? "#2962ff" : "#e91e63", text: PR.trLbl === false ? "" : `${long ? "Achat" : "Vente"} ${r.Size || 1} @ ${r["Entry Price"]}` });
+      if (fin(tx) && tx <= t1) { const ep = +r["Entry Price"], xp = +r["Exit Price"], pts = fin(ep) && fin(xp) ? (xp - ep) * (long ? 1 : -1) : NaN, tk = this.spec.tick || 0.25;
+        const txt = PR.trPL === false ? "" : PR.trPLu === "ticks" && fin(pts) ? `${pts >= 0 ? "+" : ""}${Math.round(pts / tk)} ticks` : PR.trPLu === "pts" && fin(pts) ? `${pts >= 0 ? "+" : ""}${+pts.toFixed(2)} pts` : `${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} $`;
+        out.push({ time: snapT(tx), position: long ? "aboveBar" : "belowBar", shape: "circle", color: pnl >= 0 ? "#089981" : "#f23645", text: txt }); } });
     this.trades = out; this.markers(); }
   /* ----- légende (barre d'état) ----- */
   legend(i) {
     const B = this.DB, n = B.length; if (i == null || i < 0 || i >= n) i = n - 1; const b = B[i], sp = this.spec, P = PR, f = (v) => fmtPx(v, sp);
     let h = "";
-    if (P.legSym !== false) h += `<span class="gr-ls"><b>${E(symCode(this.st.sym))}</b><i>·</i>${E(ivLabel(this.st.iv))}<i>·</i>${E(sp.src === "ff" ? "Forex Factory" : sp.src === "csv" ? "CSV" : sp.x)}${this.feed && this.feed.spec.src !== "csv" && (HAS_TSX || sp.src === "ff") ? `<em class="gr-live" title="Données en direct">●</em>` : ""}</span>`;
+    if (P.legLogo) h += `<span class="gr-llogo" title="${E(sp.n || symCode(this.st.sym))}">${E(String(undOf(this.st.sym)).replace(/^M(?=NQ|ES|YM|RTY|GC|CL)/, "").slice(0, 2))}</span>`;
+    const ttl = P.legTitle === "name" ? sp.n || symCode(this.st.sym) : P.legTitle === "symname" ? symCode(this.st.sym) + " · " + (sp.n || "") : symCode(this.st.sym);
+    if (P.legSym !== false) h += `<span class="gr-ls"><b>${E(ttl)}</b><i>·</i>${E(ivLabel(this.st.iv))}<i>·</i>${E(sp.src === "ff" ? "Forex Factory" : sp.src === "csv" ? "CSV" : sp.x)}${this.feed && this.feed.spec.src !== "csv" && (HAS_TSX || sp.src === "ff") ? `<em class="gr-live" title="Données en direct">●</em>` : ""}</span>`;
     if (b) { const prev = i > 0 ? B[i - 1][4] : b[1], ch = b[4] - prev, cls = b[4] >= b[1] ? "up" : "dn";
       if (P.legOhlc !== false) h += `<span class="gr-lo ${cls}">O<b>${f(b[1])}</b> H<b>${f(b[2])}</b> B<b>${f(b[3])}</b> C<b>${f(b[4])}</b></span>`;
       if (P.legChg !== false) h += `<span class="gr-lc ${ch >= 0 ? "up" : "dn"}">${ch >= 0 ? "+" : ""}${f(ch)} (${ch >= 0 ? "+" : ""}${(prev ? ch / prev * 100 : 0).toFixed(2)} %)</span>`;
-      if (P.legVol !== false && b[5]) h += `<span class="gr-lv">Vol <b>${fmtVol(b[5])}</b></span>`; }
+      if (P.legVol !== false && b[5]) h += `<span class="gr-lv">Vol <b>${fmtVol(b[5])}</b></span>`;
+      if (P.legDay && ivIntra(this.st.iv)) { const g = dayGroups(B); if (g.length >= 2) { const pc = B[g[g.length - 2].i1][4], dc = B[n - 1][4] - pc; h += `<span class="gr-lc ${dc >= 0 ? "up" : "dn"}" title="Variation depuis la clôture de la veille">Jour ${dc >= 0 ? "+" : ""}${f(dc)} (${dc >= 0 ? "+" : ""}${(dc / pc * 100).toFixed(2)} %)</span>`; } } }
     const top = `<div class="gr-lrow">${h}</div>`;
     (this.st.cmp || []).length && (this.cmpLeg = (this.st.cmp || []).map((c) => `<div class="gr-lind" data-cmp="${E(c.s)}"><span style="color:${c.c}">● ${E(symCode(c.s))}</span><span class="gr-lb"><button data-a="cmpx" title="Retirer">×</button></span></div>`).join(""));
     const indRow = (x, idx) => { const d = indDef(x.t); if (!d) return ""; const r = this.R[x.id] || {}, sty = x.sty || {}, pine = r._pine;
@@ -11948,6 +11995,7 @@ class Cell {
       return `<div class="gr-lind${x.hide ? " off" : ""}${LEGHOV.id === x.id ? " hov" : ""}" data-ind="${x.id}"><span class="gr-ln">${E(indTitle(x))}</span>${vals}${r._err ? `<em class="gr-lerr" title="${E(r._err)}">⚠</em>` : ""}<span class="gr-lb"><button data-a="eye" title="${x.hide ? "Afficher" : "Masquer"}">${x.hide ? ICO.eyeoff : ICO.eye}</button><button data-a="set" title="Paramètres">${ICO.gear}</button><button data-a="del" title="Supprimer">${ICO.x}</button><button data-a="more" title="Plus">⋯</button></span></div>`; };
     const ovl = this.st.inds.filter((x) => { const d = indDef(x.t); const r = this.R[x.id]; return d && (r && r._pine ? r._pine.meta.overlay !== false : d.ov); }), col = !!this.st.legCol;
     const tog = ovl.length ? `<div class="gr-lind gr-ltog" data-tog="1"><button data-a="tog" title="${col ? "Afficher la légende des indicateurs" : "Masquer la légende des indicateurs"}">${col ? `${ICO.chevd}<span>${ovl.length}</span>` : ICO.chevu}</button></div>` : "";
+    this.main.leg.classList.toggle("gr-lbg", !!P.legBg); this.main.leg.style.setProperty("--lbga", (P.legBgA ?? 40) / 100);
     this.main.leg.innerHTML = top + (this.cmpLeg && (this.st.cmp || []).length ? this.cmpLeg : "") + (col ? "" : ovl.map((x) => indRow(x, i)).join("")) + tog;
     this.panes.forEach((p) => { const x = this.st.inds.find((y) => y.id === p.id); p.leg.innerHTML = x ? indRow(x, i) : ""; });
     if (STATE.active === this.idx) refreshDataWin(i, this);
@@ -12005,6 +12053,10 @@ class Cell {
   paintHandles(c, d, P, def) { const hs = def.handles ? def.handles(P, d) : P.map((q, i) => ({ x: q[0], y: q[1], i })); c.save(); c.setLineDash([]); hs.forEach((h) => { c.fillStyle = PR.bg; c.strokeStyle = "#2962ff"; c.lineWidth = 1.5; c.beginPath(); c.arc(h.x, h.y, 5, 0, PI2); c.fill(); c.stroke(); }); c.restore(); }
   paintInd(c, G) {
     const P = PR;
+    // fond des heures de trading électronique (hors séance régulière 9:30 – 16:15 NY)
+    if (P.ethBg && alphaOf(P.ethBg) > 0 && ivIntra(this.st.iv) && ivSec(this.st.iv) <= 3600 && !P.rth) { const B = this.DB, i0 = Math.max(0, Math.floor(G.lOfX(0)) - 1), i1 = Math.min(B.length - 1, Math.ceil(G.lOfX(G.W)) + 1); c.save(); c.fillStyle = P.ethBg; let s0 = -1;
+      const out = (i) => { const m = nyMin(B[i][0]); return m < 570 || m >= 975; };
+      for (let i = i0; i <= i1 + 1; i++) { const o = i <= i1 && out(i); if (o && s0 < 0) s0 = i; if (!o && s0 >= 0) { const x0 = G.lx(s0 - 0.5), x1 = G.lx(i - 0.5); c.fillRect(x0, 0, x1 - x0, G.H); s0 = -1; } } c.restore(); }
     // séparateurs de séance (18:00 NY)
     if (P.sess && ivIntra(this.st.iv) && ivSec(this.st.iv) <= 3600) { const B = this.DB; let i0 = Math.max(1, Math.floor(G.lOfX(0))), i1 = Math.min(B.length - 1, Math.ceil(G.lOfX(G.W))); c.save(); c.strokeStyle = P.sessC; c.setLineDash([4, 4]); c.lineWidth = 1;
       for (let i = i0; i <= i1; i++) if (sessDate(B[i][0]) !== sessDate(B[i - 1][0])) { const x = Math.round(G.lx(i - 0.5)) + 0.5; c.beginPath(); c.moveTo(x, 0); c.lineTo(x, G.H); c.stroke(); } c.restore(); }
@@ -12025,7 +12077,9 @@ class Cell {
       c.save(); c.font = "bold 9px -apple-system,Roboto,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; groups.forEach((g) => { const hi = g.ev.some((e) => e.i === "high"), y = G.H - 11; c.fillStyle = hi ? "#f23645" : "#ff9800"; c.beginPath(); c.arc(g.x, y, 7.5, 0, PI2); c.fill(); c.fillStyle = "#fff"; c.fillText(g.ev.length > 1 ? String(g.ev.length) : "US", g.x, y + 0.5); this.evHit.push({ x: g.x, y, ev: g.ev }); }); c.restore(); }
     // plus haut / plus bas visibles
     if (P.hiLo) { const B = this.DB, i0 = Math.max(0, Math.floor(G.lOfX(0))), i1 = Math.min(B.length - 1, Math.ceil(G.lOfX(G.W))); let hi = -Infinity, lo = Infinity, ih = -1, il = -1; for (let i = i0; i <= i1; i++) { if (B[i][2] > hi) { hi = B[i][2]; ih = i; } if (B[i][3] < lo) { lo = B[i][3]; il = i; } }
-      if (ih >= 0) { const pen = new Pen(c, false); pen.st(P.txt, 1).seg(G.lx(ih), G.y(hi), G.lx(ih) + 18, G.y(hi)); pen.text(G.lx(ih) + 20, G.y(hi), "H " + G.fp(hi), { col: P.txt, fs: 10, al: "left", bl: "middle" }); pen.seg(G.lx(il), G.y(lo), G.lx(il) + 18, G.y(lo)); pen.text(G.lx(il) + 20, G.y(lo), "B " + G.fp(lo), { col: P.txt, fs: 10, al: "left", bl: "middle" }); } }
+      if (ih >= 0) { const pen = new Pen(c, false), hc = P.hlC || P.txt, m = P.hlMode || "v";
+        if (/l/.test(m)) { pen.st(hc, 1, 2).seg(0, G.y(hi), G.W, G.y(hi)).seg(0, G.y(lo), G.W, G.y(lo)); }
+        if (/v/.test(m)) { pen.st(hc, 1, 0).seg(G.lx(ih), G.y(hi), G.lx(ih) + 18, G.y(hi)); pen.text(G.lx(ih) + 20, G.y(hi), "H " + G.fp(hi), { col: hc, fs: 10, al: "left", bl: "middle" }); pen.seg(G.lx(il), G.y(lo), G.lx(il) + 18, G.y(lo)); pen.text(G.lx(il) + 20, G.y(lo), "B " + G.fp(lo), { col: hc, fs: 10, al: "left", bl: "middle" }); } } }
   }
   paintPane(p, c, G) { const x = this.st.inds.find((y) => y.id === p.id), d = x && indDef(x.t), r = x && this.R[x.id]; if (!d || !r || x.hide) return; const s = p.anchor;
     const yP = (v) => { const ser = [...this.IS.entries()].find(([k]) => k.startsWith(x.id + "|")); const host = ser ? ser[1] : s; const y = host.priceToCoordinate(v); return y == null ? NaN : y; };
@@ -12294,7 +12348,8 @@ ROOT.innerHTML = `
 <div class="gr-toasts" id="grToasts"></div>`;
 
 /* ---------- petits composants : menus, fenêtres, messages ---------- */
-function toast(msg, err) { const t = el("div", "gr-toast" + (err ? " err" : ""), E(msg)); $r("#grToasts").append(t); setTimeout(() => t.classList.add("out"), 3600); setTimeout(() => t.remove(), 4100); }
+function toast(msg, err, sticky) { const t = el("div", "gr-toast" + (err ? " err" : "") + (sticky ? " sticky" : ""), E(msg) + (sticky ? `<button class="gr-tx" title="Fermer">×</button>` : "")); $r("#grToasts").append(t);
+  if (sticky) { t.querySelector(".gr-tx").onclick = () => t.remove(); return; } setTimeout(() => t.classList.add("out"), 3600); setTimeout(() => t.remove(), 4100); }
 let MENU = null;
 function closeMenu() { if (MENU) { MENU.remove(); MENU = null; } }
 function menu(x, y, items, o = {}) {
@@ -12317,7 +12372,7 @@ function dlg(title, body, o = {}) {
   const ov = el("div", "gr-ov"), d = el("div", "gr-dlg" + (o.cls ? " " + o.cls : "")); d.style.width = (o.w || 460) + "px"; if (o.h) d.style.height = o.h + "px";
   d.innerHTML = `<div class="gr-dh"><b>${E(title)}</b><button class="gr-dx" title="Fermer">${ICO.x}</button></div><div class="gr-db">${body}</div>${o.foot === false ? "" : `<div class="gr-df">${o.left || ""}<span class="gr-fill"></span>${o.cancel === false ? "" : `<button class="gr-btn" data-x="cancel">${E(o.cancelTxt || "Annuler")}</button>`}<button class="gr-btn gr-pri" data-x="ok">${E(o.ok || "OK")}</button></div>`}`;
   ov.append(d); ROOT.append(ov); const close = (ok) => { if (ok && o.onOk && o.onOk(d) === false) return; if (!ok && o.onCancel) o.onCancel(d); ov.remove(); document.removeEventListener("keydown", kd, true); };
-  const kd = (e) => { if (e.key === "Escape") { e.stopPropagation(); close(false); } if (e.key === "Enter" && o.enter !== false && !/TEXTAREA/.test(e.target.tagName) && !e.target.closest(".gr-ssin")) { e.preventDefault(); close(true); } };
+  const kd = (e) => { const all = ROOT.querySelectorAll(".gr-ov"); if (all[all.length - 1] !== ov) return; /* seule la fenêtre du dessus réagit à Entrée / Échap */ if (e.key === "Escape") { e.stopPropagation(); close(false); } if (e.key === "Enter" && o.enter !== false && !/TEXTAREA/.test(e.target.tagName) && !e.target.closest(".gr-ssin")) { e.preventDefault(); close(true); } };
   document.addEventListener("keydown", kd, true); d.querySelector(".gr-dx").onclick = () => close(false); ov.addEventListener("pointerdown", (e) => { if (e.target === ov) close(false); });
   d.querySelectorAll("[data-x]").forEach((b) => (b.onclick = () => close(b.dataset.x === "ok")));
   const head = d.querySelector(".gr-dh"); head.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; const r = d.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; d.style.position = "fixed"; d.style.margin = "0";
@@ -12325,7 +12380,7 @@ function dlg(title, body, o = {}) {
   return { el: d, ov, close };
 }
 const tabs = (host, onTab) => { host.querySelectorAll(".gr-tab").forEach((t) => (t.onclick = () => { host.querySelectorAll(".gr-tab").forEach((x) => x.classList.toggle("on", x === t)); host.querySelectorAll(".gr-tpane").forEach((p) => (p.hidden = p.dataset.p !== t.dataset.p)); onTab && onTab(t.dataset.p); })); };
-const colorInput = (k, v) => `<span class="gr-col"><input type="color" data-k="${k}" value="${hex6(v)}"><input type="text" class="gr-hex" value="${hex6(v).toUpperCase()}" maxlength="9" spellcheck="false" title="Couleur en hexadécimal (#RRGGBB, ou #RRGGBBAA avec l'opacité)"><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(opOf(v) * 100)}" title="Opacité"></span>`;
+const colorInput = (k, v) => `<span class="gr-col"><input type="color" data-k="${k}" value="${hex6(v)}"><input type="text" class="gr-hex" value="${(hex6(v) + (alphaOf(v) < 0.999 ? Math.round(alphaOf(v) * 255).toString(16).padStart(2, "0") : "")).toUpperCase()}" maxlength="9" spellcheck="false" title="Couleur en hexadécimal (#RRGGBB, ou #RRGGBBAA avec l'opacité)"><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(opOf(v) * 100)}" title="Opacité"></span>`;
 /* couleurs en hexadécimal : le champ texte à côté de chaque pastille pilote la couleur (et l'opacité si #RRGGBBAA) ; capture sur ROOT = avant les « apply » des fenêtres */
 const hexNorm = (v) => { const m = /^#?([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(String(v || "").trim()); if (!m) return null; let h = m[1]; if (h.length === 3) h = h.split("").map((x) => x + x).join(""); return { hex: "#" + h.slice(0, 6).toLowerCase(), a: h.length === 8 ? parseInt(h.slice(6), 16) / 255 : null }; };
 ROOT.addEventListener("input", (e) => { const t = e.target; if (!t || !t.closest) return; const box = t.closest(".gr-col"); if (!box) return;
@@ -12729,7 +12784,7 @@ function checkAlerts(sym, bar) { if (!bar || !ALERTS.length) return; const px = 
     if (hit && Date.now() - (a.last || 0) > 15000) { fireAlert(a, px, lv); ch = true; } }
   if (ch) { saveAlerts(); if (STATE.panel === "al") renderAL(); CELLS.forEach((c) => c.redraw()); } }
 function fireAlert(a, px, lv) { a.last = Date.now(); a.n = (a.n || 0) + 1; if (a.once !== false) a.on = false; const sp = SYM(a.sym), msg = a.msg || `${symCode(a.sym)} : ${COND[a.cond]} ${fmtPx(lv, sp)}`;
-  ALOG.unshift({ at: Date.now(), sym: a.sym, msg, px }); toast("⏰ " + msg + " (" + fmtPx(px, sp) + ")");
+  ALOG.unshift({ at: Date.now(), sym: a.sym, msg, px }); toast("⏰ " + msg + " (" + fmtPx(px, sp) + ")", false, PR.toastAuto === false);
   if (a.notif !== false && "Notification" in window) { try { if (Notification.permission === "granted") new Notification("Alerte · " + symCode(a.sym), { body: msg + "\nPrix : " + fmtPx(px, sp) }); else if (Notification.permission !== "denied") Notification.requestPermission(); } catch (e) { /* */ } }
   if (a.sound !== false) beep(); }
 function beep() { try { const A = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)()); [0, 0.18, 0.36].forEach((d, i) => { const o = A.createOscillator(), g = A.createGain(); o.type = "sine"; o.frequency.value = i === 2 ? 1175 : 880; g.gain.setValueAtTime(0.0001, A.currentTime + d); g.gain.exponentialRampToValueAtTime(0.25, A.currentTime + d + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, A.currentTime + d + 0.15); o.connect(g).connect(A.destination); o.start(A.currentTime + d); o.stop(A.currentTime + d + 0.16); }); } catch (e) { /* */ } }
@@ -12758,7 +12813,7 @@ function renderAL() { const P = $r("#grRPanel"), tab = renderAL.tab || "a";
     if (g("data-at")) { renderAL.tab = g("data-at").dataset.at; renderAL(); } if (g("data-aclr")) { ALOG = []; saveAlerts(); renderAL(); }
     if (g("data-ae")) openAlert({ edit: g("data-ae").dataset.ae }); if (g("data-ap")) { const a = ALERTS.find((x) => x.id === g("data-ap").dataset.ap); a.on = !a.on; if (a.on) a.last = 0; saveAlerts(); renderAL(); CELLS.forEach((c) => c.redraw()); } if (g("data-ad")) { ALERTS = ALERTS.filter((x) => x.id !== g("data-ad").dataset.ad); saveAlerts(); renderAL(); CELLS.forEach((c) => c.redraw()); } }; }
 // lignes d'alerte sur le graphique (comme TradingView)
-function paintAlerts(cell, c, G) { const u = undOf(cell.st.sym); const pen = new Pen(c, false); for (const a of ALERTS) { if (!a.on || undOf(a.sym) !== u || a.draw) continue; const y = G.y(a.val); if (!fin(y)) continue; pen.st("#ff9800", 1, 2).seg(0, y, G.W, y); pen.text(G.W - 4, y - 2, "⏰ " + fmtPx(a.val, cell.spec), { col: "#ff9800", fs: 10, al: "right", bl: "bottom" }); } }
+function paintAlerts(cell, c, G) { if (PR.alertLines === false) return; const u = undOf(cell.st.sym), col = PR.alertC || "#ff9800"; const pen = new Pen(c, false); for (const a of ALERTS) { if ((!a.on && PR.alertActive !== false) || undOf(a.sym) !== u || a.draw) continue; const y = G.y(a.val); if (!fin(y)) continue; pen.st(a.on ? col : alpha(col, 0.45), 1, 2).seg(0, y, G.W, y); pen.text(G.W - 4, y - 2, "⏰ " + fmtPx(a.val, cell.spec), { col: a.on ? col : alpha(col, 0.6), fs: 10, al: "right", bl: "bottom" }); } }
 // ----- actualités / calendrier économique (données du calendrier de l'app, heure NY) -----
 function renderNews() { const P = $r("#grRPanel"), today = nyDate(NOW()), hiOnly = !!renderNews.hi; let h = "";
   for (let i = -1; i < 7; i++) { const d = addDays(today, i), ev = (window.calEvents ? window.calEvents(d) || [] : []).filter((e) => (!e.k || e.k === "ev") && (!hiOnly || e.i === "high")); if (!ev.length) continue; const dd = new Date(d + "T12:00:00Z");
@@ -12868,26 +12923,64 @@ function openGoto() { const c = activeCell(); if (!c) return; const now = new Da
     { w: 360, ok: "Aller à", onOk: (x) => { const d = x.querySelector("#grGoD").value, tm = (x.querySelector("#grGoT").value || "00:00").split(":"); if (!d) return false; const want = Date.parse(d + "T00:00:00Z") / 1000 + +tm[0] * 3600 + +tm[1] * 60; let g = want; for (let k = 0; k < 3; k++) g = want - tzOff(dispTZ(), g); targets("time").forEach((cc) => goToTime(cc, g)); } }); }
 
 /* ---------- Paramètres du graphique ---------- */
+/* Réglages du graphique façon TradingView : menu à gauche (Symbole, Ligne d'état, Échelles et lignes, Toile, Trading, Alertes, Événements), modèles de graphique en bas à gauche (gr-ctpl = { nom: réglages }, gr-ctpldef = modèle par défaut) */
+const CTPL_SKIP = ["tz", "poll"];
+const ctplAll = () => LS.get("gr-ctpl", {});
+const ctplOf = () => Object.fromEntries(Object.entries(PR).filter(([k]) => !CTPL_SKIP.includes(k)));
 function openSettings(tab) {
-  const before = JSON.stringify(PR), ck = (k, n) => `<label class="gr-chk"><input type="checkbox" data-pk="${k}" ${PR[k] ? "checked" : ""}><span>${n}</span></label>`, col = (k, n) => `<div class="gr-fr"><span>${n}</span>${colorInput("p:" + k, PR[k])}</div>`;
-  const sel = (k, n, opts) => `<div class="gr-fr"><span>${n}</span><select class="gr-in" data-ps="${k}">${opts.map(([v, t]) => `<option value="${v}" ${String(PR[k]) === String(v) ? "selected" : ""}>${t}</option>`).join("")}</select></div>`;
-  const tabsDef = [["sym", "Symbole", col("up", "Corps haussier") + col("dn", "Corps baissier") + col("bdUp", "Bordure haussière") + col("bdDn", "Bordure baissière") + col("wickUp", "Mèche haussière") + col("wickDn", "Mèche baissière") + col("lineC", "Ligne / zone") + sel("lineW", "Épaisseur de ligne", [[1, "1"], [2, "2"], [3, "3"], [4, "4"]]) + sel("prec", "Précision", [["auto", "Auto (tick du contrat)"], [0, "0"], [1, "0,1"], [2, "0,01"], [3, "0,001"], [4, "0,0001"], [5, "0,00001"]])],
-    ["leg", "Barre d'état", ck("legSym", "Titre (symbole, unité, source)") + ck("legOhlc", "Valeurs OHLC") + ck("legChg", "Variation de la bougie") + ck("legVol", "Volume") + ck("legArgs", "Paramètres des indicateurs") + ck("legVals", "Valeurs des indicateurs")],
-    ["sc", "Échelles", ck("lastLbl", "Étiquette du dernier prix") + ck("priceLine", "Ligne du dernier prix") + ck("countdown", "Compte à rebours avant la clôture de la bougie") + ck("hiLo", "Étiquettes plus haut / plus bas visibles") + ck("prevClose", "Ligne de clôture de la veille") + ck("indLbl", "Étiquettes des indicateurs sur l'échelle") + ck("left", "Échelle de prix à gauche") + sel("mTop", "Marge haute", [[5, "5 %"], [10, "10 %"], [15, "15 %"], [20, "20 %"]]) + sel("mBot", "Marge basse", [[5, "5 %"], [8, "8 %"], [12, "12 %"], [20, "20 %"]]) + sel("rightOffset", "Marge à droite (bougies)", [[0, "0"], [5, "5"], [10, "10"], [20, "20"], [40, "40"]])],
-    ["app", "Apparence", `<div class="gr-fr"><span>Thème</span><span class="gr-seg"><button class="gr-btn${PR.theme !== "light" ? " gr-pri" : ""}" data-theme="dark">Sombre</button><button class="gr-btn${PR.theme === "light" ? " gr-pri" : ""}" data-theme="light">Clair</button></span></div>` + col("bg", "Fond") + `<div class="gr-fr"><span>Dégradé (bas)</span><label class="gr-chk"><input type="checkbox" data-grad="1" ${PR.bg2 ? "checked" : ""}><span>Activer</span></label>${colorInput("p:bg2", PR.bg2 || PR.bg)}</div>` + ck("vgrid", "Lignes de grille verticales") + ck("hgrid", "Lignes de grille horizontales") + col("gridC", "Couleur de la grille") + col("txt", "Texte des échelles") + sel("fs", "Taille du texte", [[10, "10"], [11, "11"], [12, "12"], [13, "13"], [14, "14"], [16, "16"]]) + col("crossC", "Réticule") + sel("crossS", "Style du réticule", [[0, "Plein"], [1, "Pointillés"], [2, "Tirets"], [3, "Longs tirets"]]) + ck("crossMag", "Réticule aimanté (OHLC)") + sel("wm", "Filigrane", [["", "Aucun"], [1, "Symbole + unité"], [2, "Symbole"]]) + ck("sess", "Séparateurs de séance (18:00 NY)") + col("sessC", "Couleur des séparateurs")],
-    ["ev", "Événements", ck("events", "Événements économiques USD (calendrier de l'app)") + ck("evMed", "Inclure l'impact moyen (orange)") + ck("evLine", "Trait à l'heure de chaque news (sur tout le graphique)") + ck("trades", "Mes trades TopstepX (achats, ventes, résultat)")],
-    ["data", "Données", sel("tz", "Fuseau horaire", TZS.map(([z, n]) => [z, n])) + ck("rth", "Séance régulière seulement (RTH 9:30 – 16:15 NY)") + sel("poll", "Rafraîchissement en direct (TopstepX)", [[500, "0,5 s"], [1000, "1 s"], [2000, "2 s"], [5000, "5 s"]]) + `<div class="gr-mut">${HAS_TSX ? "Historique : tes CSV data_csv / data (NQ, ES, MNQ, MES) puis chartapi.topstepx.com jusqu'à maintenant. Direct : chartapi interrogé à ce rythme pour chaque graphique affiché." : "Sur le web : Forex Factory et CSV importés. Les données TopstepX en direct sont dans l'app Windows."}</div><button class="gr-btn" data-clr="1">Vider le cache des bougies</button>`]];
-  const d = dlg("Paramètres du graphique", `<div class="gr-tabs">${tabsDef.map(([k, n], i) => `<button class="gr-tab${(tab || "sym") === k || (!tab && i === 0) ? " on" : ""}" data-p="${k}">${n}</button>`).join("")}</div>${tabsDef.map(([k, , h], i) => `<div class="gr-tpane" data-p="${k}" ${(tab || "sym") === k || (!tab && i === 0) ? "" : "hidden"}>${h}</div>`).join("")}`,
-    { w: 560, cls: "gr-dset", left: `<button class="gr-btn" data-pdef="1">Réinitialiser</button>`, onCancel: () => { PR = JSON.parse(before); applyPrefs(); } , onOk: () => { savePrefs(); } });
-  tabs(d.el); const root = d.el;
-  const apply = () => { root.querySelectorAll("[data-pk]").forEach((e) => (PR[e.dataset.pk] = e.checked)); root.querySelectorAll("[data-ps]").forEach((e) => { const v = e.value; PR[e.dataset.ps] = v === "" ? "" : isNaN(+v) || /\//.test(v) ? v : +v; });
-    root.querySelectorAll("[data-k^='p:']").forEach((e) => { const k = e.dataset.k.slice(2); if (k === "bg2" && !root.querySelector("[data-grad]").checked) { PR.bg2 = ""; return; } PR[k] = readColor(root, "p:" + k); }); applyPrefs(); };
-  root.addEventListener("change", apply); root.addEventListener("input", debounce(apply, 150));
-  root.addEventListener("click", (e) => { const t = e.target.closest("[data-theme]"); if (t) { PR.theme = t.dataset.theme; Object.assign(PR, t.dataset.theme === "light" ? LIGHT : { bg: PDEF.bg, bg2: "", txt: PDEF.txt, gridC: PDEF.gridC, crossC: PDEF.crossC, sessC: PDEF.sessC }); applyPrefs(); d.close(true); openSettings("app"); }
-    if (e.target.closest("[data-pdef]")) { PR = Object.assign({}, PDEF); applyPrefs(); savePrefs(); d.close(false); openSettings(); }
-    if (e.target.closest("[data-clr]")) { FEEDS.forEach((f) => { f.ready = false; f.bars = []; }); LS.set("gr-tsxbad", []); tsxBad.clear(); CELLS.forEach((c) => c.bind()); toast("Cache vidé, bougies rechargées"); } });
+  const before = JSON.stringify(PR);
+  const ck = (k, n, def) => `<label class="tv-ck"><input type="checkbox" data-pk="${k}" ${(PR[k] ?? def) ? "checked" : ""}><span>${n}</span></label>`;
+  const sw = (k) => colorInput("p:" + k, PR[k] || "rgba(0,0,0,0)");
+  const sl = (k, opts, cls) => `<select class="gr-in tv-sel${cls ? " " + cls : ""}" data-ps="${k}">${opts.map(([v, t]) => `<option value="${v}" ${String(PR[k]) === String(v) ? "selected" : ""}>${t}</option>`).join("")}</select>`;
+  const num = (k, unit, step) => `<input class="gr-in tv-num" type="number" step="${step || 1}" data-pn="${k}" value="${E(PR[k])}"><span class="tv-u">${unit || ""}</span>`;
+  const row = (l, c, hint) => `<div class="tv-r"><span class="tv-l">${l}</span><span class="tv-c">${c || ""}</span></div>${hint ? `<div class="tv-h">${hint}</div>` : ""}`;
+  const sec = (t) => `<div class="tv-sec">${t}</div>`;
+  const shown = [["h", "Masqué"], ["vl", "Valeur et ligne"], ["v", "Valeur"], ["l", "Ligne"]], vis = [["always", "Toujours visible"], ["hover", "Visible au survol"], ["never", "Masqué"]];
+  const IC = { sym: '<path d="M8 6v16M6 9h4v9H6zM18 4v20M16 8h4v12h-4z"/>', leg: '<path d="M5 8h18M5 13h18M5 18h12"/>', sc: '<path d="M7 5v15h16M7 5l-2 2M7 5l2 2M23 20l-2-2M23 20l-2 2"/>', canvas: '<path d="M6 22l2-6L19 5l4 4-11 11zM17 7l4 4"/>', trd: '<path d="M4 20l6-6 4 4 9-9M17 9h6v6"/>', al: '<circle cx="14" cy="15" r="7"/><path d="M14 11v4l3 2M6 7l3-2M22 7l-3-2"/>', ev: '<rect x="5" y="7" width="18" height="16" rx="2"/><path d="M5 12h18M10 5v4M18 5v4"/>' };
+  const tabsDef = [
+    ["sym", "Symbole", sec("Bougies") + row(ck("colorPrev", "Coloriser les barres selon la clôture précédente")) + row(ck("bodyOn", "Corps", true), sw("up") + sw("dn")) + row(ck("borderOn", "Bordures", true), sw("bdUp") + sw("bdDn")) + row(ck("wickOn", "Mèche", true), sw("wickUp") + sw("wickDn"))
+      + row("Ligne / zone (types ligne)", sw("lineC") + sl("lineW", [[1, "1 px"], [2, "2 px"], [3, "3 px"], [4, "4 px"]], "sm"))
+      + sec("Modification des données") + row("Séance", sl("rth", [["false", "Horaires de trading électronique"], ["true", "Horaires de trading réguliers"]])) + row("Fond des heures de trading électronique", sw("ethBg"))
+      + row("Précision", sl("prec", [["auto", "Par défaut"], [0, "1"], [1, "0,1"], [2, "0,01"], [3, "0,001"], [4, "0,0001"], [5, "0,00001"]])) + row("Fuseau horaire", sl("tz", TZS.map(([z, n]) => [z, n])))
+      + row("Rafraîchissement en direct", sl("poll", [[500, "0,5 s"], [1000, "1 s"], [2000, "2 s"], [5000, "5 s"]], "sm")) + `<div class="tv-r"><span class="tv-l tv-mut">${HAS_TSX ? "Historique : CSV data_csv / data puis chartapi.topstepx.com." : "Sur le web : Forex Factory et CSV importés."}</span><span class="tv-c"><button class="gr-btn" data-clr="1">Vider le cache des bougies</button></span></div>`],
+    ["leg", "Ligne d'état", sec("Instrument") + row(ck("legLogo", "Logo")) + row(ck("legSym", "Titre", true), sl("legTitle", [["name", "Nom"], ["sym", "Symbole"], ["symname", "Symbole & nom"]])) + row(ck("legOhlc", "Valeurs du graphique", true)) + row(ck("legChg", "Valeurs du changement de barre", true)) + row(ck("legVol", "Volume", true)) + row(ck("legDay", "Valeurs de changement du dernier jour"))
+      + sec("Indicateurs") + row(ck("legArgs", "Paramètres des indicateurs", true)) + row(ck("legVals", "Valeurs des indicateurs", true))
+      + row(ck("legBg", "Arrière-plan"), `<input type="range" min="0" max="100" data-pn="legBgA" value="${E(PR.legBgA ?? 40)}" class="tv-rng">`)],
+    ["sc", "Échelles et lignes", sec("Échelle de prix") + row("Modes d'échelle (%, log, auto)", sl("scaleBtns", vis)) + row("Placement des échelles", sl("scalePos", [["right", "Droite"], ["left", "Gauche"]]))
+      + sec("Étiquettes de prix & lignes") + row(ck("countdown", "Compte à rebours jusqu'à la fermeture de la barre", true)) + row("Symbole", sl("symLine", shown)) + row("Clôture du jour précédent", sl("pcMode", shown) + sw("pcC")) + row("Haut et bas", sl("hlMode", shown) + sw("hlC")) + row(ck("indLbl", "Étiquettes des indicateurs sur l'échelle", true))
+      + sec("Échelle de temps") + row(ck("tsDow", "Jour de la semaine sur les étiquettes", true)) + row("Format de la date", sl("dateFmt", [["fr", "lun. 29 sept. '97"], ["long", "lun. 29 sept. 1997"], ["dmy", "29/09/1997"], ["mdy", "09/29/1997"], ["ymd", "1997-09-29"]])) + row("Format de l'heure", sl("h24", [["true", "24 heures"], ["false", "12 heures"]], "sm"))],
+    ["canvas", "Toile", sec("Styles de base des graphiques") + row("Arrière-plan", `<select class="gr-in tv-sel sm" data-grad="1"><option value="">Uni</option><option value="g" ${PR.bg2 ? "selected" : ""}>Dégradé</option></select>` + sw("bg") + (PR.bg2 ? sw("bg2") : ""))
+      + row(ck("vgrid", "Lignes de grille verticales", true), colorInput("p:vgridC", PR.vgridC || PR.gridC)) + row(ck("hgrid", "Lignes de grille horizontales", true), colorInput("p:hgridC", PR.hgridC || PR.gridC))
+      + row("Mire", sw("crossC") + sl("crossS", [[0, "Plein"], [1, "Pointillés"], [2, "Tirets"], [3, "Longs tirets"]], "sm")) + row(ck("crossMag", "Mire aimantée (OHLC)")) + row("Filigrane", sl("wm", [["", "Masqué"], [1, "Symbole et unité"], [2, "Symbole"]]) + colorInput("p:wmC", PR.wmC || (PR.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)")))
+      + row(ck("sess", "Séparateurs de séance (18:00 NY)", true), sw("sessC"))
+      + sec("Échelles") + row("Texte", sw("txt") + sl("fs", [[10, "10"], [11, "11"], [12, "12"], [13, "13"], [14, "14"], [16, "16"]], "sm")) + row("Lignes", colorInput("p:scaleLineC", PR.scaleLineC || PR.gridC))
+      + sec("Boutons") + row("Navigation", sl("navBtns", vis))
+      + sec("Marges") + row("Haut", num("mTop", "%")) + row("Bas", num("mBot", "%")) + row("Droite", num("rightOffset", "barres"))
+      + sec("Thème") + row("Couleurs", `<span class="gr-seg"><button class="gr-btn${PR.theme !== "light" ? " gr-pri" : ""}" data-theme="dark">Sombre</button><button class="gr-btn${PR.theme === "light" ? " gr-pri" : ""}" data-theme="light">Clair</button></span>`)],
+    ["trd", "Trading", `<div class="tv-h" style="margin-top:10px">La page Graphique ne passe pas d'ordres : ces réglages affichent tes trades TopstepX (journal de l'app) sur le graphique.</div>` + sec("Apparence") + row(ck("trades", "Marques d'exécution", true)) + `<div class="tv-sub">${row(ck("trLbl", "Étiquettes d'exécution", true))}</div>` + row(ck("trPL", "Valeur des profits et pertes", true), sl("trPLu", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"]], "sm"))],
+    ["al", "Alertes", sec("Visibilité de la ligne graphique") + row(ck("alertLines", "Lignes d'alerte", true), sw("alertC")) + row(ck("alertActive", "Uniquement les alertes actives", true)) + sec("Notifications") + row(ck("toastAuto", "Masquer automatiquement les toasts", true))],
+    ["ev", "Événements", sec("Calendrier économique USD") + row(ck("events", "Événements économiques (calendrier de l'app)", true)) + row(ck("evMed", "Inclure l'impact moyen (orange)", true)) + row(ck("evLine", "Trait à l'heure de chaque news (sur tout le graphique)"))]];
+  const cur = tabsDef.some(([k]) => k === tab) ? tab : tab === "app" ? "canvas" : tab === "data" ? "sym" : "sym";
+  const body = `<div class="tv-wrap"><nav class="tv-nav">${tabsDef.map(([k, n]) => `<button class="tv-ni${k === cur ? " on" : ""}" data-p="${k}">${sv(IC[k])}<span>${n}</span></button>`).join("")}</nav><div class="tv-body">${tabsDef.map(([k, , h]) => `<div class="tv-pane" data-p="${k}" ${k === cur ? "" : "hidden"}>${h}</div>`).join("")}</div></div>`;
+  const d = dlg("Réglages", body, { w: 780, cls: "gr-dset gr-tvset", ok: "D'accord", left: `<button class="gr-btn tv-tpl" data-ctpl="1">Modèle ▾</button>`, onCancel: () => { PR = JSON.parse(before); applyPrefs(); }, onOk: () => { savePrefs(); } });
+  const root = d.el;
+  root.querySelector(".tv-nav").onclick = (e) => { const b = e.target.closest("[data-p]"); if (!b) return; root.querySelectorAll(".tv-ni").forEach((x) => x.classList.toggle("on", x === b)); root.querySelectorAll(".tv-pane").forEach((x) => (x.hidden = x.dataset.p !== b.dataset.p)); };
+  const apply = () => { root.querySelectorAll("[data-pk]").forEach((e) => (PR[e.dataset.pk] = e.checked));
+    root.querySelectorAll("[data-ps]").forEach((e) => { const v = e.value; PR[e.dataset.ps] = v === "true" ? true : v === "false" ? false : v === "" ? "" : isNaN(+v) || /\//.test(v) ? v : +v; });
+    root.querySelectorAll("[data-pn]").forEach((e) => { if (e.value !== "" && fin(+e.value)) PR[e.dataset.pn] = +e.value; });
+    root.querySelectorAll("[data-k^='p:']").forEach((e) => { const k = e.dataset.k.slice(2); PR[k] = readColor(root, "p:" + k); });
+    applyPrefs(); };
+  root.addEventListener("change", (e) => { if (e.target.closest("[data-grad]")) { PR.bg2 = e.target.value ? PR.bg2 || "#000000" : ""; apply(); const p = root.querySelector(".tv-ni.on").dataset.p; d.close(true); openSettings(p); return; } apply(); });
+  root.addEventListener("input", debounce(apply, 150));
+  root.addEventListener("click", (e) => { const t = e.target.closest("[data-theme]"); if (t) { PR.theme = t.dataset.theme; Object.assign(PR, t.dataset.theme === "light" ? LIGHT : { bg: PDEF.bg, bg2: "", txt: PDEF.txt, gridC: PDEF.gridC, crossC: PDEF.crossC, sessC: PDEF.sessC }); PR.vgridC = PR.hgridC = PR.scaleLineC = PR.wmC = ""; applyPrefs(); d.close(true); openSettings("canvas"); }
+    if (e.target.closest("[data-clr]")) { FEEDS.forEach((f) => { f.ready = false; f.bars = []; }); LS.set("gr-tsxbad", []); tsxBad.clear(); CELLS.forEach((c) => c.bind()); toast("Cache vidé, bougies rechargées"); }
+    const tb = e.target.closest("[data-ctpl]"); if (tb) { const all = ctplAll(), names = Object.keys(all).sort(natCmp), def = LS.get("gr-ctpldef", ""), reopen = () => { const p = root.querySelector(".tv-ni.on").dataset.p; d.close(true); openSettings(p); };
+      menuAt(tb, [names.length ? "h:Mes modèles de graphique" : null, ...names.map((n) => ({ t: n + (n === def ? " (par défaut)" : ""), f: () => { PR = Object.assign({}, PR, all[n]); applyPrefs(); savePrefs(); toast("Modèle « " + n + " » appliqué"); reopen(); }, del: () => { const A = ctplAll(); delete A[n]; LS.set("gr-ctpl", A); if (LS.get("gr-ctpldef", "") === n) LS.set("gr-ctpldef", ""); toast("Modèle « " + n + " » supprimé"); } })), names.length ? "-" : null,
+        { t: "Enregistrer sous…", f: () => askText("Nom du modèle de graphique", "Mon modèle", (n) => { const A = ctplAll(); const had = !!A[n]; A[n] = JSON.parse(JSON.stringify(ctplOf())); LS.set("gr-ctpl", A); toast((had ? "Modèle remplacé : " : "Modèle enregistré : ") + n); }) },
+        names.length ? { t: "Utiliser par défaut", sub: [{ t: "Aucun", on: !def, f: () => LS.set("gr-ctpldef", "") }, ...names.map((n) => ({ t: n, on: n === def, f: () => { LS.set("gr-ctpldef", n); toast("« " + n + " » sera appliqué aux nouveaux réglages par défaut"); } }))] } : null,
+        "-", { t: "Réinitialiser les réglages", f: () => { const dn = LS.get("gr-ctpldef", ""); PR = Object.assign({}, PDEF, dn && all[dn] ? all[dn] : {}, { tz: PR.tz, poll: PR.poll }); applyPrefs(); savePrefs(); reopen(); } }].filter(Boolean)); } });
 }
-function applyPrefs() { ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); CELLS.forEach((c) => { c.applyFmt(); c.mkMain(); c.full(false); }); refreshBottom(); }
+function applyPrefs() { prDerive(); ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); CELLS.forEach((c) => { c.applyFmt(); c.mkMain(); c.full(false); c.redraw(); }); refreshBottom(); }
 
 /* ---------- disposition, mises en page ---------- */
 const GRID_N = { "1": "1 graphique", "2v": "2 côte à côte", "2h": "2 empilés", "3v": "3 côte à côte", "3h": "3 empilés", "3l": "1 grand + 2", "4": "4 (2 × 2)", "4v": "4 côte à côte", "6": "6 (3 × 2)", "8": "8 (4 × 2)" };

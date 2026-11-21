@@ -2,6 +2,20 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.73.0] — 2026-11-21
+Page Graphique : fenêtre **Réglages** refaite façon TradingView, avec les options qui manquaient et des modèles de graphique.
+### Ajouté
+- Menu à gauche : Symbole, Ligne d'état, Échelles et lignes, Toile, Trading, Alertes, Événements ; même mise en forme que TradingView (sections, cases, pastilles de couleur avec code hex, boutons Annuler / D'accord).
+- **Symbole** : coloriser les barres selon la clôture précédente, cases Corps / Bordures / Mèche (haussier + baissier), séance (électronique / régulière), fond des heures de trading électronique.
+- **Ligne d'état** : logo, Titre = Nom / Symbole / Symbole & nom, valeurs du changement du dernier jour, arrière-plan avec opacité.
+- **Échelles et lignes** : modes d'échelle (%, log, auto) toujours visibles / au survol / masqués, placement des échelles, Symbole / Clôture du jour précédent / Haut et bas en Masqué / Valeur et ligne / Valeur / Ligne avec leur couleur, jour de la semaine sur les étiquettes, format de la date, heure 24 h / 12 h.
+- **Toile** : couleur de chaque grille, couleur du filigrane, couleur des lignes d'échelle, boutons de navigation sur le graphique (zoom, défilement, retour au direct) toujours / au survol / masqués, marges en saisie libre.
+- **Trading** : marques et étiquettes d'exécution de tes trades TopstepX, valeur des profits et pertes en argent / ticks / points (la page Graphique ne passe pas d'ordres).
+- **Alertes** : lignes d'alerte (couleur), uniquement les alertes actives, masquer automatiquement les toasts (sinon ils restent jusqu'au clic).
+- **Modèles de graphique** (bouton Modèle en bas à gauche) : enregistrer sous, appliquer, supprimer (poubelle), modèle par défaut, réinitialiser.
+### Corrigé
+- Entrée / Échap n'agissent plus que sur la fenêtre du dessus (une petite fenêtre de saisie ne ferme plus celle d'en dessous).
+
 ## [1.72.1] — 2026-11-21
 ### Corrigé
 - Page Graphique : les boutons d'un indicateur dans la légende (œil, paramètres, ×, ⋯) ne disparaissent plus pendant le survol quand la légende se met à jour (bougie en direct), et restent 1,2 s après la sortie du curseur.
