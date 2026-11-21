@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.80.0] — 2026-11-21
+Page Graphique : dessins et logos comme TradingView.
+### Ajouté
+- Menu du dessin (clic droit / ⋯) identique à TradingView : Ajouter une alerte pour … (Alt + A), **Espace de Travail** (Sauvegarder Sous…, Appliquer paramètres par Défaut, tes modèles), **Ordre de visualisation** (premier plan, fond, en avant, vers l'arrière), **Visibilité des intervalles** (actuel et supérieur, actuel et inférieur, actuel uniquement, tous), Créer un groupe de dessins, Cloner, Copier, Renommer, Verrouiller, Cacher, Retirer, **Aller à …**, Configurations….
+- Barre flottante du dessin sélectionné au style TradingView : poignée, modèles, couleur de ligne (crayon), de fond (pot de peinture) et du texte (T) avec la couleur soulignée, épaisseur et style de ligne en menus visuels, configurations, alerte, verrou, retirer, plus.
+- Logos des contrats comme TradingView : NQ / MNQ (Nasdaq 100) et ES / MES (S&P 500) dans la légende, la liste de surveillance et la recherche de symboles.
+### Modifié
+- Barre d'outils de gauche : la barre des favoris a une icône en étoile ; le bouton Arborescence (déjà dans le panneau de droite) est retiré.
+
 ## [1.79.0] — 2026-11-21
 Page Graphique : dispositions et barre d'outils comme TradingView.
 ### Ajouté

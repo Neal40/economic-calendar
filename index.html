@@ -830,6 +830,16 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-ltg{display:flex;align-items:center;gap:8px;height:34px;font-size:14px;color:var(--gt)}.gr-linf{width:15px;height:15px;border-radius:50%;background:var(--gm);color:var(--gb);font:bold 10px/15px Georgia,serif;text-align:center;font-style:normal;cursor:help;opacity:.8}
 .gr-sw{width:38px;height:22px;border-radius:11px;background:var(--gm);position:relative;flex:none;transition:background .15s;opacity:.75}.gr-sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
 .gr-sw.on{background:var(--gt);opacity:1}.gr-sw.on::after{left:19px;background:var(--gb)}
+/* v1.80 : barre flottante et menu du dessin façon TradingView, logos des contrats */
+.gr-float{background:var(--gb);border:0;border-radius:8px;padding:3px 4px;gap:1px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 6px 22px rgba(0,0,0,.18)}
+.gr-float .gr-fgrip{display:flex;align-items:center;padding:0 6px 0 4px;color:var(--gm);letter-spacing:0}
+.gr-float .gr-fb{width:34px;height:34px;border-radius:6px;font-weight:400;color:var(--gt)}.gr-float .gr-fb svg{width:28px;height:28px}
+.gr-fcol{position:relative;width:34px;height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;color:var(--gt)}.gr-fcol:hover{background:var(--gh)}
+.gr-fcol svg{width:24px;height:24px;margin-top:-3px}.gr-fcol i{position:absolute;left:8px;right:8px;bottom:5px;height:3px;border-radius:2px}.gr-fcol input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.gr-fwb{height:34px;display:flex;align-items:center;gap:2px;padding:0 6px 0 2px;border-radius:6px;color:var(--gt);font-size:13px}.gr-fwb:hover{background:var(--gh)}.gr-fwb svg{width:22px;height:22px}
+.gr-menu.gr-fmenu .gr-mic svg{width:28px;height:28px}
+.gr-menu.gr-dmenu{min-width:310px;font-size:14px;padding:6px 0}.gr-dmenu .gr-mi{padding:7px 14px;min-height:32px}.gr-dmenu .gr-mic{width:24px;min-width:24px;display:inline-flex;align-items:center;justify-content:center}.gr-dmenu .gr-mic svg{width:24px;height:24px}
+.gr-slogo{width:18px;height:18px;border-radius:50%;flex:none;vertical-align:middle;margin-right:6px}.gr-llg{margin-right:4px;align-self:center}.gr-ssr b .gr-slogo{margin-right:6px}
 .gr-grids{display:grid;grid-template-columns:repeat(5,40px);gap:4px}.gr-grids button{height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gt)}.gr-grids button:hover{background:var(--gh)}.gr-grids button.on{color:var(--ga);background:rgba(41,98,255,.14)}
 .gr-emo{display:grid;grid-template-columns:repeat(6,34px);gap:2px}.gr-emo button{height:34px;font-size:20px;border-radius:4px}.gr-emo button:hover,.gr-emo button.on{background:var(--gh)}.gr-emo.sm{grid-template-columns:repeat(10,28px)}.gr-emo.sm button{height:28px;font-size:16px}
 .gr-ov{position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
@@ -13231,7 +13241,7 @@ class Cell {
   legend(i) {
     const B = this.DB, n = B.length; if (i == null || i < 0 || i >= n) i = n - 1; const b = B[i], sp = this.spec, P = PR, f = (v) => fmtPx(v, sp);
     let h = "";
-    if (P.legLogo) h += `<span class="gr-llogo" title="${E(sp.n || symCode(this.st.sym))}">${E(String(undOf(this.st.sym)).replace(/^M(?=NQ|ES|YM|RTY|GC|CL)/, "").slice(0, 2))}</span>`;
+    if (P.legLogo) h += symLogo(this.st.sym, "gr-slogo gr-llg") || `<span class="gr-llogo" title="${E(sp.n || symCode(this.st.sym))}">${E(String(undOf(this.st.sym)).replace(/^M(?=NQ|ES|YM|RTY|GC|CL)/, "").slice(0, 2))}</span>`;
     const ttl = P.legTitle === "name" ? sp.n || symCode(this.st.sym) : P.legTitle === "symname" ? symCode(this.st.sym) + " · " + (sp.n || "") : symCode(this.st.sym);
     if (P.legSym !== false) h += `<span class="gr-ls"><b>${E(ttl)}</b><i>·</i>${E(ivLabel(this.st.iv))}<i>·</i>${E(sp.src === "ff" ? "Forex Factory" : sp.src === "csv" ? "CSV" : sp.x)}${this.feed && this.feed.spec.src !== "csv" && (HAS_TSX || sp.src === "ff") ? `<em class="gr-live" title="Données en direct">●</em>` : ""}</span>`;
     if (b) { const prev = i > 0 ? B[i - 1][4] : b[1], ch = b[4] - prev, cls = b[4] >= b[1] ? "up" : "dn";
@@ -13284,7 +13294,8 @@ class Cell {
     const x0 = ts.logicalToCoordinate(0) ?? 0, x1 = ts.logicalToCoordinate(1) ?? 1, bs = (x1 - x0) || 1;
     return { bars: B, iv, spec: sp, W: sz.width, H: sz.height, bs, li: (t) => liOf(B, iv, t), lx: (l) => x0 + l * bs, x: (t) => x0 + liOf(B, iv, t) * bs, y: (p) => { const v = s.priceToCoordinate(p); return v == null ? NaN : v; }, p: (y) => s.coordinateToPrice(y), lOfX: (x) => (x - x0) / bs, tOfL: (l) => tOfLi(B, iv, l), fp: (p) => fmtPx(p, sp) };
   }
-  visibleD(d) { if (d.hide || DS.hideAll) return false; if (d.vis && d.vis[ivCat(this.st.iv)] === false) return false; return true; }
+  visibleD(d) { if (d.hide || DS.hideAll) return false; if (d.vis && d.vis[ivCat(this.st.iv)] === false) return false;
+    if (d.visR) { const s = ivSec(this.st.iv), op = d.visR.op, iv = d.visR.iv; if ((op === "ge" && s < iv) || (op === "le" && s > iv) || (op === "eq" && s !== iv)) return false; } return true; }
   pts(d, G) { return d.p.map((q) => [G.x(q.t), G.y(q.p)]); }
   redraw() { if (this.lay) this.lay.update(); if (this.ilay) this.ilay.update(); }
   paint(layer, c, size) {
@@ -13723,7 +13734,7 @@ function openSymbolSearch(mode, init) {
   const q = d.el.querySelector("#grSsQ"), L = d.el.querySelector("#grSsL"); q.value = init || "";
   const list = () => { const s = q.value.trim().toLowerCase(); return symRows().filter((r) => (cat === "Tout" || r.cat === cat) && (!s || r.s.toLowerCase().includes(s) || r.n.toLowerCase().includes(s) || symCode(r.s).toLowerCase().includes(s))).sort((a, b) => { const ea = a.s.toLowerCase().startsWith(s) ? 0 : 1, eb = b.s.toLowerCase().startsWith(s) ? 0 : 1; return ea - eb; }); };
   const draw = () => { const R = list(); sel = clamp(sel, 0, Math.max(0, R.length - 1));
-    L.innerHTML = R.length ? R.map((r, i) => `<button class="gr-ssr${i === sel ? " on" : ""}" data-s="${E(r.s)}"><b>${E(symCode(r.s))}</b><span>${E(r.n)}</span><em>${E(r.cat)}</em><i class="gr-src gr-s-${r.src}${r.src === "tsx" && !HAS_TSX ? " gr-off" : ""}">${r.src === "tsx" ? (HAS_TSX ? "TopstepX" : "app Windows") : r.src === "ff" ? "Forex Factory" : "CSV"}</i></button>`).join("")
+    L.innerHTML = R.length ? R.map((r, i) => `<button class="gr-ssr${i === sel ? " on" : ""}" data-s="${E(r.s)}"><b>${symLogo(r.s)}${E(symCode(r.s))}</b><span>${E(r.n)}</span><em>${E(r.cat)}</em><i class="gr-src gr-s-${r.src}${r.src === "tsx" && !HAS_TSX ? " gr-off" : ""}">${r.src === "tsx" ? (HAS_TSX ? "TopstepX" : "app Windows") : r.src === "ff" ? "Forex Factory" : "CSV"}</i></button>`).join("")
       : `<div class="gr-empty">${ivFromText(q.value) ? `Entrée = passer en <b>${E(ivLabel(ivFromText(q.value), true))}</b>` : "Aucun symbole"}</div>`; const on = L.querySelector(".gr-ssr.on"); if (on) on.scrollIntoView({ block: "nearest" }); };
   const pick = (s) => { d.close(false); if (mode === "cmp") addCompare(s); else if (mode === "wl") wlAdd(s); else if (mode && mode.call) mode(s); else applySym(s); };
   q.oninput = () => { sel = 0; draw(); };
@@ -13833,9 +13844,12 @@ function toolBtn(id, title, extra = "") { return `<button class="gr-lt${extra}" 
     eye: tv('<path d="M3.5 14S7.4 7.5 14 7.5 24.5 14 24.5 14 20.6 20.5 14 20.5 3.5 14 3.5 14z"/><circle cx="14" cy="14" r="3.2"/>'),
     eyeoff: tv('<path d="M3.5 14S7.4 7.5 14 7.5 24.5 14 24.5 14 20.6 20.5 14 20.5 3.5 14 3.5 14z"/><circle cx="14" cy="14" r="3.2"/><path d="M5.5 22.5l17-17"/>'),
     trash: tv('<path d="M6.5 8.5h15M11.5 8.5V6.5h5v2M8.5 8.5l1 14h9l1-14M12.5 11.5v8M15.5 11.5v8"/>'),
-    favbar: tv('<rect x="4.5" y="9.5" width="19" height="9" rx="2.5"/><path d="M14 11.3l.8 1.7 1.9.3-1.4 1.3.3 1.9-1.6-.9-1.6.9.3-1.9-1.4-1.3 1.9-.3z"/>'),
+    favbar: tv('<path d="M14 5.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6-4.4-4.2 6-.8z"/>'),
     tree: tv('<rect x="5.5" y="5.5" width="7" height="5" rx="1"/><path d="M9 10.5v10.5h4.5M9 15.5h4.5"/><rect x="13.5" y="13" width="9" height="5" rx="1"/><rect x="13.5" y="18.5" width="9" height="5" rx="1"/>'),
   }); }
+/* v1.80 : logos des contrats comme sur TradingView (NQ / MNQ = Nasdaq 100, ES / MES = S&P 500 ; icônes TradingView s3-symbol-logo) */
+const SYM_LOGO = { NQ: "data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill%3D%22%230091BA%22%20d%3D%22M0%200h18v18H0z%22/%3E%3Cpath%20d%3D%22M3.5%2011.9h1.2V6.1H3.5L2%207.14v1.08l1.47-1h.03v4.68ZM8.27%2012c1.460%200%202.35-1.15%202.35-3s-.89-3-2.35-3-2.35%201.15-2.35%203%20.89%203%202.35%203Zm0-.97c-.72%200-1.130-.75-1.130-2.030%200-1.28.41-2.03%201.13-2.03S9.4%207.72%209.4%209V9c0%201.28-.41%202.03-1.13%202.03ZM13.65%2012C15.1%2012%2016%2010.85%2016%209s-.89-3-2.35-3c-1.47%200-2.36%201.15-2.36%203s.9%203%202.36%203Zm0-.97c-.72%200-1.13-.75-1.13-2.03%200-1.28.4-2.03%201.13-2.03.72%200%201.13.75%201.13%202.02V9c0%201.28-.41%202.03-1.13%202.03Z%22%20fill%3D%22%23fff%22/%3E%3C/svg%3E", ES: "data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill%3D%22%23C4162E%22%20d%3D%22M0%200h18v18H0z%22/%3E%3Cpath%20d%3D%22M4.147%2012c1.308%200%202.215-.824%202.215-2.038v-.008c0-1.093-.788-1.884-1.88-1.884-.579%200-1.052.237-1.292.627h-.024l.142-1.632h2.707V6.1H2.362l-.264%203.404h1.033c.07-.12.165-.233.276-.321.197-.157.449-.245.748-.245.623%200%201.068.43%201.072%201.04v.009c0%20.618-.445%201.053-1.076%201.053-.555%200-.961-.338-1.048-.776l-.004-.028H2l.004.06C2.07%2011.265%202.898%2012%204.147%2012ZM8.886%2012c1.426%200%202.293-1.153%202.293-2.998v-.008C11.179%207.149%2010.312%206%208.886%206c-1.43%200-2.297%201.15-2.297%202.994v.008c0%201.845.866%202.998%202.297%202.998Zm0-.973c-.698%200-1.092-.751-1.092-2.025v-.008c0-1.274.394-2.021%201.092-2.021.693%200%201.091.747%201.091%202.021v.008c0%201.274-.398%202.025-1.091%202.025ZM13.707%2012C15.133%2012%2016%2010.847%2016%209.002v-.008C16%207.149%2015.133%206%2013.707%206c-1.43%200-2.297%201.15-2.297%202.994v.008c0%201.845.867%202.998%202.297%202.998Zm0-.973c-.698%200-1.092-.751-1.092-2.025v-.008c0-1.274.394-2.021%201.092-2.021.693%200%201.091.747%201.091%202.021v.008c0%201.274-.398%202.025-1.091%202.025Z%22%20fill%3D%22%23fff%22/%3E%3C/svg%3E" };
+const symLogo = (s, cls = "gr-slogo") => { const u = String(undOf(s) || "").toUpperCase().replace(/^M(?=NQ|ES)/, ""), src = SYM_LOGO[u]; return src ? `<img class="${cls}" src="${src}" alt="${u}" draggable="false">` : ""; };
 function buildLeft() {
   const L = $r("#grLeft"), groups = TOOL_GROUPS.map(([g, n, list]) => { const cur = (g === "cur" ? DS.cursor : DS.last[g]) || list[0]; return `<div class="gr-lg" data-g="${g}"><button class="gr-lt" data-tool="${list.includes(cur) ? cur : list[0]}" title="${E((T[cur] || T[list[0]]).n)}">${ICO[list.includes(cur) ? cur : list[0]]}</button><button class="gr-lx" data-fly="${g}" title="${E(n)}">${ICO.chev}</button></div>`; }).join("");
   L.innerHTML = groups + `<i class="gr-lsep"></i>` + toolBtn("measure", "Règle (Maj + clic)") + toolBtn("zoom", "Zoom avant (rectangle)") +
@@ -13843,7 +13857,7 @@ function buildLeft() {
     <button class="gr-lt" id="grStay" title="Rester en mode dessin">${ICO.stay}</button><button class="gr-lt" id="grLock" title="Verrouiller tous les dessins (Alt+Maj+L)">${ICO.unlock}</button>
     <div class="gr-lg"><button class="gr-lt" id="grHide" title="Masquer tous les dessins (Ctrl+Alt+H)">${ICO.eye}</button><button class="gr-lx" id="grHideX" title="Masquer…">${ICO.chev}</button></div>
     <div class="gr-lg"><button class="gr-lt" id="grDel" title="Supprimer les dessins">${ICO.trash}</button><button class="gr-lx" id="grDelX" title="Supprimer…">${ICO.chev}</button></div>
-    <span class="gr-fill"></span><button class="gr-lt" id="grFavT" title="Barre d'outils favoris">${ICO.favbar}</button><button class="gr-lt" id="grTreeT" title="Arborescence des objets (Alt+O)">${ICO.tree}</button>`;
+    <span class="gr-fill"></span><button class="gr-lt" id="grFavT" title="Barre d'outils favoris">${ICO.favbar}</button>`;
   refreshTools();
 }
 function refreshTools() {
@@ -13902,22 +13916,40 @@ function toggleHideAll() { DS.hideAll = !DS.hideAll; CELLS.forEach((c) => c.redr
 function removeAllDrawings(sym) { const L = drawsOf(sym); if (!L.length) return; snap(); L.splice(0, L.length); selectD(null); drawChanged(); toast("Dessins de " + undOf(sym) + " supprimés (Ctrl+Z pour annuler)"); }
 
 /* ---------- dessin sélectionné : barre flottante, menu, réglages, texte ---------- */
+const FI = (() => { const v = (d) => `<svg viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`; return {
+  grip: `<svg viewBox="0 0 8 16" width="8" height="16" fill="currentColor"><circle cx="2" cy="3" r="1.1"/><circle cx="6" cy="3" r="1.1"/><circle cx="2" cy="8" r="1.1"/><circle cx="6" cy="8" r="1.1"/><circle cx="2" cy="13" r="1.1"/><circle cx="6" cy="13" r="1.1"/></svg>`,
+  tpl: v('<rect x="5.5" y="5.5" width="6.5" height="6.5" rx="1"/><rect x="16" y="5.5" width="6.5" height="6.5" rx="1"/><rect x="5.5" y="16" width="6.5" height="6.5" rx="1"/><path d="M19.25 16v6.5M16 19.25h6.5"/>'),
+  pen: v('<path d="M7.5 19.5l.9-3.6L18 6.3l2.7 2.7-9.6 9.6z"/><path d="M16.2 8.1l2.7 2.7"/>'),
+  fill: v('<path d="M12.6 5.6l7.6 7.6-6.3 6.3a1.5 1.5 0 0 1-2.1 0l-5.5-5.5a1.5 1.5 0 0 1 0-2.1z"/><path d="M6.4 13.2h13.6M10 3.5l2.6 2.1M21.8 16.6s1.7 2.2 1.7 3.3a1.7 1.7 0 0 1-3.4 0c0-1.1 1.7-3.3 1.7-3.3z"/>'),
+  txt: v('<path d="M8 8.5V7h12v1.5M14 7v12.5M11.8 19.5h4.4"/>'),
+  set: v('<path d="M14 4.6l8.2 4.7v9.4L14 23.4l-8.2-4.7V9.3z"/><circle cx="14" cy="14" r="3"/>'),
+  alert: v('<circle cx="14" cy="15" r="7.5"/><path d="M14 11v4l2.5 1.5M6.5 6.5l-2 2M21.5 6.5l2 2M19.5 19.5v5M17 22h5"/>'),
+  layers: v('<path d="M14 5.5l9 4.5-9 4.5-9-4.5z"/><path d="M5 14l9 4.5 9-4.5M5 18l9 4.5 9-4.5"/>'),
+  gplus: v('<path d="M4.5 9a2 2 0 0 1 2-2h4l2 2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/><path d="M14 12.5v6M11 15.5h6"/>'),
+  clone: v('<rect x="9.5" y="9.5" width="13" height="13" rx="2"/><path d="M18.5 9.5V7.5a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2"/>'),
+  ren: v('<path d="M6.5 21.5l1-4L18 7l3 3-10.5 10.5z"/><path d="M16 9l3 3"/>'),
+  more: v('<circle cx="7" cy="14" r="1.3" fill="currentColor"/><circle cx="14" cy="14" r="1.3" fill="currentColor"/><circle cx="21" cy="14" r="1.3" fill="currentColor"/>'),
+  ln: (w, dsh) => `<svg viewBox="0 0 28 28" width="28" height="28"><path d="M5 14h18" stroke="currentColor" stroke-width="${w}" ${dsh ? `stroke-dasharray="${dsh}"` : ""} stroke-linecap="${dsh === "1 3" ? "round" : "butt"}"/></svg>`,
+}; })();
+const DASH = { 0: "", 2: "5 3", 1: "1 3" };
 function showFloat(d) {
   const f = $r("#grFloat"), def = T[d.tool]; if (!def || STATE.mode === "tv") return; const s = d.s || {};
-  const hasF = "f" in s || "tp" in s, hasW = "w" in s && !["text", "note", "emoji", "plabel", "callout", "pnote", "pin"].includes(d.tool);
-  f.innerHTML = `<span class="gr-fgrip" title="Déplacer">⋮⋮</span><span class="gr-fn">${E(def.n)}</span>
-    <label class="gr-fc" title="Couleur"><input type="color" data-fk="c" value="${hex6(s.tc && ["text", "note"].includes(d.tool) ? s.tc : s.c)}"><i style="background:${E(s.c || "#2962ff")}"></i></label>
-    ${hasF ? `<label class="gr-fc" title="Remplissage"><input type="color" data-fk="f" value="${hex6(s.f || s.tp)}"><i class="gr-ff" style="background:${E(s.f || s.tp)}"></i></label>` : ""}
-    ${hasW ? `<select class="gr-fs" data-fk="w" title="Épaisseur">${[1, 2, 3, 4].map((w) => `<option value="${w}" ${s.w == w ? "selected" : ""}>${w}px</option>`).join("")}</select><select class="gr-fs" data-fk="d" title="Style">${[["0", "———"], ["2", "– – –"], ["1", "· · · ·"]].map(([v, n]) => `<option value="${v}" ${String(s.d || 0) === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : ""}
-    ${def.txt || d.tool === "text" ? `<button class="gr-fb" data-fa="txt" title="Texte">T</button>` : ""}
-    <button class="gr-fb gr-ftpl" data-fa="tpl" title="Modèles de dessin">Modèle</button><button class="gr-fb" data-fa="set" title="Paramètres">${ICO.gear}</button>${["hline", "hray", "trend", "ray", "ext"].includes(d.tool) ? `<button class="gr-fb" data-fa="alert" title="Alerte sur ce dessin">${ICO.bell}</button>` : ""}
-    <button class="gr-fb" data-fa="lock" title="${d.lock ? "Déverrouiller" : "Verrouiller"}">${d.lock ? ICO.lock : ICO.unlock}</button><button class="gr-fb" data-fa="clone" title="Cloner">${ICO.clone}</button><button class="gr-fb" data-fa="del" title="Supprimer (Suppr)">${ICO.trash}</button><button class="gr-fb" data-fa="more" title="Plus">${ICO.dots}</button>`;
+  const TXT = ["text", "note", "emoji", "plabel", "callout", "pnote", "pin"], hasF = "f" in s || "tp" in s, hasW = "w" in s && !TXT.includes(d.tool), hasT = !!(def.txt || d.tool === "text" || "tc" in s);
+  const col = (k, ic, v, t) => `<label class="gr-fcol" title="${t}">${ic}<i style="background:${E(v || "transparent")}"></i><input type="color" data-fk="${k}" value="${hex6(v)}"></label>`;
+  f.innerHTML = `<span class="gr-fgrip" title="Déplacer">${FI.grip}</span>
+    <button class="gr-fb" data-fa="tpl" title="Modèles">${FI.tpl}</button>
+    ${col("c", FI.pen, s.c || "#2962ff", "Couleur de la ligne")}${hasF ? col("f", FI.fill, s.f || s.tp, "Couleur de fond") : ""}${hasT ? col("tc", FI.txt, s.tc || s.c, "Couleur du texte") : ""}
+    ${hasW ? `<button class="gr-fwb" data-fa="w" title="Épaisseur de ligne">${FI.ln(Math.min(+s.w || 1, 3))}<span>${+s.w || 1}px</span></button><button class="gr-fwb" data-fa="d" title="Style de ligne">${FI.ln(1, DASH[s.d || 0])}</button>` : ""}
+    <button class="gr-fb" data-fa="set" title="Configurations">${FI.set}</button><button class="gr-fb" data-fa="alert" title="Ajouter une alerte">${FI.alert}</button>
+    <button class="gr-fb" data-fa="lock" title="${d.lock ? "Déverrouiller" : "Verrouiller"}">${d.lock ? ICO.lock : ICO.unlock}</button><button class="gr-fb" data-fa="del" title="Retirer (Suppr)">${ICO.trash}</button><button class="gr-fb" data-fa="more" title="Plus">${FI.more}</button>`;
   f.hidden = false; const pos = LS.get("gr-floatpos", null); if (pos) { f.style.left = pos[0] + "px"; f.style.top = pos[1] + "px"; f.style.transform = "none"; }
-  f.oninput = (e) => { const k = e.target.dataset.fk; if (!k) return; snapOnce(d); const v = e.target.value; if (k === "c") { d.s.c = v; if (["text", "note"].includes(d.tool) && d.tool === "text") d.s.tc = v; } else if (k === "f") { if ("tp" in d.s) d.s.tp = alpha(v, opOf(d.s.tp)); else d.s.f = alpha(v, opOf(d.s.f) || 0.2); } else if (k === "w") d.s.w = +v; else if (k === "d") d.s.d = +v; drawChanged(); };
+  f.oninput = (e) => { const k = e.target.dataset.fk; if (!k) return; snapOnce(d); const v = e.target.value; if (k === "c") { d.s.c = v; if (d.tool === "text") d.s.tc = v; } else if (k === "tc") d.s.tc = v; else if (k === "f") { if ("tp" in d.s) d.s.tp = alpha(v, opOf(d.s.tp)); else d.s.f = alpha(v, opOf(d.s.f) || 0.2); } const i = e.target.parentNode.querySelector("i"); if (i) i.style.background = v; drawChanged(); };
   f.onchange = () => { delete d._snap; showFloat(d); };
   f.onclick = (e) => { const a = e.target.closest("[data-fa]"); if (!a) return; const act = a.dataset.fa, c = CELLS.find((x) => undOf(x.st.sym) === d.sym) || activeCell();
-    if (act === "set") openDrawSettings(d, c); if (act === "txt") editText(d, c); if (act === "lock") { d.lock = !d.lock; drawChanged(d); } if (act === "del") deleteSel(); if (act === "clone") cloneD(d, c); if (act === "alert") openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p });
-    if (act === "more") { const r = a.getBoundingClientRect(); drawMenu(d, c, r.left, r.bottom + 2); } if (act === "tpl") menuAt(a, tplItems(d, () => showFloat(d))); };
+    if (act === "set") openDrawSettings(d, c); if (act === "lock") { d.lock = !d.lock; drawChanged(d); showFloat(d); } if (act === "del") deleteSel(); if (act === "alert") openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p });
+    if (act === "w") menuAt(a, [1, 2, 3, 4].map((w) => ({ t: w + "px", ic: FI.ln(w), on: (+d.s.w || 1) === w, f: () => { snap(); d.s.w = w; drawChanged(d); showFloat(d); } })), { cls: "gr-fmenu" });
+    if (act === "d") menuAt(a, [["0", "Ligne"], ["2", "Tirets"], ["1", "Pointillés"]].map(([v, n]) => ({ t: n, ic: FI.ln(1.4, DASH[v]), on: String(d.s.d || 0) === v, f: () => { snap(); d.s.d = +v; drawChanged(d); showFloat(d); } })), { cls: "gr-fmenu" });
+    if (act === "more") { const r = a.getBoundingClientRect(); drawMenu(d, c, r.left, r.bottom + 4); } if (act === "tpl") menuAt(a, tplItems(d, () => showFloat(d))); };
   f.querySelector(".gr-fgrip").onpointerdown = (e) => { e.preventDefault(); const r = f.getBoundingClientRect(), pr = ROOT.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; f.style.transform = "none";
     const mv = (ev) => { f.style.left = clamp(ev.clientX - pr.left - x0, 0, pr.width - 120) + "px"; f.style.top = clamp(ev.clientY - pr.top - y0, 0, pr.height - 30) + "px"; }, up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); LS.set("gr-floatpos", [parseInt(f.style.left), parseInt(f.style.top)]); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); };
 }
@@ -13964,14 +13996,25 @@ function tplItems(d, after) { const tpl = tplOf(d.tool), names = tplNames(d.tool
     "-", { t: "Utiliser comme style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); all[d.tool] = JSON.parse(JSON.stringify(d.s)); LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » mis à jour"); } },
     { t: "Réinitialiser le style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); delete all[d.tool]; LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » réinitialisé"); } }].filter(Boolean); }
 tsxSeed();
-function drawMenu(d, c, x, y) { const L = drawsOf(c.st.sym), i = L.indexOf(d);
-  menu(x, y, [{ t: "Paramètres…", f: () => openDrawSettings(d, c) }, (T[d.tool].txt || d.tool === "text") && { t: "Modifier le texte…", f: () => editText(d, c) }, { t: "Cloner", k: "Alt + glisser", f: () => cloneD(d, c) }, { t: "Copier", k: "Ctrl+C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
-    ["hline", "hray", "trend", "ray", "ext"].includes(d.tool) && { t: "Ajouter une alerte sur ce dessin", f: () => openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p }) },
-    "-", { t: d.lock ? "Déverrouiller" : "Verrouiller", f: () => { d.lock = !d.lock; drawChanged(d); } }, { t: "Masquer", f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
-    { t: "Ordre", sub: [{ t: "Premier plan", k: "Ctrl+Maj+↑", f: () => zMove(d, c, 1e9) }, { t: "Avancer", f: () => zMove(d, c, 1) }, { t: "Reculer", f: () => zMove(d, c, -1) }, { t: "Arrière-plan", k: "Ctrl+Maj+↓", f: () => zMove(d, c, -1e9) }] },
-    { t: "Visibilité", sub: [["sec", "Secondes"], ["min", "Minutes"], ["hr", "Heures"], ["day", "Jours"], ["wk", "Semaines"], ["mo", "Mois"]].map(([k, n]) => ({ t: n, on: !(d.vis && d.vis[k] === false), keep: true, f: () => { d.vis = d.vis || {}; d.vis[k] = d.vis[k] === false; drawChanged(d); drawMenu(d, c, x, y); } })) },
-    { t: "Modèle", sub: tplItems(d) },
-    "-", { t: "Supprimer", k: "Suppr", f: () => { selectD(d, c); deleteSel(); } }].filter(Boolean)); void i; }
+function drawMenu(d, c, x, y) {
+  const nm = dName(d), low = nm.charAt(0).toLowerCase() + nm.slice(1), names = tplNames(d.tool), tpl = tplOf(d.tool), cur = ivSec(c.st.iv), vr = d.visR && d.visR.iv === cur ? d.visR.op : d.visR ? "x" : d.vis && Object.values(d.vis).includes(false) ? "x" : "all";
+  const setVis = (op) => { snap(); delete d.vis; if (op === "all") delete d.visR; else d.visR = { op, iv: cur }; drawChanged(d); toast(op === "all" ? "Visible sur tous les intervalles" : `Visible sur l'intervalle ${ivLabel(c.st.iv)}${op === "ge" ? " et supérieurs" : op === "le" ? " et inférieurs" : " uniquement"}`); };
+  const goTo = () => { try { const G = c.geo(), li = G.li(d.p[0].t), ts = c.main.chart.timeScale(), r = ts.getVisibleLogicalRange(), w = r ? r.to - r.from : 120; ts.setVisibleLogicalRange({ from: li - w / 2, to: li + w / 2 }); selectD(d, c); } catch (e) { /* */ } };
+  menu(x, y, [
+    { t: `Ajouter une alerte pour ${low}…`, k: "Alt + A", ic: FI.alert, f: () => openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p }) }, "-",
+    { t: "Espace de Travail", ic: " ", sub: [{ t: "Sauvegarder Sous…", f: () => askText("Sauvegarder le modèle sous", "", (n) => tplSave(d.tool, n, tplStyle(d))) }, { t: "Appliquer paramètres par Défaut", f: () => { const base = JSON.parse(JSON.stringify((T[d.tool] && T[d.tool].def) || {})); tplApply(d, Object.assign(base, LS.get("gr-tpldef", {})[d.tool] || {})); } },
+      names.length ? "-" : null, ...names.map((n) => ({ t: n, f: () => tplApply(d, tpl[n]) }))].filter(Boolean) },
+    { t: "Ordre de visualisation", ic: FI.layers, sub: [{ t: "Mettre au premier plan", f: () => zMove(d, c, 1e9) }, { t: "Mettre au Fond", f: () => zMove(d, c, -1e9) }, { t: "Mettre en avant", f: () => zMove(d, c, 1) }, { t: "Mettre vers l'Arrière", f: () => zMove(d, c, -1) }] },
+    { t: "Visibilité des intervalles", ic: " ", sub: [["ge", "Intervalle actuel et supérieur"], ["le", "Intervalle actuel et inférieur"], ["eq", "Intervalle actuel uniquement"], ["all", "Tous les intervalles"]].map(([k, t]) => ({ t, on: vr === k, f: () => setVis(k) })) }, "-",
+    { t: "Créer un groupe de dessins", ic: FI.gplus, f: () => { const u = undOf(c.st.sym), G = dGroups(u), ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true }; dGroupsSet(u, G.concat(ng)); snap(); d.grp = ng.id; drawChanged(d); refreshTree(); toast("« " + ng.name + " » créé avec ce dessin"); } },
+    { t: "Cloner", ic: FI.clone, f: () => cloneD(d, c) }, { t: "Copier", ic: " ", k: "Ctrl + C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
+    { t: "Renommer", ic: FI.ren, f: () => askText("Renommer", nm, (n) => { snap(); d.name = n; drawChanged(d); refreshTree(); }) }, "-",
+    { t: d.lock ? "Déverrouiller" : "Verrouiller", ic: d.lock ? ICO.lock : ICO.unlock, f: () => { d.lock = !d.lock; drawChanged(d); if (selD() === d) showFloat(d); } },
+    { t: "Cacher", ic: ICO.eyeoff, f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
+    { t: "Retirer", k: "Del", ic: ICO.trash, f: () => { selectD(d, c); deleteSel(); } }, "-",
+    { t: `Aller à ${low}`, ic: " ", f: goTo }, "-",
+    { t: "Configurations…", ic: FI.set, f: () => openDrawSettings(d, c) }].filter(Boolean), { cls: "gr-dmenu" });
+}
 function zMove(d, c, k) { const L = drawsOf(c.st.sym), i = L.indexOf(d); if (i < 0) return; snap(); L.splice(i, 1); const j = clamp(i + k, 0, L.length); L.splice(k > 1e8 ? L.length : k < -1e8 ? 0 : j, 0, d); drawChanged(d); }
 function editText(d, c, isNew) {
   const G = c.geo(), P = c.pts(d, G), r = c.main.host.getBoundingClientRect(), pr = ROOT.getBoundingClientRect(), box = el("div", "gr-tedit");
@@ -14048,7 +14091,7 @@ async function wlFetch(s) { const sp = SYM(s); try { let b = [];
 const livePx = (s) => { for (const c of CELLS) { const f = c.feed; if (c.st.sym === s && f && f.sym === s && f.bars.length && f.spec.src !== "csv" && !PR.rth) return f.bars[f.bars.length - 1][4]; } return null; };
 function renderWL() { const P = $r("#grRPanel"), act = activeCell();
   const rows = WL.map((s) => { const q = WLP.get(s) || {}, lp = livePx(s), last = lp != null ? lp : q.last, ch = fin(last) && fin(q.prev) ? last - q.prev : NaN, sp = SYM(s);
-    return `<div class="gr-wlr${act && act.st.sym === s ? " on" : ""}" data-s="${E(s)}" draggable="true"><span class="gr-wls"><i class="gr-dot gr-s-${sp.src}"></i>${E(symCode(s))}</span><b>${q.err === "login" ? "—" : fin(last) ? fmtPx(last, sp) : "…"}</b><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) ? (ch >= 0 ? "+" : "") + fmtPx(ch, sp) : ""}</em><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) && q.prev ? (ch >= 0 ? "+" : "") + (ch / q.prev * 100).toFixed(2) + " %" : ""}</em><button class="gr-ib gr-wlx" data-x="${E(s)}" title="Retirer">${ICO.x}</button></div>`; }).join("");
+    return `<div class="gr-wlr${act && act.st.sym === s ? " on" : ""}" data-s="${E(s)}" draggable="true"><span class="gr-wls"><i class="gr-dot gr-s-${sp.src}"></i>${symLogo(s)}${E(symCode(s))}</span><b>${q.err === "login" ? "—" : fin(last) ? fmtPx(last, sp) : "…"}</b><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) ? (ch >= 0 ? "+" : "") + fmtPx(ch, sp) : ""}</em><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) && q.prev ? (ch >= 0 ? "+" : "") + (ch / q.prev * 100).toFixed(2) + " %" : ""}</em><button class="gr-ib gr-wlx" data-x="${E(s)}" title="Retirer">${ICO.x}</button></div>`; }).join("");
   P.innerHTML = ph("Liste de surveillance", `<button class="gr-ib" data-wladd="1" title="Ajouter un symbole">${ICO.plus}</button>`) + `<div class="gr-wlh"><span>Symbole</span><span>Dernier</span><span>Var</span><span>Var %</span></div><div class="gr-wl">${rows || `<div class="gr-empty">Liste vide</div>`}</div>${act ? detMini(act.st.sym) : ""}`;
   P.querySelector("[data-wladd]").onclick = () => openSymbolSearch("wl");
   P.querySelector(".gr-wl").onclick = (e) => { const x = e.target.closest("[data-x]"); if (x) { WL = WL.filter((s) => s !== x.dataset.x); LS.set("gr-wl", WL); renderWL(); return; } const r = e.target.closest("[data-s]"); if (r) applySym(r.dataset.s); };
