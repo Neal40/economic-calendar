@@ -822,6 +822,14 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-mic svg{width:24px;height:24px}.gr-mstar{opacity:.55}.gr-mstar svg{width:18px;height:18px}.gr-mi:hover .gr-mstar{opacity:1}
 .gr-mh{padding:8px 12px 4px;font-size:11px;color:var(--gm);text-transform:uppercase;letter-spacing:.06em;font-weight:600}.gr-msep{height:1px;background:var(--gl);margin:4px 0}
 .gr-mhtml{padding:4px 10px}.gr-ivadd{display:flex;gap:6px}.gr-ivadd input{flex:1;height:28px;border:1px solid var(--gl);background:var(--gb);border-radius:4px;padding:0 8px;min-width:0}.gr-ivadd input.bad{border-color:#f23645}
+/* v1.79 : menu des dispositions façon TradingView (1 à 16 graphiques) */
+.gr-menu.gr-laymenu{padding:6px 0 10px;min-width:0;max-height:calc(100vh - 60px)}.gr-lay2{width:420px;padding:0 12px}
+.gr-lrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--gl)}.gr-lnum{width:16px;flex:none;color:var(--gm);font-size:12px;text-align:center}
+.gr-lics{display:flex;flex-wrap:wrap;gap:3px}.gr-lics button{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--gt)}.gr-lics button:hover{background:var(--gh)}.gr-lics button.on{background:var(--gt);color:var(--gb)}
+.gr-lsync{margin:14px 0 6px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gm)}
+.gr-ltg{display:flex;align-items:center;gap:8px;height:34px;font-size:14px;color:var(--gt)}.gr-linf{width:15px;height:15px;border-radius:50%;background:var(--gm);color:var(--gb);font:bold 10px/15px Georgia,serif;text-align:center;font-style:normal;cursor:help;opacity:.8}
+.gr-sw{width:38px;height:22px;border-radius:11px;background:var(--gm);position:relative;flex:none;transition:background .15s;opacity:.75}.gr-sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.gr-sw.on{background:var(--gt);opacity:1}.gr-sw.on::after{left:19px;background:var(--gb)}
 .gr-grids{display:grid;grid-template-columns:repeat(5,40px);gap:4px}.gr-grids button{height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gt)}.gr-grids button:hover{background:var(--gh)}.gr-grids button.on{color:var(--ga);background:rgba(41,98,255,.14)}
 .gr-emo{display:grid;grid-template-columns:repeat(6,34px);gap:2px}.gr-emo button{height:34px;font-size:20px;border-radius:4px}.gr-emo button:hover,.gr-emo button.on{background:var(--gh)}.gr-emo.sm{grid-template-columns:repeat(10,28px)}.gr-emo.sm button{height:28px;font-size:16px}
 .gr-ov{position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
@@ -13637,13 +13645,31 @@ ROOT.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.clas
 const readColor = (root, k) => { const c = root.querySelector(`[data-k="${k}"]`), o = root.querySelector(`[data-ko="${k}"]`); if (!c) return null; const a = o ? +o.value / 100 : 1; return a >= 0.999 ? c.value : alpha(c.value, +a.toFixed(2)); };
 
 /* ---------- grille de graphiques ---------- */
-const GRIDS = { "1": [1, "1fr", "1fr"], "2v": [2, "1fr 1fr", "1fr"], "2h": [2, "1fr", "1fr 1fr"], "3v": [3, "1fr 1fr 1fr", "1fr"], "3h": [3, "1fr", "1fr 1fr 1fr"], "3l": [3, "2fr 1fr", "1fr 1fr", "1/1/3/2"], "4": [4, "1fr 1fr", "1fr 1fr"], "4v": [4, "repeat(4,1fr)", "1fr"], "6": [6, "repeat(3,1fr)", "1fr 1fr"], "8": [8, "repeat(4,1fr)", "1fr 1fr"] };
-function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco === "function") gb.innerHTML = gridIco(GRIDS[STATE.grid] ? STATE.grid : "1");
-  CELLS.forEach((c) => c.destroy()); CELLS = []; const g = GRIDS[STATE.grid] || GRIDS["1"], host = $r("#grGrid");
-  while (STATE.cells.length < g[0]) { const b = STATE.cells[STATE.active] || STATE.cells[0]; STATE.cells.push(DEF_CELL({ sym: b.sym, iv: b.iv, type: b.type, inds: [{ id: uid(), t: "vol", inp: {} }] })); }
-  host.style.gridTemplateColumns = g[1]; host.style.gridTemplateRows = g[2]; host.classList.toggle("max", !!STATE.max); host.classList.toggle("multi", g[0] > 1);
-  STATE.active = clamp(STATE.active, 0, g[0] - 1);
-  for (let i = 0; i < g[0]; i++) { const c = new Cell(STATE.cells[i], i); if (i === 0 && g[3]) c.el.style.gridArea = g[3]; host.append(c.el); CELLS.push(c); }
+// v1.79 : toutes les dispositions de TradingView (1 à 16 graphiques) ; c / r = colonnes / lignes de la grille, a = cases [colonne, ligne, largeur, hauteur]
+const GG = (c, r) => { const a = []; for (let y = 0; y < r; y++) for (let x = 0; x < c; x++) a.push([x, y, 1, 1]); return { c, r, a }; }, GL = (c, r, a) => ({ c, r, a: a.map((q) => [q[0], q[1], q[2] || 1, q[3] || 1]) });
+const GRIDS = {
+  "1": GG(1, 1),
+  "2v": GG(2, 1), "2h": GG(1, 2),
+  "3v": GG(3, 1), "3h": GG(1, 3), "3l": GL(2, 2, [[0, 0, 1, 2], [1, 0], [1, 1]]), "3r": GL(2, 2, [[0, 0], [0, 1], [1, 0, 1, 2]]), "3t": GL(2, 2, [[0, 0], [1, 0], [0, 1, 2, 1]]), "3b": GL(2, 2, [[0, 0, 2, 1], [0, 1], [1, 1]]),
+  "4": GG(2, 2), "4h": GG(1, 4), "4v": GG(4, 1), "4l": GL(2, 3, [[0, 0, 1, 3], [1, 0], [1, 1], [1, 2]]), "4r": GL(2, 3, [[0, 0], [0, 1], [0, 2], [1, 0, 1, 3]]), "4b": GL(3, 2, [[0, 0, 3, 1], [0, 1], [1, 1], [2, 1]]), "4t": GL(3, 2, [[0, 0], [1, 0], [2, 0], [0, 1, 3, 1]]),
+  "4c": GL(3, 2, [[0, 0, 1, 2], [1, 0, 1, 2], [2, 0], [2, 1]]), "4d": GL(3, 2, [[0, 0], [0, 1], [1, 0, 1, 2], [2, 0, 1, 2]]), "4e": GL(2, 3, [[0, 0, 2, 1], [0, 1, 2, 1], [0, 2], [1, 2]]),
+  "5b": GL(4, 2, [[0, 0, 4, 1], [0, 1], [1, 1], [2, 1], [3, 1]]), "5v": GG(5, 1), "5h": GG(1, 5), "5l": GL(2, 4, [[0, 0, 1, 4], [1, 0], [1, 1], [1, 2], [1, 3]]), "5r": GL(2, 4, [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0, 1, 4]]),
+  "5q": GL(3, 2, [[0, 0], [1, 0], [0, 1], [1, 1], [2, 0, 1, 2]]), "5p": GL(3, 2, [[0, 0, 1, 2], [1, 0], [2, 0], [1, 1], [2, 1]]), "5t": GL(4, 2, [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1, 4, 1]]), "5s": GL(6, 2, [[0, 0, 3, 1], [3, 0, 3, 1], [0, 1, 2, 1], [2, 1, 2, 1], [4, 1, 2, 1]]), "5u": GL(6, 2, [[0, 0, 2, 1], [2, 0, 2, 1], [4, 0, 2, 1], [0, 1, 3, 1], [3, 1, 3, 1]]),
+  "6": GG(3, 2), "6v": GG(6, 1), "6h": GG(1, 6), "6w": GG(2, 3), "6l": GL(3, 3, [[0, 0, 2, 2], [2, 0], [2, 1], [0, 2], [1, 2], [2, 2]]), "6s": GL(4, 2, [[0, 0, 2, 1], [2, 0, 2, 1], [0, 1], [1, 1], [2, 1], [3, 1]]),
+  "7": GL(12, 2, [[0, 0, 4, 1], [4, 0, 4, 1], [8, 0, 4, 1], [0, 1, 3, 1], [3, 1, 3, 1], [6, 1, 3, 1], [9, 1, 3, 1]]), "7l": GL(3, 3, [[0, 0, 1, 3], [1, 0], [2, 0], [1, 1], [2, 1], [1, 2], [2, 2]]), "7b": GL(12, 2, [[0, 0, 3, 1], [3, 0, 3, 1], [6, 0, 3, 1], [9, 0, 3, 1], [0, 1, 4, 1], [4, 1, 4, 1], [8, 1, 4, 1]]),
+  "8": GG(4, 2), "8w": GG(2, 4), "8v": GG(8, 1), "8h": GG(1, 8),
+  "9": GG(3, 3), "9s": GL(20, 2, [[0, 0, 4, 1], [4, 0, 4, 1], [8, 0, 4, 1], [12, 0, 4, 1], [16, 0, 4, 1], [0, 1, 5, 1], [5, 1, 5, 1], [10, 1, 5, 1], [15, 1, 5, 1]]), "9v": GG(9, 1), "9h": GG(1, 9),
+  "10": GG(5, 2), "10v": GG(10, 1), "10h": GG(1, 10),
+  "12": GG(4, 3), "12w": GG(3, 4), "12x": GG(6, 2),
+  "14": GG(7, 2),
+  "16": GG(4, 4), "16x": GG(8, 2),
+};
+function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco === "function") gb.innerHTML = gridIco(GRIDS[STATE.grid] ? STATE.grid : "1", 28);
+  CELLS.forEach((c) => c.destroy()); CELLS = []; if (!GRIDS[STATE.grid]) STATE.grid = "1"; const g = GRIDS[STATE.grid], n = g.a.length, host = $r("#grGrid");
+  while (STATE.cells.length < n) { const b = STATE.cells[STATE.active] || STATE.cells[0]; STATE.cells.push(DEF_CELL({ sym: b.sym, iv: b.iv, type: b.type, inds: [{ id: uid(), t: "vol", inp: {} }] })); }
+  host.style.gridTemplateColumns = `repeat(${g.c},minmax(0,1fr))`; host.style.gridTemplateRows = `repeat(${g.r},minmax(0,1fr))`; host.classList.toggle("max", !!STATE.max); host.classList.toggle("multi", n > 1);
+  STATE.active = clamp(STATE.active, 0, n - 1);
+  for (let i = 0; i < n; i++) { const c = new Cell(STATE.cells[i], i), [x, y, w, h] = g.a[i]; c.el.style.gridArea = `${y + 1} / ${x + 1} / span ${h} / span ${w}`; host.append(c.el); CELLS.push(c); }
   setActive(STATE.active, true); refreshHeader(); saveState();
 }
 function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); }
@@ -13787,6 +13813,29 @@ function openIndSettings(c, x) {
 
 /* ---------- barre d'outils de dessin (gauche) ---------- */
 function toolBtn(id, title, extra = "") { return `<button class="gr-lt${extra}" data-tool="${id}" title="${E(title)}">${ICO[id] || ICO.cross}</button>`; }
+/* v1.79 : icônes de la barre d'outils de gauche identiques à TradingView (sauf positions longue / courte, gardées) */
+{ const tv = (d) => `<svg viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`, o = (x, y, r = 1.75) => `<circle cx="${x}" cy="${y}" r="${r}" fill="var(--grbg)"/>`;
+  Object.assign(ICO, {
+    cross: tv('<path d="M14 5.5v17M5.5 14h17"/>'),
+    trend: tv('<path d="M8.6 19.4L19.4 8.6"/>' + o(7.5, 20.5) + o(20.5, 7.5)),
+    channel: tv('<path d="M6.6 15.9l9.8-7.8M11.6 21.9l9.8-7.8"/>' + o(5.3, 17) + o(17.7, 7) + o(22.7, 13)),
+    fib: tv('<path d="M4.5 6.5h19M4.5 11h19M4.5 15.5h19M4.5 21.5h19"/><path d="M8.2 20.3l11.6-12.6" stroke-dasharray="2 2"/>' + o(7, 21.5) + o(21, 6.5)),
+    xabcd: tv('<path d="M5.4 19.4l3.4-8.9M10.3 10.6l4.4 6.7M16.1 17.4l2.8-8.8M20.3 8.7l2.6 5.6"/>' + o(5, 21) + o(9.5, 9) + o(15.5, 18.6) + o(19.5, 7.2) + o(23.6, 15.3)),
+    rect: tv('<path d="M7.2 8.5h13.6M7.2 19.5h13.6M5.5 10.2v7.6M22.5 10.2v7.6"/>' + o(5.5, 8.5) + o(22.5, 8.5) + o(5.5, 19.5) + o(22.5, 19.5)),
+    brush: tv('<path d="M5.5 22.5c2.5 0 4-1 4.3-3.2.3-1.9 2.2-2.6 3.5-1.5 1.3 1.2.6 3.3-1 4-1.8.8-4.3.7-6.8.7z"/><path d="M13.6 17.5L22.5 6.5"/>'),
+    text: tv('<path d="M7.5 8.5V7h13v1.5M14 7v14.5M11.5 21.5h5"/>'),
+    measure: tv('<path d="M4.2 19.2L19.2 4.2l4.6 4.6-15 15z"/><path d="M8.3 15.1l2 2M10.9 12.5l1.3 1.3M13.5 9.9l2 2M16.1 7.3l1.3 1.3"/>'),
+    zoom: tv('<circle cx="12.5" cy="12.5" r="6.5"/><path d="M17.3 17.3l5.7 5.7M12.5 9.5v6M9.5 12.5h6"/>'),
+    magnet: tv('<path d="M7.5 6.5h4v8.5a2.5 2.5 0 0 0 5 0V6.5h4V15a6.5 6.5 0 0 1-13 0z"/><path d="M7.5 10h4M16.5 10h4"/>'),
+    stay: tv('<path d="M5.5 20.5l1-4.3L16.3 6.4l3.3 3.3-9.8 9.8z"/><path d="M14.3 8.4l3.3 3.3"/><rect x="17.5" y="18.5" width="6" height="5" rx="1"/><path d="M18.8 18.5v-1.3a1.7 1.7 0 0 1 3.4 0v1.3"/>'),
+    unlock: tv('<rect x="8.5" y="12.5" width="11" height="10" rx="1.5"/><path d="M10.5 12.5V9.5a3.5 3.5 0 0 1 6.8-1.2M14 16.3v2.4"/>'),
+    lock: tv('<rect x="8.5" y="12.5" width="11" height="10" rx="1.5"/><path d="M10.5 12.5V9.5a3.5 3.5 0 0 1 7 0v3M14 16.3v2.4"/>'),
+    eye: tv('<path d="M3.5 14S7.4 7.5 14 7.5 24.5 14 24.5 14 20.6 20.5 14 20.5 3.5 14 3.5 14z"/><circle cx="14" cy="14" r="3.2"/>'),
+    eyeoff: tv('<path d="M3.5 14S7.4 7.5 14 7.5 24.5 14 24.5 14 20.6 20.5 14 20.5 3.5 14 3.5 14z"/><circle cx="14" cy="14" r="3.2"/><path d="M5.5 22.5l17-17"/>'),
+    trash: tv('<path d="M6.5 8.5h15M11.5 8.5V6.5h5v2M8.5 8.5l1 14h9l1-14M12.5 11.5v8M15.5 11.5v8"/>'),
+    favbar: tv('<rect x="4.5" y="9.5" width="19" height="9" rx="2.5"/><path d="M14 11.3l.8 1.7 1.9.3-1.4 1.3.3 1.9-1.6-.9-1.6.9.3-1.9-1.4-1.3 1.9-.3z"/>'),
+    tree: tv('<rect x="5.5" y="5.5" width="7" height="5" rx="1"/><path d="M9 10.5v10.5h4.5M9 15.5h4.5"/><rect x="13.5" y="13" width="9" height="5" rx="1"/><rect x="13.5" y="18.5" width="9" height="5" rx="1"/>'),
+  }); }
 function buildLeft() {
   const L = $r("#grLeft"), groups = TOOL_GROUPS.map(([g, n, list]) => { const cur = (g === "cur" ? DS.cursor : DS.last[g]) || list[0]; return `<div class="gr-lg" data-g="${g}"><button class="gr-lt" data-tool="${list.includes(cur) ? cur : list[0]}" title="${E((T[cur] || T[list[0]]).n)}">${ICO[list.includes(cur) ? cur : list[0]]}</button><button class="gr-lx" data-fly="${g}" title="${E(n)}">${ICO.chev}</button></div>`; }).join("");
   L.innerHTML = groups + `<i class="gr-lsep"></i>` + toolBtn("measure", "Règle (Maj + clic)") + toolBtn("zoom", "Zoom avant (rectangle)") +
@@ -14229,12 +14278,19 @@ function openSettings(tab) {
 function applyPrefs() { prDerive(); ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); CELLS.forEach((c) => { c.applyFmt(); c.mkMain(); c.full(false); c.redraw(); }); refreshBottom(); }
 
 /* ---------- disposition, mises en page ---------- */
-const GRID_N = { "1": "1 graphique", "2v": "2 côte à côte", "2h": "2 empilés", "3v": "3 côte à côte", "3h": "3 empilés", "3l": "1 grand + 2", "4": "4 (2 × 2)", "4v": "4 côte à côte", "6": "6 (3 × 2)", "8": "8 (4 × 2)" };
-const gridIco = (g) => { const [n, cols, rows, area] = GRIDS[g], cs = cols.includes("repeat") ? +cols.match(/\d+/)[0] : cols.split(" ").length, rs = rows.includes("repeat") ? +rows.match(/\d+/)[0] : rows.split(" ").length; let h = ""; const w = 20 / cs, hh = 14 / rs; let k = 0;
-  for (let r = 0; r < rs; r++) for (let c = 0; c < cs; c++) { if (area && k === 0 && r === 0 && c === 0) { h += `<rect x="4" y="7" width="${w * 1 - 1}" height="${14 - 1}" rx=".5"/>`; k++; continue; } if (area && c === 0) continue; if (k >= n) break; h += `<rect x="${4 + c * w}" y="${7 + r * hh}" width="${w - 1}" height="${hh - 1}" rx=".5"/>`; k++; } return sv(h); };
-function gridMenu(btn) { menuAt(btn, ["h:Disposition", { html: `<div class="gr-grids">${Object.keys(GRIDS).map((g) => `<button class="${STATE.grid === g ? "on" : ""}" data-g="${g}" title="${E(GRID_N[g])}">${gridIco(g)}</button>`).join("")}</div>`, init: (w) => (w.onclick = (e) => { const b = e.target.closest("[data-g]"); if (!b) return; STATE.grid = b.dataset.g; STATE.max = false; closeMenu(); renderGrid(); }) },
-  "h:Synchroniser", ...[["sym", "Symbole"], ["iv", "Unité de temps"], ["cross", "Réticule"], ["time", "Défilement (heure)"], ["range", "Plages de dates"]].map(([k, n]) => ({ t: n, on: !!STATE.sync[k], keep: true, f: () => { STATE.sync[k] = !STATE.sync[k]; saveState(); gridMenu(btn); } })),
-  "-", { t: STATE.max ? "Restaurer la disposition" : "Agrandir le graphique actif", k: "Alt+Entrée · Alt+clic", f: toggleMax }]); }
+const gridIco = (k, w = 28) => { const g = GRIDS[k] || GRIDS["1"], X = 5, Y = 5, S = 18, cw = S / g.c, ch = S / g.r; let d = "";
+  const px = (v) => Math.round(v) + 0.5; // traits nets (1 px) même avec 8 ou 10 colonnes
+  g.a.forEach(([x, y, ww, hh]) => { const x1 = X + (x + ww) * cw, y1 = Y + (y + hh) * ch; if (x + ww < g.c) d += `M${px(x1)} ${Y + y * ch}V${y1}`; if (y + hh < g.r) d += `M${X + x * cw} ${px(y1)}H${x1}`; });
+  return `<svg viewBox="0 0 28 28" width="${w}" height="${w}" fill="none" stroke="currentColor" stroke-width="1"><rect x="${X + 0.5}" y="${Y + 0.5}" width="${S - 1}" height="${S - 1}" rx="2.5"/><path d="${d}" shape-rendering="crispEdges"/></svg>`; };
+const SYNC_INFO = { sym: "Tous les graphiques de la mise en page affichent le même symbole", iv: "Tous les graphiques de la mise en page affichent le même intervalle", cross: "La mire (réticule) suit la souris sur tous les graphiques", time: "Le défilement dans le temps est synchronisé entre les graphiques", range: "Les plages de dates (1J, 5J, 1M…) s'appliquent à tous les graphiques" };
+function gridMenu(btn) {
+  const byN = {}; Object.keys(GRIDS).forEach((k) => { const n = GRIDS[k].a.length; (byN[n] = byN[n] || []).push(k); });
+  const html = () => `<div class="gr-lay2">${Object.keys(byN).map(Number).sort((a, b) => a - b).map((n) => `<div class="gr-lrow"><span class="gr-lnum">${n}</span><div class="gr-lics">${byN[n].map((k) => `<button class="${STATE.grid === k ? "on" : ""}" data-g="${k}">${gridIco(k)}</button>`).join("")}</div></div>`).join("")}
+    <div class="gr-lsync">Synchroniser dans la mise en page</div>${[["sym", "Symbole"], ["iv", "Intervalle"], ["cross", "Mire"], ["time", "Heure"], ["range", "Plage de dates"]].map(([k, t]) => `<div class="gr-ltg"><span>${t}</span><i class="gr-linf" title="${E(SYNC_INFO[k])}">i</i><span class="gr-fill"></span><button class="gr-sw ${STATE.sync[k] ? "on" : ""}" data-s="${k}" aria-label="${t}"></button></div>`).join("")}</div>`;
+  menuAt(btn, [{ html: html(), init: (w) => (w.onclick = (e) => { const b = e.target.closest("[data-g]"), sw = e.target.closest("[data-s]");
+    if (b) { STATE.grid = b.dataset.g; STATE.max = false; closeMenu(); renderGrid(); return; }
+    if (sw) { const k = sw.dataset.s; STATE.sync[k] = !STATE.sync[k]; sw.classList.toggle("on", !!STATE.sync[k]); saveState(); } }) }], { cls: "gr-laymenu" });
+}
 function toggleMax() { if (CELLS.length < 2) return; STATE.max = !STATE.max; $r("#grGrid").classList.toggle("max", STATE.max); saveState(); refreshHeader(); requestAnimationFrame(() => CELLS.forEach((c) => c.redraw())); }
 function saveLayout(as) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId);
   if (!L || as) { askText(as ? "Enregistrer la mise en page sous" : "Nom de la mise en page", L ? L.name + " (copie)" : "Ma mise en page", (n) => { const x = { id: uid(), name: n, state: snapshotLayout(), at: Date.now() }; LAYOUTS.push(x); STATE.layoutId = x.id; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + n + " » enregistrée"); }); return; }

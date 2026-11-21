@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.79.0] — 2026-11-21
+Page Graphique : dispositions et barre d'outils comme TradingView.
+### Ajouté
+- **Toutes les dispositions de TradingView, jusqu'à 16 graphiques** (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16), classées par nombre de graphiques avec les mêmes icônes, et la section « Synchroniser dans la mise en page » (Symbole, Intervalle, Mire, Heure, Plage de dates) avec interrupteurs et bulles d'info. Les anciennes dispositions enregistrées restent valables.
+### Modifié
+- Icônes de la barre d'outils de gauche redessinées à l'identique de TradingView (réticule, ligne de tendance, canal, Fibonacci, figures, rectangle, texte, règle, zoom, aimant, rester en mode dessin, verrou, œil, corbeille, barre des favoris, arborescence) ; les icônes des positions longue / courte sont gardées.
+
 ## [1.78.0] — 2026-11-21
 Page Graphique : **Éditeur Pine refait comme celui de TradingView**.
 ### Ajouté
