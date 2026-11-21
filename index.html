@@ -5971,7 +5971,8 @@ function ictWheelScale(o) { const st = { man: null }, prov = (orig) => (st.man ?
     const up = () => { removeEventListener("pointerup", up, true); setTimeout(() => { const c2 = o.chart(); if (c2 && c2.priceScale(o.scaleId()).options().autoScale === false) { st.man = null; o.onManual(true); } }, 0); }; addEventListener("pointerup", up, true); }, true);
   o.el.addEventListener("dblclick", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return; setTimeout(() => { st.man = null; attach(); o.chart().priceScale(o.scaleId()).applyOptions({ autoScale: true }); o.onManual(false); }, 0); }, true);
   attach(); return { attach, reset: () => { st.man = null; }, manual: () => !!st.man }; }
-/* pineEngine:start — moteur Pine Script v5 / v6 (lexer, parseur, traduction en JS, exécution, rendu des dessins) ; testé par tools/check.js */
+/* pineEngine:start — moteur Pine Script v5 / v6 (lexer, parseur, traduction en JS, exécution, rendu des dessins, Web Worker) ; testé par tools/check.js */
+function pineEngineFactory() { // une seule fonction : sert aussi de code source au Web Worker (PineAsync)
 /* ---------- Pine Script v5 / v6 : lexer + parser (AST) ---------- */
 const PineParser = (() => {
   const KW = new Set(["if", "else", "for", "to", "by", "in", "while", "switch", "var", "varip", "and", "or", "not", "true", "false", "break", "continue", "import", "export", "method", "type", "enum", "as"]);
@@ -7018,7 +7019,64 @@ const PineDraw = (() => {
   const has = (r) => { const d = r && r.draw; return !!d && (d.lines.length || d.labels.length || d.boxes.length || d.tables.length || d.linefills.length || d.polylines.length || d.fills.length || d.bgs.length); };
   return { paint, shift, has };
 })();
-window.PineEngine = PineEngine; window.PineDraw = PineDraw;
+return { PineEngine, PineDraw, PineParser };
+}
+const { PineEngine, PineDraw } = pineEngineFactory();
+/* ---------- Pine Script : calcul dans un Web Worker (le graphique ne fige plus pendant l'exécution des scripts lourds) ----------
+   PineAsync.request(id, code, bars, opts, onDone) -> dernier résultat connu (ou null) ; relance le calcul en arrière-plan si les bougies / réglages ont changé,
+   puis appelle onDone(résultat). Un seul calcul à la fois par indicateur : les mises à jour arrivées entre-temps sont fusionnées (seule la dernière est calculée). */
+const PineAsync = (() => {
+  const LIM = 5000; let W = null; const jobs = new Map(), ovCache = new Map();
+  const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i += 7) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return (h >>> 0).toString(36) + s.length; };
+  const hcache = new Map(); const hashOf = (s) => { let h = hcache.get(s); if (!h) { h = hash(s); if (hcache.size > 200) hcache.clear(); hcache.set(s, h); } return h; };
+  function worker() {
+    if (W !== null) return W;
+    try {
+      const src = `const pineEngineFactory = ${pineEngineFactory.toString()};
+const { PineEngine, PineDraw } = pineEngineFactory();
+const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+const nyc = new Map(); const ny = (t) => { const k = Math.floor(t / 1800); let off = nyc.get(k); if (off === undefined) { const p = {}; fmt.formatToParts(new Date(t * 1000)).forEach((x) => (p[x.type] = x.value)); off = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second) / 1000 - t; nyc.set(k, off); } return t + off; };
+const cmps = new Map();
+self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; let r;
+  try { let c = cmps.get(code); if (!c) { c = PineEngine.compile(code); cmps.set(code, c); if (cmps.size > 30) cmps.delete(cmps.keys().next().value); }
+    const bars = new Array(m); for (let i = 0; i < m; i++) { const k = i * 6; bars[i] = [flat[k], flat[k + 1], flat[k + 2], flat[k + 3], flat[k + 4], flat[k + 5]]; }
+    r = PineEngine.run(c, bars, { mintick: 0.25, ...o, ny }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver;
+  } catch (err) { r = { error: "Erreur : " + (err && err.message || err), meta: { name: "", overlay: true }, plots: [], hlines: [], marks: [], inputs: [], warns: [], draw: null }; }
+  self.postMessage({ id, sig, r }); };`;
+      W = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
+      W.onmessage = (e) => { const { id, sig, r } = e.data, j = jobs.get(id); if (!j) return; j.running = null; j.res = r; j.resSig = sig; if (j.want) send(id, j); if (j.cb) try { j.cb(r); } catch (er) { console.error(er); } };
+      W.onerror = (e) => { console.warn("Pine : worker indisponible, calcul sur le fil principal", e && e.message); W = false; jobs.forEach((j) => (j.running = null)); };
+    } catch (e) { W = false; }
+    return W;
+  }
+  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv].join("|"); };
+  function send(id, j) {
+    const { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
+    const n = bars.length, off = Math.max(0, n - LIM), m = n - off, flat = new Float64Array(m * 6);
+    for (let i = 0; i < m; i++) { const b = bars[i + off], k = i * 6; flat[k] = b[0]; flat[k + 1] = b[1]; flat[k + 2] = b[2]; flat[k + 3] = b[3]; flat[k + 4] = b[4]; flat[k + 5] = b[5]; }
+    const oo = {}; for (const k in o) if (typeof o[k] !== "function") oo[k] = o[k];
+    W.postMessage({ id, sig, code, flat, m, off, n, o: oo }, [flat.buffer]);
+  }
+  function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - LIM); const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
+  function request(id, code, bars, o, cb) {
+    let j = jobs.get(id); if (!j) jobs.set(id, (j = {})); j.cb = cb;
+    const sig = sigOf(code, bars, o); if (j.resSig === sig) return j.res;
+    if (!bars.length) { j.res = null; j.resSig = sig; return null; }
+    const w = worker();
+    if (!w) { j.res = runSync(code, bars, o); j.resSig = sig; return j.res; }
+    if (j.running === sig) return j.res || null;
+    j.want = { sig, code, bars, o }; if (!j.running) send(id, j);
+    return j.res || null;
+  }
+  // overlay=true / false sans attendre le calcul (indicateur masqué ou en cours de calcul : il garde sa place sur le graphique)
+  function overlayOf(code) {
+    let v = ovCache.get(code); if (v !== undefined) return v;
+    try { const c = PineEngine.compile(code); if (c.error) v = true; else { const t = 1794000000, b = [[t, 1, 2, 0.5, 1.5, 1], [t + 60, 1.5, 2, 1, 1.2, 1]]; const r = PineEngine.run(c, b, { ny: (x) => x, tfSec: 60, timeLimit: 300 }); v = r.meta.overlay !== false; } } catch (e) { v = true; }
+    if (ovCache.size > 100) ovCache.clear(); ovCache.set(code, v); return v;
+  }
+  return { request, overlayOf, forget: (id) => jobs.delete(id), pending: (id) => { const j = jobs.get(id); return !!(j && (j.running || j.want)); } };
+})();
+window.PineEngine = PineEngine; window.PineDraw = PineDraw; window.PineAsync = PineAsync;
 /* pineEngine:end */
 /* ---------- Mes scripts TradingView : import de l'export « tradingview-mes-scripts.json » (Pine Editor › Mes scripts) dans la liste des scripts partagée Backtesteur / Graphique (localStorage « bt-indicators »).
    Les scripts restent sur le PC (jamais dans le dépôt). Desktop : le fichier posé dans Bureau\Inner Circle Trader est importé tout seul au lancement s'il est plus récent que le dernier import. ---------- */
@@ -8359,21 +8417,27 @@ const col: string = input.color("#ff9800", "Couleur");
 plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
 ` },
   ];
-  function indList() { return (() => { const L = LS.get("bt-indicators", null); return Array.isArray(L) ? L : JSON.parse(JSON.stringify(IND_EX)); })(); }
+  // v1.77 : liste gardée en mémoire tant que le stockage ne change pas (relue avant à chaque bougie du replay, ~330 Ko avec les scripts TradingView)
+  let indRaw = null, indMemo = null;
+  function indList() { let raw = null; try { raw = localStorage.getItem("bt-indicators"); } catch (e) { raw = null; } if (raw === null) return JSON.parse(JSON.stringify(IND_EX));
+    if (raw !== indRaw || !indMemo) { indRaw = raw; let L = null; try { L = JSON.parse(raw); } catch (e) { L = null; } indMemo = Array.isArray(L) ? L : JSON.parse(JSON.stringify(IND_EX)); } return indMemo; }
   const indSave = (L) => LS.set("bt-indicators", L);
   window.btIND = { ...IND, EX: IND_EX, TPL: IND_TPL, list: indList, save: indSave }; // page Graphique : mêmes scripts Pine / TS que le Backtesteur
   var indCache = new Map(), indSer = new Map(), indRes = {}, indErrShown = {};
   var indMk = [], baseMk = [], indHl = [], indOscH = 0, indT = 0, indTimer = null;
   const indCmp = (x) => { const k = x.lang + "\n" + x.code; let c = indCache.get(k); if (!c) { c = IND.compile(x.code, x.lang); indCache.set(k, c); if (indCache.size > 40) indCache.delete(indCache.keys().next().value); } return c; };
   const indFake = () => { const B = []; let p = 20000; const t0 = Math.floor(Date.now() / 60000) * 60 - 300 * 60; for (let i = 0; i < 300; i++) { const o = p; p += Math.sin(i / 9) * 6; B.push([t0 + i * 60, o, Math.max(o, p) + 3, Math.min(o, p) - 3, p, 1000]); } return B; };
-  function indExec(x, bars) { const c = indCmp(x); if (c.error) return { error: c.error, plots: [], hlines: [], marks: [], inputs: [], warns: [], meta: { name: "", overlay: true } };
+  function indExec(x, bars, sync) { const c = indCmp(x); if (c.error) return { error: c.error, plots: [], hlines: [], marks: [], inputs: [], warns: [], meta: { name: "", overlay: true } };
+    if (c.engine === 2 && !sync && window.PineAsync) { // v1.77 : calcul en arrière-plan (Web Worker), le dernier résultat reste affiché en attendant
+      const r = PineAsync.request("bt:" + x.id, x.code, bars, { inputs: x.inputs || {}, tfSec: tfSec(), tfName: tfName(S.tf), sym: S.sym, pv: (CTR[S.sym] || CTR.NQ).pv }, () => indSchedule());
+      return r || { pending: true, error: null, plots: [], hlines: [], marks: [], inputs: [], warns: [], draw: null, meta: { name: x.name, overlay: PineAsync.overlayOf(x.code) } }; }
     return IND.run(c, bars, { ny: toNY, inputs: x.inputs || {}, tfSec: tfSec(), tfName: tfName(S.tf), sym: S.sym, pv: (CTR[S.sym] || CTR.NQ).pv }); }
   function indBottom() { return Math.max((+P.mBot || 0) / 100, indOscH ? indOscH + 0.03 : 0); }
   function applyMk() { if (!cs) return; const a = baseMk.concat(indMk); a.sort((x, y) => x.time - y.time); cs.setMarkers(a); }
   function indSchedule() { if (!indList().some((x) => x.on) && !indSer.size) return; clearTimeout(indTimer); indTimer = setTimeout(() => { indT = Date.now(); indRun(); }, Math.max(0, indT + 300 - Date.now())); }
   function indRun() {
     if (!chart || !cs) return;
-    const on = indList().filter((x) => x.on), bars = S.B || [], used = new Set(), T = bars.map((b) => toNY(b[0])), osc = [];
+    const on = indList().filter((x) => x.on), bars = S.B || [], used = new Set(), T = bars.map((b) => toNY(b[0])), osc = []; btPineOn = on;
     indHl.forEach(([s, l]) => { try { s.removePriceLine(l); } catch (e) { /* série retirée */ } }); indHl = []; indMk = [];
     if (bars.length) on.forEach((x) => {
       const r = indExec(x, bars); indRes[x.id] = r;
@@ -8407,12 +8471,12 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     applyMk(); if (btPineLay) btPineLay.update();
   }
   // v1.76 : calque des dessins Pine (primitive Lightweight Charts attachée aux bougies)
-  var btPineLay = null;
+  var btPineLay = null, btPineOn = [];
   function btPineLayer() {
     let req = null;
     const paint = (c, size) => {
       if (!chart || !cs || !window.PineDraw) return; const ts = chart.timeScale(), x0 = ts.logicalToCoordinate(0), x1 = ts.logicalToCoordinate(1); if (x0 == null || x1 == null) return; const bs = x1 - x0 || 1, n = (S.B || []).length;
-      indList().filter((x) => x.on).forEach((x) => { const r = indRes[x.id]; if (!r || r.error || !PineDraw.has(r)) return; const ov = r.meta.overlay !== false;
+      btPineOn.forEach((x) => { const r = indRes[x.id]; if (!r || r.error || !PineDraw.has(r)) return; const ov = r.meta.overlay !== false;
         let yf = (p) => { const v = cs.priceToCoordinate(p); return v == null ? NaN : v; };
         if (!ov) { const e = [...indSer.entries()].find(([k]) => k.startsWith(x.id + "|")); if (!e) return; yf = (p) => { const v = e[1].priceToCoordinate(p); return v == null ? NaN : v; }; }
         PineDraw.paint(c, { W: size.width, H: size.height, bs, lx: (i) => x0 + i * bs, lOfX: (px) => (px - x0) / bs, y: yf }, r, { n, noBg: !ov }); });
@@ -8421,7 +8485,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     return { attached: (p) => { req = p.requestUpdate; }, detached: () => { req = null; }, updateAllViews() {}, paneViews: () => [view], update: () => { if (req) req(); } };
   }
   // réglages d'un indicateur jamais lancé : passage rapide sur les dernières bougies (ou des bougies fictives)
-  const indProbe = (x) => indRes[x.id] || indExec(x, (S.B && S.B.length ? S.B.slice(-400) : indFake()));
+  const indProbe = (x) => { const r = indRes[x.id]; return r && !r.pending ? r : indExec(x, (S.B && S.B.length ? S.B.slice(-400) : indFake()), true); };
   const hex6 = (c) => (/^#[0-9a-f]{6}/i.test(c || "") ? c.slice(0, 7) : /^rgba?\(/.test(c || "") ? rgbHex(c) : "#2962ff");
   function indInputField(x, f) {
     const v = x.inputs && f.key in x.inputs ? x.inputs[f.key] : f.def, a = `data-ii="${esc(x.id)}" data-ik="${esc(f.key)}" data-it="${f.type}"`;
@@ -12563,13 +12627,25 @@ function indInputs(x) { const d = indDef(x.t); const I = {}; (d ? d.inp : []).fo
 const indTitle = (x) => { const d = indDef(x.t); if (!d) return x.t; const I = indInputs(x), args = (d.inp || []).filter((f) => f.t === "int" || f.t === "float" || (f.t === "sel" && f.k === "src")).slice(0, 4).map((f) => I[f.k]); return d.sh + (args.length && PREF().legArgs !== false ? " " + args.join(" ") : ""); };
 
 /* ---------- scripts Pine Script / TypeScript (même liste que le Backtesteur : localStorage « bt-indicators ») ---------- */
-const pineList = () => { const L = LS.get("bt-indicators", null); return Array.isArray(L) ? L : []; };
+// v1.77 : liste gardée en mémoire tant que le stockage ne change pas (avant : relue et re-parsée à chaque dessin du graphique, ~330 Ko avec les scripts TradingView)
+let pineRaw = null, pineMemo = [];
+const pineList = () => { let raw = null; try { raw = localStorage.getItem("bt-indicators"); } catch (e) { raw = null; } if (raw !== pineRaw) { pineRaw = raw; try { const L = raw ? JSON.parse(raw) : null; pineMemo = Array.isArray(L) ? L : []; } catch (e) { pineMemo = []; } } return pineMemo; };
+const pineRepaint = (() => { const ids = new Set(); let raf = 0; return (id) => { ids.add(id); if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const S2 = new Set(ids); ids.clear(); (typeof CELLS !== "undefined" ? CELLS : []).forEach((c) => { if (c && c.st && c.st.inds.some((y) => S2.has(y.id))) c.inds(true); }); }); }; })();
 const PCMP = new Map();
 function pineCmp(x) { const E2 = window.btIND; if (!E2) return { error: "moteur Pine indisponible (ouvre une fois le Backtesteur)" }; const k = x.lang + "\n" + x.code; let c = PCMP.get(k); if (!c) { c = E2.compile(x.code, x.lang); PCMP.set(k, c); if (PCMP.size > 40) PCMP.delete(PCMP.keys().next().value); } return c; }
 function pineDef(id) {
   const x = pineList().find((s) => s.id === id); if (!x) return { n: "Script supprimé", sh: "Script", cat: "Mes scripts", inp: [], pl: [], calc: () => ({}) };
-  return { n: x.name + (x.lang === "pine" ? " (Pine)" : " (TS)"), sh: x.name, cat: "Mes scripts", pine: true, inp: [], pl: [], ov: null, src: x,
-    calc: (B, I, X, inst) => { const c = pineCmp(x); if (c.error) return { _err: c.error };
+  const memo = PINEDEF.get(x); if (memo) return memo; const d = pineDef0(id, x); PINEDEF.set(x, d); return d;
+}
+const PINEDEF = new WeakMap(); // définition gardée par script (même objet tant que le stockage ne change pas)
+function pineDef0(id, x) {
+  const v2 = x.lang === "pine" && window.PineAsync && !/\/\/\s*@version\s*=\s*[1-4]\b/.test(x.code);
+  return { n: x.name + (x.lang === "pine" ? " (Pine)" : " (TS)"), sh: x.name, cat: "Mes scripts", pine: true, inp: [], pl: [], ov: v2 ? PineAsync.overlayOf(x.code) : null, src: x,
+    calc: (B, I, X, inst) => {
+      if (v2) { // calcul en arrière-plan (Web Worker) : le graphique garde le dernier résultat en attendant
+        const iid = (inst && inst.id) || id, r = PineAsync.request("gr:" + iid, x.code, B, { inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
+        return r ? { _pine: r, _err: r.error || "" } : {}; }
+      const c = pineCmp(x); if (c.error) return { _err: c.error };
       const r = window.btIND.run(c, B.map((b) => [b[0], b[1], b[2], b[3], b[4], b[5]]), { ny: (t) => t + nyOff(t), inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv });
       return { _pine: r, _err: r.error || "" }; } };
 }

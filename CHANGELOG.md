@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.77.0] — 2026-11-21
+Indicateurs Pine : plus de saccades, et un indicateur masqué garde sa place.
+### Modifié
+- Les scripts Pine (moteur v5 / v6) sont calculés dans un **Web Worker** (`PineAsync`) : le graphique ne fige plus pendant le calcul, le dernier résultat reste affiché en attendant, et les mises à jour en direct sont fusionnées (un seul calcul à la fois par indicateur, toujours sur les dernières bougies).
+- La liste des scripts n'est plus relue et re-parsée depuis le stockage à chaque dessin du graphique ou bougie du replay (≈ 330 Ko avec les scripts TradingView) : gardée en mémoire tant qu'elle ne change pas.
+### Corrigé
+- Page Graphique : masquer un indicateur Pine `overlay=true` (œil) l'envoyait dans un panneau séparé sous le graphique ; il reste maintenant sur le graphique, juste caché (l'option overlay est lue dans le script sans attendre le calcul).
+
 ## [1.76.0] — 2026-11-21
 Indicateurs : **nouveau moteur Pine Script v5 / v6** (Backtesteur et page Graphique).
 ### Ajouté
