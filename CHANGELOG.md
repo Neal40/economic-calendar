@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.72.1] — 2026-11-21
+### Corrigé
+- Page Graphique : les boutons d'un indicateur dans la légende (œil, paramètres, ×, ⋯) ne disparaissent plus pendant le survol quand la légende se met à jour (bougie en direct), et restent 1,2 s après la sortie du curseur.
+
 ## [1.72.0] — 2026-11-21
 ### Ajouté
 - Page Graphique : **Alt + clic gauche** dans un graphique l'agrandit seul (comme une disposition à 1 graphique) ; Alt + clic à nouveau remet la disposition d'avant. Alt + clic sur un dessin le duplique toujours. Alt + Entrée fait la même chose sur le graphique actif.

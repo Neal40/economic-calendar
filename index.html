@@ -690,7 +690,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-lo{display:flex;gap:6px;color:var(--gm)}.gr-lo b{font-weight:400;margin-left:2px}.gr-lo.up b{color:var(--gup)}.gr-lo.dn b{color:var(--gdn)}.gr-lc,.gr-lv{color:var(--gm)}.gr-lv b{font-weight:400;color:var(--gt)}
 .gr-lind{display:flex;align-items:center;gap:6px;pointer-events:auto;align-self:flex-start;padding:1px 4px;margin-left:-4px;border-radius:4px;font-size:12px;color:var(--gt)}
 .gr-lind b{font-weight:400}.gr-lind.off{opacity:.45}.gr-lind:hover{background:rgba(127,127,127,.12)}
-.gr-ln{cursor:pointer}.gr-lb{display:none;gap:1px}.gr-lind:hover .gr-lb{display:flex}
+.gr-ln{cursor:pointer}.gr-lb{display:none;gap:1px}.gr-lind:hover .gr-lb,.gr-lind.hov .gr-lb{display:flex}.gr-lind.hov{background:rgba(127,127,127,.12)}
 .gr-lb button{width:22px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:3px;color:var(--gt)}.gr-lb button:hover{background:var(--gh)}.gr-lb svg{width:18px;height:18px}
 .gr-lerr{color:#ff9800;font-style:normal}
 .gr-cmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;z-index:6;background:color-mix(in srgb,var(--grbg) 82%,transparent);padding:24px;color:var(--gt)}
@@ -11749,6 +11749,7 @@ const findD = (id) => { for (const k in DRAW) { const i = DRAW[k].findIndex((x) 
 /* ---------- un graphique (une case de la mise en page) ---------- */
 let CELLS = [];
 const activeCell = () => CELLS[clamp(STATE.active, 0, CELLS.length - 1)] || null;
+const LEGHOV = { id: null, t: 0 }; // indicateur survolé dans la légende
 class Cell {
   constructor(st, idx) {
     this.st = st; this.idx = idx; this.feed = null; this.unsub = null; this.DB = []; this.T = []; this.R = {}; this.IS = new Map(); this.cmpS = new Map(); this.panes = []; this.hl = []; this.syncing = false; this.cross = null; this.dead = false;
@@ -11944,7 +11945,7 @@ class Cell {
     (this.st.cmp || []).length && (this.cmpLeg = (this.st.cmp || []).map((c) => `<div class="gr-lind" data-cmp="${E(c.s)}"><span style="color:${c.c}">● ${E(symCode(c.s))}</span><span class="gr-lb"><button data-a="cmpx" title="Retirer">×</button></span></div>`).join(""));
     const indRow = (x, idx) => { const d = indDef(x.t); if (!d) return ""; const r = this.R[x.id] || {}, sty = x.sty || {}, pine = r._pine;
       const vals = P.legVals === false || x.hide ? "" : (pine ? pine.plots.filter((p) => p.display !== "none").map((p) => [p.color, p.data[idx]]) : d.pl.filter((p) => !(sty[p.k] && sty[p.k].v === false)).map((p) => [(sty[p.k] && sty[p.k].c) || p.c, r[p.k] ? r[p.k][idx] : NaN])).filter(([, v]) => fin(v) && !(v === 0 && ["vol", "volpane"].includes(x.t))).map(([c, v]) => `<b style="color:${c}">${["vol", "volpane", "obv"].includes(x.t) || Math.abs(v) >= 1e5 ? fmtVol(v) : fmtPx(v, sp)}</b>`).join(" ");
-      return `<div class="gr-lind${x.hide ? " off" : ""}" data-ind="${x.id}"><span class="gr-ln">${E(indTitle(x))}</span>${vals}${r._err ? `<em class="gr-lerr" title="${E(r._err)}">⚠</em>` : ""}<span class="gr-lb"><button data-a="eye" title="${x.hide ? "Afficher" : "Masquer"}">${x.hide ? ICO.eyeoff : ICO.eye}</button><button data-a="set" title="Paramètres">${ICO.gear}</button><button data-a="del" title="Supprimer">${ICO.x}</button><button data-a="more" title="Plus">⋯</button></span></div>`; };
+      return `<div class="gr-lind${x.hide ? " off" : ""}${LEGHOV.id === x.id ? " hov" : ""}" data-ind="${x.id}"><span class="gr-ln">${E(indTitle(x))}</span>${vals}${r._err ? `<em class="gr-lerr" title="${E(r._err)}">⚠</em>` : ""}<span class="gr-lb"><button data-a="eye" title="${x.hide ? "Afficher" : "Masquer"}">${x.hide ? ICO.eyeoff : ICO.eye}</button><button data-a="set" title="Paramètres">${ICO.gear}</button><button data-a="del" title="Supprimer">${ICO.x}</button><button data-a="more" title="Plus">⋯</button></span></div>`; };
     const ovl = this.st.inds.filter((x) => { const d = indDef(x.t); const r = this.R[x.id]; return d && (r && r._pine ? r._pine.meta.overlay !== false : d.ov); }), col = !!this.st.legCol;
     const tog = ovl.length ? `<div class="gr-lind gr-ltog" data-tog="1"><button data-a="tog" title="${col ? "Afficher la légende des indicateurs" : "Masquer la légende des indicateurs"}">${col ? `${ICO.chevd}<span>${ovl.length}</span>` : ICO.chevu}</button></div>` : "";
     this.main.leg.innerHTML = top + (this.cmpLeg && (this.st.cmp || []).length ? this.cmpLeg : "") + (col ? "" : ovl.map((x) => indRow(x, i)).join("")) + tog;
@@ -11964,6 +11965,10 @@ class Cell {
     host.addEventListener("dblclick", (e) => this.dbl(e), true);
     host.addEventListener("contextmenu", (e) => this.ctxMenu(e), true);
     host.addEventListener("pointerleave", () => { if (DS.hover) { DS.hover = null; this.redraw(); } if (DS.cursor === "dot") this.redraw(); });
+    /* boutons d'un indicateur dans la légende : restent affichés pendant le survol même quand la légende se redessine (bougie en direct, curseur), et 1,2 s après la sortie */
+    this.el.addEventListener("pointerover", (e) => { const r = e.target.closest(".gr-lind[data-ind]"); if (!r) return; clearTimeout(LEGHOV.t); if (LEGHOV.id !== r.dataset.ind) { LEGHOV.id = r.dataset.ind; ROOT.querySelectorAll(".gr-lind.hov").forEach((x) => x.classList.toggle("hov", x.dataset.ind === LEGHOV.id)); } r.classList.add("hov"); });
+    this.el.addEventListener("pointerout", (e) => { const r = e.target.closest(".gr-lind[data-ind]"); if (!r) return; const to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest(".gr-lind[data-ind]") : null; if (to && to.dataset.ind === r.dataset.ind) return;
+      clearTimeout(LEGHOV.t); LEGHOV.t = setTimeout(() => { LEGHOV.id = null; ROOT.querySelectorAll(".gr-lind.hov").forEach((x) => x.classList.remove("hov")); }, 1200); });
     this.el.addEventListener("click", (e) => { const b = e.target.closest(".gr-lind button, .gr-lind .gr-ln"); if (!b) return; const row = b.closest(".gr-lind"); if (row.dataset.cmp) { this.st.cmp = this.st.cmp.filter((c) => c.s !== row.dataset.cmp); const s = this.cmpS.get(row.dataset.cmp); if (s) { this.main.chart.removeSeries(s); this.cmpS.delete(row.dataset.cmp); } this.scaleMode(); this.legend(); saveState(); return; }
       if (row.dataset.tog) { this.st.legCol = !this.st.legCol; this.legend(); saveState(); return; }
       const x = this.st.inds.find((y) => y.id === row.dataset.ind); if (!x) return; const a = b.dataset.a || "set";
