@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.78.0] — 2026-11-21
+Page Graphique : **Éditeur Pine refait comme celui de TradingView**.
+### Ajouté
+- Barre de titre « Editeur Pine » (agrandir / restaurer, fermer) et barre d'outils : replier, nom du script avec son menu, **Ajouter au Graphique** (devient « Mettre à jour sur le graphique » si le script y est déjà), **Sauvegarder** (bleu tant qu'il reste des modifications), **Publier le script** (copie le code pour le publier sur TradingView), menu **⋯** avec pastille rouge quand la console a un nouveau message.
+- Menu du script : Sauvegarder (Ctrl + S), Créer une copie, Renommer, **Historique des versions** (30 dernières sauvegardes, aperçu et restauration), Déplacer le script vers le bas / vers la droite, Créer un nouveau (indicateur, stratégie, TypeScript), **Récemment utilisé**, Ouvrir le script (Ctrl + O, avec recherche).
+- Éditeur : coloration syntaxique (types, mots-clés, fonctions, chaînes, nombres, true / false, commentaires, pastilles de couleur), numéros de ligne, ligne courante surlignée, **mini-carte** cliquable, barre d'état « Droite N, Col M · Pine Script® v6 », **console Pine** (compilation, erreurs, avertissements), ligne en erreur marquée en rouge.
+- Clavier : Ctrl + / (commenter), Tab / Maj + Tab, Ctrl + D (dupliquer la ligne), Alt + ↑ / ↓ (déplacer la ligne), Ctrl + Entrée (ajouter au graphique), indentation automatique après if / for / => ; annuler / rétablir conservés.
+- Menu ⋯ : taille du texte, mini-carte, importer / exporter un fichier .pine, raccourcis clavier, aide, supprimer le script.
+
 ## [1.77.0] — 2026-11-21
 Indicateurs Pine : plus de saccades, et un indicateur masqué garde sa place.
 ### Modifié

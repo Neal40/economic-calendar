@@ -768,6 +768,40 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 /* panneau du bas (éditeur Pine) */
 .gr-bpanel{width:560px;min-width:320px;flex:none;border-left:1px solid var(--gl);display:flex;flex-direction:column;background:var(--gb);position:relative;min-height:0}
 .gr-bpanel .gr-ph{gap:6px;flex-wrap:wrap;height:auto;min-height:40px;padding-top:4px;padding-bottom:4px}.gr-pb{flex:1;display:flex;flex-direction:column;min-height:0}
+/* ---------- v1.78 : Éditeur Pine façon TradingView ---------- */
+#v-graphique .gr{--pe-k:#5b9cf6;--pe-t:#5b9cf6;--pe-f:#8fb6ff;--pe-s:#4caf50;--pe-n:#ffa726;--pe-b:#f7525f;--pe-c:#787b86;--pe-v:#ce93d8}
+#v-graphique .gr.light{--pe-k:#1848cc;--pe-t:#1848cc;--pe-f:#2962ff;--pe-s:#0c8a4f;--pe-n:#f57c00;--pe-b:#e53935;--pe-c:#787b86;--pe-v:#8e24aa}
+.pe-k{color:var(--pe-k)}.pe-t{color:var(--pe-t)}.pe-f{color:var(--pe-f)}.pe-s{color:var(--pe-s)}.pe-n{color:var(--pe-n)}.pe-b{color:var(--pe-b)}.pe-c{color:var(--pe-c)}.pe-v{color:var(--pe-v)}
+.pe-sw{color:transparent!important;background:var(--c);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.gr-bpanel.bottom{width:auto!important;min-width:0;border-left:0;border-top:1px solid var(--gl)}
+.gr-bpanel.max{position:absolute;inset:0;width:auto!important;height:auto!important;z-index:40;border:0}
+.gr-bpanel.col{height:auto!important}.gr-bpanel.col .pe-body,.gr-bpanel.col .pe-con,.gr-bpanel.col .pe-sb{display:none}.gr-bpanel.col:not(.bottom){justify-content:flex-start}
+.gr-pgrip.h{left:0;right:0;top:-3px;bottom:auto;width:auto;height:7px;cursor:row-resize}
+.pe-title{display:flex;align-items:center;gap:8px;height:42px;padding:0 6px 0 12px;font-size:15px;color:var(--gt);flex:none}.pe-title b{font-weight:400}.pe-tic{display:flex}
+.pe-ib{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:0;background:none;color:var(--gt);border-radius:6px;cursor:pointer;position:relative;flex:none}.pe-ib:hover{background:var(--gh)}.pe-ib.on{color:var(--ga)}
+.pe-tb{display:flex;align-items:center;gap:8px;padding:4px 10px 8px 4px;border-bottom:1px solid var(--gl);flex:none;flex-wrap:wrap;row-gap:6px}
+.pe-name{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--gt);font-size:19px;font-weight:600;padding:4px 8px;border-radius:6px;cursor:pointer;max-width:360px;min-width:0}.pe-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pe-name:hover{background:var(--gh)}
+.pe-btn{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border:1px solid var(--gl);border-radius:8px;background:var(--gb);color:var(--gt);font-size:15px;cursor:pointer;white-space:nowrap}.pe-btn:hover{background:var(--gh)}
+.pe-save{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 8px;border:0;background:none;color:var(--gm);font-size:15px;cursor:pointer;border-radius:8px;white-space:nowrap}.pe-save.dirty{color:var(--ga)}.pe-save:hover{background:var(--gh)}
+.pe-btn:disabled,.pe-save:disabled{opacity:.45;cursor:default}
+.pe-moreb{border:1px solid var(--gl);border-radius:8px;width:38px;height:34px}.pe-dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:#f23645}
+.pe-body{flex:1;display:flex;min-height:0;position:relative;background:var(--gb)}
+.pe-gut,.pe-pre,.pe-ta{font-family:Consolas,Menlo,"Roboto Mono","Space Mono",monospace;font-size:var(--pefs);line-height:var(--pelh)}
+.pe-gut{flex:none;width:54px;overflow:hidden;color:var(--gm);text-align:right;user-select:none;-webkit-user-select:none}.pe-gin{padding:8px 16px 60px 0;will-change:transform}.pe-gin div{height:var(--pelh)}.pe-gin .on{color:var(--gt)}.pe-gin .err{color:#fff;background:#f23645;border-radius:3px;padding-right:3px}
+.pe-ed{flex:1;position:relative;overflow:hidden;min-width:0}.pe-hl{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.pe-pre{margin:0;padding:8px 14px 60px 6px;white-space:pre;color:var(--gt);tab-size:4;will-change:transform}.pe-cur{position:absolute;left:0;right:0;background:var(--gh);opacity:.75}
+.pe-ta{position:absolute;inset:0;width:100%;height:100%;margin:0;border:0;outline:0;resize:none;padding:8px 14px 60px 6px;white-space:pre;overflow:auto;background:transparent;color:transparent;caret-color:var(--gt);tab-size:4;user-select:text;-webkit-user-select:text}
+.pe-ta::selection{background:rgba(41,98,255,.28);color:transparent}.pe-ta::placeholder{color:var(--gm)}
+.pe-mini{flex:none;width:96px;position:relative;border-left:1px solid var(--gl);cursor:pointer;overflow:hidden}.pe-mini canvas{position:absolute;left:4px;top:4px}.pe-mvp{position:absolute;left:0;right:0;background:rgba(128,128,128,.3)}.pe-mini:hover .pe-mvp{background:rgba(120,123,134,.32)}
+.pe-con{flex:none;height:160px;border-top:1px solid var(--gl);display:flex;flex-direction:column;background:var(--gb)}.pe-con[hidden]{display:none}.pe-conh{display:flex;align-items:center;height:32px;padding:0 4px 0 12px;font-size:13px;color:var(--gt)}
+.pe-conb{flex:1;overflow:auto;font:12px/1.65 Consolas,Menlo,monospace;padding:2px 12px 8px;user-select:text;-webkit-user-select:text}.pe-cl{display:flex;gap:12px;color:var(--gt)}.pe-ct{color:var(--gm);flex:none}.pe-cl.err{color:#f23645}.pe-cl.warn{color:#ff9800}.pe-mut{color:var(--gm)}
+.pe-sb{flex:none;display:flex;align-items:center;gap:18px;height:30px;padding:0 14px 0 4px;border-top:1px solid var(--gl);font-size:12.5px;color:var(--gt)}
+.gr-menu.pe-menu{min-width:330px;font-size:14.5px;padding:6px 0}.pe-menu .gr-mi{padding:8px 14px}.pe-menu .gr-mh{padding:10px 14px 4px;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+.pe-oq{display:flex}.pe-ol{max-height:440px;overflow:auto;margin-top:8px}.pe-or{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;background:none;color:var(--gt);text-align:left;border-radius:6px;cursor:pointer;font-size:14px}.pe-or:hover,.pe-or.on{background:var(--gh)}
+.pe-on{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pe-tag{font-size:10px;border:1px solid var(--gm);border-radius:4px;padding:0 4px;color:var(--gm)}.pe-ok,.pe-ol2{color:var(--gm);font-size:12px;white-space:nowrap}
+.pe-hv{display:flex;gap:10px;height:440px}.pe-hl2{width:250px;flex:none;overflow:auto}.pe-hr{display:block;width:100%;text-align:left;padding:8px 10px;border:0;background:none;color:var(--gt);border-radius:6px;cursor:pointer;font-size:13px}.pe-hr small{display:block;color:var(--gm);margin-top:2px}.pe-hr.on,.pe-hr:hover{background:var(--gh)}
+.pe-hp{flex:1;margin:0;overflow:auto;font:12px/1.5 Consolas,Menlo,monospace;background:var(--gp);color:var(--gt);padding:8px 10px;border-radius:6px;white-space:pre}
+.pe-keys{width:100%;border-collapse:collapse;font-size:13px}.pe-keys td{padding:6px 4px;border-bottom:1px solid var(--gl)}.pe-keys kbd{font:12px Consolas,monospace;padding:2px 6px;border:1px solid var(--gl);border-radius:4px}.pe-help{font-size:13.5px;line-height:1.6;color:var(--gt)}.pe-help code{font-size:12.5px}
 .gr-pgrip{position:absolute;left:-3px;top:0;bottom:0;width:7px;cursor:col-resize;z-index:6}.gr-pgrip:hover,.gr-pgrip.on{background:var(--ga);opacity:.5}
 .gr-pb textarea{flex:1;resize:none;border:0;outline:0;background:var(--gp);padding:10px 12px;font:12.5px/1.5 "Space Mono",Consolas,monospace;color:var(--gt);tab-size:4;user-select:text;-webkit-user-select:text}
 .gr-pmsg{flex:none;max-height:30%;padding:8px 10px;font-size:12px;color:var(--gup);border-top:1px solid var(--gl);overflow:auto;white-space:pre-wrap}.gr-pmsg:empty{display:none}.gr-pmsg.bad{color:#ff9800}
@@ -14316,26 +14350,176 @@ new MutationObserver(() => { if (STATE.mode === "tv") tvSync(); }).observe(docum
 document.addEventListener("visibilitychange", () => { if (STATE.mode === "tv") tvSync(); });
 new MutationObserver(() => { if (STATE.mode === "tv" && TV_SITE()) tvSync(); }).observe(ROOT, { childList: true });
 
-/* ---------- éditeur Pine Script (scripts partagés avec le Backtesteur) ---------- */
+/* ---------- Éditeur Pine façon TradingView (v1.78) : barre de titre, menu du script, coloration, mini-carte, console, historique des versions, ancrage à droite / en bas ---------- */
 let pineCur = null;
-function pineGrip(P) { P.style.width = clamp(LS.get("gr-pinew", 560), 320, Math.max(340, ROOT.clientWidth - 360)) + "px"; const g = document.createElement("div"); g.className = "gr-pgrip"; g.title = "Glisser pour agrandir"; P.prepend(g);
-  g.onpointerdown = (e) => { e.preventDefault(); const x0 = e.clientX, w0 = P.offsetWidth; g.classList.add("on"); const mv = (ev) => { P.style.width = clamp(w0 + (x0 - ev.clientX), 320, Math.max(340, ROOT.clientWidth - 360)) + "px"; }, up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); g.classList.remove("on"); LS.set("gr-pinew", P.offsetWidth); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); };
-  g.ondblclick = () => { const big = P.offsetWidth < ROOT.clientWidth * 0.55; P.style.width = (big ? Math.max(340, ROOT.clientWidth - 360) : 560) + "px"; LS.set("gr-pinew", P.offsetWidth); }; }
-function renderPine() { const P = $r("#grBPanel"); P.hidden = STATE.bpanel !== "pine" || STATE.mode === "tv"; if (P.hidden) return; setTimeout(() => { if (!P.querySelector(".gr-pgrip")) pineGrip(P); }, 0);
-  if (!window.btIND || !window.btIND.list) { P.innerHTML = `<div class="gr-ph"><b>Éditeur Pine</b><span class="gr-fill"></span><button class="gr-ib" data-bx="1">${ICO.x}</button></div><div class="gr-empty">Moteur Pine indisponible.</div>`; P.querySelector("[data-bx]").onclick = () => { STATE.bpanel = null; renderPine(); renderStrip(); }; return; }
-  const L = window.btIND.list(); if (!pineCur || !L.some((x) => x.id === pineCur)) pineCur = L[0] ? L[0].id : null; const x = L.find((y) => y.id === pineCur);
-  P.innerHTML = `<div class="gr-ph"><b>${ICO.code} Éditeur Pine</b><select class="gr-in sm" id="grPineSel">${L.map((y) => `<option value="${E(y.id)}" ${y.id === pineCur ? "selected" : ""}>${E(y.name)} (${y.lang === "pine" ? "Pine" : "TS"})</option>`).join("")}</select><input class="gr-in sm" id="grPineName" value="${E(x ? x.name : "")}" placeholder="Nom">
-    <button class="gr-btn sm" data-pn="pine">+ Pine</button><button class="gr-btn sm" data-pn="ts">+ TS</button><span class="gr-fill"></span><button class="gr-btn sm" data-pa="save">Enregistrer</button><button class="gr-btn sm gr-pri" data-pa="add">Ajouter au graphique</button><button class="gr-btn sm" data-pa="del">Supprimer</button><button class="gr-ib" data-bx="1">${ICO.x}</button></div>
-    <div class="gr-pb"><textarea id="grPineCode" spellcheck="false" placeholder="//@version=5">${E(x ? x.code : "")}</textarea><div class="gr-pmsg" id="grPineMsg">${x ? "" : "Aucun script : crée-en un (+ Pine / + TS)."}</div></div>`;
-  const msg = (t, bad) => { const m = P.querySelector("#grPineMsg"); m.textContent = t; m.classList.toggle("bad", !!bad); };
-  const save = () => { if (!x) return false; x.code = P.querySelector("#grPineCode").value; x.name = P.querySelector("#grPineName").value.trim() || x.name; const c = window.btIND.compile(x.code, x.lang); if (c.error) { msg(c.error, true); } else msg("Compilé ✓ · enregistré (aussi visible dans le Backtesteur)"); window.btIND.save(L); CELLS.forEach((cc) => { if (cc.st.inds.some((y) => y.t === "pine:" + x.id)) { cc.inds(true); cc.legend(); } }); return !c.error; };
-  P.querySelector("#grPineSel").onchange = (e) => { pineCur = e.target.value; renderPine(); };
-  P.querySelector("#grPineCode").onkeydown = (e) => { e.stopPropagation(); if (e.key === "Tab") { e.preventDefault(); const t = e.target, s = t.selectionStart; t.value = t.value.slice(0, s) + "    " + t.value.slice(t.selectionEnd); t.selectionStart = t.selectionEnd = s + 4; } if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); } };
-  P.onclick = (e) => { const n = e.target.closest("[data-pn]"), a = e.target.closest("[data-pa]");
-    if (e.target.closest("[data-bx]")) { STATE.bpanel = null; renderPine(); renderStrip(); saveState(); return; }
-    if (n) { const lang = n.dataset.pn, y = { id: "u" + uid(), name: lang === "pine" ? "Mon indicateur" : "Mon indicateur TS", lang, on: false, inputs: {}, code: (window.btIND.TPL || {})[lang] || "" }; L.push(y); window.btIND.save(L); pineCur = y.id; renderPine(); return; }
-    if (!a || !x) return; if (a.dataset.pa === "save") save(); if (a.dataset.pa === "add") { if (save()) addInd(activeCell(), "pine:" + x.id); }
-    if (a.dataset.pa === "del") { if (!confirmDel(x.name)) return; L.splice(L.indexOf(x), 1); window.btIND.save(L); pineCur = null; renderPine(); } }; }
+const PE = { con: false, max: false, col: false, log: [], unread: false, err: null, hlRaf: 0 };
+const peOpt = () => Object.assign({ fs: 13, mini: true }, LS.get("gr-pineopt", {}));
+const peDock = () => (LS.get("gr-pinedock", "right") === "bottom" ? "bottom" : "right");
+const peSv = (d, w = 18) => `<svg viewBox="0 0 24 24" width="${w}" height="${w}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const PEI = {
+  save: peSv('<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 10a4 4 0 0 1 0 8"/><path d="M12 12v8M9 15l3-3 3 3"/>'), play: peSv('<path d="M7 5l12 7-12 7z"/>'), warn: peSv('<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/>'),
+  more: peSv('<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>'), down: peSv('<path d="M6 9l6 6 6-6"/>'), up: peSv('<path d="M6 15l6-6 6 6"/>', 16),
+  copy: peSv('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>'), pen: peSv('<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>'),
+  hist: peSv('<path d="M4 12a8 8 0 1 0 2.3-5.6L4 9"/><path d="M4 4v5h5M12 8v4l3 2"/>'), dockB: peSv('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 14h16M12 9v3M10 10.5l2 2 2-2"/>'), dockR: peSv('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M14 4v16M8 12h3M9.5 10l2 2-2 2"/>'),
+  plus: peSv('<path d="M12 5v14M5 12h14"/>'), folder: peSv('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'), max: peSv('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'), min: peSv('<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>'),
+  x: peSv('<path d="M6 6l12 12M18 6L6 18"/>'), back: peSv('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M13 9l-3 3 3 3M10 12h7"/>'), con: peSv('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10l3 2-3 2M12 15h5"/>', 16),
+  trash: peSv('<path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/>'), dl: peSv('<path d="M12 4v11M8 11l4 4 4-4M5 20h14"/>'), ul: peSv('<path d="M12 15V4M8 8l4-4 4 4M5 20h14"/>'), help: peSv('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17v.5"/>'), kb: peSv('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/>'), gear: peSv('<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2L10 21h4l.6-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/>'),
+};
+const PE_TPL = {
+  indicator: `//@version=6\nindicator("Script sans titre", overlay = true)\nplot(close)\n`,
+  strategy: `//@version=6\nstrategy("Script sans titre", overlay = true)\n\nlongCondition = ta.crossover(ta.sma(close, 14), ta.sma(close, 28))\nif longCondition\n    strategy.entry("Long", strategy.long)\n\nshortCondition = ta.crossunder(ta.sma(close, 14), ta.sma(close, 28))\nif shortCondition\n    strategy.entry("Short", strategy.short)\n`,
+};
+/* --- coloration (mêmes catégories que l'éditeur de TradingView) --- */
+const PE_KW = new Set(["if", "else", "for", "to", "by", "in", "while", "switch", "var", "varip", "break", "continue", "import", "export", "method", "type", "enum", "as", "and", "or", "not"]);
+const PE_TY = new Set(["int", "float", "bool", "string", "color", "line", "label", "box", "table", "linefill", "polyline", "array", "map", "matrix", "series", "simple", "const"]);
+const PE_BV = new Set(["true", "false", "na"]);
+const PE_VAR = new Set(["open", "high", "low", "close", "volume", "time", "time_close", "bar_index", "last_bar_index", "hl2", "hlc3", "ohlc4", "hlcc4", "timenow", "year", "month", "dayofmonth", "dayofweek", "hour", "minute", "second", "weekofyear"]);
+const PE_NS = /^(ta|math|str|array|map|matrix|color|input|line|label|box|table|linefill|polyline|chart|request|timeframe|syminfo|barstate|strategy|session|ticker|runtime|log|plot|hline|location|shape|size|display|extend|xloc|yloc|format|position|text|font|order|currency|barmerge|alert|dayofweek|adjustment|scale)\./;
+function peHiLine(s) {
+  let out = "", k = 0; const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  while (k < s.length) {
+    const r = s.slice(k); let m;
+    if ((m = /^\/\/.*/.exec(r))) { out += `<span class="pe-c">${esc(m[0])}</span>`; break; }
+    if ((m = /^("(?:[^"\\]|\\.)*"?|'(?:[^'\\]|\\.)*'?)/.exec(r))) { out += `<span class="pe-s">${esc(m[0])}</span>`; k += m[0].length; continue; }
+    if ((m = /^#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6})\b/.exec(r))) { out += `<span class="pe-sw" style="--c:${m[0]}">#</span><span class="pe-n">${m[0].slice(1)}</span>`; k += m[0].length; continue; }
+    if ((m = /^(?:\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+)/.exec(r))) { out += `<span class="pe-n">${m[0]}</span>`; k += m[0].length; continue; }
+    if ((m = /^[A-Za-z_][\w]*(?:\.[A-Za-z_]\w*)*/.exec(r))) { const w = m[0], call = /^\s*(\(|<[\w<>, .]*>\s*\()/.test(s.slice(k + w.length));
+      const cls = PE_KW.has(w) ? "pe-k" : PE_BV.has(w) ? "pe-b" : call ? "pe-f" : PE_TY.has(w) || w === "chart.point" ? "pe-t" : PE_VAR.has(w) ? "pe-v" : PE_NS.test(w) ? "pe-v" : "";
+      out += cls ? `<span class="${cls}">${w}</span>` : w; k += w.length; continue; }
+    out += esc(s[k]); k++;
+  }
+  return out;
+}
+/* --- historique des versions et scripts récents (localStorage) --- */
+const peHist = (id) => (LS.get("gr-pinehist", {})[id] || []);
+function pePushHist(x) { const H = LS.get("gr-pinehist", {}), L = H[x.id] || []; if (L.length && L[0].code === x.code) return; L.unshift({ t: Date.now(), name: x.name, code: x.code }); H[x.id] = L.slice(0, 30); LS.set("gr-pinehist", H); }
+function peRecent(id) { if (!id) return LS.get("gr-pinerecent", []); const R = [id, ...LS.get("gr-pinerecent", []).filter((y) => y !== id)].slice(0, 8); LS.set("gr-pinerecent", R); return R; }
+const peLog = (msg, kind) => { const d = new Date(); PE.log.push({ t: `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`, msg, kind: kind || "" }); if (PE.log.length > 80) PE.log.shift(); if (!PE.con) PE.unread = true; };
+const peKind = (x) => (x && x.lang === "pine" ? (/^\s*strategy\s*\(/m.test(x.code) ? "Stratégie" : /^\s*library\s*\(/m.test(x.code) ? "Bibliothèque" : "Indicateur") : "TypeScript");
+const peVer = (code) => { const m = /\/\/\s*@version\s*=\s*(\d+)/.exec(code || ""); return m ? m[1] : "5"; };
+
+function pineGrip(P) {
+  P.querySelectorAll(".gr-pgrip").forEach((g) => g.remove()); const bottom = peDock() === "bottom", g = document.createElement("div"); g.className = "gr-pgrip" + (bottom ? " h" : ""); g.title = "Glisser pour agrandir"; P.prepend(g);
+  if (bottom) { P.style.width = ""; P.style.height = clamp(LS.get("gr-pineh", 340), 160, Math.max(200, ROOT.clientHeight - 200)) + "px"; } else { P.style.height = ""; P.style.width = clamp(LS.get("gr-pinew", 560), 320, Math.max(340, ROOT.clientWidth - 360)) + "px"; }
+  g.onpointerdown = (e) => { e.preventDefault(); const x0 = e.clientX, y0 = e.clientY, w0 = P.offsetWidth, h0 = P.offsetHeight; g.classList.add("on");
+    const mv = (ev) => { if (bottom) P.style.height = clamp(h0 + (y0 - ev.clientY), 160, Math.max(200, ROOT.clientHeight - 200)) + "px"; else P.style.width = clamp(w0 + (x0 - ev.clientX), 320, Math.max(340, ROOT.clientWidth - 360)) + "px"; peMini(); };
+    const up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); g.classList.remove("on"); if (bottom) LS.set("gr-pineh", P.offsetHeight); else LS.set("gr-pinew", P.offsetWidth); CELLS.forEach((c) => c.redraw && c.redraw()); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); };
+  g.ondblclick = () => { if (bottom) { P.style.height = (P.offsetHeight < ROOT.clientHeight * 0.5 ? ROOT.clientHeight - 200 : 340) + "px"; LS.set("gr-pineh", P.offsetHeight); } else { P.style.width = (P.offsetWidth < ROOT.clientWidth * 0.55 ? Math.max(340, ROOT.clientWidth - 360) : 560) + "px"; LS.set("gr-pinew", P.offsetWidth); } peMini(); };
+}
+// place du panneau : à droite du graphique ou sous le graphique (« Déplacer le script vers le bas »)
+function pePlace(P) { const bottom = peDock() === "bottom", host = bottom ? ROOT.querySelector(".gr-center") : ROOT.querySelector(".gr-body"), ref = bottom ? null : ROOT.querySelector("#grRPanel"); if (P.parentNode !== host) host.insertBefore(P, ref); P.classList.toggle("bottom", bottom); P.classList.toggle("max", PE.max); P.classList.toggle("col", PE.col); }
+
+function renderPine() {
+  const P = $r("#grBPanel"); P.hidden = STATE.bpanel !== "pine" || STATE.mode === "tv"; if (P.hidden) return;
+  if (!window.btIND || !window.btIND.list) { P.innerHTML = `<div class="pe-title"><b>Editeur Pine</b><span class="gr-fill"></span><button class="pe-ib" data-pe="close">${PEI.x}</button></div><div class="gr-empty">Moteur Pine indisponible.</div>`; P.querySelector("[data-pe]").onclick = () => { STATE.bpanel = null; renderPine(); renderStrip(); }; return; }
+  pePlace(P);
+  const L = window.btIND.list(); if (!pineCur || !L.some((x) => x.id === pineCur)) pineCur = (peRecent().find((id) => L.some((y) => y.id === id))) || (L[0] ? L[0].id : null); const x = L.find((y) => y.id === pineCur); if (x) peRecent(x.id);
+  const o = peOpt(), onChart = () => !!(x && activeCell() && activeCell().st.inds.some((y) => y.t === "pine:" + x.id));
+  const old = P.querySelector(".pe-ta"), keep = old && P.dataset.sid === String(pineCur) ? { st: old.scrollTop, sl: old.scrollLeft, a: old.selectionStart, b: old.selectionEnd, f: document.activeElement === old, v: old.value } : null; P.dataset.sid = String(pineCur);
+  P.style.setProperty("--pefs", o.fs + "px"); P.style.setProperty("--pelh", Math.round(o.fs * 1.5) + "px");
+  P.innerHTML = `<div class="pe-title"><span class="pe-tic">${PEI.back}</span><b>Editeur Pine</b><span class="gr-fill"></span><button class="pe-ib" data-pe="max" title="${PE.max ? "Restaurer" : "Agrandir"}">${PE.max ? PEI.min : PEI.max}</button><button class="pe-ib" data-pe="close" title="Fermer">${PEI.x}</button></div>
+    <div class="pe-tb"><button class="pe-ib pe-colb" data-pe="col" title="${PE.col ? "Déplier" : "Replier"} l'éditeur">${PE.col ? PEI.up : PEI.down}</button>
+      <button class="pe-name" data-pe="menu" title="Menu du script"><span>${E(x ? x.name : "Script sans titre")}</span>${PEI.up}</button>
+      <button class="pe-btn" data-pe="add" ${x ? "" : "disabled"}>${PEI.play}<span>${onChart() ? "Mettre à jour sur le graphique" : "Ajouter au Graphique"}</span></button>
+      <button class="pe-save" data-pe="save" ${x ? "" : "disabled"}>${PEI.save}<span>Sauvegarder</span></button><span class="gr-fill"></span>
+      <button class="pe-btn" data-pe="pub" ${x ? "" : "disabled"}>${PEI.warn}<span>Publier le script</span></button><button class="pe-ib pe-moreb" data-pe="more" title="Plus">${PEI.more}<i class="pe-dot" ${PE.unread ? "" : "hidden"}></i></button></div>
+    <div class="pe-body"><div class="pe-gut"><div class="pe-gin"></div></div><div class="pe-ed"><div class="pe-hl"><div class="pe-cur"></div><pre class="pe-pre"></pre></div><textarea class="pe-ta" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" ${x ? "" : "disabled"} placeholder="${x ? "" : "Aucun script : … › Créer un nouveau"}"></textarea></div>${o.mini ? `<div class="pe-mini"><canvas></canvas><div class="pe-mvp"></div></div>` : ""}</div>
+    <div class="pe-con" ${PE.con ? "" : "hidden"}><div class="pe-conh"><b>Console Pine</b><span class="gr-fill"></span><button class="pe-ib" data-pe="clr" title="Effacer">${PEI.trash}</button><button class="pe-ib" data-pe="con" title="Fermer">${PEI.x}</button></div><div class="pe-conb"></div></div>
+    <div class="pe-sb"><button class="pe-ib ${PE.con ? "on" : ""}" data-pe="con" title="Console Pine">${PEI.con}</button><span class="gr-fill"></span><span class="pe-pos">Droite 1, Col 1</span><span class="pe-ver">${x && x.lang !== "pine" ? "TypeScript" : `Pine Script® v${peVer(x && x.code)}`}</span></div>`;
+  const ta = P.querySelector(".pe-ta"), pre = P.querySelector(".pe-pre"), gin = P.querySelector(".pe-gin"), cur = P.querySelector(".pe-cur"), hl = P.querySelector(".pe-hl"), saveB = P.querySelector("[data-pe=save]");
+  ta.value = x ? x.code : ""; setTimeout(() => pineGrip(P), 0);
+  const lh = () => Math.round(o.fs * 1.5);
+  const dirty = () => !!x && ta.value !== x.code;
+  const conRender = () => { const b = P.querySelector(".pe-conb"); if (!b) return; b.innerHTML = PE.log.length ? PE.log.map((l) => `<div class="pe-cl ${l.kind}"><span class="pe-ct">${l.t}</span><span>${E(l.msg)}</span></div>`).join("") : `<div class="pe-cl pe-mut">Aucun message.</div>`; b.scrollTop = b.scrollHeight; };
+  const errLine = () => { const m = PE.err && PE.err.id === (x && x.id) ? /ligne (\d+)/.exec(PE.err.msg) : null; return m ? +m[1] : 0; };
+  const paint = () => { PE.hlRaf = 0; const lines = ta.value.split("\n"), el2 = errLine();
+    pre.innerHTML = lines.map((l) => peHiLine(l) || " ").join("\n") + "\n";
+    gin.innerHTML = lines.map((_, i) => `<div class="${i + 1 === el2 ? "err" : ""}">${i + 1}</div>`).join("");
+    saveB.classList.toggle("dirty", dirty()); peMini(); syncScroll(); caret(); };
+  const sched = () => { if (!PE.hlRaf) PE.hlRaf = requestAnimationFrame(paint); };
+  const syncScroll = () => { const t = `translate(${-ta.scrollLeft}px, ${-ta.scrollTop}px)`; pre.style.transform = t; cur.style.transform = `translateY(${-ta.scrollTop}px)`; gin.style.transform = `translateY(${-ta.scrollTop}px)`; peMiniVp(); };
+  const caret = () => { const v = ta.value, p = ta.selectionStart, ln = v.slice(0, p).split("\n").length, col = p - v.lastIndexOf("\n", p - 1); P.querySelector(".pe-pos").textContent = `Droite ${ln}, Col ${col}`; cur.style.top = (8 + (ln - 1) * lh()) + "px"; cur.style.height = lh() + "px";
+    gin.querySelectorAll(".on").forEach((d) => d.classList.remove("on")); const g = gin.children[ln - 1]; if (g) g.classList.add("on"); };
+  // mini-carte : un trait par mot, couleur de sa catégorie ; clic / glisser = défiler
+  function peMini() {
+    const box = P.querySelector(".pe-mini"); if (!box) return; const cv = box.querySelector("canvas"), W = box.clientWidth, H = box.clientHeight; if (!W || !H) return; const dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + "px"; cv.style.height = H + "px"; const c = cv.getContext("2d"); c.scale(dpr, dpr); c.clearRect(0, 0, W, H);
+    const lines = ta.value.split("\n"), rh = Math.min(2, H / Math.max(1, lines.length)), cs = getComputedStyle(P), col = (v, d) => cs.getPropertyValue(v).trim() || d;
+    const C = { "pe-c": col("--pe-c", "#787b86"), "pe-s": col("--pe-s", "#089981"), "pe-n": col("--pe-n", "#ff6d00"), "pe-k": col("--pe-k", "#1848cc"), "pe-t": col("--pe-t", "#1848cc"), "pe-f": col("--pe-f", "#2962ff"), "pe-b": col("--pe-b", "#f23645"), "pe-v": col("--pe-v", "#9c27b0"), "": col("--gm", "#888") };
+    const el2 = errLine();
+    lines.forEach((l, i) => { const y = i * rh; if (y > H) return; let xx = 0; const re = /(\/\/.*)|("(?:[^"\\]|\\.)*"?)|(#[0-9a-fA-F]{6,8})|(\d+\.?\d*)|([A-Za-z_][\w.]*)|(\s+)|(.)/g; let m;
+      while ((m = re.exec(l)) && xx < W) { const w = m[0].length * 0.9; if (m[6]) { xx += w; continue; } const k = m[1] ? "pe-c" : m[2] ? "pe-s" : m[3] || m[4] ? "pe-n" : m[5] ? (PE_KW.has(m[5]) ? "pe-k" : PE_BV.has(m[5]) ? "pe-b" : /^\s*\(/.test(l.slice(re.lastIndex)) ? "pe-f" : PE_TY.has(m[5]) ? "pe-t" : "") : ""; c.globalAlpha = 0.7; c.fillStyle = C[k] || C[""]; c.fillRect(xx, y, Math.max(0.8, w), Math.max(1, rh - 0.4)); xx += w; } });
+    c.globalAlpha = 1; if (el2) { c.fillStyle = "#ff9800"; c.fillRect(W - 4, (el2 - 1) * rh, 4, Math.max(3, rh)); }
+    box.dataset.rh = rh; peMiniVp();
+  }
+  function peMiniVp() { const box = P.querySelector(".pe-mini"); if (!box) return; const rh = +box.dataset.rh || 2, vp = box.querySelector(".pe-mvp"); vp.style.top = (ta.scrollTop / lh()) * rh + "px"; vp.style.height = Math.max(12, (ta.clientHeight / lh()) * rh) + "px"; }
+  { const box = P.querySelector(".pe-mini"); if (box) box.onpointerdown = (e) => { e.preventDefault(); const go = (ev) => { const r = box.getBoundingClientRect(), rh = +box.dataset.rh || 2; ta.scrollTop = ((ev.clientY - r.top) / rh) * lh() - ta.clientHeight / 2; syncScroll(); }; go(e); const up = () => { removeEventListener("pointermove", go); removeEventListener("pointerup", up); }; addEventListener("pointermove", go); addEventListener("pointerup", up); }; }
+  /* --- actions --- */
+  const refreshCells = () => CELLS.forEach((cc) => { if (x && cc.st.inds.some((y) => y.t === "pine:" + x.id)) { cc.inds(true); cc.legend(); } });
+  const save = (quiet) => {
+    if (!x) return false; x.code = ta.value; const nm = x.lang === "pine" && /^\s*(indicator|strategy|library)\s*\(\s*"([^"]+)"/m.exec(x.code); if (nm && x.name === "Script sans titre") x.name = nm[2];
+    pePushHist(x); window.btIND.save(L); const c = window.btIND.compile(x.code, x.lang);
+    if (c.error) { PE.err = { id: x.id, msg: c.error }; peLog(c.error, "err"); if (!PE.con) { PE.con = true; } } else { PE.err = null; peLog(`Compilation réussie : « ${x.name} »${(c.warns || []).length ? ` (${c.warns.length} avertissement${c.warns.length > 1 ? "s" : ""})` : ""}`, "ok"); (c.warns || []).forEach((w) => peLog(w, "warn")); }
+    refreshCells(); if (!quiet || c.error) renderPine(); return !c.error; };
+  const add = () => { if (!x) return; const was = onChart(); if (!save(true)) return renderPine(); if (!was) addInd(activeCell(), "pine:" + x.id); peLog(was ? `« ${x.name} » mis à jour sur le graphique` : `« ${x.name} » ajouté au graphique`, "ok"); renderPine(); };
+  const open = (id) => { if (dirty() && !window.confirm("Le script a des modifications non sauvegardées. Les abandonner ?")) return; pineCur = id; PE.err = null; renderPine(); };
+  const create = (kind) => { if (dirty() && !window.confirm("Le script a des modifications non sauvegardées. Les abandonner ?")) return; const lang = kind === "ts" ? "ts" : "pine", y = { id: "u" + uid(), name: "Script sans titre", lang, on: false, inputs: {}, code: lang === "ts" ? (window.btIND.TPL || {}).ts || "" : PE_TPL[kind] || PE_TPL.indicator }; L.push(y); window.btIND.save(L); pineCur = y.id; renderPine(); };
+  const exportFile = () => { if (!x) return; const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ta.value], { type: "text/plain" })); a.download = x.name.replace(/[\\/:*?"<>|]+/g, "_") + (x.lang === "pine" ? ".pine" : ".ts"); a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  const importFile = () => { const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".pine,.ts,.js,.txt"; inp.onchange = async () => { const f = inp.files[0]; if (!f) return; const code = await f.text(), y = { id: "u" + uid(), name: f.name.replace(/\.[^.]+$/, ""), lang: /\.(ts|js)$/i.test(f.name) ? "ts" : "pine", on: false, inputs: {}, code }; L.push(y); window.btIND.save(L); pineCur = y.id; renderPine(); }; inp.click(); };
+  function openDlg() {
+    const d = dlg("Ouvrir le script", `<label class="gr-ssin pe-oq">${PEI.folder}<input id="peOq" placeholder="Rechercher un script" autocomplete="off" spellcheck="false"></label><div class="pe-ol" id="peOl"></div>`, { w: 560, foot: false });
+    const q = d.el.querySelector("#peOq"), list = d.el.querySelector("#peOl");
+    const draw = () => { const s = q.value.trim().toLowerCase(); list.innerHTML = L.filter((y) => !s || y.name.toLowerCase().includes(s)).map((y) => `<button class="pe-or ${y.id === pineCur ? "on" : ""}" data-o="${E(y.id)}"><span class="pe-on">${E(y.name)}</span>${y.tv ? `<span class="pe-tag">TV</span>` : ""}<span class="pe-ok">${peKind(y)}</span><span class="pe-ol2">${(y.code || "").split("\n").length} lignes</span></button>`).join("") || `<div class="gr-empty">Aucun script.</div>`; };
+    draw(); q.oninput = draw; list.onclick = (e) => { const b = e.target.closest("[data-o]"); if (!b) return; d.close(false); open(b.dataset.o); }; setTimeout(() => q.focus(), 0);
+  }
+  function histDlg() {
+    if (!x) return; const H = peHist(x.id), fmt = (t) => new Date(t).toLocaleString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    const d = dlg("Historique des versions — " + x.name, H.length ? `<div class="pe-hv"><div class="pe-hl2">${H.map((h, i) => `<button class="pe-hr ${i ? "" : "on"}" data-h="${i}"><b>${fmt(h.t)}</b><small>${E(h.name)} · ${h.code.split("\n").length} lignes${i ? "" : " · version actuelle"}</small></button>`).join("")}</div><pre class="pe-hp" id="peHp"></pre></div>` : `<div class="gr-empty">Aucune version enregistrée : chaque sauvegarde en crée une.</div>`, { w: 820, ok: "Restaurer cette version", cancelTxt: "Fermer", onOk: (dd) => { const i = +(dd.querySelector(".pe-hr.on") || {}).dataset?.h || 0; if (!H[i]) return; ta.value = H[i].code; sched(); peLog(`Version du ${fmt(H[i].t)} restaurée (pense à sauvegarder)`, "warn"); } });
+    const pv = d.el.querySelector("#peHp"), show = (i) => { d.el.querySelectorAll(".pe-hr").forEach((b) => b.classList.toggle("on", +b.dataset.h === i)); if (pv) pv.innerHTML = H[i].code.split("\n").map((l) => peHiLine(l) || " ").join("\n"); };
+    if (H.length) { show(0); d.el.querySelector(".pe-hl2").onclick = (e) => { const b = e.target.closest("[data-h]"); if (b) show(+b.dataset.h); }; }
+  }
+  function keysDlg() { dlg("Raccourcis clavier de l'éditeur", `<table class="pe-keys">${[["Ctrl + S", "Sauvegarder le script"], ["Ctrl + Entrée", "Ajouter / mettre à jour sur le graphique"], ["Ctrl + O", "Ouvrir un script"], ["Ctrl + /", "Commenter / décommenter les lignes"], ["Tab / Maj + Tab", "Indenter / désindenter"], ["Ctrl + Z / Ctrl + Y", "Annuler / rétablir"], ["Ctrl + D", "Dupliquer la ligne"], ["Alt + ↑ / ↓", "Déplacer la ligne"]].map(([k, t]) => `<tr><td><kbd>${k}</kbd></td><td>${t}</td></tr>`).join("")}</table>`, { w: 460, cancel: false }); }
+  function helpDlg() { dlg("Pine Script dans l'app", `<div class="pe-help">Moteur Pine Script <b>v5 / v6</b> : types (<code>type</code>), méthodes, <code>enum</code>, <code>switch</code>, tableaux, maps, objets de dessin (<code>box</code>, <code>line</code>, <code>label</code>, <code>table</code>, <code>linefill</code>, <code>polyline</code>), <code>fill</code>, <code>bgcolor</code>, <code>request.security</code> (même symbole, unité supérieure), <code>time()</code> / séances / fuseaux, stratégies (simulation simplifiée).<br><br><b>Non disponibles</b> : autres symboles dans <code>request.security</code>, bibliothèques (<code>import</code>), <code>request.financial</code> / <code>economic</code>. Les scripts v4 passent par l'ancien moteur.<br><br>Les scripts sont partagés avec le Backtesteur et calculés en arrière-plan sur les 5 000 dernières bougies.</div>`, { w: 520, cancel: false }); }
+  function pubDlg() { if (!x) return; const d = dlg("Publier le script", `<div class="pe-help">La publication se fait sur TradingView. Copie le code ci-dessous, puis colle-le dans l'Éditeur Pine de TradingView (mode TradingView de cette page) et clique sur <b>Publier le script</b>.</div>`, { w: 480, ok: "Copier le code", left: `<button class="gr-btn" data-pub="tv">Ouvrir TradingView</button>`, onOk: () => { navigator.clipboard && navigator.clipboard.writeText(ta.value).then(() => toast("Code copié"), () => toast("Copie impossible", true)); } });
+    d.el.querySelector("[data-pub]").onclick = () => { d.close(false); navigator.clipboard && navigator.clipboard.writeText(ta.value).catch(() => {}); setMode("tv"); }; }
+  function scriptMenu(btn) { const r = btn.getBoundingClientRect(), R = peRecent().filter((id) => id !== pineCur && L.some((y) => y.id === id)).slice(0, 5);
+    menu(r.left, r.bottom + 4, [{ t: "Sauvegarder le script", k: "Ctrl + S", ic: PEI.save, f: () => save(), dis: !x }, { t: "Créer une copie…", ic: PEI.copy, dis: !x, f: () => askText("Créer une copie", x.name + " (copie)", (n) => { const y = { ...JSON.parse(JSON.stringify(x)), id: "u" + uid(), name: n, code: ta.value, tv: undefined }; L.push(y); window.btIND.save(L); pineCur = y.id; renderPine(); }) },
+      { t: "Renommer…", ic: PEI.pen, dis: !x, f: () => askText("Renommer le script", x.name, (n) => { x.name = n; window.btIND.save(L); refreshCells(); renderPine(); }) }, { t: "Historique des versions…", ic: PEI.hist, dis: !x || !peHist(x.id).length, f: histDlg },
+      { t: peDock() === "bottom" ? "Déplacer le script vers la droite" : "Déplacer le script vers le bas", ic: peDock() === "bottom" ? PEI.dockR : PEI.dockB, f: () => { LS.set("gr-pinedock", peDock() === "bottom" ? "right" : "bottom"); PE.max = false; renderPine(); CELLS.forEach((c) => c.redraw && c.redraw()); } }, "-",
+      { t: "Créer un nouveau", ic: PEI.plus, sub: [{ t: "Indicateur", f: () => create("indicator") }, { t: "Stratégie", f: () => create("strategy") }, { t: "Indicateur TypeScript", f: () => create("ts") }] }, "-",
+      R.length ? "h:Récemment utilisé" : null, ...R.map((id) => ({ t: L.find((y) => y.id === id).name, f: () => open(id) })), R.length ? "-" : null,
+      { t: "Ouvrir le script…", k: "Ctrl + O", ic: PEI.folder, f: openDlg }], { cls: "pe-menu" }); }
+  function moreMenu(btn) { const r = btn.getBoundingClientRect(), op = peOpt(), setO = (k, v) => { LS.set("gr-pineopt", Object.assign(peOpt(), { [k]: v })); renderPine(); };
+    menu(r.right - 260, r.bottom + 4, [{ t: "Paramètres de l'éditeur", ic: PEI.gear, sub: [{ t: "Mini-carte", on: op.mini, f: () => setO("mini", !op.mini) }, "-", "h:Taille du texte", ...[12, 13, 14, 16].map((v) => ({ t: v + " px", on: op.fs === v, f: () => setO("fs", v) }))] },
+      { t: "Console Pine", ic: PEI.con, on: PE.con, f: () => { PE.con = !PE.con; PE.unread = false; renderPine(); } }, "-", { t: "Importer un fichier…", ic: PEI.ul, f: importFile }, { t: "Exporter le script", ic: PEI.dl, dis: !x, f: exportFile },
+      { t: "Raccourcis clavier", ic: PEI.kb, f: keysDlg }, { t: "Aide Pine Script", ic: PEI.help, f: helpDlg }, "-",
+      { t: "Supprimer le script", ic: PEI.trash, dis: !x, f: () => { if (!confirmDel(x.name)) return; L.splice(L.indexOf(x), 1); window.btIND.save(L); pineCur = null; renderPine(); } }], { cls: "pe-menu" }); }
+  /* --- clavier : indentation, commentaires, raccourcis (insertText garde l'historique annuler / rétablir) --- */
+  const ins = (s) => { ta.focus(); if (!document.execCommand("insertText", false, s)) ta.setRangeText(s, ta.selectionStart, ta.selectionEnd, "end"); };
+  const lineSpan = () => { const v = ta.value, a = v.lastIndexOf("\n", ta.selectionStart - 1) + 1; let b = v.indexOf("\n", Math.max(ta.selectionEnd - (ta.selectionEnd > ta.selectionStart && v[ta.selectionEnd - 1] === "\n" ? 1 : 0), ta.selectionStart)); if (b < 0) b = v.length; return [a, b]; };
+  const mapLines = (fn) => { const [a, b] = lineSpan(), v = ta.value, blk = v.slice(a, b).split("\n"), out = fn(blk).join("\n"); ta.setSelectionRange(a, b); ins(out); ta.setSelectionRange(a, a + out.length); };
+  ta.addEventListener("keydown", (e) => {
+    e.stopPropagation(); const k = e.key, ctl = e.ctrlKey || e.metaKey;
+    if (ctl && k.toLowerCase() === "s") { e.preventDefault(); save(); return; }
+    if (ctl && k === "Enter") { e.preventDefault(); add(); return; }
+    if (ctl && k.toLowerCase() === "o") { e.preventDefault(); openDlg(); return; }
+    if (ctl && k === "/") { e.preventDefault(); mapLines((ls) => { const all = ls.filter((l) => l.trim()).every((l) => /^\s*\/\//.test(l)); return ls.map((l) => (all ? l.replace(/^(\s*)\/\/ ?/, "$1") : l.trim() ? l.replace(/^(\s*)/, "$1// ") : l)); }); return; }
+    if (ctl && k.toLowerCase() === "d") { e.preventDefault(); const [a, b] = lineSpan(), s = ta.value.slice(a, b); ta.setSelectionRange(b, b); ins("\n" + s); return; }
+    if (e.altKey && (k === "ArrowUp" || k === "ArrowDown")) { e.preventDefault(); const v = ta.value, [a, b] = lineSpan(); if (k === "ArrowUp" && a > 0) { const pa = v.lastIndexOf("\n", a - 2) + 1, prev = v.slice(pa, a - 1), cur2 = v.slice(a, b); ta.setSelectionRange(pa, b); ins(cur2 + "\n" + prev); ta.setSelectionRange(pa, pa + cur2.length); } else if (k === "ArrowDown" && b < v.length) { let nb = v.indexOf("\n", b + 1); if (nb < 0) nb = v.length; const next = v.slice(b + 1, nb), cur2 = v.slice(a, b); ta.setSelectionRange(a, nb); ins(next + "\n" + cur2); ta.setSelectionRange(a + next.length + 1, a + next.length + 1 + cur2.length); } return; }
+    if (k === "Tab") { e.preventDefault(); if (ta.selectionStart !== ta.selectionEnd && ta.value.slice(ta.selectionStart, ta.selectionEnd).includes("\n") || e.shiftKey) mapLines((ls) => ls.map((l) => (e.shiftKey ? l.replace(/^( {1,4}|\t)/, "") : "    " + l))); else ins("    "); return; }
+    if (k === "Enter" && !ctl) { e.preventDefault(); const v = ta.value, a = v.lastIndexOf("\n", ta.selectionStart - 1) + 1, line = v.slice(a, ta.selectionStart), ind = line.match(/^\s*/)[0], more = /^\s*(if|else|for|while|switch|type|enum)\b/.test(line) || /=>\s*$/.test(line) || /(=|:=)\s*(if|switch|for|while)\b/.test(line); ins("\n" + ind + (more ? "    " : "")); return; }
+  });
+  ta.addEventListener("input", sched); ta.addEventListener("scroll", syncScroll); ["keyup", "click", "select", "focus"].forEach((ev) => ta.addEventListener(ev, caret));
+  P.onclick = (e) => { const b = e.target.closest("[data-pe]"); if (!b) return; const a = b.dataset.pe;
+    if (a === "close") { if (dirty() && !window.confirm("Le script a des modifications non sauvegardées. Fermer quand même ?")) return; STATE.bpanel = null; PE.max = false; renderPine(); renderStrip(); saveState(); CELLS.forEach((c) => c.redraw && c.redraw()); }
+    else if (a === "max") { PE.max = !PE.max; renderPine(); }
+    else if (a === "col") { PE.col = !PE.col; renderPine(); CELLS.forEach((c) => c.redraw && c.redraw()); }
+    else if (a === "menu") scriptMenu(b); else if (a === "more") moreMenu(b); else if (a === "save") save(); else if (a === "add") add(); else if (a === "pub") pubDlg();
+    else if (a === "con") { PE.con = !PE.con; PE.unread = false; renderPine(); } else if (a === "clr") { PE.log = []; conRender(); } };
+  if (keep && x) { if (keep.v !== x.code) ta.value = keep.v; } // texte non sauvegardé, défilement et curseur gardés quand le panneau se redessine
+  if (PE.con) PE.unread = false; conRender(); paint();
+  if (keep && x) { ta.scrollTop = keep.st; ta.scrollLeft = keep.sl; ta.setSelectionRange(keep.a, keep.b); if (keep.f) ta.focus(); syncScroll(); caret(); }
+}
 const confirmDel = (n) => window.confirm(`Supprimer le script « ${n} » ? (il disparaît aussi du Backtesteur)`);
 
 /* ---------- démarrage (à la première ouverture de la page) ---------- */
