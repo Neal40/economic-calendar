@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.74.0] — 2026-11-21
+Backtesteur et page Graphique.
+### Ajouté
+- **Rectangle** : 8 poignées comme TopstepX (4 coins ronds, 4 milieux carrés) pour l'étirer par un coin ou par un côté.
+- **Molette sur l'échelle de prix** : étire / rétrécit les prix autour du curseur ; **molette sur l'échelle de temps** : étire / rétrécit le temps.
+### Modifié
+- Échelle de prix étirée (molette) ou glissée à la souris : le bouton **auto** s'éteint (noir) puisque l'échelle n'est plus automatique ; clic sur auto ou double-clic sur l'échelle = retour en automatique (bleu).
+
 ## [1.73.0] — 2026-11-21
 Page Graphique : fenêtre **Réglages** refaite façon TradingView, avec les options qui manquaient et des modèles de graphique.
 ### Ajouté

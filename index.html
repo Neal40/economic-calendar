@@ -5955,6 +5955,22 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 
 </script>
 <script>
+/* ---------- molette sur les échelles (Backtesteur + page Graphique) : sur l'échelle de prix = étirer / rétrécir les prix (autour du curseur), sur l'échelle de temps = étirer / rétrécir le temps (ancré à droite) ;
+   l'échelle de prix étirée ou glissée passe en mode manuel (onManual(true) -> bouton « auto » éteint), double-clic sur l'échelle ou bouton auto = retour en auto ---------- */
+function ictWheelScale(o) { const st = { man: null }, prov = (orig) => (st.man ? { priceRange: { minValue: st.man[0], maxValue: st.man[1] } } : orig());
+  const attach = () => { try { o.series().filter(Boolean).forEach((x) => x.applyOptions({ autoscaleInfoProvider: prov })); } catch (e) { /* série retirée */ } };
+  const geom = () => { const ch = o.chart(), r = o.el.getBoundingClientRect(), ts = ch.timeScale(); let lw = 0; try { lw = ch.priceScale("left").width(); } catch (e) { lw = 0; } return { r, lw, pw: ts.width(), ph: r.height - ts.height() }; };
+  const onAxis = (g, x, y) => (x < g.lw || x > g.lw + g.pw) && y < g.ph;
+  o.el.addEventListener("wheel", (e) => { const ch = o.chart && o.chart(); if (!ch || (o.enabled && !o.enabled())) return; const g = geom(), x = e.clientX - g.r.left, y = e.clientY - g.r.top, onP = onAxis(g, x, y), onT = y >= g.ph && x >= g.lw && x <= g.lw + g.pw; if (!onP && !onT) return;
+    e.preventDefault(); e.stopPropagation(); const f = e.deltaY > 0 ? 1.12 : 1 / 1.12;
+    if (onT) { const ts = ch.timeScale(), lr = ts.getVisibleLogicalRange(); if (!lr) return; ts.setVisibleLogicalRange({ from: lr.to - (lr.to - lr.from) * f, to: lr.to }); return; }
+    const ser = o.series().filter(Boolean).find((q) => { try { return q.options().visible !== false; } catch (er) { return false; } }); if (!ser) return; const top = ser.coordinateToPrice(0), bot = ser.coordinateToPrice(g.ph), c = ser.coordinateToPrice(y); if (top == null || bot == null || c == null) return;
+    const id = o.scaleId(), m = ch.priceScale(id).options().scaleMargins || { top: 0.1, bottom: 0.1 }, nt = c + (top - c) * f, nb = c + (bot - c) * f, H = nt - nb; if (!(H > 0)) return;
+    st.man = [nb + H * m.bottom, nt - H * m.top]; attach(); ch.priceScale(id).applyOptions({ autoScale: true }); o.onManual(true); }, { passive: false, capture: true });
+  o.el.addEventListener("pointerdown", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return;
+    const up = () => { removeEventListener("pointerup", up, true); setTimeout(() => { const c2 = o.chart(); if (c2 && c2.priceScale(o.scaleId()).options().autoScale === false) { st.man = null; o.onManual(true); } }, 0); }; addEventListener("pointerup", up, true); }, true);
+  o.el.addEventListener("dblclick", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return; setTimeout(() => { st.man = null; attach(); o.chart().priceScale(o.scaleId()).applyOptions({ autoScale: true }); o.onManual(false); }, 0); }, true);
+  attach(); return { attach, reset: () => { st.man = null; }, manual: () => !!st.man }; }
 /* ---------- Backtesteur style TopstepX : replay m1, compte démo 50K, ordres, dessins (outils, raccourcis, arborescence, modèles) ---------- */
 (function () {
   const D = window.desktop, $ = (id) => document.getElementById(id);
@@ -6680,7 +6696,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     const h = newsHit.find((q) => Math.abs(q.x - x) < 10 && Math.abs(q.y - y) < 12);
     tip.hidden = !h; if (!h) return; tip.innerHTML = h.ev.map((e) => `<div><i style="background:${IMPC[e.i || "med"]}"></i>${hm(e.ts)} · ${esc(e.n)}</div>`).join(""); tip.style.left = Math.max(4, x - 110) + "px"; tip.style.bottom = "34px";
   }
-  function recenter() { [chart, chart2].filter(Boolean).forEach((c) => { c.timeScale().scrollToRealTime(); c.priceScale("right").applyOptions({ autoScale: true }); }); if ($("btAuto") && !$("btAuto").classList.contains("on")) $("btAuto").classList.add("on"); }
+  function recenter() { if (btWsc) btWsc.reset(); if (btWsc2) btWsc2.reset(); [chart, chart2].filter(Boolean).forEach((c) => { c.timeScale().scrollToRealTime(); c.priceScale("right").applyOptions({ autoScale: true }); }); if ($("btAuto") && !$("btAuto").classList.contains("on")) $("btAuto").classList.add("on"); }
   function gotoT(t) { const i = S.raw.findIndex((b) => b[0] >= t); if (i < 0) return msg("Cette news n'est pas dans la journée chargée.", true); if (i > S.cur) step(i - S.cur); else { S.cur = i; draw(); ui(); } recenter(); }
   function nextNews() { if (!S.raw.length) return; const t = S.raw[S.cur][0], e = newsList().find((x) => x.ts > t && x.i !== "low"); if (!e) return msg("Plus de news à venir dans la journée chargée."); gotoT(e.ts); msg(`News : ${hm(e.ts)} ${e.n}`); }
   const ffMatch = (e) => (ffWeek || []).find((f) => { const d = new Date(f.date); return dayOf(d.getTime() / 1000) === e.day && Math.abs(d.getTime() / 1000 - e.ts) < 90 && (f.title || "").toLowerCase().split(/\W+/).filter((w) => w.length > 2).some((w) => e.n.toLowerCase().includes(w)); });
@@ -6696,6 +6712,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
 
   /* ---------------- 2e chart côte à côte (NQ <-> ES), synchronisé sur l'heure du replay ---------------- */
   let chart2 = null, cs2 = null, key2 = "", sync2 = false, xsync = false;
+  let btWsc = null, btWsc2 = null; // molette sur les échelles (ictWheelScale)
   // 2e chart : symbole jumeau (NQ <-> ES) ou le même symbole (Mise en page › Synchroniser › Symbole)
   const sym2 = () => (S.sym === "CSV" ? null : P.syncSym ? S.sym || null : ({ NQ: "ES", ES: "NQ", MNQ: "MES", MES: "MNQ" }[S.sym] || null));
   // unité du 2e chart : celle du chart principal (Intervalle synchronisé) ou la sienne (P.tf2, minutes et plus)
@@ -6712,6 +6729,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     if (chart2) return;
     chart2 = LightweightCharts.createChart($("btChart2"), { autoSize: true, layout: { attributionLogo: false }, crosshair: { mode: LightweightCharts.CrosshairMode.Normal }, rightPriceScale: { borderColor: "#000000" }, timeScale: { borderColor: "#000000", timeVisible: true, secondsVisible: false, barSpacing: 7, allowShiftVisibleRangeOnWhitespaceReplacement: true }, localization: { locale: "fr-FR", priceFormatter: (p) => p.toFixed(2) } });
     cs2 = chart2.addCandlestickSeries({ priceFormat: { type: "price", precision: 2, minMove: 0.25 } });
+    if (!btWsc2) btWsc2 = ictWheelScale({ el: $("btChart2"), chart: () => chart2, series: () => [cs2], scaleId: () => "right", onManual: () => {} }); else btWsc2.attach();
     ws2 = chart2.addLineSeries({ visible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); FUT2.key = ""; // v1.67.1 : créneaux à venir
     const link = (a, b) => a.timeScale().subscribeVisibleLogicalRangeChange(() => { if (sync2 || !P.split || P.syncTime === false) return; const r = a.timeScale().getVisibleRange(); if (!r) return; sync2 = true; try { b.timeScale().setVisibleRange(r); } catch (e) { /* plage hors données */ } sync2 = false; });
     link(chart, chart2); link(chart2, chart); applyPrefs();
@@ -6877,6 +6895,7 @@ document.querySelectorAll('.jtab[data-jt="neal"]').forEach((b) => (b.textContent
     vs = chart.addHistogramSeries({ priceScaleId: "vol", priceFormat: { type: "volume" }, lastValueVisible: false, priceLineVisible: false, visible: false });
     ws = chart.addLineSeries({ visible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); // v1.67.1 : créneaux à venir (points vides)
     chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+    if (!btWsc) btWsc = ictWheelScale({ el: $("btChart"), chart: () => chart, series: () => [cs, ls], scaleId: () => "right", onManual: (on) => { const b = $("btAuto"); if (b) b.classList.toggle("on", !on); if (typeof alSync === "function") alSync(); } }); else btWsc.attach();
     chart.subscribeCrosshairMove((p) => { const d = p && p.time ? p.seriesData.get(cs) : null; if (d && vs) { const v = p.seriesData.get(vs); d.vol = v ? v.value : 0; } legend(d); });
     chart.timeScale().subscribeVisibleLogicalRangeChange(() => { if (!hlRaf) hlRaf = requestAnimationFrame(() => { hlRaf = 0; hiLo(); }); });
     chart.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && r.from < 30 && !olderBusy) setTimeout(loadOlder, 0); }); // hors du rendu du chart // bord gauche atteint -> historique plus ancien
@@ -8741,6 +8760,9 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   ["dot", "arrowc", "eraser", "zoom"].forEach((id) => IMPL.add(id));
   let stay = LS.get("bt-stay", false), zoomSel = null; // stay = l'outil reste actif après un tracé (comme le crayon-cadenas)
   const afterDraw = () => { if (!stay) setTool("cross"); };
+  /* rectangle : 8 poignées. Coins : 0 = point 1, 1 = point 2, c10 / c01 = les deux autres ; milieux : e0 / e1 = bords au prix du point 1 / 2, l0 / l1 = bords à l'heure du point 1 / 2 */
+  const rectH = (P) => { const [a, b] = P, mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2; return [{ x: a.x, y: a.y, h: 0 }, { x: b.x, y: b.y, h: 1 }, { x: b.x, y: a.y, h: "c10" }, { x: a.x, y: b.y, h: "c01" }, { x: mx, y: a.y, h: "e0", sq: 1 }, { x: mx, y: b.y, h: "e1", sq: 1 }, { x: a.x, y: my, h: "l0", sq: 1 }, { x: b.x, y: my, h: "l1", sq: 1 }]; };
+  function rectDrag(s, k, q) { const [a, b] = s.p; if (k === "c10") { b.t = q.t; a.price = q.price; } else if (k === "c01") { a.t = q.t; b.price = q.price; } else if (k === "e0") a.price = q.price; else if (k === "e1") b.price = q.price; else if (k === "l0") a.t = q.t; else if (k === "l1") b.t = q.t; }
   function specHit(s, P, x, y) {
     const sp = SPEC[s.type];
     if (sp.hit) return sp.hit(P, x, y);
@@ -8783,7 +8805,9 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     } else if (s.type === "text") { g.fillStyle = st.textColor; g.fillText(s.text || "Texte", a.x, a.y); }
     else if (SPEC[s.type]) { g.save(); SPEC[s.type].d(g, s, pts, W, H); g.restore(); }
     setDash(g, 0);
-    if (s === sel) { g.fillStyle = "#fff"; g.strokeStyle = "#2962ff"; g.lineWidth = 1; pts.forEach((p) => { g.fillRect(p.x - 4, p.y - 4, 8, 8); g.strokeRect(p.x - 4, p.y - 4, 8, 8); }); }
+    if (s === sel) { g.fillStyle = "#fff"; g.strokeStyle = "#2962ff"; g.lineWidth = 1.5;
+      if (s.type === "rect" && pts.length > 1) rectH(pts).forEach((h) => { g.beginPath(); if (h.sq) g.rect(h.x - 4.5, h.y - 4.5, 9, 9); else g.arc(h.x, h.y, 5, 0, Math.PI * 2); g.fill(); g.stroke(); });
+      else { g.lineWidth = 1; pts.forEach((p) => { g.fillRect(p.x - 4, p.y - 4, 8, 8); g.strokeRect(p.x - 4, p.y - 4, 8, 8); }); } }
   }
   function drawMeasure(g, m) {
     const a = { x: X(m.a.t), y: Y(m.a.price) }, b = { x: X(m.b.t), y: Y(m.b.price) }; if ([a.x, a.y, b.x, b.y].some((v) => v == null)) return;
@@ -8800,6 +8824,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     for (let i = shapes.length - 1; i >= 0; i--) {
       const s = shapes[i]; if (!visible(s)) continue;
       const pts = s.p.map((p) => ({ x: X(p.t), y: Y(p.price) })); if (pts.some((p) => p.x == null || p.y == null)) continue;
+      if (s === sel && s.type === "rect" && pts.length > 1) { const rh = rectH(pts).find((p) => Math.abs(p.x - x) < 7 && Math.abs(p.y - y) < 7); if (rh) return { s, h: rh.h }; }
       const hh = pts.findIndex((p) => Math.abs(p.x - x) < 7 && Math.abs(p.y - y) < 7); if (hh >= 0 && s === sel) return { s, h: hh };
       const [a, b] = pts; let near = false;
       if (s.type === "hline") near = Math.abs(y - a.y) < 6;
@@ -8883,7 +8908,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       if (ordDrag) { const p = cs.coordinateToPrice(pos(e).y); if (p != null) { if (ordDrag.temp) Object.assign(ordDrag, posDragOrder(rnd(p))); else ordDrag.px = rnd(p); priceLines(); } return; }
       if (!drag) return; const { x, y } = pos(e), q = at(x, y); if (!q || !drag.start) return;
       const dt = q.t - drag.start.t, dp = q.price - drag.start.price;
-      if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
+      if (typeof drag.h === "string") rectDrag(drag.s, drag.h, q);
+      else if (drag.h >= 0) drag.s.p[drag.h] = { t: q.t, price: q.price };
       else drag.s.p = drag.orig.map((p) => ({ t: p.t + dt, price: rnd(p.price + dp) }));
     });
     if (n === 1) window.addEventListener("mouseup", () => { if (ordDrag) { const o = ordDrag; ordDrag = null; if (o.temp) { if (!A.pos || o.px === rnd(A.pos.avg)) { priceLines(); return; } A.orders = A.orders.filter((x) => x.bracket !== o.bracket); delete o.temp; o.id = A.seq++; A.orders.push(o); msg(`${o.bracket} posé à ${o.px.toFixed(2)} (glisse la ligne pour l'ajuster).`); } dropOrder(o); } if (drag) { if (drag.s && drag.s.anc) ancOf(drag.s); drag = null; saveDrawings(); } });
@@ -9607,7 +9633,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const scale = () => { if (!chart) return; const m = $("btLog").classList.contains("on") ? 1 : $("btPct").classList.contains("on") ? 2 : 0; chart.priceScale("right").applyOptions({ mode: m, autoScale: $("btAuto").classList.contains("on") }); };
     $("btLog").onclick = () => { $("btLog").classList.toggle("on"); $("btPct").classList.remove("on"); scale(); };
     $("btPct").onclick = () => { $("btPct").classList.toggle("on"); $("btLog").classList.remove("on"); scale(); };
-    $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); scale(); };
+    $("btAuto").onclick = () => { $("btAuto").classList.toggle("on"); if ($("btAuto").classList.contains("on") && btWsc) { btWsc.reset(); btWsc.attach(); } scale(); };
     bindDrawing(); bindDrawing(2); bindSettings(); loadDrawings(); ui();
     initPhase1(); // v1.66 : rejouer depuis une bougie, sessions isolées (sauvegarde continue), panneau Règles
   }
@@ -11631,7 +11657,8 @@ const T = {
     if (d.txt) { const th = d.s.th, tv = d.s.tv, xl = Math.min(x0, x1), xr = Math.max(x0, x1), yt = Math.min(P[0][1], P[1][1]), yb = Math.max(P[0][1], P[1][1]);
       if (!th && !tv) pen.text((P[0][0] + P[1][0]) / 2, yt + 4, d.txt, { col: d.s.tc || "#fff", fs: d.s.fs || 12, al: "center", bl: "top", bold: d.s.b, italic: d.s.i });
       else { const xr2 = d.s.er ? Math.min(xr, G.W - 6) : xr; pen.text(th === "l" ? xl + 4 : th === "r" ? xr2 - 4 : (xl + xr2) / 2, tv === "t" ? yt + 3 : tv === "b" ? yb - 3 : (yt + yb) / 2, d.txt, { col: d.s.tc || "#fff", fs: d.s.fs || 12, al: th === "l" ? "left" : th === "r" ? "right" : "center", bl: tv === "t" ? "top" : tv === "b" ? "bottom" : "middle", bold: d.s.b, italic: d.s.i }); } } },
-    handles(P) { return P.length < 2 ? P.map((q, i) => ({ x: q[0], y: q[1], i })) : [{ x: P[0][0], y: P[0][1], i: 0 }, { x: P[1][0], y: P[1][1], i: 1 }, { x: P[1][0], y: P[0][1], k: "c10" }, { x: P[0][0], y: P[1][1], k: "c01" }]; } },
+    handles(P) { if (P.length < 2) return P.map((q, i) => ({ x: q[0], y: q[1], i })); const mx = (P[0][0] + P[1][0]) / 2, my = (P[0][1] + P[1][1]) / 2;
+      return [{ x: P[0][0], y: P[0][1], i: 0 }, { x: P[1][0], y: P[1][1], i: 1 }, { x: P[1][0], y: P[0][1], k: "c10" }, { x: P[0][0], y: P[1][1], k: "c01" }, { x: mx, y: P[0][1], k: "e0", sq: 1 }, { x: mx, y: P[1][1], k: "e1", sq: 1 }, { x: P[0][0], y: my, k: "l0", sq: 1 }, { x: P[1][0], y: my, k: "l1", sq: 1 }]; } },
   circle: { n: "Cercle", g: "shape", np: 2, def: { c: "#ff9800", w: 1, f: "rgba(255,152,0,0.15)" }, draw(pen, P, d) { pen.fl(d.s.f).st(d.s.c, d.s.w, d.s.d).circ(P[0][0], P[0][1], Math.hypot(P[1][0] - P[0][0], P[1][1] - P[0][1]), true); } },
   ellipse: { n: "Ellipse", g: "shape", np: 2, def: { c: "#00bcd4", w: 1, f: "rgba(0,188,212,0.15)" }, draw(pen, P, d) { pen.fl(d.s.f).st(d.s.c, d.s.w, d.s.d).ell((P[0][0] + P[1][0]) / 2, (P[0][1] + P[1][1]) / 2, (P[1][0] - P[0][0]) / 2, (P[1][1] - P[0][1]) / 2, true); } },
   triangle: { n: "Triangle", g: "shape", np: 3, def: { c: "#e91e63", w: 1, f: "rgba(233,30,99,0.15)" }, draw(pen, P, d) { pen.fl(d.s.f).st(d.s.c, d.s.w, d.s.d).poly(P, P.length > 2, P.length > 2); } },
@@ -11846,6 +11873,7 @@ class Cell {
     else if (t === "baseline") this.series = ch.addBaselineSeries({ ...base, lineWidth: P.lineW, topLineColor: P.up, bottomLineColor: P.dn, topFillColor1: alpha(P.up, 0.28), topFillColor2: alpha(P.up, 0.05), bottomFillColor1: alpha(P.dn, 0.05), bottomFillColor2: alpha(P.dn, 0.28) });
     else this.series = ch.addLineSeries({ ...base, color: P.lineC, lineWidth: P.lineW, lineType: t === "step" ? 1 : 0, pointMarkersVisible: t === "linemk" });
     if (t === "hlcarea") { this.hlc = [ch.addLineSeries({ color: alpha(P.up, 0.8), lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, priceScaleId: ps }), ch.addLineSeries({ color: alpha(P.dn, 0.8), lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, priceScaleId: ps })]; }
+    if (!this.wsc) this.wsc = ictWheelScale({ el: this.main.host, chart: () => this.main.chart, series: () => [this.series], scaleId: () => (PR.left ? "left" : "right"), onManual: (on) => { this.st.scale = Object.assign({}, this.st.scale || {}, { auto: !on }); if (STATE.active === this.idx) refreshBottom(); saveState(); } }); else this.wsc.attach();
     this.lay = new Layer(this, "draw", this.main); this.ilay = new Layer(this, "ind", this.main);
     this.series.attachPrimitive(this.ilay); this.series.attachPrimitive(this.lay);
     ch.priceScale(ps).applyOptions({ scaleMargins: { top: P.mTop / 100, bottom: Math.max(P.mBot / 100, this.volBand()) } });
@@ -12050,7 +12078,7 @@ class Cell {
     if (DS.measure && DS.measure.cell === this) { const d = DS.measure.d, P = this.pts(d, G); if (P.every((q) => fin(q[0]) && fin(q[1]))) T.measure.draw(new Pen(c, false), P, d, G); }
     if (DS.cursor === "dot" && this.cross && this.cross.point) { c.fillStyle = PR.crossC; c.beginPath(); c.arc(this.cross.point.x, this.cross.point.y, 3, 0, PI2); c.fill(); }
   }
-  paintHandles(c, d, P, def) { const hs = def.handles ? def.handles(P, d) : P.map((q, i) => ({ x: q[0], y: q[1], i })); c.save(); c.setLineDash([]); hs.forEach((h) => { c.fillStyle = PR.bg; c.strokeStyle = "#2962ff"; c.lineWidth = 1.5; c.beginPath(); c.arc(h.x, h.y, 5, 0, PI2); c.fill(); c.stroke(); }); c.restore(); }
+  paintHandles(c, d, P, def) { const hs = def.handles ? def.handles(P, d) : P.map((q, i) => ({ x: q[0], y: q[1], i })); c.save(); c.setLineDash([]); hs.forEach((h) => { c.fillStyle = PR.bg; c.strokeStyle = "#2962ff"; c.lineWidth = 1.5; c.beginPath(); if (h.sq) c.rect(h.x - 4.5, h.y - 4.5, 9, 9); else c.arc(h.x, h.y, 5, 0, PI2); c.fill(); c.stroke(); }); c.restore(); }
   paintInd(c, G) {
     const P = PR;
     // fond des heures de trading électronique (hors séance régulière 9:30 – 16:15 NY)
@@ -12188,6 +12216,7 @@ Cell.prototype.drag = function (e) {
   const d = g.d, o = g.orig;
   if (g.h) { const pt = this.ptAt(x, y, G), k = g.h.k, i = g.h.i;
     if (k === "c10") { d.p[1].t = pt.t; d.p[0].p = pt.p; } else if (k === "c01") { d.p[0].t = pt.t; d.p[1].p = pt.p; }
+    else if (k === "e0") d.p[0].p = pt.p; else if (k === "e1") d.p[1].p = pt.p; else if (k === "l0") d.p[0].t = pt.t; else if (k === "l1") d.p[1].t = pt.t;
     else if (k === "tp") d.p[1].p = pt.p; else if (k === "sl") d.p[2].p = pt.p; else if (k === "w") { d.p[1].t = pt.t; d.p[2].t = pt.t; }
     else if (k === "entry") { d.p[0] = { t: pt.t, p: pt.p }; }
     else if (d.tool === "flat" && i === 2) d.p[2] = { t: d.p[2].t, p: pt.p };
@@ -12913,7 +12942,7 @@ $r("#grBot").onclick = (e) => { const c = activeCell(); if (!c) return; const rg
   if (rg) { const r = RANGES.find((x) => x[0] === rg.dataset.rg); const t0 = r[2] === "ytd" ? nyTime(nyDate(NOW()).slice(0, 4) + "-01-01", 0, 0) : r[2] === "all" ? 0 : NOW() - r[2]; targets("range").forEach((x) => { x.pendT = t0; if (x.st.iv !== r[1]) x.setIv(r[1]); else x.full(false); }); refreshHeader(); return; }
   if (!b) return; const k = b.dataset.b; if (k === "goto") openGoto(); if (k === "tz") menuAt(b, ["h:Fuseau horaire", ...TZS.map(([z, n]) => ({ t: n, on: dispTZ() === z, f: () => { PR.tz = z; savePrefs(); CELLS.forEach((x) => { x.applyFmt(); x.full(false); }); refreshBottom(); } }))]);
   if (k === "rth") toggleRTH(); if (k === "pct") setScale(c, { mode: (c.st.scale || {}).mode === 2 ? 0 : 2 }); if (k === "log") setScale(c, { mode: (c.st.scale || {}).mode === 1 ? 0 : 1 }); if (k === "auto") { setScale(c, { auto: true }); c.main.chart.timeScale().scrollToRealTime(); } };
-function setScale(c, o) { c.st.scale = Object.assign({}, c.st.scale || {}, o); c.scaleMode(); refreshBottom(); saveState(); }
+function setScale(c, o) { if (o.auto && c.wsc) { c.wsc.reset(); c.wsc.attach(); } c.st.scale = Object.assign({}, c.st.scale || {}, o); c.scaleMode(); refreshBottom(); saveState(); }
 function toggleRTH() { PR.rth = !PR.rth; savePrefs(); CELLS.forEach((c) => c.full(false)); refreshBottom(); toast(PR.rth ? "Séance régulière (RTH 9:30 – 16:15 NY)" : "Séance électronique complète (ETH)"); }
 function scaleMenu(c, x, y) { const m = c.st.scale || {}; menu(x, y, [{ t: "Échelle automatique", on: m.auto !== false, f: () => setScale(c, { auto: true }) }, "-", { t: "Normale", on: !m.mode, f: () => setScale(c, { mode: 0 }) }, { t: "Logarithmique", k: "Alt+A", on: m.mode === 1, f: () => setScale(c, { mode: 1 }) }, { t: "Pourcentage", k: "Alt+P", on: m.mode === 2, f: () => setScale(c, { mode: 2 }) }, { t: "Indexée à 100", on: m.mode === 3, f: () => setScale(c, { mode: 3 }) }, "-", { t: "Inverser l'échelle", k: "Alt+I", on: !!m.inv, f: () => setScale(c, { inv: !m.inv }) }, { t: PR.left ? "Échelle à droite" : "Échelle à gauche", f: () => { PR.left = !PR.left; savePrefs(); CELLS.forEach((cc) => { cc.applyFmt(); cc.mkMain(); cc.full(false); }); } }, "-", { t: "Réinitialiser le graphique", k: "Alt+R", f: () => resetChart(c) }]); }
 function resetChart(c) { if (!c) return; setScale(c, { auto: true }); const n = c.DB.length; if (n) c.setRange({ from: n - clamp(Math.round(c.pEl.clientWidth / 8), 40, 400), to: n + PR.rightOffset }); }
