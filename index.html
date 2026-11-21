@@ -12089,7 +12089,10 @@ function initPos(d, cell) { const G = cell.geo(), pt = d.p[0], tick = cell.spec.
   d.p = [{ t: pt.t, p: pt.p }, { t: t1, p: +(pt.p + dir * stp * 2).toFixed(8) }, { t: t1, p: +(pt.p - dir * stp).toFixed(8) }]; }
 Cell.prototype.down = function (e) {
   if (e.button !== 0) return; KEYMOD.ctrl = e.ctrlKey || e.metaKey; KEYMOD.shift = e.shiftKey;
-  const { x, y } = this.evPos(e), G = this.geo(); if (!this.inPlot(x, y, G) || !this.DB.length) return;
+  const { x, y } = this.evPos(e), G = this.geo();
+  /* Alt + clic gauche dans un graphique (pas sur un dessin, pas en train de dessiner) : l'agrandir seul comme une disposition à 1 graphique ; Alt + clic à nouveau = retour à la disposition. Alt + clic sur un dessin = le dupliquer, comme avant */
+  if (e.altKey && CELLS.length > 1 && (!T[DS.tool] || T[DS.tool].g === "cur") && !DS.creating && !(this.DB.length && this.inPlot(x, y, G) && this.hit(x, y))) { stopEv(e); if (!STATE.max) setActive(this.idx, true); toggleMax(); return; }
+  if (!this.inPlot(x, y, G) || !this.DB.length) return;
   if (DS.measure && DS.measure.done) { DS.measure = null; this.redraw(); if (DS.tool === "measure" && !DS.stay) setTool("cross", true); stopEv(e); return; }
   const c = DS.creating;
   if (c) { stopEv(e); if (c.cell !== this) { cancelCreate(); return; } const def = T[c.d.tool], pt = this.ptAt(x, y, G, { free: def.np === -1 });
@@ -12887,8 +12890,8 @@ const gridIco = (g) => { const [n, cols, rows, area] = GRIDS[g], cs = cols.inclu
   for (let r = 0; r < rs; r++) for (let c = 0; c < cs; c++) { if (area && k === 0 && r === 0 && c === 0) { h += `<rect x="4" y="7" width="${w * 1 - 1}" height="${14 - 1}" rx=".5"/>`; k++; continue; } if (area && c === 0) continue; if (k >= n) break; h += `<rect x="${4 + c * w}" y="${7 + r * hh}" width="${w - 1}" height="${hh - 1}" rx=".5"/>`; k++; } return sv(h); };
 function gridMenu(btn) { menuAt(btn, ["h:Disposition", { html: `<div class="gr-grids">${Object.keys(GRIDS).map((g) => `<button class="${STATE.grid === g ? "on" : ""}" data-g="${g}" title="${E(GRID_N[g])}">${gridIco(g)}</button>`).join("")}</div>`, init: (w) => (w.onclick = (e) => { const b = e.target.closest("[data-g]"); if (!b) return; STATE.grid = b.dataset.g; STATE.max = false; closeMenu(); renderGrid(); }) },
   "h:Synchroniser", ...[["sym", "Symbole"], ["iv", "Unité de temps"], ["cross", "Réticule"], ["time", "Défilement (heure)"], ["range", "Plages de dates"]].map(([k, n]) => ({ t: n, on: !!STATE.sync[k], keep: true, f: () => { STATE.sync[k] = !STATE.sync[k]; saveState(); gridMenu(btn); } })),
-  "-", { t: STATE.max ? "Restaurer la disposition" : "Agrandir le graphique actif", k: "Alt+Entrée", f: toggleMax }]); }
-function toggleMax() { if (CELLS.length < 2) return; STATE.max = !STATE.max; $r("#grGrid").classList.toggle("max", STATE.max); saveState(); }
+  "-", { t: STATE.max ? "Restaurer la disposition" : "Agrandir le graphique actif", k: "Alt+Entrée · Alt+clic", f: toggleMax }]); }
+function toggleMax() { if (CELLS.length < 2) return; STATE.max = !STATE.max; $r("#grGrid").classList.toggle("max", STATE.max); saveState(); refreshHeader(); requestAnimationFrame(() => CELLS.forEach((c) => c.redraw())); }
 function saveLayout(as) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId);
   if (!L || as) { askText(as ? "Enregistrer la mise en page sous" : "Nom de la mise en page", L ? L.name + " (copie)" : "Ma mise en page", (n) => { const x = { id: uid(), name: n, state: snapshotLayout(), at: Date.now() }; LAYOUTS.push(x); STATE.layoutId = x.id; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + n + " » enregistrée"); }); return; }
   L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); toast("Mise en page « " + L.name + " » enregistrée"); }

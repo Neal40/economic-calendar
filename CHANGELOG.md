@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.72.0] — 2026-11-21
+### Ajouté
+- Page Graphique : **Alt + clic gauche** dans un graphique l'agrandit seul (comme une disposition à 1 graphique) ; Alt + clic à nouveau remet la disposition d'avant. Alt + clic sur un dessin le duplique toujours. Alt + Entrée fait la même chose sur le graphique actif.
+
 ## [1.71.1] — 2026-11-21
 ### Modifié
 - Menu des mises en page : un clic sur une mise en page l'ouvre directement ; icône poubelle au bout de la ligne pour la supprimer (2e clic pour confirmer). Même poubelle sur les modèles de dessins du menu Modèle.
