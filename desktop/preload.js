@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld("desktop", {
   notionDb: (id) => ipcRenderer.invoke("notion:db", id),
   dataStatus: () => ipcRenderer.invoke("data:status"),
   comptesRead: () => ipcRenderer.invoke("comptes:read"),
+  tvScriptsRead: () => ipcRenderer.invoke("tvscripts:read"), // Mes scripts TradingView (Bureau\Inner Circle Trader\tradingview-mes-scripts.json)
   propSync: (firm) => ipcRenderer.invoke("propsync:run", firm),
   onPropSync: (cb) => ipcRenderer.on("propsync:progress", (e, p) => cb(p)),
   copierGetConfig: () => ipcRenderer.invoke("copier:getConfig"),

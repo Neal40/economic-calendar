@@ -396,6 +396,8 @@ function mdSchedule() {
 /* synchronisation d'une prop firm (Topstep / Apex / My Funded Futures) : fenêtre de connexion gardée + récupération complète → comptes\comptes.json */
 ipcMain.handle("propsync:run", async (e, firm) => propsync.run(String(firm || ""), { dir: path.join(ICT(), "comptes"), parent: win, onProgress: (p) => { try { if (win && !win.isDestroyed()) win.webContents.send("propsync:progress", p); } catch (x) { /* ignore */ } } }));
 ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes", "comptes.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
+// Mes scripts TradingView : export posé dans Bureau\Inner Circle Trader\tradingview-mes-scripts.json (importé dans la liste des indicateurs par index.html)
+ipcMain.handle("tvscripts:read", () => { try { const f = path.join(ICT(), "tradingview-mes-scripts.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
 ipcMain.handle("data:read", async (e, sym, from, to, res) => { try { return { ok: true, data: await md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });

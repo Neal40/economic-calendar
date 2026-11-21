@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.75.0] — 2026-11-21
+Indicateurs : import de **Mes scripts TradingView**.
+### Ajouté
+- Éditeur d'indicateurs (Backtesteur) : bouton **TV** pour importer l'export `tradingview-mes-scripts.json` (Pine Editor › Mes scripts : nom, code Pine, version, type indicateur / stratégie). Les scripts arrivent dans « Mes scripts » (Backtesteur et page Graphique), masqués par défaut, avec un badge **TV**.
+- App Windows : le fichier posé dans `Bureau\Inner Circle Trader\` est importé tout seul au lancement s'il est plus récent que le dernier import. Un nouvel import met à jour le code sans toucher à l'affichage ni aux réglages.
+- Les scripts restent sur le PC (localStorage), jamais dans le dépôt. Le moteur Pine de l'app est un sous-ensemble de v5 : les scripts v6 ou qui utilisent label / box / request.security peuvent ne pas s'afficher sur le chart, mais leur code est consultable et modifiable.
+
 ## [1.74.0] — 2026-11-21
 Backtesteur et page Graphique.
 ### Ajouté

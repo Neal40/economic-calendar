@@ -1384,7 +1384,7 @@ table.tbl:has(#subT){min-width:900px}
 .tx-jvt .tx-ico{vertical-align:-5px;margin-right:7px}
 .tx-codeb svg{vertical-align:-4px}
 .tx-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border:1px solid #787b86;border-radius:9px;color:#787b86;margin-left:6px}
-.tx-badge.pine{border-color:#2962ff;color:#2962ff}.tx-badge.ts{border-color:#3178c6;background:#3178c6;color:#fff}
+.tx-badge.pine{border-color:#2962ff;color:#2962ff}.tx-badge.tv{border-color:#787b86;color:#d1d4dc;margin-right:4px}.tx-badge.ts{border-color:#3178c6;background:#3178c6;color:#fff}
 .tx-indl{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
 .tx-indr{border:1px solid rgba(120,123,134,.35);border-radius:6px;padding:6px 10px}
 .tx-indh{display:flex;align-items:center;gap:6px}.tx-indh label{display:flex;align-items:center;gap:6px;cursor:pointer}
@@ -5971,6 +5971,36 @@ function ictWheelScale(o) { const st = { man: null }, prov = (orig) => (st.man ?
     const up = () => { removeEventListener("pointerup", up, true); setTimeout(() => { const c2 = o.chart(); if (c2 && c2.priceScale(o.scaleId()).options().autoScale === false) { st.man = null; o.onManual(true); } }, 0); }; addEventListener("pointerup", up, true); }, true);
   o.el.addEventListener("dblclick", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return; setTimeout(() => { st.man = null; attach(); o.chart().priceScale(o.scaleId()).applyOptions({ autoScale: true }); o.onManual(false); }, 0); }, true);
   attach(); return { attach, reset: () => { st.man = null; }, manual: () => !!st.man }; }
+/* ---------- Mes scripts TradingView : import de l'export « tradingview-mes-scripts.json » (Pine Editor › Mes scripts) dans la liste des scripts partagée Backtesteur / Graphique (localStorage « bt-indicators »).
+   Les scripts restent sur le PC (jamais dans le dépôt). Desktop : le fichier posé dans Bureau\Inner Circle Trader est importé tout seul au lancement s'il est plus récent que le dernier import. ---------- */
+window.tvScripts = (() => {
+  const K = "bt-indicators", KI = "bt-tv-import";
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const set = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+  const tvId = (id) => "tv-" + String(id || "").replace(/^USER;/, "").replace(/[^\w-]/g, "");
+  function merge(data) { // -> { added, updated, skipped, total } ; garde l'état affiché / les réglages des scripts déjà importés
+    const arr = Array.isArray(data) ? data : data && Array.isArray(data.scripts) ? data.scripts : null; if (!arr) throw new Error("fichier non reconnu (attendu : export « Mes scripts » TradingView)");
+    let L = get(K, null); if (!Array.isArray(L)) L = window.btIND && window.btIND.EX ? JSON.parse(JSON.stringify(window.btIND.EX)) : [];
+    let added = 0, updated = 0, skipped = 0;
+    arr.forEach((t) => { const code = String(t.source || "").replace(/\r\n/g, "\n"); if (!code.trim()) { skipped++; return; }
+      const id = tvId(t.id), name = String(t.name || t.title || "Script TradingView").trim(), meta = { id: t.id, version: t.version, kind: t.kind || "study", title: t.title || "", modified: t.modified || 0 };
+      const x = L.find((i) => i.id === id);
+      if (x) { if (x.code !== code || x.name !== name) updated++; x.code = code; x.name = name; x.lang = "pine"; x.tv = meta; }
+      else { L.push({ id, name, lang: "pine", on: false, inputs: {}, code, tv: meta }); added++; } });
+    if (!set(K, L)) throw new Error("stockage plein : impossible d'enregistrer les scripts");
+    set(KI, { at: data && data.exportedAt || new Date().toISOString(), n: arr.length });
+    return { added, updated, skipped, total: arr.length };
+  }
+  const say = (r) => `TradingView : ${r.added} script${r.added > 1 ? "s" : ""} ajouté${r.added > 1 ? "s" : ""}${r.updated ? `, ${r.updated} mis à jour` : ""} (${r.total} dans l'export) — dans « Mes scripts » des indicateurs.`;
+  async function importFile(f) { return merge(JSON.parse(await f.text())); }
+  async function auto() { // desktop : Bureau\Inner Circle Trader\tradingview-mes-scripts.json
+    const D = window.desktop; if (!D || !D.tvScriptsRead) return null;
+    try { const r = await D.tvScriptsRead(); if (!r || !r.ok) return null; const last = get(KI, null), at = r.data && r.data.exportedAt;
+      if (last && at && last.at >= at) return null; const res = merge(r.data); console.info(say(res)); return res; } catch (e) { console.warn("Import TradingView :", e); return null; }
+  }
+  setTimeout(auto, 1500);
+  return { merge, importFile, auto, say };
+})();
 /* ---------- Backtesteur style TopstepX : replay m1, compte démo 50K, ordres, dessins (outils, raccourcis, arborescence, modèles) ---------- */
 (function () {
   const D = window.desktop, $ = (id) => document.getElementById(id);
@@ -7364,7 +7394,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       o = document.createElement("div"); o.id = "btIde"; o.className = "tx-ide"; o.hidden = true;
       o.innerHTML = `<div class="tx-ide-top"><span class="tx-ide-logo">&lt;/&gt;</span> Éditeur d'indicateurs <small>Pine Script v5 · TypeScript / JavaScript</small><span class="tx-sp"></span><button data-i="close" title="Fermer (Échap)">✕ Fermer</button></div>
         <div class="tx-ide-main">
-          <aside class="tx-ide-list"><div class="tx-ide-new"><button data-i="newpine">＋ Pine</button><button data-i="newts">＋ TS</button><button data-i="import" title="Importer un fichier .pine / .ts / .js">⇪</button><input type="file" id="btIdeFile" accept=".pine,.ts,.js,.txt" hidden></div><div id="btIdeRows"></div></aside>
+          <aside class="tx-ide-list"><div class="tx-ide-new"><button data-i="newpine">＋ Pine</button><button data-i="newts">＋ TS</button><button data-i="import" title="Importer un fichier .pine / .ts / .js">⇪</button><input type="file" id="btIdeFile" accept=".pine,.ts,.js,.txt" hidden><button data-i="tvimp" title="Importer mes scripts TradingView (fichier tradingview-mes-scripts.json)">TV</button><input type="file" id="btIdeTv" accept=".json,application/json" hidden></div><div id="btIdeRows"></div></aside>
           <section class="tx-ide-ed">
             <div class="tx-ide-bar"><input id="btIdeName" placeholder="Nom de l'indicateur"><select id="btIdeLang"><option value="pine">Pine Script v5</option><option value="ts">TypeScript / JavaScript</option></select><span class="tx-sp"></span>
               <button data-i="run" title="Exécuter sur les bougies du chart (Ctrl+Entrée)">▶ Tester</button><button data-i="save" title="Ctrl+S">💾 Enregistrer</button><button data-i="add" class="pri">Enregistrer + afficher</button><button data-i="js" title="Voir le JavaScript généré">JS</button><button data-i="export" title="Exporter le fichier">⇩</button><button data-i="del" title="Supprimer l'indicateur">🗑</button></div>
@@ -7386,7 +7416,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   }
   const ideCode = () => $("btIdeTxt").value;
   function ideGut() { const n = ideCode().split("\n").length, g = $("btIdeGut"); if (g._n !== n) { g._n = n; g.textContent = Array.from({ length: n }, (_, i) => i + 1).join("\n"); } g.scrollTop = $("btIdeTxt").scrollTop; }
-  function ideRows() { const L = indList(); $("btIdeRows").innerHTML = L.map((x) => `<div class="tx-ide-row ${x.id === ideId ? "on" : ""}" data-r="${esc(x.id)}"><span class="dot ${x.on ? "lit" : ""}" data-r-on="${esc(x.id)}" title="${x.on ? "Affiché sur le chart (clic = masquer)" : "Masqué (clic = afficher)"}"></span><span class="nm">${esc(x.name)}</span><span class="tx-badge ${x.lang}">${x.lang === "pine" ? "Pine" : "TS"}</span></div>`).join(""); }
+  function ideRows() { const L = indList(); $("btIdeRows").innerHTML = L.map((x) => `<div class="tx-ide-row ${x.id === ideId ? "on" : ""}" data-r="${esc(x.id)}"><span class="dot ${x.on ? "lit" : ""}" data-r-on="${esc(x.id)}" title="${x.on ? "Affiché sur le chart (clic = masquer)" : "Masqué (clic = afficher)"}"></span><span class="nm">${esc(x.name)}</span>${x.tv ? `<span class="tx-badge tv" title="Importé de TradingView${x.tv.kind === "strategy" ? " · stratégie" : ""}">TV</span>` : ""}<span class="tx-badge ${x.lang}">${x.lang === "pine" ? "Pine" : "TS"}</span></div>`).join(""); }
   function ideOpen(id) {
     if (ideDirty) ideSave(true);
     const x = indList().find((i) => i.id === id); if (!x) return; ideId = id; ideDirty = false;
@@ -7440,6 +7470,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       if (i === "close") ideClose();
       else if (i === "newpine" || i === "newts") { if (ideDirty) ideSave(true); const n = indNew(i === "newpine" ? "pine" : "ts"); ideRows(); ideOpen(n.id); $("btIdeName").select(); }
       else if (i === "import") $("btIdeFile").click();
+      else if (i === "tvimp") $("btIdeTv").click();
       else if (i === "run") ideRun();
       else if (i === "save") ideSave(false);
       else if (i === "add") ideSave(false, true);
@@ -7448,6 +7479,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       else if (i === "del") { const btn = e.target.closest("[data-i]"); if (!btn.dataset.armed) { btn.dataset.armed = "1"; btn.textContent = "Confirmer ?"; setTimeout(() => { delete btn.dataset.armed; btn.textContent = "🗑"; }, 3000); return; }
         const L = indList().filter((k) => k.id !== ideId); indSave(L); delete indRes[ideId]; ideDirty = false; indRun(); ideId = null; ideRows(); if (L.length) ideOpen(L[0].id); else ideOpen(indNew("pine").id); msg("Indicateur supprimé."); }
     });
+    $("btIdeTv").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (!f) return; if (ideDirty) ideSave(true);
+      try { const r = await window.tvScripts.importFile(f); ideRows(); msg(window.tvScripts.say(r)); } catch (er) { msg("Import TradingView : " + (er.message || er), true); } };
     $("btIdeFile").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (!f) return; const code = await f.text(), lang = /\.pine$|\.txt$/i.test(f.name) || /\bindicator\s*\(|\/\/@version/.test(code) && !/\bconst\b|\blet\b/.test(code) ? "pine" : "ts";
       if (ideDirty) ideSave(true); const L = indList(), x = { id: "i" + Date.now(), name: f.name.replace(/\.[^.]+$/, ""), lang, code, on: false, inputs: {} }; L.push(x); indSave(L); ideRows(); ideOpen(x.id); ideRun(); };
   }
