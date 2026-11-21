@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.71.1] — 2026-11-21
+### Modifié
+- Menu des mises en page : un clic sur une mise en page l'ouvre directement ; icône poubelle au bout de la ligne pour la supprimer (2e clic pour confirmer). Même poubelle sur les modèles de dessins du menu Modèle.
+
 ## [1.71.0] — 2026-11-21
 Page Graphique : arborescence des objets façon TopstepX, modèles et mises en page réordonnables, éditeur Pine à droite, trait des news.
 ### Ajouté

@@ -742,6 +742,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-sortl{display:flex;flex-direction:column;gap:2px;margin-top:8px;max-height:60vh;overflow:auto}.gr-sr{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:4px;background:var(--gp);user-select:none;touch-action:none}.gr-sr:hover{background:var(--gh)}
 .gr-sg{cursor:grab;color:var(--gm);letter-spacing:-2px}.gr-sn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-sb{font-size:11px;color:var(--ga)}.gr-sr.drag{opacity:.35}.gr-sr.ins-t{box-shadow:inset 0 2px 0 var(--ga)}.gr-sr.ins-b{box-shadow:inset 0 -2px 0 var(--ga)}
 .gr-lvl .gr-fr{flex-wrap:nowrap;gap:5px}.gr-lvl .gr-fr>*{flex:none}.gr-lvl input[data-lv]{width:76px}.gr-lvl .gr-col input[type=range]{width:46px}.gr-lvl .gr-col .gr-hex{width:76px}.gr-lvt{width:96px!important;flex:1 1 auto!important;min-width:60px}.gr-nline{display:flex;padding:6px 12px;border-bottom:1px solid var(--gl);font-size:12px}
+.gr-mdel{margin-left:8px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;opacity:.45;flex:none}.gr-mdel svg{width:18px;height:18px}.gr-mi:hover .gr-mdel{opacity:.8}.gr-mdel:hover{background:var(--gh);opacity:1}.gr-mdel.arm{background:#f23645;color:#fff;opacity:1}
 .gr-tic{width:22px;height:22px;display:flex;align-items:center;justify-content:center}.gr-tic svg{width:22px;height:22px}.gr-tn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-tr .gr-ib{width:24px;height:24px;opacity:.7}
 /* panneau du bas (éditeur Pine) */
 .gr-bpanel{width:560px;min-width:320px;flex:none;border-left:1px solid var(--gl);display:flex;flex-direction:column;background:var(--gb);position:relative;min-height:0}
@@ -12293,9 +12294,11 @@ function menu(x, y, items, o = {}) {
   const render = (list, host) => list.filter(Boolean).forEach((it) => {
     if (it === "-") { host.append(el("div", "gr-msep")); return; } if (typeof it === "string" && it.startsWith("h:")) { host.append(el("div", "gr-mh", E(it.slice(2)))); return; }
     if (it.html) { const w = el("div", "gr-mhtml", it.html); host.append(w); if (it.init) it.init(w); return; }
-    const b = el("button", "gr-mi" + (it.on ? " on" : "") + (it.dis ? " dis" : ""), `${it.ic ? `<span class="gr-mic">${it.ic}</span>` : it.on != null ? `<span class="gr-mck">${it.on ? "✓" : ""}</span>` : ""}<span class="gr-mt">${E(it.t)}</span>${it.k ? `<kbd>${E(it.k)}</kbd>` : ""}${it.sub ? `<span class="gr-msub">›</span>` : ""}${it.star != null ? `<span class="gr-mstar" data-star="1">${it.star ? ICO.starOn : ICO.star}</span>` : ""}`);
+    const b = el("button", "gr-mi" + (it.on ? " on" : "") + (it.dis ? " dis" : ""), `${it.ic ? `<span class="gr-mic">${it.ic}</span>` : it.on != null ? `<span class="gr-mck">${it.on ? "✓" : ""}</span>` : ""}<span class="gr-mt">${E(it.t)}</span>${it.k ? `<kbd>${E(it.k)}</kbd>` : ""}${it.sub ? `<span class="gr-msub">›</span>` : ""}${it.star != null ? `<span class="gr-mstar" data-star="1">${it.star ? ICO.starOn : ICO.star}</span>` : ""}${it.del ? `<span class="gr-mdel" data-mdel="1" title="Supprimer">${ICO.trash}</span>` : ""}`);
     if (it.sub) { b.onmouseenter = () => { m.querySelectorAll(".gr-menu.sub").forEach((s) => s.remove()); const s = el("div", "gr-menu sub"); render(it.sub, s); m.append(s); const r = b.getBoundingClientRect(), mr = m.getBoundingClientRect(); s.style.left = (r.right - mr.left + 2) + "px"; s.style.top = (r.top - mr.top - 4) + "px"; }; }
-    else b.onclick = (e) => { if (it.dis) return; if (e.target.closest("[data-star]") && it.onStar) { e.stopPropagation(); it.onStar(); return; } if (!it.keep) closeMenu(); it.f && it.f(e); };
+    else b.onclick = (e) => { if (it.dis) return; if (e.target.closest("[data-star]") && it.onStar) { e.stopPropagation(); it.onStar(); return; }
+      /* poubelle d'une ligne : 1er clic = armer (rouge), 2e clic = supprimer ; le menu reste ouvert */
+      const dx = e.target.closest("[data-mdel]"); if (dx && it.del) { e.stopPropagation(); if (!dx.classList.contains("arm")) { dx.classList.add("arm"); dx.title = "Cliquer encore pour supprimer"; setTimeout(() => { dx.classList.remove("arm"); dx.title = "Supprimer"; }, 2500); return; } it.del(); b.remove(); return; } if (!it.keep) closeMenu(); it.f && it.f(e); };
     host.append(b); });
   render(items, m); ROOT.append(m); const r = m.getBoundingClientRect(); m.style.left = clamp(x, 4, innerWidth - r.width - 4) + "px"; m.style.top = clamp(y, 4, innerHeight - r.height - 4) + "px";
   setTimeout(() => { const off = (e) => { if (MENU === m && !m.contains(e.target)) { closeMenu(); removeEventListener("pointerdown", off, true); } }; addEventListener("pointerdown", off, true); }, 0);
@@ -12594,7 +12597,7 @@ function tplApply(d, st) { snap(); const x = JSON.parse(JSON.stringify(st)), txt
   drawChanged(d); }
 const tplStyle = (d) => Object.assign({}, JSON.parse(JSON.stringify(d.s)), d.txt ? { _txt: d.txt } : {});
 function tplItems(d, after) { const tpl = tplOf(d.tool), names = tplNames(d.tool), done = () => after && after();
-  return [names.length ? "h:Mes modèles" : null, ...names.map((n) => ({ t: n, f: () => { tplApply(d, tpl[n]); done(); } })), names.length ? "-" : null,
+  return [names.length ? "h:Mes modèles" : null, ...names.map((n) => ({ t: n, f: () => { tplApply(d, tpl[n]); done(); }, del: () => tplDel(d.tool, n) })), names.length ? "-" : null,
     { t: "Enregistrer le modèle sous…", f: () => askText("Nom du modèle (" + T[d.tool].n + ")", names[0] || "Mon modèle", (n) => tplSave(d.tool, n, tplStyle(d))) },
     names.length ? { t: "Remplacer un modèle", sub: names.map((n) => ({ t: n, f: () => tplSave(d.tool, n, tplStyle(d)) })) } : null,
     names.length ? { t: "Renommer un modèle", sub: names.map((n) => ({ t: n, f: () => askText("Renommer le modèle", n, (m) => { if (m === n) return; const all = tplAll(); all[d.tool][m] = all[d.tool][n]; delete all[d.tool][n]; LS.set("gr-tpl", all); toast("Modèle renommé"); }) })) } : null,
@@ -12895,7 +12898,7 @@ function layoutMenu(btn) { const cur = LAYOUTS.find((x) => x.id === STATE.layout
     { t: "Nouvelle mise en page", f: () => { STATE.layoutId = null; STATE.grid = "1"; STATE.cells = [DEF_CELL()]; STATE.active = 0; renderGrid(); } }, { t: "Sauvegarde automatique", on: !!STATE.auto, keep: true, f: () => { STATE.auto = !STATE.auto; saveState(); layoutMenu(btn); } },
     LAYOUTS.length ? { t: "Gérer et réordonner les mises en page…", f: layManage } : null,
     { t: "Réimporter mes mises en page et modèles TopstepX", f: () => { const r = tsxSeed(true); refreshHeader(); if (r && !r.nt && !r.nl) toast("Déjà à jour : rien de nouveau à ajouter"); } },
-    LAYOUTS.length ? "h:Mes mises en page" : null, ...LAYOUTS.map((L) => ({ t: L.name, on: L.id === STATE.layoutId ? true : undefined, sub: [{ t: "Ouvrir", f: () => loadLayout(L) }, { t: "Supprimer", f: () => { LAYOUTS = LAYOUTS.filter((x) => x !== L); if (STATE.layoutId === L.id) STATE.layoutId = null; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); } }] })),
+    LAYOUTS.length ? "h:Mes mises en page" : null, ...LAYOUTS.map((L) => ({ t: L.name, on: L.id === STATE.layoutId ? true : undefined, f: () => loadLayout(L), del: () => { LAYOUTS = LAYOUTS.filter((x) => x !== L); if (STATE.layoutId === L.id) STATE.layoutId = null; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + L.name + " » supprimée"); } })),
     "-", { t: "Exporter (fichier : mises en page, dessins, alertes, réglages)", f: exportAll }, { t: "Importer un fichier…", f: importAll }].filter(Boolean)); }
 function layManage() { sortDlg("Mises en page", () => LAYOUTS.map((L) => ({ k: L.id, n: L.name, on: L.id === STATE.layoutId ? "en cours" : "" })), {
   order: (keys) => { LAYOUTS = keys.map((k) => LAYOUTS.find((L) => L.id === k)).filter(Boolean); LS.set("gr-layouts", LAYOUTS); },
