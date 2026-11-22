@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.84.0] — 2026-11-22
+Moteur Pine : plusieurs positions à la fois.
+### Ajouté
+- Stratégies Pine : `pyramiding` pris en compte — plusieurs entrées ouvertes en même temps (une par identifiant), chacune avec ses propres sorties `strategy.exit(from_entry=…)` (TP / SL calculés depuis son prix d'entrée) et son propre trade dans les stats ; plusieurs ordres peuvent être remplis dans la même bougie. Une entrée en sens inverse clôture d'abord les positions ouvertes (position nette, comme sur un compte futures). `strategy.opentrades`, `strategy.opentrades.entry_id(k)`, `entry_price(k)`, `entry_bar_index(k)`, `entry_time(k)`, `size(k)`, `profit(k)` et `strategy.openprofit` gèrent chaque position ouverte. Scripts à une seule position : résultats inchangés.
+
 ## [1.83.0] — 2026-11-22
 Page Graphique : les stratégies Pine gardent le calcul m1 sur toutes les unités de temps.
 ### Ajouté
