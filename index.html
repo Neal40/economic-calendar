@@ -14192,14 +14192,18 @@ function openIndSettings(c, x, o = {}) {
     const num = f.t === "int" || f.t === "float";
     return lb + `<input class="gr-in tvi-in${num ? " tvi-num" : ""}" data-i="${E(f.k)}"${tip} ${num ? `type="number" step="${f.step || (f.t === "int" ? 1 : "any")}"${f.min != null ? ` min="${f.min}"` : ""}${f.max != null ? ` max="${f.max}"` : ""}` : ""} value="${E(v)}">`; };
   // lignes : groupes (titres en capitales) + entrées « inline » sur une même ligne, info-bulle (i) en bout de ligne
-  let inH = "", lastG;
-  for (let j = 0; j < inp.length;) {
-    const f = inp[j]; if ((f.g || "") !== (lastG || "")) { if (f.g) inH += `<div class="tv-sec tvi-sec">${E(f.g)}</div>`; lastG = f.g; }
-    const row = [f]; if (f.il != null && f.il !== "") while (j + row.length < inp.length && inp[j + row.length].il === f.il && (inp[j + row.length].g || "") === (f.g || "")) row.push(inp[j + row.length]);
-    j += row.length; const tips = row.filter((q) => q.tip).map((q) => q.tip).join("\n"), tipH = tips ? `<span class="tvi-tip" title="${E(tips)}">${IXI.info}</span>` : "";
-    if (row[0].t === "bool") inH += `<div class="tvi-r"><div class="tvi-c tvi-full">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
-    else inH += `<div class="tvi-r"><div class="tvi-l">${E(row[0].n)}</div><div class="tvi-c${row.length > 1 ? " tvi-multi" : ""}">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
-  }
+  // lignes : groupes (titres en capitales) + entrées « inline » sur une même ligne, info-bulle (i) en bout de ligne
+  // v1.92.1 : les entrées d'un groupe qui commence par « Style » (ex. « Style · Étiquettes ») vont dans l'onglet Style
+  const isSty = (f) => /^\s*style\b/i.test(f.g || ""), gName = (g) => String(g || "").replace(/^\s*style\s*[·:\-–—|]?\s*/i, "") || "Style";
+  const rowsOf = (L, st) => { let h = "", lastG;
+    for (let j = 0; j < L.length;) {
+      const f = L[j]; if ((f.g || "") !== (lastG || "")) { if (f.g) h += `<div class="tv-sec tvi-sec">${E(st ? gName(f.g) : f.g)}</div>`; lastG = f.g; }
+      const row = [f]; if (f.il != null && f.il !== "") while (j + row.length < L.length && L[j + row.length].il === f.il && (L[j + row.length].g || "") === (f.g || "")) row.push(L[j + row.length]);
+      j += row.length; const tips = row.filter((q) => q.tip).map((q) => q.tip).join("\n"), tipH = tips ? `<span class="tvi-tip" title="${E(tips)}">${IXI.info}</span>` : "";
+      if (row[0].t === "bool") h += `<div class="tvi-r"><div class="tvi-c tvi-full">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
+      else h += `<div class="tvi-r"><div class="tvi-l">${E(row[0].n)}</div><div class="tvi-c${row.length > 1 ? " tvi-multi" : ""}">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
+    } return h; };
+  const inMain = inp.filter((f) => !isSty(f)), inSty = inp.filter(isSty), inH = rowsOf(inMain, false), styInH = rowsOf(inSty, true);
   const plots = pine ? pine.plots.filter((p) => p.display !== "none" && p.display !== "data_window").map((p, k) => ({ k: "p" + k, n: p.title || "Plot " + (k + 1), c: p.color, t: p.style === "hist" ? "hist" : p.style === "area" ? "area" : p.style === "circles" ? "dots" : p.style === "step" ? "step" : "line", w: p.lw })) : d0.pl, sty = x.sty || {};
   const wSel = (k, w) => `<select class="gr-in tvi-in tvi-w" data-sw="${k}" title="Épaisseur">${[1, 2, 3, 4].map((q) => `<option value="${q}" ${(w || 1) == q ? "selected" : ""}>${q}px</option>`).join("")}</select>`;
   const styRow = (p) => { const s = sty[p.k] || {}, kind = s.t || p.t || "line";
@@ -14207,14 +14211,14 @@ function openIndSettings(c, x, o = {}) {
       <select class="gr-in tvi-in tvi-st" data-st="${p.k}" title="Type de tracé">${[["line", "Ligne"], ["step", "Escalier"], ["hist", "Histogramme"], ["area", "Zone"], ["dots", "Points"]].map(([k, n2]) => `<option value="${k}" ${kind === k ? "selected" : ""}>${n2}</option>`).join("")}</select>
       <select class="gr-in tvi-in tvi-ls" data-sl="${p.k}" title="Style du trait" ${kind === "hist" || kind === "dots" ? "disabled" : ""}>${LSTY.map(([v, n2]) => `<option value="${v}" ${(s.ls || 0) == v ? "selected" : ""}>${n2}</option>`).join("")}</select></div></div>`; };
   const extra = (d0.hl && d0.hl.length ? `<div class="tvi-r"><div class="tvi-l">Lignes horizontales</div><div class="tvi-c">${colorInput("hl", (sty._hl && sty._hl.c) || "rgba(120,123,134,0.6)")}</div></div>` : "") + (d0.band ? `<div class="tvi-r"><div class="tvi-l">Fond entre les niveaux</div><div class="tvi-c">${colorInput("band", (sty._band && sty._band.c) || d0.band[2])}</div></div>` : "") + (d0.fills && d0.fills.length ? `<div class="tvi-r"><div class="tvi-l">Remplissage</div><div class="tvi-c">${colorInput("fill", (sty._fill && sty._fill.c) || d0.fills[0][2])}</div></div>` : "");
-  const stH = (plots.length ? `<div class="tv-sec tvi-sec">Tracés</div>` + plots.map(styRow).join("") : "") + (extra ? `<div class="tv-sec tvi-sec">Niveaux et fonds</div>` + extra : "")
-    + (!plots.length && !extra ? `<div class="tvi-note">${pine ? "Ce script dessine avec line.new / box.new / label.new : ses couleurs et ses styles de trait se règlent dans l'onglet « Paramètres en entrée »." : "Aucun tracé à régler."}</div>` : "")
+  const stH = styInH + (plots.length ? `<div class="tv-sec tvi-sec">Tracés</div>` + plots.map(styRow).join("") : "") + (extra ? `<div class="tv-sec tvi-sec">Niveaux et fonds</div>` + extra : "")
+    + (!plots.length && !extra && !inSty.length ? `<div class="tvi-note">${pine ? "Ce script dessine avec line.new / box.new / label.new : ses couleurs et ses styles de trait se règlent dans l'onglet « Paramètres en entrée »." : "Aucun tracé à régler."}</div>` : "")
     + `<div class="tv-sec tvi-sec">Ligne d'état</div><div class="tvi-r"><div class="tvi-c tvi-full"><label class="tv-ck"><input type="checkbox" data-sx="_lv" ${sty._lv === false ? "" : "checked"}><span>Valeurs dans la ligne d'état</span></label></div></div>`;
   const V = visOf(x), visH = VISCATS.map(([k, n2, rg]) => rg ? `<div class="tvi-vr"><label class="tv-ck"><input type="checkbox" data-vk="${k}" ${V[k][0] ? "checked" : ""}><span>${n2}</span></label><input class="gr-in tvi-in tvi-vn" type="number" min="${rg[0]}" max="${rg[1]}" data-v0="${k}" value="${V[k][1]}"><div class="tvi-dual" style="--a:${(V[k][1] - rg[0]) / (rg[1] - rg[0] || 1)};--b:${(V[k][2] - rg[0]) / (rg[1] - rg[0] || 1)}"><input type="range" min="${rg[0]}" max="${rg[1]}" data-r0="${k}" value="${V[k][1]}"><input type="range" min="${rg[0]}" max="${rg[1]}" data-r1="${k}" value="${V[k][2]}"></div><input class="gr-in tvi-in tvi-vn" type="number" min="${rg[0]}" max="${rg[1]}" data-v1="${k}" value="${V[k][2]}"></div>`
     : `<div class="tvi-vr"><label class="tv-ck"><input type="checkbox" data-vk="${k}" ${V[k] ? "checked" : ""}><span>${n2}</span></label></div>`).join("");
   const tab0 = o.tab || "in";
   const body = `<div class="gr-tabs tvi-tabs">${[["in", "Paramètres en entrée"], ["st", "Style"], ["vis", "Visibilité"]].map(([k, n2]) => `<button class="gr-tab${k === tab0 ? " on" : ""}" data-p="${k}">${n2}</button>`).join("")}</div>
-    <div class="tvi-body"><div class="gr-tpane" data-p="in" ${tab0 === "in" ? "" : "hidden"}>${inp.length ? inH : `<div class="tvi-note">Aucun paramètre.</div>`}${r._err ? `<div class="gr-err">${E(r._err)}</div>` : ""}</div>
+    <div class="tvi-body"><div class="gr-tpane" data-p="in" ${tab0 === "in" ? "" : "hidden"}>${inMain.length ? inH : `<div class="tvi-note">Aucun paramètre.</div>`}${r._err ? `<div class="gr-err">${E(r._err)}</div>` : ""}</div>
     <div class="gr-tpane" data-p="st" ${tab0 === "st" ? "" : "hidden"}>${stH}</div>
     <div class="gr-tpane" data-p="vis" ${tab0 === "vis" ? "" : "hidden"}>${visH}</div></div>`;
   const d = dlg(indTitle(x), body, { w: 560, cls: "gr-dset gr-tvset gr-tvind", ok: "D'accord", left: `<button class="gr-btn tvi-cfg" data-cfg="1">Configurations${IXI.chev}</button>`,

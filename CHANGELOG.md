@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.92.1] — 2026-11-23
+### Ajouté
+- Fenêtre de paramètres d'un script Pine : les entrées dont le groupe commence par « Style » (ex. `group = "Style · Étiquettes"`) s'affichent dans l'onglet **Style**, sous leur nom sans le préfixe, comme les couleurs et les cases d'affichage sur TradingView.
+
 ## [1.92.0] — 2026-11-23
 Page Graphique : indicateurs façon TradingView (légende, menu ⋯, paramètres, couleurs).
 ### Ajouté
