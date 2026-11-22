@@ -6,6 +6,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 Backtesteur : backtest automatique d'un script Pine `strategy()`.
 ### Ajouté
 - Pages **Stratégies** et fiche d'une stratégie : bouton **🧪 Backtest auto Pine**. Choisis un script Pine de stratégie, l'actif (NQ / MNQ / ES / MES), la période et la fiche de stratégie : le script est rejoué bougie par bougie sur les bougies m1 des CSV (data_csv / data) dans le Web Worker Pine, avec les mêmes règles que la page Graphique. Résultats affichés (trades, win rate, P&L net, profit factor, drawdown, solde final), puis **Enregistrer dans le Journal backtest** : les trades (sens, quantité, entrée / sortie, frais, risque initial R, MAE / MFE, raison TP / SL) apparaissent dans Testing (Tableau de bord, Trades, Analytique) et dans la fiche de la stratégie. Réglages gardés (localStorage `bt-pineauto`).
+- Bougies lues : toujours celles de NQ / ES (historique complet, mêmes prix que MNQ / MES), P&L à la valeur du contrat choisi (avant : le fichier MNQ, qui a des trous, était lu pour MNQ).
 - Bougies isolées hors séance CME (quelques ticks le samedi / dimanche dans les données TopstepX) ignorées par ce backtest.
 ### Modifié
 - Moteur Pine : chaque trade de stratégie garde sa quantité, ses frais, sa raison de sortie et son risque initial.

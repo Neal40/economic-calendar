@@ -11870,7 +11870,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         <label>Du<input type="date" id="paF" value="${from0}"></label><label>Au<input type="date" id="paT" value="${to0}"></label>
         <label>Stratégie (fiche)<input id="paN" value="${esc(stratName || o.strat || "")}" placeholder="Nom de la stratégie (relie les trades à sa fiche)"></label>
         <label>Capital de départ ($)<input type="number" id="paC" value="${+o.cap || 50000}" step="1000"></label></div>
-      <p class="rv-mut" style="margin:10px 0 0">Le script est exécuté bougie par bougie sur les bougies m1 du dossier data / data_csv, avec les mêmes règles que sur la page Graphique (quantité, frais et glissement du <code>strategy()</code>). MNQ / MES : bougies du micro si son fichier existe, sinon celles de NQ / ES (mêmes prix), P&amp;L à la valeur du micro.</p><div id="paRes"></div>`,
+      <p class="rv-mut" style="margin:10px 0 0">Le script est exécuté bougie par bougie sur les bougies m1 du dossier data / data_csv, avec les mêmes règles que sur la page Graphique (quantité, frais et glissement du <code>strategy()</code>). Les bougies lues sont toujours celles de NQ / ES (historique complet, mêmes prix que MNQ / MES) ; le P&amp;L est calculé à la valeur du contrat choisi (MNQ = 2 $ / point, NQ = 20 $). Le capital de départ ne sert qu'au solde final : la taille des positions vient du script.</p><div id="paRes"></div>`,
       '<span class="tx-sp"></span><button data-m="x" class="ghost">Fermer</button><button data-m="save" class="ghost" disabled>Enregistrer dans le Journal backtest</button><button data-m="run">Lancer le backtest</button>');
     let last = null; const res = () => $("paRes"), out = (h) => { if (res()) res().innerHTML = `<p class="rv-mut">${h}</p>`; };
     m.onclick = async (e) => {
@@ -11880,7 +11880,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         if (!x || !from || !to || from > to) return out('<span style="color:#ef5350">Dates invalides.</span>');
         LS.set("bt-pineauto", { id: x.id, sym, from, to, cap, strat }); e.target.disabled = true; m.querySelector('[data-m="save"]').disabled = true; last = null;
         try {
-          const bars = await pineReadM1(sym, from, to, out); if (bars.length < 100) throw new Error("pas assez de bougies m1 sur cette période");
+          const bars = await pineReadM1(und(sym), from, to, out); // v1.82.1 : toujours les bougies du sous-jacent (NQ / ES : fichiers complets, mêmes prix que MNQ / MES), P&L à la valeur du contrat choisi if (bars.length < 100) throw new Error("pas assez de bougies m1 sur cette période");
           out(`Calcul du script sur ${bars.length.toLocaleString("fr-FR")} bougies…`); const t0 = Date.now();
           const r = await new Promise((ok) => { const now = PineAsync.request("pa:" + Date.now(), x.code, bars, { inputs: x.inputs || {}, tfSec: 60, tfName: "1", sym, pv: CTR[sym].pv }, ok); if (now) ok(now); });
           if (!r || r.error) throw new Error((r && r.error) || "calcul impossible");
