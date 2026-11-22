@@ -400,7 +400,14 @@ ipcMain.handle("comptes:read", () => { try { const f = path.join(ICT(), "comptes
 ipcMain.handle("tvscripts:read", () => { try { const f = path.join(ICT(), "tradingview-mes-scripts.json"); if (!fs.existsSync(f)) return { ok: false, reason: "absent" }; return { ok: true, data: JSON.parse(fs.readFileSync(f, "utf8")), mtime: fs.statSync(f).mtimeMs }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:status", () => { try { return { ok: true, data: md().status() }; } catch (e) { return { ok: false, reason: String(e.message || e) }; } });
 ipcMain.handle("data:sync", () => mdSync(true));
-ipcMain.handle("data:read", async (e, sym, from, to, res) => { try { return { ok: true, data: await md().read(sym, from, to, res) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
+// v1.85 : option « Écarter les données douteuses » (bougies hors séance, sauts aberrants) appliquée à toutes les lectures m1 / 1 s ; activée par défaut
+const cleanFile = () => path.join(app.getPath("userData"), "data-clean.json");
+let dataClean = null;
+const cleanOn = () => { if (dataClean === null) { try { dataClean = JSON.parse(fs.readFileSync(cleanFile(), "utf8")).on !== false; } catch (e) { dataClean = true; } } return dataClean; };
+ipcMain.handle("data:cleanGet", () => ({ ok: true, on: cleanOn() }));
+ipcMain.handle("data:cleanSet", (e, on) => { dataClean = !!on; try { fs.writeFileSync(cleanFile(), JSON.stringify({ on: dataClean })); } catch (x) { /* ignore */ } return { ok: true, on: dataClean }; });
+ipcMain.handle("data:repair", async () => { const token = await getToken(true); if (!token) return { ok: false, reason: "login" }; const r = await md().repair(token, sfetch, (p) => { try { win && win.webContents.send("data:progress", p); } catch (x) { /* ignore */ } }); try { win && win.webContents.send("data:done", r); } catch (x) { /* ignore */ } return r; });
+ipcMain.handle("data:read", async (e, sym, from, to, res) => { try { return { ok: true, data: await md().read(sym, from, to, res, cleanOn()) }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 // v1.67 : actifs ayant des bougies (data_csv puis data) et leurs bornes, pour la fenêtre « Nouvelle session » des pages du Backtesteur (lecture légère : début et fin des CSV)
 ipcMain.handle("data:assets", async () => { try { return { ok: true, data: await md().assets() }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });
 ipcMain.handle("data:readTf", async (e, sym, tf, from, to) => { try { const d = await md().readTf(sym, tf, from, to); return d ? { ok: true, data: d, span: await md().span(sym, tf) } : { ok: false, reason: "missing" }; } catch (err) { return { ok: false, reason: String(err.message || err) }; } });

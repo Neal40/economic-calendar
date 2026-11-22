@@ -14,12 +14,52 @@ const SYMS = ["NQ", "ES"];               // symboles synchronisés depuis Topste
 const UND = { MNQ: "NQ", MES: "ES" };    // micros : mêmes prix que le contrat principal (repli quand leur fichier manque)
 const SEC_TFS = ["1s", "5s", "15s", "30s"];
 const M1_START = Date.UTC(2023, 6, 1) / 1000; // first m1 data available on TopstepX ~ July 2023
+const TAIL = 15;                          // v1.85 : bougies de fin de bloc jetées (retéléchargées ensuite)
 const HEADER = "time_ny,ts,open,high,low,close,volume\n";
 
 const fmtNY = (() => {
   const f = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
   return (ts) => { const o = {}; f.formatToParts(new Date(ts * 1000)).forEach((x) => (o[x.type] = x.value)); return `${o.year}-${o.month}-${o.day} ${o.hour}:${o.minute}:${o.second}`; };
 })();
+
+/* ---------- v1.85 : nettoyage des bougies (option « Écarter les données douteuses », et synchro) ----------
+ * Retire : les bougies hors séance CME (samedi, vendredi après 17:00, dimanche avant 18:00 NY) et les sauts aberrants qui reviennent :
+ * une bougie qui ouvre à plus de JUMP pts de la dernière clôture gardée, alors que le prix revient à moins de BACK pts de cette clôture
+ * dans les LOOK bougies suivantes, ou juste avant une pause du marché (fin de bloc corrompue de l'API History, contrat secondaire
+ * pendant un rollover). Un vrai gap qui ne revient pas est gardé. Les séances complètes de moins de 600 bougies m1 sont retirées. rows = [[ts, o, h, l, c, v], …] triées. Pur, testé dans marketdata.test.js. */
+const OFFS = new Map(), SKEY = new Map();
+function offSession(ts) {
+  const h = Math.floor(ts / 3600); let v = OFFS.get(h);
+  if (v === undefined) { const s = fmtNY(h * 3600), d = new Date(s.slice(0, 10) + "T12:00:00Z").getUTCDay(), hr = +s.slice(11, 13); v = d === 6 || (d === 5 && hr >= 17) || (d === 0 && hr < 18); if (OFFS.size > 300000) OFFS.clear(); OFFS.set(h, v); }
+  return v;
+}
+function cleanBars(rows, o = {}) {
+  const JUMP = o.jump || 120, BACK = o.back || 40, LOOK = o.look || 60, out = [], removed = { offSession: 0, spikes: 0 };
+  let g = o.prevClose != null && isFinite(o.prevClose) ? +o.prevClose : null, lastT = -Infinity;
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    if (offSession(r[0])) { removed.offSession++; continue; }
+    if (g !== null && (r[0] - lastT <= 1800 || Math.abs(r[1] - g) > (o.big || 600)) && Math.abs(r[1] - g) > JUMP) { // une réouverture (après une pause de plus de 30 min) n'est jamais un saut aberrant : vrai gap
+      let end = -1;
+      const big = Math.abs(r[1] - g) > (o.big || 600); // saut impossible sur le NQ / ES : on cherche le retour sans limite de durée
+      for (let j = i + 1; j < rows.length && (big || j <= i + LOOK); j++) {
+        if (!big && rows[j][0] - rows[j - 1][0] > 1800) { end = j; break; } // pause du marché juste après le saut : bougies de fin de séance corrompues
+        if (!offSession(rows[j][0]) && Math.abs(rows[j][1] - g) <= BACK) { end = j; break; }
+      }
+      if (end > 0) { removed.spikes += end - i; i = end - 1; continue; }
+    }
+    out.push(r); g = r[4]; lastT = r[0];
+  }
+  // séances clairsemées (moins de minBars bougies m1 : données incomplètes ou fausses), sauf la première et la dernière lues (coupées par la plage, séance en cours)
+  const minBars = o.minBars === undefined ? 600 : o.minBars;
+  if (minBars > 0 && out.length) {
+    const key = (t) => { const h = Math.floor((t + 6 * 3600) / 3600); let v = SKEY.get(h); if (v === undefined) { v = fmtNY(h * 3600).slice(0, 10); if (SKEY.size > 300000) SKEY.clear(); SKEY.set(h, v); } return v; };
+    const cnt = new Map(); out.forEach((x) => { const k = key(x[0]); cnt.set(k, (cnt.get(k) || 0) + 1); });
+    const first = key(out[0][0]), last = key(out[out.length - 1][0]), thin = new Set([...cnt].filter(([k, n]) => n < minBars && k !== first && k !== last).map(([k]) => k));
+    if (thin.size) { const kept = out.filter((x) => !thin.has(key(x[0]))); removed.thinSessions = thin.size; removed.thinBars = out.length - kept.length; return { rows: kept, removed, lastClose: g }; }
+  }
+  return { rows: out, removed, lastClose: g };
+}
 
 /* ---------- banque de bougies : un CSV -> Float64Array (6 valeurs par bougie : ts, o, h, l, c, v), triée, sans doublons ----------
  * Lecture en flux (un fichier 1 s de 100 Mo ne bloque pas l'app), une seule fois par fichier : relu seulement si sa date ou sa taille change.
@@ -172,15 +212,20 @@ function create(baseDir, opts = {}) {
       for (const sym of SYMS) {
         st[sym] = st[sym] || {};
         // ---- m1: forward from the last saved bar (or July 2023), 15 calendar days per request (< 25 000 bars)
+        // v1.85 : les dernières bougies renvoyées par l'API History pour un bloc sont parfois fausses (prix d'autres contrats en escalier) :
+        // les TAIL dernières sont jetées et retéléchargées au début du bloc suivant (ou à la prochaine synchro), puis le bloc est nettoyé (cleanBars)
         let cur = st[sym].m1Last ? st[sym].m1Last + 60 : M1_START, added = 0;
         while (cur < now - 60) {
-          const to = Math.min(cur + 15 * 86400, now);
-          const rows = (await chunk(token, fetchFn, sym, "1", cur, to, 25000)).filter((b) => !st[sym].m1Last || b.t > st[sym].m1Last);
+          const to = Math.min(cur + 15 * 86400, now), final = to >= now;
+          let rows = (await chunk(token, fetchFn, sym, "1", cur, to, 25000)).filter((b) => !st[sym].m1Last || b.t > st[sym].m1Last);
+          if (rows.length > TAIL) rows = rows.slice(0, rows.length - TAIL); else if (final) rows = [];
+          const cl = cleanBars(rows.map((b) => [b.t, b.o, b.h, b.l, b.c, b.v]), { prevClose: st[sym].m1LastClose, minBars: 0 });
+          const keep = cl.rows.map((r) => ({ t: r[0], o: r[1], h: r[2], l: r[3], c: r[4], v: r[5] }));
           const byYear = {};
-          rows.forEach((b) => (byYear[yearOf(b.t)] = byYear[yearOf(b.t)] || []).push(b));
+          keep.forEach((b) => (byYear[yearOf(b.t)] = byYear[yearOf(b.t)] || []).push(b));
           Object.entries(byYear).forEach(([y, rs]) => append(fileM1(sym, y), rs));
-          if (rows.length) { st[sym].m1Last = rows[rows.length - 1].t; added += rows.length; writeState(st); }
-          cur = to + 1;
+          if (rows.length) { st[sym].m1Last = rows[rows.length - 1].t; if (cl.lastClose != null) st[sym].m1LastClose = cl.lastClose; added += keep.length; st[sym].m1Removed = (st[sym].m1Removed || 0) + cl.removed.spikes + cl.removed.offSession; writeState(st); }
+          cur = rows.length && !final ? st[sym].m1Last + 60 : to + 1;
           onProgress({ sym, kind: "m1", upTo: fmtNY(Math.min(cur, now)).slice(0, 10), added });
         }
         // ---- 1-second bars: TopstepX keeps only the last days -> collect every evening, 6 h per request
@@ -229,9 +274,10 @@ function create(baseDir, opts = {}) {
   const hasOwn = (sym, res) => { const f = csvFile(sym, res); if (f && fs.existsSync(f)) return true; try { return fs.readdirSync(dir).some((x) => x.startsWith(`${sym}_${res}_`) && x.endsWith(".csv")); } catch (e) { return false; } };
   // read bars of a symbol between two unix timestamps (m1 or 1s) : data_csv d'abord, trous comblés par la synchro du même symbole.
   // v1.67.1 (décision de l'arbitre du 20/11/2026) : un micro (MNQ, MES) n'utilise que ses propres bougies ; sans aucun fichier à lui dans cette résolution, il prend celles de son sous-jacent (NQ, ES)
-  async function read(sym, from, to, res = "m1") {
+  async function read(sym, from, to, res = "m1", clean = false) {
     res = res === "1s" ? "1s" : "m1";
-    if (sym in UND && !hasOwn(sym, res)) return read(UND[sym], from, to, res);
+    if (sym in UND && !hasOwn(sym, res)) return read(UND[sym], from, to, res, clean);
+    if (clean) return cleanBars(await read(sym, from, to, res, false), res === "1s" ? { look: 3600, minBars: 0 } : {}).rows;
     to = Math.min(to, Math.floor(Date.now() / 1000) + 86400); from = Math.max(from, 0);
     const main = await rowsOf(csvFile(sym, res), from, to);
     let fill = [];
@@ -324,7 +370,15 @@ function create(baseDir, opts = {}) {
     for (const f of scan(dir)) { const m = /^([A-Za-z]+)_(m1|1s)_\d{4}(-\d\d)?\.csv$/i.exec(f); if (m) await add(m[1].toUpperCase(), m[2].toLowerCase(), path.join(dir, f), "data"); }
     return { csvDir: cd, dataDir: dir, syms };
   }
-  return { sync, status, read, readTf, span, assets, buildAllTf, importAllTf, TFS, dir, csvDir, isRunning: () => running };
+  // v1.85 : retélécharge tout l'historique m1 avec la synchro corrigée ; les anciens fichiers sont gardés dans data\_avant_reparation_AAAA-MM-JJ
+  async function repair(token, fetchFn, onProgress = () => {}) {
+    if (running) return { ok: false, reason: "busy" };
+    const day = new Date().toISOString().slice(0, 10), back = path.join(dir, "_avant_reparation_" + day); let moved = 0;
+    try { fs.mkdirSync(back, { recursive: true }); for (const f of fs.readdirSync(dir)) if (/^(NQ|ES)_m1_\d{4}\.csv$/.test(f)) { fs.renameSync(path.join(dir, f), path.join(back, f)); moved++; } } catch (e) { return { ok: false, reason: String(e.message || e) }; }
+    const st = readState(); SYMS.forEach((k) => { if (st[k]) { delete st[k].m1Last; delete st[k].m1LastClose; delete st[k].m1Removed; } }); writeState(st);
+    const r = await sync(token, fetchFn, onProgress); return { ...r, backup: back, moved };
+  }
+  return { sync, repair, status, read, readTf, span, assets, buildAllTf, importAllTf, TFS, dir, csvDir, isRunning: () => running };
 }
 
 // parse a CSV chosen by the user (time_ny,ts,open,high,low,close,volume or any CSV with ts/open/high/low/close[/volume])
@@ -354,4 +408,4 @@ function parseNY(s) {
   return g;
 }
 
-module.exports = { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges, SYMS, UND, SEC_TFS };
+module.exports = { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges, cleanBars, offSession, SYMS, UND, SEC_TFS };

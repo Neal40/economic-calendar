@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.87.0] — 2026-11-22
+Données de marché : synchro corrigée, option « Écarter les données douteuses », réparation de l'historique.
+### Corrigé
+- Synchro des bougies m1 TopstepX : les dernières bougies renvoyées par l'API History pour chaque bloc de 15 jours étaient parfois fausses (prix d'autres contrats en « escalier » de -217 / -247 / -289 pts, une fois tous les 15 jours environ) ; les 15 dernières bougies de chaque bloc sont maintenant jetées et retéléchargées au début du bloc suivant, puis chaque bloc est nettoyé avant d'être écrit.
+### Ajouté
+- Option **« Écarter les données douteuses »** (activée par défaut ; Backtesteur : bouton « Données : nettoyées ✓ / brutes » de la barre des données ; page Graphique : menu des unités de temps). Appliquée à toutes les lectures m1 / 1 s (Graphique, Backtesteur, Backtest auto Pine) par `desktop/marketdata.js` (`cleanBars`, testée) : bougies hors séance CME (week-end), sauts aberrants qui reviennent (fins de bloc corrompues, contrat secondaire pendant un rollover), sauts impossibles (> 600 pts), séances clairsemées (< 600 bougies m1, sauf la première et la dernière lues). Les vrais gaps (réouvertures, changement de contrat) sont gardés. Réglage dans `userData/data-clean.json`.
+- Bouton **« Réparer l'historique »** (Backtesteur) : retélécharge tout l'historique m1 NQ / ES depuis TopstepX avec la synchro corrigée ; les anciens fichiers sont gardés dans `data\\_avant_reparation_AAAA-MM-JJ`.
+
 ## [1.86.1] — 2026-11-22
 ### Modifié
 - Page Graphique : boutons de navigation du graphique (−, +, ‹, ›, réinitialiser) en noir sur fond clair, plus lisibles.

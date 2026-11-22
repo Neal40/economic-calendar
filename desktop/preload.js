@@ -28,6 +28,9 @@ contextBridge.exposeInMainWorld("desktop", {
   copierStatus: () => ipcRenderer.invoke("copier:status"),
   onCopierLog: (cb) => ipcRenderer.on("copier:log", (e, l) => cb(l)),
   dataSync: () => ipcRenderer.invoke("data:sync"),
+  dataRepair: () => ipcRenderer.invoke("data:repair"),
+  dataCleanGet: () => ipcRenderer.invoke("data:cleanGet"),
+  dataCleanSet: (on) => ipcRenderer.invoke("data:cleanSet", !!on),
   dataRead: (sym, from, to, res) => ipcRenderer.invoke("data:read", sym, from, to, res),
   dataReadTf: (sym, tf, from, to) => ipcRenderer.invoke("data:readTf", sym, tf, from, to),
   dataAssets: () => ipcRenderer.invoke("data:assets"), // v1.67 : actifs des CSV (data_csv, data) et bornes de dates

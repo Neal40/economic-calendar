@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert");
 const fs = require("fs"), os = require("os"), path = require("path");
-const { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges } = require("./marketdata");
+const { create, csvDirsOf, parseCsv, parseNY, mergeRows, csvEdges, cleanBars, offSession } = require("./marketdata");
 
 test("parseNY : date sans fuseau = heure de New York (hiver et été)", () => {
   assert.strictEqual(parseNY("2026-11-06 09:30:00"), Date.parse("2026-11-06T14:30:00Z") / 1000); // EST, UTC-5
@@ -114,4 +114,43 @@ test("v1.67.1 micros : leurs propres bougies dans le data_csv d'un sous-dossier 
     assert.deepStrictEqual((await S.readTf("MNQ", "m5", 0, 2e9)).map((r) => r[4]), [6]);
     assert.deepStrictEqual((await S.readTf("MES", "m5", 0, 2e9)).map((r) => r[4]), [7]); // MES sans m5 : m5 de l'ES
   } finally { fs.rmSync(ict, { recursive: true, force: true }); }
+});
+
+test("cleanBars : escalier de fin de bloc retiré, vrai gap gardé, week-end retiré", () => {
+  const t0 = Date.parse("2025-09-02T23:50:00Z") / 1000; // mardi 19:50 NY
+  const px = [24620, 24622, 24625, 24384, 24136, 23919, 23629, 24620, 24624, 24630];
+  const rows = px.map((p, i) => [t0 + i * 60, p, p + 1, p - 1, p]);
+  const r = cleanBars(rows);
+  assert.deepStrictEqual(r.rows.map((x) => x[1]), [24620, 24622, 24625, 24620, 24624, 24630]);
+  assert.strictEqual(r.removed.spikes, 4);
+  const gap = [24620, 24622, 24900, 24905, 24910].map((p, i) => [t0 + i * 60, p, p + 1, p - 1, p]);
+  assert.strictEqual(cleanBars(gap).rows.length, 5); // le prix ne revient pas : vrai gap gardé
+  const sat = Date.parse("2025-09-06T15:00:00Z") / 1000; // samedi
+  assert.strictEqual(offSession(sat), true);
+  assert.strictEqual(offSession(Date.parse("2025-09-07T21:59:00Z") / 1000), true);  // dimanche 17:59 NY
+  assert.strictEqual(offSession(Date.parse("2025-09-07T22:00:00Z") / 1000), false); // dimanche 18:00 NY
+  assert.strictEqual(cleanBars([[sat, 1, 1, 1, 1]]).rows.length, 0);
+});
+
+test("cleanBars : contrat secondaire pendant un rollover (alternance) retiré", () => {
+  const t0 = Date.parse("2026-03-13T07:40:00Z") / 1000;
+  const px = [25300, 25520, 25298, 25515, 25295, 25290];
+  const r = cleanBars(px.map((p, i) => [t0 + i * 60, p, p + 2, p - 2, p]));
+  assert.deepStrictEqual(r.rows.map((x) => x[1]), [25300, 25298, 25295, 25290]);
+});
+
+test("cleanBars : escalier juste avant la fermeture du vendredi retiré", () => {
+  const t0 = Date.parse("2024-09-06T20:50:00Z") / 1000; // vendredi 16:50 NY
+  const fri = [19400, 19402, 19171, 18876, 18670].map((p, i) => [t0 + i * 60, p, p + 1, p - 1, p]);
+  const sun = [[Date.parse("2024-09-08T22:00:00Z") / 1000, 19450, 19451, 19449, 19450]];
+  const r = cleanBars(fri.concat(sun));
+  assert.deepStrictEqual(r.rows.map((x) => x[1]), [19400, 19402, 19450]);
+});
+
+test("cleanBars : séance clairsemée retirée, première et dernière séances gardées", () => {
+  const day = (iso, n) => Array.from({ length: n }, (_, i) => { const t = Date.parse(iso) / 1000 + i * 60; return [t, 100, 101, 99, 100]; });
+  const rows = day("2025-09-08T22:00:00Z", 50).concat(day("2025-09-09T22:00:00Z", 1300), day("2025-09-10T22:00:00Z", 300), day("2025-09-11T22:00:00Z", 1300), day("2025-09-14T22:00:00Z", 40));
+  const r = cleanBars(rows);
+  assert.strictEqual(r.rows.length, 50 + 1300 + 1300 + 40);
+  assert.strictEqual(r.removed.thinSessions, 1);
 });

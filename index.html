@@ -2140,6 +2140,8 @@ table.tbl:has(#subT){min-width:900px}
     <span class="tx-sp"></span>
     <span id="btData" class="tx-data"></span>
     <button class="tx-link" id="btSync" title="Télécharger les bougies TopstepX">Synchro données</button>
+    <button class="tx-link" id="btClean" title="Écarter les données douteuses : bougies hors séance (week-end), sauts aberrants (fins de bloc corrompues de la synchro, contrat secondaire pendant un rollover) et séances clairsemées">Données : …</button>
+    <button class="tx-link" id="btRepair" title="Retélécharger tout l'historique m1 NQ / ES depuis TopstepX avec la synchro corrigée (les anciens fichiers sont gardés dans data\_avant_reparation_…)">Réparer l'historique</button>
     <button class="tx-link" id="btImport">Importer CSV</button>
     <button class="tx-link" id="btDir" title="Ouvrir le dossier des données">Dossier</button>
     <input type="file" id="btFile" accept=".csv,.txt" hidden>
@@ -10484,6 +10486,17 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     $("btBottom").onclick = (e) => { const x = e.target.dataset.x; if (x === "flat") { flatten("Close"); draw(); ui(); } if (x === "cxl") { A.orders = A.orders.filter((o) => String(o.id) !== e.target.dataset.id); saveAcc(); draw(); ui(); } };
     $("btImport").onclick = importCsv; $("btFile").onchange = importCsv; $("btSync").onclick = syncData; $("btDir").onclick = () => D && D.dataOpenDir && D.dataOpenDir();
     if (!D || !D.dataSync) { $("btSync").hidden = true; $("btDir").hidden = true; }
+    // v1.85 : option « Écarter les données douteuses » (partagée avec la page Graphique) et réparation de l'historique m1
+    const cleanLbl = (on) => { const b = $("btClean"); if (b) { b.textContent = on ? "Données : nettoyées ✓" : "Données : brutes"; b.classList.toggle("on", !!on); } };
+    if (D && D.dataCleanGet) D.dataCleanGet().then((r) => cleanLbl(r && r.on)); else { $("btClean").hidden = true; }
+    $("btClean").onclick = async () => { const r = await D.dataCleanGet(), on = !(r && r.on); await D.dataCleanSet(on); cleanLbl(on); window.dispatchEvent(new CustomEvent("ict-data-clean", { detail: on })); msg(on ? "Données douteuses écartées (week-end, sauts aberrants, rollovers, séances clairsemées)." : "Données brutes de la synchro (rien n'est écarté)."); };
+    window.addEventListener("ict-data-clean", (e) => { cleanLbl(e.detail); RC.clear(); if (S.raw && S.raw.length) load(); });
+    if (!D || !D.dataRepair) $("btRepair").hidden = true;
+    $("btRepair").onclick = async () => {
+      if (!confirm("Retélécharger tout l'historique m1 NQ / ES depuis TopstepX (juillet 2023 → aujourd'hui) avec la synchro corrigée ?\n\nLes fichiers actuels sont gardés dans data\\_avant_reparation_<date>. Compte quelques minutes.")) return;
+      $("btRepair").disabled = true; msg("Réparation de l'historique : téléchargement depuis TopstepX…"); const r = await D.dataRepair(); $("btRepair").disabled = false; RC.clear();
+      msg(r.ok ? `Historique réparé : ${Object.entries(r.summary || {}).filter(([k]) => k !== "allTf").map(([k, v]) => `${k} ${v.m1} bougies m1`).join(" · ")} (anciens fichiers : ${r.backup})` : r.reason === "login" ? "Connecte-toi à TopstepX (fenêtre ouverte) puis relance." : "Réparation impossible : " + r.reason, !r.ok); status();
+    };
     if (D && D.onData) D.onData((k, p) => { if (k === "progress") msg(`Synchro ${p.sym} ${p.kind} : jusqu'au ${p.upTo} (+${p.added})`); if (k === "done") status(); });
     // raccourcis clavier personnalisables (défauts FXReplay / TradingView) : onglet Raccourcis des Paramètres (v1.67.1), enregistrés dans localStorage "bt-keys"
     const ORD = (type, side) => { const t = $("oType"); t.value = type; t.dispatchEvent(new Event("change", { bubbles: true }));
@@ -12543,6 +12556,10 @@ async function pollOf(f) { // dernières bougies (direct)
 
 /* ---------- flux de bougies (un par symbole + unité, partagé par les graphiques) ---------- */
 const FEEDS = new Map();
+// v1.85 : option « Écarter les données douteuses » (réglage de l'app, appliqué par desktop/marketdata.js à toutes les lectures m1 / 1 s)
+let GR_CLEAN = true;
+if (D && D.dataCleanGet) D.dataCleanGet().then((r) => { GR_CLEAN = !(r && r.on === false); });
+window.addEventListener("ict-data-clean", (e) => { GR_CLEAN = !!e.detail; FEEDS.forEach((f) => { if (f.spec && f.spec.src === "tsx" && (f.ready || f.err)) f.load(true); }); });
 // Historique chargé (menu des unités de temps) : 5 000 bougies par défaut, ou 1 an pour les unités de 1 min à 59 min (backtest des stratégies Pine)
 const HIST_1Y = () => LS.get("gr-hist-1y", false) === true;
 const INIT_N = (iv) => { const s = ivSec(iv); if (HIST_1Y() && s >= 60 && s < 3600) return Math.ceil(400 * 23 * 3600 * 5 / 7 / s); return s < 60 ? 6000 : s < 3600 ? 5000 : s < 86400 ? 4000 : 3000; };
@@ -13904,6 +13921,7 @@ function addCompare(s) { const c = activeCell(); if (!c || s === c.st.sym || (c.
 function ivMenu(btn) {
   const c = activeCell(), items = [];
   IV_GROUPS.forEach(([g, list]) => { items.push("h:" + g); list.forEach((iv) => items.push({ t: ivLabel(iv, true), on: c && c.st.iv === iv, star: IVFAV.includes(iv), f: () => applyIv(iv), onStar: () => { IVFAV = IVFAV.includes(iv) ? IVFAV.filter((x) => x !== iv) : IVFAV.concat(iv).sort((a, b) => ivSec(a) - ivSec(b)); LS.set("gr-ivfav", IVFAV); refreshHeader(); ivMenu(btn); } })); });
+  if (D && D.dataCleanSet) items.push("-", { t: GR_CLEAN ? "Données douteuses : écartées (cliquer pour les données brutes)" : "Données douteuses : gardées (cliquer pour les écarter)", on: GR_CLEAN ? true : undefined, f: async () => { closeMenu(); const on = !GR_CLEAN; await D.dataCleanSet(on); window.dispatchEvent(new CustomEvent("ict-data-clean", { detail: on })); toast(on ? "Données douteuses écartées (week-end, sauts aberrants, rollovers, séances clairsemées)" : "Données brutes de la synchro"); } });
   items.push("-", { t: HIST_1Y() ? "Historique chargé : 1 an (cliquer pour 5 000 bougies)" : "Historique chargé : 5 000 bougies (cliquer pour 1 an)", on: HIST_1Y() ? true : undefined, f: () => { LS.set("gr-hist-1y", !HIST_1Y()); closeMenu(); FEEDS.forEach((f) => { if (f.ready || f.err) f.load(true); }); toast(HIST_1Y() ? "Chargement d'1 an de bougies (1 à 59 min)…" : "Retour à 5 000 bougies"); } });
   items.push("-", { html: `<div class="gr-ivadd"><input placeholder="Personnalisé : 7, 90, 4h, 2D…" id="grIvAdd"><button class="gr-btn">Ajouter</button></div>`, init: (w) => { const i = w.querySelector("input"), go = () => { const iv = ivFromText(i.value); if (!iv) { i.classList.add("bad"); return; } if (!IVFAV.includes(iv)) { IVFAV = IVFAV.concat(iv).sort((a, b) => ivSec(a) - ivSec(b)); LS.set("gr-ivfav", IVFAV); } closeMenu(); applyIv(iv); }; w.querySelector("button").onclick = go; i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") go(); }; } });
   menuAt(btn, items, { cls: "gr-ivm" });
