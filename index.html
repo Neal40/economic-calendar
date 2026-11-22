@@ -12424,7 +12424,9 @@ async function pollOf(f) { // dernières bougies (direct)
 
 /* ---------- flux de bougies (un par symbole + unité, partagé par les graphiques) ---------- */
 const FEEDS = new Map();
-const INIT_N = (iv) => { const s = ivSec(iv); return s < 60 ? 6000 : s < 3600 ? 5000 : s < 86400 ? 4000 : 3000; };
+// Historique chargé (menu des unités de temps) : 5 000 bougies par défaut, ou 1 an pour les unités de 1 min à 59 min (backtest des stratégies Pine)
+const HIST_1Y = () => LS.get("gr-hist-1y", false) === true;
+const INIT_N = (iv) => { const s = ivSec(iv); if (HIST_1Y() && s >= 60 && s < 3600) return Math.ceil(400 * 23 * 3600 * 5 / 7 / s); return s < 60 ? 6000 : s < 3600 ? 5000 : s < 86400 ? 4000 : 3000; };
 class Feed {
   constructor(sym, iv) { this.sym = sym; this.iv = iv; this.spec = SYM(sym); this.bars = []; this.subs = new Set(); this.done = false; this.loading = null; this.more = null; this.err = ""; this.ver = 0; this.lastPoll = 0; this.ready = false; this.used = Date.now(); }
   emit(type, info) { this.subs.forEach((fn) => { try { fn(type, info); } catch (e) { console.error(e); } }); }
@@ -13758,6 +13760,7 @@ function addCompare(s) { const c = activeCell(); if (!c || s === c.st.sym || (c.
 function ivMenu(btn) {
   const c = activeCell(), items = [];
   IV_GROUPS.forEach(([g, list]) => { items.push("h:" + g); list.forEach((iv) => items.push({ t: ivLabel(iv, true), on: c && c.st.iv === iv, star: IVFAV.includes(iv), f: () => applyIv(iv), onStar: () => { IVFAV = IVFAV.includes(iv) ? IVFAV.filter((x) => x !== iv) : IVFAV.concat(iv).sort((a, b) => ivSec(a) - ivSec(b)); LS.set("gr-ivfav", IVFAV); refreshHeader(); ivMenu(btn); } })); });
+  items.push("-", { t: HIST_1Y() ? "Historique chargé : 1 an (cliquer pour 5 000 bougies)" : "Historique chargé : 5 000 bougies (cliquer pour 1 an)", on: HIST_1Y() ? true : undefined, f: () => { LS.set("gr-hist-1y", !HIST_1Y()); closeMenu(); FEEDS.forEach((f) => { if (f.ready || f.err) f.load(true); }); toast(HIST_1Y() ? "Chargement d'1 an de bougies (1 à 59 min)…" : "Retour à 5 000 bougies"); } });
   items.push("-", { html: `<div class="gr-ivadd"><input placeholder="Personnalisé : 7, 90, 4h, 2D…" id="grIvAdd"><button class="gr-btn">Ajouter</button></div>`, init: (w) => { const i = w.querySelector("input"), go = () => { const iv = ivFromText(i.value); if (!iv) { i.classList.add("bad"); return; } if (!IVFAV.includes(iv)) { IVFAV = IVFAV.concat(iv).sort((a, b) => ivSec(a) - ivSec(b)); LS.set("gr-ivfav", IVFAV); } closeMenu(); applyIv(iv); }; w.querySelector("button").onclick = go; i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") go(); }; } });
   menuAt(btn, items, { cls: "gr-ivm" });
 }

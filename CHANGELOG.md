@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.81.0] — 2026-11-22
+Page Graphique : 1 an d'historique pour backtester les stratégies Pine.
+### Ajouté
+- Menu des unités de temps : **Historique chargé : 5 000 bougies / 1 an**. Sur « 1 an », les graphiques de 1 à 59 minutes chargent environ 400 jours depuis les CSV (`data_csv` / `data`) au lieu de 5 000 bougies (≈ 3,5 jours en 1 min) : une stratégie Pine voit toute l'année. Réglage gardé (localStorage `gr-hist-1y`).
+
 ## [1.80.0] — 2026-11-21
 Page Graphique : dessins et logos comme TradingView.
 ### Ajouté
