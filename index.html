@@ -6769,14 +6769,14 @@ const PineRuntime = (() => {
       if (s.pos === 0) { s.avg = px; s.entryI = i; s.entryId = id; } else s.avg = (s.avg * Math.abs(s.pos) + px * qty) / (Math.abs(s.pos) + qty);
       s.pos += dir * qty; rt.marks.push({ i, position: dir > 0 ? "belowBar" : "aboveBar", shape: dir > 0 ? "arrowUp" : "arrowDown", color: dir > 0 ? "#2962ff" : "#e91e63", text: String(id || (dir > 0 ? "Long" : "Short")) });
     }
-    function closePos(s, px, why, i) { if (!s.pos) return; const q = Math.abs(s.pos), fee = s.commType === "cash_per_contract" ? 2 * s.comm * q : s.commType === "cash_per_order" ? 2 * s.comm : s.commType === "percent" ? s.comm / 100 * (s.avg + px) * q * (o.pv || 1) : 0; const pl = (px - s.avg) * s.pos * (o.pv || 1) - fee; s.net += pl; if (pl > 0) { s.wins++; s.gp += pl; } else { s.losses++; s.gl -= pl; } s.peak = Math.max(s.peak, s.net); s.mdd = Math.max(s.mdd, s.peak - s.net); s.trades.push({ in: s.entryI, out: i, dir: Math.sign(s.pos), entry: s.avg, exit: px, pnl: pl }); rt.marks.push({ i, position: s.pos > 0 ? "aboveBar" : "belowBar", shape: "circle", color: pl >= 0 ? "#089981" : "#f23645", text: why || "Sortie" }); s.pos = 0; s.avg = NaN; s.exits = []; }
+    function closePos(s, px, why, i) { if (!s.pos) return; const q = Math.abs(s.pos), fee = s.commType === "cash_per_contract" ? 2 * s.comm * q : s.commType === "cash_per_order" ? 2 * s.comm : s.commType === "percent" ? s.comm / 100 * (s.avg + px) * q * (o.pv || 1) : 0; const pl = (px - s.avg) * s.pos * (o.pv || 1) - fee; s.net += pl; if (pl > 0) { s.wins++; s.gp += pl; } else { s.losses++; s.gl -= pl; } s.peak = Math.max(s.peak, s.net); s.mdd = Math.max(s.mdd, s.peak - s.net); s.trades.push({ in: s.entryI, out: i, dir: Math.sign(s.pos), qty: q, entry: s.avg, exit: px, pnl: pl, fee, why: why || "", r0: s.r0 || null }); s.r0 = null; rt.marks.push({ i, position: s.pos > 0 ? "aboveBar" : "belowBar", shape: "circle", color: pl >= 0 ? "#089981" : "#f23645", text: why || "Sortie" }); s.pos = 0; s.avg = NaN; s.exits = []; }
     function stratBar(i) { const s = rt.strat; if (!s) return; const b = bars[i];
       const q = s.queue; s.queue = []; q.forEach((od) => { if (od.kind === "close") { if (!od.id || od.id === s.entryId || od.all) closePos(s, b[1], od.comment || "Clôture", i); } else if (od.limit === undefined && od.stop === undefined) { fillPos(s, od.dir, od.qty, b[1], od.id, i); s.intra = false; } else s.queue.push({ ...od, pending: true }); });
       s.queue = s.queue.filter((od) => { if (!od.pending) return true; if (s.pos && Math.sign(s.pos) === od.dir) return true; const lv = od.limit, sv = od.stop, hasL = lv !== undefined && !isna(lv), hasS = sv !== undefined && !isna(sv);
         // v1.81 : ordre limite / stop déjà dépassé à l'ouverture -> rempli à l'ouverture (comme TradingView), sinon au niveau
         let px = NaN; if (od.dir > 0) { if (hasL && b[3] <= lv) px = Math.min(b[1], lv); else if (hasS && b[2] >= sv) px = Math.max(b[1], sv); } else { if (hasL && b[2] >= lv) px = Math.max(b[1], lv); else if (hasS && b[3] <= sv) px = Math.min(b[1], sv); }
         if (!isna(px)) { fillPos(s, od.dir, od.qty, px, od.id, i); s.intra = px !== b[1]; return false; } return true; });
-      if (s.pos && s.exits.length) for (const ex of s.exits) { if (ex.from && ex.from !== s.entryId) continue; const long = s.pos > 0, tp = ex.limit !== undefined ? ex.limit : ex.profit !== undefined ? s.avg + (long ? 1 : -1) * ex.profit * mintick : undefined, sl = ex.stop !== undefined ? ex.stop : ex.loss !== undefined ? s.avg - (long ? 1 : -1) * ex.loss * mintick : undefined; const fb = s.entryI === i, o1 = fb ? NaN : b[1]; // v1.81 : bougie d'entrée = pas de prix d'ouverture (antérieur à l'entrée) ; entrée en cours de bougie -> SL d'abord, TP seulement si la clôture est repassée du bon côté de l'entrée
+      if (s.pos && s.exits.length) for (const ex of s.exits) { if (ex.from && ex.from !== s.entryId) continue; if (s.r0 == null) { const r0 = ex.stop !== undefined ? Math.abs(s.avg - ex.stop) : ex.loss !== undefined ? ex.loss * mintick : NaN; if (r0 > 0) s.r0 = r0; } const long = s.pos > 0, tp = ex.limit !== undefined ? ex.limit : ex.profit !== undefined ? s.avg + (long ? 1 : -1) * ex.profit * mintick : undefined, sl = ex.stop !== undefined ? ex.stop : ex.loss !== undefined ? s.avg - (long ? 1 : -1) * ex.loss * mintick : undefined; const fb = s.entryI === i, o1 = fb ? NaN : b[1]; // v1.81 : bougie d'entrée = pas de prix d'ouverture (antérieur à l'entrée) ; entrée en cours de bougie -> SL d'abord, TP seulement si la clôture est repassée du bon côté de l'entrée
         if (!isna(sl) && sl !== undefined && (long ? b[3] <= sl : b[2] >= sl)) { closePos(s, (isna(o1) ? sl : long ? Math.min(o1, sl) : Math.max(o1, sl)) - (long ? 1 : -1) * s.slip * mintick, ex.comment_loss || ex.comment || "SL", i); break; }
         if (!isna(tp) && tp !== undefined && (long ? b[2] >= tp : b[3] <= tp) && !(fb && s.intra && (long ? b[4] < s.avg : b[4] > s.avg))) { closePos(s, isna(o1) ? tp : long ? Math.max(o1, tp) : Math.min(o1, tp), ex.comment_profit || ex.comment || "TP", i); break; } }
     }
@@ -6951,7 +6951,7 @@ const PineEngine = (() => {
     }
     const s = rt.strat;
     return { error: err, meta: rt.meta, plots: rt.plots, hlines: rt.hlines, marks: rt.marks, inputs: rt.inputs, warns: [...rt.warns], ms: Date.now() - t0, draw: R.drawOut(),
-      strategy: s ? { trades: s.trades.length, net: s.net, wins: s.wins, losses: s.losses, pos: s.pos } : null };
+      strategy: s ? { trades: s.trades.length, net: s.net, wins: s.wins, losses: s.losses, pos: s.pos, list: s.trades } : null };
   }
   return { compile, run };
 })();
@@ -11324,7 +11324,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     return `<svg class="bp-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="M0,${sy(0).toFixed(1)}H${w}" stroke="var(--tx-line)" stroke-dasharray="3 3"/><path d="${c.map((v, i) => `${i ? "L" : "M"}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join("")}" fill="none" stroke="${c[c.length - 1] >= 0 ? "var(--tx-profit)" : "var(--tx-loss)"}" stroke-width="1.8"/></svg>`; };
   function pageStrats(el) {
     const o = (v, t) => `<option value="${v}" ${pg.st.f === v ? "selected" : ""}>${t}</option>`;
-    el.innerHTML = bpHead("Stratégies", "Tes modèles de trading et leurs résultats en backtest : une stratégie reprend les trades des sessions qui portent son nom.", '<button class="bp-btn" data-bpa="stnew">＋ Nouvelle stratégie</button>')
+    el.innerHTML = bpHead("Stratégies", "Tes modèles de trading et leurs résultats en backtest : une stratégie reprend les trades des sessions qui portent son nom.", '<button class="bp-btn bp-g" data-bpa="stauto" title="Rejoue un script Pine strategy() sur les bougies m1 des CSV et enregistre ses trades dans le Journal backtest">🧪 Backtest auto Pine</button><button class="bp-btn" data-bpa="stnew">＋ Nouvelle stratégie</button>')
       + `<div class="bp-bar" style="margin-top:16px"><input type="search" data-bpf="st.q" placeholder="Rechercher une stratégie" value="${esc(pg.st.q)}"><select data-bpf="st.f">${o("", "Toutes")}${o("trades", "Avec des trades")}${o("empty", "Sans trade")}${o("norules", "Sans règle")}${o("named", "Noms tapés dans les sessions")}</select></div><div id="bpRes"></div>`;
     stRes();
   }
@@ -11847,6 +11847,66 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
       if (a.m === "ok") { const h = Math.round((+$("bpGoH").value || 0) * 100) / 100; if (!(h > 0)) return bpToast("Objectif : un nombre d'heures positif.", true); if (!lsPut(GOALK, { v: 1, mode: $("bpGoM").value === "week" ? "week" : "day", h })) return bpToast("Stockage plein : objectif non enregistré.", true); closeModal(); bpToast("Objectif enregistré."); tabDash($("bpBody")); } };
   }
 
+  /* ---- v1.82 · Backtest auto d'un script Pine strategy() : bougies m1 des CSV (data_csv / data), calcul dans le Web Worker Pine, trades enregistrés dans le Journal backtest (bt-journal)
+     -> visibles dans Testing (Tableau de bord, Trades, Analytique) et dans la fiche de la stratégie nommée. Réglages gardés : localStorage bt-pineauto ---- */
+  async function pineReadM1(sym, from, to, out) {
+    const bars = []; let a = addDays(from, -6); // séances d'avant : PDH, High d'Asie de la veille…
+    while (a <= to) { const b = addDays(a, 30) < to ? addDays(a, 30) : to; out(`Lecture des bougies m1 ${esc(sym)} : ${a} → ${b}…`);
+      const r = await D.dataRead(sym, ny(addDays(a, -1), 18, 0), ny(b, 17, 0), "m1"); if (!r || !r.ok) throw new Error((r && r.reason) || "lecture impossible");
+      btCore.append(bars, r.data.map((x) => [x[0], +x[1], +x[2], +x[3], +x[4], +x[5] || 0])); a = addDays(b, 1); }
+    // bougies isolées hors séance CME (quelques ticks le samedi / dimanche dans les données TopstepX) : ignorées
+    return bars.filter((x) => { const wd = new Date(sessionKey(x[0]) + "T12:00:00Z").getUTCDay(); return wd >= 1 && wd <= 5; });
+  }
+  function pineAutoStats(T, cap) { let net = 0, gp = 0, gl = 0, w = 0, peak = 0, mdd = 0; T.forEach((t) => { net += t.pnl; if (t.pnl > 0) { w++; gp += t.pnl; } else gl -= t.pnl; peak = Math.max(peak, net); mdd = Math.max(mdd, peak - net); });
+    return { n: T.length, wr: T.length ? (w / T.length) * 100 : 0, pf: gl ? gp / gl : null, net, mdd, end: cap + net }; }
+  function pineAuto(stratName) {
+    const L = (window.btIND && window.btIND.list ? window.btIND.list() : []).filter((x) => x.lang === "pine" && /^\s*strategy\s*\(/m.test(x.code || ""));
+    if (!L.length) return bpToast("Aucun script Pine de stratégie (qui commence par strategy(…)) : crée-le dans l'Éditeur Pine.", true);
+    if (!D || !D.dataRead || !window.PineAsync) return bpToast("Backtest auto Pine : disponible dans l'app Windows / Mac (bougies des CSV).", true);
+    const o = LS.get("bt-pineauto", {}), to0 = o.to || addDays(lastTradingDay(), -1), from0 = o.from || addDays(to0, -365), syms = ["NQ", "MNQ", "ES", "MES"];
+    const m = modal("🧪 Backtest auto · script Pine", `<div class="fm-g">
+        <label>Script<select id="paS">${L.map((x) => `<option value="${esc(x.id)}" ${x.id === o.id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label>
+        <label>Actif (P&amp;L)<select id="paSym">${syms.map((k) => `<option ${k === (o.sym || "MNQ") ? "selected" : ""}>${k}</option>`).join("")}</select></label>
+        <label>Du<input type="date" id="paF" value="${from0}"></label><label>Au<input type="date" id="paT" value="${to0}"></label>
+        <label>Stratégie (fiche)<input id="paN" value="${esc(stratName || o.strat || "")}" placeholder="Nom de la stratégie (relie les trades à sa fiche)"></label>
+        <label>Capital de départ ($)<input type="number" id="paC" value="${+o.cap || 50000}" step="1000"></label></div>
+      <p class="rv-mut" style="margin:10px 0 0">Le script est exécuté bougie par bougie sur les bougies m1 du dossier data / data_csv, avec les mêmes règles que sur la page Graphique (quantité, frais et glissement du <code>strategy()</code>). MNQ / MES : bougies du micro si son fichier existe, sinon celles de NQ / ES (mêmes prix), P&amp;L à la valeur du micro.</p><div id="paRes"></div>`,
+      '<span class="tx-sp"></span><button data-m="x" class="ghost">Fermer</button><button data-m="save" class="ghost" disabled>Enregistrer dans le Journal backtest</button><button data-m="run">Lancer le backtest</button>');
+    let last = null; const res = () => $("paRes"), out = (h) => { if (res()) res().innerHTML = `<p class="rv-mut">${h}</p>`; };
+    m.onclick = async (e) => {
+      const a = (e.target.closest("[data-m]") || {}).dataset; if (!a || !a.m) return; if (a.m === "x") return closeModal();
+      if (a.m === "run") {
+        const x = L.find((y) => y.id === $("paS").value), sym = $("paSym").value, from = $("paF").value, to = $("paT").value, cap = +$("paC").value || 50000, strat = $("paN").value.trim();
+        if (!x || !from || !to || from > to) return out('<span style="color:#ef5350">Dates invalides.</span>');
+        LS.set("bt-pineauto", { id: x.id, sym, from, to, cap, strat }); e.target.disabled = true; m.querySelector('[data-m="save"]').disabled = true; last = null;
+        try {
+          const bars = await pineReadM1(sym, from, to, out); if (bars.length < 100) throw new Error("pas assez de bougies m1 sur cette période");
+          out(`Calcul du script sur ${bars.length.toLocaleString("fr-FR")} bougies…`); const t0 = Date.now();
+          const r = await new Promise((ok) => { const now = PineAsync.request("pa:" + Date.now(), x.code, bars, { inputs: x.inputs || {}, tfSec: 60, tfName: "1", sym, pv: CTR[sym].pv }, ok); if (now) ok(now); });
+          if (!r || r.error) throw new Error((r && r.error) || "calcul impossible");
+          const st0 = r.strategy; if (!st0 || !st0.list) throw new Error("le script n'a passé aucun ordre (strategy.entry)");
+          const t1 = ny(from, 0, 0) - 6 * 3600, T = st0.list.filter((t) => bars[t.in] && bars[t.out] && bars[t.in][0] >= t1).map((t) => {
+            let mae = 0, mfe = 0; for (let k = t.in; k <= t.out; k++) { const b = bars[k]; mfe = Math.max(mfe, t.dir > 0 ? b[2] - t.entry : t.entry - b[3]); mae = Math.max(mae, t.dir > 0 ? t.entry - b[3] : b[2] - t.entry); }
+            const tIn = bars[t.in][0], tOut = bars[t.out][0];
+            return { day: sessionKey(tOut), pnl: +t.pnl.toFixed(2), dur: tOut - tIn, side: t.dir > 0 ? "Long" : "Short", ctr: sym, qty: t.qty || 1, entry: +(+t.entry).toFixed(2), exit: +(+t.exit).toFixed(2), tIn, tOut, r0: t.r0 ? +t.r0.toFixed(2) : null, mae: +mae.toFixed(2), mfe: +mfe.toFixed(2), tags: [], note: "", fee: +(t.fee || 0).toFixed(2), why: t.why || "" };
+          }).filter((t) => t.day >= from && t.day <= to);
+          const st = pineAutoStats(T, cap), pc = (v) => (v >= 0 ? "#26a69a" : "#ef5350"), k = (lab, v, col) => `<div><small>${lab}</small><b${col ? ` style="color:${col}"` : ""}>${v}</b></div>`;
+          last = { x, sym, from, to, cap, strat, T, st };
+          res().innerHTML = `<div class="fm-k" style="margin-top:12px">${k("Trades", st.n)}${k("Win rate", st.wr.toFixed(2) + " %")}${k("P&amp;L net", usd(st.net), pc(st.net))}${k("Profit factor", st.pf == null ? "∞" : st.pf.toFixed(2))}${k("Max drawdown", usd(-st.mdd), "#ef5350")}${k("Solde final", usd(st.end))}</div>
+            <p class="rv-mut">${bars.length.toLocaleString("fr-FR")} bougies m1 · calcul ${((Date.now() - t0) / 1000).toFixed(1)} s. « Enregistrer dans le Journal backtest » ajoute ces ${st.n} trades à Testing (Tableau de bord, Trades, Analytique)${strat ? ` et à la fiche « ${esc(strat)} »` : ""}.</p>`;
+          m.querySelector('[data-m="save"]').disabled = !st.n;
+        } catch (err) { out(`<span style="color:#ef5350">Backtest impossible : ${esc(err.message || String(err))}</span>`); }
+        finally { e.target.disabled = false; }
+      }
+      if (a.m === "save" && last) {
+        const { x, sym, from, to, cap, strat, T, st } = last, name = `${x.name} · ${sym} · ${from} → ${to}`;
+        const rec = { id: "j" + Date.now(), name, at: new Date().toISOString(), sym, cfg: { size: cap, auto: "pine", script: x.name }, start: cap, end: +st.end.toFixed(2), blown: false, trades: T, notes: `Backtest auto du script Pine « ${x.name} » sur ${sym} du ${from} au ${to}.`, ...(strat ? { strat } : {}) };
+        if (!saveList("bt-journal", [rec, ...journal()])) return; last = null; m.querySelector('[data-m="save"]').disabled = true;
+        bpToast(`« ${name} » : ${T.length} trades enregistrés dans le Journal backtest.`); bpRender();
+      }
+    };
+  }
+
   /* ---- v1.68 · fiche stratégie (NAV-06, STR-01) : Vue d'ensemble, Règles (et paramètres), Docs (notes et images), Trades (filtre par session, ajout depuis les sessions), « Tester » ---- */
   // modification d'une fiche (celle d'un nom tapé dans les sessions est créée) ; puis la même page, sous le nouvel id si la fiche vient d'être créée
   function stEdit(id, fn, toast) {
@@ -11862,7 +11922,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     if (!it) { el.innerHTML = back + bpHead("Stratégie introuvable") + '<div class="bp-empty">Cette stratégie n\'existe plus (supprimée, ou renommée depuis une autre fenêtre).</div>'; return; }
     const { s, T } = it, p = (x) => "strategies/" + s.id + (x ? "/" + x : "");
     const lead = `${s.saved ? "par " + esc(s.author || profileName()) + (s.created ? " · créée le " + isoNY(s.created) : "") + (s.updated && s.updated !== s.created ? " · modifiée le " + isoNY(s.updated) : "") : "Nom tapé dans tes sessions : la fiche est créée dès que tu la modifies."}${(s.alias || []).length ? " · aussi reliée aux sessions nommées " + s.alias.map((a) => "« " + esc(a) + " »").join(", ") : ""}`;
-    el.innerHTML = back + bpHead(esc(s.name), lead, `<button class="bp-btn" data-bpa="sttest" data-id="${esc(s.id)}" title="Nouvelle session avec cette stratégie">▶ Tester</button><button class="bp-btn bp-g bp-s" data-bpa="stren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="stdup" data-id="${esc(s.id)}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="stdel" data-id="${esc(s.id)}">Supprimer</button>`)
+    el.innerHTML = back + bpHead(esc(s.name), lead, `<button class="bp-btn" data-bpa="sttest" data-id="${esc(s.id)}" title="Nouvelle session avec cette stratégie">▶ Tester</button><button class="bp-btn bp-g" data-bpa="stauto" data-id="${esc(s.id)}" title="Rejoue un script Pine strategy() sur les bougies m1 et relie ses trades à cette stratégie">🧪 Backtest auto Pine</button><button class="bp-btn bp-g bp-s" data-bpa="stren" data-id="${esc(s.id)}">Renommer</button><button class="bp-btn bp-g bp-s" data-bpa="stdup" data-id="${esc(s.id)}">Dupliquer</button><button class="bp-btn bp-g bp-s bp-x" data-bpa="stdel" data-id="${esc(s.id)}">Supprimer</button>`)
       + `<div class="bp-h2">Description</div><textarea class="bp-desc" data-bpf="stdesc" data-id="${esc(s.id)}" placeholder="Idée du modèle, contexte, marchés et horaires visés… (enregistrée quand tu quittes le champ)">${esc(s.desc || "")}</textarea>`
       + bpTabs([["", "Vue d'ensemble", p("")], ["regles", `Règles (${rulesOf(s).length})`, p("regles")], ["docs", `Docs (${(s.docs || []).length})`, p("docs")], ["trades", `Trades (${T.length})`, p("trades")]], sub) + '<div id="bpBody"></div>';
     const box = $("bpBody");
@@ -12066,6 +12126,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     kind: (b) => { pg.kind = b.dataset.v || ""; tabDash($("bpBody")); }, sview: (b) => { pg.sv = b.dataset.v; tabDash($("bpBody")); }, goal: () => goalOpen(),
     // v1.68 : fiche stratégie
     sttest: (b) => { const s = stratList().find((x) => x.id === b.dataset.id); if (s) nsOpen("bt", { strat: s.name }); },
+    stauto: (b) => { const s = b.dataset.id ? stratList().find((x) => x.id === b.dataset.id) : null; pineAuto(s ? s.name : ""); },
     radd: (b) => ruleAdd(b.dataset.id), rex: (b) => stEdit(b.dataset.id, (r) => { r.rules = [...(r.rules || []), ...RULEX.map(([cat, text]) => ({ id: "r" + uid(), cat, text }))]; }, "Règles d'exemple ajoutées : adapte-les à ta stratégie."),
     rmove: (b) => stEdit(b.dataset.id, (r) => { const i = (r.rules || []).findIndex((x) => x.id === b.dataset.r); r.rules = btNav.move(r.rules, i, +b.dataset.v); }),
     rdel: (b) => stEdit(b.dataset.id, (r) => { r.rules = (r.rules || []).filter((x) => x.id !== b.dataset.r); }, "Règle supprimée (les cases déjà cochées dans les trades sont ignorées)."),
