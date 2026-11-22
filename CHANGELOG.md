@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.88.1] — 2026-11-22
+### Corrigé
+- Page Graphique : plus de trait horizontal sous la ligne d'état (nom du symbole, OHLC) en haut du graphique. Le style des lignes du menu « Disposition » (avec un séparateur) s'appliquait aussi à la ligne d'état.
+
 ## [1.88.0] — 2026-11-22
 Page Graphique : onglet **Réglages › Trading** complété comme TopstepX (compte démo, aucun vrai ordre).
 ### Ajouté
