@@ -10,6 +10,8 @@ Page Graphique : 1 an d'historique pour backtester les stratégies Pine.
 - Pine : une **stratégie** (`strategy()`) calcule maintenant sur tout l'historique chargé, plus seulement sur les 5 000 dernières bougies (un indicateur garde cette limite) ; délai de calcul porté à 120 s.
 - Pine, moteur de stratégie : TP / SL de `strategy.exit(profit=, loss=)` calculés depuis le **prix d'entrée réel** (avant : depuis la clôture de la bougie précédente, d'où des pertes énormes) ; ordre limite / stop déjà dépassé à l'ouverture = rempli à l'ouverture ; sur la bougie d'entrée, pas de sortie au prix d'ouverture et, après une entrée en cours de bougie, SL d'abord puis TP seulement si la clôture est repassée du bon côté.
 - Pine, moteur de stratégie : `default_qty_value`, `commission_type` / `commission_value` (frais aller-retour), `slippage` (sur le SL), `strategy.grossprofit`, `strategy.grossloss` et `strategy.max_drawdown` pris en compte (avant : toujours 0).
+- Pine : `bgcolor` dessine un seul rectangle par plage de bougies de même couleur (plus de rayures au dézoom, déplacement du graphique plus fluide).
+- Page Graphique : les flèches d'entrée / sortie des stratégies Pine s'affichent aussi quand le calcul se termine en arrière-plan.
 
 ## [1.80.0] — 2026-11-21
 Page Graphique : dessins et logos comme TradingView.

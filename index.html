@@ -7055,7 +7055,9 @@ const PineDraw = (() => {
     const d = r && r.draw; if (!d) return; c.save();
     try {
       const n = opts.n || 0, i0 = Math.max(0, Math.floor(G.lOfX ? G.lOfX(-20) : 0)), i1 = Math.min(n - 1, Math.ceil(G.lOfX ? G.lOfX(G.W + 20) : n - 1));
-      if (!opts.noBg) (d.bgs || []).forEach((B) => { for (let i = i0; i <= i1; i++) { const col = B.colors[i - (B.offset || 0)]; if (!okc(col)) continue; const x0 = G.lx(i - 0.5), x1 = G.lx(i + 0.5); c.fillStyle = col; c.fillRect(x0, 0, x1 - x0 + 0.5, G.H); } });
+      if (!opts.noBg) (d.bgs || []).forEach((B) => { let s0 = -1, c0 = null; // v1.81 : bougies consécutives de même couleur = un seul rectangle (plus de rayures au dézoom, rendu bien plus rapide)
+        const flush = (e) => { if (c0 === null) return; const x0 = Math.round(G.lx(s0 - 0.5)), x1 = Math.round(G.lx(e + 0.5)); c.fillStyle = c0; c.fillRect(x0, 0, Math.max(1, x1 - x0), G.H); c0 = null; };
+        for (let i = i0; i <= i1; i++) { const col = B.colors[i - (B.offset || 0)], ok = okc(col); if (ok && col === c0) continue; flush(i - 1); if (ok) { c0 = col; s0 = i; } } flush(i1); });
       fills(c, G, r, i0, i1);
       (d.linefills || []).forEach((F) => { if (!okc(F.color)) return; const p = [[F.a[0], F.a[1]], [F.a[2], F.a[3]], [F.b[2], F.b[3]], [F.b[0], F.b[1]]].map(([x, y]) => [G.lx(x), G.y(y)]); if (!p.flat().every(fin)) return; c.fillStyle = F.color; c.beginPath(); p.forEach(([x, y], k) => (k ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.fill(); });
       (d.boxes || []).forEach((B) => box(c, G, B));
@@ -13221,7 +13223,7 @@ class Cell {
       });
       const host = ov ? this.series : pane.anchor, hls = pine ? pine.hlines.map((h) => [h.price, h.title, h.color, h.style === "solid" ? 0 : h.style === "dotted" ? 1 : 2]) : (d.hl || []).map(([v, n]) => [v, n, (sty._hl && sty._hl.c) || "rgba(120,123,134,0.6)", 2]);
       if (full && !x.hide && hls.length) hls.forEach(([v, n, c, ls]) => this.hl.push([host, host.createPriceLine({ price: v, color: c, lineWidth: 1, lineStyle: ls, axisLabelVisible: false, title: "" })]));
-      if (pine && full && pine.marks.length) this.R[x.id]._marks = pine.marks;
+      if (pine && pine.marks.length) this.R[x.id]._marks = pine.marks; // v1.81 : aussi quand le résultat arrive du calcul en arrière-plan (flèches d'exécution des stratégies)
     }
     this.IS.forEach((s, k) => { if (!used.has(k)) { try { s._pane.chart.removeSeries(s); } catch (e) { /* */ } this.IS.delete(k); } });
     this.panes.filter((p) => !usedPanes.has(p.id)).forEach((p) => this.removePane(p));
