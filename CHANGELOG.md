@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.88.0] — 2026-11-22
+Page Graphique : onglet **Réglages › Trading** complété comme TopstepX (compte démo, aucun vrai ordre).
+### Ajouté
+- **Général** : Boutons Buy/sell sur le graphique, Trading en un clic (décoché = confirmation avant de passer, modifier, annuler un ordre ou fermer / retourner une position), Son d'exécution (volume + son : Mince, Clic, Cloche, Carillon, Caisse, bouton ▶ pour écouter), Afficher uniquement les notifications de rejet.
+- **Apparence** : Positions et ordres (afficher / masquer les lignes et étiquettes du compte démo), Bouton de position inversée, Commandes de trading (Toujours visible / Visible avec déplacement de la souris / Masqué), Ordre de projet pour les ordres au marché (les boutons Buy/sell posent d'abord un ordre de projet sur le graphique, envoyé par son bouton Acheter / Vendre), Valeur des profits et pertes séparée Positions / Brackets (Argent, Ticks, Points, Pourcentage), Lignes de prix étendues sur toute la largeur du graphique, Alignement de l'ordre et de la position (Droite / Centre / Gauche), Ordres, exécutions et positions dans les captures de graphique.
+### Modifié
+- Les options « Boutons Vendre / Acheter » et « Confirmer chaque ordre » du menu ⚙ du panneau Trading utilisent maintenant ces réglages (anciens choix repris automatiquement).
+
 ## [1.87.1] — 2026-11-22
 ### Corrigé
 - Page Graphique : on peut se balader librement sur le graphique — glisser vers le haut / le bas déplace aussi les prix (avant, l'échelle restait en automatique et seul le défilement horizontal marchait). Le bouton **auto** (en bas à droite) ou un double-clic sur l'échelle des prix remet l'échelle automatique.
