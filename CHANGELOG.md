@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.91.0] — 2026-11-22
+Menus contextuels : plus jamais coupés à droite.
+### Corrigé
+- Page Graphique et Backtesteur : un menu ouvert près du bord droit (Arborescence des objets, liste de surveillance…) s'ouvre maintenant **à gauche du clic**, et ses sous-menus (Espace de Travail, Ordre de visualisation, Visibilité des intervalles…) s'ouvrent à gauche s'il n'y a pas la place à droite, sans barre de défilement horizontale.
+
 ## [1.90.0] — 2026-11-22
 Arborescence des objets : clic droit = menu façon TradingView.
 ### Ajouté

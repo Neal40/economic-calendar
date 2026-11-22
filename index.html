@@ -854,7 +854,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-favbar .gr-lt{width:32px;height:30px}
 /* menus, fenêtres */
 .gr-menu{position:fixed;z-index:9000;min-width:200px;max-height:80vh;overflow:auto;background:var(--gp);border:1px solid var(--gl);border-radius:6px;padding:4px 0;box-shadow:0 10px 30px rgba(0,0,0,.45);color:var(--gt);font-size:13px}
-.gr-menu.sub{position:absolute;max-height:70vh}
+.gr-menu.sub{position:fixed;max-height:70vh}
 .gr-mi{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:6px 12px;min-height:32px;white-space:nowrap}.gr-mi:hover{background:var(--gh)}.gr-mi.on{color:var(--ga)}.gr-mi.dis{opacity:.4;pointer-events:none}
 .gr-mt{flex:1}.gr-mi kbd{font:11px -apple-system,Roboto,sans-serif;color:var(--gm);background:none;border:0}.gr-mck{width:14px;color:var(--ga)}.gr-msub{color:var(--gm)}
 .gr-mic svg{width:24px;height:24px}.gr-mstar{opacity:.55}.gr-mstar svg{width:18px;height:18px}.gr-mi:hover .gr-mstar{opacity:1}
@@ -10269,7 +10269,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
         + "<i></i>" + tv("lock", L.every((v) => v.locked) ? "Déverrouiller" : "Verrouiller", ICON[L.every((v) => v.locked) ? "lockOpen" : "lockClosed"]) + tv("hide", "Cacher", ICON.eyeOff) + tv("del", "Retirer", ICON.trash, "Suppr")
         + "<i></i>" + tv("goto", `Aller à ${low}`) + "<i></i>" + tv("set", "Configurations…", ICON.gear);
     }
-    m.dataset.fid = fid || ""; m.hidden = false; m.style.left = Math.min(x, innerWidth - 330) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px";
+    m.dataset.fid = fid || ""; m.hidden = false; const mw = m.offsetWidth; m.style.left = Math.max(4, x + mw > innerWidth - 4 ? x - mw : x) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px"; // à gauche du clic s'il n'y a pas la place
     m.classList.toggle("flip", m.getBoundingClientRect().right + 280 > innerWidth);
   }
   function ctxDo(a) {
@@ -13830,20 +13830,23 @@ ROOT.innerHTML = `
 function toast(msg, err, sticky) { const t = el("div", "gr-toast" + (err ? " err" : "") + (sticky ? " sticky" : ""), E(msg) + (sticky ? `<button class="gr-tx" title="Fermer">×</button>` : "")); $r("#grToasts").append(t);
   if (sticky) { t.querySelector(".gr-tx").onclick = () => t.remove(); return; } setTimeout(() => t.classList.add("out"), 3600); setTimeout(() => t.remove(), 4100); }
 let MENU = null;
-function closeMenu() { if (MENU) { MENU.remove(); MENU = null; } }
+function closeMenu() { if (MENU) { if (MENU._sub) MENU._sub.remove(); MENU.remove(); MENU = null; } }
 function menu(x, y, items, o = {}) {
   closeMenu(); const m = el("div", "gr-menu" + (o.cls ? " " + o.cls : "")); MENU = m;
   const render = (list, host) => list.filter(Boolean).forEach((it) => {
     if (it === "-") { host.append(el("div", "gr-msep")); return; } if (typeof it === "string" && it.startsWith("h:")) { host.append(el("div", "gr-mh", E(it.slice(2)))); return; }
     if (it.html) { const w = el("div", "gr-mhtml", it.html); host.append(w); if (it.init) it.init(w); return; }
     const b = el("button", "gr-mi" + (it.on ? " on" : "") + (it.dis ? " dis" : ""), `${it.ic ? `<span class="gr-mic">${it.ic}</span>` : it.on != null ? `<span class="gr-mck">${it.on ? "✓" : ""}</span>` : ""}<span class="gr-mt">${E(it.t)}</span>${it.k ? `<kbd>${E(it.k)}</kbd>` : ""}${it.sub ? `<span class="gr-msub">›</span>` : ""}${it.star != null ? `<span class="gr-mstar" data-star="1">${it.star ? ICO.starOn : ICO.star}</span>` : ""}${it.del ? `<span class="gr-mdel" data-mdel="1" title="Supprimer">${ICO.trash}</span>` : ""}`);
-    if (it.sub) { b.onmouseenter = () => { m.querySelectorAll(".gr-menu.sub").forEach((s) => s.remove()); const s = el("div", "gr-menu sub"); render(it.sub, s); m.append(s); const r = b.getBoundingClientRect(), mr = m.getBoundingClientRect(); s.style.left = (r.right - mr.left + 2) + "px"; s.style.top = (r.top - mr.top - 4) + "px"; }; }
+    if (it.sub) { b.onmouseenter = () => { if (m._sub) m._sub.remove(); const s = el("div", "gr-menu sub"); render(it.sub, s); ROOT.append(s); m._sub = s; // v1.91 : sous-menu hors du menu (plus de barre de défilement), à gauche s'il n'y a pas la place à droite
+        const r = b.getBoundingClientRect(), sw = s.offsetWidth, sh = s.offsetHeight; s.style.left = (r.right + sw + 2 > innerWidth - 4 ? Math.max(4, r.left - sw - 2) : r.right + 2) + "px"; s.style.top = clamp(r.top - 4, 4, innerHeight - sh - 4) + "px"; }; }
     else b.onclick = (e) => { if (it.dis) return; if (e.target.closest("[data-star]") && it.onStar) { e.stopPropagation(); it.onStar(); return; }
       /* poubelle d'une ligne : 1er clic = armer (rouge), 2e clic = supprimer ; le menu reste ouvert */
       const dx = e.target.closest("[data-mdel]"); if (dx && it.del) { e.stopPropagation(); if (!dx.classList.contains("arm")) { dx.classList.add("arm"); dx.title = "Cliquer encore pour supprimer"; setTimeout(() => { dx.classList.remove("arm"); dx.title = "Supprimer"; }, 2500); return; } it.del(); b.remove(); return; } if (!it.keep) closeMenu(); it.f && it.f(e); };
+    if (!it.sub && host === m) b.addEventListener("mouseenter", () => { if (m._sub) { m._sub.remove(); m._sub = null; } });
     host.append(b); });
-  render(items, m); ROOT.append(m); const r = m.getBoundingClientRect(); m.style.left = clamp(x, 4, innerWidth - r.width - 4) + "px"; m.style.top = clamp(y, 4, innerHeight - r.height - 4) + "px";
-  setTimeout(() => { const off = (e) => { if (MENU === m && !m.contains(e.target)) { closeMenu(); removeEventListener("pointerdown", off, true); } }; addEventListener("pointerdown", off, true); }, 0);
+  render(items, m); ROOT.append(m); const r = m.getBoundingClientRect(); m.style.left = clamp(x + r.width > innerWidth - 4 ? x - r.width : x, 4, innerWidth - r.width - 4) + "px"; m.style.top = clamp(y, 4, innerHeight - r.height - 4) + "px";
+  { const q = m.getBoundingClientRect(); if (q.right > innerWidth - 4) m.style.left = (parseFloat(m.style.left) - (q.right - innerWidth + 4)) + "px"; if (q.left < 4) m.style.left = (parseFloat(m.style.left) + 4 - q.left) + "px"; if (q.bottom > innerHeight - 4) m.style.top = (parseFloat(m.style.top) - (q.bottom - innerHeight + 4)) + "px"; } // v1.91 : jamais coupé à droite (s'ouvre à gauche du clic)
+  setTimeout(() => { const off = (e) => { if (MENU === m && !m.contains(e.target) && !(m._sub && m._sub.contains(e.target))) { closeMenu(); removeEventListener("pointerdown", off, true); } }; addEventListener("pointerdown", off, true); }, 0);
   return m;
 }
 const menuAt = (btn, items, o) => { const r = btn.getBoundingClientRect(); return menu(r.left, r.bottom + 2, items, o); };
