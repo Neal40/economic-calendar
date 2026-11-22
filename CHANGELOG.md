@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.86.1] — 2026-11-22
+### Modifié
+- Page Graphique : boutons de navigation du graphique (−, +, ‹, ›, réinitialiser) en noir sur fond clair, plus lisibles.
+
 ## [1.86.0] — 2026-11-22
 Page Graphique, compte démo : position et ordres façon TradingView sur le graphique.
 ### Ajouté
