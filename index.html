@@ -916,6 +916,56 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-fav svg{width:18px;height:18px}
 .gr-dset .gr-db{min-height:260px}
 .gr-sty .gr-chk{min-width:150px}
+/* v1.92 : indicateur façon TradingView (légende, menu ⋯, paramètres, couleurs) */
+.gr-lb button.gr-lcode.dis{opacity:.35}
+.gr-tvind{border-radius:12px}.gr-tvind .gr-db{min-height:0!important;display:flex;flex-direction:column;padding:0}
+.gr-tvind .gr-dh{padding:18px 22px 4px}.gr-tvind .gr-dh b{font-size:20px;font-weight:700}
+.gr-tvind .tvi-tabs{margin:0;padding:0 22px;gap:22px;border-bottom:1px solid var(--gl)}
+.gr-tvind .tvi-tabs .gr-tab{padding:10px 0 9px;font-size:15px;font-weight:600;color:var(--gt);border-bottom-width:3px;opacity:.85}.gr-tvind .tvi-tabs .gr-tab.on{border-bottom-color:var(--gt);opacity:1}
+.tvi-body{overflow:auto;max-height:calc(90vh - 190px);min-height:300px;padding:6px 22px 14px}
+.tvi-sec{margin:18px 0 6px!important}.tvi-body .gr-tpane>.tvi-sec:first-child{margin-top:10px!important}
+.tvi-r{display:flex;align-items:center;gap:10px;min-height:46px}.tvi-l{width:170px;flex:none;font-size:14px;line-height:1.25}
+.tvi-c{display:flex;align-items:center;gap:8px;flex:1;min-width:0;flex-wrap:wrap}.tvi-c.tvi-full{flex:1}
+.tvi-in{height:36px;border-radius:7px;font-size:14px;padding:0 10px;background:var(--gb)}.tvi-sel{min-width:120px;max-width:100%;flex:1}.tvi-num{width:96px;flex:none!important}
+.tvi-c input.tvi-in:not(.tvi-num){flex:1;min-width:90px}.tvi-w{width:66px;flex:none;padding:0 6px}.tvi-st{width:108px;flex:none;padding:0 6px}.tvi-ls{width:104px;flex:none;padding:0 6px}.tvi-ls:disabled{opacity:.4}
+.tvi-il{font-size:13px;color:var(--gm);margin-left:4px}.tvi-ck span{font-size:14px}
+.tvi-tip{display:inline-flex;color:var(--gm);cursor:help;margin-left:auto}.tvi-tip:hover{color:var(--gt)}
+.tvi-note{font-size:13px;color:var(--gm);padding:14px 0;line-height:1.5}
+.tvi-vr{display:grid;grid-template-columns:130px 66px 1fr 66px;align-items:center;gap:12px;min-height:46px}.tvi-vr:has(> :only-child){grid-template-columns:1fr}
+.tvi-vn{width:66px;padding:0 8px;text-align:left}
+.tvi-dual{position:relative;height:20px}.tvi-dual::before,.tvi-dual::after{content:"";position:absolute;top:8px;height:4px;border-radius:2px}
+.tvi-dual::before{left:0;right:0;background:var(--gl)}.tvi-dual::after{left:calc(var(--a) * 100%);right:calc((1 - var(--b)) * 100%);background:var(--gt)}
+.tvi-dual input{position:absolute;inset:0;width:100%;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none;z-index:1}
+.tvi-dual input::-webkit-slider-runnable-track{background:none;height:20px}
+.tvi-dual input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:18px;height:18px;margin-top:1px;border-radius:50%;background:var(--gp);border:2px solid var(--gt);cursor:pointer}
+.tvi-dual input::-moz-range-thumb{pointer-events:auto;width:14px;height:14px;border-radius:50%;background:var(--gp);border:2px solid var(--gt);cursor:pointer}
+.gr-tvind .gr-df{padding:14px 22px 18px;border-top:1px solid var(--gl)}
+.tvi-cfg{height:38px!important;padding:0 10px 0 14px!important;border-radius:9px!important;font-size:14px!important;font-weight:500!important;gap:4px!important;background:transparent}
+.gr-tvm .gr-mt{white-space:nowrap}
+/* pastille de couleur + sélecteur */
+.gr-cw{width:32px;height:32px;padding:3px;border:1px solid var(--gl);border-radius:7px;background:var(--gb);cursor:pointer;flex:none;display:inline-flex}.gr-cw:hover{border-color:var(--gm)}
+.gr-cw i{flex:1;border-radius:4px;display:block;background:linear-gradient(var(--c),var(--c)),conic-gradient(#d6d6d6 25%,#fff 0 50%,#d6d6d6 0 75%,#fff 0) 0 0/8px 8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.gr-cpprev{display:block;border-radius:4px;background:linear-gradient(var(--c),var(--c))}
+.gr-cp{position:fixed;z-index:100000;background:var(--gp);color:var(--gt);border:1px solid var(--gl);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.35);padding:12px;width:max-content;font-size:13px;user-select:none}
+.gr-cpr{display:flex;gap:4px;margin-bottom:4px}.gr-cpr.gap{margin-bottom:10px}.gr-cpcu{flex-wrap:wrap;max-width:236px;margin:0}
+.gr-cps{width:20px;height:20px;border-radius:4px;padding:0;border:1px solid rgba(127,127,127,.28);background:var(--c);cursor:pointer;flex:none}.gr-cps:hover{transform:scale(1.12)}
+.gr-cps.on{box-shadow:0 0 0 2px var(--gp),0 0 0 3.5px var(--gt)}
+.gr-cpsep{height:1px;background:var(--gl);margin:8px 0 10px}
+.gr-cpadd{width:20px;height:20px;padding:0;display:inline-grid;place-items:center;border-radius:4px;color:var(--gt)}.gr-cpadd:hover{background:var(--gh)}.gr-cpadd svg{width:20px;height:20px}
+.gr-cpo{margin-top:12px}.gr-cpol{font-size:13px;margin-bottom:6px}.gr-cpor{display:flex;align-items:center;gap:10px}
+.gr-cpbar{position:relative;flex:1;height:22px;border-radius:5px;background:linear-gradient(to right,transparent,var(--c)),conic-gradient(#c8c8c8 25%,#fff 0 50%,#c8c8c8 0 75%,#fff 0) 0 0/10px 10px;border:1px solid var(--gl)}
+.gr-cpbar input{position:absolute;inset:-1px;width:calc(100% + 2px);margin:0;-webkit-appearance:none;appearance:none;background:none;cursor:pointer}
+.gr-cpbar input::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:26px;border-radius:4px;background:#fff;border:1px solid #9598a1;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.gr-cpn{display:inline-flex;align-items:center;gap:2px;height:30px;border:1px solid var(--gl);border-radius:6px;padding:0 8px 0 4px;background:var(--gb)}.gr-cpn input{width:38px;border:0;background:none;color:var(--gt);text-align:right;font-size:13px}.gr-cpn input:focus{outline:0}
+.gr-cph{display:flex;align-items:center;gap:8px;margin-bottom:10px}.gr-cpprev{flex:none;width:30px;height:30px;border:1px solid var(--gl)}
+.gr-cphex{flex:1;width:96px;height:30px;border:1px solid var(--gl);border-radius:6px;background:var(--gb);color:var(--gt);padding:0 8px;font-size:13px}.gr-cphex:focus{outline:0;border-color:var(--gt)}.gr-cphex.bad{border-color:#f23645}
+.gr-cpok{height:30px;padding:0 12px;border-radius:6px;background:var(--gt);color:var(--gp);font-weight:600}
+.gr-cpsv{display:flex;gap:10px}.gr-cpsq{position:relative;width:190px;height:150px;border-radius:4px;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,hsl(var(--h),100%,50%))}
+.gr-cphue{position:relative;width:16px;height:150px;border-radius:4px;cursor:ns-resize;background:linear-gradient(to bottom,#f00 0%,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00 100%)}
+.gr-cpk{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4);pointer-events:none}
+.gr-cpk2{position:absolute;left:-2px;right:-2px;height:6px;margin-top:-3px;border-radius:3px;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4);pointer-events:none}
+.gr-col input[hidden]{display:none!important}
+.tvi-multi{flex-wrap:nowrap;gap:6px}.tvi-multi .tvi-num{width:62px}.tvi-multi .tvi-sel{flex:0 1 auto;min-width:96px}.tvi-multi .tvi-il{margin-left:2px;white-space:nowrap}
 .gr-tedit{position:absolute;z-index:60}.gr-tedit textarea{width:260px;height:76px;resize:both;background:var(--gp);color:var(--gt);border:1px solid var(--ga);border-radius:6px;padding:8px;font-size:13px;outline:0;box-shadow:0 8px 24px rgba(0,0,0,.4);user-select:text;-webkit-user-select:text}
 .gr-ivbuf{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:80;background:var(--gp);border:1px solid var(--gl);border-radius:8px;padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 10px 30px rgba(0,0,0,.45)}.gr-ivbuf b{font-size:28px}.gr-ivbuf span{color:var(--gm);font-size:12px}
 .gr-toasts{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);z-index:8000;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
@@ -13396,19 +13446,20 @@ class Cell {
     const B = this.DB, used = new Set(), usedPanes = new Set(), X = this.ctx();
     if (full) { this.hl.forEach(([s, l]) => { try { s.removePriceLine(l); } catch (e) { /* */ } }); this.hl = []; }
     for (const x of this.st.inds) {
-      const d = indDef(x.t); if (!d) continue; const r = x.hide || DS.hideInd || (d.intra && !ivIntra(this.st.iv)) ? {} : indCompute(x, B, X); this.R[x.id] = r;
+      const d = indDef(x.t); if (!d) continue; const r = x.hide || DS.hideInd || (d.intra && !ivIntra(this.st.iv)) || !indVisIv(x, this.st.iv) ? {} : indCompute(x, B, X); this.R[x.id] = r;
       if (r._err && full) toast(`Indicateur « ${d.sh} » : ${r._err}`, true);
-      const pine = r._pine, ov = pine ? pine.meta.overlay !== false : !!d.ov, pane = ov ? this.main : this.paneFor(x.id); if (!ov) usedPanes.add(x.id);
+      const pine = r._pine, ov = indOv(x, d, r), pane = ov ? this.main : this.paneFor(x.id); if (!ov) usedPanes.add(x.id);
       const plots = pine ? pine.plots.filter((p) => p.display !== "none" && p.display !== "data_window").map((p, k) => ({ k: "p" + k, n: p.title || "Plot " + (k + 1), c: p.color, w: p.lw, t: p.style === "hist" ? "hist" : p.style === "area" ? "area" : p.style === "circles" ? "dots" : p.style === "step" ? "step" : "line", data: p.data, colors: p.varCol ? p.colors : null, off: p.offset || 0 }))
         : d.pl.map((p) => ({ ...p, data: r[p.k], colors: r._col && r._col[p.k] })), sty = x.sty || {};
       plots.forEach((p) => {
         const key = x.id + "|" + p.k, ps = sty[p.k] || {}; if (!p.data || ps.v === false || x.hide) return; used.add(key);
-        let s = this.IS.get(key); const kind = ps.t || p.t || "line", col = ps.c || p.c, lw = ps.w || p.w || (d.vol ? 1 : 1.5), scale = d.vol ? "vol" : ov ? (PR.left ? "left" : "right") : "right";
-        if (s && s._kind !== kind) { try { pane.chart.removeSeries(s); } catch (e) { /* */ } s = null; }
+        let s = this.IS.get(key); const kind = ps.t || p.t || "line", col = ps.c || p.c, lw = ps.w || p.w || (d.vol ? 1 : 1.5), scale = d.vol ? "vol" : ov ? (x.scale === "none" ? "ov-" + x.id : x.scale === "left" || x.scale === "right" ? x.scale : PR.left ? "left" : "right") : "right", ls = kind === "hist" || kind === "dots" ? 0 : +ps.ls || 0;
+        if (scale === "left" && x.scale === "left") pane.chart.applyOptions({ leftPriceScale: { visible: true } });
+        if (s && (s._kind !== kind || s._sc !== scale)) { try { pane.chart.removeSeries(s); } catch (e) { /* */ } s = null; }
         if (!s) { const o = { priceScaleId: scale, priceLineVisible: false, lastValueVisible: !!PR.indLbl && !d.vol, crosshairMarkerVisible: !d.vol, title: "" };
-          s = kind === "hist" ? pane.chart.addHistogramSeries({ ...o, color: col, base: 0 }) : kind === "area" ? pane.chart.addAreaSeries({ ...o, lineColor: col, topColor: alpha(col, 0.3), bottomColor: alpha(col, 0.02), lineWidth: lw }) : pane.chart.addLineSeries({ ...o, color: col, lineWidth: lw, lineType: kind === "step" ? 1 : 0, lineVisible: kind !== "dots", pointMarkersVisible: kind === "dots", pointMarkersRadius: kind === "dots" ? 1.6 : undefined });
-          s._kind = kind; s._pane = pane; this.IS.set(key, s); if (d.vol) pane.chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.8, bottom: 0 }, visible: false }); full = true; }
-        else s.applyOptions(kind === "hist" ? { color: col } : kind === "area" ? { lineColor: col, lineWidth: lw } : { color: col, lineWidth: lw });
+          s = kind === "hist" ? pane.chart.addHistogramSeries({ ...o, color: col, base: 0 }) : kind === "area" ? pane.chart.addAreaSeries({ ...o, lineColor: col, topColor: alpha(col, 0.3), bottomColor: alpha(col, 0.02), lineWidth: lw, lineStyle: ls }) : pane.chart.addLineSeries({ ...o, color: col, lineWidth: lw, lineStyle: ls, lineType: kind === "step" ? 1 : 0, lineVisible: kind !== "dots", pointMarkersVisible: kind === "dots", pointMarkersRadius: kind === "dots" ? 1.6 : undefined });
+          s._kind = kind; s._sc = scale; s._pane = pane; this.IS.set(key, s); if (d.vol) pane.chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.8, bottom: 0 }, visible: false }); full = true; }
+        else s.applyOptions(kind === "hist" ? { color: col } : kind === "area" ? { lineColor: col, lineWidth: lw, lineStyle: ls } : { color: col, lineWidth: lw, lineStyle: ls });
         const pt = (i) => { const j = i - (p.off || 0), v = j >= 0 && j < p.data.length ? p.data[j] : NaN; if (!fin(v)) return { time: this.T[i] }; const c = p.colors && p.colors[j]; return c ? { time: this.T[i], value: v, color: c } : { time: this.T[i], value: v }; };
         if (full || from == null) s.setData(this.T.map((t, i) => pt(i))); else { try { for (let i = from; i < B.length; i++) s.update(pt(i)); } catch (e) { s.setData(this.T.map((t, i) => pt(i))); } }
       });
@@ -13454,9 +13505,9 @@ class Cell {
     const top = `<div class="gr-lrow">${h}</div>`;
     (this.st.cmp || []).length && (this.cmpLeg = (this.st.cmp || []).map((c) => `<div class="gr-lind" data-cmp="${E(c.s)}"><span style="color:${c.c}">● ${E(symCode(c.s))}</span><span class="gr-lb"><button data-a="cmpx" title="Retirer">×</button></span></div>`).join(""));
     const indRow = (x, idx) => { const d = indDef(x.t); if (!d) return ""; const r = this.R[x.id] || {}, sty = x.sty || {}, pine = r._pine;
-      const vals = P.legVals === false || x.hide ? "" : (pine ? pine.plots.filter((p) => p.display !== "none").map((p) => [p.color, p.data[idx]]) : d.pl.filter((p) => !(sty[p.k] && sty[p.k].v === false)).map((p) => [(sty[p.k] && sty[p.k].c) || p.c, r[p.k] ? r[p.k][idx] : NaN])).filter(([, v]) => fin(v) && !(v === 0 && ["vol", "volpane"].includes(x.t))).map(([c, v]) => `<b style="color:${c}">${["vol", "volpane", "obv"].includes(x.t) || Math.abs(v) >= 1e5 ? fmtVol(v) : fmtPx(v, sp)}</b>`).join(" ");
-      return `<div class="gr-lind${x.hide ? " off" : ""}${LEGHOV.id === x.id ? " hov" : ""}" data-ind="${x.id}"><span class="gr-ln">${E(indTitle(x))}</span>${vals}${r._err ? `<em class="gr-lerr" title="${E(r._err)}">⚠</em>` : ""}<span class="gr-lb"><button data-a="eye" title="${x.hide ? "Afficher" : "Masquer"}">${x.hide ? ICO.eyeoff : ICO.eye}</button><button data-a="set" title="Paramètres">${ICO.gear}</button><button data-a="del" title="Supprimer">${ICO.x}</button><button data-a="more" title="Plus">⋯</button></span></div>`; };
-    const ovl = this.st.inds.filter((x) => { const d = indDef(x.t); const r = this.R[x.id]; return d && (r && r._pine ? r._pine.meta.overlay !== false : d.ov); }), col = !!this.st.legCol;
+      const vals = P.legVals === false || x.hide || sty._lv === false ? "" : (pine ? pine.plots.filter((p) => p.display !== "none").map((p) => [p.color, p.data[idx]]) : d.pl.filter((p) => !(sty[p.k] && sty[p.k].v === false)).map((p) => [(sty[p.k] && sty[p.k].c) || p.c, r[p.k] ? r[p.k][idx] : NaN])).filter(([, v]) => fin(v) && !(v === 0 && ["vol", "volpane"].includes(x.t))).map(([c, v]) => `<b style="color:${c}">${["vol", "volpane", "obv"].includes(x.t) || Math.abs(v) >= 1e5 ? fmtVol(v) : fmtPx(v, sp)}</b>`).join(" ");
+      return `<div class="gr-lind${x.hide || !indVisIv(x, this.st.iv) ? " off" : ""}${LEGHOV.id === x.id ? " hov" : ""}" data-ind="${x.id}"><span class="gr-ln">${E(indTitle(x))}</span>${vals}${r._err ? `<em class="gr-lerr" title="${E(r._err)}">⚠</em>` : ""}<span class="gr-lb"><button data-a="eye" title="${x.hide ? "Afficher" : "Masquer"}">${x.hide ? ICO.eyeoff : ICO.eye}</button><button data-a="code" class="gr-lcode${String(x.t).startsWith("pine:") ? "" : " dis"}" title="${String(x.t).startsWith("pine:") ? "Code source" : "Indicateur intégré (pas de code Pine)"}">${ICO.code}</button><button data-a="set" title="Paramètres">${ICO.gear}</button><button data-a="del" title="Supprimer">${ICO.x}</button><button data-a="more" title="Plus">⋯</button></span></div>`; };
+    const ovl = this.st.inds.filter((x) => { const d = indDef(x.t); return d && indOv(x, d, this.R[x.id]); }), col = !!this.st.legCol;
     const tog = ovl.length ? `<div class="gr-lind gr-ltog" data-tog="1"><button data-a="tog" title="${col ? "Afficher la légende des indicateurs" : "Masquer la légende des indicateurs"}">${col ? `${ICO.chevd}<span>${ovl.length}</span>` : ICO.chevu}</button></div>` : "";
     this.main.leg.classList.toggle("gr-lbg", !!P.legBg); this.main.leg.style.setProperty("--lbga", (P.legBgA ?? 40) / 100);
     this.main.leg.innerHTML = top + (this.cmpLeg && (this.st.cmp || []).length ? this.cmpLeg : "") + (col ? "" : ovl.map((x) => indRow(x, i)).join("")) + tog;
@@ -13483,7 +13534,7 @@ class Cell {
     this.el.addEventListener("click", (e) => { const b = e.target.closest(".gr-lind button, .gr-lind .gr-ln"); if (!b) return; const row = b.closest(".gr-lind"); if (row.dataset.cmp) { this.st.cmp = this.st.cmp.filter((c) => c.s !== row.dataset.cmp); const s = this.cmpS.get(row.dataset.cmp); if (s) { this.main.chart.removeSeries(s); this.cmpS.delete(row.dataset.cmp); } this.scaleMode(); this.legend(); saveState(); return; }
       if (row.dataset.tog) { this.st.legCol = !this.st.legCol; this.legend(); saveState(); return; }
       const x = this.st.inds.find((y) => y.id === row.dataset.ind); if (!x) return; const a = b.dataset.a || "set";
-      if (a === "eye") { x.hide = !x.hide; this.inds(true); this.legend(); saveState(); } else if (a === "del") removeInd(this, x.id); else if (a === "set") openIndSettings(this, x); else if (a === "more") { const r = b.getBoundingClientRect(); indMenu(this, x, r.left, r.bottom); } });
+      if (a === "eye") { x.hide = !x.hide; this.inds(true); this.legend(); saveState(); } else if (a === "del") removeInd(this, x.id); else if (a === "set") openIndSettings(this, x); else if (a === "code") openIndCode(x); else if (a === "more") { const r = b.getBoundingClientRect(); indMenu(this, x, r.left, r.bottom); } });
   }
   wirePane(p) { p.chart.subscribeCrosshairMove((q) => { if (this.dead || this.xs) return; this.xs = true; try { const i = q && q.logical != null && q.point ? Math.round(q.logical) : null; this.legend(i); this.hoverPanes(p, q); if (q && q.point) { try { this.main.chart.setCrosshairPosition(NaN, q.time, this.series); } catch (e) { /* */ } } else this.main.chart.clearCrosshairPosition(); } finally { this.xs = false; } });
     p.chart.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (!r || this.dead || this.syncing) return; this.syncing = true; try { this.main.chart.timeScale().setVisibleLogicalRange(r); this.panes.forEach((q) => { if (q !== p) q.chart.timeScale().setVisibleLogicalRange(r); }); } catch (e) { /* */ } this.syncing = false; }); }
@@ -13526,14 +13577,14 @@ class Cell {
       for (let i = i0; i <= i1; i++) if (sessDate(B[i][0]) !== sessDate(B[i - 1][0])) { const x = Math.round(G.lx(i - 0.5)) + 0.5; c.beginPath(); c.moveTo(x, 0); c.lineTo(x, G.H); c.stroke(); } c.restore(); }
     // indicateurs : zones (remplissages), boîtes, niveaux, polylignes, profil de volume
     for (const x of this.st.inds) { const d = indDef(x.t), r = this.R[x.id]; if (!d || !r || x.hide || DS.hideInd) continue; const pen = new Pen(c, false), sty = x.sty || {};
-      const ov = r._pine ? r._pine.meta.overlay !== false : d.ov; if (!ov) continue;
+      const ov = indOv(x, d, r); if (!ov) continue;
       (d.fills || []).forEach(([a, b, col]) => { if (sty[a] && sty[a].v === false || sty[b] && sty[b].v === false) return; this.fillBetween(c, G, r[a], r[b], (sty._fill && sty._fill.c) || col); });
       if (d.cloud) this.cloud(c, G, r[d.cloud[0]], r[d.cloud[1]], r._fwd);
       (r._box || []).forEach((bx) => { const x0 = G.lx(bx.i0), x1 = bx.ext ? G.W + 10 : G.lx(bx.i1), y0 = G.y(bx.p0), y1 = G.y(bx.p1); if (x1 < -5 || x0 > G.W + 5) return; pen.fl(bx.f).st(bx.c, 1, 0).rect(x0, y0, x1 - x0, y1 - y0, true, false);
         if (bx.ce) pen.st(alpha(bx.c, 0.9), 1, 2).seg(x0, (y0 + y1) / 2, x1, (y0 + y1) / 2); if (bx.t) pen.text(x0 + 3, Math.min(y0, y1) - 2, bx.t, { col: bx.c, fs: 10, al: "left", bl: "bottom" }); });
       (r._lv || []).forEach((l) => { const x0 = G.lx(l.i0), x1 = l.ext ? G.W + 10 : G.lx(l.i1), y = G.y(l.p); if (x1 < -5 || x0 > G.W + 5) return; pen.st(l.c, 1, l.d || 0).seg(x0, y, x1, y); if (l.t) pen.text(Math.min(G.W - 4, x1 - 4), y - 1, `${l.t} ${G.fp(l.p)}`, { col: l.c, fs: 10, al: "right", bl: "bottom" }); });
       (r._poly || []).forEach((pl) => { const pts = pl.pts.map(([i, p]) => [G.lx(i), G.y(p)]); pen.st(pl.c, pl.w || 2, 0).poly(pts); if (pl.lab) pl.pts.forEach(([i, p], k) => { const up = k > 0 ? p > pl.pts[k - 1][1] : pl.pts[1] && p > pl.pts[1][1]; const px = G.lx(i); if (px > -20 && px < G.W + 20) pen.text(px, G.y(p) + (up ? -4 : 4), G.fp(p), { col: pl.c, fs: 10, al: "center", bl: up ? "bottom" : "top" }); }); });
-      if (r._pine && r._pine.meta.overlay !== false && window.PineDraw && PineDraw.has(r._pine)) PineDraw.paint(c, G, r._pine, { n: this.DB.length }); // v1.76 : dessins des scripts Pine
+      if (r._pine && ov && window.PineDraw && PineDraw.has(r._pine)) PineDraw.paint(c, G, r._pine, { n: this.DB.length }); // v1.76 : dessins des scripts Pine
       if (r._vpvr) { const I = indInputs(x), i0 = Math.max(0, Math.floor(G.lOfX(0))), i1 = Math.min(this.DB.length - 1, Math.ceil(G.lOfX(G.W))); volProfile(pen, G, i0, i1, { rows: I.rows, va: I.va, cu: I.cu, cd: I.cd, poc: I.poc, right: true, width: G.W * I.w / 100 }, 0, G.W - 2); }
     }
     // événements économiques (bas du graphique)
@@ -13862,7 +13913,7 @@ function dlg(title, body, o = {}) {
   return { el: d, ov, close };
 }
 const tabs = (host, onTab) => { host.querySelectorAll(".gr-tab").forEach((t) => (t.onclick = () => { host.querySelectorAll(".gr-tab").forEach((x) => x.classList.toggle("on", x === t)); host.querySelectorAll(".gr-tpane").forEach((p) => (p.hidden = p.dataset.p !== t.dataset.p)); onTab && onTab(t.dataset.p); })); };
-const colorInput = (k, v) => `<span class="gr-col"><input type="color" data-k="${k}" value="${hex6(v)}"><input type="text" class="gr-hex" value="${(hex6(v) + (alphaOf(v) < 0.999 ? Math.round(alphaOf(v) * 255).toString(16).padStart(2, "0") : "")).toUpperCase()}" maxlength="9" spellcheck="false" title="Couleur en hexadécimal (#RRGGBB, ou #RRGGBBAA avec l'opacité)"><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(opOf(v) * 100)}" title="Opacité"></span>`;
+const colorInput = (k, v) => `<span class="gr-col"><button type="button" class="gr-cw" title="Couleur"><i style="--c:${E(v || "transparent")}"></i></button><input type="color" data-k="${k}" value="${hex6(v)}" hidden><input type="range" min="0" max="100" data-ko="${k}" value="${Math.round(alphaOf(v || "#000") * 100)}" hidden></span>`;
 /* couleurs en hexadécimal : le champ texte à côté de chaque pastille pilote la couleur (et l'opacité si #RRGGBBAA) ; capture sur ROOT = avant les « apply » des fenêtres */
 const hexNorm = (v) => { const m = /^#?([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(String(v || "").trim()); if (!m) return null; let h = m[1]; if (h.length === 3) h = h.split("").map((x) => x + x).join(""); return { hex: "#" + h.slice(0, 6).toLowerCase(), a: h.length === 8 ? parseInt(h.slice(6), 16) / 255 : null }; };
 ROOT.addEventListener("input", (e) => { const t = e.target; if (!t || !t.closest) return; const box = t.closest(".gr-col"); if (!box) return;
@@ -13871,6 +13922,61 @@ ROOT.addEventListener("input", (e) => { const t = e.target; if (!t || !t.closest
 ROOT.addEventListener("change", (e) => { const t = e.target; if (!t || !t.classList || !t.classList.contains("gr-hex")) return; const n = hexNorm(t.value), c = t.closest(".gr-col").querySelector("input[type=color]"); if (!n) { e.stopPropagation(); if (c) t.value = c.value.toUpperCase(); t.classList.remove("bad"); return; } t.value = n.hex.toUpperCase(); }, true);
 ROOT.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("gr-hex")) e.target.blur(); }, true);
 const readColor = (root, k) => { const c = root.querySelector(`[data-k="${k}"]`), o = root.querySelector(`[data-ko="${k}"]`); if (!c) return null; const a = o ? +o.value / 100 : 1; return a >= 0.999 ? c.value : alpha(c.value, +a.toFixed(2)); };
+/* ---------- v1.92 : sélecteur de couleur façon TradingView (palette, couleurs perso « + », sélecteur libre + hex + Ajouter, opacité) — toutes les couleurs de la page Graphique ---------- */
+const CP_ROWS = [
+  ["#ffffff", "#d1d4dc", "#b2b5be", "#9598a1", "#787b86", "#5d606b", "#434651", "#2a2e39", "#131722", "#000000"],
+  ["#f23645", "#ff9800", "#ffeb3b", "#4caf50", "#089981", "#00bcd4", "#2962ff", "#673ab7", "#9c27b0", "#e91e63"],
+  ["#fccbcd", "#ffe0b2", "#fff9c4", "#c8e6c9", "#ace5dc", "#b2ebf2", "#bbd9fb", "#d1c4e9", "#e1bee7", "#f8bbd0"],
+  ["#faa1a4", "#ffcc80", "#fff59d", "#a5d6a7", "#70ccbd", "#80deea", "#90bff9", "#b39ddb", "#ce93d8", "#f48fb1"],
+  ["#f77c80", "#ffb74d", "#fff176", "#81c784", "#42bda8", "#4dd0e1", "#5b9cf6", "#9575cd", "#ba68c8", "#f06292"],
+  ["#f7525f", "#ffa726", "#ffee58", "#66bb6a", "#22ab94", "#26c6da", "#3179f5", "#7e57c2", "#ab47bc", "#ec407a"],
+  ["#b22833", "#f57c00", "#fbc02d", "#388e3c", "#056656", "#0097a7", "#1848cc", "#512da8", "#7b1fa2", "#c2185b"],
+  ["#801922", "#e65100", "#f57f17", "#1b5e20", "#00332a", "#006064", "#0c3299", "#311b92", "#4a148c", "#880e4f"]];
+const cpCustom = () => LS.get("gr-colors", []);
+const hsv2hex = (h, s, v) => { const f = (n) => { const k = (n + h / 60) % 6; return Math.round((v - v * s * Math.max(0, Math.min(k, 4 - k, 1))) * 255).toString(16).padStart(2, "0"); }; return "#" + f(5) + f(3) + f(1); };
+const hex2hsv = (hx) => { const n = parseInt(hex6(hx).slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), dl = mx - mn;
+  let h = 0; if (dl) h = mx === r ? ((g - b) / dl) % 6 : mx === g ? (b - r) / dl + 2 : (r - g) / dl + 4; h = (h * 60 + 360) % 360; return [h, mx ? dl / mx : 0, mx]; };
+let CPOP = null;
+function closeColorPop() { if (CPOP) { CPOP.el.remove(); removeEventListener("pointerdown", CPOP.off, true); removeEventListener("keydown", CPOP.kd, true); CPOP = null; } }
+// anchor = élément cliqué ; val = couleur actuelle (#hex / rgba) ; pick(v) appelé à chaque changement ; o.noAlpha = sans opacité
+function colorPop(anchor, val, pick, o = {}) {
+  closeColorPop(); let hx = hex6(val), a = o.noAlpha ? 1 : alphaOf(val); if (!(a >= 0)) a = 1;
+  const p = el("div", "gr-cp"); ROOT.append(p);
+  const out = () => (a >= 0.999 ? hx : alpha(hx, +a.toFixed(2)));
+  const emit = () => { pick(out()); paint(); };
+  const sw = (c) => `<button type="button" class="gr-cps${c.toLowerCase() === hx.toLowerCase() ? " on" : ""}" data-c="${c}" style="--c:${c}" title="${c.toUpperCase()}"></button>`;
+  const grid = () => { const cu = cpCustom(); p.innerHTML = `<div class="gr-cpg">${CP_ROWS.map((r, i) => `<div class="gr-cpr${i === 1 ? " gap" : ""}">${r.map(sw).join("")}</div>`).join("")}</div><div class="gr-cpsep"></div>
+      <div class="gr-cpr gr-cpcu">${cu.map(sw).join("")}<button type="button" class="gr-cpadd" title="Couleur personnalisée">${ICO.plus}</button></div>
+      ${o.noAlpha ? "" : `<div class="gr-cpo"><div class="gr-cpol">Opacité</div><div class="gr-cpor"><div class="gr-cpbar" style="--c:${hx}"><input type="range" min="0" max="100" value="${Math.round(a * 100)}" data-cpa></div><label class="gr-cpn"><input type="number" min="0" max="100" value="${Math.round(a * 100)}" data-cpn><span>%</span></label></div></div>`}`; };
+  // vue « + » : carré saturation / luminosité, bande de teinte, champ hex, Ajouter
+  let hsv = hex2hsv(hx);
+  const custom = () => { p.innerHTML = `<div class="gr-cph"><i class="gr-cpprev" style="--c:${hx}"></i><input class="gr-cphex" value="${hx}" maxlength="7" spellcheck="false"><button type="button" class="gr-cpok">Ajouter</button></div>
+      <div class="gr-cpsv"><div class="gr-cpsq" style="--h:${hsv[0]}"><i class="gr-cpk" style="left:${hsv[1] * 100}%;top:${(1 - hsv[2]) * 100}%"></i></div><div class="gr-cphue"><i class="gr-cpk2" style="top:${hsv[0] / 360 * 100}%"></i></div></div>`;
+    const sq = p.querySelector(".gr-cpsq"), hue = p.querySelector(".gr-cphue"), hexIn = p.querySelector(".gr-cphex");
+    const upd = (fromHex) => { if (!fromHex) hx = hsv2hex(hsv[0], hsv[1], hsv[2]); sq.style.setProperty("--h", hsv[0]); sq.firstElementChild.style.left = hsv[1] * 100 + "%"; sq.firstElementChild.style.top = (1 - hsv[2]) * 100 + "%"; hue.firstElementChild.style.top = hsv[0] / 360 * 100 + "%"; p.querySelector(".gr-cpprev").style.setProperty("--c", hx); if (!fromHex) hexIn.value = hx; pick(out()); };
+    const drag = (box, f) => box.addEventListener("pointerdown", (e) => { e.preventDefault(); const mv = (ev) => { const r = box.getBoundingClientRect(); f(clamp((ev.clientX - r.left) / r.width, 0, 1), clamp((ev.clientY - r.top) / r.height, 0, 1)); upd(); }; mv(e); const up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); });
+    drag(sq, (u, v) => { hsv[1] = u; hsv[2] = 1 - v; }); drag(hue, (u, v) => { hsv[0] = Math.min(359.9, v * 360); });
+    hexIn.oninput = () => { const n = hexNorm(hexIn.value); hexIn.classList.toggle("bad", !n); if (!n) return; hx = n.hex; hsv = hex2hsv(hx); upd(true); };
+    hexIn.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); p.querySelector(".gr-cpok").click(); } };
+    p.querySelector(".gr-cpok").onclick = () => { const cu = cpCustom().filter((c) => c.toLowerCase() !== hx.toLowerCase()); cu.push(hx); LS.set("gr-colors", cu.slice(-20)); grid(); place(); emit(); }; };
+  const paint = () => { p.querySelectorAll(".gr-cps").forEach((b) => b.classList.toggle("on", b.dataset.c.toLowerCase() === hx.toLowerCase())); const bar = p.querySelector(".gr-cpbar"); if (bar) bar.style.setProperty("--c", hx); };
+  p.addEventListener("click", (e) => { const s = e.target.closest(".gr-cps"); if (s) { hx = s.dataset.c; hsv = hex2hsv(hx); emit(); return; } if (e.target.closest(".gr-cpadd")) { hsv = hex2hsv(hx); custom(); place(); } });
+  p.addEventListener("contextmenu", (e) => { const s = e.target.closest(".gr-cpcu .gr-cps"); if (!s) return; e.preventDefault(); LS.set("gr-colors", cpCustom().filter((c) => c !== s.dataset.c)); s.remove(); });
+  p.addEventListener("input", (e) => { const t = e.target; if (t.dataset.cpa != null || t.dataset.cpn != null) { a = clamp(+t.value || 0, 0, 100) / 100; const o2 = p.querySelector(t.dataset.cpa != null ? "[data-cpn]" : "[data-cpa]"); if (o2) o2.value = Math.round(a * 100); pick(out()); } });
+  const place = () => { const r = anchor.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight; let x = r.left, y = r.bottom + 4; if (y + h > innerHeight - 6) y = Math.max(6, r.top - h - 4); if (x + w > innerWidth - 6) x = Math.max(6, innerWidth - w - 6); p.style.left = x + "px"; p.style.top = y + "px"; };
+  grid(); place();
+  const off = (e) => { if (!p.contains(e.target) && !anchor.contains(e.target)) closeColorPop(); };
+  const kd = (e) => { if (e.key === "Escape") { e.stopPropagation(); e.preventDefault(); closeColorPop(); } };
+  setTimeout(() => { if (CPOP && CPOP.el === p) { addEventListener("pointerdown", off, true); addEventListener("keydown", kd, true); } }, 0);
+  CPOP = { el: p, off, kd }; return p;
+}
+// pastilles .gr-col (fenêtres de réglages) et .gr-fcol (barre flottante des dessins) → sélecteur ci-dessus
+ROOT.addEventListener("click", (e) => {
+  const b = e.target.closest && e.target.closest(".gr-col .gr-cw"); if (b) { e.preventDefault(); e.stopPropagation(); if (CPOP && CPOP.anchor === b) { closeColorPop(); return; }
+    const box = b.closest(".gr-col"), c = box.querySelector("input[type=color]"), op = box.querySelector("input[data-ko]"), cur = alpha(c.value, (op ? +op.value : 100) / 100);
+    colorPop(b, cur, (v) => { c.value = hex6(v); if (op) op.value = Math.round(alphaOf(v) * 100); b.firstElementChild.style.setProperty("--c", v); c.dispatchEvent(new Event("input", { bubbles: true })); c.dispatchEvent(new Event("change", { bubbles: true })); }); CPOP.anchor = b; return; }
+  const f = e.target.closest && e.target.closest(".gr-fcol"); if (f) { e.preventDefault(); e.stopPropagation(); if (CPOP && CPOP.anchor === f) { closeColorPop(); return; } const c = f.querySelector("input[type=color]"); if (!c) return;
+    colorPop(f, c.value, (v) => { c.value = hex6(v); c.dispatchEvent(new Event("input", { bubbles: true })); }, { noAlpha: true }); CPOP.anchor = f; } }, true);
 
 /* ---------- grille de graphiques ---------- */
 // v1.79 : toutes les dispositions de TradingView (1 à 16 graphiques) ; c / r = colonnes / lignes de la grille, a = cases [colonne, ligne, largeur, hauteur]
@@ -13989,7 +14095,7 @@ function askText(title, v, cb, ph) { const d = dlg(title, `<input class="gr-in" 
 
 /* ---------- indicateurs : fenêtre, réglages, modèles ---------- */
 let INDFAV = LS.get("gr-indfav", ["ema", "vwap", "rsi", "sessions", "levels", "fvg"]);
-function addInd(c, t, inp) { if (!c) return; const d = indDef(t); if (!d) return; const x = { id: uid(), t, inp: inp ? JSON.parse(JSON.stringify(inp)) : {} }; c.st.inds.push(x); c.inds(true); c.legend(); saveState(); refreshTree(); if (d.intra && !ivIntra(c.st.iv)) toast(`« ${d.sh} » s'affiche sur les unités intraday.`); return x; }
+function addInd(c, t, inp) { if (!c) return; const d = indDef(t); if (!d) return; const x = { id: uid(), t, inp: inp ? JSON.parse(JSON.stringify(inp)) : {} }; if (!inp && indCfgOf(t).def) indPut(x, indCfgOf(t).def); c.st.inds.push(x); c.inds(true); c.legend(); saveState(); refreshTree(); if (d.intra && !ivIntra(c.st.iv)) toast(`« ${d.sh} » s'affiche sur les unités intraday.`); return x; }
 function removeInd(c, id) { c.st.inds = c.st.inds.filter((x) => x.id !== id); delete c.R[id]; c.inds(true); c.legend(); saveState(); refreshTree(); }
 function openIndicators() {
   const c = activeCell(); let cat = "Favoris";
@@ -14014,31 +14120,134 @@ function openIndicators() {
 function saveIndTpl() { const c = activeCell(); if (!c || !c.st.inds.length) { toast("Aucun indicateur sur le graphique actif."); return; } askText("Nom du modèle d'indicateurs", "Mon modèle", (n) => { const T2 = LS.get("gr-indtpl", []); T2.push({ name: n, inds: c.st.inds.map((x) => ({ t: x.t, inp: x.inp || {}, sty: x.sty || {} })) }); LS.set("gr-indtpl", T2); toast("Modèle « " + n + " » enregistré"); }); }
 function applyIndTpl(t) { const c = activeCell(); if (!c || !t) return; c.st.inds = t.inds.map((x) => ({ id: uid(), t: x.t, inp: JSON.parse(JSON.stringify(x.inp || {})), sty: JSON.parse(JSON.stringify(x.sty || {})) })); c.inds(true); c.legend(); saveState(); refreshTree(); toast("Modèle « " + t.name + " » appliqué"); }
 function tplMenu(btn) { const T2 = LS.get("gr-indtpl", []); menuAt(btn, ["h:Modèles d'indicateurs", ...T2.map((t) => ({ t: t.name, f: () => applyIndTpl(t) })), T2.length ? "-" : null, { t: "Enregistrer le modèle actuel…", f: saveIndTpl }, { t: "Retirer tous les indicateurs", f: () => { const c = activeCell(); c.st.inds = []; c.inds(true); c.legend(); saveState(); } }]); }
-function indMenu(c, x, px, py) { const d = indDef(x.t), i = c.st.inds.indexOf(x); menu(px, py, [{ t: "Paramètres…", f: () => openIndSettings(c, x) }, { t: x.hide ? "Afficher" : "Masquer", f: () => { x.hide = !x.hide; c.inds(true); c.legend(); saveState(); } },
-  { t: "Dupliquer", f: () => { const y = JSON.parse(JSON.stringify(x)); y.id = uid(); c.st.inds.splice(i + 1, 0, y); c.inds(true); c.legend(); saveState(); } }, { t: "Ajouter aux favoris", dis: INDFAV.includes(x.t), f: () => { INDFAV.push(x.t); LS.set("gr-indfav", INDFAV); } },
-  d && !d.ov && !(c.R[x.id] && c.R[x.id]._pine) ? { t: "Agrandir le panneau", f: () => { const p = c.panes.find((q) => q.id === x.id); if (p) { p.h = Math.min(70, (p.h || 22) + 12); x.h = p.h; p.el.style.flex = `0 0 ${p.h}%`; saveState(); } } } : null, "-", { t: "Supprimer", f: () => removeInd(c, x.id) }]); }
-function openIndSettings(c, x) {
-  const d0 = indDef(x.t); if (!d0) return; const snapX = JSON.stringify(x), r = c.R[x.id] || {}, pine = r._pine, I = indInputs(x);
-  const inp = pine ? (pine.inputs || []).map((f) => ({ k: f.key, n: f.key, d: f.def, t: f.options ? "sel" : f.type === "bool" ? "bool" : f.type === "color" ? "color" : f.type === "source" ? "sel" : typeof f.def === "number" ? (Number.isInteger(f.def) ? "int" : "float") : "text", o: f.options || (f.type === "source" ? SRC_O : null), min: f.min, max: f.max, step: f.step })) : d0.inp;
+/* ---------- v1.92 : indicateur façon TradingView — menu ⋯ de la légende, fenêtre de paramètres (Paramètres en entrée / Style / Visibilité), Configurations (modèles par indicateur, défaut) ---------- */
+// panneau effectif : x.pane = "main" / "new" (Déplacer vers) sinon celui du script
+const indOv = (x, d, r) => (x.pane === "main" ? true : x.pane === "new" ? false : r && r._pine ? r._pine.meta.overlay !== false : !!(d && d.ov));
+// Visibilité des intervalles (x.vis absent = toutes les unités)
+const VISCATS = [["tk", "Ticks", null], ["s", "Secondes", [1, 59]], ["m", "Minutes", [1, 59]], ["h", "Heures", [1, 24]], ["d", "Jours", [1, 366]], ["w", "Semaines", [1, 52]], ["mo", "Mois", [1, 12]], ["rg", "Ranges", null]];
+const visOf = (x) => { const v = (x && x.vis) || {}; const o = {}; VISCATS.forEach(([k, , r]) => { const c = v[k]; o[k] = r ? (Array.isArray(c) ? [c[0] !== false, clamp(+c[1] || r[0], r[0], r[1]), clamp(+c[2] || r[1], r[0], r[1])] : [true, r[0], r[1]]) : c !== false; }); return o; };
+const ivVisKey = (iv) => { const p = ivParse(iv); if (!p) return ["m", 1]; if (p.u === "S") return ["s", p.n]; if (p.u === "m") return p.n >= 60 ? ["h", p.n / 60] : ["m", p.n]; return [{ D: "d", W: "w", M: "mo" }[p.u], p.n]; };
+const indVisIv = (x, iv) => { if (!x || !x.vis) return true; const [k, n] = ivVisKey(iv), v = visOf(x)[k]; return !Array.isArray(v) || (v[0] && n >= v[1] && n <= v[2]); };
+// Configurations : par type d'indicateur (x.t) → { def: { inp, sty, vis }, tpls: { nom: { inp, sty, vis } } }
+const indCfgAll = () => LS.get("gr-indcfg", {});
+const indCfgOf = (t) => indCfgAll()[t] || {};
+const indCfgSet = (t, f) => { const A = indCfgAll(); A[t] = f(A[t] || {}); if (!A[t].def && !(A[t].tpls && Object.keys(A[t].tpls).length)) delete A[t]; LS.set("gr-indcfg", A); };
+const indSnap = (x) => JSON.parse(JSON.stringify({ inp: x.inp || {}, sty: x.sty || {}, vis: x.vis || null }));
+const indPut = (x, s) => { const c = JSON.parse(JSON.stringify(s || {})); x.inp = c.inp || {}; x.sty = c.sty || {}; if (c.vis) x.vis = c.vis; else delete x.vis; };
+const LSTY = [[0, "Plein"], [1, "Pointillés"], [2, "Tirets"]];
+const lsPreview = (v) => `<svg width="34" height="10" viewBox="0 0 34 10"><path d="M1 5h32" stroke="currentColor" stroke-width="2" stroke-dasharray="${v == 1 ? "1.5 3" : v == 2 ? "6 4" : ""}" stroke-linecap="round"/></svg>`;
+const IXI = {
+  alert: sv('<path d="M14 6a6 6 0 0 1 6 6v5l2 2H6l2-2v-5a6 6 0 0 1 6-6zM12 22h4"/><path d="M21 4.5l2 2M7 4.5l-2 2"/>'),
+  addind: sv('<path d="M5 20l5-6 4 3 7-9"/><path d="M19 17v6M16 20h6"/>'),
+  layers: sv('<path d="M14 5l9 5-9 5-9-5z"/><path d="M5 14l9 5 9-5"/>'),
+  move: sv('<path d="M14 5v18M9 10l5-5 5 5M9 18l5 5 5-5"/>'),
+  pin: sv('<path d="M8 6v15h15"/><path d="M8 6l-2 2M8 6l2 2M23 21l-2-2M23 21l-2 2"/>'),
+  copy: sv('<rect x="10" y="10" width="12" height="12" rx="2"/><path d="M18 10V7a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>'),
+  info: `<svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="9" cy="9" r="7.4"/><path d="M9 8v5M9 5.2v.6" stroke-linecap="round"/></svg>`,
+  chev: `<svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l4 4 4-4"/></svg>`,
+};
+function openIndCode(x) { if (!x || !String(x.t).startsWith("pine:")) { toast("Indicateur intégré à l'app : pas de code Pine à afficher."); return; } pineCur = x.t.slice(5); STATE.bpanel = "pine"; renderPine(); renderStrip(); saveState(); }
+function indLastVal(c, x) { const r = c.R[x.id] || {}, d = indDef(x.t), n = c.DB.length; const arrs = r._pine ? r._pine.plots.map((p) => p.data) : d ? d.pl.map((p) => r[p.k]) : []; for (const a of arrs) { if (!a) continue; for (let i = Math.min(n, a.length) - 1; i >= Math.max(0, n - 5); i--) if (fin(a[i])) return a[i]; } const b = c.DB[n - 1]; return b ? b[4] : NaN; }
+function pasteInd(c, src) { if (!c || !src) return; const y = JSON.parse(JSON.stringify(src)); y.id = uid(); c.st.inds.push(y); c.inds(true); c.legend(); saveState(); refreshTree(); toast("Indicateur collé : " + indTitle(y)); }
+function indMenu(c, x, px, py) {
+  const d = indDef(x.t), r = c.R[x.id] || {}, nm = indTitle(x), isP = String(x.t).startsWith("pine:"), fav = INDFAV.includes(x.t), ov = indOv(x, d, r), L = c.st.inds, i = L.indexOf(x), n = L.length;
+  const done = () => { c.inds(true); c.legend(); c.redraw(); saveState(); refreshTree(); };
+  const mv = (j) => { L.splice(i, 1); L.splice(clamp(j, 0, L.length), 0, x); done(); };
+  const hasDraw = !!(r._pine && window.PineDraw && PineDraw.has(r._pine)), sc = x.scale || (PR.left ? "left" : "right"), iv = c.st.iv, [vk, vn] = ivVisKey(iv);
+  menu(px, py, [
+    { t: `Ajouter une alerte pour ${nm}…`, ic: IXI.alert, f: () => openAlert({ sym: c.st.sym, val: indLastVal(c, x) }) },
+    { t: `Ajouter un indicateur/une stratégie à ${nm}…`, ic: IXI.addind, f: () => openIndicators() },
+    { t: fav ? "Supprimer cet indicateur des favoris" : "Ajouter cet indicateur aux favoris", ic: fav ? ICO.starOn : ICO.star, f: () => { INDFAV = fav ? INDFAV.filter((k) => k !== x.t) : INDFAV.concat(x.t); LS.set("gr-indfav", INDFAV); toast(fav ? "Retiré des favoris" : "Ajouté aux favoris"); } },
+    "-",
+    { t: "Ordre de visualisation", ic: IXI.layers, sub: [{ t: "Mettre au premier plan", dis: i === n - 1, f: () => mv(n - 1) }, { t: "Avancer d'un niveau", dis: i === n - 1, f: () => mv(i + 1) }, { t: "Reculer d'un niveau", dis: i === 0, f: () => mv(i - 1) }, { t: "Mettre en arrière-plan", dis: i === 0, f: () => mv(0) }] },
+    { t: "Visibilité des intervalles", ic: sv('<path d="M4 14s4-6 10-6 10 6 10 6-4 6-10 6S4 14 4 14z"/><circle cx="14" cy="14" r="2.5"/><path d="M5 22h18" stroke-dasharray="2 2.5"/>'), sub: [{ t: "Toutes les unités de temps", on: !x.vis, f: () => { delete x.vis; done(); } },
+      { t: `Seulement ${ivLabel(iv, true)}`, f: () => { const v = {}; VISCATS.forEach(([k, , rg]) => { v[k] = rg ? (k === vk ? [true, vn, vn] : [false, rg[0], rg[1]]) : false; }); x.vis = v; done(); } },
+      "-", { t: "Réglages de visibilité…", f: () => openIndSettings(c, x, { tab: "vis" }) }] },
+    { t: "Déplacer vers", ic: IXI.move, sub: [{ t: "Panneau principal (sur le graphique)", on: ov, f: () => { x.pane = "main"; done(); } }, { t: hasDraw ? "Nouveau panneau en dessous (pas avec les dessins Pine)" : "Nouveau panneau en dessous", on: !ov, dis: hasDraw, f: () => { x.pane = "new"; done(); } }, x.pane ? "-" : null, x.pane ? { t: "Panneau d'origine du script", f: () => { delete x.pane; done(); } } : null] },
+    ov ? { t: "Épingler à l'échelle", ic: IXI.pin, sub: [["right", "Échelle de droite"], ["left", "Échelle de gauche"], ["none", "Sans échelle (superposé)"]].map(([k, t]) => ({ t, on: sc === k, f: () => { x.scale = k; done(); } })) } : null,
+    "-",
+    { t: "Code source…", ic: ICO.code, dis: !isP, f: () => openIndCode(x) },
+    "-",
+    { t: "Copier", ic: IXI.copy, f: () => { DS.clip = { kind: "ind", x: JSON.parse(JSON.stringify(x)) }; toast("Indicateur copié : Ctrl+V sur un graphique pour le coller"); } },
+    { t: "Dupliquer", ic: ICO.clone, f: () => { const y = JSON.parse(JSON.stringify(x)); y.id = uid(); L.splice(i + 1, 0, y); done(); } },
+    { t: x.hide ? "Afficher" : "Cacher", ic: x.hide ? ICO.eye : ICO.eyeoff, f: () => { x.hide = !x.hide; done(); } },
+    { t: "Retirer", ic: ICO.trash, f: () => removeInd(c, x.id) },
+    "-",
+    { t: "Arborescence d'objets", ic: ICO.tree, f: () => openPanel("tree") },
+    d && !ov && !r._pine ? { t: "Agrandir le panneau", f: () => { const p = c.panes.find((q) => q.id === x.id); if (p) { p.h = Math.min(70, (p.h || 22) + 12); x.h = p.h; p.el.style.flex = `0 0 ${p.h}%`; saveState(); } } } : null,
+    "-",
+    { t: "Configurations…", ic: ICO.gear, f: () => openIndSettings(c, x) },
+  ], { cls: "gr-dmenu gr-tvm" });
+}
+function openIndSettings(c, x, o = {}) {
+  const d0 = indDef(x.t); if (!d0) return; const snap0 = o.snap || indSnap(x), r = c.R[x.id] || {}, pine = r._pine, I = indInputs(x);
+  const inp = pine ? (pine.inputs || []).map((f) => ({ k: f.key, n: String(f.key).replace(/ \(\d+\)$/, ""), d: f.def, t: f.options ? "sel" : f.type === "timeframe" ? "tf" : f.type === "bool" ? "bool" : f.type === "color" ? "color" : f.type === "source" ? "sel" : typeof f.def === "number" ? (Number.isInteger(f.def) && f.type !== "float" ? "int" : "float") : "text", o: f.options || (f.type === "source" ? SRC_O : null), min: f.min, max: f.max, step: f.step, g: f.group, il: f.inline, tip: f.tooltip })) : d0.inp.map((f) => ({ ...f, g: f.g, il: f.il, tip: f.tip }));
   const val = (f) => (x.inp && f.k in x.inp ? x.inp[f.k] : pine ? f.d : I[f.k]);
-  const field = (f) => { const v = val(f); if (f.t === "bool") return `<label class="gr-chk"><input type="checkbox" data-i="${E(f.k)}" ${v ? "checked" : ""}><span>${E(f.n)}</span></label>`;
-    const ctl = f.t === "sel" ? `<select class="gr-in" data-i="${E(f.k)}">${(f.o || []).map((o) => `<option ${String(o) === String(v) ? "selected" : ""}>${E(o)}</option>`).join("")}</select>` : f.t === "color" ? colorInput("i:" + f.k, v) : `<input class="gr-in" data-i="${E(f.k)}" ${f.t === "int" || f.t === "float" ? `type="number" step="${f.step || (f.t === "int" ? 1 : "any")}"${f.min != null ? ` min="${f.min}"` : ""}` : ""} value="${E(v)}">`;
-    return `<div class="gr-fr"><span>${E(f.n)}</span>${ctl}</div>`; };
-  const plots = pine ? pine.plots.map((p, k) => ({ k: "p" + k, n: p.title, c: p.color, t: p.style === "hist" ? "hist" : "line", w: p.lw })) : d0.pl, sty = x.sty || {};
-  const styRow = (p) => { const s = sty[p.k] || {}; return `<div class="gr-fr gr-sty"><label class="gr-chk"><input type="checkbox" data-sv="${p.k}" ${s.v === false ? "" : "checked"}><span>${E(p.n)}</span></label>${colorInput("s:" + p.k, s.c || p.c)}<select class="gr-in sm" data-sw="${p.k}">${[1, 2, 3, 4].map((w) => `<option ${(s.w || p.w || 1) == w ? "selected" : ""}>${w}</option>`).join("")}</select><select class="gr-in sm" data-st="${p.k}">${[["line", "Ligne"], ["step", "Escalier"], ["hist", "Histogramme"], ["area", "Zone"], ["dots", "Points"]].map(([k, n]) => `<option value="${k}" ${(s.t || p.t || "line") === k ? "selected" : ""}>${n}</option>`).join("")}</select></div>`; };
-  const extra = (d0.hl && d0.hl.length ? `<div class="gr-fr"><span>Lignes horizontales</span>${colorInput("hl", (sty._hl && sty._hl.c) || "rgba(120,123,134,0.6)")}</div>` : "") + (d0.band ? `<div class="gr-fr"><span>Fond entre les niveaux</span>${colorInput("band", (sty._band && sty._band.c) || d0.band[2])}</div>` : "") + (d0.fills && d0.fills.length ? `<div class="gr-fr"><span>Remplissage</span>${colorInput("fill", (sty._fill && sty._fill.c) || d0.fills[0][2])}</div>` : "");
-  const d = dlg(indTitle(x), `<div class="gr-tabs"><button class="gr-tab on" data-p="in">Paramètres</button><button class="gr-tab" data-p="st">Style</button></div>
-    <div class="gr-tpane" data-p="in">${inp.length ? inp.map(field).join("") : `<div class="gr-empty">Aucun paramètre.</div>`}${r._err ? `<div class="gr-err">${E(r._err)}</div>` : ""}</div>
-    <div class="gr-tpane" data-p="st" hidden>${plots.length ? plots.map(styRow).join("") : ""}${extra || (plots.length ? "" : `<div class="gr-empty">Les couleurs se règlent dans l'onglet Paramètres.</div>`)}</div>`,
-  { w: 470, cls: "gr-dset", left: `<button class="gr-btn" data-def="1">Par défaut</button>`, onCancel: () => { Object.assign(x, JSON.parse(snapX)); c.inds(true); c.legend(); } });
+  const ctl = (f, lbl) => { const v = val(f), tip = f.tip ? ` title="${E(f.tip)}"` : "";
+    if (f.t === "bool") return `<label class="tv-ck tvi-ck"${tip}><input type="checkbox" data-i="${E(f.k)}" ${v ? "checked" : ""}><span>${E(f.n)}</span></label>`;
+    const lb = lbl ? `<span class="tvi-il">${E(f.n)}</span>` : "";
+    if (f.t === "sel") return lb + `<select class="gr-in tvi-in tvi-sel" data-i="${E(f.k)}"${tip}>${(f.o || []).map((q) => `<option ${String(q) === String(v) ? "selected" : ""}>${E(q)}</option>`).join("")}</select>`;
+    if (f.t === "tf") { const L = ["", "1S", "5S", "15S", "30S", "1", "2", "3", "5", "10", "15", "30", "45", "60", "120", "180", "240", "1D", "1W", "1M", "3M", "6M", "12M"]; if (v && !L.includes(String(v))) L.push(String(v)); return lb + `<select class="gr-in tvi-in tvi-sel" data-i="${E(f.k)}"${tip}>${L.map((q) => `<option value="${q}" ${String(q) === String(v || "") ? "selected" : ""}>${q ? E(ivLabel(q, true)) : "Graphique"}</option>`).join("")}</select>`; }
+    if (f.t === "color") return lb + colorInput("i:" + f.k, v);
+    const num = f.t === "int" || f.t === "float";
+    return lb + `<input class="gr-in tvi-in${num ? " tvi-num" : ""}" data-i="${E(f.k)}"${tip} ${num ? `type="number" step="${f.step || (f.t === "int" ? 1 : "any")}"${f.min != null ? ` min="${f.min}"` : ""}${f.max != null ? ` max="${f.max}"` : ""}` : ""} value="${E(v)}">`; };
+  // lignes : groupes (titres en capitales) + entrées « inline » sur une même ligne, info-bulle (i) en bout de ligne
+  let inH = "", lastG;
+  for (let j = 0; j < inp.length;) {
+    const f = inp[j]; if ((f.g || "") !== (lastG || "")) { if (f.g) inH += `<div class="tv-sec tvi-sec">${E(f.g)}</div>`; lastG = f.g; }
+    const row = [f]; if (f.il != null && f.il !== "") while (j + row.length < inp.length && inp[j + row.length].il === f.il && (inp[j + row.length].g || "") === (f.g || "")) row.push(inp[j + row.length]);
+    j += row.length; const tips = row.filter((q) => q.tip).map((q) => q.tip).join("\n"), tipH = tips ? `<span class="tvi-tip" title="${E(tips)}">${IXI.info}</span>` : "";
+    if (row[0].t === "bool") inH += `<div class="tvi-r"><div class="tvi-c tvi-full">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
+    else inH += `<div class="tvi-r"><div class="tvi-l">${E(row[0].n)}</div><div class="tvi-c${row.length > 1 ? " tvi-multi" : ""}">${row.map((q, k) => ctl(q, k > 0 && q.t !== "color")).join("")}${tipH}</div></div>`;
+  }
+  const plots = pine ? pine.plots.filter((p) => p.display !== "none" && p.display !== "data_window").map((p, k) => ({ k: "p" + k, n: p.title || "Plot " + (k + 1), c: p.color, t: p.style === "hist" ? "hist" : p.style === "area" ? "area" : p.style === "circles" ? "dots" : p.style === "step" ? "step" : "line", w: p.lw })) : d0.pl, sty = x.sty || {};
+  const wSel = (k, w) => `<select class="gr-in tvi-in tvi-w" data-sw="${k}" title="Épaisseur">${[1, 2, 3, 4].map((q) => `<option value="${q}" ${(w || 1) == q ? "selected" : ""}>${q}px</option>`).join("")}</select>`;
+  const styRow = (p) => { const s = sty[p.k] || {}, kind = s.t || p.t || "line";
+    return `<div class="tvi-r"><div class="tvi-l"><label class="tv-ck"><input type="checkbox" data-sv="${p.k}" ${s.v === false ? "" : "checked"}><span>${E(p.n)}</span></label></div><div class="tvi-c">${colorInput("s:" + p.k, s.c || p.c)}${wSel(p.k, s.w || p.w)}
+      <select class="gr-in tvi-in tvi-st" data-st="${p.k}" title="Type de tracé">${[["line", "Ligne"], ["step", "Escalier"], ["hist", "Histogramme"], ["area", "Zone"], ["dots", "Points"]].map(([k, n2]) => `<option value="${k}" ${kind === k ? "selected" : ""}>${n2}</option>`).join("")}</select>
+      <select class="gr-in tvi-in tvi-ls" data-sl="${p.k}" title="Style du trait" ${kind === "hist" || kind === "dots" ? "disabled" : ""}>${LSTY.map(([v, n2]) => `<option value="${v}" ${(s.ls || 0) == v ? "selected" : ""}>${n2}</option>`).join("")}</select></div></div>`; };
+  const extra = (d0.hl && d0.hl.length ? `<div class="tvi-r"><div class="tvi-l">Lignes horizontales</div><div class="tvi-c">${colorInput("hl", (sty._hl && sty._hl.c) || "rgba(120,123,134,0.6)")}</div></div>` : "") + (d0.band ? `<div class="tvi-r"><div class="tvi-l">Fond entre les niveaux</div><div class="tvi-c">${colorInput("band", (sty._band && sty._band.c) || d0.band[2])}</div></div>` : "") + (d0.fills && d0.fills.length ? `<div class="tvi-r"><div class="tvi-l">Remplissage</div><div class="tvi-c">${colorInput("fill", (sty._fill && sty._fill.c) || d0.fills[0][2])}</div></div>` : "");
+  const stH = (plots.length ? `<div class="tv-sec tvi-sec">Tracés</div>` + plots.map(styRow).join("") : "") + (extra ? `<div class="tv-sec tvi-sec">Niveaux et fonds</div>` + extra : "")
+    + (!plots.length && !extra ? `<div class="tvi-note">${pine ? "Ce script dessine avec line.new / box.new / label.new : ses couleurs et ses styles de trait se règlent dans l'onglet « Paramètres en entrée »." : "Aucun tracé à régler."}</div>` : "")
+    + `<div class="tv-sec tvi-sec">Ligne d'état</div><div class="tvi-r"><div class="tvi-c tvi-full"><label class="tv-ck"><input type="checkbox" data-sx="_lv" ${sty._lv === false ? "" : "checked"}><span>Valeurs dans la ligne d'état</span></label></div></div>`;
+  const V = visOf(x), visH = VISCATS.map(([k, n2, rg]) => rg ? `<div class="tvi-vr"><label class="tv-ck"><input type="checkbox" data-vk="${k}" ${V[k][0] ? "checked" : ""}><span>${n2}</span></label><input class="gr-in tvi-in tvi-vn" type="number" min="${rg[0]}" max="${rg[1]}" data-v0="${k}" value="${V[k][1]}"><div class="tvi-dual" style="--a:${(V[k][1] - rg[0]) / (rg[1] - rg[0] || 1)};--b:${(V[k][2] - rg[0]) / (rg[1] - rg[0] || 1)}"><input type="range" min="${rg[0]}" max="${rg[1]}" data-r0="${k}" value="${V[k][1]}"><input type="range" min="${rg[0]}" max="${rg[1]}" data-r1="${k}" value="${V[k][2]}"></div><input class="gr-in tvi-in tvi-vn" type="number" min="${rg[0]}" max="${rg[1]}" data-v1="${k}" value="${V[k][2]}"></div>`
+    : `<div class="tvi-vr"><label class="tv-ck"><input type="checkbox" data-vk="${k}" ${V[k] ? "checked" : ""}><span>${n2}</span></label></div>`).join("");
+  const tab0 = o.tab || "in";
+  const body = `<div class="gr-tabs tvi-tabs">${[["in", "Paramètres en entrée"], ["st", "Style"], ["vis", "Visibilité"]].map(([k, n2]) => `<button class="gr-tab${k === tab0 ? " on" : ""}" data-p="${k}">${n2}</button>`).join("")}</div>
+    <div class="tvi-body"><div class="gr-tpane" data-p="in" ${tab0 === "in" ? "" : "hidden"}>${inp.length ? inH : `<div class="tvi-note">Aucun paramètre.</div>`}${r._err ? `<div class="gr-err">${E(r._err)}</div>` : ""}</div>
+    <div class="gr-tpane" data-p="st" ${tab0 === "st" ? "" : "hidden"}>${stH}</div>
+    <div class="gr-tpane" data-p="vis" ${tab0 === "vis" ? "" : "hidden"}>${visH}</div></div>`;
+  const d = dlg(indTitle(x), body, { w: 560, cls: "gr-dset gr-tvset gr-tvind", ok: "D'accord", left: `<button class="gr-btn tvi-cfg" data-cfg="1">Configurations${IXI.chev}</button>`,
+    onCancel: () => { indPut(x, snap0); if ("pane" in snap0) x.pane = snap0.pane; c.inds(true); c.legend(); c.redraw(); }, onOk: () => { saveState(); } });
+  if (o.pos) { d.el.style.position = "fixed"; d.el.style.margin = "0"; d.el.style.left = o.pos[0] + "px"; d.el.style.top = o.pos[1] + "px"; }
   tabs(d.el);
-  const apply = debounce(() => { x.inp = x.inp || {}; d.el.querySelectorAll("[data-i]").forEach((e) => { const k = e.dataset.i, f = inp.find((q) => String(q.k) === k); if (!f) return; x.inp[k] = e.type === "checkbox" ? e.checked : f.t === "int" ? Math.round(+e.value) : f.t === "float" ? +e.value : e.value; });
-    inp.filter((f) => f.t === "color").forEach((f) => { const v = readColor(d.el, "i:" + f.k); if (v) x.inp[f.k] = v; });
-    x.sty = x.sty || {}; plots.forEach((p) => { const v = d.el.querySelector(`[data-sv="${p.k}"]`); if (!v) return; x.sty[p.k] = { v: v.checked, c: readColor(d.el, "s:" + p.k), w: +d.el.querySelector(`[data-sw="${p.k}"]`).value, t: d.el.querySelector(`[data-st="${p.k}"]`).value }; });
-    ["hl", "band", "fill"].forEach((k) => { const v = readColor(d.el, k); if (v) x.sty["_" + k] = { c: v }; });
-    c.inds(true); c.legend(); saveState(); }, 120);
-  d.el.addEventListener("input", apply); d.el.addEventListener("change", apply);
-  d.el.querySelector("[data-def]").onclick = () => { x.inp = {}; x.sty = {}; c.inds(true); c.legend(); d.close(false); saveState(); openIndSettings(c, x); };
+  const root = d.el, curTab = () => (root.querySelector(".gr-tab.on") || {}).dataset?.p || "in";
+  const read = () => { x.inp = x.inp || {}; root.querySelectorAll("[data-i]").forEach((e) => { const k = e.dataset.i, f = inp.find((q) => String(q.k) === k); if (!f) return; x.inp[k] = e.type === "checkbox" ? e.checked : f.t === "int" ? Math.round(+e.value) : f.t === "float" ? +e.value : e.value; });
+    inp.filter((f) => f.t === "color").forEach((f) => { const v = readColor(root, "i:" + f.k); if (v) x.inp[f.k] = v; });
+    x.sty = x.sty || {}; plots.forEach((p) => { const v = root.querySelector(`[data-sv="${p.k}"]`); if (!v) return; const t = root.querySelector(`[data-st="${p.k}"]`).value, ls = root.querySelector(`[data-sl="${p.k}"]`); ls.disabled = t === "hist" || t === "dots"; x.sty[p.k] = { v: v.checked, c: readColor(root, "s:" + p.k), w: +root.querySelector(`[data-sw="${p.k}"]`).value, t, ls: +ls.value }; });
+    ["hl", "band", "fill"].forEach((k) => { const v = readColor(root, k); if (v) x.sty["_" + k] = { c: v }; });
+    const lv = root.querySelector('[data-sx="_lv"]'); if (lv) { if (lv.checked) delete x.sty._lv; else x.sty._lv = false; }
+    const vis = {}; let all = true; VISCATS.forEach(([k, , rg]) => { const ck = root.querySelector(`[data-vk="${k}"]`); if (!rg) { vis[k] = ck.checked; if (!ck.checked) all = false; return; } const a = +root.querySelector(`[data-v0="${k}"]`).value, b = +root.querySelector(`[data-v1="${k}"]`).value; vis[k] = [ck.checked, a, b]; if (!ck.checked || a !== rg[0] || b !== rg[1]) all = false; });
+    if (all) delete x.vis; else x.vis = vis; };
+  // curseurs doubles de la Visibilité : nombres ⇄ curseurs, min ≤ max
+  root.addEventListener("input", (e) => { const t = e.target, k = t.dataset.r0 || t.dataset.r1 || t.dataset.v0 || t.dataset.v1; if (!k) return; const rg = VISCATS.find((q) => q[0] === k)[2];
+    const r0 = root.querySelector(`[data-r0="${k}"]`), r1 = root.querySelector(`[data-r1="${k}"]`), v0 = root.querySelector(`[data-v0="${k}"]`), v1 = root.querySelector(`[data-v1="${k}"]`);
+    let a = +(t.dataset.v0 ? v0.value : r0.value), b = +(t.dataset.v1 ? v1.value : r1.value); a = clamp(a || rg[0], rg[0], rg[1]); b = clamp(b || rg[1], rg[0], rg[1]); if (a > b) { if (t.dataset.r0 || t.dataset.v0) b = a; else a = b; }
+    r0.value = a; r1.value = b; if (!t.dataset.v0) v0.value = a; if (!t.dataset.v1) v1.value = b; const dual = r0.parentNode, span = rg[1] - rg[0] || 1; dual.style.setProperty("--a", (a - rg[0]) / span); dual.style.setProperty("--b", (b - rg[0]) / span); }, true);
+  const apply = debounce(() => { if (!root.isConnected) return; read(); c.inds(true); c.legend(); c.redraw(); saveState(); }, 120);
+  root.addEventListener("input", apply); root.addEventListener("change", apply);
+  const reopen = (tab) => { const rc = root.getBoundingClientRect(), moved = root.style.position === "fixed"; d.close(true); /* on rouvre la même fenêtre (Annuler y revient toujours à l'état d'avant la 1re ouverture) */ c.inds(true); c.legend(); c.redraw(); saveState(); openIndSettings(c, x, { tab: tab || curTab(), snap: snap0, pos: moved ? [rc.left, rc.top] : null }); };
+  root.querySelector("[data-cfg]").onclick = (e) => { read(); const cfg = indCfgOf(x.t), tp = cfg.tpls || {}, names = Object.keys(tp).sort(natCmp), btn = e.currentTarget;
+    const m = menuAt(btn, [names.length ? "h:Mes modèles" : null, ...names.map((nm) => ({ t: nm, f: () => { indPut(x, tp[nm]); toast("Modèle « " + nm + " » appliqué"); reopen(); }, del: () => { indCfgSet(x.t, (q) => { delete (q.tpls || {})[nm]; return q; }); toast("Modèle « " + nm + " » supprimé"); } })), names.length ? "-" : null,
+      { t: "Enregistrer sous…", f: () => askText("Nom du modèle", "Mon modèle", (nm) => { indCfgSet(x.t, (q) => { q.tpls = q.tpls || {}; q.tpls[nm] = indSnap(x); return q; }); toast("Modèle enregistré : " + nm); }) },
+      "-",
+      { t: "Réinitialiser les paramètres", f: () => { indPut(x, cfg.def || {}); toast(cfg.def ? "Paramètres par défaut remis" : "Paramètres d'origine remis"); reopen(); } },
+      { t: "Sauvegarder comme Paramètres par Défaut", f: () => { indCfgSet(x.t, (q) => { q.def = indSnap(x); return q; }); toast("Paramètres par défaut enregistrés : ils s'appliqueront à chaque nouvel ajout de « " + (d0.sh || d0.n) + " »"); } },
+      cfg.def ? "-" : null,
+      cfg.def ? { t: "Revenir aux paramètres d'origine", f: () => { indPut(x, {}); reopen(); } } : null,
+      cfg.def ? { t: "Oublier les paramètres par défaut", f: () => { indCfgSet(x.t, (q) => { delete q.def; return q; }); toast("Paramètres par défaut supprimés"); } } : null], { cls: "gr-dmenu gr-tvm" });
+    // le menu s'ouvre au-dessus du bouton, comme sur TradingView
+    const rb = btn.getBoundingClientRect(), h = m.offsetHeight; if (rb.top - h - 4 > 4) m.style.top = (rb.top - h - 4) + "px"; };
 }
 
 /* ---------- barre d'outils de dessin (gauche) ---------- */
@@ -14652,7 +14861,7 @@ const KDEF = [
   ["vline", "Ligne verticale", ["Alt+V"], () => setTool("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => setTool("xline")], ["fib", "Retracement de Fibonacci", ["Alt+F"], () => setTool("fib")], ["rect", "Rectangle", ["Alt+E"], () => setTool("rect")],
   ["long", "Position longue", ["Alt+Shift+B"], () => setTool("long")], ["short", "Position courte", ["Alt+Shift+V"], () => setTool("short")],
   ["undo", "Annuler", ["Ctrl+Z"], () => undoRedo(false)], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"], () => undoRedo(true)], ["del", "Supprimer le dessin sélectionné", ["Delete", "Backspace"], deleteSel],
-  ["copy", "Copier le dessin", ["Ctrl+C"], () => { const d = selD(); if (d) { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } }], ["paste", "Coller le dessin", ["Ctrl+V"], () => { if (!DS.clip) return; const c = curC(); snap(); const cp = JSON.parse(JSON.stringify(DS.clip)); cp.id = uid(); cp.sym = undOf(c.st.sym); const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 3), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }],
+  ["copy", "Copier le dessin", ["Ctrl+C"], () => { const d = selD(); if (d) { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } }], ["paste", "Coller le dessin", ["Ctrl+V"], () => { if (!DS.clip) return; if (DS.clip.kind === "ind") { pasteInd(curC(), DS.clip.x); return; } const c = curC(); snap(); const cp = JSON.parse(JSON.stringify(DS.clip)); cp.id = uid(); cp.sym = undOf(c.st.sym); const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 3), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }],
   ["zin", "Zoom avant", ["Ctrl+ArrowUp"], () => zoomBy(0.8)], ["zout", "Zoom arrière", ["Ctrl+ArrowDown"], () => zoomBy(1.25)], ["left", "Défiler à gauche", ["ArrowLeft"], () => scrollBy(-10)], ["right", "Défiler à droite", ["ArrowRight"], () => scrollBy(10)],
   ["help", "Aide des raccourcis", ["?", "F1"], openKeys], ["esc", "Annuler / désélectionner", ["Escape"], () => { if (MENU) { closeMenu(); return; } if (DS.creating) cancelCreate(); else if (DS.measure) { DS.measure = null; CELLS.forEach((c) => c.redraw()); } else if (DS.tool !== "cross") setTool("cross"); else if (DS.sel) selectD(null); }],
 ];

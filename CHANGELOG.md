@@ -2,6 +2,17 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.92.0] — 2026-11-23
+Page Graphique : indicateurs façon TradingView (légende, menu ⋯, paramètres, couleurs).
+### Ajouté
+- Légende d'un indicateur : bouton **Code source** `{}` entre l'œil et l'engrenage (ouvre le script dans l'Éditeur Pine ; grisé pour les indicateurs intégrés).
+- Menu **⋯** comme TradingView : Ajouter une alerte pour …, Ajouter un indicateur/une stratégie à …, favoris, **Ordre de visualisation**, **Visibilité des intervalles**, **Déplacer vers** (panneau principal / nouveau panneau), **Épingler à l'échelle** (droite / gauche / sans échelle), Code source…, Copier (Ctrl+V pour coller sur un graphique), Dupliquer, Cacher, Retirer, Arborescence d'objets, Configurations….
+- Fenêtre de paramètres façon TradingView : onglets **Paramètres en entrée** (groupes, entrées sur une même ligne, info-bulles ⓘ, liste des unités de temps), **Style** (couleur, épaisseur, type, **style du trait : Plein / Pointillés / Tirets**, valeurs dans la ligne d'état) et **Visibilité** (Ticks, Secondes, Minutes, Heures, Jours, Semaines, Mois, Ranges avec curseurs min / max).
+- Bouton **Configurations** en bas de la fenêtre : modèles par indicateur (Enregistrer sous…, appliquer, supprimer), **Réinitialiser les paramètres**, **Sauvegarder comme Paramètres par Défaut** (appliqués à chaque nouvel ajout de l'indicateur), revenir aux paramètres d'origine. Annuler revient toujours à l'état d'avant l'ouverture.
+- **Sélecteur de couleur TradingView** pour toutes les couleurs de la page Graphique (réglages, indicateurs, dessins) : palette, couleurs perso avec « + » (carré de couleur, teinte, champ hex, Ajouter ; clic droit pour en retirer une), opacité en %.
+### Corrigé
+- Le bouton « Par défaut » de l'ancienne fenêtre remettait les anciennes valeurs ; les styles des tracés Pine visaient le mauvais tracé quand un plot était masqué (`display.none`).
+
 ## [1.91.0] — 2026-11-22
 Menus contextuels : plus jamais coupés à droite.
 ### Corrigé
