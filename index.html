@@ -718,6 +718,30 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-wlr b,.gr-wlr em{text-align:right;font-weight:400;font-style:normal;font-variant-numeric:tabular-nums}.gr-wls{display:flex;align-items:center;gap:6px;font-weight:600}
 .gr-wlx{opacity:0;width:22px;height:22px}.gr-wlr:hover .gr-wlx{opacity:1}.gr-wlx svg{width:16px;height:16px}
 .gr-dot{width:7px;height:7px;border-radius:50%;background:var(--gm);flex:none;display:inline-block}.gr-dot.gr-s-tsx{background:#2962ff}.gr-dot.gr-s-ff{background:#ff9800}.gr-dot.gr-s-csv{background:#9c27b0}.gr-dot.on{background:var(--gup)}.gr-dot.hit{background:#ff9800}
+.gr-rpanel.gr-rp-trade{width:340px}.gr-dtbadge{font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#ff9800;border:1px solid rgba(255,152,0,.5);border-radius:3px;padding:1px 5px}
+.gr-dt{padding:10px 14px 16px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px;font-size:13px}.gr-dt>*{flex:none}
+.gr-dtbs{display:grid;grid-template-columns:1fr 1fr;position:relative;border-radius:8px;overflow:hidden;background:var(--gh)}
+.gr-dtside{display:flex;flex-direction:column;gap:2px;padding:9px 12px;text-align:left}.gr-dtside.buy{text-align:right;align-items:flex-end}.gr-dtside span{font-size:13px;font-weight:600}.gr-dtside b{font-size:17px;font-weight:500;font-variant-numeric:tabular-nums}
+.gr-dtside.sell.on{background:rgba(242,54,69,.2);color:#f7525f}.gr-dtside.buy.on{background:rgba(41,98,255,.22);color:#5b8cff}
+.gr-dtspr{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:var(--gb);border-radius:4px;padding:1px 7px;font-size:11.5px;font-style:normal;font-variant-numeric:tabular-nums}
+.gr-dttabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--gl)}.gr-dttabs button{height:36px;font-size:13.5px;margin-bottom:-2px;border-bottom:3px solid transparent}.gr-dttabs button.on{border-bottom-color:var(--gt);font-weight:600}
+.gr-dtlab{color:var(--gm);font-size:12.5px;margin-top:4px}.gr-dtsel{background:none;border:0;color:var(--gm);font-size:12.5px;padding:0;cursor:pointer}
+.gr-dtf{display:flex;align-items:center;gap:4px;border:1px solid var(--gl);border-radius:6px;padding-right:8px}.gr-dtf.bad{border-color:#f23645}.gr-dtf .gr-in{border:0;flex:1;min-width:0;height:34px;font-size:14px;background:none}.gr-dtf em{font-style:normal;color:var(--gm);font-size:12.5px;white-space:nowrap;min-width:60px;text-align:right}
+.gr-dtinfo{background:var(--gh);border-radius:6px;padding:8px 12px;display:flex;flex-direction:column;gap:4px}.gr-dtinfo div{display:flex;justify-content:space-between;color:var(--gm);font-size:12.5px}.gr-dtinfo b{color:var(--gt);font-weight:500;font-variant-numeric:tabular-nums}.gr-dtinfo b.up{color:var(--gup)}.gr-dtinfo b.dn{color:var(--gdn)}
+.gr-dtsec{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:4px 0}.gr-dtsec b{font-size:14px}
+.gr-dtlv{display:flex;flex-direction:column;gap:6px;padding-bottom:6px;border-bottom:1px dashed var(--gl)}.gr-dtx{display:flex;flex-direction:column;gap:4px}.gr-dtl{display:flex;justify-content:space-between;align-items:center;color:var(--gm);font-size:12.5px}.gr-dtl b{color:var(--gt)}
+.gr-dtlq{display:flex;align-items:center;gap:4px}.gr-dtlq .gr-in.sm{width:52px;height:24px}.gr-dtlq .gr-ib{width:20px;height:20px}
+.gr-dtsw{position:relative;width:36px;height:20px;flex:none;cursor:pointer}.gr-dtsw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer}.gr-dtsw span{position:absolute;inset:0;border-radius:10px;background:var(--gl);pointer-events:none;transition:background .15s}.gr-dtsw span:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.gr-dtsw input:checked+span{background:var(--ga)}.gr-dtsw input:checked+span:after{left:18px}
+.gr-dtrr{display:flex;justify-content:space-between;background:var(--gh);border-radius:6px;padding:7px 12px;color:var(--gm)}.gr-dtrr b{color:var(--gt);font-weight:500}
+.gr-dtadd{color:var(--ga);text-align:left;padding:4px 0;font-size:13.5px}.gr-dtw{width:100%;height:34px}
+.gr-dtgo{height:52px;border-radius:8px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:8px;line-height:1.2}.gr-dtgo b{font-size:15px}.gr-dtgo small{font-size:11.5px;opacity:.85}.gr-dtgo.buy{background:#2962ff}.gr-dtgo.sell{background:#f23645}.gr-dtgo:hover{filter:brightness(1.08)}.gr-dtgo:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.gr-dth{font-weight:600;margin-top:8px;padding-top:10px;border-top:1px solid var(--gl)}.gr-dth em{font-style:normal;color:var(--gm);font-weight:400}.gr-dtnone{color:var(--gm);font-size:12.5px}
+.gr-dtrow{display:flex;align-items:center;gap:6px;font-size:12.5px}.gr-dtrow span:nth-child(2){flex:1;color:var(--gm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-dtrow b{font-weight:500;font-variant-numeric:tabular-nums}.gr-dtrow .gr-ib{width:22px;height:22px}.gr-dtrow .gr-ib svg{width:14px;height:14px}.gr-dtsm{font-size:11.5px}
+.gr-dtflat{justify-content:center;margin-top:4px;color:#f23645}.gr-dtflat:disabled{opacity:.4}
+.gr-qt{position:absolute;left:8px;top:48px;z-index:7;display:flex;align-items:flex-end;gap:4px;pointer-events:auto}.gr-qt[hidden]{display:none}
+.gr-qtb{width:104px;height:44px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;box-shadow:0 1px 3px rgba(0,0,0,.3)}.gr-qtb b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}.gr-qtb span{font-size:11px;letter-spacing:.06em}
+.gr-qtb.sell{background:#e04c55}.gr-qtb.buy{background:#3a63f5}.gr-qtb:hover{filter:brightness(1.1)}
+.gr-qtm{display:flex;flex-direction:column;align-items:center;gap:2px}.gr-qtm em{font-style:normal;font-size:12px;color:var(--gt);text-shadow:0 0 3px var(--grbg)}.gr-qtm input{width:46px;height:28px;border-radius:6px;border:1px solid var(--gl);background:var(--gb);color:var(--gt);text-align:center;font-size:14px}
 .gr-dmini,.gr-det{padding:12px;border-top:1px solid var(--gl);overflow:auto}.gr-det{border-top:0;flex:1}
 .gr-dmh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.gr-dmh b{font-size:16px}.gr-dmh span{color:var(--gm);font-size:12px}
 .gr-dmp{font-size:20px;font-weight:600;margin:6px 0 2px;font-variant-numeric:tabular-nums}.gr-dmp.big{font-size:26px}.gr-dmp em{font-size:13px;font-style:normal;font-weight:500}
@@ -14125,6 +14149,7 @@ function drawMenu(d, c, x, y) {
     { t: d.lock ? "Déverrouiller" : "Verrouiller", ic: d.lock ? ICO.lock : ICO.unlock, f: () => { d.lock = !d.lock; drawChanged(d); if (selD() === d) showFloat(d); } },
     { t: "Cacher", ic: ICO.eyeoff, f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
     { t: "Retirer", k: "Del", ic: ICO.trash, f: () => { selectD(d, c); deleteSel(); } }, "-",
+    d.tool === "long" || d.tool === "short" ? { t: "Envoyer en ordre (compte démo)", ic: " ", f: () => paFromDraw(d, c) } : null, d.tool === "long" || d.tool === "short" ? "-" : null,
     { t: `Aller à ${low}`, ic: " ", f: goTo }, "-",
     { t: "Configurations…", ic: FI.set, f: () => openDrawSettings(d, c) }].filter(Boolean), { cls: "gr-dmenu" });
 }
@@ -14178,7 +14203,8 @@ function openDrawSettings(d, c) {
 }
 
 /* ---------- panneaux de droite : liste de surveillance, alertes, actualités, détails, arborescence, fenêtre de données ---------- */
-const PANELS = [["wl", "list", "Liste de surveillance (Alt+W)"], ["al", "bell", "Alertes (Alt+Maj+A)"], ["news", "news", "Actualités et calendrier (Alt+N)"], ["det", "detail", "Détails du symbole (Alt+D)"], ["tree", "tree", "Arborescence des objets (Alt+O)"], ["dw", "data", "Fenêtre de données"], ["pine", "code", "Éditeur Pine Script"], ["keys", "kbd", "Raccourcis clavier (?)"]];
+const PANELS = [["wl", "list", "Liste de surveillance (Alt+W)"], ["al", "bell", "Alertes (Alt+Maj+A)"], ["news", "news", "Actualités et calendrier (Alt+N)"], ["det", "detail", "Détails du symbole (Alt+D)"], ["tree", "tree", "Arborescence des objets (Alt+O)"], ["dw", "data", "Fenêtre de données"], ["trade", "trade", "Trading (compte démo)"], ["pine", "code", "Éditeur Pine Script"], ["keys", "kbd", "Raccourcis clavier (?)"]];
+ICO.trade = sv('<path d="M14 4v20M18.5 8.5c-.8-1.3-2.5-2-4.5-2-2.6 0-4.5 1.3-4.5 3.3 0 4.6 9.5 2.4 9.5 7.2 0 2-2 3.5-5 3.5-2.2 0-4-.8-5-2.3"/>');
 function renderStrip() { $r("#grRStrip").innerHTML = PANELS.map(([k, ic, t]) => `<button class="gr-rs${(k === "pine" ? STATE.bpanel === "pine" : STATE.panel === k) ? " on" : ""}" data-p="${k}" title="${E(t)}">${ICO[ic]}</button>`).join(""); }
 $r("#grRStrip").onclick = (e) => { const b = e.target.closest("[data-p]"); if (!b) return; const k = b.dataset.p; if (k === "pine") { STATE.bpanel = STATE.bpanel === "pine" ? null : "pine"; renderPine(); renderStrip(); saveState(); return; } if (k === "keys") { openKeys(); return; } openPanel(k, true); };
 function openPanel(k, toggle) { STATE.panel = toggle && STATE.panel === k ? null : k; renderStrip(); refreshPanels(); saveState(); }
@@ -14187,7 +14213,8 @@ function refreshPanels(light) {
   const P = $r("#grRPanel"); if (!P) return; P.hidden = !STATE.panel || STATE.mode === "tv"; if (P.hidden) return;
   if (light && Date.now() - lastPanelAt < 900) return; lastPanelAt = Date.now();
   if (light && !["wl", "det"].includes(STATE.panel)) return;
-  const k = STATE.panel; if (k === "wl") renderWL(); else if (k === "al") renderAL(); else if (k === "news") renderNews(); else if (k === "det") renderDet(); else if (k === "tree") renderTree(); else if (k === "dw") { const c = activeCell(); refreshDataWin(null, c); }
+  P.classList.toggle("gr-rp-trade", STATE.panel === "trade");
+  const k = STATE.panel; if (k === "wl") renderWL(); else if (k === "al") renderAL(); else if (k === "news") renderNews(); else if (k === "det") renderDet(); else if (k === "tree") renderTree(); else if (k === "trade") renderTrade(); else if (k === "dw") { const c = activeCell(); refreshDataWin(null, c); }
 }
 const refreshTree = () => { if (STATE.panel === "tree") renderTree(); };
 const ph = (title, btns) => `<div class="gr-ph"><b>${E(title)}</b><span class="gr-fill"></span>${btns || ""}<button class="gr-ib" data-pclose="1" title="Fermer">${ICO.x}</button></div>`;
@@ -14733,6 +14760,320 @@ function renderPine() {
   if (keep && x) { ta.scrollTop = keep.st; ta.scrollLeft = keep.sl; ta.setSelectionRange(keep.a, keep.b); if (keep.f) ta.focus(); syncScroll(); caret(); }
 }
 const confirmDel = (n) => window.confirm(`Supprimer le script « ${n} » ? (il disparaît aussi du Backtesteur)`);
+
+/* grPaper:start — compte démo (paper trading) de la page Graphique : ordres, exécutions, positions, P&L réalisé. Pur (aucun DOM, aucun appel réseau), testé par tools/check.js.
+   État A = { v, bal, start, seq, fee, pos: { sym: { q (signé), avg, t } }, orders: [...], trades: [...] } ; spec = { tick, pv } du contrat ; px = { bid, ask }.
+   Ordre = { id, sym, side: buy | sell, type: market | limit | stop, qty, price, stop, st: working | pending | filled | canceled | expired | rejected, t, exp, par, oco, fpx, ft, why }.
+   Sorties (TP limite / SL stop) = ordres enfants « pending » activés à l'exécution de l'ordre parent ; TP et SL d'un même niveau = OCO ; position revenue à 0 = sorties restantes annulées. */
+const grPaper = (() => {
+  const fin = (v) => typeof v === "number" && isFinite(v);
+  const LIVE = (o) => o.st === "working" || o.st === "pending";
+  const r6 = (v) => Math.round(v * 1e6) / 1e6;
+  const fresh = (bal) => ({ v: 1, bal: fin(bal) && bal > 0 ? bal : 100000, start: fin(bal) && bal > 0 ? bal : 100000, seq: 0, fee: 0, pos: {}, orders: [], trades: [] });
+  const nid = (A) => ++A.seq;
+  const dirOf = (side) => (side === "buy" ? 1 : -1);
+  /** refus d'un ordre (texte) ou null ; e = prix d'entrée de référence */
+  function check(o, px) {
+    if (!o || !o.sym) return "Symbole manquant.";
+    if (o.side !== "buy" && o.side !== "sell") return "Choisis Acheter ou Vendre.";
+    if (!["market", "limit", "stop"].includes(o.type)) return "Type d'ordre inconnu.";
+    if (!Number.isInteger(o.qty) || o.qty < 1) return "La quantité doit être un entier >= 1.";
+    if (!px || !fin(px.bid) || !fin(px.ask)) return "Pas de prix en direct pour ce symbole.";
+    const buy = o.side === "buy", ref = buy ? px.ask : px.bid;
+    if (o.type === "limit" && !fin(o.price)) return "Prix limite manquant."; // limite au-delà du prix = exécutée tout de suite au Ask / Bid (comme TradingView)
+    if (o.type === "stop") { if (!fin(o.stop)) return "Prix stop manquant."; if (buy ? o.stop <= ref : o.stop >= ref) return buy ? "Un stop d'achat doit être au-dessus du prix Ask." : "Un stop de vente doit être sous le prix Bid."; }
+    const e = o.type === "limit" ? o.price : o.type === "stop" ? o.stop : ref, ex = o.exits || [];
+    let n = 0;
+    for (const x of ex) {
+      if (!Number.isInteger(x.qty) || x.qty < 1) return "Chaque niveau de sortie doit avoir au moins 1 contrat.";
+      n += x.qty;
+      if (fin(x.tp) && (buy ? x.tp <= e : x.tp >= e)) return buy ? "Le take profit d'un achat doit être au-dessus de l'entrée." : "Le take profit d'une vente doit être sous l'entrée.";
+      if (fin(x.sl) && (buy ? x.sl >= e : x.sl <= e)) return buy ? "Le stop loss d'un achat doit être sous l'entrée." : "Le stop loss d'une vente doit être au-dessus de l'entrée.";
+    }
+    if (n > o.qty) return "Les niveaux de sortie dépassent la quantité de l'ordre.";
+    return null;
+  }
+  /** place un ordre (+ ses sorties) ; un ordre au marché est exécuté tout de suite au Ask (achat) / Bid (vente). Renvoie { ok, id, why } */
+  function place(A, o, px, spec, t) {
+    const why = check(o, px); if (why) return { ok: false, why };
+    const p = { id: nid(A), sym: o.sym, side: o.side, type: o.type, qty: o.qty, price: o.type === "limit" ? o.price : null, stop: o.type === "stop" ? o.stop : null, st: "working", t, exp: fin(o.exp) ? o.exp : null, par: null, oco: null, tif: o.tif || null };
+    A.orders.push(p);
+    const exit = o.side === "buy" ? "sell" : "buy";
+    for (const x of o.exits || []) {
+      const g = fin(x.tp) && fin(x.sl) ? "g" + nid(A) : null;
+      if (fin(x.tp)) A.orders.push({ id: nid(A), sym: o.sym, side: exit, type: "limit", qty: x.qty, price: x.tp, stop: null, st: "pending", t, exp: null, par: p.id, oco: g, kind: "tp" });
+      if (fin(x.sl)) A.orders.push({ id: nid(A), sym: o.sym, side: exit, type: "stop", qty: x.qty, price: null, stop: x.sl, st: "pending", t, exp: null, par: p.id, oco: g, kind: "sl" });
+    }
+    const mk = o.type === "market" || (o.type === "limit" && (o.side === "buy" ? o.price >= px.ask : o.price <= px.bid));
+    if (mk) fill(A, p, o.side === "buy" ? px.ask : px.bid, t, spec);
+    return { ok: true, id: p.id };
+  }
+  /** exécution : position nette (moyenne si même sens, P&L réalisé si sens inverse, retournement possible), frais par contrat, sorties activées, OCO */
+  function fill(A, o, price, t, spec) {
+    const pv = (spec && spec.pv) || 1, d = dirOf(o.side), P = A.pos[o.sym] || { q: 0, avg: 0, t };
+    let n = o.qty; A.bal = r6(A.bal - (A.fee || 0) * n);
+    if (P.q === 0 || Math.sign(P.q) === d) { P.avg = P.q === 0 ? price : r6((P.avg * Math.abs(P.q) + price * n) / (Math.abs(P.q) + n)); if (P.q === 0) P.t = t; P.q += d * n; }
+    else {
+      const c = Math.min(Math.abs(P.q), n), pnl = r6((price - P.avg) * c * Math.sign(P.q) * pv);
+      A.bal = r6(A.bal + pnl); A.trades.unshift({ sym: o.sym, side: P.q > 0 ? "long" : "short", qty: c, entry: P.avg, exit: price, pnl, fees: r6((A.fee || 0) * c * 2), t0: P.t, t1: t });
+      A.trades.length = Math.min(A.trades.length, 500);
+      P.q += d * c; n -= c; if (n > 0) { P.q = d * n; P.avg = price; P.t = t; }
+    }
+    if (P.q === 0) delete A.pos[o.sym]; else A.pos[o.sym] = P;
+    Object.assign(o, { st: "filled", fpx: price, ft: t });
+    for (const c of A.orders) if (c.par === o.id && c.st === "pending") c.st = "working";
+    if (o.oco) for (const c of A.orders) if (c.oco === o.oco && c.id !== o.id && LIVE(c)) Object.assign(c, { st: "canceled", why: "OCO" });
+    if (!A.pos[o.sym]) for (const c of A.orders) if (c.sym === o.sym && c.par != null && LIVE(c) && c.id !== o.id) Object.assign(c, { st: "canceled", why: "position fermée" });
+    return o;
+  }
+  /** nouveau prix : lo / hi = plus bas / plus haut du Bid depuis le dernier passage, sp = écart Ask - Bid. Exécute les ordres touchés, expire les ordres périmés. Renvoie les ordres exécutés. */
+  function tick(A, sym, lo, hi, sp, t, spec) {
+    const out = [];
+    const was = new Set(A.orders.filter((o) => o.sym === sym && o.st === "working").map((o) => o.id)); // une sortie activée pendant ce passage attend le prix suivant
+    for (const o of A.orders.slice().sort((a, b) => a.id - b.id)) {
+      if (o.sym !== sym || o.st !== "working" || !was.has(o.id)) continue;
+      if (o.exp && t >= o.exp) { Object.assign(o, { st: "expired" }); continue; }
+      const buy = o.side === "buy", aLo = lo + sp, aHi = hi + sp;
+      let hit = null;
+      if (o.type === "limit") hit = buy ? (aLo <= o.price ? o.price : null) : (hi >= o.price ? o.price : null);
+      else if (o.type === "stop") hit = buy ? (aHi >= o.stop ? o.stop : null) : (lo <= o.stop ? o.stop : null);
+      if (hit == null) continue;
+      if (o.par != null && !A.pos[sym]) { Object.assign(o, { st: "canceled", why: "position fermée" }); continue; }
+      out.push(fill(A, o, hit, t, spec));
+    }
+    return out;
+  }
+  function cancel(A, id) { let n = 0; for (const o of A.orders) if ((o.id === id || o.par === id) && LIVE(o)) { o.st = "canceled"; o.why = "annulé"; n++; } return n; }
+  function modify(A, id, ch) {
+    const o = A.orders.find((x) => x.id === id && LIVE(x)); if (!o) return false;
+    if (fin(ch.price) && o.type === "limit") o.price = ch.price; if (fin(ch.stop) && o.type === "stop") o.stop = ch.stop; if (Number.isInteger(ch.qty) && ch.qty > 0) o.qty = ch.qty;
+    return true;
+  }
+  /** ferme la position du symbole au marché et annule ses ordres en cours (sym absent = tout le compte) */
+  function flatten(A, sym, pxOf, t, specOf) {
+    for (const o of A.orders) if (LIVE(o) && (!sym || o.sym === sym)) { o.st = "canceled"; o.why = "tout fermer"; }
+    const done = [];
+    for (const s of Object.keys(A.pos)) { if (sym && s !== sym) continue; const P = A.pos[s], px = pxOf(s); if (!px || !fin(px.bid)) continue;
+      const o = { id: nid(A), sym: s, side: P.q > 0 ? "sell" : "buy", type: "market", qty: Math.abs(P.q), st: "working", t, par: null, oco: null };
+      A.orders.push(o); fill(A, o, o.side === "buy" ? px.ask : px.bid, t, specOf(s)); done.push(s); }
+    return done;
+  }
+  const upnl = (A, sym, px, spec) => { const P = A.pos[sym]; if (!P || !px) return 0; const last = P.q > 0 ? px.bid : px.ask; return fin(last) ? r6((last - P.avg) * P.q * ((spec && spec.pv) || 1)) : 0; };
+  const live = (A, sym) => A.orders.filter((o) => LIVE(o) && (!sym || o.sym === sym));
+  /** garde l'historique raisonnable : ordres terminés au-delà des 300 derniers supprimés */
+  function prune(A) { const done = A.orders.filter((o) => !LIVE(o)); if (done.length > 300) { const cut = new Set(done.slice(0, done.length - 300).map((o) => o.id)); A.orders = A.orders.filter((o) => !cut.has(o.id)); } return A; }
+  return { fresh, check, place, fill, tick, cancel, modify, flatten, upnl, live, prune, LIVE };
+})();
+/* grPaper:end */
+/* ---------- Trading : compte démo (paper trading) façon TradingView ----------
+   Panneau de droite « trade » (icône $) : ticket Vendre / Acheter (Bid / Ask + écart), Marché / Limite / Stop, prix en prix ou en ticks (« Ask + 30 »),
+   quantité en contrats ou au risque $, valeur du contrat / solde disponible / valeur du tick, sorties TP / SL (prix ou ticks, interrupteurs, plusieurs niveaux),
+   R:R, durée de validité (Jour / Semaine / Jusqu'à annulation), compte (solde, P&L latent), position, ordres en cours, historique.
+   Boutons VENDRE / ACHETER sur le graphique actif (un clic = ordre au marché). Lignes de la position et des ordres sur le graphique ; glisser une ligne d'ordre = modifier son prix.
+   Moteur pur grPaper ; prix = dernier prix du flux (Bid) + écart réglable (Ask). Compte : localStorage gr-paper ; ticket : gr-trade. Web et desktop. Aucun vrai ordre. */
+const PA = { A: null, lines: new Map(), drag: null, hov: false, prev: new Map(), qt: null };
+const TP0 = { side: "buy", type: "market", pxMode: "price", px: null, pxT: 10, qMode: "qty", qty: 1, risk: 200, exOpen: true, xOpen: false, tif: "day", spread: 1, quick: true, confirm: false,
+  ex: [{ tpOn: true, tpM: "ticks", tp: 240, slOn: true, slM: "ticks", sl: 80, qty: 1 }] };
+let TPF = Object.assign({}, TP0, LS.get("gr-trade", {})); if (!Array.isArray(TPF.ex) || !TPF.ex.length) TPF.ex = JSON.parse(JSON.stringify(TP0.ex));
+const tpSave = () => LS.set("gr-trade", TPF);
+const paLoad = () => { if (!PA.A) { const a = LS.get("gr-paper", null); PA.A = a && a.v === 1 ? a : grPaper.fresh(100000); } return PA.A; };
+const paSave = () => { grPaper.prune(PA.A); LS.set("gr-paper", PA.A); };
+const paSpec = (s) => { const sp = SYM(s); return { tick: sp.tick || 0.01, pv: sp.pv || 1 }; };
+const paRound = (p, tick) => (fin(p) && tick > 0 ? +(Math.round(p / tick) * tick).toFixed(decOf(tick)) : p);
+/** Bid = dernier prix du flux, Ask = Bid + écart (ticks) */
+function paPx(s) {
+  let last = livePx(s); if (!fin(last)) for (const c of CELLS) { const B = c.feed && c.feed.sym === s && c.feed.bars; if (B && B.length) { last = B[B.length - 1][4]; break; } }
+  if (!fin(last)) { const q = WLP.get(s); if (q && fin(q.last)) last = q.last; }
+  if (!fin(last)) return null; const tick = paSpec(s).tick; return { bid: last, ask: paRound(last + Math.max(0, +TPF.spread || 0) * tick, tick) };
+}
+const nyParts = (t) => { const o = {}; new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date(t * 1000)).forEach((x) => (o[x.type] = x.value)); return o; };
+/** fin de validité : Jour = prochaine clôture CME 17:00 NY ; Semaine = vendredi 17:00 NY ; GTC = aucune */
+function paExp(tif, t) {
+  if (tif === "gtc") return null; let x = Math.floor(t / 3600) * 3600 + 3600;
+  for (let i = 0; i < 24 * 9; i++, x += 3600) { const p = nyParts(x); if (+p.hour === 17 && (tif === "day" ? true : p.weekday === "Fri")) return x; }
+  return null;
+}
+const paSym = () => { const c = activeCell(); return c ? c.st.sym : null; };
+const ticksOf = (a, b, tick) => Math.round(Math.abs(a - b) / tick);
+/** prix d'entrée du ticket (Ask pour un achat au marché, Bid pour une vente) */
+function tkEntry(s, px) {
+  const tick = paSpec(s).tick, ref = TPF.side === "buy" ? px.ask : px.bid;
+  if (TPF.type === "market") return ref;
+  if (TPF.pxMode === "ticks") { const k = Math.round(+TPF.pxT || 0), sg = TPF.type === "limit" ? (TPF.side === "buy" ? -1 : 1) : TPF.side === "buy" ? 1 : -1; return paRound(ref + sg * k * tick, tick); }
+  return fin(+TPF.px) && TPF.px !== null ? paRound(+TPF.px, tick) : ref;
+}
+/** prix d'une sortie du ticket : en ticks depuis l'entrée, ou prix saisi */
+function tkExit(x, k, e, tick) { const on = x[k + "On"]; if (!on) return NaN; const v = +x[k]; if (!fin(v)) return NaN; if (x[k + "M"] === "price") return paRound(v, tick); const sg = (k === "tp" ? 1 : -1) * (TPF.side === "buy" ? 1 : -1); return paRound(e + sg * Math.abs(v) * tick, tick); }
+/** quantité totale : contrats, ou au risque $ avec le SL du 1er niveau */
+function tkQty(s, e) { const sp = paSpec(s); if (TPF.qMode !== "risk") return Math.max(1, Math.round(+TPF.qty || 1)); const sl = tkExit(TPF.ex[0], "sl", e, sp.tick); if (!fin(sl)) return 0; const r = Math.abs(e - sl) * sp.pv; return r > 0 ? Math.max(0, Math.floor(+TPF.risk / r)) : 0; }
+/** niveaux de sortie : le 1er prend le reste de la quantité */
+function tkLevels(qty) { const L = TPF.ex.map((x) => Math.max(1, Math.round(+x.qty || 1))); const rest = qty - L.slice(1).reduce((a, b) => a + b, 0); L[0] = Math.max(0, rest); return L; }
+function tkOrder(s, px) {
+  const sp = paSpec(s), e = tkEntry(s, px), qty = tkQty(s, e), L = tkLevels(qty);
+  const exits = TPF.ex.map((x, i) => ({ qty: L[i], tp: tkExit(x, "tp", e, sp.tick), sl: tkExit(x, "sl", e, sp.tick) })).filter((x) => x.qty > 0 && (fin(x.tp) || fin(x.sl)));
+  const o = { sym: s, side: TPF.side, type: TPF.type, qty, exits, tif: TPF.type === "market" ? null : TPF.tif, exp: TPF.type === "market" ? null : paExp(TPF.tif, NOW()) };
+  if (TPF.type === "limit") o.price = e; if (TPF.type === "stop") o.stop = e; return { o, e };
+}
+function paPlace(o, msg) {
+  const A = paLoad(), px = paPx(o.sym); if (!px) return toast("Pas de prix en direct pour " + symCode(o.sym), true);
+  const r = grPaper.place(A, o, px, paSpec(o.sym), NOW()); if (!r.ok) { toast(r.why, true); return false; }
+  paSave(); toast(msg || `Ordre démo : ${o.side === "buy" ? "achat" : "vente"} ${o.qty} ${symCode(o.sym)}${o.type === "market" ? " au marché" : ""}`); paRefresh(); return true;
+}
+function tkSend() {
+  const s = paSym(); if (!s) return; const px = paPx(s); if (!px) return toast("Pas de prix en direct pour " + symCode(s), true);
+  const { o } = tkOrder(s, px); if (!o.qty) return toast(TPF.qMode === "risk" ? "Risque trop faible pour 1 contrat avec ce stop loss (ou stop loss désactivé)." : "Quantité invalide.", true);
+  if (TPF.confirm && !window.confirm(`${o.side === "buy" ? "Acheter" : "Vendre"} ${o.qty} ${symCode(s)} ?`)) return;
+  paPlace(o);
+}
+/** dessin Position longue / courte -> ordre démo (entrée, TP, SL et quantité du dessin) */
+function paFromDraw(d, c) {
+  if (!d || !d.p || d.p.length < 3) return; const s = c.st.sym, px = paPx(s); if (!px) return toast("Pas de prix en direct pour " + symCode(s), true);
+  const long = d.tool === "long", sp = paSpec(s), e = paRound(d.p[0].p, sp.tick), tp = paRound(d.p[1].p, sp.tick), sl = paRound(d.p[2].p, sp.tick), ref = long ? px.ask : px.bid, st = d.s || {}, risk = Math.abs(e - sl);
+  let qty = Math.max(1, Math.round(+st.qty || 1)); if (+st.risk > 0 && risk) qty = Math.max(1, Math.floor((+st.acc || 50000) * +st.risk / 100 / (risk * sp.pv)));
+  let type = "limit"; if (Math.abs(e - ref) <= sp.tick) type = "market"; else if (long ? e > ref : e < ref) type = "stop";
+  const o = { sym: s, side: long ? "buy" : "sell", type, qty, exits: [{ qty, tp, sl }], tif: type === "market" ? null : TPF.tif, exp: type === "market" ? null : paExp(TPF.tif, NOW()) };
+  if (type === "limit") o.price = e; if (type === "stop") o.stop = e; paPlace(o);
+}
+
+/* ----- moteur : exécution des ordres en attente à chaque nouveau prix ----- */
+function paEngine() {
+  const A = PA.A; if (!A) return; const syms = new Set([...grPaper.live(A).map((o) => o.sym), ...Object.keys(A.pos)]); let ch = false;
+  for (const s of syms) { const px = paPx(s); if (!px) continue; const sp = px.ask - px.bid, pv = PA.prev.get(s), lo = fin(pv) ? Math.min(pv, px.bid) : px.bid, hi = fin(pv) ? Math.max(pv, px.bid) : px.bid; PA.prev.set(s, px.bid);
+    const before = JSON.stringify(grPaper.live(A, s).map((o) => o.st)), f = grPaper.tick(A, s, lo, hi, sp, NOW(), paSpec(s));
+    f.forEach((o) => toast(`Démo : ${o.kind === "tp" ? "take profit" : o.kind === "sl" ? "stop loss" : "ordre"} exécuté — ${o.side === "buy" ? "achat" : "vente"} ${o.qty} ${symCode(s)} à ${fmtPx(o.fpx, SYM(s))}`));
+    if (f.length || before !== JSON.stringify(grPaper.live(A, s).map((o) => o.st))) ch = true; }
+  if (ch) { paSave(); paRefresh(); }
+}
+function paRefresh() { if (STATE.panel === "trade") renderTrade(); paLines(); paQuick(); }
+
+/* ----- panneau ----- */
+const swp = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 5h9l-2-2M13 11H4l2 2"/></svg>`;
+function renderTrade() {
+  const P = $r("#grRPanel"); if (!P || STATE.panel !== "trade") return; P.classList.add("gr-rp-trade");
+  const A = paLoad(), s = paSym(); if (!s) { P.innerHTML = ph("Trading") + `<div class="gr-empty">Ouvre un graphique.</div>`; return; }
+  const spec = SYM(s), sp = paSpec(s), px = paPx(s), f = (p) => fmtPx(p, spec), buy = TPF.side === "buy", code = symCode(s);
+  const e = px ? tkEntry(s, px) : NaN, qty = px ? tkQty(s, e) : 0, L = tkLevels(qty), ref = px ? (buy ? px.ask : px.bid) : NaN;
+  const pos = A.pos[s], up = px ? grPaper.upnl(A, s, px, sp) : 0, uAll = Object.keys(A.pos).reduce((a, k) => a + grPaper.upnl(A, k, paPx(k), paSpec(k)), 0), ords = grPaper.live(A);
+  const exRow = (x, i, k) => { const on = x[k + "On"], v = tkExit(x, k, e, sp.tick), tk = fin(v) && fin(e) ? ticksOf(v, e, sp.tick) : null;
+    return `<div class="gr-dtx"><div class="gr-dtl"><span>${k === "tp" ? "Take profit" : "Stop loss"}</span><label class="gr-dtsw"><input type="checkbox" data-xon="${i}:${k}"${on ? " checked" : ""}><span></span></label></div>
+      ${on ? `<div class="gr-dtf"><input class="gr-in" type="number" step="${x[k + "M"] === "price" ? sp.tick : 1}" data-xv="${i}:${k}" value="${x[k + "M"] === "price" ? (fin(+x[k]) ? x[k] : fin(v) ? v : "") : x[k]}"><button class="gr-ib" data-xm="${i}:${k}" title="Prix / ticks">${swp}</button><em>${x[k + "M"] === "price" ? (tk != null ? tk + " ticks" : "") : fin(v) ? f(v) : ""}</em></div>` : ""}</div>`; };
+  const lvl = TPF.ex.map((x, i) => { const tp = tkExit(x, "tp", e, sp.tick), sl = tkExit(x, "sl", e, sp.tick), rr = fin(tp) && fin(sl) && Math.abs(e - sl) ? Math.abs(tp - e) / Math.abs(e - sl) : null;
+    return `<div class="gr-dtlv">${TPF.ex.length > 1 ? `<div class="gr-dtl"><b>Niveau ${i + 1}</b><span class="gr-dtlq">${i ? `<input class="gr-in sm" type="number" min="1" step="1" data-lq="${i}" value="${L[i]}"> contrat(s) <button class="gr-ib" data-ldel="${i}" title="Retirer ce niveau">${ICO.x}</button>` : `${L[0]} contrat(s)`}</span></div>` : ""}
+      ${exRow(x, i, "tp")}${exRow(x, i, "sl")}<div class="gr-dtrr"><span>Risk / Reward</span><b>${rr != null ? nf(rr, 2).replace(/,00$/, "") : "—"}</b></div></div>`; }).join("");
+  const offT = px && TPF.type !== "market" ? Math.round((e - ref) / sp.tick) : 0;
+  P.innerHTML = `<div class="gr-ph"><b>${E(code)}</b><span class="gr-dtbadge">DÉMO</span><span class="gr-fill"></span><button class="gr-ib" id="dtMore" title="Compte démo">${ICO.gear}</button><button class="gr-ib" data-pclose="1" title="Fermer">${ICO.x}</button></div>
+  <div class="gr-dt">
+    <div class="gr-dtbs"><button class="gr-dtside sell${!buy ? " on" : ""}" data-side="sell"><span>Vendre</span><b>${px ? f(px.bid) : "—"}</b></button><em class="gr-dtspr">${px ? f(px.ask - px.bid) : "—"}</em><button class="gr-dtside buy${buy ? " on" : ""}" data-side="buy"><span>Acheter</span><b>${px ? f(px.ask) : "—"}</b></button></div>
+    <div class="gr-dttabs">${[["market", "Marché"], ["limit", "Limite"], ["stop", "Stop"]].map(([k, t]) => `<button data-ty="${k}" class="${TPF.type === k ? "on" : ""}">${t}</button>`).join("")}</div>
+    ${TPF.type !== "market" ? `<div class="gr-dtlab">Prix</div><div class="gr-dtf"><input class="gr-in" id="dtPx" type="number" step="${TPF.pxMode === "ticks" ? 1 : sp.tick}" value="${TPF.pxMode === "ticks" ? TPF.pxT : fin(e) ? e : ""}"><button class="gr-ib" id="dtPxM" title="Prix / ticks">${swp}</button><em>${TPF.pxMode === "ticks" ? (fin(e) ? f(e) : "") : `${buy ? "Ask" : "Bid"} ${offT >= 0 ? "+" : "−"} ${Math.abs(offT)}`}</em></div>` : ""}
+    <div class="gr-dtlab"><select class="gr-dtsel" id="dtQM"><option value="qty"${TPF.qMode !== "risk" ? " selected" : ""}>Quantité</option><option value="risk"${TPF.qMode === "risk" ? " selected" : ""}>Risque $</option></select></div>
+    <div class="gr-dtf${!qty ? " bad" : ""}"><input class="gr-in" id="dtQ" type="number" min="1" step="${TPF.qMode === "risk" ? 10 : 1}" value="${TPF.qMode === "risk" ? TPF.risk : TPF.qty}"><em>${TPF.qMode === "risk" ? `${qty} contrat(s)` : "contrat(s)"}</em></div>
+    <div class="gr-dtinfo"><div><span>Valeur du contrat</span><b>${fin(e) ? money(e * sp.pv * qty) : "—"}</b></div><div><span>Solde disponible</span><b>${money(A.bal + uAll)}</b></div><div><span>Valeur du tick</span><b>${money(sp.tick * sp.pv * qty)}</b></div></div>
+    <button class="gr-dtsec" data-sec="exOpen"><b>Sorties</b><span>${TPF.exOpen ? "▴" : "▾"}</span></button>
+    ${TPF.exOpen ? lvl + `<button class="gr-dtadd" id="dtAdd">+ Ajouter un niveau</button>` : ""}
+    <button class="gr-dtsec" data-sec="xOpen"><b>Réglages avancés</b><span>${TPF.xOpen ? "▴" : "▾"}</span></button>
+    ${TPF.xOpen ? `<div class="gr-dtlab">Durée de validité</div><select class="gr-in gr-dtw" id="dtTif"${TPF.type === "market" ? " disabled" : ""}><option value="day"${TPF.tif === "day" ? " selected" : ""}>Jour (jusqu'à 17:00 NY)</option><option value="week"${TPF.tif === "week" ? " selected" : ""}>Semaine (vendredi 17:00 NY)</option><option value="gtc"${TPF.tif === "gtc" ? " selected" : ""}>Jusqu'à annulation</option></select>` : ""}
+    <button class="gr-dtgo ${buy ? "buy" : "sell"}" id="dtGo"${!px || !qty ? " disabled" : ""}><b>${buy ? "Acheter" : "Vendre"}</b><small>${qty} ${E(code)} @ ${fin(e) ? f(e) : "—"} ${TPF.type === "market" ? "MARCHÉ" : TPF.type === "limit" ? "LIMITE" : "STOP"}</small></button>
+    <div class="gr-dth">Compte démo</div>
+    <div class="gr-dtinfo"><div><span>Solde</span><b>${money(A.bal)}</b></div><div><span>P&L latent</span><b id="dtUp" class="${uAll >= 0 ? "up" : "dn"}">${money(uAll)}</b></div><div><span>P&L réalisé</span><b class="${A.bal - A.start >= 0 ? "up" : "dn"}">${money(A.bal - A.start)}</b></div></div>
+    <div class="gr-dth">Positions</div>
+    ${Object.keys(A.pos).length ? Object.entries(A.pos).map(([k, p]) => { const u = grPaper.upnl(A, k, paPx(k), paSpec(k)); return `<div class="gr-dtrow"><span class="${p.q > 0 ? "up" : "dn"}">${p.q > 0 ? "Long" : "Short"} ${Math.abs(p.q)}</span><span>${E(symCode(k))} @ ${fmtPx(p.avg, SYM(k))}</span><b data-up="${E(k)}" class="${u >= 0 ? "up" : "dn"}">${money(u)}</b><button class="gr-btn sm" data-close="${E(k)}">Fermer</button></div>`; }).join("") : `<div class="gr-dtnone">Aucune position</div>`}
+    <div class="gr-dth">Ordres en cours <em>${ords.length || ""}</em></div>
+    ${ords.length ? ords.map((o) => `<div class="gr-dtrow"><span class="${o.side === "buy" ? "up" : "dn"}">${o.side === "buy" ? "Achat" : "Vente"} ${o.qty}</span><span>${E(symCode(o.sym))} · ${o.kind === "tp" ? "TP " : o.kind === "sl" ? "SL " : ""}${o.type === "limit" ? "limite " + fmtPx(o.price, SYM(o.sym)) : o.type === "stop" ? "stop " + fmtPx(o.stop, SYM(o.sym)) : "marché"}${o.st === "pending" ? " · en attente" : ""}</span>${o.type !== "market" ? `<button class="gr-ib" data-mod="${o.id}" title="Modifier le prix">✎</button>` : ""}<button class="gr-ib" data-can="${o.id}" title="Annuler">${ICO.x}</button></div>`).join("") : `<div class="gr-dtnone">Aucun ordre</div>`}
+    <button class="gr-btn gr-dtflat" id="dtFlat"${!ords.length && !Object.keys(A.pos).length ? " disabled" : ""}>Tout fermer</button>
+    <div class="gr-dth">Historique <em>${A.trades.length || ""}</em></div>
+    ${A.trades.length ? A.trades.slice(0, 12).map((t) => `<div class="gr-dtrow gr-dtsm"><span>${new Date(t.t1 * 1000).toLocaleString("fr-FR", { timeZone: "America/New_York", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><span>${E(symCode(t.sym))} ${t.side === "long" ? "Long" : "Short"} ${t.qty} · ${fmtPx(t.entry, SYM(t.sym))} → ${fmtPx(t.exit, SYM(t.sym))}</span><b class="${t.pnl >= 0 ? "up" : "dn"}">${money(t.pnl)}</b></div>`).join("") : `<div class="gr-dtnone">Aucun trade</div>`}
+  </div>`;
+  const q = (id) => P.querySelector(id), num = (v) => parseFloat(String(v).replace(",", "."));
+  const set = (k, v) => { TPF[k] = v; tpSave(); renderTrade(); paQuick(); };
+  q("#dtMore").onclick = () => menuAt(q("#dtMore"), [
+    { t: "Boutons Vendre / Acheter sur le graphique", on: !!TPF.quick, f: () => set("quick", !TPF.quick) },
+    { t: "Confirmer chaque ordre du panneau", on: !!TPF.confirm, f: () => set("confirm", !TPF.confirm) }, "-",
+    { t: `Écart Bid / Ask : ${TPF.spread} tick(s)…`, f: () => askText("Écart Bid / Ask (ticks)", String(TPF.spread), (v) => { const n = Math.max(0, Math.round(num(v))); if (fin(n)) set("spread", n); }) },
+    { t: `Frais par contrat : ${money(A.fee || 0)}…`, f: () => askText("Frais par contrat et par côté ($)", String(A.fee || 0), (v) => { const n = num(v); if (fin(n) && n >= 0) { A.fee = n; paSave(); renderTrade(); } }) }, "-",
+    { t: "Réinitialiser le compte démo…", f: () => askText("Solde de départ du compte démo ($)", String(A.start || 100000), (v) => { const n = num(v); if (!(fin(n) && n > 0)) return toast("Solde invalide", true); PA.A = grPaper.fresh(n); paSave(); paRefresh(); toast("Compte démo réinitialisé : " + money(n)); }) }]);
+  P.querySelectorAll("[data-side]").forEach((b) => (b.onclick = () => set("side", b.dataset.side)));
+  P.querySelectorAll("[data-ty]").forEach((b) => (b.onclick = () => { TPF.type = b.dataset.ty; if (TPF.type !== "market" && px) { const sg = TPF.type === "limit" ? (buy ? -1 : 1) : buy ? 1 : -1; TPF.px = paRound(ref + sg * 10 * sp.tick, sp.tick); TPF.pxT = 10; } set("type", TPF.type); }));
+  const pxI = q("#dtPx"); if (pxI) { pxI.onchange = () => { const v = num(pxI.value); if (TPF.pxMode === "ticks") TPF.pxT = Math.max(0, Math.round(v || 0)); else TPF.px = v; tpSave(); renderTrade(); };
+    q("#dtPxM").onclick = () => { if (TPF.pxMode === "ticks") { TPF.pxMode = "price"; TPF.px = e; } else { TPF.pxMode = "ticks"; TPF.pxT = Math.abs(offT); } tpSave(); renderTrade(); }; }
+  q("#dtQM").onchange = () => set("qMode", q("#dtQM").value);
+  q("#dtQ").onchange = () => { const v = num(q("#dtQ").value); if (TPF.qMode === "risk") TPF.risk = Math.max(1, v || 1); else TPF.qty = Math.max(1, Math.round(v || 1)); tpSave(); renderTrade(); paQuick(); };
+  P.querySelectorAll("[data-sec]").forEach((b) => (b.onclick = () => set(b.dataset.sec, !TPF[b.dataset.sec])));
+  P.querySelectorAll("[data-xon]").forEach((b) => (b.onchange = () => { const [i, k] = b.dataset.xon.split(":"); TPF.ex[+i][k + "On"] = b.checked; tpSave(); renderTrade(); }));
+  P.querySelectorAll("[data-xv]").forEach((b) => (b.onchange = () => { const [i, k] = b.dataset.xv.split(":"), x = TPF.ex[+i], v = num(b.value); x[k] = x[k + "M"] === "price" ? v : Math.max(1, Math.round(Math.abs(v) || 1)); tpSave(); renderTrade(); }));
+  P.querySelectorAll("[data-xm]").forEach((b) => (b.onclick = () => { const [i, k] = b.dataset.xm.split(":"), x = TPF.ex[+i], v = tkExit(x, k, e, sp.tick); if (x[k + "M"] === "price") { x[k + "M"] = "ticks"; x[k] = fin(v) && fin(e) ? Math.max(1, ticksOf(v, e, sp.tick)) : x[k]; } else { x[k + "M"] = "price"; x[k] = fin(v) ? v : x[k]; } tpSave(); renderTrade(); }));
+  P.querySelectorAll("[data-lq]").forEach((b) => (b.onchange = () => { TPF.ex[+b.dataset.lq].qty = Math.max(1, Math.round(num(b.value) || 1)); tpSave(); renderTrade(); }));
+  P.querySelectorAll("[data-ldel]").forEach((b) => (b.onclick = () => { TPF.ex.splice(+b.dataset.ldel, 1); tpSave(); renderTrade(); }));
+  const add = q("#dtAdd"); if (add) add.onclick = () => { const l = TPF.ex[TPF.ex.length - 1]; TPF.ex.push({ tpOn: true, tpM: "ticks", tp: (l.tpM === "ticks" ? +l.tp : 240) * 2 || 480, slOn: l.slOn, slM: l.slM, sl: l.sl, qty: 1 }); if (TPF.qMode !== "risk" && TPF.qty < TPF.ex.length) TPF.qty = TPF.ex.length; tpSave(); renderTrade(); };
+  const tif = q("#dtTif"); if (tif) tif.onchange = () => set("tif", tif.value);
+  q("#dtGo").onclick = tkSend;
+  P.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => { grPaper.flatten(A, b.dataset.close, paPx, NOW(), paSpec); paSave(); paRefresh(); toast("Position démo fermée"); }));
+  P.querySelectorAll("[data-can]").forEach((b) => (b.onclick = () => { grPaper.cancel(A, +b.dataset.can); paSave(); paRefresh(); }));
+  P.querySelectorAll("[data-mod]").forEach((b) => (b.onclick = () => { const o = A.orders.find((x) => x.id === +b.dataset.mod); if (!o) return; const sp2 = paSpec(o.sym);
+    askText(`Nouveau prix (${o.type === "stop" ? "stop" : "limite"})`, String(o.type === "stop" ? o.stop : o.price), (v) => { const p = paRound(num(v), sp2.tick); if (!fin(p)) return toast("Prix invalide", true); grPaper.modify(A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); }); }));
+  q("#dtFlat").onclick = () => { if (!window.confirm("Fermer toutes les positions et annuler tous les ordres du compte démo ?")) return; grPaper.flatten(A, null, paPx, NOW(), paSpec); paSave(); paRefresh(); toast("Tout est fermé sur le compte démo"); };
+}
+/** chiffres en direct sans redessiner le panneau (saisie en cours gardée) */
+function paTickUI() {
+  const A = PA.A; if (!A) return;
+  if (STATE.panel === "trade") { const P = $r("#grRPanel"), s = paSym(), px = s && paPx(s); if (P && px) { const sp = SYM(s), b = P.querySelectorAll(".gr-dtside b"); if (b.length === 2) { b[0].textContent = fmtPx(px.bid, sp); b[1].textContent = fmtPx(px.ask, sp); }
+      let all = 0; P.querySelectorAll("[data-up]").forEach((x) => { const k = x.dataset.up, u = grPaper.upnl(A, k, paPx(k), paSpec(k)); x.textContent = money(u); x.className = u >= 0 ? "up" : "dn"; });
+      for (const k of Object.keys(A.pos)) all += grPaper.upnl(A, k, paPx(k), paSpec(k)); const u = $r("#dtUp"); if (u) { u.textContent = money(all); u.className = all >= 0 ? "up" : "dn"; } } }
+  if (STATE.panel === "trade") { const P = $r("#grRPanel"), s = paSym(), px = s && paPx(s), g = P && P.querySelector("#dtGo small");
+    if (g && px && !(document.activeElement && P.contains(document.activeElement))) { const { o, e } = tkOrder(s, px); g.textContent = `${o.qty} ${symCode(s)} @ ${fmtPx(e, SYM(s))} ${TPF.type === "market" ? "MARCHÉ" : TPF.type === "limit" ? "LIMITE" : "STOP"}`; } }
+  paQuick();
+}
+
+/* ----- boutons VENDRE / ACHETER sur le graphique actif ----- */
+function paQuick() {
+  const c = activeCell(); if (!c || !TPF.quick || STATE.mode === "tv") { if (PA.qt) PA.qt.hidden = true; return; }
+  if (!PA.qt || !PA.qt.isConnected) {
+    PA.qt = el("div", "gr-qt", `<button class="gr-qtb sell" data-q="sell"><b>—</b><span>VENDRE</span></button><div class="gr-qtm"><em>—</em><input type="number" min="1" step="1" title="Quantité"></div><button class="gr-qtb buy" data-q="buy"><b>—</b><span>ACHETER</span></button>`);
+    PA.qt.addEventListener("pointerdown", (e) => e.stopPropagation()); PA.qt.addEventListener("mousedown", (e) => e.stopPropagation());
+    PA.qt.querySelector("input").onchange = (e) => { TPF.qty = Math.max(1, Math.round(+e.target.value || 1)); tpSave(); if (STATE.panel === "trade") renderTrade(); };
+    PA.qt.onclick = (e) => { const b = e.target.closest("[data-q]"); if (!b) return; const s = paSym(); paPlace({ sym: s, side: b.dataset.q, type: "market", qty: Math.max(1, Math.round(+TPF.qty || 1)), exits: [] }); };
+  }
+  if (PA.qt.parentNode !== c.el) c.el.append(PA.qt); PA.qt.hidden = false;
+  const lg = c.main && c.main.leg; if (lg) { const r = lg.getBoundingClientRect(), r0 = c.el.getBoundingClientRect(); PA.qt.style.top = Math.max(8, Math.round(r.bottom - r0.top + 6)) + "px"; }
+  const px = paPx(c.st.sym), sp = c.spec, b = PA.qt.querySelectorAll("b"), inp = PA.qt.querySelector("input");
+  b[0].textContent = px ? fmtPx(px.bid, sp) : "—"; b[1].textContent = px ? fmtPx(px.ask, sp) : "—"; PA.qt.querySelector("em").textContent = px ? fmtPx(px.ask - px.bid, sp) : "—";
+  if (document.activeElement !== inp) inp.value = Math.max(1, Math.round(+TPF.qty || 1));
+}
+
+/* ----- lignes de la position et des ordres sur le graphique actif ; glisser une ligne d'ordre = modifier son prix ----- */
+function paLines() {
+  const keep = new Set(), c = activeCell(), A = PA.A;
+  if (c && A && c.series) {
+    const s = c.st.sym, add = (key, price, color, title, style, o) => { if (!fin(price)) return; keep.add(key); let L = PA.lines.get(key);
+      if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
+      const opt = { price, color, lineWidth: 1, lineStyle: style, axisLabelVisible: true, title }, dragging = PA.drag && PA.drag.key === key;
+      if (L) { if (!dragging) { L.line.applyOptions(opt); L.price = price; } } else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt), price })); L.ord = o || null; };
+    const P = A.pos[s]; if (P) add("pos", P.avg, "#2962ff", `${P.q > 0 ? "Long" : "Short"} ${Math.abs(P.q)}`, 0);
+    grPaper.live(A, s).forEach((o) => { if (o.st === "pending" && !P) { /* sortie d'un ordre pas encore exécuté : affichée en pointillés clairs */ }
+      const col = o.kind === "tp" ? "#089981" : o.kind === "sl" ? "#f23645" : o.side === "buy" ? "#2962ff" : "#f7525f";
+      add("o" + o.id, o.type === "stop" ? o.stop : o.price, o.st === "pending" ? alpha(col, 0.55) : col, `${o.kind === "tp" ? "TP" : o.kind === "sl" ? "SL" : o.side === "buy" ? "Achat" : "Vente"} ${o.qty} ${o.type === "stop" ? "stop" : "limite"}`, 2, o); });
+  }
+  for (const [k, L] of PA.lines) if (!keep.has(k)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } PA.lines.delete(k); }
+}
+function paHit(e) {
+  if (!PA.lines.size || e.button !== 0) return null;
+  for (const [k, L] of PA.lines) { if (!L.ord) continue; const host = L.cell.main && L.cell.main.host; if (!host || !host.contains(e.target)) continue;
+    const r = host.getBoundingClientRect(), y = L.series.priceToCoordinate(L.price); if (y != null && Math.abs(e.clientY - r.top - y) <= 5 && e.clientX - r.left < r.width - 60) return { key: k, L, top: r.top }; }
+  return null;
+}
+addEventListener("pointerdown", (e) => { const h = paHit(e); if (!h) return; e.stopImmediatePropagation(); e.preventDefault(); PA.drag = h; document.body.style.cursor = "ns-resize"; }, true);
+addEventListener("mousedown", (e) => { if (PA.drag) { e.stopImmediatePropagation(); e.preventDefault(); } }, true);
+addEventListener("pointermove", (e) => {
+  if (PA.drag) { e.stopImmediatePropagation(); const { L, top } = PA.drag, p = L.series.coordinateToPrice(e.clientY - top); if (fin(p)) { L.price = paRound(p, L.cell.spec.tick); L.line.applyOptions({ price: L.price }); } return; }
+  if (PA.lines.size && !e.buttons) { const h = paHit(e); if (h) { document.body.style.cursor = "ns-resize"; PA.hov = true; } else if (PA.hov) { document.body.style.cursor = ""; PA.hov = false; } }
+}, true);
+addEventListener("pointerup", (e) => { if (!PA.drag) return; e.stopImmediatePropagation(); const { L } = PA.drag, o = L.ord, p = L.price; PA.drag = null; document.body.style.cursor = "";
+  const cur = o.type === "stop" ? o.stop : o.price; if (!fin(p) || p === cur) { paLines(); return; }
+  const P = PA.A.pos[o.sym], px = paPx(o.sym);
+  if (px && o.kind && P && (o.kind === "sl" ? (P.q > 0 ? p >= px.bid : p <= px.ask) : (P.q > 0 ? p <= px.bid : p >= px.ask))) { toast(o.kind === "sl" ? "Stop loss du mauvais côté du prix" : "Take profit du mauvais côté du prix", true); paLines(); return; }
+  grPaper.modify(PA.A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); toast(`Ordre démo déplacé à ${fmtPx(p, L.cell.spec)}`); }, true);
+paLoad();
+setInterval(() => { paEngine(); if (viewOn()) { paTickUI(); paLines(); } }, 500);
 
 /* ---------- démarrage (à la première ouverture de la page) ---------- */
 let booted = false;

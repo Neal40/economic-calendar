@@ -2,6 +2,16 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.85.0] — 2026-11-22
+Page Graphique : **compte démo** (paper trading) façon TradingView — trader depuis le graphique sans argent réel.
+### Ajouté
+- Panneau de droite **Trading** (icône $) : bloc **Vendre / Acheter** avec Bid, Ask et écart ; onglets **Marché / Limite / Stop** ; prix saisi en prix ou en ticks (⇄, « Ask + 10 ») ; **Quantité** en contrats ou au **Risque $** (contrats calculés avec le stop loss) ; valeur du contrat, solde disponible, valeur du tick ; **Sorties** take profit / stop loss avec interrupteurs, en prix ou en ticks, **Risk / Reward**, **+ Ajouter un niveau** (plusieurs TP / SL avec leur quantité) ; **Réglages avancés** : durée de validité Jour (17:00 NY) / Semaine (vendredi 17:00 NY) / Jusqu'à annulation ; gros bouton « Acheter 1 NQZ26 @ prix LIMITE ».
+- Compte démo : solde, P&L latent et réalisé, positions (Fermer), ordres en cours (modifier, annuler), **Tout fermer**, historique des trades ; menu ⚙ : boutons sur le graphique, confirmation, écart Bid / Ask (ticks), frais par contrat, **Réinitialiser le compte** (solde de départ au choix, 100 000 $ par défaut).
+- Boutons **VENDRE / ACHETER** sur le graphique actif avec la quantité au milieu (un clic = ordre au marché), comme TradingView.
+- Lignes de la position et des ordres (TP vert, SL rouge) sur le graphique ; **glisser une ligne** modifie le prix de l'ordre.
+- Dessins **Position longue / courte** : menu du dessin › **Envoyer en ordre (compte démo)**.
+- Moteur `grPaper` (pur, testé par `tools/check.js`) : exécution au Ask / Bid, limites et stops déclenchés par le prix en direct, sorties activées à l'exécution, TP / SL en OCO, position nette (moyenne, retournement), frais. Marche sur le site web et dans l'app ; aucun vrai ordre n'est envoyé. Données : localStorage `gr-paper` (compte) et `gr-trade` (ticket).
+
 ## [1.84.0] — 2026-11-22
 Moteur Pine : plusieurs positions à la fois.
 ### Ajouté

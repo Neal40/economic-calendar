@@ -428,6 +428,48 @@ try {
   eq("pairs (heures strictement croissantes, après la dernière bougie)", F.pairs([1, 2, 3, 4], (s) => [0, 10, 20, 20, 30][s], 5), [[1, 10], [2, 20], [4, 30]]);
 } catch (e) { errors.push("btFut : " + e.message); }
 
+// v1.85 : compte démo (paper trading) de la page Graphique (grPaper) — ordres, sorties OCO, position nette, P&L
+try {
+  const G = new Function(grab("grPaper") + "; return grPaper;")(), eq = (n, a, b) => { if (JSON.stringify(a) !== JSON.stringify(b)) errors.push(`grPaper.${n} : ${JSON.stringify(a)} au lieu de ${JSON.stringify(b)}`); };
+  const S = { tick: 0.25, pv: 2 }, px = { bid: 100, ask: 100.25 };
+  let A = G.fresh(10000);
+  // achat au marché au Ask avec TP / SL : sorties activées
+  let r = G.place(A, { sym: "MNQ", side: "buy", type: "market", qty: 2, exits: [{ qty: 2, tp: 110, sl: 95 }] }, px, S, 1);
+  eq("marché ok", r.ok, true); eq("position", A.pos.MNQ, { q: 2, avg: 100.25, t: 1 });
+  eq("sorties actives", G.live(A, "MNQ").map((o) => [o.kind, o.side, o.type, o.st]), [["tp", "sell", "limit", "working"], ["sl", "sell", "stop", "working"]]);
+  // le TP est touché (Bid monte à 110) : P&L = (110 - 100.25) x 2 x 2 $ ; SL annulé (OCO), position à 0
+  const f = G.tick(A, "MNQ", 105, 110, 0.25, 2, S);
+  eq("TP exécuté", f.map((o) => o.kind), ["tp"]); eq("plus de position", A.pos.MNQ, undefined); eq("solde", A.bal, 10039);
+  eq("SL annulé", G.live(A).length, 0); eq("trade", [A.trades[0].side, A.trades[0].qty, A.trades[0].pnl], ["long", 2, 39]);
+  // refus : limite d'achat au-dessus du Ask, SL du mauvais côté, sorties > quantité
+  eq("limite au-delà du prix = exécutée au Ask", (() => { const B = G.fresh(1000); G.place(B, { sym: "X", side: "buy", type: "limit", qty: 1, price: 101 }, px, S, 1); return B.pos.X; })(), { q: 1, avg: 100.25, t: 1 });
+  eq("refus stop", /au-dessus du prix Ask/.test(G.check({ sym: "X", side: "buy", type: "stop", qty: 1, stop: 100 }, px)), true);
+  eq("refus SL", /sous l'entrée/.test(G.check({ sym: "X", side: "buy", type: "market", qty: 1, exits: [{ qty: 1, sl: 101 }] }, px)), true);
+  eq("refus niveaux", /dépassent/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 1, exits: [{ qty: 1, tp: 90 }, { qty: 1, tp: 80 }] }, px)), true);
+  eq("refus quantité", /entier/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 0 }, px)), true);
+  // vente stop en attente : déclenchée quand le Bid passe sous le stop ; sorties en attente jusque-là
+  A = G.fresh(10000);
+  r = G.place(A, { sym: "MES", side: "sell", type: "stop", qty: 1, stop: 98, exits: [{ qty: 1, sl: 99 }] }, px, { tick: 0.25, pv: 5 }, 1);
+  eq("stop en attente", G.live(A).map((o) => o.st), ["working", "pending"]);
+  G.tick(A, "MES", 99, 100, 0.25, 2, { tick: 0.25, pv: 5 }); eq("pas encore", A.pos.MES, undefined);
+  G.tick(A, "MES", 97.5, 99, 0.25, 3, { tick: 0.25, pv: 5 }); eq("short ouvert", A.pos.MES && [A.pos.MES.q, A.pos.MES.avg], [-1, 98]);
+  // SL d'achat (Ask) touché : perte de 1 point x 5 $
+  G.tick(A, "MES", 98.75, 98.75, 0.25, 4, { tick: 0.25, pv: 5 }); eq("SL", [A.pos.MES, A.bal], [undefined, 9995]);
+  // position nette : achat 1 puis vente 3 = retournement short 2 ; frais par contrat
+  A = G.fresh(10000); A.fee = 1;
+  G.place(A, { sym: "NQ", side: "buy", type: "market", qty: 1 }, px, { tick: 0.25, pv: 20 }, 1);
+  G.place(A, { sym: "NQ", side: "sell", type: "market", qty: 3 }, { bid: 101, ask: 101.25 }, { tick: 0.25, pv: 20 }, 2);
+  eq("retournement", [A.pos.NQ.q, A.pos.NQ.avg], [-2, 101]); eq("solde avec frais", A.bal, 10000 - 1 - 3 + 0.75 * 20);
+  // tout fermer + expiration + modifier / annuler
+  eq("flatten", G.flatten(A, null, () => ({ bid: 100, ask: 100.25 }), 3, () => ({ tick: 0.25, pv: 20 })), ["NQ"]); eq("flatten position", A.pos, {});
+  r = G.place(A, { sym: "NQ", side: "buy", type: "limit", qty: 1, price: 95, exp: 10 }, px, S, 4);
+  eq("modifier", G.modify(A, r.id, { price: 96 }), true); eq("prix modifié", A.orders.find((o) => o.id === r.id).price, 96);
+  G.tick(A, "NQ", 99, 100, 0.25, 10, S); eq("expiré", A.orders.find((o) => o.id === r.id).st, "expired");
+  r = G.place(A, { sym: "NQ", side: "buy", type: "limit", qty: 1, price: 95, exits: [{ qty: 1, tp: 97 }] }, px, S, 11);
+  eq("annuler (avec sorties)", G.cancel(A, r.id), 2);
+  eq("P&L latent", (() => { const B = G.fresh(1000); G.place(B, { sym: "MNQ", side: "buy", type: "market", qty: 1 }, px, S, 1); return G.upnl(B, "MNQ", { bid: 101.25, ask: 101.5 }, S); })(), 2);
+} catch (e) { errors.push("grPaper : " + e.message); }
+
 const invoked =new Set([...read("desktop/preload.js").matchAll(/ipcRenderer\.invoke\("([^"]+)"/g)].map((m) => m[1]));
 const handled = new Set([...read("desktop/main.js").matchAll(/ipcMain\.handle\("([^"]+)"/g)].map((m) => m[1]));
 for (const c of invoked) if (!handled.has(c)) errors.push(`IPC : preload appelle "${c}" sans ipcMain.handle dans main.js`);
