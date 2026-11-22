@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.83.0] — 2026-11-22
+Page Graphique : les stratégies Pine gardent le calcul m1 sur toutes les unités de temps.
+### Ajouté
+- Une stratégie Pine (`strategy()`) affichée en 2 min … 4 h est calculée sur les bougies **m1** du même contrat (mêmes trades, win rate, P&L qu'en 1 minute ; avant, en 15 min, TP et SL dans la même bougie faussaient tout), puis reportée sur les bougies du graphique : flèches d'entrée / sortie, lignes, labels, fonds, plots (dernière valeur de chaque bougie) et tableau. Les indicateurs (`indicator()`) restent calculés sur l'unité affichée. Désactivable : localStorage `gr-pine-m1` = `"0"`.
+
 ## [1.82.0] — 2026-11-22
 Backtesteur : backtest automatique d'un script Pine `strategy()`.
 ### Ajouté

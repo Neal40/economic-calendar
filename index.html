@@ -12762,13 +12762,37 @@ function pineDef(id) {
   const x = pineList().find((s) => s.id === id); if (!x) return { n: "Script supprimé", sh: "Script", cat: "Mes scripts", inp: [], pl: [], calc: () => ({}) };
   const memo = PINEDEF.get(x); if (memo) return memo; const d = pineDef0(id, x); PINEDEF.set(x, d); return d;
 }
+// v1.83 : stratégies calculées en m1 sur les graphiques 2 min … 4 h (réglage localStorage « gr-pine-m1 », activé par défaut) ; résultat m1 reporté sur les bougies du graphique (dernière valeur de chaque bougie)
+const PINE_M1 = (() => { try { return localStorage.getItem("gr-pine-m1") !== "0"; } catch (e) { return true; } })(), PINE_M1SUB = new Set(), PINE_TF = new WeakMap();
+function pineToTf(r1, M, B, sec) {
+  if (!r1 || r1.error || !B.length || !M.length) return r1;
+  const key = B.length + "|" + B[0][0] + "|" + B[B.length - 1][0] + "|" + M.length, memo = PINE_TF.get(r1); if (memo && memo.key === key) return memo.r;
+  const n = B.length, map = new Int32Array(M.length); let j = 0;
+  for (let i = 0; i < M.length; i++) { const t = M[i][0]; while (j + 1 < n && B[j + 1][0] <= t) j++; map[i] = t < B[0][0] ? -1 : j; }
+  const last = M.length - 1, ratio = 60 / sec;
+  const mx = (x) => { if (!Number.isFinite(x)) return x; const i = Math.round(x); if (i < 0) return x * ratio; if (i > last) return map[last] + (x - last) * ratio; return map[i]; };
+  const arr = (a, F) => { if (!a) return a; const o = F ? new F(n).fill(NaN) : new Array(n); for (let i = 0; i < a.length && i < M.length; i++) { const k = map[i]; if (k >= 0 && a[i] !== undefined && !(typeof a[i] === "number" && a[i] !== a[i])) o[k] = a[i]; } return o; };
+  const d = r1.draw, r = { ...r1, off: 0, plots: r1.plots.map((p) => ({ ...p, data: arr(p.data, Float64Array), colors: arr(p.colors) })), marks: r1.marks.filter((m) => m.i >= 0 && m.i <= last && map[m.i] >= 0).map((m) => ({ ...m, i: map[m.i] })),
+    draw: d ? { ...d, lines: d.lines.map((l) => ({ ...l, x1: mx(l.x1), x2: mx(l.x2) })), labels: d.labels.map((l) => ({ ...l, x: mx(l.x) })), boxes: d.boxes.map((b) => ({ ...b, x1: mx(b.x1), x2: mx(b.x2) })),
+      linefills: d.linefills.map((f) => ({ ...f, a: [mx(f.a[0]), f.a[1], mx(f.a[2]), f.a[3]], b: [mx(f.b[0]), f.b[1], mx(f.b[2]), f.b[3]] })), polylines: d.polylines.map((p) => ({ ...p, pts: p.pts.map(([x, y]) => [mx(x), y]) })),
+      fills: d.fills.map((f) => ({ ...f, colors: arr(f.colors) })), bgs: d.bgs.map((b) => ({ ...b, offset: 0, colors: arr(b.colors) })), barcolors: arr(d.barcolors) } : d,
+    warns: [...(r1.warns || []), "Stratégie calculée sur les bougies m1 (mêmes trades qu'en 1 minute)."] };
+  PINE_TF.set(r1, { key, r }); return r;
+}
 const PINEDEF = new WeakMap(); // définition gardée par script (même objet tant que le stockage ne change pas)
 function pineDef0(id, x) {
   const v2 = x.lang === "pine" && window.PineAsync && !/\/\/\s*@version\s*=\s*[1-4]\b/.test(x.code);
   return { n: x.name + (x.lang === "pine" ? " (Pine)" : " (TS)"), sh: x.name, cat: "Mes scripts", pine: true, inp: [], pl: [], ov: v2 ? PineAsync.overlayOf(x.code) : null, src: x,
     calc: (B, I, X, inst) => {
       if (v2) { // calcul en arrière-plan (Web Worker) : le graphique garde le dernier résultat en attendant
-        const iid = (inst && inst.id) || id, r = PineAsync.request("gr:" + iid, x.code, B, { inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
+        const iid = (inst && inst.id) || id, inp = Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), sec = ivSec(X.iv);
+        // v1.83 : une stratégie (strategy()) affichée en 2 min … 4 h est calculée sur les bougies m1 (mêmes trades et stats qu'en m1), puis reportée sur les bougies du graphique
+        if (PINE_M1 && /^\s*strategy\s*\(/m.test(x.code) && sec > 60 && sec < 86400 && X.spec.src !== "ff" && X.spec.src !== "csv") {
+          const f1 = getFeed(X.sym, "1"); if (!PINE_M1SUB.has(iid + "|" + X.sym)) { PINE_M1SUB.add(iid + "|" + X.sym); f1.subs.add((t) => { if (t === "reset" || t === "tick" || t === "prepend") pineRepaint(iid); }); }
+          if (!f1.ready) { f1.load().then(() => pineRepaint(iid)); return {}; }
+          const r1 = PineAsync.request("gr:" + iid + ":m1", x.code, f1.bars, { inputs: inp, tfSec: 60, tfName: "1", sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
+          if (!r1) return {}; const r = pineToTf(r1, f1.bars, B, sec); return { _pine: r, _err: r.error || "" }; }
+        const r = PineAsync.request("gr:" + iid, x.code, B, { inputs: inp, tfSec: sec, tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
         return r ? { _pine: r, _err: r.error || "" } : {}; }
       const c = pineCmp(x); if (c.error) return { _err: c.error };
       const r = window.btIND.run(c, B.map((b) => [b[0], b[1], b[2], b[3], b[4], b[5]]), { ny: (t) => t + nyOff(t), inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv });
