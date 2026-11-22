@@ -7055,9 +7055,10 @@ const PineDraw = (() => {
     const d = r && r.draw; if (!d) return; c.save();
     try {
       const n = opts.n || 0, i0 = Math.max(0, Math.floor(G.lOfX ? G.lOfX(-20) : 0)), i1 = Math.min(n - 1, Math.ceil(G.lOfX ? G.lOfX(G.W + 20) : n - 1));
-      if (!opts.noBg) (d.bgs || []).forEach((B) => { let s0 = -1, c0 = null; // v1.81 : bougies consécutives de même couleur = un seul rectangle (plus de rayures au dézoom, rendu bien plus rapide)
-        const flush = (e) => { if (c0 === null) return; const x0 = Math.round(G.lx(s0 - 0.5)), x1 = Math.round(G.lx(e + 0.5)); c.fillStyle = c0; c.fillRect(x0, 0, Math.max(1, x1 - x0), G.H); c0 = null; };
-        for (let i = i0; i <= i1; i++) { const col = B.colors[i - (B.offset || 0)], ok = okc(col); if (ok && col === c0) continue; flush(i - 1); if (ok) { c0 = col; s0 = i; } } flush(i1); });
+      if (!opts.noBg) (d.bgs || []).forEach((B) => { // v1.81 : plages de même couleur calculées une fois (cache sur le résultat), puis seules les plages visibles sont dessinées
+        let R = B._runs; if (!R) { R = B._runs = []; const off = B.offset || 0, C = B.colors; let s0 = -1, c0 = null; for (let k = 0; k <= C.length; k++) { const col = k < C.length ? C[k] : null, ok = col != null && okc(col); if (ok && col === c0) continue; if (c0 !== null) R.push([s0 + off, k - 1 + off, c0]); c0 = ok ? col : null; s0 = k; } }
+        let lo = 0, hi = R.length; while (lo < hi) { const m = (lo + hi) >> 1; if (R[m][1] < i0) lo = m + 1; else hi = m; }
+        for (let k = lo; k < R.length && R[k][0] <= i1; k++) { const [a, b2, col] = R[k], x0 = Math.round(G.lx(Math.max(a, i0 - 1) - 0.5)), x1 = Math.round(G.lx(Math.min(b2, i1 + 1) + 0.5)); c.fillStyle = col; c.fillRect(x0, 0, Math.max(1, x1 - x0), G.H); } });
       fills(c, G, r, i0, i1);
       (d.linefills || []).forEach((F) => { if (!okc(F.color)) return; const p = [[F.a[0], F.a[1]], [F.a[2], F.a[3]], [F.b[2], F.b[3]], [F.b[0], F.b[1]]].map(([x, y]) => [G.lx(x), G.y(y)]); if (!p.flat().every(fin)) return; c.fillStyle = F.color; c.beginPath(); p.forEach(([x, y], k) => (k ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.fill(); });
       (d.boxes || []).forEach((B) => box(c, G, B));
@@ -12443,7 +12444,7 @@ class Feed {
     if (this.loading) return this.loading; if (this.ready && !force) return;
     this.loading = (async () => {
       try { this.err = ""; this.emit("loading");
-        const b = await histOf(this, null, INIT_N(this.iv)); this.bars = b; this.done = false; this.ready = true; this.ver++; this.emit("reset");
+        const b = await histOf(this, null, INIT_N(this.iv)); this.bars = b; const s1 = ivSec(this.iv); this.done = HIST_1Y() && s1 >= 60 && s1 < 3600; this.ready = true; this.ver++; this.emit("reset"); // v1.81 : « 1 an » chargé d'un coup -> pas de chargement automatique au bord gauche (chaque ajout redessinait ~600 000 bougies et relançait les stratégies)
       } catch (e) { this.err = e.code === "login" ? "login" : String(e.message || e); this.ready = false; this.emit("error", this.err); }
       finally { this.loading = null; }
     })();
