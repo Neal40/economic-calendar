@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.90.0] — 2026-11-22
+Arborescence des objets : clic droit = menu façon TradingView.
+### Ajouté
+- Backtesteur et page Graphique : un clic droit sur un dessin dans l'**Arborescence des objets** ouvre le même menu que sur le graphique (alerte, Espace de Travail, Ordre de visualisation, Visibilité des intervalles, groupe, cloner, copier, renommer, verrouiller, cacher, retirer, aller à, configurations), avec le même style.
+- Clic droit sur un groupe : Renommer, Verrouiller, Cacher, Dégrouper, Retirer le groupe, dans le même style.
+
 ## [1.89.0] — 2026-11-22
 Backtesteur : menu clic droit des dessins identique à TradingView.
 ### Ajouté

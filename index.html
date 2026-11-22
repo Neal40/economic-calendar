@@ -10255,8 +10255,8 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     gplus: SG('<path d="M4.5 9a2 2 0 0 1 2-2h4l2 2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/><path d="M14 12.5v6M11 15.5h6"/>'), clone: SG('<rect x="9.5" y="9.5" width="13" height="13" rx="2"/><path d="M18.5 9.5V7.5a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2"/>') };
   function ctxMenu(x, y, fid) {
     const m = $("btCtx"), L = selShapes(), f = fid && folders.find((v) => v.id === fid), it = (a, t, k) => `<div class="ci" data-c="${a}">${t}${k ? `<span>${k}</span>` : ""}</div>`;
-    m.classList.toggle("tv", !f);
-    if (f) m.innerHTML = it("ren", "Renommer") + it("ungroup", "Dégrouper") + it("fhide", f.hidden ? "Afficher" : "Masquer") + it("flock", f.locked ? "Déverrouiller" : "Verrouiller") + "<i></i>" + it("fdel", "Supprimer le groupe");
+    m.classList.add("tv"); const tv0 = (a, t, ic, k) => `<div class="ci" data-c="${a}"><em class="cic">${ic || ""}</em><b class="ct">${esc(t)}</b>${k ? `<span>${k}</span>` : ""}</div>`;
+    if (f) m.innerHTML = tv0("ren", "Renommer", ICON.pencil) + "<i></i>" + tv0("flock", f.locked ? "Déverrouiller" : "Verrouiller", ICON[f.locked ? "lockOpen" : "lockClosed"]) + tv0("fhide", f.hidden ? "Afficher" : "Cacher", ICON[f.hidden ? "eye" : "eyeOff"]) + "<i></i>" + tv0("ungroup", "Dégrouper") + tv0("fdel", "Retirer le groupe", ICON.trash, "Suppr");
     else {
       const s0 = L[0]; if (!s0) return; const nm = String(s0.name || TOOLS[s0.type] || "dessin"), low = nm.charAt(0).toLowerCase() + nm.slice(1), names = Object.keys(tpls()[s0.type] || {}), vr = s0.tfR ? s0.tfR.op : s0.sync === "none" && s0.tfOnly != null ? "eq" : "all";
       const tv = (a, t, ic, k, ck) => `<div class="ci" data-c="${a}"><em class="cic">${ck != null ? (ck ? "✓" : "") : ic || ""}</em><b class="ct">${esc(t)}</b>${k ? `<span>${k}</span>` : ""}</div>`;
@@ -10491,7 +10491,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     };
     TL.ondblclick = (e) => { if (e.target.closest(".nm")) rename(e.target.closest(".row")); };
     TL.oncontextmenu = (e) => { const r = e.target.closest(".row"); if (!r || (!r.dataset.id && !r.dataset.fid)) return; e.preventDefault();
-      if (r.dataset.id && !msel.has(r.dataset.id)) { msel = new Set([r.dataset.id]); sel = shapes.find((x) => x.id === r.dataset.id) || sel; tree(); } treeMenu(e.clientX, e.clientY, r.dataset.fid); };
+      if (r.dataset.id && !msel.has(r.dataset.id)) { msel = new Set([r.dataset.id]); sel = shapes.find((x) => x.id === r.dataset.id) || sel; tree(); } ctxMenu(e.clientX, e.clientY, r.dataset.fid); }; // v1.90 : même menu façon TradingView que sur le graphique
     let dragIds = null, dragF = null; // glisser-déposer : dessins vers un groupe / avant un dessin / à la racine, groupes entre eux
     const clearDrop = () => TL.querySelectorAll(".drop").forEach((x) => x.classList.remove("drop"));
     TL.ondragstart = (e) => { const r = e.target.closest(".row"); if (!r) return; if (r.dataset.fid) dragF = r.dataset.fid; else dragIds = msel.has(r.dataset.id) ? [...msel] : [r.dataset.id]; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", "ict"); };
@@ -14415,6 +14415,16 @@ function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || S
   const members = (g) => L.filter((d) => d.grp === g), selList = () => L.filter((d) => TSEL.has(d.id));
   const rename = (el, cur, cb) => { const inp = document.createElement("input"); inp.className = "gr-in sm gr-tren"; inp.value = cur; el.replaceWith(inp); inp.focus(); inp.select(); let done = false; const fin2 = (ok) => { if (done) return; done = true; if (ok && inp.value.trim() !== cur) cb(inp.value.trim()); renderTree(); };
     inp.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") fin2(true); if (e.key === "Escape") fin2(false); }; inp.onblur = () => fin2(true); inp.onpointerdown = (e) => e.stopPropagation(); };
+  P.oncontextmenu = (e) => { // v1.90 : clic droit dans l'arborescence = même menu que sur le graphique (façon TradingView)
+    const r = e.target.closest("[data-d]"), gr = !r && e.target.closest("[data-g]"); if (!r && !gr) return; e.preventDefault();
+    if (r) { const d = L.find((x) => x.id === r.dataset.d); if (d) { selectD(d, c); drawMenu(d, c, e.clientX, e.clientY); } return; }
+    const g = G.find((x) => x.id === gr.dataset.g); if (!g) return; const M = L.filter((d) => d.grp === g.id), hid = M.length && M.every((d) => d.hide), lk = M.length && M.every((d) => d.lock);
+    menu(e.clientX, e.clientY, [{ t: "Renommer", ic: FI.ren, f: () => askText("Renommer le groupe", g.name, (n) => { g.name = n; dGroupsSet(u, G); renderTree(); }) }, "-",
+      { t: lk ? "Déverrouiller" : "Verrouiller", ic: lk ? ICO.lock : ICO.unlock, dis: !M.length, f: () => { snap(); M.forEach((d) => (d.lock = !lk)); drawChanged(); renderTree(); } },
+      { t: hid ? "Afficher" : "Cacher", ic: hid ? ICO.eye : ICO.eyeoff, dis: !M.length, f: () => { snap(); M.forEach((d) => (d.hide = !hid)); drawChanged(); renderTree(); } }, "-",
+      { t: "Dégrouper", ic: " ", f: () => { snap(); M.forEach((d) => delete d.grp); dGroupsSet(u, G.filter((x) => x !== g)); drawChanged(); renderTree(); } },
+      { t: "Retirer le groupe et ses dessins", k: "Del", ic: ICO.trash, f: () => { if (M.length && !window.confirm(`Supprimer « ${g.name} » et ses ${M.length} dessin(s) ?`)) return; snap(); M.forEach((d) => { const k = L.indexOf(d); if (k >= 0) L.splice(k, 1); }); dGroupsSet(u, G.filter((x) => x !== g)); selectD(null); drawChanged(); renderTree(); } }], { cls: "gr-dmenu" });
+  };
   P.onclick = (e) => { const g = (k) => { const b = e.target.closest(`[${k}]`); return b && b.getAttribute(k); }; let id; if (Date.now() - treeDragAt < 300) return; if (e.target.closest(".gr-tren")) return;
     if (g("data-tgnew")) { const name = "Groupe " + (G.length + 1), ng = { id: uid(), name, open: true }; dGroupsSet(u, G.concat(ng)); const sel = selList().length ? selList() : DS.sel ? L.filter((d) => d.id === DS.sel) : []; if (sel.length) { snap(); sel.forEach((d) => (d.grp = ng.id)); drawChanged(); } TSEL.clear(); renderTree(); toast("« " + name + " » créé : glisse des dessins dedans, double-clic pour renommer"); return; }
     if ((id = g("data-sa"))) { const S = selList(); if (id === "clr") { TSEL.clear(); renderTree(); return; } if (!S.length) return; snap(); if (id === "hide") { const h = !S.every((d) => d.hide); S.forEach((d) => (d.hide = h)); } if (id === "lock") { const k = !S.every((d) => d.lock); S.forEach((d) => (d.lock = k)); } if (id === "del") { S.forEach((d) => { const i = L.indexOf(d); if (i >= 0) L.splice(i, 1); }); TSEL.clear(); selectD(null); toast(S.length + " dessin(s) supprimé(s) (Ctrl+Z pour annuler)"); } drawChanged(); return; }
