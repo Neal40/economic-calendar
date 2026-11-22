@@ -738,10 +738,19 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-dth{font-weight:600;margin-top:8px;padding-top:10px;border-top:1px solid var(--gl)}.gr-dth em{font-style:normal;color:var(--gm);font-weight:400}.gr-dtnone{color:var(--gm);font-size:12.5px}
 .gr-dtrow{display:flex;align-items:center;gap:6px;font-size:12.5px}.gr-dtrow span:nth-child(2){flex:1;color:var(--gm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-dtrow b{font-weight:500;font-variant-numeric:tabular-nums}.gr-dtrow .gr-ib{width:22px;height:22px}.gr-dtrow .gr-ib svg{width:14px;height:14px}.gr-dtsm{font-size:11.5px}
 .gr-dtflat{justify-content:center;margin-top:4px;color:#f23645}.gr-dtflat:disabled{opacity:.4}
-.gr-qt{position:absolute;left:8px;top:48px;z-index:7;display:flex;align-items:flex-end;gap:4px;pointer-events:auto}.gr-qt[hidden]{display:none}
-.gr-qtb{width:104px;height:44px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;box-shadow:0 1px 3px rgba(0,0,0,.3)}.gr-qtb b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}.gr-qtb span{font-size:11px;letter-spacing:.06em}
+.gr-qt{position:absolute;left:8px;top:48px;z-index:7;display:flex;align-items:flex-end;gap:3px;pointer-events:auto}.gr-qt[hidden]{display:none}
+.gr-qtb{width:74px;height:32px;border-radius:5px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;box-shadow:0 1px 3px rgba(0,0,0,.3)}.gr-qtb b{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}.gr-qtb span{font-size:9px;letter-spacing:.06em}
 .gr-qtb.sell{background:#e04c55}.gr-qtb.buy{background:#3a63f5}.gr-qtb:hover{filter:brightness(1.1)}
-.gr-qtm{display:flex;flex-direction:column;align-items:center;gap:2px}.gr-qtm em{font-style:normal;font-size:12px;color:var(--gt);text-shadow:0 0 3px var(--grbg)}.gr-qtm input{width:46px;height:28px;border-radius:6px;border:1px solid var(--gl);background:var(--gb);color:var(--gt);text-align:center;font-size:14px}
+.gr-qtm{display:flex;flex-direction:column;align-items:center;gap:2px}.gr-qtm em{font-style:normal;font-size:10px;color:var(--gt);text-shadow:0 0 3px var(--grbg)}.gr-qtm input{width:34px;height:20px;border-radius:4px;font-size:12px!important;border:1px solid var(--gl);background:var(--gb);color:var(--gt);text-align:center;font-size:14px}
+.gr-pov{position:absolute;inset:0;pointer-events:none;z-index:8}.gr-pov[hidden]{display:none}
+.gr-pol,.gr-pog{position:absolute;transform:translateY(-50%);display:flex;align-items:center;gap:4px;pointer-events:auto;font-size:11.5px;white-space:nowrap;user-select:none}
+.gr-poc,.gr-por{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:13px;line-height:1;border:1px solid #2962ff;background:var(--gb);color:#2962ff}.gr-pol.pos .gr-poc{background:#2962ff;color:#fff}
+.gr-pob{display:flex;align-items:stretch;height:20px;border-radius:4px;overflow:hidden;border:1px solid #2962ff;background:#fff;cursor:ns-resize;box-shadow:0 0 0 3px rgba(41,98,255,.15)}.gr-pol.pos .gr-pob{cursor:default}
+.gr-pob b{background:#2962ff;color:#fff;padding:0 7px;display:flex;align-items:center;font-weight:600}.gr-pob em{font-style:normal;padding:0 7px;display:flex;align-items:center;color:#131722;font-weight:600;font-variant-numeric:tabular-nums}.gr-pob em.up{color:#089981}.gr-pob em.dn{color:#f23645}
+.gr-pol.tp .gr-pob,.gr-pol.tp .gr-poc{border-color:#089981}.gr-pol.tp .gr-pob b{background:#089981}.gr-pol.tp .gr-poc{color:#089981}.gr-pol.tp .gr-pob{box-shadow:0 0 0 3px rgba(8,153,129,.15)}
+.gr-pol.sl .gr-pob,.gr-pol.sl .gr-poc{border-color:#f23645}.gr-pol.sl .gr-pob b{background:#f23645}.gr-pol.sl .gr-poc{color:#f23645}.gr-pol.sl .gr-pob{box-shadow:0 0 0 3px rgba(242,54,69,.15)}
+.gr-pol.pend{opacity:.55}
+.gr-pog{height:18px;padding:0 9px 0 5px;border-radius:3px;background:var(--gb);border:1px solid var(--gl);color:var(--gm);cursor:ns-resize;font-weight:600;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 50%,calc(100% - 6px) 100%,0 100%)}.gr-pog i{font-style:normal;letter-spacing:-2px;margin-right:3px;opacity:.7}.gr-pog:hover{color:var(--gt);border-color:var(--gm)}
 .gr-dmini,.gr-det{padding:12px;border-top:1px solid var(--gl);overflow:auto}.gr-det{border-top:0;flex:1}
 .gr-dmh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.gr-dmh b{font-size:16px}.gr-dmh span{color:var(--gm);font-size:12px}
 .gr-dmp{font-size:20px;font-weight:600;margin:6px 0 2px;font-variant-numeric:tabular-nums}.gr-dmp.big{font-size:26px}.gr-dmp em{font-size:13px;font-style:normal;font-weight:500}
@@ -13631,6 +13640,7 @@ Cell.prototype.ctxMenu = function (e) {
   if (!onPlot) return scaleMenu(this, e.clientX, e.clientY);
   const px = fin(price) ? Math.round(price / sp.tick) * sp.tick : null;
   menu(e.clientX, e.clientY, [
+    ...paCtxItems(this, px),
     { t: "Réinitialiser le graphique", k: "Alt+R", f: () => resetChart(this) },
     px != null && { t: `Copier le prix ${fmtPx(px, sp)}`, f: () => { try { navigator.clipboard.writeText(fmtPx(px, sp)); } catch (er) { /* */ } } },
     px != null && { t: `Ajouter une alerte à ${fmtPx(px, sp)}`, k: "Alt+Maj+N", f: () => openAlert({ sym: this.st.sym, val: px }) },
@@ -14843,6 +14853,13 @@ const grPaper = (() => {
     }
     return out;
   }
+  /** TP / SL posé sur une position ouverte (glissé depuis l'entrée) : toute la quantité, OCO avec l'autre sortie posée de la même façon */
+  function addExit(A, sym, kind, price, t) {
+    const P = A.pos[sym]; if (!P || !fin(price)) return null;
+    for (const o of A.orders) if (o.sym === sym && o.kind === kind && o.par === 0 && LIVE(o)) Object.assign(o, { st: "canceled", why: "remplacé" });
+    const o = { id: nid(A), sym, side: P.q > 0 ? "sell" : "buy", type: kind === "tp" ? "limit" : "stop", qty: Math.abs(P.q), price: kind === "tp" ? price : null, stop: kind === "sl" ? price : null, st: "working", t, exp: null, par: 0, oco: "p:" + sym, kind };
+    A.orders.push(o); return o;
+  }
   function cancel(A, id) { let n = 0; for (const o of A.orders) if ((o.id === id || o.par === id) && LIVE(o)) { o.st = "canceled"; o.why = "annulé"; n++; } return n; }
   function modify(A, id, ch) {
     const o = A.orders.find((x) => x.id === id && LIVE(x)); if (!o) return false;
@@ -14862,7 +14879,7 @@ const grPaper = (() => {
   const live = (A, sym) => A.orders.filter((o) => LIVE(o) && (!sym || o.sym === sym));
   /** garde l'historique raisonnable : ordres terminés au-delà des 300 derniers supprimés */
   function prune(A) { const done = A.orders.filter((o) => !LIVE(o)); if (done.length > 300) { const cut = new Set(done.slice(0, done.length - 300).map((o) => o.id)); A.orders = A.orders.filter((o) => !cut.has(o.id)); } return A; }
-  return { fresh, check, place, fill, tick, cancel, modify, flatten, upnl, live, prune, LIVE };
+  return { fresh, check, place, fill, tick, addExit, cancel, modify, flatten, upnl, live, prune, LIVE };
 })();
 /* grPaper:end */
 /* ---------- Trading : compte démo (paper trading) façon TradingView ----------
@@ -14946,6 +14963,13 @@ function paEngine() {
 }
 function paRefresh() { if (STATE.panel === "trade") renderTrade(); paLines(); paQuick(); }
 
+/** clic droit sur le graphique : ordre limite / stop au prix cliqué (quantité du ticket), comme TradingView */
+function paCtxItems(c, p) {
+  const s = c.st.sym, px = paPx(s); if (p == null || !px) return [];
+  const q = Math.max(1, Math.round(+TPF.qty || 1)), code = symCode(s), f = fmtPx(p, c.spec), up = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10l4-4 4 4M4 13l4-4 4 4"/></svg>`, dn = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 3l4 4 4-4M4 6l4 4 4-4"/></svg>`;
+  const mk = (side, type) => ({ t: `${side === "buy" ? "Acheter" : "Vendre"} ${q} ${code} @ ${f} ${type === "limit" ? "limite" : "stop"}`, ic: side === "buy" ? up : dn, f: () => paPlace(Object.assign({ sym: s, side, type, qty: q, exits: [], tif: TPF.tif, exp: paExp(TPF.tif, NOW()) }, type === "limit" ? { price: p } : { stop: p })) });
+  return p >= px.ask ? [mk("sell", "limit"), mk("buy", "stop"), "-"] : p <= px.bid ? [mk("buy", "limit"), mk("sell", "stop"), "-"] : [];
+}
 /* ----- panneau ----- */
 const swp = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 5h9l-2-2M13 11H4l2 2"/></svg>`;
 function renderTrade() {
@@ -15040,38 +15064,101 @@ function paQuick() {
   if (document.activeElement !== inp) inp.value = Math.max(1, Math.round(+TPF.qty || 1));
 }
 
-/* ----- lignes de la position et des ordres sur le graphique actif ; glisser une ligne d'ordre = modifier son prix ----- */
+/* ----- lignes de la position et des ordres sur le graphique actif, façon TradingView -----
+   Ligne de position : [×] fermer, [⇅] retourner, [qté | P&L $] ; étiquettes « TP » / « SL » à glisser depuis l'entrée pour poser un take profit / stop loss.
+   Ligne d'ordre : [qté | P&L au prix de l'ordre] glissable + [×] annuler. Glisser une ligne (ou son étiquette) = modifier le prix. */
+const paPL = (o, P, price, s) => { const pv = paSpec(s).pv; return P ? (price - P.avg) * Math.sign(P.q) * o.qty * pv : NaN; };
+function paItems(c) {
+  const A = PA.A, s = c.st.sym, P = A.pos[s], out = [];
+  if (P) out.push({ key: "pos", kind: "pos", price: P.avg, P });
+  const ex = grPaper.live(A, s);
+  for (const o of ex) out.push({ key: "o" + o.id, kind: o.kind === "tp" ? "tp" : o.kind === "sl" ? "sl" : "ord", price: o.type === "stop" ? o.stop : o.price, o, P });
+  if (P) { const has = (k) => ex.some((o) => o.kind === k && o.st === "working"); if (!has("tp")) out.push({ key: "gtp", kind: "gtp", price: P.avg, P }); if (!has("sl")) out.push({ key: "gsl", kind: "gsl", price: P.avg, P }); }
+  return out;
+}
+const PLCOL = { pos: "#2962ff", tp: "#089981", sl: "#f23645", ord: "#2962ff" };
 function paLines() {
   const keep = new Set(), c = activeCell(), A = PA.A;
   if (c && A && c.series) {
-    const s = c.st.sym, add = (key, price, color, title, style, o) => { if (!fin(price)) return; keep.add(key); let L = PA.lines.get(key);
-      if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
-      const opt = { price, color, lineWidth: 1, lineStyle: style, axisLabelVisible: true, title }, dragging = PA.drag && PA.drag.key === key;
-      if (L) { if (!dragging) { L.line.applyOptions(opt); L.price = price; } } else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt), price })); L.ord = o || null; };
-    const P = A.pos[s]; if (P) add("pos", P.avg, "#2962ff", `${P.q > 0 ? "Long" : "Short"} ${Math.abs(P.q)}`, 0);
-    grPaper.live(A, s).forEach((o) => { if (o.st === "pending" && !P) { /* sortie d'un ordre pas encore exécuté : affichée en pointillés clairs */ }
-      const col = o.kind === "tp" ? "#089981" : o.kind === "sl" ? "#f23645" : o.side === "buy" ? "#2962ff" : "#f7525f";
-      add("o" + o.id, o.type === "stop" ? o.stop : o.price, o.st === "pending" ? alpha(col, 0.55) : col, `${o.kind === "tp" ? "TP" : o.kind === "sl" ? "SL" : o.side === "buy" ? "Achat" : "Vente"} ${o.qty} ${o.type === "stop" ? "stop" : "limite"}`, 2, o); });
+    for (const it of paItems(c)) { if (it.kind === "gtp" || it.kind === "gsl") continue; const key = it.key, price = PA.drag && PA.drag.key === key ? PA.drag.price : it.price; if (!fin(price)) continue; keep.add(key);
+      let L = PA.lines.get(key); if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
+      const col = it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : PLCOL[it.kind], opt = { price, color: it.o && it.o.st === "pending" ? alpha(col, 0.5) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : 2, axisLabelVisible: true, title: "" };
+      if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = it.o || null; }
   }
   for (const [k, L] of PA.lines) if (!keep.has(k)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } PA.lines.delete(k); }
+  paOverlay();
 }
+/* étiquettes HTML posées sur les lignes (recalées à chaque image tant que la page est affichée) */
+function paOverlay() {
+  const c = activeCell(), A = PA.A;
+  if (!c || !A || !c.series || STATE.mode === "tv") { if (PA.ov) PA.ov.hidden = true; return; }
+  if (!PA.ov || !PA.ov.isConnected || PA.ov.parentNode !== c.el) { if (PA.ov) PA.ov.remove(); PA.ov = el("div", "gr-pov"); c.el.append(PA.ov); PA.ovSig = ""; paOvWire(PA.ov); }
+  PA.ov.hidden = false;
+  const items = paItems(c), sig = items.map((i) => i.key + (i.o ? i.o.st : "")).join("|");
+  if (sig !== PA.ovSig) { PA.ovSig = sig; PA.ov.innerHTML = items.map((it) => {
+    if (it.kind === "pos") return `<div class="gr-pol pos" data-k="pos"><button class="gr-poc" data-a="close" title="Fermer la position">×</button><button class="gr-por" data-a="rev" title="Retourner la position">⇅</button><span class="gr-pob"><b></b><em></em></span></div>`;
+    if (it.kind === "gtp" || it.kind === "gsl") return `<div class="gr-pog ${it.kind === "gtp" ? "tp" : "sl"}" data-k="${it.key}" data-drag="1" title="Glisser pour poser un ${it.kind === "gtp" ? "take profit" : "stop loss"}"><i>⋮⋮</i>${it.kind === "gtp" ? "TP" : "SL"}</div>`;
+    return `<div class="gr-pol ${it.kind}${it.o.st === "pending" ? " pend" : ""}" data-k="${it.key}"><span class="gr-pob" data-drag="1" title="Glisser pour déplacer"><b></b><em></em></span><button class="gr-poc" data-a="can" title="Annuler l'ordre">×</button></div>`; }).join(""); }
+  paOvPos(c, items);
+}
+function paOvPos(c, items) {
+  const ov = PA.ov; if (!ov || ov.hidden) return; items = items || paItems(c);
+  const host = c.main.host, hr = host.getBoundingClientRect(), cr = c.el.getBoundingClientRect(); let sw = 60; try { sw = c.main.chart.priceScale("right").width() || 60; } catch (e) { /* */ }
+  const right = hr.right - cr.left - sw - 70, s = c.st.sym, sp = SYM(s), px = paPx(s);
+  for (const it of items) { const node = ov.querySelector(`[data-k="${it.key}"]`); if (!node) continue;
+    const dragging = PA.drag && PA.drag.key === it.key, price = dragging ? PA.drag.price : it.price, y = c.series.priceToCoordinate(price);
+    if (y == null || y < 0 || y > hr.height) { node.style.display = "none"; continue; } node.style.display = "";
+    let top = hr.top - cr.top + y; if (!dragging && it.kind === "gtp") top -= 22; if (!dragging && it.kind === "gsl") top += 22;
+    node.style.top = Math.round(top) + "px"; node.style.left = Math.round(right - node.offsetWidth) + "px";
+    if (it.kind === "gtp" || it.kind === "gsl") { const pn = ov.querySelector('[data-k="pos"]'), pb = pn && pn.querySelector(".gr-pob"); if (pb && pn.style.display !== "none") node.style.left = Math.round(pn.offsetLeft + pb.offsetLeft) + "px"; }
+    const b = node.querySelector(".gr-pob b"), em = node.querySelector(".gr-pob em"); if (!b) continue;
+    if (it.kind === "pos") { const u = px ? grPaper.upnl(PA.A, s, px, paSpec(s)) : NaN; b.textContent = Math.abs(it.P.q); em.textContent = fin(u) ? money(u).replace(" $", " USD") : "—"; em.className = u >= 0 ? "up" : "dn"; }
+    else if (it.kind === "tp" || it.kind === "sl") { const v = paPL(it.o, it.P, price, s); b.textContent = it.kind.toUpperCase() + " " + it.o.qty; em.textContent = fin(v) ? money(v).replace(" $", " USD") : fmtPx(price, sp); em.className = v >= 0 ? "up" : "dn"; }
+    else { b.textContent = it.o.qty; em.textContent = `${it.o.side === "buy" ? "Achat" : "Vente"} ${it.o.type === "stop" ? "stop" : "limite"}${dragging ? " " + fmtPx(price, sp) : ""}`; em.className = ""; }
+  }
+}
+function paOvWire(ov) {
+  ov.addEventListener("pointerdown", (e) => {
+    const n = e.target.closest("[data-k]"); if (!n) return; e.stopPropagation(); e.preventDefault(); const k = n.dataset.k, A = PA.A, s = paSym(), c = activeCell();
+    const a = e.target.closest("[data-a]");
+    if (a) { if (a.dataset.a === "close") { grPaper.flatten(A, s, paPx, NOW(), paSpec); paSave(); paRefresh(); toast("Position démo fermée"); }
+      else if (a.dataset.a === "rev") { const P = A.pos[s]; if (P) paPlace({ sym: s, side: P.q > 0 ? "sell" : "buy", type: "market", qty: Math.abs(P.q) * 2, exits: [] }, "Position démo retournée"); }
+      else if (a.dataset.a === "can") { grPaper.cancel(A, +k.slice(1)); paSave(); paRefresh(); }
+      return; }
+    if (!e.target.closest("[data-drag]")) return;
+    const it = paItems(c).find((i) => i.key === k); if (!it) return;
+    PA.drag = { key: k, it, price: it.price, top: c.main.host.getBoundingClientRect().top, c, ov: true }; document.body.style.cursor = "ns-resize";
+  });
+  ov.addEventListener("mousedown", (e) => { if (e.target.closest("[data-k]")) e.stopPropagation(); });
+  ov.addEventListener("contextmenu", (e) => { if (e.target.closest("[data-k]")) { e.preventDefault(); e.stopPropagation(); } });
+}
+/** fin du glisser d'une étiquette : pose le TP / SL, ou déplace l'ordre */
+function paDropOv(d) {
+  const A = PA.A, it = d.it, s = d.c.st.sym, px = paPx(s), p = d.price; if (!fin(p) || !px) { paRefresh(); return; }
+  if (it.kind === "gtp" || it.kind === "gsl") { const P = A.pos[s]; if (!P) return paRefresh(); const k = it.kind === "gtp" ? "tp" : "sl", long = P.q > 0;
+    const ok = k === "tp" ? (long ? p > px.bid : p < px.ask) : long ? p < px.bid : p > px.ask;
+    if (!ok) { toast(k === "tp" ? "Le take profit doit être du côté du gain" : "Le stop loss doit être du côté de la perte", true); return paRefresh(); }
+    grPaper.addExit(A, s, k, p, NOW()); paSave(); paRefresh(); toast(`${k === "tp" ? "Take profit" : "Stop loss"} démo posé à ${fmtPx(p, SYM(s))}`); return; }
+  const o = it.o, cur = o.type === "stop" ? o.stop : o.price; if (p === cur) return paRefresh();
+  const P = A.pos[s];
+  if (o.kind && P && (o.kind === "sl" ? (P.q > 0 ? p >= px.bid : p <= px.ask) : (P.q > 0 ? p <= px.bid : p >= px.ask))) { toast(o.kind === "sl" ? "Stop loss du mauvais côté du prix" : "Take profit du mauvais côté du prix", true); return paRefresh(); }
+  if (!o.kind && (o.type === "stop" ? (o.side === "buy" ? p <= px.ask : p >= px.bid) : false)) { toast("Un ordre stop doit rester au-delà du prix", true); return paRefresh(); }
+  grPaper.modify(A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); toast(`Ordre démo déplacé à ${fmtPx(p, SYM(s))}`);
+}
+(function paFrame() { requestAnimationFrame(paFrame); if (PA.ov && !PA.ov.hidden && viewOn()) { const c = activeCell(); if (c && PA.ov.parentNode === c.el) paOvPos(c); } })();
 function paHit(e) {
   if (!PA.lines.size || e.button !== 0) return null;
   for (const [k, L] of PA.lines) { if (!L.ord) continue; const host = L.cell.main && L.cell.main.host; if (!host || !host.contains(e.target)) continue;
-    const r = host.getBoundingClientRect(), y = L.series.priceToCoordinate(L.price); if (y != null && Math.abs(e.clientY - r.top - y) <= 5 && e.clientX - r.left < r.width - 60) return { key: k, L, top: r.top }; }
+    const r = host.getBoundingClientRect(), y = L.series.priceToCoordinate(L.price); if (y != null && Math.abs(e.clientY - r.top - y) <= 5 && e.clientX - r.left < r.width - 60) { const it = paItems(L.cell).find((i) => i.key === k); if (it) return { key: k, it, price: L.price, top: r.top, c: L.cell }; } }
   return null;
 }
 addEventListener("pointerdown", (e) => { const h = paHit(e); if (!h) return; e.stopImmediatePropagation(); e.preventDefault(); PA.drag = h; document.body.style.cursor = "ns-resize"; }, true);
 addEventListener("mousedown", (e) => { if (PA.drag) { e.stopImmediatePropagation(); e.preventDefault(); } }, true);
 addEventListener("pointermove", (e) => {
-  if (PA.drag) { e.stopImmediatePropagation(); const { L, top } = PA.drag, p = L.series.coordinateToPrice(e.clientY - top); if (fin(p)) { L.price = paRound(p, L.cell.spec.tick); L.line.applyOptions({ price: L.price }); } return; }
+  if (PA.drag) { e.stopImmediatePropagation(); const d = PA.drag, p = d.c.series.coordinateToPrice(e.clientY - d.top); if (fin(p)) { d.price = paRound(p, d.c.spec.tick); const L = PA.lines.get(d.key); if (L) L.line.applyOptions({ price: d.price }); } return; }
   if (PA.lines.size && !e.buttons) { const h = paHit(e); if (h) { document.body.style.cursor = "ns-resize"; PA.hov = true; } else if (PA.hov) { document.body.style.cursor = ""; PA.hov = false; } }
 }, true);
-addEventListener("pointerup", (e) => { if (!PA.drag) return; e.stopImmediatePropagation(); const { L } = PA.drag, o = L.ord, p = L.price; PA.drag = null; document.body.style.cursor = "";
-  const cur = o.type === "stop" ? o.stop : o.price; if (!fin(p) || p === cur) { paLines(); return; }
-  const P = PA.A.pos[o.sym], px = paPx(o.sym);
-  if (px && o.kind && P && (o.kind === "sl" ? (P.q > 0 ? p >= px.bid : p <= px.ask) : (P.q > 0 ? p <= px.bid : p >= px.ask))) { toast(o.kind === "sl" ? "Stop loss du mauvais côté du prix" : "Take profit du mauvais côté du prix", true); paLines(); return; }
-  grPaper.modify(PA.A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); toast(`Ordre démo déplacé à ${fmtPx(p, L.cell.spec)}`); }, true);
+addEventListener("pointerup", (e) => { if (!PA.drag) return; e.stopImmediatePropagation(); const d = PA.drag; PA.drag = null; document.body.style.cursor = ""; paDropOv(d); }, true);
 paLoad();
 setInterval(() => { paEngine(); if (viewOn()) { paTickUI(); paLines(); } }, 500);
 

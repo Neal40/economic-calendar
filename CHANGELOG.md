@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.86.0] — 2026-11-22
+Page Graphique, compte démo : position et ordres façon TradingView sur le graphique.
+### Ajouté
+- Ligne de position : boutons **×** (fermer) et **⇅** (retourner), étiquette **qté | P&L en USD** en direct ; étiquettes **TP** et **SL** à **glisser depuis l'entrée** pour poser un take profit / stop loss (toute la position, TP et SL en OCO).
+- Lignes d'ordres (TP vert, SL rouge, limites / stops) avec étiquette **qté | P&L au prix de l'ordre** à glisser pour déplacer l'ordre, et **×** pour l'annuler.
+- **Clic droit** sur le graphique : « Vendre 1 MNQZ26 @ prix limite » / « Acheter … stop » au-dessus du prix, « Acheter … limite » / « Vendre … stop » en dessous.
+### Modifié
+- Boutons Vendre / Acheter du graphique plus petits.
+
 ## [1.85.0] — 2026-11-22
 Page Graphique : **compte démo** (paper trading) façon TradingView — trader depuis le graphique sans argent réel.
 ### Ajouté

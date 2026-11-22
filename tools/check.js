@@ -467,6 +467,8 @@ try {
   G.tick(A, "NQ", 99, 100, 0.25, 10, S); eq("expiré", A.orders.find((o) => o.id === r.id).st, "expired");
   r = G.place(A, { sym: "NQ", side: "buy", type: "limit", qty: 1, price: 95, exits: [{ qty: 1, tp: 97 }] }, px, S, 11);
   eq("annuler (avec sorties)", G.cancel(A, r.id), 2);
+  eq("TP glissé depuis l'entrée", (() => { const B = G.fresh(1000); G.place(B, { sym: "MNQ", side: "buy", type: "market", qty: 2 }, px, S, 1); G.addExit(B, "MNQ", "tp", 102, 2); G.addExit(B, "MNQ", "sl", 99, 2); G.addExit(B, "MNQ", "sl", 99.5, 3);
+    const l = G.live(B).map((o) => [o.kind, o.qty, o.price || o.stop]); G.tick(B, "MNQ", 99.5, 100, 0.25, 4, S); return [l, B.pos.MNQ, G.live(B).length, B.trades[0].pnl]; })(), [[["tp", 2, 102], ["sl", 2, 99.5]], undefined, 0, -3]);
   eq("P&L latent", (() => { const B = G.fresh(1000); G.place(B, { sym: "MNQ", side: "buy", type: "market", qty: 1 }, px, S, 1); return G.upnl(B, "MNQ", { bid: 101.25, ask: 101.5 }, S); })(), 2);
 } catch (e) { errors.push("grPaper : " + e.message); }
 
