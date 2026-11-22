@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.89.0] — 2026-11-22
+Backtesteur : menu clic droit des dessins identique à TradingView.
+### Ajouté
+- Clic droit sur un dessin du Backtesteur : Ajouter une alerte pour … (alerte de prix au niveau du dessin), **Espace de Travail** (Sauvegarder Sous…, Appliquer paramètres par Défaut, tes modèles), **Ordre de visualisation** (premier plan, fond, en avant, vers l'arrière), **Visibilité des intervalles** (actuel et supérieur, actuel et inférieur, actuel uniquement, tous), Créer un groupe de dessins, Cloner, Copier, Renommer, Verrouiller, Cacher, Retirer, **Aller à …**, Configurations…, avec les icônes et sous-menus au survol comme TradingView (la page Graphique l'avait depuis la v1.80).
+
 ## [1.88.1] — 2026-11-22
 ### Corrigé
 - Page Graphique : plus de trait horizontal sous la ligne d'état (nom du symbole, OHLC) en haut du graphique. Le style des lignes du menu « Disposition » (avec un séparateur) s'appliquait aussi à la ligne d'état.

@@ -1360,6 +1360,11 @@ table.tbl:has(#subT){min-width:900px}
 .tx-tree .row small{color:var(--tx-mut);font-weight:400}
 .tx-ren{flex:1;min-width:0;background:var(--tx-in);border:1px solid var(--tx-acc);border-radius:3px;color:#fff;font:inherit;padding:2px 5px}
 .tx-ctx{position:fixed;z-index:61;min-width:230px;background:var(--tx-menu);border:1px solid var(--tx-hov);border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.5);padding:4px 0;font:13px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,sans-serif;color:var(--tx-txt2)}
+.tx-ctx.tv{min-width:310px;padding:6px 0;font-size:14px;border-radius:8px}.tx-ctx.tv .ci{align-items:center;justify-content:flex-start;gap:10px;padding:7px 14px;min-height:32px;position:relative}
+.tx-ctx.tv .cic{width:24px;min-width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:13px}.tx-ctx.tv .cic svg{width:24px;height:24px}
+.tx-ctx.tv .ct{flex:1;font-weight:400;color:var(--tx-txt2);white-space:nowrap}.tx-ctx.tv .ci>span{margin-left:12px}.tx-ctx.tv .cchev{font-size:18px!important;line-height:1;color:var(--tx-txt2)!important}
+.tx-ctx.tv .csub{display:none;position:absolute;left:100%;top:-6px;min-width:260px;background:var(--tx-menu);border:1px solid var(--tx-hov);border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.35);padding:6px 0;max-height:70vh;overflow:auto}
+.tx-ctx.tv.flip .csub{left:auto;right:100%}.tx-ctx.tv .csubp:hover>.csub{display:block}.tx-ctx.tv .csubp:hover{background:var(--tx-hov)}
 .tx-ctx .ci{display:flex;justify-content:space-between;gap:16px;padding:7px 14px;cursor:pointer}
 .tx-ctx .ci:hover{background:var(--tx-hov)}
 .tx-ctx .ci span{color:var(--tx-mut);font-size:11px}
@@ -9855,7 +9860,7 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
   const fkey = () => dkey() + "-f";
   const saveFolders = () => LS.set(fkey(), folders);
   const fOf = (s) => (s.folder ? folders.find((f) => f.id === s.folder) || null : null);
-  const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden && (s.sync !== "none" || s.tfOnly == null || s.tfOnly === S.tf);
+  const visible = (s) => !s.hidden && !(fOf(s) || {}).hidden && (s.sync !== "none" || s.tfOnly == null || s.tfOnly === S.tf) && (!s.tfR || (s.tfR.op === "ge" ? S.tf >= s.tfR.tf : s.tfR.op === "le" ? S.tf <= s.tfR.tf : S.tf === s.tfR.tf));
   const lockedS = (s) => s.locked || lockAll || !!(fOf(s) || {}).locked;
   // dessins en « Synchro globale » : copiés dans bt-draw-global-<sous-jacent> et affichés dans toutes les mises en page
   const gkey = (n = pane) => "bt-draw-global-" + (n === 2 ? und(sym2() || "X") : und(S.sym || "NQ"));
@@ -10245,11 +10250,27 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     const end = (ok) => { if (done) return; done = true; if (ok && inp.value.trim()) o.name = inp.value.trim(); saveFolders(); saveDrawings(); };
     inp.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") end(true); if (e.key === "Escape") end(false); }; inp.onblur = () => end(true); inp.onmousedown = (e) => e.stopPropagation();
   }
+  // v1.89 : menu clic droit d'un dessin identique à TradingView (sous-menus Espace de Travail, Ordre de visualisation, Visibilité des intervalles)
+  const CXI = { alert: SG('<circle cx="14" cy="15" r="7.5"/><path d="M14 11v4l2.5 1.5M6.5 6.5l-2 2M21.5 6.5l2 2M19.5 19.5v5M17 22h5"/>'), layers: SG('<path d="M14 5.5l9 4.5-9 4.5-9-4.5z"/><path d="M5 14l9 4.5 9-4.5M5 18l9 4.5 9-4.5"/>'),
+    gplus: SG('<path d="M4.5 9a2 2 0 0 1 2-2h4l2 2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/><path d="M14 12.5v6M11 15.5h6"/>'), clone: SG('<rect x="9.5" y="9.5" width="13" height="13" rx="2"/><path d="M18.5 9.5V7.5a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2"/>') };
   function ctxMenu(x, y, fid) {
     const m = $("btCtx"), L = selShapes(), f = fid && folders.find((v) => v.id === fid), it = (a, t, k) => `<div class="ci" data-c="${a}">${t}${k ? `<span>${k}</span>` : ""}</div>`;
-    m.innerHTML = f ? it("ren", "Renommer") + it("ungroup", "Dégrouper") + it("fhide", f.hidden ? "Afficher" : "Masquer") + it("flock", f.locked ? "Déverrouiller" : "Verrouiller") + "<i></i>" + it("fdel", "Supprimer le groupe")
-      : it("group", "Créer un groupe de dessins") + it("clone", "Cloner", "Ctrl+D") + it("copy", "Copier", "Ctrl+C") + (clip ? it("paste", "Coller", "Ctrl+V") : "") + "<i></i>" + it("front", "Premier plan") + it("back", "Arrière-plan") + "<i></i>" + it("lock", "Verrouiller / déverrouiller") + it("hide", "Masquer / afficher") + it("del", "Supprimer", "Suppr") + (L.length === 1 ? "<i></i>" + it("ren1", "Renommer") + it("set", "Paramètres…") : "");
-    m.dataset.fid = fid || ""; m.hidden = false; m.style.left = Math.min(x, innerWidth - 240) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px";
+    m.classList.toggle("tv", !f);
+    if (f) m.innerHTML = it("ren", "Renommer") + it("ungroup", "Dégrouper") + it("fhide", f.hidden ? "Afficher" : "Masquer") + it("flock", f.locked ? "Déverrouiller" : "Verrouiller") + "<i></i>" + it("fdel", "Supprimer le groupe");
+    else {
+      const s0 = L[0]; if (!s0) return; const nm = String(s0.name || TOOLS[s0.type] || "dessin"), low = nm.charAt(0).toLowerCase() + nm.slice(1), names = Object.keys(tpls()[s0.type] || {}), vr = s0.tfR ? s0.tfR.op : s0.sync === "none" && s0.tfOnly != null ? "eq" : "all";
+      const tv = (a, t, ic, k, ck) => `<div class="ci" data-c="${a}"><em class="cic">${ck != null ? (ck ? "✓" : "") : ic || ""}</em><b class="ct">${esc(t)}</b>${k ? `<span>${k}</span>` : ""}</div>`;
+      const sub = (t, ic, items) => `<div class="ci csubp"><em class="cic">${ic || ""}</em><b class="ct">${esc(t)}</b><span class="cchev">›</span><div class="csub">${items.join("")}</div></div>`;
+      m.innerHTML = tv("alert", `Ajouter une alerte pour ${low}…`, CXI.alert, "Alt + A") + "<i></i>"
+        + sub("Espace de Travail", "", [tv("tplsave", "Sauvegarder Sous…"), tv("tpldef", "Appliquer paramètres par Défaut"), ...(names.length ? ["<i></i>"] : []), ...names.map((n) => `<div class="ci" data-c="tpl:${esc(n)}"><em class="cic"></em><b class="ct">${esc(n)}</b></div>`)])
+        + sub("Ordre de visualisation", CXI.layers, [tv("front", "Mettre au premier plan"), tv("back", "Mettre au Fond"), tv("fwd", "Mettre en avant"), tv("bwd", "Mettre vers l'Arrière")])
+        + sub("Visibilité des intervalles", "", [["ge", "Intervalle actuel et supérieur"], ["le", "Intervalle actuel et inférieur"], ["eq", "Intervalle actuel uniquement"], ["all", "Tous les intervalles"]].map(([k, t]) => tv("vis:" + k, t, null, "", vr === k)))
+        + "<i></i>" + tv("group", "Créer un groupe de dessins", CXI.gplus) + tv("clone", "Cloner", CXI.clone, "Ctrl + D") + tv("copy", "Copier", "", "Ctrl + C") + (clip ? tv("paste", "Coller", "", "Ctrl + V") : "") + tv("ren1", "Renommer", ICON.pencil)
+        + "<i></i>" + tv("lock", L.every((v) => v.locked) ? "Déverrouiller" : "Verrouiller", ICON[L.every((v) => v.locked) ? "lockOpen" : "lockClosed"]) + tv("hide", "Cacher", ICON.eyeOff) + tv("del", "Retirer", ICON.trash, "Suppr")
+        + "<i></i>" + tv("goto", `Aller à ${low}`) + "<i></i>" + tv("set", "Configurations…", ICON.gear);
+    }
+    m.dataset.fid = fid || ""; m.hidden = false; m.style.left = Math.min(x, innerWidth - 330) + "px"; m.style.top = Math.max(8, Math.min(y, innerHeight - m.offsetHeight - 8)) + "px";
+    m.classList.toggle("flip", m.getBoundingClientRect().right + 280 > innerWidth);
   }
   function ctxDo(a) {
     const f = folders.find((v) => v.id === $("btCtx").dataset.fid), L = selShapes(), dt = S.tf * 60 * 5; $("btCtx").hidden = true;
@@ -10259,6 +10280,13 @@ plot(ta.vwap(hlc3), { title: "VWAP", color: col, linewidth: 2 });
     else if (a === "fhide" && f) { f.hidden = !f.hidden; saveFolders(); tree(); } else if (a === "flock" && f) { f.locked = !f.locked; saveFolders(); tree(); } else if (a === "fdel" && f) delFolder(f);
     else if (a === "group") groupSel(); else if (a === "clone") clone(L, dt); else if (a === "copy") clip = JSON.parse(JSON.stringify(L)); else if (a === "paste") clone(clip, dt);
     else if (a === "front" || a === "back") { shapes = shapes.filter((s) => !L.includes(s)); if (a === "front") shapes.push(...L); else shapes.unshift(...L); saveDrawings(); }
+    else if (a === "fwd" || a === "bwd") { const idx = L.map((s) => shapes.indexOf(s)).sort((p, q) => (a === "fwd" ? q - p : p - q)); idx.forEach((i) => { const j = a === "fwd" ? i + 1 : i - 1; if (i < 0 || j < 0 || j >= shapes.length || L.includes(shapes[j])) return; [shapes[i], shapes[j]] = [shapes[j], shapes[i]]; }); saveDrawings(); }
+    else if (a === "alert" && L[0]) { const px = rnd(L[0].p[0].price), last = S.raw.length ? S.raw[S.cur][4] : px, AL2 = LS.get("bt-alerts", []); AL2.push({ sym: S.sym, px, dir: px >= last ? "up" : "dn" }); LS.set("bt-alerts", AL2); msg(`Alerte ${S.sym} ${px.toFixed(2)} ajoutée (${L[0].name}).`); }
+    else if (a === "tplsave" && L[0]) { openSettings(L[0]); $("btTplSave").click(); }
+    else if (a === "tpldef" && L[0]) { L.forEach((s) => { const d = LS.get("bt-tpl-default", {})[s.type]; s.style = d ? JSON.parse(JSON.stringify(d)) : defStyle(s.type); }); saveDrawings(); }
+    else if (a.startsWith("tpl:") && L[0]) { const t = tpls()[L[0].type] || {}, st = t[a.slice(4)]; if (st) { L.forEach((s) => { if (s.type === L[0].type) s.style = JSON.parse(JSON.stringify(st)); }); saveDrawings(); } }
+    else if (a.startsWith("vis:")) { const v = a.slice(4); L.forEach((s) => { delete s.sync; delete s.tfOnly; if (v === "all") delete s.tfR; else s.tfR = { op: v, tf: S.tf }; }); saveDrawings(); msg(v === "all" ? "Visible sur tous les intervalles." : `Visible en ${tfName(S.tf)}${v === "ge" ? " et au-dessus" : v === "le" ? " et en dessous" : " uniquement"}.`); }
+    else if (a === "goto" && L[0]) { const c = PC(), B = pane === 2 ? S.B2 || [] : S.B, t = L[0].p[0].t; let i = B.findIndex((b) => b[0] >= t); if (i < 0) i = B.length - 1; const ts = c.timeScale(), r = ts.getVisibleLogicalRange(), w = r ? r.to - r.from : 120; ts.setVisibleLogicalRange({ from: i - w / 2, to: i + w / 2 }); }
     else if (a === "lock") { L.forEach((s) => (s.locked = !s.locked)); saveDrawings(); } else if (a === "hide") { L.forEach((s) => (s.hidden = !s.hidden)); saveDrawings(); }
     else if (a === "del") { shapes = shapes.filter((s) => !L.includes(s)); if (L.includes(sel)) sel = null; msel = new Set(); saveDrawings(); } else if (a === "set" && L[0]) openSettings(L[0]);
     else if (a.startsWith("sync:")) { const v = a.slice(5); L.forEach((s) => { if (v === "layout") { delete s.sync; delete s.tfOnly; } else { s.sync = v; if (v === "none") s.tfOnly = S.tf; else delete s.tfOnly; } }); saveDrawings();
