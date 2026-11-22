@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.87.1] — 2026-11-22
+### Corrigé
+- Page Graphique : on peut se balader librement sur le graphique — glisser vers le haut / le bas déplace aussi les prix (avant, l'échelle restait en automatique et seul le défilement horizontal marchait). Le bouton **auto** (en bas à droite) ou un double-clic sur l'échelle des prix remet l'échelle automatique.
+
 ## [1.87.0] — 2026-11-22
 Données de marché : synchro corrigée, option « Écarter les données douteuses », réparation de l'historique.
 ### Corrigé

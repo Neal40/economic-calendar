@@ -6057,7 +6057,10 @@ function ictWheelScale(o) { const st = { man: null }, prov = (orig) => (st.man ?
   o.el.addEventListener("pointerdown", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return;
     const up = () => { removeEventListener("pointerup", up, true); setTimeout(() => { const c2 = o.chart(); if (c2 && c2.priceScale(o.scaleId()).options().autoScale === false) { st.man = null; o.onManual(true); } }, 0); }; addEventListener("pointerup", up, true); }, true);
   o.el.addEventListener("dblclick", (e) => { const ch = o.chart && o.chart(); if (!ch) return; const g = geom(); if (!onAxis(g, e.clientX - g.r.left, e.clientY - g.r.top)) return; setTimeout(() => { st.man = null; attach(); o.chart().priceScale(o.scaleId()).applyOptions({ autoScale: true }); o.onManual(false); }, 0); }, true);
-  attach(); return { attach, reset: () => { st.man = null; }, manual: () => !!st.man }; }
+  /* échelle manuelle posée de l'extérieur (glisser le graphique verticalement) : nb / nt = bas / haut visibles voulus */
+  const setView = (nb, nt, quiet) => { const ch = o.chart && o.chart(); if (!ch) return; const id = o.scaleId(), m = ch.priceScale(id).options().scaleMargins || { top: 0.1, bottom: 0.1 }, H = nt - nb; if (!(H > 0)) return;
+    st.man = [nb + H * m.bottom, nt - H * m.top]; attach(); ch.priceScale(id).applyOptions({ autoScale: true }); if (!quiet) o.onManual(true); };
+  attach(); return { attach, reset: () => { st.man = null; }, manual: () => !!st.man, setView }; }
 /* pineEngine:start — moteur Pine Script v5 / v6 (lexer, parseur, traduction en JS, exécution, rendu des dessins, Web Worker) ; testé par tools/check.js */
 function pineEngineFactory() { // une seule fonction : sert aussi de code source au Web Worker (PineAsync)
 /* ---------- Pine Script v5 / v6 : lexer + parser (AST) ---------- */
@@ -13598,6 +13601,17 @@ Cell.prototype.down = function (e) {
   if (h) { stopEv(e); selectD(h.d, this); if (h.d.lock || DS.lockAll) return; if (e.altKey && !h.h) { snap(); const cp = JSON.parse(JSON.stringify(h.d)); cp.id = uid(); drawsOf(this.st.sym).push(cp); selectD(cp, this); h.d = cp; }
     DS.drag = { cell: this, d: h.d, h: h.h || null, x0: x, y0: y, l0: G.lOfX(x), p0: G.p(y), orig: JSON.parse(JSON.stringify(h.d.p)), moved: false }; this.capture(); return; }
   if (DS.sel) selectD(null);
+  this.panStart(e);
+};
+/* glisser le graphique : le défilement horizontal reste celui de Lightweight Charts ; un mouvement vertical (> 4 px) déplace aussi les prix, comme TradingView (échelle « auto » coupée ; bouton « auto » ou double-clic sur l'échelle pour revenir) */
+Cell.prototype.panStart = function (e) {
+  const m = this.st.scale || {}; if (!this.wsc || !this.series || m.mode || m.inv) return;
+  const r = this.main.host.getBoundingClientRect(), ph = r.height - this.main.chart.timeScale().height(), top = this.series.coordinateToPrice(0), bot = this.series.coordinateToPrice(ph);
+  if (!fin(top) || !fin(bot) || !(ph > 0) || top <= bot) return;
+  const ppp = (top - bot) / ph; let on = false;
+  const mv = (ev) => { const dy = ev.clientY - e.clientY; if (!on) { if (Math.abs(dy) < 4) return; on = true; } this.wsc.setView(bot + dy * ppp, top + dy * ppp, on === "q"); on = "q"; };
+  const up = () => { removeEventListener("pointermove", mv, true); removeEventListener("pointerup", up, true); if (on) { saveState(); if (STATE.active === this.idx) refreshBottom(); } };
+  addEventListener("pointermove", mv, true); addEventListener("pointerup", up, true);
 };
 Cell.prototype.capture = function () { // suivre la souris hors du graphique pendant un tracé / déplacement
   const mv = (e) => this.drag(e), up = (e) => { removeEventListener("pointermove", mv, true); removeEventListener("pointerup", up, true); this.up(e); };
