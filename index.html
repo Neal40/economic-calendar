@@ -6954,7 +6954,7 @@ const PineRuntime = (() => {
       in_seconds: (tf) => { const s = tfSpec(tf); return s ? s.sec : NaN; }, from_seconds: (s) => tfStr(s), change: (tf) => { const sp = tfSpec(tf); const v = rt.s; if (!sp || v.i === 0) return v.i === 0 ? false : true; if (sp.chart) return true; return periodId(v.b[v.i][0], sp) !== periodId(v.b[v.i - 1][0], sp); } };
     const syminfo = { ticker: o.sym || "NQ", tickerid: o.sym || "NQ", root: o.sym || "NQ", prefix: "CME", description: o.sym || "NQ", mintick: mintick, pointvalue: o.pv || 20, currency: "USD", basecurrency: "USD", type: "futures", timezone: "America/New_York", session: "regular", volumetype: "base", minmove: 1, pricescale: Math.round(1 / mintick), country: "US", main_tickerid: o.sym || "NQ" };
     const barstate = {};
-    const chart = { point: pt, bg_color: o.bg || "#131722", fg_color: o.fg || "#d1d4dc", is_standard: true, is_heikinashi: false, is_renko: false, is_kagi: false, is_linebreak: false, is_pnf: false, is_range: false, left_visible_bar_time: bars.length ? bars[0][0] * 1000 : NaN, right_visible_bar_time: bars.length ? bars[bars.length - 1][0] * 1000 : NaN };
+    const chart = { point: pt, bg_color: o.bg || "#131722", fg_color: o.fg || "#d1d4dc", is_standard: true, is_heikinashi: false, is_renko: false, is_kagi: false, is_linebreak: false, is_pnf: false, is_range: false, left_visible_bar_time: o.lvis ? o.lvis * 1000 : bars.length ? bars[0][0] * 1000 : NaN, right_visible_bar_time: o.rvis ? o.rvis * 1000 : bars.length ? bars[bars.length - 1][0] * 1000 : NaN }; // v1.92.3 : bornes visibles réelles (page Graphique)
     /* --- espace de noms complet --- */
     const noopF = (name) => () => { warn(`${name}() n'est pas pris en charge (ignoré).`); return NaN; };
     const nsProxy = (name, base) => new Proxy(base, { get: (t, k) => (k in t ? t[k] : typeof k === "symbol" ? undefined : noopF(name + "." + String(k))) });
@@ -7224,7 +7224,7 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
     } catch (e) { W = false; }
     return W;
   }
-  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv].join("|"); };
+  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0].join("|"); };
   function send(id, j) {
     const { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
     const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6);
@@ -12943,7 +12943,8 @@ function pineDef0(id, x) {
           if (!f1.ready) { f1.load().then(() => pineRepaint(iid)); return {}; }
           const r1 = PineAsync.request("gr:" + iid + ":m1", x.code, f1.bars, { inputs: inp, tfSec: 60, tfName: "1", sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
           if (!r1) return {}; const r = pineToTf(r1, f1.bars, B, sec); return { _pine: r, _err: r.error || "" }; }
-        const r = PineAsync.request("gr:" + iid, x.code, B, { inputs: inp, tfSec: sec, tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv }, () => pineRepaint(iid));
+        const vis = X.vis && /(left|right)_visible_bar_time/.test(x.code) ? X.vis : null; // v1.92.3 : chart.left/right_visible_bar_time = bord réel de l'écran
+        const r = PineAsync.request("gr:" + iid, x.code, B, { inputs: inp, tfSec: sec, tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv, lvis: vis ? vis[0] : 0, rvis: vis ? vis[1] : 0 }, () => pineRepaint(iid));
         return r ? { _pine: r, _err: r.error || "" } : {}; }
       const c = pineCmp(x); if (c.error) return { _err: c.error };
       const r = window.btIND.run(c, B.map((b) => [b[0], b[1], b[2], b[3], b[4], b[5]]), { ny: (t) => t + nyOff(t), inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv });
@@ -13441,7 +13442,9 @@ class Cell {
       if (act === "retry") { this.feed.ready = false; this.feed.load(true); } if (act === "sym") openSymbolSearch(); if (act === "tv") setMode("tv"); };
   }
   /* ----- indicateurs ----- */
-  ctx() { return { iv: this.st.iv, sym: this.st.sym, spec: this.spec }; }
+  ctx() { return { iv: this.st.iv, sym: this.st.sym, spec: this.spec, vis: this.visT() }; }
+  // v1.92.3 : heures (s) de la 1re et de la dernière bougie visibles, bornées aux bougies du graphique
+  visT() { try { const r = this.main.chart.timeScale().getVisibleLogicalRange(), B = this.DB, n = B ? B.length : 0; if (!r || !n) return null; const a = clamp(Math.ceil(r.from), 0, n - 1), z = clamp(Math.floor(r.to), 0, n - 1); return [B[a][0], B[z][0]]; } catch (e) { return null; } }
   inds(full, from) {
     const B = this.DB, used = new Set(), usedPanes = new Set(), X = this.ctx();
     if (full) { this.hl.forEach(([s, l]) => { try { s.removePriceLine(l); } catch (e) { /* */ } }); this.hl = []; }
@@ -13518,7 +13521,8 @@ class Cell {
   wire() {
     const ch = this.main.chart;
     ch.subscribeCrosshairMove((p) => { if (this.dead) return; this.cross = p && p.point ? p : null; if (this.xs) return; this.xs = true; try { const i = p && p.logical != null && p.point ? Math.round(p.logical) : null; this.legend(i); this.hoverPanes(this.main, p); if (!Cell.xsync) { Cell.xsync = true; try { syncCross(this, p); } finally { Cell.xsync = false; } } this.newsTip(p); } finally { this.xs = false; } });
-    ch.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (!r || this.dead) return; if (!this.syncing) { this.syncing = true; this.panes.forEach((p) => { try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }); this.syncing = false; syncTime(this); }
+    ch.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && !this.dead) { clearTimeout(this.visTo); this.visTo = setTimeout(() => { if (this.dead) return; const v = this.visT(), k = v ? v.join(",") : ""; if (k === this.visK) return; this.visK = k; if (this.st.inds.some((y) => !y.hide && String(y.t).startsWith("pine:") && (() => { const d = indDef(y.t); return d && d.src && /(left|right)_visible_bar_time/.test(d.src.code || ""); })())) this.inds(true); }, 250); }
+      if (!r || this.dead) return; if (!this.syncing) { this.syncing = true; this.panes.forEach((p) => { try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }); this.syncing = false; syncTime(this); }
       if (r.from < 30 && this.feed && !this.feed.done && !this.feed.more && this.feed.ready) this.feed.loadMore(); this.ilay.update(); });
     // souris sur le graphique principal : outils de dessin, sélection, déplacement
     const host = this.main.host;

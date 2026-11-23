@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.92.3] — 2026-11-23
+### Ajouté
+- Scripts Pine de la page Graphique : `chart.left_visible_bar_time` / `chart.right_visible_bar_time` donnent maintenant les vraies bougies au bord gauche / droit de l'écran (avant : première / dernière bougie chargée). Les scripts qui les lisent sont recalculés quand tu fais défiler le graphique (textes alignés sur le bord droit, comme sur TradingView).
+
 ## [1.92.2] — 2026-11-23
 ### Corrigé
 - Scripts Pine (page Graphique et Backtesteur) : les étiquettes `label.style_label_lower_left / lower_right` s'affichent maintenant **au-dessus** du point et `upper_left / upper_right` **en dessous**, comme sur TradingView (c'était inversé).
