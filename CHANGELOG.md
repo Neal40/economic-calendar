@@ -2,6 +2,12 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.93.0] — 2026-11-23
+### Ajouté
+- Moteur Pine de la page Graphique : **`request.security_lower_tf`** (bougies 1 min du même symbole, flux m1 partagé, recalcul quand de nouvelles bougies arrivent), avec les tuples (`[time, open, high, low, close]`). Un script peut ainsi garder les FVG / niveaux du 1 min sur un graphique 5 min, 15 min, 1 h…
+### Corrigé
+- `request.security` / `security_lower_tf` : `syminfo.tickerid` d'un CSV importé (`CSV:…`) est reconnu comme le symbole du graphique.
+
 ## [1.92.3] — 2026-11-23
 ### Ajouté
 - Scripts Pine de la page Graphique : `chart.left_visible_bar_time` / `chart.right_visible_bar_time` donnent maintenant les vraies bougies au bord gauche / droit de l'écran (avant : première / dernière bougie chargée). Les scripts qui les lisent sont recalculés quand tu fais défiler le graphique (textes alignés sur le bord droit, comme sur TradingView).
