@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.92.2] — 2026-11-23
+### Corrigé
+- Scripts Pine (page Graphique et Backtesteur) : les étiquettes `label.style_label_lower_left / lower_right` s'affichent maintenant **au-dessus** du point et `upper_left / upper_right` **en dessous**, comme sur TradingView (c'était inversé).
+
 ## [1.92.1] — 2026-11-23
 ### Ajouté
 - Fenêtre de paramètres d'un script Pine : les entrées dont le groupe commence par « Style » (ex. `group = "Style · Étiquettes"`) s'affichent dans l'onglet **Style**, sous leur nom sans le préfixe, comme les couleurs et les cases d'affichage sur TradingView.

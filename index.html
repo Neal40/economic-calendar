@@ -7111,8 +7111,8 @@ const PineDraw = (() => {
       case "label_left": bx = x + ar; by = y - h / 2; break;
       case "label_right": bx = x - w - ar; by = y - h / 2; break;
       case "label_center": case "none": case "text_outline": bx = x - w / 2; by = y - h / 2; break;
-      case "label_lower_left": bx = x; by = y; break; case "label_lower_right": bx = x - w; by = y; break;
-      case "label_upper_left": bx = x; by = y - h; break; case "label_upper_right": bx = x - w; by = y - h; break;
+      case "label_lower_left": bx = x; by = y - h; break; case "label_lower_right": bx = x - w; by = y - h; break; // v1.92.2 : comme TradingView, pointe en bas à gauche = étiquette au-dessus du point
+      case "label_upper_left": bx = x; by = y; break; case "label_upper_right": bx = x - w; by = y; break;
       default: bx = x - w / 2; by = y - h - ar;
     }
     if (bg && st !== "none" && st !== "text_outline") {
