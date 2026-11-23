@@ -6,6 +6,10 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 ### Corrigé
 - Page Graphique et Backtesteur : la mire (étiquette de prix sur l'échelle) et les prix affichés avancent maintenant **de tick en tick** (0.25 sur NQ / ES / MNQ / MES : 25875.75 et plus 25875.66). Le format de prix arrondit au tick du symbole.
 
+## [1.93.1] — 2026-11-23
+### Ajouté
+- Moteur Pine de la page Graphique : `request.security` vers une unité supérieure (W, D, 4 h…) a maintenant l'**historique d'avant le graphique** (bougies 1 h de l'app), comme sur TradingView. Ex. : en 1 min, `open[30]` du weekly est disponible alors que le graphique n'a que quelques jours.
+
 ## [1.93.0] — 2026-11-23
 ### Ajouté
 - Moteur Pine de la page Graphique : **`request.security_lower_tf`** (bougies 1 min du même symbole, flux m1 partagé, recalcul quand de nouvelles bougies arrivent), avec les tuples (`[time, open, high, low, close]`). Un script peut ainsi garder les FVG / niveaux du 1 min sur un graphique 5 min, 15 min, 1 h…

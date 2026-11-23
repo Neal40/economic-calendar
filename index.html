@@ -6925,7 +6925,11 @@ const PineRuntime = (() => {
       const sp = tfSpec(tf); if (!sp) { warn(`request.security : unité de temps « ${tf} » non reconnue.`); return NaN; }
       const parent = rt.ctx;
       if (sp.chart || sp.sec <= tfs) { if (sp.sec < tfs) warn("request.security vers une unité de temps inférieure : valeur du graphique utilisée."); const c = parent.sub["s" + site] || (parent.sub["s" + site] = newCtx()); rt.ctx = c; try { return fn(); } finally { rt.ctx = parent; } }
-      let S = rt.secs.get(site); if (!S) { S = { b: [], view: null, ctx: newCtx(), id: null, snap: null, done: NaN, curV: NaN }; S.view = new View(S.b, sp.sec); rt.secs.set(site, S); }
+      let S = rt.secs.get(site); if (!S) { S = { b: [], view: null, ctx: newCtx(), id: null, snap: null, done: NaN, curV: NaN }; S.view = new View(S.b, sp.sec); rt.secs.set(site, S);
+        // v1.93.1 : historique d'avant le graphique (bougies 1 h fournies par l'app : o.hist) → l'unité supérieure a son passé (open[5], close[20]…)
+        const H = o.hist; if (H && H.length && sp.sec >= (o.histSec || 3600) && bars.length) { const t0 = bars[0][0];
+          for (const h of H) { if (h[0] >= t0) break; const id = periodId(h[0], sp); if (id !== S.id) { S.b.push([periodStart(h[0], sp), h[1], h[2], h[3], h[4], h[5] || 0]); S.id = id; } else { const L = S.b[S.b.length - 1]; L[2] = Math.max(L[2], h[2]); L[3] = Math.min(L[3], h[3]); L[4] = h[4]; L[5] += h[5] || 0; } }
+          if (S.b.length) { const ps = rt.s; try { for (let k = 0; k < S.b.length; k++) { if (k === S.b.length - 1) S.snap = clone(S.ctx); S.view.i = k; rt.s = S.view; rt.ctx = S.ctx; const v = fn(); if (k < S.b.length - 1) S.done = v; else S.curV = v; } } finally { rt.s = ps; rt.ctx = parent; } } } }
       const b = cur(), id = periodId(b[0], sp);
       if (id !== S.id) { if (S.b.length) S.done = S.curV; S.snap = clone(S.ctx); S.b.push([periodStart(b[0], sp), b[1], b[2], b[3], b[4], b[5]]); S.id = id; }
       else { const L = S.b[S.b.length - 1]; L[2] = Math.max(L[2], b[2]); L[3] = Math.min(L[3], b[3]); L[4] = b[4]; L[5] += b[5]; S.ctx = clone(S.snap); }
@@ -7245,7 +7249,7 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
     } catch (e) { W = false; }
     return W;
   }
-  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0].join("|"); };
+  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0].join("|"); };
   function send(id, j) {
     const { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
     const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6);
@@ -12968,8 +12972,11 @@ function pineDef0(id, x) {
         // v1.93 : request.security_lower_tf → bougies 1 min du même symbole (flux m1 partagé)
         let ltf = null; if (/request\.security_lower_tf/.test(x.code) && sec > 60 && X.spec.src !== "ff") { const f1 = getFeed(X.sym, "1"); if (!PINE_M1SUB.has(iid + "|" + X.sym + "|ltf")) { PINE_M1SUB.add(iid + "|" + X.sym + "|ltf"); f1.subs.add((t) => { if (t === "reset" || t === "tick" || t === "prepend") pineRepaint(iid); }); }
           if (!f1.ready) f1.load().then(() => pineRepaint(iid)); else if (f1.bars.length && B.length) { const t0 = B[0][0]; let a = 0, z = f1.bars.length; while (a < z) { const m = (a + z) >> 1; if (f1.bars[m][0] < t0) a = m + 1; else z = m; } ltf = f1.bars.slice(a); } }
+        // v1.93.1 : request.security vers une unité supérieure → historique 1 h d'avant le graphique
+        let hist = null; if (/request\.security\s*\(/.test(x.code) && sec < 3600 * 24 && X.spec.src !== "ff") { const fh = getFeed(X.sym, "60"); if (!PINE_M1SUB.has(iid + "|" + X.sym + "|hist")) { PINE_M1SUB.add(iid + "|" + X.sym + "|hist"); fh.subs.add((t) => { if (t === "reset" || t === "prepend") pineRepaint(iid); }); }
+          if (!fh.ready) fh.load().then(() => pineRepaint(iid)); else if (fh.bars.length && B.length) { const t0 = B[0][0]; let a = 0, z = fh.bars.length; while (a < z) { const m = (a + z) >> 1; if (fh.bars[m][0] < t0) a = m + 1; else z = m; } hist = fh.bars.slice(0, a); } }
         const vis = X.vis && /(left|right)_visible_bar_time/.test(x.code) ? X.vis : null; // v1.92.3 : chart.left/right_visible_bar_time = bord réel de l'écran
-        const r = PineAsync.request("gr:" + iid, x.code, B, { inputs: inp, tfSec: sec, tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv, lvis: vis ? vis[0] : 0, rvis: vis ? vis[1] : 0, ltf, ltfSec: ltf ? 60 : 0 }, () => pineRepaint(iid));
+        const r = PineAsync.request("gr:" + iid, x.code, B, { inputs: inp, tfSec: sec, tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv, lvis: vis ? vis[0] : 0, rvis: vis ? vis[1] : 0, ltf, ltfSec: ltf ? 60 : 0, hist: hist && hist.length ? hist : null, histSec: 3600 }, () => pineRepaint(iid));
         return r ? { _pine: r, _err: r.error || "" } : {}; }
       const c = pineCmp(x); if (c.error) return { _err: c.error };
       const r = window.btIND.run(c, B.map((b) => [b[0], b[1], b[2], b[3], b[4], b[5]]), { ny: (t) => t + nyOff(t), inputs: Object.assign({}, x.inputs || {}, (inst && inst.inp) || {}), tfSec: ivSec(X.iv), tfName: ivLabel(X.iv), sym: X.sym, pv: X.spec.pv });
