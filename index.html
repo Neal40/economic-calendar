@@ -659,6 +659,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-tabl{width:8px;height:8px;border-radius:2px;background:var(--lc);flex:none}
 .gr-tab.drop,.gr-tg.drop{outline:2px solid #2962ff;outline-offset:-2px}
 .gr-tabadd{width:28px;height:28px;margin-left:2px;border:0;border-radius:6px;background:none;color:var(--gm);display:grid;place-items:center;cursor:pointer;flex:none;align-self:center}.gr-tabadd:hover{background:var(--gh);color:var(--gt)}.gr-tabadd svg{width:18px;height:18px}
+.gr-tabsp{flex:1 1 auto;min-width:8px}.gr-tabw{width:32px;height:28px;border:0;border-radius:6px;background:none;color:var(--gm);display:grid;place-items:center;cursor:pointer;flex:none;align-self:center}.gr-tabw:hover{background:var(--gh);color:var(--gt)}.gr-tabq:hover{background:#f23645;color:#fff}
 .gr-tg{align-self:center;height:22px;padding:0 9px;margin:0 2px 0 6px;border-radius:6px;border:0;background:var(--c);color:#fff;font-size:12px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap}.gr-tg small{opacity:.8;margin-left:4px}.gr-tg.col{opacity:.85}
 .gr-tlk{padding:6px 12px 8px;min-width:250px}.gr-tlkh{font-size:11px;color:var(--gm);margin-bottom:6px}.gr-tlkc{display:flex;gap:6px;margin-bottom:6px}
 .gr-tlkd{width:20px;height:20px;border-radius:5px;border:2px solid transparent;background:var(--c);cursor:pointer;padding:0}.gr-tlkd.none{background:none;color:var(--gm);border-color:var(--gl);font-size:12px;line-height:1}.gr-tlkd.on{border-color:var(--gt);box-shadow:0 0 0 1px var(--gb) inset}
@@ -770,7 +771,14 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-pol.pend{opacity:.55}
 /* v1.94 : ordres comme TradingView : vente = rouge (ordre, position), aperçu du ticket en pointillés, P&L pendant le glisser */
 .gr-pol.sell:not(.tp):not(.sl) .gr-pob,.gr-pol.sell:not(.tp):not(.sl) .gr-poc,.gr-pol.sell:not(.tp):not(.sl) .gr-por{border-color:#f23645}.gr-pol.sell:not(.tp):not(.sl) .gr-pob b,.gr-pol.pos.sell .gr-poc{background:#f23645}.gr-pol.sell:not(.tp):not(.sl):not(.pos) .gr-poc,.gr-pol.pos.sell .gr-por{color:#f23645}.gr-pol.sell:not(.tp):not(.sl) .gr-pob{box-shadow:0 0 0 3px rgba(242,54,69,.15)}.gr-pol.pos.sell .gr-poc{color:#fff}
-.gr-pol.pv{opacity:.75;pointer-events:none}.gr-pol.pv .gr-pob{border-style:dashed;box-shadow:none;cursor:default}.gr-pol.pv.tp .gr-pob{border-color:#089981}.gr-pol.pv.tp .gr-pob b{background:#089981}.gr-pol.pv.sl .gr-pob{border-color:#f23645}.gr-pol.pv.sl .gr-pob b{background:#f23645}
+.gr-pol.pv{opacity:.8}.gr-pol.pv .gr-pob{border-style:dashed;box-shadow:none;cursor:ns-resize}.gr-pol.pv .gr-poc{border-style:dashed}
+/* v1.94.1 : thème TopstepX des ordres */
+.gr-pol.gtsx{gap:0}.gr-pol.gtsx .gr-pob{height:19px;border:1px solid #000;border-radius:0;box-shadow:none;background:var(--tb);font:700 11px Arial,Helvetica,sans-serif;color:#000;cursor:ns-resize}.gr-pol.gtsx.pos .gr-pob{cursor:default}
+.gr-pol.gtsx .gr-pob i{font-style:normal;padding:0 4px 0 5px;display:flex;align-items:center;color:#000;font-weight:700}
+.gr-pol.gtsx .gr-pob em,.gr-pol.gtsx .gr-pob em.up,.gr-pol.gtsx .gr-pob em.dn{order:1;color:#000;padding:0 7px 0 2px;font-weight:700}
+.gr-pol.gtsx .gr-pob b{order:2;background:var(--qb);color:#000;border-left:1px solid #000;padding:0 7px;font-weight:700}
+.gr-pol.gtsx .gr-poc,.gr-pov .gr-pol.gtsx.pos .gr-poc{width:19px;height:19px;border-radius:0;border:1px solid #000;border-left:0;background:#fff;color:#000;font:400 14px Arial,sans-serif;margin:0}.gr-pol.gtsx .gr-por{display:none}
+.gr-pol.gtsx.pv .gr-pob,.gr-pol.gtsx.pv .gr-poc{border-style:dashed}.gr-pol.gtsx.pend{opacity:.6}.gr-pol.pv.tp .gr-pob{border-color:#089981}.gr-pol.pv.tp .gr-pob b{background:#089981}.gr-pol.pv.sl .gr-pob{border-color:#f23645}.gr-pol.pv.sl .gr-pob b{background:#f23645}
 .gr-pog .gr-pgv{font-variant-numeric:tabular-nums}.gr-pog .gr-pgv.up{color:#089981}.gr-pog .gr-pgv.dn{color:#f23645}.gr-pog.drag{background:#fff;color:#131722;box-shadow:0 1px 4px rgba(0,0,0,.25)}.gr-pog.tp.drag{border-color:#089981}.gr-pog.sl.drag{border-color:#f23645}
 .gr-pov.gr-ctl-never .gr-poc,.gr-pov.gr-ctl-never .gr-por,.gr-pov.gr-ctl-never .gr-pog{display:none!important}
 .gr-pov.gr-ctl-hover .gr-poc,.gr-pov.gr-ctl-hover .gr-por,.gr-pov.gr-ctl-hover .gr-pog{opacity:0;transition:opacity .12s}.gr-cell:hover .gr-pov.gr-ctl-hover .gr-poc,.gr-cell:hover .gr-pov.gr-ctl-hover .gr-por,.gr-cell:hover .gr-pov.gr-ctl-hover .gr-pog{opacity:1}
@@ -12954,7 +12962,7 @@ const indTitle = (x) => { const d = indDef(x.t); if (!d) return x.t; const I = i
 // v1.77 : liste gardée en mémoire tant que le stockage ne change pas (avant : relue et re-parsée à chaque dessin du graphique, ~330 Ko avec les scripts TradingView)
 let pineRaw = null, pineMemo = [];
 const pineList = () => { let raw = null; try { raw = localStorage.getItem("bt-indicators"); } catch (e) { raw = null; } if (raw !== pineRaw) { pineRaw = raw; try { const L = raw ? JSON.parse(raw) : null; pineMemo = Array.isArray(L) ? L : []; } catch (e) { pineMemo = []; } } return pineMemo; };
-const pineRepaint = (() => { const ids = new Set(); let raf = 0; return (id) => { ids.add(id); if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const S2 = new Set(ids); ids.clear(); (typeof CELLS !== "undefined" ? CELLS : []).forEach((c) => { if (c && c.st && c.st.inds.some((y) => S2.has(y.id))) c.inds(true); }); }); }; })();
+const pineRepaint = (() => { const ids = new Set(); let raf = 0; return (id) => { ids.add(id); if (raf) return; raf = requestAnimationFrame(() => { raf = 0; const S2 = new Set(ids); ids.clear(); (typeof CELLS !== "undefined" ? CELLS : []).forEach((c) => { if (c && c.st && c.st.inds.some((y) => S2.has(y.id))) { c.inds(true); requestAnimationFrame(() => c.keepCross && c.keepCross()); } }); }); }; })();
 const PCMP = new Map();
 function pineCmp(x) { const E2 = window.btIND; if (!E2) return { error: "moteur Pine indisponible (ouvre une fois le Backtesteur)" }; const k = x.lang + "\n" + x.code; let c = PCMP.get(k); if (!c) { c = E2.compile(x.code, x.lang); PCMP.set(k, c); if (PCMP.size > 40) PCMP.delete(PCMP.keys().next().value); } return c; }
 function pineDef(id) {
@@ -13274,7 +13282,7 @@ const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#0
   vgridC: "", hgridC: "", wmC: "", scaleLineC: "", navBtns: "hover", trLbl: true, trPL: true, trPLu: "money",
   /* v1.88 : réglages Trading façon TopstepX (compte démo de la page) */
   trBtns: true, tr1Click: true, trSnd: true, trSndV: 50, trSndT: "thin", trRejOnly: false, trPos: true, trRev: true, trCtl: "always", trDraft: false,
-  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, trPrev: true, alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
+  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, trPrev: true, trTheme: "tv", alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
 const LIGHT = { bg: "#ffffff", bg2: "", txt: "#131722", gridC: "rgba(42,46,57,0.07)", crossC: "#9598a1", sessC: "rgba(120,123,134,0.30)" };
 let PR = Object.assign({}, PDEF, LS.get("gr-prefs", {}));
 /* anciennes cases -> nouveaux menus (une fois), puis valeurs dérivées gardées à jour pour le reste du code */
@@ -13598,7 +13606,8 @@ class Cell {
       const x = this.st.inds.find((y) => y.id === row.dataset.ind); if (!x) return; const a = b.dataset.a || "set";
       if (a === "eye") { x.hide = !x.hide; this.inds(true); this.legend(); saveState(); } else if (a === "del") removeInd(this, x.id); else if (a === "set") openIndSettings(this, x); else if (a === "code") openIndCode(x); else if (a === "more") { const r = b.getBoundingClientRect(); indMenu(this, x, r.left, r.bottom); } });
   }
-  wirePane(p) { p.chart.subscribeCrosshairMove((q) => { if (this.dead || this.xs) return; this.xs = true; try { const i = q && q.logical != null && q.point ? Math.round(q.logical) : null; this.legend(i); this.hoverPanes(p, q); if (q && q.point) { try { this.main.chart.setCrosshairPosition(NaN, q.time, this.series); } catch (e) { /* */ } } else this.main.chart.clearCrosshairPosition(); } finally { this.xs = false; } });
+  wirePane(p) { try { p.host.addEventListener("pointerenter", () => (p.hov = true)); p.host.addEventListener("pointerleave", () => (p.hov = false)); } catch (e) { /* */ }
+    p.chart.subscribeCrosshairMove((q) => { if (this.dead || this.xs || !p.hov) return; /* v1.94.1 : mise à jour des données d'un panneau = plus d'effacement de la ligne horizontale du graphique */ this.xs = true; try { const i = q && q.logical != null && q.point ? Math.round(q.logical) : null; this.legend(i); this.hoverPanes(p, q); if (q && q.point) { try { this.main.chart.setCrosshairPosition(NaN, q.time, this.series); } catch (e) { /* */ } } else this.main.chart.clearCrosshairPosition(); } finally { this.xs = false; } });
     p.chart.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (!r || this.dead || this.syncing) return; this.syncing = true; try { this.main.chart.timeScale().setVisibleLogicalRange(r); this.panes.forEach((q) => { if (q !== p) q.chart.timeScale().setVisibleLogicalRange(r); }); } catch (e) { /* */ } this.syncing = false; }); }
   hoverPanes(src, p) { const all = [this.main, ...this.panes]; all.forEach((q) => { if (q === src) return; try { if (p && p.time != null) { const s = q === this.main ? this.series : q.anchor; q.chart.setCrosshairPosition(NaN, p.time, s); } else q.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
   newsTip(p) { const tip = this.tipEl; if (!p || !p.point || !this.evHit || !this.evHit.length) { tip.hidden = true; return; } const h = this.evHit.find((q) => Math.abs(q.x - p.point.x) < 9 && Math.abs(q.y - p.point.y) < 11);
@@ -14043,10 +14052,15 @@ function renderTabs() { const bar = $r("#grTabs"); if (!bar) return; const L = T
     const c = tabSym(t);
     h += `<div class="gr-tab${t.id === TABS.cur ? " on" : ""}${t.pin ? " pin" : ""}${g ? " ing" : ""}" data-t="${t.id}" draggable="true" style="${g ? `--gc:${g.color};` : ""}${t.link ? `--lc:${t.link}` : ""}" title="${E(tabTitle(t))}${t.link ? " — onglet lié" : ""}">
       ${t.link ? `<i class="gr-tabl"></i>` : ""}${t.pin ? `<span class="gr-tabp">${E(c ? symCode(c.sym) : "★")}</span>` : `<span class="gr-tabn">${E(tabTitle(t))}</span><button class="gr-tabx" data-x="1" title="Fermer l'onglet (Ctrl+W)">×</button>`}</div>`; });
-  h += `<button class="gr-tabadd" id="grTabAdd" title="Nouvel onglet (Ctrl+T) — Maj + clic : nouvelle fenêtre">${ICO.plus}</button>`;
+  h += `<button class="gr-tabadd" id="grTabAdd" title="Nouvel onglet (Ctrl+T) — Maj + clic : nouvelle fenêtre">${ICO.plus}</button><span class="gr-tabsp"></span>`;
+  // v1.94.1 : à droite comme TradingView : nouvelle fenêtre ; dans une fenêtre secondaire, fermer seulement cette fenêtre (l'app reste ouverte)
+  h += `<button class="gr-tabw" id="grTabWin" title="Nouvelle fenêtre"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M10 13.5v3M6.5 16.5h7M2.5 6.5h15"/></svg></button>`;
+  if (TABWIN) h += `<button class="gr-tabw gr-tabq" id="grTabQuit" title="Fermer cette fenêtre (l'app reste ouverte)"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3.5H4.5a1 1 0 00-1 1v11a1 1 0 001 1H8M12 6.5l3.5 3.5-3.5 3.5M15.5 10H7.5"/></svg></button>`;
   bar.innerHTML = h; }
 function tabsWire() { const bar = $r("#grTabs"); if (!bar || bar._w) return; bar._w = 1;
   bar.addEventListener("click", (e) => { const add = e.target.closest("#grTabAdd"); if (add) { if (e.shiftKey) tabWindow(null); else tabNew(); return; }
+    if (e.target.closest("#grTabWin")) { tabWindow(null); return; }
+    if (e.target.closest("#grTabQuit")) { tabSnap(); LS.set(TABKEY(), TABS); window.close(); return; }
     const gb = e.target.closest("[data-g]"); if (gb) { const g = TABS.groups.find((x) => x.id === gb.dataset.g); if (g) { g.col = !g.col; LS.set(TABKEY(), TABS); renderTabs(); } return; }
     const tb = e.target.closest("[data-t]"); if (!tb) return; const t = TABS.list.find((x) => x.id === tb.dataset.t); if (!t) return;
     if (e.target.closest("[data-x]")) { e.stopPropagation(); tabClose(t); return; } tabGo(t.id); });
@@ -14984,7 +14998,8 @@ function openSettings(tab) {
       + row(ck("trPL", "Valeur des profits et pertes", true)) + `<div class="tv-sub">${row(ck("trPLpos", "Positions", true), sl("trPLposU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}${row(ck("trPLbr", "Brackets", true), sl("trPLbrU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}</div>`
       + row(ck("trades", "Marques d'exécution", true)) + `<div class="tv-sub">${row(ck("trLbl", "Étiquettes d'exécution", true))}</div>`
       + row(ck("trExt", "Lignes de prix étendues sur toute la largeur du graphique", true))
-      + row(ck("trPrev", "Aperçu de l'ordre limite / stop du ticket avec ses TP / SL", true))
+      + row(ck("trPrev", "Aperçu de l'ordre limite / stop du ticket avec ses TP / SL", true), "", "Entrée, TP et SL de l'aperçu se glissent sur le graphique ; × = revenir à un ordre au marché")
+      + row("Thème des ordres", sl("trTheme", [["tv", "TradingView"], ["tsx", "TopstepX"]], "sm"), "Style des étiquettes de position, d'ordres, de TP et de SL sur le graphique")
       + row("Alignement de l'ordre et de la position", sl("trAlign", [["right", "Droite"], ["center", "Centre"], ["left", "Gauche"]], "sm"))
       + row(ck("trShot", "Ordres, exécutions et positions dans les captures de graphique", true), "", "Affiche vos transactions sur le graphique sous forme de captures d'écran")],
     ["al", "Alertes", sec("Visibilité de la ligne graphique") + row(ck("alertLines", "Lignes d'alerte", true), sw("alertC")) + row(ck("alertActive", "Uniquement les alertes actives", true)) + sec("Notifications") + row(ck("toastAuto", "Masquer automatiquement les toasts", true))],
@@ -15672,14 +15687,18 @@ function paItems(c) {
 }
 const PLCOL = { pos: "#2962ff", tp: "#089981", sl: "#f23645", ord: "#2962ff", draft: "#787b86" };
 // v1.94 : couleurs TradingView : achat bleu, vente rouge (position comprise), TP vert, SL rouge
-const paCol = (it) => (it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "draft" ? (it.d.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pos" ? (it.P.q > 0 ? "#2962ff" : "#f23645") : it.kind === "pv" ? (it.pv.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pvx" ? (it.x === "tp" ? "#089981" : "#f23645") : PLCOL[it.kind]);
+const TSXC = { g: "#26ff26", r: "#ff1a1a", b: "#2f8cff", o: "#ff9800" };
+const tsxOn = () => PR.trTheme === "tsx";
+const paColTsx = (it) => { const k = it.kind, x = it.x; if (k === "tp" || (k === "pvx" && x === "tp")) return TSXC.g; if (k === "sl" || (k === "pvx" && x === "sl")) return TSXC.r; if (k === "pos") { const sy = paSym(), px = sy ? paPx(sy) : null, u = px && PA.A ? grPaper.upnl(PA.A, sy, px, paSpec(sy)) : 0; return u < 0 ? TSXC.r : TSXC.g; }
+  const side = it.o ? it.o.side : it.pv ? it.pv.side : it.d ? it.d.side : "buy"; return side === "buy" ? TSXC.b : TSXC.o; };
+const paCol = (it) => tsxOn() && it.kind !== "gtp" && it.kind !== "gsl" ? paColTsx(it) : (it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "draft" ? (it.d.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pos" ? (it.P.q > 0 ? "#2962ff" : "#f23645") : it.kind === "pv" ? (it.pv.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pvx" ? (it.x === "tp" ? "#089981" : "#f23645") : PLCOL[it.kind]);
 function paLines() {
   const keep = new Set(), c = activeCell(), A = PA.A;
   if (c && A && c.series && PR.trPos !== false) {
     for (const it of paItems(c)) { if (it.kind === "gtp" || it.kind === "gsl") continue; const key = it.key, price = PA.drag && PA.drag.key === key ? PA.drag.price : it.price; if (!fin(price)) continue; keep.add(key);
       let L = PA.lines.get(key); if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
-      const col = paCol(it), prv = it.kind === "pv" || it.kind === "pvx", opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : prv ? alpha(col, 0.45) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : prv ? 1 : 2, lineVisible: PR.trExt !== false, axisLabelVisible: true, title: "" };
-      if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = it.o || null; }
+      const col = paCol(it), prv = it.kind === "pv" || it.kind === "pvx", tsx = tsxOn(), opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : prv ? alpha(col, 0.45) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : prv ? 1 : tsx && it.kind === "tp" ? 1 : 2, axisLabelTextColor: tsx && (col === TSXC.g || col === TSXC.o) ? "#000000" : "#ffffff", lineVisible: PR.trExt !== false, axisLabelVisible: true, title: "" };
+      if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = it.o || (prv ? { pv: 1 } : null); }
   }
   for (const [k, L] of PA.lines) if (!keep.has(k)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } PA.lines.delete(k); }
   paOverlay();
@@ -15691,10 +15710,15 @@ function paOverlay() {
   if (!PA.ov || !PA.ov.isConnected || PA.ov.parentNode !== c.el) { if (PA.ov) PA.ov.remove(); PA.ov = el("div", "gr-pov"); c.el.append(PA.ov); PA.ovSig = ""; paOvWire(PA.ov); }
   PA.ov.hidden = false; const ctl = PR.trCtl || "always", al = PR.trAlign || "right";
   ["always", "hover", "never"].forEach((v) => PA.ov.classList.toggle("gr-ctl-" + v, ctl === v)); PA.ov.classList.toggle("gr-noext", PR.trExt === false); ["right", "center", "left"].forEach((v) => PA.ov.classList.toggle("gr-al-" + v, al === v));
-  const items = paItems(c), sig = items.map((i) => i.key + (i.o ? i.o.st : "") + (i.d ? i.d.side + i.d.qty : "") + (i.P ? Math.sign(i.P.q) : "") + (i.pv ? i.pv.side + i.pv.type : "")).join("|") + "|" + (PR.trRev !== false);
+  const items = paItems(c), sig = items.map((i) => i.key + (i.o ? i.o.st : "") + (i.d ? i.d.side + i.d.qty : "") + (i.P ? Math.sign(i.P.q) : "") + (i.pv ? i.pv.side + i.pv.type : "")).join("|") + "|" + (PR.trRev !== false) + PR.trTheme;
+  PA.ov.classList.toggle("gr-tsx", tsxOn());
   if (sig !== PA.ovSig) { PA.ovSig = sig; PA.ov.innerHTML = items.map((it) => {
-    if (it.kind === "pv") return `<div class="gr-pol pv ${it.pv.side}" data-k="${it.key}"><span class="gr-pob"><b></b><em></em></span></div>`;
-    if (it.kind === "pvx") return `<div class="gr-pol pv ${it.x}" data-k="${it.key}"><span class="gr-pob"><b></b><em></em></span></div>`;
+    // v1.94.1 : thème TopstepX (poignée |, P&L, quantité, ×)
+    if (tsxOn() && it.kind !== "draft" && it.kind !== "gtp" && it.kind !== "gsl") { const pend = it.o && it.o.st === "pending", cl = it.kind === "pv" ? "ord pv " + it.pv.side : it.kind === "pvx" ? "pv " + it.x : it.kind + (it.o ? " " + it.o.side : "");
+      const x = it.kind === "pos" ? "close" : it.kind === "pv" || it.kind === "pvx" ? "pvx" : "can";
+      return `<div class="gr-pol gtsx ${cl}${pend ? " pend" : ""}" data-k="${it.key}"><span class="gr-pob"${it.kind === "pos" ? "" : ` data-drag="1" title="Glisser pour déplacer"`}><i>|</i><em></em><b></b></span><button class="gr-poc" data-a="${x}" title="${x === "close" ? "Fermer la position" : x === "pvx" ? "Annuler l'aperçu (ordre au marché)" : "Annuler l'ordre"}">×</button></div>`; }
+    if (it.kind === "pv") return `<div class="gr-pol pv ${it.pv.side}" data-k="${it.key}"><span class="gr-pob" data-drag="1" title="Glisser pour changer le prix de l'ordre"><b></b><em></em></span><button class="gr-poc" data-a="pvx" title="Annuler l'aperçu (revenir à un ordre au marché)">×</button></div>`;
+    if (it.kind === "pvx") return `<div class="gr-pol pv ${it.x}" data-k="${it.key}"><span class="gr-pob" data-drag="1" title="Glisser pour changer le ${it.x === "tp" ? "take profit" : "stop loss"}"><b></b><em></em></span></div>`;
     if (it.kind === "pos") return `<div class="gr-pol pos ${it.P.q > 0 ? "buy" : "sell"}" data-k="pos"><button class="gr-poc" data-a="close" title="Fermer la position">×</button>${PR.trRev !== false ? `<button class="gr-por" data-a="rev" title="Retourner la position">⇅</button>` : ""}<span class="gr-pob"><b></b><em></em></span></div>`;
     if (it.kind === "draft") return `<div class="gr-pol draft ${it.d.side}" data-k="draft"><span class="gr-pob"><b></b><em></em></span><button class="gr-pogo" data-a="send" title="Envoyer l'ordre au marché">${it.d.side === "buy" ? "Acheter" : "Vendre"}</button><button class="gr-poc" data-a="drop" title="Abandonner l'ordre de projet">×</button></div>`;
     if (it.kind === "gtp" || it.kind === "gsl") return `<div class="gr-pog ${it.kind === "gtp" ? "tp" : "sl"}" data-k="${it.key}" data-drag="1" title="Glisser pour poser un ${it.kind === "gtp" ? "take profit" : "stop loss"}"><i>⋮⋮</i>${it.kind === "gtp" ? "TP" : "SL"}<span class="gr-pgv"></span></div>`;
@@ -15715,6 +15739,7 @@ function paOvPos(c, items) {
       // v1.94 : P&L en direct pendant le glisser du TP / SL (comme TradingView)
       const gv = node.querySelector(".gr-pgv"); if (gv) { const P = it.P, v = dragging && P ? (price - P.avg) * Math.sign(P.q) * Math.abs(P.q) * paSpec(s).pv : NaN; node.classList.toggle("drag", !!dragging); gv.textContent = dragging ? ` ${fmtPx(price, sp)}  ${fin(v) ? (v >= 0 ? "+" : "") + money(v).replace(" $", " USD") : ""}` : ""; gv.className = "gr-pgv" + (fin(v) ? (v >= 0 ? " up" : " dn") : ""); } }
     const b = node.querySelector(".gr-pob b"), em = node.querySelector(".gr-pob em"); if (!b) continue;
+    if (node.classList.contains("gtsx")) { paTsxTxt(it, node, b, em, price, s, sp, px, dragging); continue; }
     if (it.kind === "pos") { const last = px ? (it.P.q > 0 ? px.bid : px.ask) : NaN, pts = fin(last) ? (last - it.P.avg) * Math.sign(it.P.q) : NaN, u = px ? grPaper.upnl(PA.A, s, px, paSpec(s)) : NaN; b.textContent = Math.abs(it.P.q);
       em.style.display = plOn("trPLpos") ? "" : "none"; em.textContent = (PR.trPLposU || "money") === "money" ? (fin(u) ? money(u).replace(" $", " USD") : "—") : paPLtxt(s, pts, Math.abs(it.P.q), PR.trPLposU); em.className = (fin(u) ? u : pts) >= 0 ? "up" : "dn"; }
     else if (it.kind === "draft") { b.textContent = it.d.qty; em.textContent = `${it.d.side === "buy" ? "Achat" : "Vente"} au marché`; em.className = ""; }
@@ -15725,6 +15750,16 @@ function paOvPos(c, items) {
     else { b.textContent = it.o.qty; em.textContent = `${it.o.side === "buy" ? "Achat" : "Vente"} ${it.o.type === "stop" ? "stop" : "limite"}${dragging ? " " + fmtPx(price, sp) : ""}`; em.className = ""; }
   }
 }
+/** v1.94.1 : textes du thème TopstepX : « ~ -$442.00 | 2 | × », position « $426.00 | -2 | × » */
+const tsxMoney = (v, sg) => (!fin(v) ? "—" : (v < 0 ? "-" : sg ? "+" : "") + "$" + Math.abs(v).toFixed(2));
+function paTsxTxt(it, node, b, em, price, s, sp, px, dragging) {
+  let bg = TSXC.b, qb = null;
+  if (it.kind === "pos") { const u = px ? grPaper.upnl(PA.A, s, px, paSpec(s)) : NaN; em.textContent = plOn("trPLpos") ? tsxMoney(u) : fmtPx(it.P.avg, sp); b.textContent = String(it.P.q); bg = fin(u) && u < 0 ? TSXC.r : TSXC.g; qb = it.P.q < 0 ? TSXC.r : TSXC.g; }
+  else if (it.kind === "tp" || it.kind === "sl") { const v = paPL(it.o, it.P, price, s, it); em.textContent = (plOn("trPLbr") || dragging) && fin(v) ? "~ " + tsxMoney(v, true) : fmtPx(price, sp); b.textContent = it.o.qty; bg = it.kind === "tp" ? TSXC.g : TSXC.r; }
+  else if (it.kind === "pvx") { const v = (price - it.ref.avg) * it.ref.sg * it.q * paSpec(s).pv; em.textContent = "~ " + tsxMoney(v, true); b.textContent = it.q; bg = it.x === "tp" ? TSXC.g : TSXC.r; }
+  else { const o = it.o || it.pv; em.textContent = `${o.type === "stop" ? "STP" : "LMT"} ${fmtPx(price, sp)}`; b.textContent = o.qty; bg = o.side === "buy" ? TSXC.b : TSXC.o; }
+  node.style.setProperty("--tb", bg); node.style.setProperty("--qb", qb || bg);
+}
 function paOvWire(ov) {
   ov.addEventListener("pointerdown", (e) => {
     const n = e.target.closest("[data-k]"); if (!n) return; e.stopPropagation(); e.preventDefault(); const k = n.dataset.k, A = PA.A, s = paSym(), c = activeCell();
@@ -15734,6 +15769,7 @@ function paOvWire(ov) {
       else if (a.dataset.a === "can") { if (!paOk("Annuler cet ordre ?")) return; grPaper.cancel(A, +k.slice(1)); paSave(); paRefresh(); }
       else if (a.dataset.a === "send") { const d = PA.draft; PA.draft = null; if (d) paPlace({ sym: d.sym, side: d.side, type: "market", qty: d.qty, exits: [] }); else paRefresh(); }
       else if (a.dataset.a === "drop") { PA.draft = null; paRefresh(); }
+      else if (a.dataset.a === "pvx") { TPF.type = "market"; tpSave(); paRefresh(); paQuick(); }
       return; }
     if (!e.target.closest("[data-drag]")) return;
     const it = paItems(c).find((i) => i.key === k); if (!it) return;
@@ -15745,6 +15781,7 @@ function paOvWire(ov) {
 /** fin du glisser d'une étiquette : pose le TP / SL, ou déplace l'ordre */
 function paDropOv(d) {
   const A = PA.A, it = d.it, s = d.c.st.sym, px = paPx(s), p = d.price; if (!fin(p) || !px) { paRefresh(); return; }
+  if (it.kind === "pv" || it.kind === "pvx") return pvDrop(it, p, s, px);
   if (p !== it.price && !paOk(`${it.kind === "gtp" ? "Poser un take profit" : it.kind === "gsl" ? "Poser un stop loss" : "Déplacer l'ordre"} à ${fmtPx(p, SYM(s))} ?`)) { paRefresh(); return; }
   if (it.kind === "gtp" || it.kind === "gsl") { const P = A.pos[s]; if (!P) return paRefresh(); const k = it.kind === "gtp" ? "tp" : "sl", long = P.q > 0;
     const ok = k === "tp" ? (long ? p > px.bid : p < px.ask) : long ? p < px.bid : p > px.ask;
@@ -15756,6 +15793,13 @@ function paDropOv(d) {
   if (!o.kind && (o.type === "stop" ? (o.side === "buy" ? p <= px.ask : p >= px.bid) : false)) { toast("Un ordre stop doit rester au-delà du prix", true); return paRefresh(); }
   grPaper.modify(A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); paNote(`Ordre démo déplacé à ${fmtPx(p, SYM(s))}`);
 }
+/** v1.94.1 : aperçu du ticket glissé : entrée (limite ⇄ stop selon le côté du prix, comme TradingView) ou TP / SL du niveau */
+function pvDrop(it, p, s, px) { const tick = paSpec(s).tick, buy = TPF.side === "buy";
+  if (it.kind === "pv") { const ref = buy ? px.ask : px.bid; TPF.type = buy ? (p < ref ? "limit" : "stop") : (p > ref ? "limit" : "stop"); TPF.pxMode = "price"; TPF.px = paRound(p, tick); }
+  else { const i = +it.key.replace(/^pv(tp|sl)/, ""), x = TPF.ex[i], k = it.x, e = it.ref.avg; if (!x) return paRefresh();
+    const good = k === "tp" ? (buy ? p > e : p < e) : buy ? p < e : p > e; if (!good) { toast(k === "tp" ? "Le take profit doit être du côté du gain" : "Le stop loss doit être du côté de la perte", true); return paRefresh(); }
+    if (x[k + "M"] === "price") x[k] = paRound(p, tick); else x[k] = Math.max(1, Math.round(Math.abs(p - e) / tick)); }
+  tpSave(); paRefresh(); paQuick(); }
 (function paFrame() { requestAnimationFrame(paFrame); if (PA.ov && !PA.ov.hidden && viewOn()) { const c = activeCell(); if (c && PA.ov.parentNode === c.el) paOvPos(c); } })();
 function paHit(e) {
   if (!PA.lines.size || e.button !== 0) return null;
@@ -15784,7 +15828,7 @@ function onView() { document.body.classList.toggle("on-gr", viewOn()); if (viewO
 new MutationObserver(onView).observe(document.getElementById("v-graphique"), { attributes: true, attributeFilter: ["class"] });
 onView();
 if (ALERTS_ON()) setTimeout(() => { if (!liveTimer) liveLoop(); }, 4000); // alertes surveillées même hors de la page
-window.grApi = { DRAW: () => DRAW, drawsOf, drawChanged, LAYOUTS: () => LAYOUTS, shotCanvas: (o) => shot(o), PA, grPaper, paRefresh, tsxSeed, state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, applySym, applyIv, addInd, removeInd, setTool, applyPrefs, PR, PDEF, LIGHT, T, IND, aggregate, keyFn, liOf, frontInfo, ivFromText, parseCsvText };
+window.grApi = { TPF: () => TPF, DRAW: () => DRAW, drawsOf, drawChanged, LAYOUTS: () => LAYOUTS, shotCanvas: (o) => shot(o), PA, grPaper, paRefresh, tsxSeed, state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, applySym, applyIv, addInd, removeInd, setTool, applyPrefs, PR, PDEF, LIGHT, T, IND, aggregate, keyFn, liOf, frontInfo, ivFromText, parseCsvText };
 })();
 
 </script>

@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.1] — 2026-11-24
+### Ajouté
+- Compte démo de la page Graphique : **thème des ordres** dans Paramètres › Trading : **TradingView** ou **TopstepX** (étiquettes « | ~ -$442.00 | 2 | × », position « | $426.00 | -2 | × », vert / rouge vifs, bordures noires, lignes TopstepX).
+- Aperçu de l'ordre limite / stop du ticket : l'**entrée, le TP et le SL se glissent** sur le graphique (le ticket se met à jour ; une entrée glissée de l'autre côté du prix passe de limite à stop comme sur TradingView) ; bouton **×** au bout de l'étiquette = annuler l'aperçu (retour à un ordre au marché).
+- Onglets : bouton **Nouvelle fenêtre** à droite de la barre (comme TradingView) ; dans une fenêtre secondaire, bouton **Fermer cette fenêtre** : un clic gauche ferme seulement cette fenêtre, l'app reste ouverte.
+### Corrigé
+- Ligne horizontale du curseur qui s'effaçait encore quand la souris était sur les bougies (mise à jour d'un panneau ou d'un script Pine).
+
 ## [1.94.0] — 2026-11-24
 ### Ajouté
 - Page Graphique : **onglets façon TradingView** au-dessus de la barre d'outils. Bouton « + » = nouvel onglet (Maj + clic = nouvelle fenêtre), glisser-déposer pour réordonner, clic molette pour fermer. Clic droit : Nouvel onglet (Ctrl+T), Dupliquer (Ctrl+U), Recharger (Ctrl+R), Copier le lien (TradingView), Épingler / Désépingler, Détacher l'onglet (nouvelle fenêtre), Personnaliser le titre, Déplacer l'onglet › Créer un nouveau groupe, Fermer (Ctrl+W), **liaison** par couleur avec Symbole / Intervalle / Temps / Plage de dates. Ctrl+Tab / Ctrl+Maj+Tab = onglet suivant / précédent.
