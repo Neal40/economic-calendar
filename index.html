@@ -659,6 +659,11 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-tabl{width:8px;height:8px;border-radius:2px;background:var(--lc);flex:none}
 .gr-tab.drop,.gr-tg.drop{outline:2px solid #2962ff;outline-offset:-2px}
 .gr-tabadd{width:28px;height:28px;margin-left:2px;border:0;border-radius:6px;background:none;color:var(--gm);display:grid;place-items:center;cursor:pointer;flex:none;align-self:center}.gr-tabadd:hover{background:var(--gh);color:var(--gt)}.gr-tabadd svg{width:18px;height:18px}
+.gr-vrow{display:flex;align-items:center;gap:10px;margin:6px 0}.gr-vrow .gr-chk{min-width:110px}.gr-vrow .gr-in.sm{width:64px}
+.gr-dr{position:relative;flex:1;height:22px;min-width:120px}.gr-drt{position:absolute;left:6px;right:6px;top:9px;height:4px;border-radius:2px;background:var(--gt,#131722);opacity:.7}
+.gr-dr input[type=range]{position:absolute;left:0;top:0;width:100%;height:22px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.gr-dr input[type=range]::-webkit-slider-runnable-track{background:none;height:22px}.gr-dr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:14px;height:14px;margin-top:4px;border-radius:50%;background:#fff;border:2px solid #131722;cursor:pointer}
+.gr-sec{font-size:11px;text-transform:uppercase;color:var(--gm);margin:14px 0 6px;letter-spacing:.04em}
 .gr-tabsp{flex:1 1 auto;min-width:8px}.gr-tabw{width:32px;height:28px;border:0;border-radius:6px;background:none;color:var(--gm);display:grid;place-items:center;cursor:pointer;flex:none;align-self:center}.gr-tabw:hover{background:var(--gh);color:var(--gt)}.gr-tabq:hover{background:#f23645;color:#fff}
 .gr-tg{align-self:center;height:22px;padding:0 9px;margin:0 2px 0 6px;border-radius:6px;border:0;background:var(--c);color:#fff;font-size:12px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap}.gr-tg small{opacity:.8;margin-left:4px}.gr-tg.col{opacity:.85}
 .gr-tlk{padding:6px 12px 8px;min-width:250px}.gr-tlkh{font-size:11px;color:var(--gm);margin-bottom:6px}.gr-tlkc{display:flex;gap:6px;margin-bottom:6px}
@@ -12480,6 +12485,11 @@ function ivLabel(iv, long) {
   if (p.u === "W") return long ? pl(p.n, "semaine") : p.n === 1 ? "W" : p.n + "W";
   return long ? `${p.n} mois` : p.n === 1 ? "M" : p.n + "M";
 }
+/** v1.95 : visibilité d'un dessin par unité avec plage (comme TradingView) : { tick, sec: { on, min, max }, min, hr, day, wk, mo, range } ; ancien format { hr: false } compris */
+const VIS_U = [["sec", "Secondes", 1, 59], ["min", "Minutes", 1, 59], ["hr", "Heures", 1, 24], ["day", "Jours", 1, 366], ["wk", "Semaines", 1, 52], ["mo", "Mois", 1, 12]];
+function visOk(v, iv) { if (!v) return true; const p = ivParse(iv); if (!p) return true; let k, n;
+  if (p.u === "S") { k = "sec"; n = p.n; } else if (p.u === "m") { if (p.n >= 60) { k = "hr"; n = p.n / 60; } else { k = "min"; n = p.n; } } else if (p.u === "D") { k = "day"; n = p.n; } else if (p.u === "W") { k = "wk"; n = p.n; } else { k = "mo"; n = p.n; }
+  const e = v[k]; if (e === false) return false; if (e && typeof e === "object") { if (e.on === false) return false; if (fin(+e.min) && n < +e.min) return false; if (fin(+e.max) && n > +e.max) return false; } return true; }
 const ivCat = (iv) => { const p = ivParse(iv); if (!p) return "min"; if (p.u === "S") return "sec"; if (p.u === "m") return p.n >= 60 ? "hr" : "min"; return { D: "day", W: "wk", M: "mo" }[p.u]; };
 const IV_GROUPS = [["Secondes", ["1S", "5S", "10S", "15S", "30S"]], ["Minutes", ["1", "2", "3", "5", "10", "15", "30", "45"]], ["Heures", ["60", "120", "180", "240", "360", "480", "720"]], ["Jours", ["1D", "2D", "3D", "1W", "1M", "3M", "6M", "12M"]]];
 function ivFromText(s) { // « 5 » « 5s » « 15m » « 1h » « H4 » « 4h » « D » « 2D » « W » « M » « 3M »
@@ -13180,8 +13190,8 @@ const T = {
   ewabc: Object.assign({ n: "Vague de correction d'Elliott (ABC)", g: "pat" }, PATN("0ABC"), { def: S0({ c: "#ff9800", w: 2, f: "transparent" }) }),
   ewwxy: Object.assign({ n: "Double combinaison d'Elliott (WXY)", g: "pat" }, PATN("0WXY"), { def: S0({ c: "#00bcd4", w: 2, f: "transparent" }) }),
   // prévisions et mesures
-  long: { n: "Position longue", g: "pos", np: 1, def: { c: "#787b86", w: 1, tp: "rgba(8,153,129,0.22)", sl: "rgba(242,54,69,0.22)", qty: 1, acc: 50000, risk: 0 }, draw(pen, P, d, G) { posDraw(pen, P, d, G, 1); }, handles: (P) => posHandles(P) },
-  short: { n: "Position courte", g: "pos", np: 1, def: { c: "#787b86", w: 1, tp: "rgba(8,153,129,0.22)", sl: "rgba(242,54,69,0.22)", qty: 1, acc: 50000, risk: 0 }, draw(pen, P, d, G) { posDraw(pen, P, d, G, -1); }, handles: (P) => posHandles(P) },
+  long: { n: "Position longue", g: "pos", np: 1, def: { c: "#787b86", w: 1, tp: "rgba(8,153,129,0.22)", sl: "rgba(242,54,69,0.22)", qty: 1, acc: 50000, risk: 0, riskU: "pct", lot: 1, lev: 1, qp: "def", txc: "#ffffff", tfs: 12, plbl: true, stats: "all", compact: true, always: false }, draw(pen, P, d, G) { posDraw(pen, P, d, G, 1); }, handles: (P) => posHandles(P) },
+  short: { n: "Position courte", g: "pos", np: 1, def: { c: "#787b86", w: 1, tp: "rgba(8,153,129,0.22)", sl: "rgba(242,54,69,0.22)", qty: 1, acc: 50000, risk: 0, riskU: "pct", lot: 1, lev: 1, qp: "def", txc: "#ffffff", tfs: 12, plbl: true, stats: "all", compact: true, always: false }, draw(pen, P, d, G) { posDraw(pen, P, d, G, -1); }, handles: (P) => posHandles(P) },
   drange: { n: "Plage de dates", g: "pos", np: 2, def: { c: "#2962ff", w: 1, f: "rgba(41,98,255,0.15)" }, draw(pen, P, d, G) { const [x0] = P[0], [x1] = P[1]; pen.fl(d.s.f); pen.rect(x0, 0, x1 - x0, G.H, true, false); pen.st(d.s.c, d.s.w).seg(x0, 0, x0, G.H); pen.seg(x1, 0, x1, G.H); const y = (P[0][1] + P[1][1]) / 2; pen.seg(x0, y, x1, y); pen.arrow(x0, y, x1, y);
     const m = rangeStats(G, d.p[0], d.p[1]); pen.text((x0 + x1) / 2, Math.max(P[0][1], P[1][1]) + 12, `${m.n} barres, ${durTxt(m.dt)}\nVol ${nf(m.vol, 0)}`, { col: "#fff", bg: alpha(d.s.c, 0.85), fs: 11, al: "center", bl: "top" }); } },
   prange: { n: "Plage de prix", g: "pos", np: 2, def: { c: "#2962ff", w: 1, f: "rgba(41,98,255,0.15)" }, draw(pen, P, d, G) { const [, y0] = P[0], [, y1] = P[1], x0 = Math.min(P[0][0], P[1][0]), x1 = Math.max(P[0][0], P[1][0]); pen.fl(d.s.f); pen.rect(x0, y0, x1 - x0, y1 - y0, true, false); pen.st(d.s.c, d.s.w).seg(x0, y0, x1, y0); pen.seg(x0, y1, x1, y1); const x = (x0 + x1) / 2; pen.seg(x, y0, x, y1); pen.arrow(x, y0, x, y1);
@@ -13255,20 +13265,38 @@ function volProfile(pen, G, i0, i1, s, X0, X1) { // profil de volume (lignes de 
   const yp = G.y(lo + step * (poc + 0.5)); pen.st(s.poc || "#ffeb3b", 1.5, 0).seg(anchorR ? right - width : left, yp, anchorR ? right : right, yp);
   if (!anchorR) { pen.st(alpha(s.c || "#2962ff", 0.6), 1, 2).rect(left, G.y(hi), right - left, G.y(lo) - G.y(hi), false); }
 }
-function posDraw(pen, P, d, G, dir) { // position longue / courte : entrée, objectif, stop, R:R, montants, résultat sur les bougies suivantes
-  if (P.length < 3) return; const [x0, yE] = P[0], x1 = P[1][0], yT = P[1][1], yS = P[2][1], s = d.s, e = d.p[0].p, tp = d.p[1].p, sl = d.p[2].p, tick = G.spec.tick || 0.01, pv = G.spec.pv || 1;
-  const risk = Math.abs(e - sl), rew = Math.abs(tp - e), rr = risk ? rew / risk : 0; let qty = +s.qty || 1; if (+s.risk > 0 && risk) qty = Math.max(1, Math.floor((+s.acc || 50000) * +s.risk / 100 / (risk * pv)));
-  pen.fl(s.tp).rect(x0, yE, x1 - x0, yT - yE, true, false); pen.fl(s.sl).rect(x0, yE, x1 - x0, yS - yE, true, false); pen.st(s.c, 1, 0).seg(x0, yE, x1, yE);
+/** v1.95 : quantité d'une position (TradingView) : risque en $ ou en % du compte, taille du lot, précision */
+function posQty(s, risk, pv) { const lot = +s.lot || 1; let q = +s.qty || 1;
+  if (+s.risk > 0 && risk > 0) { const usd = s.riskU === "usd" ? +s.risk : (+s.acc || 50000) * +s.risk / 100; q = usd / (risk * pv * lot); }
+  const dec = s.qp === "def" || s.qp == null ? (+s.risk > 0 ? 3 : 0) : +s.qp, f = Math.pow(10, dec); q = Math.floor(q * f + 1e-9) / f; if (+s.risk > 0 && q <= 0) q = 1 / f; return q; }
+function posDraw(pen, P, d, G, dir) { // position longue / courte façon TradingView : objectif, stop, résultat ; statistiques au survol / à la sélection (ou toujours)
+  if (P.length < 3) return; const [x0, yE] = P[0], x1 = P[1][0], yT = P[1][1], yS = P[2][1], s = d.s, e = d.p[0].p, tp = d.p[1].p, sl = d.p[2].p, tick = G.spec.tick || 0.01, pv = (G.spec.pv || 1) * (+s.lot || 1);
+  const risk = Math.abs(e - sl), rew = Math.abs(tp - e), rr = risk ? rew / risk : 0, qty = posQty(s, risk, G.spec.pv || 1), acc = +s.acc || 50000;
+  pen.fl(s.tp).rect(x0, yE, x1 - x0, yT - yE, true, false); pen.fl(s.sl).rect(x0, yE, x1 - x0, yS - yE, true, false); pen.st(s.c, +s.w || 1, 0).seg(x0, yE, x1, yE);
   // résultat : premier contact objectif / stop après l'entrée
   const B = G.bars, i0 = Math.ceil(G.li(d.p[0].t)), i1 = Math.floor(G.li(d.p[1].t)); let hit = null;
   for (let i = Math.max(0, i0); i < B.length && i <= i1; i++) { const b = B[i]; const hs = dir > 0 ? b[3] <= sl : b[2] >= sl, ht = dir > 0 ? b[2] >= tp : b[3] <= tp; if (hs || ht) { hit = { i, win: !hs, p: hs ? sl : tp }; break; } }
-  const lastI = Math.min(B.length - 1, i1), cur = hit ? hit.p : lastI >= i0 && B[lastI] ? B[lastI][4] : e, pnl = (cur - e) * dir * qty * pv;
-  if (lastI >= i0) { const xe = G.lx(hit ? hit.i : lastI), ye = G.y(cur); pen.fl(alpha(pnl >= 0 ? "#089981" : "#f23645", 0.25)).rect(x0, yE, xe - x0, ye - yE, true, false); pen.st(pnl >= 0 ? "#089981" : "#f23645", 1, 2).seg(x0, yE, xe, ye); }
-  const big = Math.abs(x1 - x0) > 120, fs = 11, xc = (x0 + x1) / 2;
-  pen.text(xc, yT + (yT < yE ? -4 : 4), `Objectif : ${G.fp(tp)} (${G.fp(rew)} · ${nf(rew / e * 100, 2)} %) ${nf(rew / tick, 0)} ticks${big ? `, ${money(rew * qty * pv)}` : ""}`, { col: "#fff", bg: "#089981", fs, al: "center", bl: yT < yE ? "bottom" : "top" });
-  pen.text(xc, yS + (yS > yE ? 4 : -4), `Stop : ${G.fp(sl)} (${G.fp(risk)} · ${nf(risk / e * 100, 2)} %) ${nf(risk / tick, 0)} ticks${big ? `, ${money(risk * qty * pv)}` : ""}`, { col: "#fff", bg: "#f23645", fs, al: "center", bl: yS > yE ? "top" : "bottom" });
-  pen.text(xc, yE, `${hit ? (hit.win ? "Objectif atteint" : "Stop touché") : "En cours"} ${money(pnl)} · Qté ${qty}\nRatio R:R ${nf(rr, 2)}`, { col: "#fff", bg: pnl >= 0 ? alpha("#089981", 0.92) : alpha("#f23645", 0.92), fs, al: "center", bl: "middle" });
+  const lastI = Math.min(B.length - 1, i1), cur = hit ? hit.p : lastI >= i0 && B[lastI] ? B[lastI][4] : e, pts = (cur - e) * dir, pnl = pts * qty * pv;
+  if (lastI >= i0) { const xe = G.lx(hit ? hit.i : lastI), ye = G.y(cur); pen.fl("rgba(0,0,0,0.22)").rect(x0, yE, xe - x0, ye - yE, true, false); pen.st(alpha("#000000", 0.35), 1, 2).seg(x0, yE, xe, ye); }
+  const show = s.always || DS.sel === d.id || (DS.hover && DS.hover.id === d.id) || (DS.drag && DS.drag.d === d) || (DS.creating && DS.creating.d === d); if (!show) return;
+  const fs = +s.tfs || 12, col = s.txc || "#ffffff", xc = (x0 + x1) / 2, st = s.stats || "all", qtxt = nf(qty, qty % 1 ? 3 : 0);
+  const part = (off, pc, tk, amt) => st === "amt" ? amt : st === "op" ? `${off} (${pc}%)` : st === "ot" ? `${off} ${tk}` : `${off} (${pc}%) ${tk} ${amt}`;
+  const solid = (c) => alpha(c, 1);
+  const tTxt = s.compact !== false ? part(nf(rew, 2), nf(rew / e * 100, 3), nf(rew / tick, 0), nf(acc + rew * qty * pv, 2)) : `Objectif : ${G.fp(tp)} (${nf(rew, 2)}) ${nf(rew / e * 100, 3)} %, ${nf(rew / tick, 0)} ticks, Montant : ${nf(rew * qty * pv, 2)}`;
+  const sTxt = s.compact !== false ? part(nf(risk, 2), nf(risk / e * 100, 3), nf(risk / tick, 0), nf(acc - risk * qty * pv, 2)) : `Stop : ${G.fp(sl)} (${nf(risk, 2)}) ${nf(risk / e * 100, 3)} %, ${nf(risk / tick, 0)} ticks, Montant : ${nf(risk * qty * pv, 2)}`;
+  const cTxt = s.compact !== false ? `${pts > 0 ? "" : pts < 0 ? "−" : ""}${nf(Math.abs(pts), 2)} ~ ${qtxt}\n${nf(rr, 2)}` : `${hit ? (hit.win ? "Objectif atteint" : "Stop touché") : "Résultat ouvert"} : ${nf(pnl, 2)}, Qté : ${qtxt}\nRatio R:R : ${nf(rr, 2)}`;
+  pen.text(xc, yT + (yT < yE ? -6 : 6), tTxt, { col, bg: solid(s.tp), fs, al: "center", bl: yT < yE ? "bottom" : "top" });
+  pen.text(xc, yS + (yS > yE ? 6 : -6), sTxt, { col, bg: "#131722", fs, al: "center", bl: yS > yE ? "top" : "bottom" });
+  pen.text(xc, yE, cTxt, { col, bg: "#131722", fs, al: "center", bl: "middle" });
+  if (s.plbl !== false && G.W) { const tag = (y, p, bg) => pen.text(G.W - 2, y, G.fp(p), { col: "#fff", bg, fs: 11, al: "right", bl: "middle" }); tag(yT, tp, solid(s.tp)); tag(yE, e, "#131722"); tag(yS, sl, solid(s.sl)); }
 }
+/** v1.95 : champs « Paramètres en entrée » de la position : prix d'entrée, TP / SL en ticks ou en prix (liés) */
+function posInput(d, root, t) { const dir = d.tool === "long" ? 1 : -1, c = activeCell(), tick = (c && c.spec.tick) || 0.25, rd = (v) => +(Math.round(v / tick) * tick).toFixed(8), q = (a) => root.querySelector(a), k = t.dataset;
+  if (!(k.pe || k.tpt || k.tpp || k.slt || k.slp)) return; const e = rd(+q("[data-pe]").value || d.p[0].p);
+  if (k.tpt) d.p[1].p = rd(e + dir * Math.abs(+t.value) * tick); else if (k.tpp) d.p[1].p = rd(+t.value); else d.p[1].p = rd(e + (d.p[1].p - d.p[0].p));
+  if (k.slt) d.p[2].p = rd(e - dir * Math.abs(+t.value) * tick); else if (k.slp) d.p[2].p = rd(+t.value); else if (k.pe) d.p[2].p = rd(e + (d.p[2].p - d.p[0].p));
+  d.p[0].p = e; if (!k.tpt) q("[data-tpt]").value = Math.round(Math.abs(d.p[1].p - e) / tick); if (!k.tpp) q("[data-tpp]").value = d.p[1].p; if (!k.slt) q("[data-slt]").value = Math.round(Math.abs(d.p[2].p - e) / tick); if (!k.slp) q("[data-slp]").value = d.p[2].p;
+  d.p.forEach((p, i) => { const x = q(`[data-cp="${i}"]`); if (x) x.value = p.p; }); }
 const posHandles = (P) => P.length < 3 ? P.map((q, i) => ({ x: q[0], y: q[1], i })) : [{ x: P[0][0], y: P[0][1], i: 0, k: "entry" }, { x: P[0][0], y: P[1][1], i: 1, k: "tp" }, { x: P[0][0], y: P[2][1], i: 2, k: "sl" }, { x: P[1][0], y: P[0][1], i: 1, k: "w" }];
 const toolDef = (id) => T[id] || null;
 const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = LS.get("gr-tpldef", {})[tool], last = LS.get("gr-tpllast", {})[tool]; const s = JSON.parse(JSON.stringify(Object.assign({}, t.def || {}, tpl || {}, last || {}))); // v1.94 : dernier style utilisé (gardé après fermeture de l'app)
@@ -13354,7 +13382,9 @@ class Layer {
 /* ---------- dessins : stockage par sous-jacent (NQ = MNQ…), annuler / rétablir ---------- */
 let DRAW = LS.get("gr-draw", {});
 const drawsOf = (sym) => (DRAW[undOf(sym)] = DRAW[undOf(sym)] || []);
-const saveDraw = debounce(() => LS.set("gr-draw", DRAW), 300);
+const saveDraw = debounce(() => LS.set("gr-draw", DRAW), 150);
+// v1.95 : deux fenêtres de l'app (même mise en page / onglet détaché) : les dessins se mettent à jour en direct dans l'autre fenêtre
+addEventListener("storage", (e) => { if (e.key !== "gr-draw" || !e.newValue) return; const go = () => { if (DS.creating || DS.drag) return setTimeout(go, 300); try { DRAW = JSON.parse(e.newValue) || {}; } catch (x) { return; } CELLS.forEach((c) => c.redraw()); refreshTree(); if (DS.sel && !selD()) DS.sel = null; }; go(); });
 const HIST = { u: [], r: [] };
 const snap = () => { HIST.u.push(JSON.stringify(DRAW)); if (HIST.u.length > 120) HIST.u.shift(); HIST.r = []; };
 const DS = { tool: "cross", cursor: "cross", stay: LS.get("gr-stay", false), mag: LS.get("gr-mag", 0), lockAll: false, hideAll: false, hideInd: false, sel: null, creating: null, drag: null, hover: null, measure: null, clip: null, last: {} };
@@ -13621,7 +13651,7 @@ class Cell {
     const x0 = ts.logicalToCoordinate(0) ?? 0, x1 = ts.logicalToCoordinate(1) ?? 1, bs = (x1 - x0) || 1;
     return { bars: B, iv, spec: sp, W: sz.width, H: sz.height, bs, li: (t) => liOf(B, iv, t), lx: (l) => x0 + l * bs, x: (t) => x0 + liOf(B, iv, t) * bs, y: (p) => { const v = s.priceToCoordinate(p); return v == null ? NaN : v; }, p: (y) => s.coordinateToPrice(y), lOfX: (x) => (x - x0) / bs, tOfL: (l) => tOfLi(B, iv, l), fp: (p) => fmtPx(p, sp) };
   }
-  visibleD(d) { if (d.hide || DS.hideAll) return false; if (!this.syncOk(d)) return false; if (d.vis && d.vis[ivCat(this.st.iv)] === false) return false;
+  visibleD(d) { if (d.hide || DS.hideAll) return false; if (!this.syncOk(d)) return false; if (d.vis && !visOk(d.vis, this.st.iv)) return false;
     if (d.visR) { const s = ivSec(this.st.iv), op = d.visR.op, iv = d.visR.iv; if ((op === "ge" && s < iv) || (op === "le" && s > iv) || (op === "eq" && s !== iv)) return false; } return true; }
   syncOk(d) { const m = syncOf(d); if (m === "global") return true; if ((d.lay || null) !== curLay()) return false; return m !== "none" || (d.cell || 0) === this.idx; }
   pts(d, G) { if (d.anch && d.anch.length === d.p.length) { const w = this.main.host.clientWidth, h = this.main.host.clientHeight; return d.anch.map((a) => [a[0] * w, a[1] * h]); } return d.p.map((q) => [G.x(q.t), G.y(q.p)]); } // v1.94 : dessin ancré = fixe à l'écran
@@ -13703,6 +13733,13 @@ class Cell {
 const nyHMtxt = (t) => { const d = new Date((t + tzOff(dispTZ(), t)) * 1000); return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}`; };
 
 /* ---------- souris : création, sélection, déplacement des dessins (capture avant Lightweight Charts) ---------- */
+DS.magPct = +LS.get("gr-magpct", 25) || 25;
+/** v1.95 : intensité de l'aimant en % (mode 3) */
+function magPctDlg() { const v0 = DS.magPct || 25;
+  const d = dlg("Intensité de l'aimant", `<div class="gr-mut" style="margin-bottom:10px">Distance (en pixels) sous laquelle le point se colle au plus proche ouverture / haut / bas / clôture de la bougie. 100 % = se colle toujours (comme l'aimant fort). Ctrl pendant le tracé = aimant fort.</div>
+    <div class="gr-fr"><input type="range" min="1" max="100" value="${v0}" id="grMagR" style="flex:1"><input class="gr-in sm" type="number" min="1" max="100" value="${v0}" id="grMagN"><span>%</span></div>`,
+    { w: 420, ok: "Appliquer", onOk: (x) => { DS.magPct = clamp(+x.querySelector("#grMagN").value || 25, 1, 100); DS.mag = 3; LS.set("gr-magpct", DS.magPct); LS.set("gr-mag", 3); refreshTools(); toast(`Aimant : intensité ${DS.magPct} %`); } });
+  const r = d.el.querySelector("#grMagR"), n = d.el.querySelector("#grMagN"); r.oninput = () => (n.value = r.value); n.oninput = () => (r.value = n.value); }
 const stopEv = (e) => { e.preventDefault(); e.stopPropagation(); };
 const KEYMOD = { ctrl: false, shift: false };
 Cell.prototype.evPos = function (e) { const r = this.main.host.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
@@ -13711,7 +13748,9 @@ Cell.prototype.ptAt = function (x, y, G, o = {}) {
   let l = G.lOfX(x); if (!o.free) l = Math.round(l); let p = G.p(y);
   const mag = o.mag != null ? o.mag : (KEYMOD.ctrl ? 2 : DS.mag);
   if (mag && this.DB.length) { const i = clamp(Math.round(G.lOfX(x)), 0, this.DB.length - 1), b = this.DB[i]; let best = null, bd = Infinity; for (const v of [b[1], b[2], b[3], b[4]]) { const dy = Math.abs(G.y(v) - y); if (dy < bd) { bd = dy; best = v; } }
-    if (mag === 2 || bd < 20) { p = best; if (!o.free && l >= 0 && l <= this.DB.length - 1) l = i; } }
+    // v1.95 : aimant faible = 20 px, fort = toujours, personnalisé = intensité en % (100 % = toujours, sinon 1,2 px par %)
+    const pct = clamp(+DS.magPct || 25, 1, 100), thr = mag === 3 ? (pct >= 100 ? Infinity : pct * 1.2) : 20;
+    if (mag === 2 || bd < thr) { p = best; if (!o.free && l >= 0 && l <= this.DB.length - 1) l = i; } }
   if (!fin(p)) p = this.DB.length ? this.DB[this.DB.length - 1][4] : 0;
   const tick = this.spec.tick || 0.01; if (!o.raw) p = Math.round(p / tick) * tick;
   return { t: G.tOfL(l), p: +p.toFixed(8) };
@@ -14544,7 +14583,7 @@ function buildLeft() {
 }
 function refreshTools() {
   $$r("#grLeft [data-tool]").forEach((b) => { const t = b.dataset.tool; b.classList.toggle("on", t === DS.tool && t !== "cross" || (["cross", "dot", "arrow", "eraser"].includes(t) && DS.tool === "cross" && DS.cursor === t) || (t === "eraser" && DS.tool === "eraser")); });
-  const m = $r("#grMag"); if (m) { m.classList.toggle("on", !!DS.mag); m.title = DS.mag ? `Aimant ${DS.mag === 2 ? "fort" : "faible"} activé (Alt+M)` : "Aimant (Alt+M) — maintenir Ctrl pendant le dessin"; }
+  const m = $r("#grMag"); if (m) { m.classList.toggle("on", !!DS.mag); m.title = DS.mag ? `Aimant ${DS.mag === 2 ? "fort" : DS.mag === 3 ? `personnalisé (${DS.magPct || 25} %)` : "faible"} activé (Alt+M)` : "Aimant (Alt+M) — maintenir Ctrl pendant le dessin"; }
   const s = $r("#grStay"); if (s) s.classList.toggle("on", !!DS.stay); const l = $r("#grLock"); if (l) { l.classList.toggle("on", DS.lockAll); l.innerHTML = DS.lockAll ? ICO.lock : ICO.unlock; }
   const h = $r("#grHide"); if (h) { h.classList.toggle("on", DS.hideAll); h.innerHTML = DS.hideAll ? ICO.eyeoff : ICO.eye; } const f = $r("#grFavT"); if (f) f.classList.toggle("on", !!STATE.favbar);
   renderFavBar();
@@ -14553,7 +14592,7 @@ $r("#grLeft").addEventListener("click", (e) => {
   const fly = e.target.closest("[data-fly]"); if (fly) { flyout(fly.dataset.fly, fly); return; }
   const tb = e.target.closest("[data-tool]"); if (tb) { const t = tb.dataset.tool; if (t === "emoji") { emojiPick(tb); return; } setTool(DS.tool === t && t !== "cross" && !["dot", "arrow", "eraser"].includes(t) ? "cross" : t); return; }
   const id = e.target.closest("button") && e.target.closest("button").id;
-  if (id === "grMag") { DS.mag = DS.mag ? 0 : 1; LS.set("gr-mag", DS.mag); refreshTools(); } if (id === "grMagX") menuAt(e.target.closest("button"), [{ t: "Aimant faible", on: DS.mag === 1, f: () => { DS.mag = 1; LS.set("gr-mag", 1); refreshTools(); } }, { t: "Aimant fort", on: DS.mag === 2, f: () => { DS.mag = 2; LS.set("gr-mag", 2); refreshTools(); } }, { t: "Désactivé", on: !DS.mag, f: () => { DS.mag = 0; LS.set("gr-mag", 0); refreshTools(); } }]);
+  if (id === "grMag") { DS.mag = DS.mag ? 0 : 1; LS.set("gr-mag", DS.mag); refreshTools(); } if (id === "grMagX") menuAt(e.target.closest("button"), [{ t: "Aimant faible", on: DS.mag === 1, f: () => { DS.mag = 1; LS.set("gr-mag", 1); refreshTools(); } }, { t: "Aimant fort", on: DS.mag === 2, f: () => { DS.mag = 2; LS.set("gr-mag", 2); refreshTools(); } }, { t: `Intensité personnalisée (${DS.magPct || 25} %)…`, on: DS.mag === 3, f: magPctDlg }, { t: "Désactivé", on: !DS.mag, f: () => { DS.mag = 0; LS.set("gr-mag", 0); refreshTools(); } }]);
   if (id === "grStay") { DS.stay = !DS.stay; LS.set("gr-stay", DS.stay); refreshTools(); } if (id === "grLock") toggleLockAll(); if (id === "grHide") toggleHideAll();
   if (id === "grHideX") menuAt(e.target.closest("button"), [{ t: "Masquer les dessins", on: DS.hideAll, f: toggleHideAll }, { t: "Masquer les indicateurs", on: DS.hideInd, f: () => { DS.hideInd = !DS.hideInd; CELLS.forEach((c) => { c.inds(true); c.legend(); }); } }, { t: "Tout masquer / afficher", f: () => { const v = !(DS.hideAll && DS.hideInd); DS.hideAll = DS.hideInd = v; CELLS.forEach((c) => { c.inds(true); c.legend(); c.redraw(); }); refreshTools(); } }]);
   if (id === "grDel" || id === "grDelX") menuAt(e.target.closest("button"), [{ t: "Supprimer les dessins de " + undOf(activeCell().st.sym), f: () => removeAllDrawings(activeCell().st.sym) }, { t: "Supprimer les indicateurs", f: () => { const c = activeCell(); c.st.inds = []; c.inds(true); c.legend(); saveState(); refreshTree(); } }, { t: "Tout supprimer (dessins + indicateurs)", f: () => { removeAllDrawings(activeCell().st.sym); const c = activeCell(); c.st.inds = []; c.inds(true); c.legend(); saveState(); } }]);
@@ -14717,7 +14756,11 @@ function openDrawSettings(d, c) {
   const style = [
     "c" in s && !isPos ? `<div class="gr-fr"><span>Ligne</span>${colorInput("c", s.c)}${"w" in s ? `<select class="gr-in sm" data-n="w">${[1, 2, 3, 4, 6, 8, 14, 20].map((w) => `<option ${s.w == w ? "selected" : ""}>${w}</option>`).join("")}</select>` : ""}${"d" in s || ["trend", "ray", "ext", "hline", "hray", "vline", "xline", "rect"].includes(d.tool) ? `<select class="gr-in sm" data-n="d">${[["0", "Plein"], ["2", "Tirets"], ["1", "Pointillés"], ["3", "Longs tirets"]].map(([v, n]) => `<option value="${v}" ${String(s.d || 0) === v ? "selected" : ""}>${n}</option>`).join("")}</select>` : ""}</div>` : "",
     "f" in s ? `<div class="gr-fr"><span>Remplissage</span>${colorInput("f", s.f)}</div>` : "",
-    isPos ? `<div class="gr-fr"><span>Zone objectif</span>${colorInput("tp", s.tp)}</div><div class="gr-fr"><span>Zone stop</span>${colorInput("sl", s.sl)}</div><div class="gr-fr"><span>Taille du compte ($)</span><input class="gr-in" type="number" data-n="acc" value="${E(s.acc)}"></div><div class="gr-fr"><span>Risque (% du compte, 0 = quantité fixe)</span><input class="gr-in" type="number" step="0.1" data-n="risk" value="${E(s.risk)}"></div><div class="gr-fr"><span>Quantité (contrats)</span><input class="gr-in" type="number" data-n="qty" value="${E(s.qty)}"></div>` : "",
+    isPos ? `<div class="gr-fr"><span>Lignes</span>${colorInput("c", s.c)}<select class="gr-in sm" data-n="w">${[1, 2, 3, 4].map((w) => `<option ${s.w == w ? "selected" : ""}>${w}</option>`).join("")}</select></div><div class="gr-fr"><span>Couleur du stop</span>${colorInput("sl", s.sl)}</div><div class="gr-fr"><span>Couleur de l'objectif</span>${colorInput("tp", s.tp)}</div>
+      <div class="gr-fr"><span>Texte</span>${colorInput("txc", s.txc || "#ffffff")}<select class="gr-in sm" data-n="tfs">${[10, 11, 12, 13, 14, 16, 18, 20].map((v) => `<option ${(s.tfs || 12) == v ? "selected" : ""}>${v}</option>`).join("")}</select></div>
+      <div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-b="plbl" ${s.plbl !== false ? "checked" : ""}><span>Étiquettes de prix</span></label></div><div class="gr-sec">Info</div>
+      <div class="gr-fr"><span>Stats</span><select class="gr-in" data-n="stats">${[["all", "Décalage du prix TP, %, ticks, montant"], ["op", "Décalage du prix, %"], ["ot", "Décalage du prix, ticks"], ["amt", "Montant"]].map(([v, n]) => `<option value="${v}" ${(s.stats || "all") === v ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+      <div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-b="compact" ${s.compact !== false ? "checked" : ""}><span>Mode statistiques compact</span></label></div><div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-b="always" ${s.always ? "checked" : ""}><span>Toujours afficher les statistiques</span></label></div>` : "",
     ["trend", "ray", "ext"].includes(d.tool) || d.tool === "trend" ? `<div class="gr-fr">${ck("el", "Prolonger à gauche")}${ck("er", "Prolonger à droite")}${d.tool === "trend" ? ck("stats", "Statistiques") + ck("al", "Flèche") : ""}</div>` : "",
     d.tool === "rect" ? `<div class="gr-fr">${ck("el", "Prolonger à gauche")}${ck("er", "Prolonger à droite")}${ck("mid", "Ligne médiane")}</div>` : "",
     ["channel", "regr", "flat"].includes(d.tool) ? `<div class="gr-fr">${d.tool === "channel" ? ck("el", "Prolonger à gauche") + ck("mid", "Ligne médiane") : ""}${ck("er", "Prolonger à droite")}${d.tool === "regr" ? `<span>Écart-type</span><input class="gr-in sm" type="number" step="0.1" data-n="dev" value="${E(s.dev ?? 2)}">` : ""}</div>` : "",
@@ -14730,9 +14773,23 @@ function openDrawSettings(d, c) {
   const lvT = lvl ? `<div class="gr-mut">Coche un niveau pour afficher sa ligne.</div><div class="gr-lvl">${s.lv.map((l, i) => `<div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-lo="${i}" ${l.on ? "checked" : ""}></label><input class="gr-in sm" type="number" step="any" data-lv="${i}" value="${l.v}">${colorInput("L:" + i, l.c)}<input class="gr-in sm gr-lvt" data-lt="${i}" value="${E(l.t || "")}" placeholder="Texte"><button class="gr-ib" data-ldel="${i}" title="Retirer">${ICO.x}</button></div>`).join("")}</div><button class="gr-btn" id="grLvAdd">+ Ajouter un niveau</button>` : "";
   const fmtIn = (t) => { const z = new Date((t + tzOff(dispTZ(), t)) * 1000).toISOString(); return z.slice(0, 16); };
   const coT = d.p.map((q, i) => `<div class="gr-fr"><span>Point ${i + 1}</span><input class="gr-in" type="datetime-local" data-ct="${i}" value="${fmtIn(q.t)}"><input class="gr-in sm" type="number" step="any" data-cp="${i}" value="${q.p}"></div>`).join("") + `<div class="gr-mut">Heures en ${E(TZS.find((z) => z[0] === dispTZ()) ? TZS.find((z) => z[0] === dispTZ())[1] : dispTZ())}.</div>`;
-  const viT = [["sec", "Secondes"], ["min", "Minutes"], ["hr", "Heures"], ["day", "Jours"], ["wk", "Semaines"], ["mo", "Mois"]].map(([k, n]) => `<label class="gr-chk"><input type="checkbox" data-vi="${k}" ${d.vis && d.vis[k] === false ? "" : "checked"}><span>${n}</span></label>`).join("");
-  const dd = dlg(def.n, `<div class="gr-tabs"><button class="gr-tab on" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button></div>
-    <div class="gr-tpane" data-p="st">${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div>`,
+  const V0 = d.vis || {}, vOn = (k) => !(V0[k] === false || (V0[k] && V0[k].on === false));
+  const viT = `<label class="gr-chk gr-vrow"><input type="checkbox" data-vb="tick" ${V0.tick === false ? "" : "checked"}><span>Ticks</span></label>`
+    + VIS_U.map(([k, n, a, b]) => { const e = V0[k] && typeof V0[k] === "object" ? V0[k] : {}, lo = fin(+e.min) ? +e.min : a, hi = fin(+e.max) ? +e.max : b;
+      return `<div class="gr-vrow"><label class="gr-chk"><input type="checkbox" data-vk="${k}" ${vOn(k) ? "checked" : ""}><span>${n}</span></label><input class="gr-in sm" type="number" min="${a}" max="${b}" data-vmin="${k}" value="${lo}"><div class="gr-dr"><i class="gr-drt"></i><input type="range" min="${a}" max="${b}" value="${lo}" data-vr1="${k}"><input type="range" min="${a}" max="${b}" value="${hi}" data-vr2="${k}"></div><input class="gr-in sm" type="number" min="${a}" max="${b}" data-vmax="${k}" value="${hi}"></div>`; }).join("")
+    + `<label class="gr-chk gr-vrow"><input type="checkbox" data-vb="range" ${V0.range === false ? "" : "checked"}><span>Ranges</span></label>`;
+  const tick0 = (c && c.spec && c.spec.tick) || 0.25, pE = d.p[0] && d.p[0].p, nT = (i) => (d.p[i] ? Math.round(Math.abs(d.p[i].p - pE) / tick0) : 0);
+  const inT = isPos && d.p.length >= 3 ? `<div class="gr-fr"><span>Taille du compte</span><input class="gr-in" type="number" data-n="acc" value="${E(s.acc ?? 50000)}"><select class="gr-in sm" disabled><option>USD</option></select></div>
+    <div class="gr-fr"><span>Taille du lot</span><input class="gr-in" type="number" step="any" data-n="lot" value="${E(s.lot ?? 1)}"></div>
+    <div class="gr-fr"><span>Risque</span><input class="gr-in" type="number" step="any" data-n="risk" value="${E(s.risk ?? 0)}"><select class="gr-in sm" data-n="riskU"><option value="usd" ${s.riskU === "usd" ? "selected" : ""}>USD</option><option value="pct" ${s.riskU !== "usd" ? "selected" : ""}>%</option></select></div>
+    <div class="gr-mut">Risque 0 = quantité fixe : <input class="gr-in sm" type="number" step="any" data-n="qty" value="${E(s.qty ?? 1)}"> contrat(s).</div>
+    <div class="gr-fr"><span>Prix d'entrée</span><input class="gr-in" type="number" step="any" data-pe="1" value="${pE}"></div>
+    <div class="gr-fr"><span>Effet de levier</span><input class="gr-in" type="number" step="any" data-n="lev" value="${E(s.lev ?? 1)}"></div>
+    <div class="gr-sec">Niveau de profit</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-tpt="1" value="${nT(1)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-tpp="1" value="${d.p[1].p}"></div>
+    <div class="gr-sec">Niveau du stop</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-slt="1" value="${nT(2)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-slp="1" value="${d.p[2].p}"></div>
+    <div class="gr-fr"><span>Précision QTY</span><select class="gr-in" data-n="qp">${[["def", "Par défaut"], ["0", "0"], ["1", "0,1"], ["2", "0,01"], ["3", "0,001"]].map(([v, n]) => `<option value="${v}" ${String(s.qp ?? "def") === v ? "selected" : ""}>${n}</option>`).join("")}</select></div>` : "";
+  const dd = dlg(def.n, `<div class="gr-tabs">${inT ? `<button class="gr-tab on" data-p="in">Paramètres en entrée</button>` : ""}<button class="gr-tab${inT ? "" : " on"}" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button></div>
+    ${inT ? `<div class="gr-tpane" data-p="in">${inT}</div>` : ""}<div class="gr-tpane" data-p="st"${inT ? " hidden" : ""}>${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div>`,
   { w: 500, cls: "gr-dset", left: `<button class="gr-btn" data-tplb="1">Modèle ▾</button>`, onCancel: () => { const f = findD(d.id); if (f) { f.list[f.i] = JSON.parse(before); drawChanged(); } }, onOk: () => { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); } });
   tabs(dd.el); const root = dd.el;
   const apply = () => { root.querySelectorAll("[data-k]").forEach((e) => { const k = e.dataset.k; if (k.includes(":")) return; const v = readColor(root, k); if (v != null) s[k] = v; });
@@ -14741,8 +14798,15 @@ function openDrawSettings(d, c) {
     const tx = root.querySelector("#grDTxt"); if (tx) d.txt = tx.value;
     if (lvl) s.lv.forEach((l, i) => { const o = root.querySelector(`[data-lo="${i}"]`), v = root.querySelector(`[data-lv="${i}"]`), c2 = readColor(root, "L:" + i), tt = root.querySelector(`[data-lt="${i}"]`); if (o) l.on = o.checked; if (v && fin(+v.value)) l.v = +v.value; if (c2) l.c = c2; if (tt) { if (tt.value) l.t = tt.value; else delete l.t; } });
     d.p.forEach((q, i) => { const t = root.querySelector(`[data-ct="${i}"]`), p = root.querySelector(`[data-cp="${i}"]`); if (t && t.value) { const ms = Date.parse(t.value + ":00Z") / 1000; if (fin(ms)) { let g = ms; for (let k = 0; k < 3; k++) g = ms - tzOff(dispTZ(), g); q.t = g; } } if (p && fin(+p.value)) q.p = +p.value; });
-    d.vis = {}; root.querySelectorAll("[data-vi]").forEach((e) => { if (!e.checked) d.vis[e.dataset.vi] = false; });
+    { const V = {}; let any = false; root.querySelectorAll("[data-vb]").forEach((e) => { if (!e.checked) { V[e.dataset.vb] = false; any = true; } });
+      VIS_U.forEach(([k, , a, b]) => { const on = root.querySelector(`[data-vk="${k}"]`), lo = +(root.querySelector(`[data-vmin="${k}"]`) || {}).value, hi = +(root.querySelector(`[data-vmax="${k}"]`) || {}).value; if (!on) return;
+        const o = { on: on.checked, min: fin(lo) ? clamp(lo, a, b) : a, max: fin(hi) ? clamp(hi, a, b) : b }; if (!o.on || o.min !== a || o.max !== b) { V[k] = o; any = true; } });
+      if (any) d.vis = V; else delete d.vis; }
     CELLS.forEach((x) => x.redraw()); };
+  root.addEventListener("input", (e) => { const t = e.target, k = t.dataset;
+    if (k.vr1 || k.vr2) { const u = k.vr1 || k.vr2, r1 = root.querySelector(`[data-vr1="${u}"]`), r2 = root.querySelector(`[data-vr2="${u}"]`); if (+r1.value > +r2.value) { if (k.vr1) r1.value = r2.value; else r2.value = r1.value; } root.querySelector(`[data-vmin="${u}"]`).value = r1.value; root.querySelector(`[data-vmax="${u}"]`).value = r2.value; }
+    if (k.vmin || k.vmax) { const u = k.vmin || k.vmax; root.querySelector(`[data-vr1="${u}"]`).value = root.querySelector(`[data-vmin="${u}"]`).value; root.querySelector(`[data-vr2="${u}"]`).value = root.querySelector(`[data-vmax="${u}"]`).value; }
+    if (isPos) posInput(d, root, t); }, true);
   root.addEventListener("input", apply); root.addEventListener("change", apply);
   dd.el.querySelector("[data-tplb]").onclick = (e) => menuAt(e.currentTarget, tplItems(d, () => { dd.close(true); openDrawSettings(d, c); }));
   root.addEventListener("click", (e) => { const em = e.target.closest("[data-emo]"); if (em) { s.e = em.dataset.emo; root.querySelectorAll("[data-emo]").forEach((b) => b.classList.toggle("on", b === em)); apply(); }
@@ -15143,21 +15207,33 @@ function comboOf(e) { let k = e.key; if (k === " ") k = "Space"; if (k.length ==
   const printable = k.length === 1 && !/[A-Z0-9]/.test(k); return [(e.ctrlKey || e.metaKey) && "Ctrl", e.altKey && "Alt", e.shiftKey && !printable && "Shift", k].filter(Boolean).join("+"); }
 function zoomBy(f) { const c = curC(); if (!c) return; const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (!r) return; const m = (r.from + r.to) / 2, w = (r.to - r.from) / 2 * f; c.setRange({ from: m - w, to: m + w }); }
 function scrollBy(n) { const c = curC(); if (!c) return; const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (r) c.setRange({ from: r.from + n, to: r.to + n }); }
+/** v1.95 : clic molette (avec Ctrl / Alt / Maj) utilisable comme raccourci */
+const midCombo = (ev) => [(ev.ctrlKey || ev.metaKey) && "Ctrl", ev.altKey && "Alt", ev.shiftKey && "Shift", "Clic molette"].filter(Boolean).join("+");
+document.addEventListener("mousedown", (ev) => { if (ev.button !== 1 || !viewOn() || STATE.mode === "tv" || !ev.target.closest || !ev.target.closest(".gr-cell")) return; const k = KMAP.get(midCombo(ev).toLowerCase()); if (!k) return; ev.preventDefault(); ev.stopPropagation(); k[3](); }, true);
 function openKeys() { const rows = KDEF.map((k) => `<div class="gr-kr" data-k="${k[0]}"><span>${E(k[1])}</span><span class="gr-kk">${keysOf(k).map((c) => `<kbd>${E(c.replace("Shift", "Maj").replace("ArrowUp", "↑").replace("ArrowDown", "↓").replace("ArrowLeft", "←").replace("ArrowRight", "→").replace("Enter", "Entrée").replace("Delete", "Suppr").replace("Escape", "Échap"))}</kbd>`).join(" ")}</span><button class="gr-btn sm" data-edit="${k[0]}">Modifier</button></div>`).join("");
   const d = dlg("Raccourcis clavier", `<div class="gr-mut">Tape directement un symbole (NQ, ES…) pour la recherche, ou un chiffre (5, 15, 60…) puis Entrée pour l'unité de temps. Maintiens Ctrl pendant un tracé pour l'aimant, Maj + clic pour la règle, Alt + glisser pour cloner un dessin.</div><div class="gr-keys">${rows}</div>`, { w: 620, cancel: false, ok: "Fermer", left: `<button class="gr-btn" data-kreset="1">Réinitialiser</button>` });
-  d.el.addEventListener("click", (e) => { if (e.target.closest("[data-kreset]")) { KEYS = {}; LS.set("gr-keys", KEYS); buildKmap(); d.close(false); openKeys(); return; } const b = e.target.closest("[data-edit]"); if (!b) return; b.textContent = "Appuie sur la combinaison…"; b.classList.add("gr-pri");
-    const cap = (ev) => { if (["Control", "Shift", "Alt", "Meta"].includes(ev.key)) return; ev.preventDefault(); ev.stopPropagation(); document.removeEventListener("keydown", cap, true); if (ev.key === "Escape") { d.close(false); openKeys(); return; } const c = comboOf(ev); KEYS[b.dataset.edit] = [c]; LS.set("gr-keys", KEYS); buildKmap(); d.close(false); openKeys(); };
+  d.el.addEventListener("click", (e) => { if (e.target.closest("[data-kreset]")) { KEYS = {}; LS.set("gr-keys", KEYS); buildKmap(); d.close(false); openKeys(); return; } const b = e.target.closest("[data-edit]"); if (!b) return; b.textContent = "Appuie sur la combinaison ou clic molette…"; b.classList.add("gr-pri");
+    const mcap = (ev) => { if (ev.button !== 1) return; ev.preventDefault(); ev.stopPropagation(); document.removeEventListener("keydown", cap, true); document.removeEventListener("mousedown", mcap, true); KEYS[b.dataset.edit] = [midCombo(ev)]; LS.set("gr-keys", KEYS); buildKmap(); d.close(false); openKeys(); };
+    document.addEventListener("mousedown", mcap, true);
+    const cap = (ev) => { if (["Control", "Shift", "Alt", "Meta"].includes(ev.key)) return; ev.preventDefault(); ev.stopPropagation(); document.removeEventListener("keydown", cap, true); document.removeEventListener("mousedown", mcap, true); if (ev.key === "Escape") { d.close(false); openKeys(); return; } const c = comboOf(ev); KEYS[b.dataset.edit] = [c]; LS.set("gr-keys", KEYS); buildKmap(); d.close(false); openKeys(); };
     document.addEventListener("keydown", cap, true); }); }
 const IVB = { s: "", t: null };
 function ivBuf(ch) { IVB.s += ch; clearTimeout(IVB.t); let o = $r(".gr-ivbuf"); if (!o) { o = el("div", "gr-ivbuf"); ROOT.append(o); } const iv = ivFromText(IVB.s); o.innerHTML = `<b>${E(IVB.s)}</b><span>${iv ? E(ivLabel(iv, true)) + " · Entrée" : "…"}</span>`; IVB.t = setTimeout(() => ivCommit(), 1800); }
 function ivCommit() { clearTimeout(IVB.t); const iv = ivFromText(IVB.s); IVB.s = ""; const o = $r(".gr-ivbuf"); if (o) o.remove(); if (iv) applyIv(iv); }
 const viewOn = () => { const v = document.getElementById("v-graphique"); return !!v && v.classList.contains("on"); };
+/** v1.95 : dessin sélectionné + flèches = il bouge (↑ ↓ d'un tick, ← → d'une bougie ; Maj = ×10) au lieu du graphique */
+let arrowT = 0;
+function arrowMove(e) { const d = selD(), c = activeCell(); if (!d || !c || d.lock || DS.lockAll || !c.DB.length) return false; e.preventDefault(); e.stopPropagation();
+  const now = Date.now(); if (now - arrowT > 800) snap(); arrowT = now; const G = c.geo(), m = e.shiftKey ? 10 : 1, tick = c.spec.tick || 0.01;
+  const dl = e.key === "ArrowLeft" ? -m : e.key === "ArrowRight" ? m : 0, dp = e.key === "ArrowUp" ? m * tick : e.key === "ArrowDown" ? -m * tick : 0;
+  d.p.forEach((q) => { if (dl && d.tool !== "hline") q.t = G.tOfL(G.li(q.t) + dl); if (dp && d.tool !== "vline") q.p = +(q.p + dp).toFixed(8); }); drawChanged(d); return true; }
 // v1.94.4 : un clic sur un graphique lui rend le clavier (sinon l'éditeur Pine ou un champ gardait le focus et Alt+R & co. ne marchaient plus)
 document.addEventListener("pointerdown", (e) => { if (!viewOn() || !e.target.closest || !e.target.closest(".gr-cell")) return; const a = document.activeElement; if (a && a !== document.body && a.closest && a.closest("input, textarea, select, [contenteditable=true], .cm-editor, .monaco-editor") && !e.target.closest("input, textarea, select, [contenteditable=true]")) a.blur(); }, true);
 document.addEventListener("keydown", (e) => {
   if (!viewOn() || STATE.mode === "tv") return; KEYMOD.ctrl = e.ctrlKey || e.metaKey; KEYMOD.shift = e.shiftKey;
   if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable=true]")) return; if (ROOT.querySelector(".gr-ov")) return;
   if (IVB.s && (e.key === "Enter" || e.key === "Escape")) { e.preventDefault(); e.stopPropagation(); if (e.key === "Enter") ivCommit(); else { IVB.s = ""; ivCommit(); } return; }
+  if (DS.sel && !e.ctrlKey && !e.metaKey && !e.altKey && /^Arrow(Up|Down|Left|Right)$/.test(e.key) && arrowMove(e)) return;
   const k = KMAP.get(comboOf(e).toLowerCase()); if (k && !(k[0] === "next" || k[0] === "prev") || (k && CELLS.length > 1)) { e.preventDefault(); e.stopPropagation(); k[3](); return; }
   if (!e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) { if (/[0-9]/.test(e.key)) { e.preventDefault(); ivBuf(e.key); return; } if (IVB.s && /^[smhdwSHDWMjJ]$/.test(e.key)) { e.preventDefault(); ivBuf(e.key); return; } if (/[a-zA-Z]/.test(e.key)) { e.preventDefault(); openSymbolSearch(undefined, e.key.toUpperCase()); } }
 }, true);

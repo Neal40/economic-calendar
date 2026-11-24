@@ -2,6 +2,15 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.95.0] — 2026-11-24
+### Ajouté
+- Page Graphique : **intensité de l'aimant en %** (menu de l'aimant › « Intensité personnalisée… », 100 % = se colle toujours).
+- Dessin sélectionné + **flèches du clavier** = le dessin bouge (↑ ↓ d'un tick, ← → d'une bougie, Maj = ×10) au lieu du graphique.
+- **Position longue / courte façon TradingView** : onglet « Paramètres en entrée » (taille du compte, taille du lot, risque en USD ou %, prix d'entrée, effet de levier, profit et stop en ticks ou en prix, précision de la quantité) ; Style (lignes, couleurs du stop / de l'objectif, texte, étiquettes de prix, Stats, mode compact, toujours afficher les statistiques). Sans le curseur dessus, seules les zones s'affichent.
+- **Visibilité de tous les dessins** comme TradingView : Ticks, Secondes, Minutes, Heures, Jours, Semaines, Mois (chacun avec une plage min / max à curseurs), Ranges.
+- **Synchro en direct des dessins** entre deux fenêtres de l'app (même mise en page / onglet détaché).
+- **Clic molette** utilisable comme raccourci (avec Ctrl / Alt / Maj) dans la fenêtre des raccourcis clavier.
+
 ## [1.94.7] — 2026-11-24
 ### Corrigé
 - Page Graphique : la **ligne horizontale du curseur** disparaissait sur les bougies quand l'onglet avait un 2e graphique (même caché par l'agrandissement) : ce graphique recopiait son propre curseur sur celui sous la souris. Seul le graphique sous la souris recopie maintenant son curseur.
