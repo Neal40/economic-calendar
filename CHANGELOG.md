@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.95.1] — 2026-11-24
+### Ajouté
+- Raccourcis clavier de la page Graphique : bouton **+** pour **ajouter** un raccourci à une action (plusieurs par action, ex. Suppr + clic molette) ; un clic sur un raccourci le **retire**. « Modifier » remplace toujours par un seul.
+
 ## [1.95.0] — 2026-11-24
 ### Ajouté
 - Page Graphique : **intensité de l'aimant en %** (menu de l'aimant › « Intensité personnalisée… », 100 % = se colle toujours).
