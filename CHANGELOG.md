@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.95.2] — 2026-11-24
+### Corrigé
+- Page Graphique **responsive** : la barre du haut ne se chevauche plus quand la fenêtre est étroite. Selon la largeur, les textes (Alerte, Replay, Indicateurs, nom de la mise en page, Graphique / TradingView) puis les boutons secondaires (annuler / rétablir, modèles, comparer, plein écran, unités au-delà de 4…) se retirent ; le panneau de droite passe par-dessus le graphique au lieu de l'écraser.
+
 ## [1.95.1] — 2026-11-24
 ### Ajouté
 - Raccourcis clavier de la page Graphique : bouton **+** pour **ajouter** un raccourci à une action (plusieurs par action, ex. Suppr + clic molette) ; un clic sur un raccourci le **retire**. « Modifier » remplace toujours par un seul.
