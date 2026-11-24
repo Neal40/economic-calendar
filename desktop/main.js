@@ -1,4 +1,10 @@
 const { app, BrowserWindow, shell, ipcMain, session, net, safeStorage, Notification, dialog } = require("electron");
+// v1.94 : Windows / Linux — la barre de menus (File / Edit / View / Window) ne s'affiche plus avec Alt. Le menu reste chargé (raccourcis Ctrl+C / V…).
+if (process.platform !== "darwin") app.on("browser-window-created", (_e, w) => { try { w.setAutoHideMenuBar(false); w.setMenuBarVisibility(false); } catch (err) { /* ignore */ } });
+// v1.94 : menu sans Ctrl+R (recharger) ni Ctrl+W (fermer) : ces touches servent aux onglets de la page Graphique (Ctrl+R hors Graphique = rechargement fait par la page)
+if (process.platform !== "darwin") app.whenReady().then(() => { try { const { Menu } = require("electron"); Menu.setApplicationMenu(Menu.buildFromTemplate([
+  { label: "Édition", submenu: [{ role: "undo" }, { role: "redo" }, { type: "separator" }, { role: "cut" }, { role: "copy" }, { role: "paste" }, { role: "selectAll" }] },
+  { label: "Affichage", submenu: [{ role: "toggleDevTools" }, { type: "separator" }, { role: "resetZoom" }, { role: "zoomIn" }, { role: "zoomOut" }, { type: "separator" }, { role: "togglefullscreen" }] }])); } catch (err) { /* ignore */ } });
 const marketdata = require("./marketdata");
 const copierLib = require("./copier");
 const path = require("path");

@@ -649,6 +649,24 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 :where(.gr) svg{display:block;flex:none}.gr .gr-fill{flex:1}.gr [hidden]{display:none!important}
 .gr .up{color:var(--gup)}.gr .dn{color:var(--gdn)}.gr .gr-mut{color:var(--gm);font-size:12px;line-height:1.45}
 /* barre du haut */
+/* v1.94 : onglets façon TradingView */
+.gr-tabs{display:flex;align-items:flex-end;gap:2px;height:34px;padding:4px 6px 0;border-bottom:1px solid var(--gl);flex:none;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;background:rgba(0,0,0,.22)}#grRoot.light .gr-tabs{background:#e9ecf2}.gr-tabs::-webkit-scrollbar{display:none}
+.gr-tab{position:relative;display:flex;align-items:center;gap:6px;height:29px;max-width:220px;min-width:0;padding:0 6px 0 12px;border-radius:7px 7px 0 0;color:var(--gm);font-size:12.5px;cursor:pointer;user-select:none;flex:none}
+.gr-tab:hover{background:var(--gh);color:var(--gt)}.gr-tab.on{background:var(--gb);color:var(--gt);box-shadow:0 -1px 0 var(--gl) inset,1px 0 0 var(--gl),-1px 0 0 var(--gl)}.gr-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gb)}
+.gr-tab.ing{box-shadow:0 -2px 0 var(--gc) inset}.gr-tab.ing.on{box-shadow:0 -2px 0 var(--gc) inset,1px 0 0 var(--gl),-1px 0 0 var(--gl)}
+.gr-tabn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gr-tab.pin{padding:0 10px;font-weight:600}
+.gr-tabx{width:18px;height:18px;border-radius:4px;border:0;background:none;color:inherit;font-size:15px;line-height:1;display:grid;place-items:center;opacity:.55;cursor:pointer;flex:none}.gr-tabx:hover{opacity:1;background:var(--gl)}
+.gr-tabl{width:8px;height:8px;border-radius:2px;background:var(--lc);flex:none}
+.gr-tab.drop,.gr-tg.drop{outline:2px solid #2962ff;outline-offset:-2px}
+.gr-tabadd{width:28px;height:28px;margin-left:2px;border:0;border-radius:6px;background:none;color:var(--gm);display:grid;place-items:center;cursor:pointer;flex:none;align-self:center}.gr-tabadd:hover{background:var(--gh);color:var(--gt)}.gr-tabadd svg{width:18px;height:18px}
+.gr-tg{align-self:center;height:22px;padding:0 9px;margin:0 2px 0 6px;border-radius:6px;border:0;background:var(--c);color:#fff;font-size:12px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap}.gr-tg small{opacity:.8;margin-left:4px}.gr-tg.col{opacity:.85}
+.gr-tlk{padding:6px 12px 8px;min-width:250px}.gr-tlkh{font-size:11px;color:var(--gm);margin-bottom:6px}.gr-tlkc{display:flex;gap:6px;margin-bottom:6px}
+.gr-tlkd{width:20px;height:20px;border-radius:5px;border:2px solid transparent;background:var(--c);cursor:pointer;padding:0}.gr-tlkd.none{background:none;color:var(--gm);border-color:var(--gl);font-size:12px;line-height:1}.gr-tlkd.on{border-color:var(--gt);box-shadow:0 0 0 1px var(--gb) inset}
+.gr-tlkt{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:13px;color:var(--gt)}.gr-tlkt input:disabled{opacity:.4}
+.gr-tgl{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;font-size:12px;color:var(--gm)}.gr-tgc{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gr-tgs{width:24px;height:24px;border-radius:6px;border:2px solid transparent;background:var(--c);cursor:pointer;padding:0}.gr-tgs.on{border-color:var(--gt)}.gr-tgmore{background:var(--gh);color:var(--gt);font-size:15px;line-height:1}
+.gr-tgv{font-family:monospace;font-size:12px;color:var(--gt);display:flex;align-items:center;gap:6px}.gr-tgv::before{content:"";width:14px;height:14px;border-radius:3px;background:var(--c)}
+.gr-tgdot{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c)}
 .gr-top{display:flex;align-items:center;gap:2px;height:38px;padding:0 6px;border-bottom:1px solid var(--gl);flex:none;white-space:nowrap;overflow:hidden}
 .gr-tb{display:flex;align-items:center;gap:4px;height:30px;padding:0 6px;border-radius:4px;color:var(--gt)}.gr-tb:hover{background:var(--gh)}.gr-tb:disabled{opacity:.35;pointer-events:none}
 .gr-tb.gr-ic{width:32px;justify-content:center;padding:0}.gr-tb.gr-dd{width:20px;padding:0;justify-content:center}.gr-tb.gr-dd svg{width:20px}
@@ -750,6 +768,10 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-pol.tp .gr-pob,.gr-pol.tp .gr-poc{border-color:#089981}.gr-pol.tp .gr-pob b{background:#089981}.gr-pol.tp .gr-poc{color:#089981}.gr-pol.tp .gr-pob{box-shadow:0 0 0 3px rgba(8,153,129,.15)}
 .gr-pol.sl .gr-pob,.gr-pol.sl .gr-poc{border-color:#f23645}.gr-pol.sl .gr-pob b{background:#f23645}.gr-pol.sl .gr-poc{color:#f23645}.gr-pol.sl .gr-pob{box-shadow:0 0 0 3px rgba(242,54,69,.15)}
 .gr-pol.pend{opacity:.55}
+/* v1.94 : ordres comme TradingView : vente = rouge (ordre, position), aperçu du ticket en pointillés, P&L pendant le glisser */
+.gr-pol.sell:not(.tp):not(.sl) .gr-pob,.gr-pol.sell:not(.tp):not(.sl) .gr-poc,.gr-pol.sell:not(.tp):not(.sl) .gr-por{border-color:#f23645}.gr-pol.sell:not(.tp):not(.sl) .gr-pob b,.gr-pol.pos.sell .gr-poc{background:#f23645}.gr-pol.sell:not(.tp):not(.sl):not(.pos) .gr-poc,.gr-pol.pos.sell .gr-por{color:#f23645}.gr-pol.sell:not(.tp):not(.sl) .gr-pob{box-shadow:0 0 0 3px rgba(242,54,69,.15)}.gr-pol.pos.sell .gr-poc{color:#fff}
+.gr-pol.pv{opacity:.75;pointer-events:none}.gr-pol.pv .gr-pob{border-style:dashed;box-shadow:none;cursor:default}.gr-pol.pv.tp .gr-pob{border-color:#089981}.gr-pol.pv.tp .gr-pob b{background:#089981}.gr-pol.pv.sl .gr-pob{border-color:#f23645}.gr-pol.pv.sl .gr-pob b{background:#f23645}
+.gr-pog .gr-pgv{font-variant-numeric:tabular-nums}.gr-pog .gr-pgv.up{color:#089981}.gr-pog .gr-pgv.dn{color:#f23645}.gr-pog.drag{background:#fff;color:#131722;box-shadow:0 1px 4px rgba(0,0,0,.25)}.gr-pog.tp.drag{border-color:#089981}.gr-pog.sl.drag{border-color:#f23645}
 .gr-pov.gr-ctl-never .gr-poc,.gr-pov.gr-ctl-never .gr-por,.gr-pov.gr-ctl-never .gr-pog{display:none!important}
 .gr-pov.gr-ctl-hover .gr-poc,.gr-pov.gr-ctl-hover .gr-por,.gr-pov.gr-ctl-hover .gr-pog{opacity:0;transition:opacity .12s}.gr-cell:hover .gr-pov.gr-ctl-hover .gr-poc,.gr-cell:hover .gr-pov.gr-ctl-hover .gr-por,.gr-cell:hover .gr-pov.gr-ctl-hover .gr-pog{opacity:1}
 .gr-pov.gr-noext .gr-pol::after{content:"";position:absolute;left:100%;top:50%;width:var(--ext,0px);border-top:1px dashed var(--lc,#2962ff);pointer-events:none}.gr-pov.gr-noext .gr-pol.pos::after{border-top-style:solid}
@@ -13238,7 +13260,7 @@ function posDraw(pen, P, d, G, dir) { // position longue / courte : entrée, obj
 }
 const posHandles = (P) => P.length < 3 ? P.map((q, i) => ({ x: q[0], y: q[1], i })) : [{ x: P[0][0], y: P[0][1], i: 0, k: "entry" }, { x: P[0][0], y: P[1][1], i: 1, k: "tp" }, { x: P[0][0], y: P[2][1], i: 2, k: "sl" }, { x: P[1][0], y: P[0][1], i: 1, k: "w" }];
 const toolDef = (id) => T[id] || null;
-const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = LS.get("gr-tpldef", {})[tool]; const s = JSON.parse(JSON.stringify(Object.assign({}, t.def || {}, tpl || {})));
+const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = LS.get("gr-tpldef", {})[tool], last = LS.get("gr-tpllast", {})[tool]; const s = JSON.parse(JSON.stringify(Object.assign({}, t.def || {}, tpl || {}, last || {}))); // v1.94 : dernier style utilisé (gardé après fermeture de l'app)
   if (!s.lv && ["fib"].includes(tool)) s.lv = FIB_LV(); if (!s.lv && ["fibext", "fibchan"].includes(tool)) s.lv = FIBX_LV(); if (!s.lv && ["fibfan"].includes(tool)) s.lv = FAN_LV(); if (!s.lv && ["gannbox"].includes(tool)) s.lv = GANN_LV(); if (!s.lv && tool === "fibtime") s.lv = TZ_LV(); if (!s.lv && ["fibcirc", "fibarc"].includes(tool)) s.lv = CIRC_LV(); return s; };
 
 /* ---------- réglages du graphique (Paramètres) ---------- */
@@ -13252,7 +13274,7 @@ const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#0
   vgridC: "", hgridC: "", wmC: "", scaleLineC: "", navBtns: "hover", trLbl: true, trPL: true, trPLu: "money",
   /* v1.88 : réglages Trading façon TopstepX (compte démo de la page) */
   trBtns: true, tr1Click: true, trSnd: true, trSndV: 50, trSndT: "thin", trRejOnly: false, trPos: true, trRev: true, trCtl: "always", trDraft: false,
-  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
+  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, trPrev: true, alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
 const LIGHT = { bg: "#ffffff", bg2: "", txt: "#131722", gridC: "rgba(42,46,57,0.07)", crossC: "#9598a1", sessC: "rgba(120,123,134,0.30)" };
 let PR = Object.assign({}, PDEF, LS.get("gr-prefs", {}));
 /* anciennes cases -> nouveaux menus (une fois), puis valeurs dérivées gardées à jour pour le reste du code */
@@ -13343,7 +13365,11 @@ class Cell {
     this.pEl = this.el.querySelector(".gr-panes"); this.msgEl = this.el.querySelector(".gr-cmsg"); this.tipEl = this.el.querySelector(".gr-ntip");
     this.main = this.mkPane(null); this.mkMain(); this.wire(); this.bind();
     this.el.addEventListener("pointerdown", () => { if (STATE.active !== this.idx) setActive(this.idx); }, true);
+    // v1.94 : la souris quitte le graphique → plus de curseur à remettre
+    try { this.main.chart.chartElement().addEventListener("pointerleave", () => { this.mouseP = null; }); } catch (e) { /* */ }
   }
+  // v1.94 : remet le curseur (lignes verticale + horizontale) à la position de la souris après une mise à jour en direct
+  keepCross() { const m = this.mouseP; if (!m || this.dead || DS.creating || DS.drag) return; try { const t = this.main.chart.timeScale().coordinateToTime(m.x), pr = this.series.coordinateToPrice(m.y); if (t == null || pr == null || !isFinite(pr)) return; this.xRest = true; this.main.chart.setCrosshairPosition(pr, t, this.series); } catch (e) { /* */ } finally { this.xRest = false; } }
   get spec() { return SYM(this.st.sym); }
   /* ----- panneaux (graphique principal + oscillateurs) ----- */
   opts(isMain, last) {
@@ -13456,7 +13482,7 @@ class Cell {
     try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i], B[i - 1])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
       if (B.length > B0.length) this.panes.forEach((p) => { for (let i = B0.length; i < B.length; i++) p.anchor.update({ time: T[i] }); }); }
     catch (e) { this.full(false); return; }
-    this.inds(false, from); this.legend(); this.redraw(); checkAlerts(this.st.sym, B[B.length - 1]);
+    this.inds(false, from); this.legend(); this.redraw(); checkAlerts(this.st.sym, B[B.length - 1]); requestAnimationFrame(() => this.keepCross());
     if (STATE.active === this.idx) refreshPanels(true);
   }
   setRange(r) { this.syncing = true; try { this.allCharts().forEach((c) => c.timeScale().setVisibleLogicalRange(r)); } catch (e) { /* pas encore de données */ } this.syncing = false; }
@@ -13552,7 +13578,7 @@ class Cell {
   /* ----- liaison souris / clavier ----- */
   wire() {
     const ch = this.main.chart;
-    ch.subscribeCrosshairMove((p) => { if (this.dead) return; this.cross = p && p.point ? p : null; if (this.xs) return; this.xs = true; try { const i = p && p.logical != null && p.point ? Math.round(p.logical) : null; this.legend(i); this.hoverPanes(this.main, p); if (!Cell.xsync) { Cell.xsync = true; try { syncCross(this, p); } finally { Cell.xsync = false; } } this.newsTip(p); } finally { this.xs = false; } });
+    ch.subscribeCrosshairMove((p) => { if (this.dead) return; this.cross = p && p.point ? p : null; if (p && p.point && !this.xRest) this.mouseP = { x: p.point.x, y: p.point.y }; if (this.xs) return; this.xs = true; try { const i = p && p.logical != null && p.point ? Math.round(p.logical) : null; this.legend(i); this.hoverPanes(this.main, p); if (!Cell.xsync) { Cell.xsync = true; try { syncCross(this, p); } finally { Cell.xsync = false; } } this.newsTip(p); } finally { this.xs = false; } });
     ch.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && !this.dead) { clearTimeout(this.visTo); this.visTo = setTimeout(() => { if (this.dead) return; const v = this.visT(), k = v ? v.join(",") : ""; if (k === this.visK) return; this.visK = k; if (this.st.inds.some((y) => !y.hide && String(y.t).startsWith("pine:") && (() => { const d = indDef(y.t); return d && d.src && /(left|right)_visible_bar_time/.test(d.src.code || ""); })())) this.inds(true); }, 250); }
       if (!r || this.dead) return; if (!this.syncing) { this.syncing = true; this.panes.forEach((p) => { try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }); this.syncing = false; syncTime(this); }
       if (r.from < 30 && this.feed && !this.feed.done && !this.feed.more && this.feed.ready) this.feed.loadMore(); this.ilay.update(); });
@@ -13583,9 +13609,10 @@ class Cell {
     const x0 = ts.logicalToCoordinate(0) ?? 0, x1 = ts.logicalToCoordinate(1) ?? 1, bs = (x1 - x0) || 1;
     return { bars: B, iv, spec: sp, W: sz.width, H: sz.height, bs, li: (t) => liOf(B, iv, t), lx: (l) => x0 + l * bs, x: (t) => x0 + liOf(B, iv, t) * bs, y: (p) => { const v = s.priceToCoordinate(p); return v == null ? NaN : v; }, p: (y) => s.coordinateToPrice(y), lOfX: (x) => (x - x0) / bs, tOfL: (l) => tOfLi(B, iv, l), fp: (p) => fmtPx(p, sp) };
   }
-  visibleD(d) { if (d.hide || DS.hideAll) return false; if (d.vis && d.vis[ivCat(this.st.iv)] === false) return false;
+  visibleD(d) { if (d.hide || DS.hideAll) return false; if (!this.syncOk(d)) return false; if (d.vis && d.vis[ivCat(this.st.iv)] === false) return false;
     if (d.visR) { const s = ivSec(this.st.iv), op = d.visR.op, iv = d.visR.iv; if ((op === "ge" && s < iv) || (op === "le" && s > iv) || (op === "eq" && s !== iv)) return false; } return true; }
-  pts(d, G) { return d.p.map((q) => [G.x(q.t), G.y(q.p)]); }
+  syncOk(d) { const m = syncOf(d); if (m === "global") return true; if ((d.lay || null) !== curLay()) return false; return m !== "none" || (d.cell || 0) === this.idx; }
+  pts(d, G) { if (d.anch && d.anch.length === d.p.length) { const w = this.main.host.clientWidth, h = this.main.host.clientHeight; return d.anch.map((a) => [a[0] * w, a[1] * h]); } return d.p.map((q) => [G.x(q.t), G.y(q.p)]); } // v1.94 : dessin ancré = fixe à l'écran
   redraw() { if (this.lay) this.lay.update(); if (this.ilay) this.ilay.update(); }
   paint(layer, c, size) {
     if (!this.DB.length) return;
@@ -13601,7 +13628,7 @@ class Cell {
     if (DS.measure && DS.measure.cell === this) { const d = DS.measure.d, P = this.pts(d, G); if (P.every((q) => fin(q[0]) && fin(q[1]))) T.measure.draw(new Pen(c, false), P, d, G); }
     if (DS.cursor === "dot" && this.cross && this.cross.point) { c.fillStyle = PR.crossC; c.beginPath(); c.arc(this.cross.point.x, this.cross.point.y, 3, 0, PI2); c.fill(); }
   }
-  paintHandles(c, d, P, def) { const hs = def.handles ? def.handles(P, d) : P.map((q, i) => ({ x: q[0], y: q[1], i })); c.save(); c.setLineDash([]); hs.forEach((h) => { c.fillStyle = PR.bg; c.strokeStyle = "#2962ff"; c.lineWidth = 1.5; c.beginPath(); if (h.sq) c.rect(h.x - 4.5, h.y - 4.5, 9, 9); else c.arc(h.x, h.y, 5, 0, PI2); c.fill(); c.stroke(); }); c.restore(); }
+  paintHandles(c, d, P, def) { const hs = def.handles ? def.handles(P, d) : P.map((q, i) => ({ x: q[0], y: q[1], i })); c.save(); c.setLineDash([]); hs.forEach((h) => { c.fillStyle = PR.bg; c.strokeStyle = "#2962ff"; c.lineWidth = 1.5; c.beginPath(); c.arc(h.x, h.y, 5, 0, PI2); c.fill(); c.stroke(); }); c.restore(); } // v1.94 : poignées toujours rondes (comme TradingView)
   paintInd(c, G) {
     const P = PR;
     // fond des heures de trading électronique (hors séance régulière 9:30 – 16:15 NY)
@@ -13684,7 +13711,12 @@ Cell.prototype.hit = function (x, y) {
     const pen = new Pen(null, true); try { def.draw(pen, P, d, G); } catch (e) { continue; } if (hitShapes(pen.sh, x, y, 5)) return { d }; }
   return null;
 };
-function drawChanged(d) { saveDraw(); CELLS.forEach((c) => c.redraw()); refreshTree(); if (d && DS.sel === d.id) showFloat(d); }
+function drawChanged(d) { saveDraw(); CELLS.forEach((c) => c.redraw()); refreshTree(); if (d && DS.sel === d.id) showFloat(d); if (d && d.s && d.tool) lastStyle(d); }
+// v1.94 : dernier style utilisé par outil (comme TradingView) : le prochain dessin de cet outil le reprend, même après redémarrage
+const lastStyle = (d) => { if (DS.noLast) return; const all = LS.get("gr-tpllast", {}), st = JSON.parse(JSON.stringify(d.s)); if (JSON.stringify(all[d.tool]) === JSON.stringify(st)) return; all[d.tool] = st; LS.set("gr-tpllast", all); };
+// v1.94 : synchro d'un dessin : "none" = ce graphique seulement, "layout" = cette mise en page, "global" = toutes les mises en page (anciens dessins sans mise en page = global)
+const syncOf = (d) => d.sync || (d.lay !== undefined ? "layout" : "global");
+const stampD = (d, c, keepSync) => { if (!keepSync || !d.sync) d.sync = PR.drawSync || "layout"; d.lay = curLay(); d.cell = c ? c.idx : 0; return d; };
 function selectD(d, cell) { DS.sel = d ? d.id : null; CELLS.forEach((c) => c.redraw()); if (d) showFloat(d, cell); else hideFloat(); refreshTree(); }
 function setTool(t, keep) { if (DS.creating) cancelCreate(); DS.tool = t; if (["cross", "dot", "arrow", "eraser"].includes(t)) { DS.cursor = t; DS.tool = t === "eraser" ? "eraser" : "cross"; CELLS.forEach((c) => c.allCharts().forEach((ch) => ch.applyOptions({ crosshair: { mode: t === "cross" ? (PR.crossMag ? 1 : 0) : 2 } }))); }
   else if (!keep) { const g = TOOL_GROUPS.find((x) => x[2].includes(t)); if (g) { DS.last[g[0]] = t; LS.set("gr-lasttool", DS.last); } }
@@ -13715,14 +13747,14 @@ Cell.prototype.down = function (e) {
   if (DS.tool === "eraser" || DS.cursor === "eraser") { const h = this.hit(x, y); stopEv(e); if (h && !h.d.lock) { snap(); const f = findD(h.d.id); if (f) f.list.splice(f.i, 1); if (DS.sel === h.d.id) selectD(null); drawChanged(); } return; }
   const def = T[DS.tool];
   if (def && def.np !== -9 && DS.tool !== "cross") { stopEv(e); if (DS.lockAll) { toast("Dessins verrouillés : déverrouille-les pour dessiner (cadenas à gauche)."); return; }
-    snap(); const pt = this.ptAt(x, y, G, { free: def.np === -1 }), d = { id: uid(), tool: DS.tool, sym: undOf(this.st.sym), p: [pt], s: defStyle(DS.tool), at: Date.now() };
+    snap(); const pt = this.ptAt(x, y, G, { free: def.np === -1 }), d = stampD({ id: uid(), tool: DS.tool, sym: undOf(this.st.sym), p: [pt], s: defStyle(DS.tool), at: Date.now() }, this);
     if (DS.tool === "emoji") d.s.e = DS.emoji || d.s.e || "🚀";
     const L = drawsOf(this.st.sym); L.push(d);
     if (def.np === 1) { if (d.tool === "long" || d.tool === "short") initPos(d, this); finishCreate(d, this); return; }
     if (def.np === -1) { DS.creating = { d, cell: this, k: 0, free: true, down: true }; this.capture(); return; }
     d.p.push({ ...pt }); DS.creating = { d, cell: this, k: 1, x0: x, y0: y, down: true, dragged: false }; this.capture(); this.redraw(); return; }
   const h = this.hit(x, y);
-  if (h) { stopEv(e); selectD(h.d, this); if (h.d.lock || DS.lockAll) return; if (e.altKey && !h.h) { snap(); const cp = JSON.parse(JSON.stringify(h.d)); cp.id = uid(); drawsOf(this.st.sym).push(cp); selectD(cp, this); h.d = cp; }
+  if (h) { stopEv(e); selectD(h.d, this); if (h.d.lock || h.d.anch || DS.lockAll) return; if (e.altKey && !h.h) { snap(); const cp = stampD(JSON.parse(JSON.stringify(h.d)), this, true); cp.id = uid(); drawsOf(this.st.sym).push(cp); selectD(cp, this); h.d = cp; }
     DS.drag = { cell: this, d: h.d, h: h.h || null, x0: x, y0: y, l0: G.lOfX(x), p0: G.p(y), orig: JSON.parse(JSON.stringify(h.d.p)), moved: false }; this.capture(); return; }
   if (DS.sel) selectD(null);
   this.panStart(e);
@@ -13785,8 +13817,38 @@ addEventListener("pointerdown", (e) => { const m = DS.measure; if (m && m.waitin
 Cell.prototype.dbl = function (e) {
   const { x, y } = this.evPos(e); const c = DS.creating;
   if (c && c.cell === this && T[c.d.tool].np === 0) { stopEv(e); c.d.p.pop(); if (c.d.p.length > 2 && Math.hypot(this.geo().x(c.d.p[c.d.p.length - 1].t) - this.geo().x(c.d.p[c.d.p.length - 2].t), 0) < 2) c.d.p.pop(); if (c.d.p.length < 2) { cancelCreate(); return; } finishCreate(c.d, this); return; }
-  const h = this.hit(x, y); if (h) { stopEv(e); const def = T[h.d.tool]; if (def && def.txt || h.d.tool === "text") editText(h.d, this); else openDrawSettings(h.d, this); }
+  const h = this.hit(x, y); if (h) { stopEv(e); const def = T[h.d.tool]; if (def && def.txt || h.d.tool === "text") editText(h.d, this); else openDrawSettings(h.d, this); return; }
+  const pb = this.inPlot(x, y, this.geo()) ? this.pineBoxAt(x, y) : null; if (pb) { stopEv(e); gapMenu(pb, this, e.clientX, e.clientY); } // v1.94 : double-clic sur un NWOG / NDOG (boîte d'un script Pine)
 };
+/** v1.94 : boîte d'un script Pine sous la souris (la plus petite : le gap plutôt qu'une zone qui l'englobe) */
+Cell.prototype.pineBoxAt = function (x, y) {
+  const G = this.geo(); let best = null;
+  for (const ind of this.st.inds) { const d = indDef(ind.t), r = this.R[ind.id]; if (!d || !r || ind.hide || DS.hideInd || !r._pine || !r._pine.draw || !indOv(ind, d, r)) continue; const D0 = r._pine.draw;
+    for (const B of D0.boxes || []) { let x1 = G.lx(Math.min(B.x1, B.x2)), x2 = G.lx(Math.max(B.x1, B.x2)); const ya = G.y(B.y1), yb = G.y(B.y2); if (!fin(ya) || !fin(yb) || !fin(x1) || !fin(x2)) continue;
+      if (B.extend === "right" || B.extend === "both") x2 = G.W + 10; if (B.extend === "left" || B.extend === "both") x1 = -10;
+      const y1 = Math.min(ya, yb) - 2, y2 = Math.max(ya, yb) + 2; if (x < x1 - 2 || x > x2 + 2 || y < y1 || y > y2) continue; const area = (x2 - x1) * (y2 - y1);
+      if (!best || area < best.area) { const top = Math.max(B.y1, B.y2), bot = Math.min(B.y1, B.y2); let name = B.text ? String(B.text).split("\n")[0] : "";
+        if (!name) { const lb = (D0.labels || []).filter((l) => l.text && fin(l.y) && l.y <= top + (top - bot) * 0.6 && l.y >= bot - (top - bot) * 0.6 && Math.abs(l.x - Math.max(B.x1, B.x2)) < 400 || l.text && /NWOG|NDOG/.test(l.text) && fin(l.y) && l.y <= top && l.y >= bot); if (lb.length) name = String(lb[0].text).split("\n")[0]; }
+        best = { area, B, top, bot, i1: Math.min(B.x1, B.x2), i2: Math.max(B.x1, B.x2), ext: B.extend === "right" || B.extend === "both", name: name || "Gap", ind: d.n || ind.t }; } } }
+  return best;
+};
+/** STDV d'un gap : 0 = haut, 1 = bas, 0,5 = CE, projections 1 → 5 (pas de 0,5) des deux côtés */
+const STDV_LV = () => { const a = [[0, "#787b86"], [0.5, "#ff9800"], [1, "#787b86"]]; for (let k = 1; k <= 8; k++) { const v = 1 + k * 0.5, w = Number.isInteger(v - 0.5) ? "#2962ff" : "#5b9cf6"; a.push([v, Number.isInteger(v) ? "#2962ff" : "#90a4d4"]); a.push([+(-k * 0.5).toFixed(1), Number.isInteger(k * 0.5) ? "#f23645" : "#e8a0a6"]); } return LV(a); };
+function gapMake(pb, c, what) {
+  const G = c.geo(), B = pb.B, t0 = G.tOfL(Math.round(pb.i1)), right = pb.ext ? Math.max(Math.round(pb.i2), c.DB.length - 1) + 20 : Math.round(pb.i2), t1 = G.tOfL(right), sym = undOf(c.st.sym), out = [];
+  snap(); DS.noLast = true;
+  try {
+    if (what !== "stdv") { const col = B.border_color && B.border_color !== "na" ? hex6(B.border_color) : "#2962ff"; const d = stampD({ id: uid(), tool: "rect", sym, p: [{ t: t0, p: pb.top }, { t: t1, p: pb.bot }], s: Object.assign(defStyle("rect"), { c: col, f: B.bgcolor && B.bgcolor !== "na" ? B.bgcolor : alpha(col, 0.15), w: 1, d: 0, er: !!pb.ext }), at: Date.now(), name: pb.name }, c); drawsOf(c.st.sym).push(d); out.push(d); }
+    if (what !== "rect") { const d = stampD({ id: uid(), tool: "fib", sym, p: [{ t: t0, p: pb.bot }, { t: t1, p: pb.top }], s: Object.assign(defStyle("fib"), { c: "#787b86", w: 1, lv: STDV_LV(), bg: false, lab: true, er: true, tl: false }), at: Date.now(), name: "STDV " + pb.name }, c); drawsOf(c.st.sym).push(d); out.push(d); }
+    out.forEach((d) => drawChanged(d)); if (out.length) selectD(out[0], c);
+  } finally { DS.noLast = false; }
+  toast(what === "stdv" ? `STDV de ${pb.name} activées (1 → 5, pas de 0,5)` : what === "rect" ? `${pb.name} : dessin modifiable créé (poignées pour prolonger / ajuster)` : `${pb.name} : dessin modifiable + STDV activées`);
+}
+function gapMenu(pb, c, x, y) { const f = fmtPx;
+  menu(x, y, [`h:${pb.name} · ${f(pb.bot, c.spec)} – ${f(pb.top, c.spec)}`,
+    { t: "Modifier / prolonger ce gap", tip: "Crée un rectangle modifiable à la place exacte du gap (glisser les poignées pour le prolonger)", f: () => gapMake(pb, c, "rect") },
+    { t: "Activer les STDV (1 → 5, pas de 0,5)", tip: "Fibonacci du gap : 0 = haut, 1 = bas, 0,5 = CE, projections de 1 à 5 écarts-types des deux côtés", f: () => gapMake(pb, c, "stdv") },
+    { t: "Les deux", f: () => gapMake(pb, c, "both") }]); }
 Cell.prototype.zoomBox = function (end) { let z = this.el.querySelector(".gr-zoom"); if (end || !DS.zoom) { if (z) z.remove(); return; } if (!z) { z = el("div", "gr-zoom"); this.main.host.append(z); } const a = DS.zoom; z.style.cssText = `left:${Math.min(a.x0, a.x1)}px;top:0;width:${Math.abs(a.x1 - a.x0)}px;height:100%`; };
 Cell.prototype.ctxMenu = function (e) {
   const { x, y } = this.evPos(e), G = this.geo(); stopEv(e); if (DS.creating) { cancelCreate(); return; }
@@ -13799,7 +13861,7 @@ Cell.prototype.ctxMenu = function (e) {
     { t: "Réinitialiser le graphique", k: "Alt+R", f: () => resetChart(this) },
     px != null && { t: `Copier le prix ${fmtPx(px, sp)}`, f: () => { try { navigator.clipboard.writeText(fmtPx(px, sp)); } catch (er) { /* */ } } },
     px != null && { t: `Ajouter une alerte à ${fmtPx(px, sp)}`, k: "Alt+Maj+N", f: () => openAlert({ sym: this.st.sym, val: px }) },
-    px != null && { t: `Ligne horizontale à ${fmtPx(px, sp)}`, f: () => { snap(); const d = { id: uid(), tool: "hline", sym: undOf(this.st.sym), p: [{ t: G.tOfL(Math.round(G.lOfX(x))), p: px }], s: defStyle("hline"), at: Date.now() }; drawsOf(this.st.sym).push(d); drawChanged(d); } },
+    px != null && { t: `Ligne horizontale à ${fmtPx(px, sp)}`, f: () => { snap(); const d = { id: uid(), tool: "hline", sym: undOf(this.st.sym), p: [{ t: G.tOfL(Math.round(G.lOfX(x))), p: px }], s: defStyle("hline"), at: Date.now() }; stampD(d, this); drawsOf(this.st.sym).push(d); drawChanged(d); } },
     "-",
     { t: DS.hideAll ? "Afficher les dessins" : "Masquer les dessins", k: "Ctrl+Alt+H", f: () => toggleHideAll() },
     { t: DS.lockAll ? "Déverrouiller les dessins" : "Verrouiller les dessins", f: () => toggleLockAll() },
@@ -13876,7 +13938,135 @@ if (!Array.isArray(STATE.cells) || !STATE.cells.length) STATE.cells = [DEF_CELL(
 STATE.cells.forEach((c) => { c.inds = Array.isArray(c.inds) ? c.inds.filter((x) => x && x.t) : []; c.cmp = c.cmp || []; c.scale = c.scale || {}; if (!SYMS.has(c.sym) && !String(c.sym).startsWith("CSV:")) c.sym = DEF_CELL().sym; if (!ivParse(c.iv)) c.iv = "5"; });
 let LAYOUTS = LS.get("gr-layouts", []);
 const snapshotLayout = () => JSON.parse(JSON.stringify({ grid: STATE.grid, cells: STATE.cells, active: STATE.active, sync: STATE.sync }));
-const saveState = debounce(() => { LS.set("gr-state", STATE); if (STATE.auto && STATE.layoutId) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId); if (L) { L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); } } }, 600);
+const saveState = debounce(() => { LS.set("gr-state", STATE); if (STATE.auto && STATE.layoutId) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId); if (L) { L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); } }  if (typeof tabSave === "function") tabSave(); }, 600);
+/* ---------- v1.94 : onglets façon TradingView (chaque onglet = une mise en page ; groupes colorés, liaison, fenêtre détachée) ---------- */
+const SS = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* */ } } };
+let TABWIN = SS.get("gr-win") || "";
+const TLINK = [["#2962ff", "Bleu"], ["#f23645", "Rouge"], ["#089981", "Vert"], ["#ff9800", "Orange"], ["#9c27b0", "Violet"], ["#00bcd4", "Cyan"], ["#e91e63", "Rose"]];
+const tabId = () => "t" + Math.random().toString(36).slice(2, 10);
+const tabMk = (state, o) => Object.assign({ id: tabId(), state: state || { grid: "1", cells: [DEF_CELL()], active: 0, sync: Object.assign({}, STATE.sync) }, layoutId: null }, o || {});
+let TABS;
+(function tabInit() {
+  const hand = LS.get("gr-tabopen", null);
+  if (!TABWIN && hand && hand.tab && Date.now() - hand.at < 20000) { TABWIN = "w" + Math.random().toString(36).slice(2, 8); SS.set("gr-win", TABWIN); LS.set("gr-tabopen", null); TABS = { v: 1, list: [hand.tab], cur: hand.tab.id, groups: [], links: hand.links || {} }; }
+  else TABS = LS.get(TABWIN ? "gr-tabs-" + TABWIN : "gr-tabs", null);
+  if (!TABS || TABS.v !== 1 || !Array.isArray(TABS.list) || !TABS.list.length) { const t = tabMk(snapshotLayout(), { layoutId: STATE.layoutId || null }); TABS = { v: 1, list: [t], cur: t.id, groups: [], links: {} }; }
+  TABS.groups = TABS.groups || []; TABS.links = TABS.links || {};
+  const t = TABS.list.find((x) => x.id === TABS.cur) || TABS.list[0]; TABS.cur = t.id;
+  if (t.state) { STATE.grid = t.state.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(t.state.cells || [DEF_CELL()])); STATE.active = t.state.active || 0; STATE.sync = Object.assign({}, STATE.sync, t.state.sync || {}); STATE.layoutId = t.layoutId || null; }
+})();
+const TABKEY = () => (TABWIN ? "gr-tabs-" + TABWIN : "gr-tabs");
+const tabCur = () => TABS.list.find((x) => x.id === TABS.cur) || TABS.list[0];
+/** clé de mise en page des dessins « mise en page » / « ce graphique » : la mise en page enregistrée, sinon l'onglet */
+const curLay = () => STATE.layoutId || "t:" + TABS.cur;
+const tabSym = (t) => { const s = t.state || {}, c = (s.cells || [])[s.active || 0] || (s.cells || [])[0]; return c || null; };
+function tabTitle(t) { if (t.custom) return t.custom; const L = t.layoutId && LAYOUTS.find((x) => x.id === t.layoutId); const c = tabSym(t); const base = c ? `${symCode(c.sym)}, ${ivLabel(c.iv)}` : "Graphique"; return L ? `${L.name} · ${base}` : base; }
+function tabSnap() { const t = tabCur(); if (!t) return; t.state = snapshotLayout(); t.layoutId = STATE.layoutId || null;
+  if (t.link) { const c = activeCell(), L = (TABS.links[t.link] = TABS.links[t.link] || {}); if (c) { L.sym = c.st.sym; L.iv = c.st.iv; try { const r = c.main.chart.timeScale().getVisibleRange(); if (r) L.rng = [r.from, r.to]; } catch (e) { /* */ } } } }
+const tabSave = debounce(() => { tabSnap(); LS.set(TABKEY(), TABS); renderTabs(); }, 400);
+function tabApply(t) {
+  const s = t.state || {}; STATE.grid = s.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(s.cells && s.cells.length ? s.cells : [DEF_CELL()])); STATE.active = s.active || 0; STATE.sync = Object.assign({}, STATE.sync, s.sync || {}); STATE.layoutId = t.layoutId || null; STATE.max = false;
+  const L = t.link && TABS.links[t.link], lk = t.lk || { sym: true, iv: true }, c0 = STATE.cells[STATE.active] || STATE.cells[0];
+  if (L && c0) { if (lk.sym && L.sym) c0.sym = L.sym; if (lk.iv && L.iv) c0.iv = L.iv; }
+  selectD(null); renderGrid(); refreshHeader(); saveState();
+  if (L && L.rng && (lk.time || lk.range)) setTimeout(() => { const c = activeCell(); if (!c) return; try { const ts = c.main.chart.timeScale(); if (lk.range) ts.setVisibleRange({ from: L.rng[0], to: L.rng[1] }); else { const r = ts.getVisibleRange(), w = r ? r.to - r.from : L.rng[1] - L.rng[0]; ts.setVisibleRange({ from: L.rng[1] - w, to: L.rng[1] }); } } catch (e) { /* */ } }, 900);
+}
+function tabGo(id) { if (id === TABS.cur) return; tabSnap(); TABS.cur = id; const t = tabCur(); LS.set(TABKEY(), TABS); tabApply(t); renderTabs(); }
+function tabNew(state, o) { tabSnap(); const c = activeCell(), t = tabMk(state || { grid: "1", cells: [DEF_CELL(c ? { sym: c.st.sym, iv: c.st.iv } : {})], active: 0, sync: Object.assign({}, STATE.sync) }, o);
+  const cur = tabCur(), i = TABS.list.indexOf(cur); if (cur && cur.group && !o) t.group = cur.group; TABS.list.splice(i + 1, 0, t); TABS.cur = t.id; LS.set(TABKEY(), TABS); tabApply(t); renderTabs(); return t; }
+/** dessins liés à un onglet sans mise en page enregistrée : copiés / déplacés avec lui */
+function tabDraws(fromId, toId, copy) { const from = "t:" + fromId; let n = 0; for (const k in DRAW) { const add = []; DRAW[k] = DRAW[k].filter((d) => { if (d.lay !== from) return true; n++; if (copy) { const c2 = JSON.parse(JSON.stringify(d)); c2.id = uid(); c2.lay = "t:" + toId; add.push(c2); return true; } if (toId) { d.lay = "t:" + toId; return true; } return false; }); DRAW[k].push(...add); } if (n) { saveDraw(); CELLS.forEach((c) => c.redraw()); } return n; }
+function tabDup(t) { tabSnap(); t = t || tabCur(); const cp = JSON.parse(JSON.stringify(t)); cp.id = tabId(); delete cp.pin; if (cp.custom) cp.custom += " (copie)"; if (!cp.layoutId) tabDraws(t.id, cp.id, true);
+  TABS.list.splice(TABS.list.indexOf(t) + 1, 0, cp); TABS.cur = cp.id; LS.set(TABKEY(), TABS); tabApply(cp); renderTabs(); toast("Onglet dupliqué"); }
+function tabClose(t, quiet) { t = t || tabCur(); const nd = t.layoutId ? 0 : Object.values(DRAW).reduce((a, L) => a + L.filter((d) => d.lay === "t:" + t.id).length, 0);
+  const go = () => { const i = TABS.list.indexOf(t); if (i < 0) return; if (!t.layoutId) tabDraws(t.id, null, false); TABS.list.splice(i, 1);
+    if (!TABS.list.length) { const n = tabMk(); TABS.list.push(n); }
+    if (TABS.cur === t.id) { const nx = TABS.list[Math.min(i, TABS.list.length - 1)]; TABS.cur = nx.id; tabApply(nx); }
+    TABS.groups = TABS.groups.filter((g) => TABS.list.some((x) => x.group === g.id)); LS.set(TABKEY(), TABS); renderTabs(); };
+  if (nd && !quiet) { dlg("Fermer l'onglet", `<p style="margin:0">Cet onglet n'est pas enregistré comme mise en page : ses <b>${nd} dessin${nd > 1 ? "s" : ""}</b> (synchronisés dans la mise en page ou sur ce graphique) seront supprimés.<br>Les dessins « globaux » restent.</p>`, { w: 420, ok: "Fermer l'onglet", onOk: () => { go(); } }); return; }
+  go(); }
+function tabReload() { tabSnap(); tabApply(tabCur()); toast("Onglet rechargé"); }
+function tabLink(t) { const c = tabSym(t); if (!c) return ""; const u = undOf(c.sym), code = symCode(c.sym), F = { NQ: "CME_MINI:NQ1!", ES: "CME_MINI:ES1!", MNQ: "CME_MINI:MNQ1!", MES: "CME_MINI:MES1!" }, ivs = String(c.iv).replace(/^1D$/, "D").replace(/^1W$/, "W").replace(/^1M$/, "M");
+  return `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(F[u] || F[code] || code)}&interval=${encodeURIComponent(ivs)}`; }
+async function tabCopyLink(t) { const u = tabLink(t); try { await navigator.clipboard.writeText(u); toast("Lien copié : " + u); } catch (e) { toast("Copie impossible : " + e.message, true); } }
+/** nouvelle fenêtre (Maj + clic sur +, Détacher l'onglet) : l'onglet passe par localStorage */
+function tabWindow(t, detach) { tabSnap(); const tab = t ? JSON.parse(JSON.stringify(t)) : tabMk(undefined, {}); if (!t) { const c = activeCell(); tab.state.cells = [DEF_CELL(c ? { sym: c.st.sym, iv: c.st.iv } : {})]; }
+  delete tab.group; LS.set("gr-tabopen", { at: Date.now(), tab, links: TABS.links });
+  if (D && D.newWindow) D.newWindow("graphique"); else window.open(location.href.split("#")[0] + "#graphique", "_blank");
+  if (detach && t) { const i = TABS.list.indexOf(t); TABS.list.splice(i, 1); if (!TABS.list.length) TABS.list.push(tabMk()); if (TABS.cur === t.id) { TABS.cur = TABS.list[Math.min(i, TABS.list.length - 1)].id; tabApply(tabCur()); } LS.set(TABKEY(), TABS); renderTabs(); toast("Onglet détaché dans une nouvelle fenêtre"); } }
+function tabMove(t, to) { const L = TABS.list, i = L.indexOf(t); L.splice(i, 1); L.splice(clamp(to > i ? to - 1 : to, 0, L.length), 0, t); }
+function tabToGroup(t, g) { t.group = g ? g.id : null; if (g) { const last = TABS.list.reduce((a, x, i) => (x.group === g.id && x !== t ? i : a), -1); if (last >= 0) tabMove(t, last + 1); g.col = false; }
+  TABS.groups = TABS.groups.filter((x) => TABS.list.some((y) => y.group === x.id)); LS.set(TABKEY(), TABS); renderTabs(); }
+/** fenêtre « Créer un groupe » / « Modifier le groupe » : nom + couleur (palette + hexadécimal) */
+function groupDlg(g, done) { let col = g ? g.color : TLINK[(TABS.groups.length) % TLINK.length][0];
+  const d = dlg(g ? "Modifier le groupe" : "Créer un nouveau groupe", `<label class="gr-tgl">Nom<input class="gr-in" id="grTgN" value="${E(g ? g.name : "")}" placeholder="Groupe ${TABS.groups.length + 1}"></label>
+    <div class="gr-tgl">Couleur<div class="gr-tgc">${TLINK.map(([c, n]) => `<button type="button" class="gr-tgs" data-c="${c}" title="${n}" style="--c:${c}"></button>`).join("")}<button type="button" class="gr-tgs gr-tgmore" id="grTgMore" title="Plus de couleurs (palette, hexadécimal)">+</button><span class="gr-tgv" id="grTgV"></span></div></div>`,
+    { w: 360, ok: g ? "Enregistrer" : "Créer", onOk: (x) => { const n = x.querySelector("#grTgN").value.trim() || `Groupe ${TABS.groups.length + 1}`; done(n, col); } });
+  const paint = () => { d.el.querySelectorAll(".gr-tgs[data-c]").forEach((b) => b.classList.toggle("on", b.dataset.c.toLowerCase() === col.toLowerCase())); const v = d.el.querySelector("#grTgV"); v.textContent = col.toUpperCase(); v.style.setProperty("--c", col); };
+  d.el.querySelectorAll(".gr-tgs[data-c]").forEach((b) => (b.onclick = () => { col = b.dataset.c; paint(); }));
+  d.el.querySelector("#grTgMore").onclick = (e) => colorPop(e.currentTarget, col, (c) => { col = hex6(c); paint(); }, { noAlpha: true });
+  paint(); setTimeout(() => { const i = d.el.querySelector("#grTgN"); if (i) i.focus(); }, 30); }
+function groupMenu(g, x, y) { const ts = TABS.list.filter((t) => t.group === g.id);
+  menu(x, y, [{ t: "Modifier le nom et la couleur…", f: () => groupDlg(g, (n, c) => { g.name = n; g.color = c; LS.set(TABKEY(), TABS); renderTabs(); }) },
+    { t: g.col ? "Déplier le groupe" : "Replier le groupe", f: () => { g.col = !g.col; LS.set(TABKEY(), TABS); renderTabs(); } },
+    { t: "Nouvel onglet dans le groupe", f: () => { const t = tabNew(); tabToGroup(t, g); } },
+    { t: "Dégrouper", f: () => { ts.forEach((t) => (t.group = null)); tabToGroup(ts[0], null); } }, "-",
+    { t: `Fermer le groupe (${ts.length} onglet${ts.length > 1 ? "s" : ""})`, f: () => ts.forEach((t) => tabClose(t, true)) }]); }
+function tabMenu(t, x, y) {
+  const lk = t.lk || { sym: true, iv: true, time: false, range: false }, grp = TABS.groups;
+  const linkHtml = `<div class="gr-tlk"><div class="gr-tlkh">Liaison de l'onglet</div><div class="gr-tlkc"><button type="button" class="gr-tlkd none${!t.link ? " on" : ""}" data-l="" title="Aucune liaison">⊘</button>${TLINK.map(([c, n]) => `<button type="button" class="gr-tlkd${t.link === c ? " on" : ""}" data-l="${c}" title="Lier aux onglets ${n.toLowerCase()}s" style="--c:${c}"></button>`).join("")}</div>
+    ${[["sym", "Symbole"], ["iv", "Intervalle"], ["time", "Temps"], ["range", "Plage de dates"]].map(([k, n]) => `<label class="gr-tlkt"><span>${n}</span><input type="checkbox" class="gr-swi" data-k="${k}"${lk[k] ? " checked" : ""}${t.link ? "" : " disabled"}></label>`).join("")}</div>`;
+  menu(x, y, [
+    { t: "Nouvel onglet", k: "Ctrl+T", f: () => tabNew() },
+    { t: "Dupliquer l'onglet", k: "Ctrl+U", f: () => tabDup(t) },
+    { t: "Recharger l'onglet", k: "Ctrl+R", f: () => { if (t.id !== TABS.cur) tabGo(t.id); else tabReload(); } },
+    { t: "Copier le lien", f: () => tabCopyLink(t) }, "-",
+    { t: t.pin ? "Désépingler" : "Épingler", f: () => { t.pin = !t.pin; const L = TABS.list; L.splice(L.indexOf(t), 1); const k = t.pin ? L.filter((z) => z.pin).length : L.filter((z) => z.pin).length; L.splice(k, 0, t); LS.set(TABKEY(), TABS); renderTabs(); } },
+    { t: "Détacher l'onglet", tip: "Ouvre cet onglet dans une nouvelle fenêtre", f: () => tabWindow(t, true) },
+    { t: "Personnaliser le titre…", f: () => askText("Titre de l'onglet", t.custom || tabTitle(t), (n) => { t.custom = n; LS.set(TABKEY(), TABS); renderTabs(); }) },
+    t.custom ? { t: "Titre automatique", f: () => { delete t.custom; LS.set(TABKEY(), TABS); renderTabs(); } } : null,
+    { t: "Déplacer l'onglet", sub: [{ t: "Créer un nouveau groupe…", f: () => groupDlg(null, (n, c) => { const g = { id: tabId(), name: n, color: c }; TABS.groups.push(g); tabToGroup(t, g); }) },
+      ...(grp.length ? ["-", ...grp.map((g) => ({ t: g.name, ic: `<i class="gr-tgdot" style="--c:${g.color}"></i>`, on: t.group === g.id ? true : undefined, f: () => tabToGroup(t, g) }))] : []),
+      t.group ? "-" : null, t.group ? { t: "Retirer du groupe", f: () => tabToGroup(t, null) } : null,
+      "-", { t: "Vers une nouvelle fenêtre", f: () => tabWindow(t, true) }] }, "-",
+    { html: linkHtml, init: (w) => {
+      w.querySelectorAll("[data-l]").forEach((b) => (b.onclick = (e) => { e.stopPropagation(); tabSnap(); t.link = b.dataset.l || null; if (t.link && t.id === TABS.cur) tabSnap(); LS.set(TABKEY(), TABS); renderTabs(); closeMenu(); tabMenu(t, x, y); }));
+      w.querySelectorAll("[data-k]").forEach((i) => (i.onchange = () => { t.lk = Object.assign({}, lk, t.lk || {}, { [i.dataset.k]: i.checked }); LS.set(TABKEY(), TABS); })); } }, "-",
+    { t: "Fermer l'onglet", k: "Ctrl+W", f: () => tabClose(t) },
+    TABS.list.length > 1 ? { t: "Fermer les autres onglets", f: () => TABS.list.filter((z) => z !== t && !z.pin).forEach((z) => tabClose(z, true)) } : null,
+  ]);
+}
+function renderTabs() { const bar = $r("#grTabs"); if (!bar) return; const L = TABS.list, G = new Map(TABS.groups.map((g) => [g.id, g])); let h = "", lastG = null;
+  L.forEach((t) => { const g = t.group && G.get(t.group);
+    if (g && g.id !== lastG) h += `<button class="gr-tg${g.col ? " col" : ""}" data-g="${g.id}" style="--c:${g.color}" title="${E(g.name)} — clic : replier / déplier, clic droit : options">${E(g.name)}${g.col ? ` <small>${L.filter((x) => x.group === g.id).length}</small>` : ""}</button>`;
+    lastG = g ? g.id : null; if (g && g.col && t.id !== TABS.cur) return;
+    const c = tabSym(t);
+    h += `<div class="gr-tab${t.id === TABS.cur ? " on" : ""}${t.pin ? " pin" : ""}${g ? " ing" : ""}" data-t="${t.id}" draggable="true" style="${g ? `--gc:${g.color};` : ""}${t.link ? `--lc:${t.link}` : ""}" title="${E(tabTitle(t))}${t.link ? " — onglet lié" : ""}">
+      ${t.link ? `<i class="gr-tabl"></i>` : ""}${t.pin ? `<span class="gr-tabp">${E(c ? symCode(c.sym) : "★")}</span>` : `<span class="gr-tabn">${E(tabTitle(t))}</span><button class="gr-tabx" data-x="1" title="Fermer l'onglet (Ctrl+W)">×</button>`}</div>`; });
+  h += `<button class="gr-tabadd" id="grTabAdd" title="Nouvel onglet (Ctrl+T) — Maj + clic : nouvelle fenêtre">${ICO.plus}</button>`;
+  bar.innerHTML = h; }
+function tabsWire() { const bar = $r("#grTabs"); if (!bar || bar._w) return; bar._w = 1;
+  bar.addEventListener("click", (e) => { const add = e.target.closest("#grTabAdd"); if (add) { if (e.shiftKey) tabWindow(null); else tabNew(); return; }
+    const gb = e.target.closest("[data-g]"); if (gb) { const g = TABS.groups.find((x) => x.id === gb.dataset.g); if (g) { g.col = !g.col; LS.set(TABKEY(), TABS); renderTabs(); } return; }
+    const tb = e.target.closest("[data-t]"); if (!tb) return; const t = TABS.list.find((x) => x.id === tb.dataset.t); if (!t) return;
+    if (e.target.closest("[data-x]")) { e.stopPropagation(); tabClose(t); return; } tabGo(t.id); });
+  bar.addEventListener("auxclick", (e) => { if (e.button !== 1) return; const tb = e.target.closest("[data-t]"); if (!tb) return; const t = TABS.list.find((x) => x.id === tb.dataset.t); if (t && !t.pin) tabClose(t); });
+  bar.addEventListener("dblclick", (e) => { if (e.target === bar) tabNew(); });
+  bar.addEventListener("contextmenu", (e) => { e.preventDefault(); const gb = e.target.closest("[data-g]"); if (gb) { const g = TABS.groups.find((x) => x.id === gb.dataset.g); if (g) groupMenu(g, e.clientX, e.clientY); return; }
+    const tb = e.target.closest("[data-t]"); const t = tb && TABS.list.find((x) => x.id === tb.dataset.t); if (t) tabMenu(t, e.clientX, e.clientY); });
+  let dragId = null;
+  bar.addEventListener("dragstart", (e) => { const tb = e.target.closest("[data-t]"); if (!tb) return; dragId = tb.dataset.t; e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", dragId); } catch (x) { /* */ } });
+  bar.addEventListener("dragover", (e) => { if (!dragId) return; e.preventDefault(); bar.querySelectorAll(".drop").forEach((n) => n.classList.remove("drop")); const tb = e.target.closest("[data-t],[data-g]"); if (tb) tb.classList.add("drop"); });
+  bar.addEventListener("drop", (e) => { if (!dragId) return; e.preventDefault(); const t = TABS.list.find((x) => x.id === dragId); dragId = null; bar.querySelectorAll(".drop").forEach((n) => n.classList.remove("drop")); if (!t) return;
+    const tb = e.target.closest("[data-t]"), gb = e.target.closest("[data-g]");
+    if (gb) { const g = TABS.groups.find((x) => x.id === gb.dataset.g); tabToGroup(t, g); return; }
+    if (tb) { const o = TABS.list.find((x) => x.id === tb.dataset.t); if (o && o !== t) { const r = tb.getBoundingClientRect(); tabMove(t, TABS.list.indexOf(o) + (e.clientX > r.left + r.width / 2 ? 1 : 0)); t.group = o.group || null; t.pin = !!o.pin; } }
+    else { tabMove(t, TABS.list.length); t.group = null; }
+    TABS.groups = TABS.groups.filter((g) => TABS.list.some((y) => y.group === g.id)); LS.set(TABKEY(), TABS); renderTabs(); });
+  bar.addEventListener("dragend", () => { dragId = null; bar.querySelectorAll(".drop").forEach((n) => n.classList.remove("drop")); });
+  renderTabs(); }
+// app Windows : plus de menu Electron (Ctrl+R / Ctrl+W y rechargeaient / fermaient la fenêtre) → hors page Graphique, Ctrl+R recharge l'app comme avant
+document.addEventListener("keydown", (e) => { if (!D || !(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey || viewOn()) return; if (e.key.toLowerCase() === "r") { e.preventDefault(); location.reload(); } }, true);
 DS.last = LS.get("gr-lasttool", {});
 let IVFAV = LS.get("gr-ivfav", ["1", "5", "15", "60", "240", "1D"]);
 let FAVTOOLS = LS.get("gr-favtools", ["trend", "hline", "rect", "fib", "long", "short", "text"]);
@@ -13884,6 +14074,7 @@ let FAVTOOLS = LS.get("gr-favtools", ["trend", "hline", "rect", "fib", "long", "
 /* ---------- squelette de la page ---------- */
 const $r = (s) => ROOT.querySelector(s), $$r = (s) => [...ROOT.querySelectorAll(s)];
 ROOT.innerHTML = `
+<div class="gr-tabs" id="grTabs"></div>
 <div class="gr-top" id="grTop">
   <button class="gr-tb gr-sym" id="grSymBtn" title="Recherche de symbole (tape directement le nom)">${ICO.search}<b id="grSymTxt">NQ</b></button>
   <button class="gr-tb gr-ic" id="grCmpBtn" title="Comparer ou ajouter un symbole (+)">${ICO.plus}</button><i class="gr-sep"></i>
@@ -13923,7 +14114,7 @@ function menu(x, y, items, o = {}) {
   const render = (list, host) => list.filter(Boolean).forEach((it) => {
     if (it === "-") { host.append(el("div", "gr-msep")); return; } if (typeof it === "string" && it.startsWith("h:")) { host.append(el("div", "gr-mh", E(it.slice(2)))); return; }
     if (it.html) { const w = el("div", "gr-mhtml", it.html); host.append(w); if (it.init) it.init(w); return; }
-    const b = el("button", "gr-mi" + (it.on ? " on" : "") + (it.dis ? " dis" : ""), `${it.ic ? `<span class="gr-mic">${it.ic}</span>` : it.on != null ? `<span class="gr-mck">${it.on ? "✓" : ""}</span>` : ""}<span class="gr-mt">${E(it.t)}</span>${it.k ? `<kbd>${E(it.k)}</kbd>` : ""}${it.sub ? `<span class="gr-msub">›</span>` : ""}${it.star != null ? `<span class="gr-mstar" data-star="1">${it.star ? ICO.starOn : ICO.star}</span>` : ""}${it.del ? `<span class="gr-mdel" data-mdel="1" title="Supprimer">${ICO.trash}</span>` : ""}`);
+    const b = el("button", "gr-mi" + (it.on ? " on" : "") + (it.dis ? " dis" : ""), `${it.ic ? `<span class="gr-mic">${it.ic}</span>` : it.on != null ? `<span class="gr-mck">${it.on ? "✓" : ""}</span>` : ""}<span class="gr-mt">${E(it.t)}</span>${it.k ? `<kbd>${E(it.k)}</kbd>` : ""}${it.sub ? `<span class="gr-msub">›</span>` : ""}${it.star != null ? `<span class="gr-mstar" data-star="1">${it.star ? ICO.starOn : ICO.star}</span>` : ""}${it.del ? `<span class="gr-mdel" data-mdel="1" title="Supprimer">${ICO.trash}</span>` : ""}`); if (it.tip) b.title = it.tip;
     if (it.sub) { b.onmouseenter = () => { if (m._sub) m._sub.remove(); const s = el("div", "gr-menu sub"); render(it.sub, s); ROOT.append(s); m._sub = s; // v1.91 : sous-menu hors du menu (plus de barre de défilement), à gauche s'il n'y a pas la place à droite
         const r = b.getBoundingClientRect(), sw = s.offsetWidth, sh = s.offsetHeight; s.style.left = (r.right + sw + 2 > innerWidth - 4 ? Math.max(4, r.left - sw - 2) : r.right + 2) + "px"; s.style.top = clamp(r.top - 4, 4, innerHeight - sh - 4) + "px"; }; }
     else b.onclick = (e) => { if (it.dis) return; if (e.target.closest("[data-star]") && it.onStar) { e.stopPropagation(); it.onStar(); return; }
@@ -14041,6 +14232,8 @@ function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco ==
   STATE.active = clamp(STATE.active, 0, n - 1);
   for (let i = 0; i < n; i++) { const c = new Cell(STATE.cells[i], i), [x, y, w, h] = g.a[i]; c.el.style.gridArea = `${y + 1} / ${x + 1} / span ${h} / span ${w}`; host.append(c.el); CELLS.push(c); }
   setActive(STATE.active, true); refreshHeader(); saveState();
+  // v1.94 : données déjà en cache (changement d'onglet / de mise en page) posées avant la mise en place du graphique → vue écrasée : on recentre
+  [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
 }
 function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); }
 function syncCross(src, p) { if (!STATE.sync.cross || CELLS.length < 2) return; CELLS.forEach((c) => { if (c === src) return; try { if (p && p.time != null && p.point && src.DB.length) { const t = src.DB[clamp(Math.round(p.logical), 0, src.DB.length - 1)][0], i = clamp(Math.round(liOf(c.DB, c.st.iv, t)), 0, c.DB.length - 1); if (c.T[i] != null) c.main.chart.setCrosshairPosition(NaN, c.T[i], c.series); } else c.main.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
@@ -14381,7 +14574,7 @@ function renderFavBar() { const b = $r("#grFavBar"); if (!b) return; b.hidden = 
   b.querySelector(".gr-fgrip").onpointerdown = (e) => { e.preventDefault(); const r = b.getBoundingClientRect(), pr = ROOT.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; const mv = (ev) => { const x = clamp(ev.clientX - pr.left - x0, 0, pr.width - 60), y = clamp(ev.clientY - pr.top - y0, 0, pr.height - 30); b.style.left = x + "px"; b.style.top = y + "px"; }, up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); LS.set("gr-favpos", [parseInt(b.style.left), parseInt(b.style.top)]); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); }; }
 function toggleLockAll() { DS.lockAll = !DS.lockAll; refreshTools(); toast(DS.lockAll ? "Dessins verrouillés" : "Dessins déverrouillés"); }
 function toggleHideAll() { DS.hideAll = !DS.hideAll; CELLS.forEach((c) => c.redraw()); refreshTools(); }
-function removeAllDrawings(sym) { const L = drawsOf(sym); if (!L.length) return; snap(); L.splice(0, L.length); selectD(null); drawChanged(); toast("Dessins de " + undOf(sym) + " supprimés (Ctrl+Z pour annuler)"); }
+function removeAllDrawings(sym) { const L = drawsOf(sym), c = activeCell(), keep = c ? L.filter((d) => !c.syncOk(d)) : []; if (L.length === keep.length) return; snap(); L.splice(0, L.length, ...keep); /* v1.94 : seulement les dessins de cette mise en page */ selectD(null); drawChanged(); toast("Dessins de " + undOf(sym) + " supprimés (Ctrl+Z pour annuler)"); }
 
 /* ---------- dessin sélectionné : barre flottante, menu, réglages, texte ---------- */
 const FI = (() => { const v = (d) => `<svg viewBox="0 0 28 28" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`; return {
@@ -14424,7 +14617,7 @@ function showFloat(d) {
 const snapOnce = (d) => { if (!d._snap) { snap(); d._snap = 1; } };
 function hideFloat() { const f = $r("#grFloat"); if (f) f.hidden = true; }
 function deleteSel() { const d = selD(); if (!d) return; if (d.lock || DS.lockAll) { toast("Dessin verrouillé"); return; } snap(); const f = findD(d.id); if (f) f.list.splice(f.i, 1); selectD(null); drawChanged(); }
-function cloneD(d, c) { snap(); const cp = JSON.parse(JSON.stringify(d)); cp.id = uid(); delete cp.lock; const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 5), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }
+function cloneD(d, c) { snap(); const cp = stampD(JSON.parse(JSON.stringify(d)), c, true); cp.id = uid(); delete cp.lock; delete cp.anch; const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 5), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }
 /* liste triable dans une fenêtre : glisser une ligne pour changer l'ordre, renommer, supprimer (modèles de dessins, mises en page) */
 function sortDlg(title, get, o) { const d = dlg(title, `<div class="gr-mut">Glisse une ligne (⋮⋮) pour changer l'ordre. Double-clic sur un nom pour le renommer.</div><div class="gr-sortl"></div>`, { w: 440, cancel: false, ok: "Fermer" }), box = d.el.querySelector(".gr-sortl");
   const draw = () => { const L = get(); box.innerHTML = L.length ? L.map((x) => `<div class="gr-sr" data-k="${E(x.k)}"><span class="gr-sg">⋮⋮</span><span class="gr-sn">${E(x.n)}</span>${x.on ? `<span class="gr-sb">${E(x.on)}</span>` : ""}${o.open ? `<button class="gr-ib" data-so="1" title="Ouvrir">${ICO.fwd || "↗"}</button>` : ""}<button class="gr-ib" data-sr="1" title="Renommer">✎</button><button class="gr-ib" data-sx="1" title="Supprimer">${ICO.trash}</button></div>`).join("") : `<div class="gr-empty">Rien pour l'instant.</div>`; };
@@ -14470,13 +14663,16 @@ function drawMenu(d, c, x, y) {
   const goTo = () => { try { const G = c.geo(), li = G.li(d.p[0].t), ts = c.main.chart.timeScale(), r = ts.getVisibleLogicalRange(), w = r ? r.to - r.from : 120; ts.setVisibleLogicalRange({ from: li - w / 2, to: li + w / 2 }); selectD(d, c); } catch (e) { /* */ } };
   menu(x, y, [
     { t: `Ajouter une alerte pour ${low}…`, k: "Alt + A", ic: FI.alert, f: () => openAlert({ sym: c.st.sym, draw: d.id, val: d.p[0].p }) }, "-",
-    { t: "Espace de Travail", ic: " ", sub: [{ t: "Sauvegarder Sous…", f: () => askText("Sauvegarder le modèle sous", "", (n) => tplSave(d.tool, n, tplStyle(d))) }, { t: "Appliquer paramètres par Défaut", f: () => { const base = JSON.parse(JSON.stringify((T[d.tool] && T[d.tool].def) || {})); tplApply(d, Object.assign(base, LS.get("gr-tpldef", {})[d.tool] || {})); } },
+    { t: "Modèle", ic: " ", sub: [{ t: "Sauvegarder Sous…", f: () => askText("Sauvegarder le modèle sous", "", (n) => tplSave(d.tool, n, tplStyle(d))) }, { t: "Appliquer paramètres par Défaut", f: () => { const base = JSON.parse(JSON.stringify((T[d.tool] && T[d.tool].def) || {})); tplApply(d, Object.assign(base, LS.get("gr-tpldef", {})[d.tool] || {})); } },
       names.length ? "-" : null, ...names.map((n) => ({ t: n, f: () => tplApply(d, tpl[n]) }))].filter(Boolean) },
     { t: "Ordre de visualisation", ic: FI.layers, sub: [{ t: "Mettre au premier plan", f: () => zMove(d, c, 1e9) }, { t: "Mettre au Fond", f: () => zMove(d, c, -1e9) }, { t: "Mettre en avant", f: () => zMove(d, c, 1) }, { t: "Mettre vers l'Arrière", f: () => zMove(d, c, -1) }] },
     { t: "Visibilité des intervalles", ic: " ", sub: [["ge", "Intervalle actuel et supérieur"], ["le", "Intervalle actuel et inférieur"], ["eq", "Intervalle actuel uniquement"], ["all", "Tous les intervalles"]].map(([k, t]) => ({ t, on: vr === k, f: () => setVis(k) })) }, "-",
     { t: "Créer un groupe de dessins", ic: FI.gplus, f: () => { const u = undOf(c.st.sym), G = dGroups(u), ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true }; dGroupsSet(u, G.concat(ng)); snap(); d.grp = ng.id; drawChanged(d); refreshTree(); toast("« " + ng.name + " » créé avec ce dessin"); } },
     { t: "Cloner", ic: FI.clone, f: () => cloneD(d, c) }, { t: "Copier", ic: " ", k: "Ctrl + C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
     { t: "Renommer", ic: FI.ren, f: () => askText("Renommer", nm, (n) => { snap(); d.name = n; drawChanged(d); refreshTree(); }) }, "-",
+    // v1.94 : synchro comme TradingView (ce graphique / cette mise en page / toutes les mises en page)
+    ...[["none", "Pas de synchronisation", "Seulement sur ce graphique de cette mise en page"], ["layout", "Synchroniser dans la mise en page", "Sur tous les graphiques de cette mise en page avec ce symbole"], ["global", "Synchroniser globalement", "Sur toutes les mises en page avec ce symbole"]].map(([k, t, tip]) => ({ t, tip, on: syncOf(d) === k, f: () => { snap(); d.sync = k; d.lay = curLay(); d.cell = c.idx; drawChanged(d); toast(t + " : " + tip.toLowerCase()); } })), "-",
+    { t: d.anch ? "Désancrer" : "Ancrer", ic: " ", tip: "Fixe le dessin à l'écran : il ne bouge plus avec le graphique", f: () => { snap(); if (d.anch) delete d.anch; else { const G = c.geo(), P = d.p.map((q) => [G.x(q.t), G.y(q.p)]), w = c.main.host.clientWidth || 1, h = c.main.host.clientHeight || 1; d.anch = P.map((q) => [q[0] / w, q[1] / h]); } drawChanged(d); } }, "-",
     { t: d.lock ? "Déverrouiller" : "Verrouiller", ic: d.lock ? ICO.lock : ICO.unlock, f: () => { d.lock = !d.lock; drawChanged(d); if (selD() === d) showFloat(d); } },
     { t: "Cacher", ic: ICO.eyeoff, f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
     { t: "Retirer", k: "Del", ic: ICO.trash, f: () => { selectD(d, c); deleteSel(); } }, "-",
@@ -14652,7 +14848,7 @@ function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) retu
 const TSEL = new Set(); let treeQ = "", treeLast = null;
 const dGroups = (u) => { const all = LS.get("gr-dgroups", {}); return all[u] || []; }, dGroupsSet = (u, L) => { const all = LS.get("gr-dgroups", {}); all[u] = L; LS.set("gr-dgroups", all); };
 const dName = (d) => d.name || (d.txt ? d.txt.split("\n")[0] : T[d.tool] ? T[d.tool].n : d.tool);
-function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym), G = dGroups(u), gid = new Set(G.map((g) => g.id));
+function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), gid = new Set(G.map((g) => g.id));
   L.forEach((d) => { if (d.grp && !gid.has(d.grp)) delete d.grp; }); [...TSEL].forEach((id) => { if (!L.some((d) => d.id === id)) TSEL.delete(id); });
   const q = treeQ.trim().toLowerCase(), match = (d) => !q || dName(d).toLowerCase().includes(q) || (T[d.tool] && T[d.tool].n.toLowerCase().includes(q));
   const row = (d, inG) => `<div class="gr-tr gr-tdr${DS.sel === d.id || TSEL.has(d.id) ? " on" : ""}${d.hide ? " off" : ""}${inG ? " ing" : ""}" data-d="${d.id}"><span class="gr-tic">${ICO[d.tool] || ""}</span><span class="gr-tn" data-tn="${d.id}" title="Double-clic pour renommer">${E(dName(d))}</span><button class="gr-ib" data-ts="${d.id}" title="Paramètres">${ICO.gear}</button><button class="gr-ib" data-th="${d.id}" title="${d.hide ? "Afficher" : "Masquer"}">${d.hide ? ICO.eyeoff : ICO.eye}</button><button class="gr-ib" data-tl="${d.id}" title="${d.lock ? "Déverrouiller" : "Verrouiller"}">${d.lock ? ICO.lock : ICO.unlock}</button><button class="gr-ib" data-tx="${d.id}" title="Supprimer">${ICO.trash}</button></div>`;
@@ -14788,6 +14984,7 @@ function openSettings(tab) {
       + row(ck("trPL", "Valeur des profits et pertes", true)) + `<div class="tv-sub">${row(ck("trPLpos", "Positions", true), sl("trPLposU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}${row(ck("trPLbr", "Brackets", true), sl("trPLbrU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}</div>`
       + row(ck("trades", "Marques d'exécution", true)) + `<div class="tv-sub">${row(ck("trLbl", "Étiquettes d'exécution", true))}</div>`
       + row(ck("trExt", "Lignes de prix étendues sur toute la largeur du graphique", true))
+      + row(ck("trPrev", "Aperçu de l'ordre limite / stop du ticket avec ses TP / SL", true))
       + row("Alignement de l'ordre et de la position", sl("trAlign", [["right", "Droite"], ["center", "Centre"], ["left", "Gauche"]], "sm"))
       + row(ck("trShot", "Ordres, exécutions et positions dans les captures de graphique", true), "", "Affiche vos transactions sur le graphique sous forme de captures d'écran")],
     ["al", "Alertes", sec("Visibilité de la ligne graphique") + row(ck("alertLines", "Lignes d'alerte", true), sw("alertC")) + row(ck("alertActive", "Uniquement les alertes actives", true)) + sec("Notifications") + row(ck("toastAuto", "Masquer automatiquement les toasts", true))],
@@ -14830,8 +15027,10 @@ function gridMenu(btn) {
     if (sw) { const k = sw.dataset.s; STATE.sync[k] = !STATE.sync[k]; sw.classList.toggle("on", !!STATE.sync[k]); saveState(); } }) }], { cls: "gr-laymenu" });
 }
 function toggleMax() { if (CELLS.length < 2) return; STATE.max = !STATE.max; $r("#grGrid").classList.toggle("max", STATE.max); saveState(); refreshHeader(); requestAnimationFrame(() => CELLS.forEach((c) => c.redraw())); }
+// v1.94 : dessins « mise en page » / « ce graphique » : passent à la nouvelle mise en page (copiés si on part d'une mise en page enregistrée)
+function layDrawsTo(from, to, copy) { let n = 0; for (const k in DRAW) { const add = []; DRAW[k].forEach((d) => { if (d.lay === undefined || syncOf(d) === "global" || (d.lay || null) !== (from || null)) return; if (copy) { const c2 = JSON.parse(JSON.stringify(d)); c2.id = uid(); c2.lay = to; add.push(c2); } else d.lay = to; n++; }); DRAW[k].push(...add); } if (n) saveDraw(); }
 function saveLayout(as) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId);
-  if (!L || as) { askText(as ? "Enregistrer la mise en page sous" : "Nom de la mise en page", L ? L.name + " (copie)" : "Ma mise en page", (n) => { const x = { id: uid(), name: n, state: snapshotLayout(), at: Date.now() }; LAYOUTS.push(x); STATE.layoutId = x.id; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + n + " » enregistrée"); }); return; }
+  if (!L || as) { askText(as ? "Enregistrer la mise en page sous" : "Nom de la mise en page", L ? L.name + " (copie)" : "Ma mise en page", (n) => { const x = { id: uid(), name: n, state: snapshotLayout(), at: Date.now() }; LAYOUTS.push(x); layDrawsTo(L ? L.id : curLay(), x.id, !!L); STATE.layoutId = x.id; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + n + " » enregistrée"); }); return; }
   L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); toast("Mise en page « " + L.name + " » enregistrée"); }
 function loadLayout(L) { if (!L) return; STATE.grid = L.state.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(L.state.cells || [DEF_CELL()])); STATE.active = L.state.active || 0; STATE.sync = Object.assign({}, STATE.sync, L.state.sync || {}); STATE.layoutId = L.id; STATE.max = false; renderGrid(); toast("Mise en page « " + L.name + " »"); }
 function layoutMenu(btn) { const cur = LAYOUTS.find((x) => x.id === STATE.layoutId);
@@ -14856,7 +15055,11 @@ function importAll() { const inp = el("input"); inp.type = "file"; inp.accept = 
 function shot(copy) {
   const withTr = PR.trShot !== false; if (!withTr) { Cell.noTr = true; CELLS.forEach((c) => c.markers()); PA.lines.forEach((L) => { try { L.line.applyOptions({ lineVisible: false, axisLabelVisible: false }); } catch (e) { /* */ } }); }
   const host = $r("#grGrid"), rr = host.getBoundingClientRect(), dpr = window.devicePixelRatio || 1, cv = document.createElement("canvas"); cv.width = Math.round(rr.width * dpr); cv.height = Math.round(rr.height * dpr); const g = cv.getContext("2d"); g.scale(dpr, dpr); g.fillStyle = PR.bg; g.fillRect(0, 0, rr.width, rr.height);
-  for (const c of CELLS) { if (STATE.max && c.idx !== STATE.active) continue; [c.main, ...c.panes].forEach((p) => { try { const s = p.chart.takeScreenshot(), r = p.host.getBoundingClientRect(); g.drawImage(s, r.left - rr.left, r.top - rr.top, r.width, r.height); } catch (e) { /* */ } });
+  for (const c of CELLS) { if (STATE.max && c.idx !== STATE.active) continue; [c.main, ...c.panes].forEach((p) => { try { const s = p.chart.takeScreenshot(), r = p.host.getBoundingClientRect(); g.drawImage(s, r.left - rr.left, r.top - rr.top, r.width, r.height); } catch (e) { /* */ }
+      // v1.94 : la capture de Lightweight Charts n'inclut pas nos calques (dessins, indicateurs Pine, oscillateurs) : on les repeint dedans, sans poignées de sélection
+      try { const r = p.host.getBoundingClientRect(), ch = p.chart, pw = (k) => { try { return ch.priceScale(k).width() || 0; } catch (e) { return 0; } }, lw = pw("left"), W = r.width - lw - pw("right"); let th = 0; try { th = ch.timeScale().height() || 0; } catch (e) { /* */ } const H = r.height - th;
+        const L = p === c.main ? [c.ilay, c.lay] : [p.layer]; g.save(); g.translate(r.left - rr.left + lw, r.top - rr.top); g.beginPath(); g.rect(0, 0, W, H); g.clip();
+        const sel = DS.sel, hov = DS.hover; DS.sel = null; DS.hover = null; try { L.forEach((ly) => { if (ly) c.paint(ly, g, { width: W, height: H }); }); } finally { DS.sel = sel; DS.hover = hov; } g.restore(); } catch (e) { console.error(e); } });
     const r0 = c.main.host.getBoundingClientRect(), b = c.DB[c.DB.length - 1], sp = c.spec; g.font = "600 13px -apple-system,Roboto,sans-serif"; g.fillStyle = PR.txt;
     if (withTr) shotTrLabels(g, rr, c);
     g.fillText(`${symCode(c.st.sym)} · ${ivLabel(c.st.iv)} · ${sp.src === "ff" ? "Forex Factory" : sp.x}${b ? `   O ${fmtPx(b[1], sp)}  H ${fmtPx(b[2], sp)}  B ${fmtPx(b[3], sp)}  C ${fmtPx(b[4], sp)}` : ""}`, r0.left - rr.left + 10, r0.top - rr.top + 20); }
@@ -14901,8 +15104,10 @@ const KDEF = [
   ["vline", "Ligne verticale", ["Alt+V"], () => setTool("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => setTool("xline")], ["fib", "Retracement de Fibonacci", ["Alt+F"], () => setTool("fib")], ["rect", "Rectangle", ["Alt+E"], () => setTool("rect")],
   ["long", "Position longue", ["Alt+Shift+B"], () => setTool("long")], ["short", "Position courte", ["Alt+Shift+V"], () => setTool("short")],
   ["undo", "Annuler", ["Ctrl+Z"], () => undoRedo(false)], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"], () => undoRedo(true)], ["del", "Supprimer le dessin sélectionné", ["Delete", "Backspace"], deleteSel],
-  ["copy", "Copier le dessin", ["Ctrl+C"], () => { const d = selD(); if (d) { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } }], ["paste", "Coller le dessin", ["Ctrl+V"], () => { if (!DS.clip) return; if (DS.clip.kind === "ind") { pasteInd(curC(), DS.clip.x); return; } const c = curC(); snap(); const cp = JSON.parse(JSON.stringify(DS.clip)); cp.id = uid(); cp.sym = undOf(c.st.sym); const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 3), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }],
+  ["copy", "Copier le dessin", ["Ctrl+C"], () => { const d = selD(); if (d) { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } }], ["paste", "Coller le dessin", ["Ctrl+V"], () => { if (!DS.clip) return; if (DS.clip.kind === "ind") { pasteInd(curC(), DS.clip.x); return; } const c = curC(); snap(); const cp = stampD(JSON.parse(JSON.stringify(DS.clip)), c, true); cp.id = uid(); delete cp.anch; cp.sym = undOf(c.st.sym); const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 3), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }],
   ["zin", "Zoom avant", ["Ctrl+ArrowUp"], () => zoomBy(0.8)], ["zout", "Zoom arrière", ["Ctrl+ArrowDown"], () => zoomBy(1.25)], ["left", "Défiler à gauche", ["ArrowLeft"], () => scrollBy(-10)], ["right", "Défiler à droite", ["ArrowRight"], () => scrollBy(10)],
+  ["tabNew", "Nouvel onglet", ["Ctrl+T"], () => tabNew()], ["tabDup", "Dupliquer l'onglet", ["Ctrl+U"], () => tabDup()], ["tabReload", "Recharger l'onglet", ["Ctrl+R"], tabReload], ["tabClose", "Fermer l'onglet", ["Ctrl+W"], () => tabClose()],
+  ["tabNext", "Onglet suivant", ["Ctrl+Tab", "Ctrl+PageDown"], () => { const L = TABS.list, i = L.indexOf(tabCur()); tabGo(L[(i + 1) % L.length].id); }], ["tabPrev", "Onglet précédent", ["Ctrl+Shift+Tab", "Ctrl+PageUp"], () => { const L = TABS.list, i = L.indexOf(tabCur()); tabGo(L[(i - 1 + L.length) % L.length].id); }],
   ["help", "Aide des raccourcis", ["?", "F1"], openKeys], ["esc", "Annuler / désélectionner", ["Escape"], () => { if (MENU) { closeMenu(); return; } if (DS.creating) cancelCreate(); else if (DS.measure) { DS.measure = null; CELLS.forEach((c) => c.redraw()); } else if (DS.tool !== "cross") setTool("cross"); else if (DS.sel) selectD(null); }],
 ];
 let KEYS = LS.get("gr-keys", {}); let KMAP = new Map();
@@ -15449,7 +15654,9 @@ function paQuick() {
 /* ----- lignes de la position et des ordres sur le graphique actif, façon TradingView -----
    Ligne de position : [×] fermer, [⇅] retourner, [qté | P&L $] ; étiquettes « TP » / « SL » à glisser depuis l'entrée pour poser un take profit / stop loss.
    Ligne d'ordre : [qté | P&L au prix de l'ordre] glissable + [×] annuler. Glisser une ligne (ou son étiquette) = modifier le prix. */
-const paPL = (o, P, price, s) => { const pv = paSpec(s).pv; return P ? (price - P.avg) * Math.sign(P.q) * o.qty * pv : NaN; };
+// v1.94 : P&L d'une sortie : depuis la position, sinon depuis l'entrée de l'ordre parent / de l'aperçu (comme TradingView avant exécution)
+const paRef = (it) => { if (it.ref) return it.ref; const o = it.o, A = PA.A, par = o && o.par && A ? A.orders.find((x) => x.id === o.par && (x.st === "working" || x.st === "pending")) : null; if (!par && it.P) return { avg: it.P.avg, sg: Math.sign(it.P.q) }; if (par) return { avg: par.type === "stop" ? par.stop : par.type === "limit" ? par.price : par.fpx, sg: par.side === "buy" ? 1 : -1 }; return null; };
+const paPL = (o, P, price, s, it) => { const pv = paSpec(s).pv, r = it ? paRef(it) : P ? { avg: P.avg, sg: Math.sign(P.q) } : null; return r && fin(r.avg) ? (price - r.avg) * r.sg * (o ? o.qty : 1) * pv : NaN; };
 function paItems(c) {
   const A = PA.A, s = c.st.sym, P = A.pos[s], out = [];
   if (P) out.push({ key: "pos", kind: "pos", price: P.avg, P });
@@ -15457,16 +15664,21 @@ function paItems(c) {
   const ex = grPaper.live(A, s);
   for (const o of ex) out.push({ key: "o" + o.id, kind: o.kind === "tp" ? "tp" : o.kind === "sl" ? "sl" : "ord", price: o.type === "stop" ? o.stop : o.price, o, P });
   if (P) { const has = (k) => ex.some((o) => o.kind === k && o.st === "working"); if (!has("tp")) out.push({ key: "gtp", kind: "gtp", price: P.avg, P }); if (!has("sl")) out.push({ key: "gsl", kind: "gsl", price: P.avg, P }); }
+  // v1.94 : aperçu de l'ordre limite / stop du ticket avec ses TP / SL (panneau Trading ouvert), comme TradingView
+  if (STATE.panel === "trade" && TPF.type !== "market" && PR.trPrev !== false && paSym() === s) { const px = paPx(s); if (px) try { const { o, e } = tkOrder(s, px); if (o.qty && fin(e)) { const ref = { avg: e, sg: o.side === "buy" ? 1 : -1 };
+    out.push({ key: "pve", kind: "pv", price: e, pv: o });
+    o.exits.forEach((x, i) => { if (fin(x.tp)) out.push({ key: "pvtp" + i, kind: "pvx", x: "tp", price: x.tp, ref, q: x.qty }); if (fin(x.sl)) out.push({ key: "pvsl" + i, kind: "pvx", x: "sl", price: x.sl, ref, q: x.qty }); }); } } catch (e) { /* */ } }
   return out;
 }
 const PLCOL = { pos: "#2962ff", tp: "#089981", sl: "#f23645", ord: "#2962ff", draft: "#787b86" };
-const paCol = (it) => (it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "draft" ? (it.d.side === "buy" ? "#2962ff" : "#f23645") : PLCOL[it.kind]);
+// v1.94 : couleurs TradingView : achat bleu, vente rouge (position comprise), TP vert, SL rouge
+const paCol = (it) => (it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "draft" ? (it.d.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pos" ? (it.P.q > 0 ? "#2962ff" : "#f23645") : it.kind === "pv" ? (it.pv.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pvx" ? (it.x === "tp" ? "#089981" : "#f23645") : PLCOL[it.kind]);
 function paLines() {
   const keep = new Set(), c = activeCell(), A = PA.A;
   if (c && A && c.series && PR.trPos !== false) {
     for (const it of paItems(c)) { if (it.kind === "gtp" || it.kind === "gsl") continue; const key = it.key, price = PA.drag && PA.drag.key === key ? PA.drag.price : it.price; if (!fin(price)) continue; keep.add(key);
       let L = PA.lines.get(key); if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
-      const col = paCol(it), opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : 2, lineVisible: PR.trExt !== false, axisLabelVisible: true, title: "" };
+      const col = paCol(it), prv = it.kind === "pv" || it.kind === "pvx", opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : prv ? alpha(col, 0.45) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : prv ? 1 : 2, lineVisible: PR.trExt !== false, axisLabelVisible: true, title: "" };
       if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = it.o || null; }
   }
   for (const [k, L] of PA.lines) if (!keep.has(k)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } PA.lines.delete(k); }
@@ -15479,12 +15691,14 @@ function paOverlay() {
   if (!PA.ov || !PA.ov.isConnected || PA.ov.parentNode !== c.el) { if (PA.ov) PA.ov.remove(); PA.ov = el("div", "gr-pov"); c.el.append(PA.ov); PA.ovSig = ""; paOvWire(PA.ov); }
   PA.ov.hidden = false; const ctl = PR.trCtl || "always", al = PR.trAlign || "right";
   ["always", "hover", "never"].forEach((v) => PA.ov.classList.toggle("gr-ctl-" + v, ctl === v)); PA.ov.classList.toggle("gr-noext", PR.trExt === false); ["right", "center", "left"].forEach((v) => PA.ov.classList.toggle("gr-al-" + v, al === v));
-  const items = paItems(c), sig = items.map((i) => i.key + (i.o ? i.o.st : "") + (i.d ? i.d.side + i.d.qty : "")).join("|") + "|" + (PR.trRev !== false);
+  const items = paItems(c), sig = items.map((i) => i.key + (i.o ? i.o.st : "") + (i.d ? i.d.side + i.d.qty : "") + (i.P ? Math.sign(i.P.q) : "") + (i.pv ? i.pv.side + i.pv.type : "")).join("|") + "|" + (PR.trRev !== false);
   if (sig !== PA.ovSig) { PA.ovSig = sig; PA.ov.innerHTML = items.map((it) => {
-    if (it.kind === "pos") return `<div class="gr-pol pos" data-k="pos"><button class="gr-poc" data-a="close" title="Fermer la position">×</button>${PR.trRev !== false ? `<button class="gr-por" data-a="rev" title="Retourner la position">⇅</button>` : ""}<span class="gr-pob"><b></b><em></em></span></div>`;
+    if (it.kind === "pv") return `<div class="gr-pol pv ${it.pv.side}" data-k="${it.key}"><span class="gr-pob"><b></b><em></em></span></div>`;
+    if (it.kind === "pvx") return `<div class="gr-pol pv ${it.x}" data-k="${it.key}"><span class="gr-pob"><b></b><em></em></span></div>`;
+    if (it.kind === "pos") return `<div class="gr-pol pos ${it.P.q > 0 ? "buy" : "sell"}" data-k="pos"><button class="gr-poc" data-a="close" title="Fermer la position">×</button>${PR.trRev !== false ? `<button class="gr-por" data-a="rev" title="Retourner la position">⇅</button>` : ""}<span class="gr-pob"><b></b><em></em></span></div>`;
     if (it.kind === "draft") return `<div class="gr-pol draft ${it.d.side}" data-k="draft"><span class="gr-pob"><b></b><em></em></span><button class="gr-pogo" data-a="send" title="Envoyer l'ordre au marché">${it.d.side === "buy" ? "Acheter" : "Vendre"}</button><button class="gr-poc" data-a="drop" title="Abandonner l'ordre de projet">×</button></div>`;
-    if (it.kind === "gtp" || it.kind === "gsl") return `<div class="gr-pog ${it.kind === "gtp" ? "tp" : "sl"}" data-k="${it.key}" data-drag="1" title="Glisser pour poser un ${it.kind === "gtp" ? "take profit" : "stop loss"}"><i>⋮⋮</i>${it.kind === "gtp" ? "TP" : "SL"}</div>`;
-    return `<div class="gr-pol ${it.kind}${it.o.st === "pending" ? " pend" : ""}" data-k="${it.key}"><span class="gr-pob" data-drag="1" title="Glisser pour déplacer"><b></b><em></em></span><button class="gr-poc" data-a="can" title="Annuler l'ordre">×</button></div>`; }).join(""); }
+    if (it.kind === "gtp" || it.kind === "gsl") return `<div class="gr-pog ${it.kind === "gtp" ? "tp" : "sl"}" data-k="${it.key}" data-drag="1" title="Glisser pour poser un ${it.kind === "gtp" ? "take profit" : "stop loss"}"><i>⋮⋮</i>${it.kind === "gtp" ? "TP" : "SL"}<span class="gr-pgv"></span></div>`;
+    return `<div class="gr-pol ${it.kind} ${it.o.side}${it.o.st === "pending" ? " pend" : ""}" data-k="${it.key}"><span class="gr-pob" data-drag="1" title="Glisser pour déplacer"><b></b><em></em></span><button class="gr-poc" data-a="can" title="Annuler l'ordre">×</button></div>`; }).join(""); }
   paOvPos(c, items);
 }
 function paOvPos(c, items) {
@@ -15497,13 +15711,17 @@ function paOvPos(c, items) {
     let top = hr.top - cr.top + y; if (!dragging && it.kind === "gtp") top -= 22; if (!dragging && it.kind === "gsl") top += 22;
     const w = node.offsetWidth, lx = al === "left" ? hr.left - cr.left + (PR.scalePos === "left" ? sw : 0) + 12 : al === "center" ? (hr.left - cr.left + edge) / 2 - w / 2 : edge - 70 - w;
     node.style.top = Math.round(top) + "px"; node.style.left = Math.round(lx) + "px"; node.style.setProperty("--ext", Math.max(0, Math.round(edge - lx - w)) + "px"); node.style.setProperty("--lc", paCol(it) || "#2962ff");
-    if (it.kind === "gtp" || it.kind === "gsl") { const pn = ov.querySelector('[data-k="pos"]'), pb = pn && pn.querySelector(".gr-pob"); if (pb && pn.style.display !== "none") node.style.left = Math.round(pn.offsetLeft + pb.offsetLeft) + "px"; }
+    if (it.kind === "gtp" || it.kind === "gsl") { const pn = ov.querySelector('[data-k="pos"]'), pb = pn && pn.querySelector(".gr-pob"); if (pb && pn.style.display !== "none") node.style.left = Math.round(pn.offsetLeft + pb.offsetLeft) + "px";
+      // v1.94 : P&L en direct pendant le glisser du TP / SL (comme TradingView)
+      const gv = node.querySelector(".gr-pgv"); if (gv) { const P = it.P, v = dragging && P ? (price - P.avg) * Math.sign(P.q) * Math.abs(P.q) * paSpec(s).pv : NaN; node.classList.toggle("drag", !!dragging); gv.textContent = dragging ? ` ${fmtPx(price, sp)}  ${fin(v) ? (v >= 0 ? "+" : "") + money(v).replace(" $", " USD") : ""}` : ""; gv.className = "gr-pgv" + (fin(v) ? (v >= 0 ? " up" : " dn") : ""); } }
     const b = node.querySelector(".gr-pob b"), em = node.querySelector(".gr-pob em"); if (!b) continue;
     if (it.kind === "pos") { const last = px ? (it.P.q > 0 ? px.bid : px.ask) : NaN, pts = fin(last) ? (last - it.P.avg) * Math.sign(it.P.q) : NaN, u = px ? grPaper.upnl(PA.A, s, px, paSpec(s)) : NaN; b.textContent = Math.abs(it.P.q);
       em.style.display = plOn("trPLpos") ? "" : "none"; em.textContent = (PR.trPLposU || "money") === "money" ? (fin(u) ? money(u).replace(" $", " USD") : "—") : paPLtxt(s, pts, Math.abs(it.P.q), PR.trPLposU); em.className = (fin(u) ? u : pts) >= 0 ? "up" : "dn"; }
     else if (it.kind === "draft") { b.textContent = it.d.qty; em.textContent = `${it.d.side === "buy" ? "Achat" : "Vente"} au marché`; em.className = ""; }
-    else if (it.kind === "tp" || it.kind === "sl") { const v = paPL(it.o, it.P, price, s), pts = it.P ? (price - it.P.avg) * Math.sign(it.P.q) : NaN; b.textContent = it.kind.toUpperCase() + " " + it.o.qty;
-      em.textContent = !plOn("trPLbr") || !fin(v) ? fmtPx(price, sp) : (PR.trPLbrU || "money") === "money" ? money(v).replace(" $", " USD") : paPLtxt(s, pts, it.o.qty, PR.trPLbrU); em.className = !plOn("trPLbr") ? "" : v >= 0 ? "up" : "dn"; }
+    else if (it.kind === "tp" || it.kind === "sl") { const v = paPL(it.o, it.P, price, s, it), r = paRef(it), pts = r ? (price - r.avg) * r.sg : NaN, on = plOn("trPLbr") || dragging, sg = fin(v) && v >= 0 ? "+" : ""; b.textContent = it.kind.toUpperCase() + " " + it.o.qty;
+      em.textContent = !on || !fin(v) ? fmtPx(price, sp) : ((PR.trPLbrU || "money") === "money" ? sg + money(v).replace(" $", " USD") : paPLtxt(s, pts, it.o.qty, PR.trPLbrU)) + (dragging ? "  @ " + fmtPx(price, sp) : ""); em.className = !on || !fin(v) ? "" : v >= 0 ? "up" : "dn"; }
+    else if (it.kind === "pv") { b.textContent = it.pv.qty; em.textContent = `Aperçu ${it.pv.side === "buy" ? "achat" : "vente"} ${it.pv.type === "stop" ? "stop" : "limite"} ${fmtPx(price, sp)}`; em.className = ""; }
+    else if (it.kind === "pvx") { const v = (price - it.ref.avg) * it.ref.sg * it.q * paSpec(s).pv; b.textContent = it.x.toUpperCase() + " " + it.q; em.textContent = (v >= 0 ? "+" : "") + money(v).replace(" $", " USD"); em.className = v >= 0 ? "up" : "dn"; }
     else { b.textContent = it.o.qty; em.textContent = `${it.o.side === "buy" ? "Achat" : "Vente"} ${it.o.type === "stop" ? "stop" : "limite"}${dragging ? " " + fmtPx(price, sp) : ""}`; em.className = ""; }
   }
 }
@@ -15559,14 +15777,14 @@ setInterval(() => { paEngine(); if (viewOn()) { paTickUI(); paLines(); } }, 500)
 let booted = false;
 function boot() {
   if (booted) return; booted = true; ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); ROOT.classList.toggle("tv", STATE.mode === "tv");
-  buildLeft(); renderStrip(); renderGrid(); renderPine(); renderTvSrc(); refreshPanels(); if (STATE.mode === "tv") tvOpen();
+  buildLeft(); renderStrip(); renderGrid(); tabsWire(); renderPine(); renderTvSrc(); refreshPanels(); if (STATE.mode === "tv") tvOpen();
   setInterval(clockTick, 1000); liveLoop();
 }
 function onView() { document.body.classList.toggle("on-gr", viewOn()); if (viewOn()) { boot(); if (STATE.mode === "tv") tvOpen(); else CELLS.forEach((c) => c.redraw()); liveLoop(); } else { tvClose(); closeMenu(); } }
 new MutationObserver(onView).observe(document.getElementById("v-graphique"), { attributes: true, attributeFilter: ["class"] });
 onView();
 if (ALERTS_ON()) setTimeout(() => { if (!liveTimer) liveLoop(); }, 4000); // alertes surveillées même hors de la page
-window.grApi = { tsxSeed, state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, applySym, applyIv, addInd, removeInd, setTool, applyPrefs, PR, PDEF, LIGHT, T, IND, aggregate, keyFn, liOf, frontInfo, ivFromText, parseCsvText };
+window.grApi = { DRAW: () => DRAW, drawsOf, drawChanged, LAYOUTS: () => LAYOUTS, shotCanvas: (o) => shot(o), PA, grPaper, paRefresh, tsxSeed, state: () => STATE, cells: () => CELLS, feeds: FEEDS, setMode, applySym, applyIv, addInd, removeInd, setTool, applyPrefs, PR, PDEF, LIGHT, T, IND, aggregate, keyFn, liOf, frontInfo, ivFromText, parseCsvText };
 })();
 
 </script>

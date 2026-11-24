@@ -2,6 +2,24 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.0] — 2026-11-24
+### Ajouté
+- Page Graphique : **onglets façon TradingView** au-dessus de la barre d'outils. Bouton « + » = nouvel onglet (Maj + clic = nouvelle fenêtre), glisser-déposer pour réordonner, clic molette pour fermer. Clic droit : Nouvel onglet (Ctrl+T), Dupliquer (Ctrl+U), Recharger (Ctrl+R), Copier le lien (TradingView), Épingler / Désépingler, Détacher l'onglet (nouvelle fenêtre), Personnaliser le titre, Déplacer l'onglet › Créer un nouveau groupe, Fermer (Ctrl+W), **liaison** par couleur avec Symbole / Intervalle / Temps / Plage de dates. Ctrl+Tab / Ctrl+Maj+Tab = onglet suivant / précédent.
+- **Groupes d'onglets colorés** : nom + couleur (7 couleurs rapides ou toute la palette avec code hexadécimal), clic pour replier / déplier, clic droit pour renommer, changer la couleur, dégrouper ou fermer le groupe.
+- Dessins : **synchronisation** comme TradingView dans le clic droit : Pas de synchronisation (ce graphique), Synchroniser dans la mise en page (par défaut), Synchroniser globalement. Les nouveaux dessins restent dans leur mise en page / leur onglet et n'apparaissent plus dans les autres. Les anciens dessins restent globaux.
+- Dessins : **Ancrer** (fixé à l'écran), menu « Modèle » (ex-« Espace de Travail »).
+- Dessins : le **dernier style utilisé** de chaque outil (modèle appliqué ou réglages changés) est repris par le prochain dessin, même après avoir fermé l'app.
+- **Double-clic sur un NWOG / NDOG** (boîte d'un script Pine) : Modifier / prolonger ce gap (rectangle modifiable à la même place), Activer les STDV (Fibonacci 0 = haut, 1 = bas, 0,5 = CE, projections 1 → 5 par pas de 0,5 des deux côtés), ou les deux.
+- Compte démo : **P&L affiché pendant le glisser** du TP / SL ; TP / SL d'un ordre limite / stop pas encore exécuté = P&L depuis son entrée ; **aperçu** de l'ordre limite / stop du ticket avec ses TP / SL (option dans Paramètres › Trading).
+### Modifié
+- Ordres et positions aux couleurs de TradingView : achat bleu, vente rouge (position comprise), TP vert, SL rouge.
+- Poignées des dessins toujours rondes.
+- App Windows : plus de barre de menus avec Alt ; Ctrl+R / Ctrl+W ne rechargent / ferment plus la fenêtre sur la page Graphique (onglets). Ailleurs, Ctrl+R recharge toujours l'app.
+### Corrigé
+- Capture d'écran : les **dessins**, les dessins des scripts Pine et les étiquettes du compte démo sont maintenant dans l'image.
+- La ligne horizontale de la mire ne disparaît plus au bout d'une seconde (mise à jour en direct).
+- Changement d'onglet / de mise en page : le graphique n'est plus écrasé à droite (vue recentrée).
+
 ## [1.93.1] — 2026-11-23
 ### Corrigé
 - Page Graphique et Backtesteur : la mire (étiquette de prix sur l'échelle) et les prix affichés avancent maintenant **de tick en tick** (0.25 sur NQ / ES / MNQ / MES : 25875.75 et plus 25875.66). Le format de prix arrondit au tick du symbole.
