@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.7] — 2026-11-24
+### Corrigé
+- Page Graphique : la **ligne horizontale du curseur** disparaissait sur les bougies quand l'onglet avait un 2e graphique (même caché par l'agrandissement) : ce graphique recopiait son propre curseur sur celui sous la souris. Seul le graphique sous la souris recopie maintenant son curseur.
+- Onglets : un graphique agrandi (Alt + clic) le reste quand on revient sur son onglet.
+
 ## [1.94.6] — 2026-11-24
 ### Modifié
 - Page Graphique : la ligne de tendance (rayon, ligne étendue, ligne d'info…) se met à plat au même prix avec **Maj** maintenu (au lieu d'Alt), comme sur TradingView.

@@ -13377,7 +13377,7 @@ class Cell {
     this.main = this.mkPane(null); this.mkMain(); this.wire(); this.bind();
     this.el.addEventListener("pointerdown", () => { if (STATE.active !== this.idx) setActive(this.idx); }, true);
     // v1.94 : la souris quitte le graphique → plus de curseur à remettre
-    try { const ce = this.main.chart.chartElement(); ce.addEventListener("pointerleave", () => { this.mouseP = null; this.btn = false; }); ce.addEventListener("pointermove", () => (this.lastMv = performance.now())); ce.addEventListener("pointerdown", () => (this.btn = true)); addEventListener("pointerup", () => (this.btn = false)); } catch (e) { /* */ }
+    try { const ce = this.main.chart.chartElement(); ce.addEventListener("pointerleave", () => { this.mouseP = null; this.btn = false; this.ptrIn = false; }); ce.addEventListener("pointermove", () => { this.lastMv = performance.now(); this.ptrIn = true; }); ce.addEventListener("pointerdown", () => (this.btn = true)); addEventListener("pointerup", () => (this.btn = false)); } catch (e) { /* */ }
   }
   // v1.94 : remet le curseur (lignes verticale + horizontale) à la position de la souris après une mise à jour en direct
   keepCross() { const m = this.mouseP; if (!m || this.dead || DS.creating || DS.drag) return; try { const t = this.main.chart.timeScale().coordinateToTime(m.x), pr = this.series.coordinateToPrice(m.y); if (t == null || pr == null || !isFinite(pr)) return; this.xRest = true; this.main.chart.setCrosshairPosition(pr, t, this.series); } catch (e) { /* */ } finally { this.xRest = false; } }
@@ -13589,7 +13589,7 @@ class Cell {
   /* ----- liaison souris / clavier ----- */
   wire() {
     const ch = this.main.chart;
-    ch.subscribeCrosshairMove((p) => { if (this.dead) return; this.cross = p && p.point ? p : null; if (p && p.point && !this.xRest) this.mouseP = { x: p.point.x, y: p.point.y }; if (this.xs) return; this.xs = true; try { const i = p && p.logical != null && p.point ? Math.round(p.logical) : null; this.legend(i); this.hoverPanes(this.main, p); if (!Cell.xsync) { Cell.xsync = true; try { syncCross(this, p); } finally { Cell.xsync = false; } } this.newsTip(p); } finally { this.xs = false; } });
+    ch.subscribeCrosshairMove((p) => { if (this.dead) return; this.cross = p && p.point ? p : null; if (p && p.point && !this.xRest && this.ptrIn) this.mouseP = { x: p.point.x, y: p.point.y }; if (this.xs) return; /* v1.94.7 : mouseP = vraie souris seulement (pas le curseur recopié depuis un autre graphique) */ this.xs = true; try { const i = p && p.logical != null && p.point ? Math.round(p.logical) : null; this.legend(i); this.hoverPanes(this.main, p); if (!Cell.xsync) { Cell.xsync = true; try { syncCross(this, p); } finally { Cell.xsync = false; } } this.newsTip(p); } finally { this.xs = false; } });
     ch.timeScale().subscribeVisibleLogicalRangeChange((r) => { if (r && !this.dead) { clearTimeout(this.visTo); this.visTo = setTimeout(() => { if (this.dead) return; const v = this.visT(), k = v ? v.join(",") : ""; if (k === this.visK) return; this.visK = k; if (this.st.inds.some((y) => !y.hide && String(y.t).startsWith("pine:") && (() => { const d = indDef(y.t); return d && d.src && /(left|right)_visible_bar_time/.test(d.src.code || ""); })())) this.inds(true); }, 250); }
       if (!r || this.dead) return; if (!this.syncing) { this.syncing = true; this.panes.forEach((p) => { try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }); this.syncing = false; syncTime(this); }
       if (r.from < 30 && this.feed && !this.feed.done && !this.feed.more && this.feed.ready) this.feed.loadMore(); this.ilay.update(); });
@@ -13977,11 +13977,11 @@ const tabCur = () => TABS.list.find((x) => x.id === TABS.cur) || TABS.list[0];
 const curLay = () => STATE.layoutId || "t:" + TABS.cur;
 const tabSym = (t) => { const s = t.state || {}, c = (s.cells || [])[s.active || 0] || (s.cells || [])[0]; return c || null; };
 function tabTitle(t) { if (t.custom) return t.custom; const L = t.layoutId && LAYOUTS.find((x) => x.id === t.layoutId); const c = tabSym(t); const base = c ? `${symCode(c.sym)}, ${ivLabel(c.iv)}` : "Graphique"; return L ? `${L.name} · ${base}` : base; }
-function tabSnap() { const t = tabCur(); if (!t) return; t.state = snapshotLayout(); t.layoutId = STATE.layoutId || null;
+function tabSnap() { const t = tabCur(); if (!t) return; t.state = snapshotLayout(); t.state.max = !!STATE.max; t.layoutId = STATE.layoutId || null;
   if (t.link) { const c = activeCell(), L = (TABS.links[t.link] = TABS.links[t.link] || {}); if (c) { L.sym = c.st.sym; L.iv = c.st.iv; try { const r = c.main.chart.timeScale().getVisibleRange(); if (r) L.rng = [r.from, r.to]; } catch (e) { /* */ } } } }
 const tabSave = debounce(() => { tabSnap(); LS.set(TABKEY(), TABS); renderTabs(); }, 400);
 function tabApply(t) {
-  const s = t.state || {}; STATE.grid = s.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(s.cells && s.cells.length ? s.cells : [DEF_CELL()])); STATE.active = s.active || 0; STATE.sync = Object.assign({}, STATE.sync, s.sync || {}); STATE.layoutId = t.layoutId || null; STATE.max = false;
+  const s = t.state || {}; STATE.grid = s.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(s.cells && s.cells.length ? s.cells : [DEF_CELL()])); STATE.active = s.active || 0; STATE.sync = Object.assign({}, STATE.sync, s.sync || {}); STATE.layoutId = t.layoutId || null; STATE.max = !!s.max;
   const L = t.link && TABS.links[t.link], lk = t.lk || { sym: true, iv: true }, c0 = STATE.cells[STATE.active] || STATE.cells[0];
   if (L && c0) { if (lk.sym && L.sym) c0.sym = L.sym; if (lk.iv && L.iv) c0.iv = L.iv; }
   selectD(null); renderGrid(); refreshHeader(); saveState();
@@ -14257,7 +14257,7 @@ function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco ==
   [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
 }
 function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); }
-function syncCross(src, p) { if (!STATE.sync.cross || CELLS.length < 2) return; CELLS.forEach((c) => { if (c === src) return; try { if (p && p.time != null && p.point && src.DB.length) { const t = src.DB[clamp(Math.round(p.logical), 0, src.DB.length - 1)][0], i = clamp(Math.round(liOf(c.DB, c.st.iv, t)), 0, c.DB.length - 1); if (c.T[i] != null) c.main.chart.setCrosshairPosition(NaN, c.T[i], c.series); } else c.main.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
+function syncCross(src, p) { if (!STATE.sync.cross || CELLS.length < 2 || !src.ptrIn) return; /* v1.94.7 : seul le graphique sous la souris recopie son curseur (un graphique caché recopiait le sien et effaçait la ligne horizontale) */ CELLS.forEach((c) => { if (c === src) return; try { if (p && p.time != null && p.point && src.DB.length) { const t = src.DB[clamp(Math.round(p.logical), 0, src.DB.length - 1)][0], i = clamp(Math.round(liOf(c.DB, c.st.iv, t)), 0, c.DB.length - 1); if (c.T[i] != null) c.main.chart.setCrosshairPosition(NaN, c.T[i], c.series); } else c.main.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
 let syncingT = false;
 function syncTime(src) { if (!STATE.sync.time || syncingT || CELLS.length < 2 || STATE.active !== src.idx) return; const r = src.main.chart.timeScale().getVisibleLogicalRange(); if (!r || !src.DB.length) return;
   const t0 = tOfLi(src.DB, src.st.iv, r.from), t1 = tOfLi(src.DB, src.st.iv, r.to); syncingT = true; CELLS.forEach((c) => { if (c === src || !c.DB.length) return; c.setRange({ from: liOf(c.DB, c.st.iv, t0), to: liOf(c.DB, c.st.iv, t1) }); }); syncingT = false; }
