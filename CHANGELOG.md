@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.5] — 2026-11-24
+### Ajouté
+- Page Graphique : **Alt maintenu** pendant le tracé d'une ligne de tendance (ou rayon, ligne étendue, ligne d'info…) ou pendant le déplacement d'un de ses points = la ligne se met **à plat, au même prix** que l'autre point.
+
 ## [1.94.4] — 2026-11-24
 ### Corrigé
 - Page Graphique : **Alt+R** (recentrer) et les autres raccourcis Alt remarchent. Un clic sur un graphique lui rend le clavier (l'éditeur Pine ou un champ ne le garde plus), et l'app Windows n'a plus de menu caché qui pouvait intercepter Alt+lettre (F12 ouvre toujours les outils de développement).

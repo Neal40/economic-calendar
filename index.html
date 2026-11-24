@@ -13753,7 +13753,7 @@ Cell.prototype.down = function (e) {
   const c = DS.creating;
   if (c) { stopEv(e); if (c.cell !== this) { cancelCreate(); return; } const def = T[c.d.tool], pt = this.ptAt(x, y, G, { free: def.np === -1 });
     if (def.np === 0) { c.d.p[c.k] = pt; c.d.p.push({ ...pt }); c.k++; this.redraw(); return; }
-    c.d.p[c.k] = pt; if (c.k + 1 < def.np) { c.k++; c.d.p.push({ ...pt }); c.down = true; c.x0 = x; c.y0 = y; this.redraw(); return; } finishCreate(c.d, this); return; }
+    c.d.p[c.k] = altFlat(c.d, c.k, pt, e); if (c.k + 1 < def.np) { c.k++; c.d.p.push({ ...pt }); c.down = true; c.x0 = x; c.y0 = y; this.redraw(); return; } finishCreate(c.d, this); return; }
   if (DS.tool === "measure" || (e.shiftKey && DS.tool === "cross" && !e.ctrlKey)) { stopEv(e); const pt = this.ptAt(x, y, G, { mag: 0 }); DS.measure = { cell: this, d: { p: [pt, { ...pt }], s: {} }, done: false, x0: x, y0: y, down: true }; this.capture(); this.redraw(); return; }
   if (DS.tool === "zoom") { stopEv(e); DS.zoom = { cell: this, x0: x, x1: x, y0: y, y1: y }; this.capture(); return; }
   if (DS.tool === "eraser" || DS.cursor === "eraser") { const h = this.hit(x, y); stopEv(e); if (h && !h.d.lock) { snap(); const f = findD(h.d.id); if (f) f.list.splice(f.i, 1); if (DS.sel === h.d.id) selectD(null); drawChanged(); } return; }
@@ -13791,7 +13791,7 @@ Cell.prototype.drag = function (e) {
   if (DS.measure && DS.measure.cell === this && !DS.measure.done) { DS.measure.d.p[1] = this.ptAt(x, y, G, { mag: 0 }); if (Math.hypot(x - DS.measure.x0, y - DS.measure.y0) > 4) DS.measure.dragged = true; this.redraw(); return; }
   const c = DS.creating; if (c && c.cell === this) { const def = T[c.d.tool];
     if (def.np === -1) { const pt = this.ptAt(x, y, G, { free: true, mag: 0, raw: true }), lp = c.d.p[c.d.p.length - 1]; if (Math.abs(G.x(lp.t) - x) + Math.abs(G.y(lp.p) - y) > 2.5) { c.d.p.push(pt); this.redraw(); } return; }
-    c.d.p[c.k] = this.ptAt(x, y, G); if (c.down && Math.hypot(x - c.x0, y - c.y0) > 5) c.dragged = true; this.redraw(); return; }
+    c.d.p[c.k] = altFlat(c.d, c.k, this.ptAt(x, y, G), e); if (c.down && Math.hypot(x - c.x0, y - c.y0) > 5) c.dragged = true; this.redraw(); return; }
   const g = DS.drag; if (!g || g.cell !== this) return; if (!g.moved) { if (Math.hypot(x - g.x0, y - g.y0) < 3) return; snap(); g.moved = true; }
   const d = g.d, o = g.orig;
   if (g.h) { const pt = this.ptAt(x, y, G), k = g.h.k, i = g.h.i;
@@ -13801,7 +13801,7 @@ Cell.prototype.drag = function (e) {
     else if (k === "entry") { d.p[0] = { t: pt.t, p: pt.p }; }
     else if (d.tool === "flat" && i === 2) d.p[2] = { t: d.p[2].t, p: pt.p };
     else if (d.tool === "hline") d.p[0].p = pt.p; else if (d.tool === "vline") d.p[0].t = pt.t;
-    else d.p[i] = pt; }
+    else d.p[i] = altFlat(d, i, pt, e); }
   else { const dl = Math.round(G.lOfX(x) - g.l0), pNow = G.p(y), dp = fin(pNow) && fin(g.p0) ? pNow - g.p0 : 0, tick = this.spec.tick || 0.01, dpr = Math.round(dp / tick) * tick;
     d.p = o.map((q) => ({ t: d.tool === "hline" ? q.t : G.tOfL(G.li(q.t) + dl), p: d.tool === "vline" ? q.p : +(q.p + dpr).toFixed(8) })); }
   CELLS.forEach((cc) => { if (undOf(cc.st.sym) === undOf(this.st.sym)) cc.redraw(); });
@@ -13814,10 +13814,14 @@ Cell.prototype.up = function (e) {
     if (c.dragged && def.np === 2 && c.k === 1) { finishCreate(c.d, this); return; } c.down = false; return; }
   const g = DS.drag; if (g && g.cell === this) { DS.drag = null; if (g.moved) drawChanged(g.d); }
 };
+/** v1.94.5 : Alt maintenu pendant le tracé / le déplacement d'un point d'une ligne (tendance, rayon, étendue, info…) = ligne à plat, au prix de l'autre point */
+function altFlat(d, i, pt, e) { const def = T[d.tool]; if (e && e.altKey && pt && def && def.g === "lines" && def.np === 2 && d.p.length >= 2) { const o = d.p[i === 0 ? 1 : 0]; if (o && o !== pt && fin(o.p)) return { ...pt, p: o.p }; } return pt; }
+// Alt appuyé sans bouger la souris : la ligne en cours de tracé se met à plat tout de suite
+document.addEventListener("keydown", (e) => { if (e.key !== "Alt") return; const c = DS.creating; if (c && c.d && c.k > 0 && c.d.p[c.k]) { const def = T[c.d.tool]; if (def && def.g === "lines" && def.np === 2) { e.preventDefault(); c.d.p[c.k] = { ...c.d.p[c.k], p: c.d.p[0].p }; c.cell.redraw(); } } });
 Cell.prototype.move = function (e) {
   if (e.buttons) return; KEYMOD.ctrl = e.ctrlKey || e.metaKey; const { x, y } = this.evPos(e), G = this.geo();
   if (DS.measure && DS.measure.cell === this && DS.measure.waiting && !DS.measure.done) { DS.measure.d.p[1] = this.ptAt(x, y, G, { mag: 0 }); this.redraw(); return; }
-  if (DS.creating && DS.creating.cell === this) { const c = DS.creating; if (T[c.d.tool].np !== -1) { c.d.p[c.k] = this.ptAt(x, y, G); this.redraw(); } return; }
+  if (DS.creating && DS.creating.cell === this) { const c = DS.creating; if (T[c.d.tool].np !== -1) { c.d.p[c.k] = altFlat(c.d, c.k, this.ptAt(x, y, G), e); this.redraw(); } return; }
   if (DS.cursor === "dot") this.redraw();
   if (!this.inPlot(x, y, G) || (T[DS.tool] && T[DS.tool].np !== -9 && DS.tool !== "cross")) return;
   const h = this.hit(x, y), id = h ? h.d.id : null, prev = DS.hover && DS.hover.cell === this ? DS.hover.id : null;
