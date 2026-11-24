@@ -7115,7 +7115,7 @@ const PineEngine = (() => {
       barstate.isfirst = i === 0; barstate.islast = i === n - 1; barstate.isconfirmed = i < n - 1; barstate.isnew = true; barstate.ishistory = i < n - 1; barstate.isrealtime = i === n - 1; barstate.islastconfirmedhistory = i === n - 2;
       if (rt.strat) R.stratBar(i);
       try { bar(); } catch (e) { err = `Erreur à la bougie ${i + 1} / ${n} : ${e.message}`; if (!(e instanceof Error) || e.constructor.name !== "PineError") console.warn(e); break; }
-      if ((i & 63) === 0 && Date.now() - t0 > limit) { err = `Script trop lent (plus de ${Math.round(limit / 1000)} s) : arrêté.`; break; }
+      if ((i & 63) === 0 && Date.now() - t0 > limit) { err = `Script trop lent (plus de ${Math.round(limit / 1000)} s sur ${n} bougies) : arrêté. Page Graphique : Paramètres › Scripts Pine pour calculer sur moins de bougies ou laisser plus de temps (ou calc_bars_count = 1000 dans indicator()).`; break; }
     }
     const s = rt.strat;
     return { error: err, meta: rt.meta, plots: rt.plots, hlines: rt.hlines, marks: rt.marks, inputs: rt.inputs, warns: [...rt.warns], ms: Date.now() - t0, draw: R.drawOut(),
@@ -7256,7 +7256,10 @@ const { PineEngine, PineDraw } = pineEngineFactory();
    puis appelle onDone(résultat). Un seul calcul à la fois par indicateur : les mises à jour arrivées entre-temps sont fusionnées (seule la dernière est calculée). */
 const PineAsync = (() => {
   const LIM = 5000, LIM_STRAT = 1500000; let W = null; // v1.81 : une stratégie (strategy()) calcule sur tout l'historique chargé (backtest), un indicateur sur les 5 000 dernières bougies
-  const isStrat = (code) => /^\s*strategy\s*\(/m.test(code); const limOf = (code) => (isStrat(code) ? LIM_STRAT : LIM); const jobs = new Map(), ovCache = new Map();
+  const isStrat = (code) => /^\s*strategy\s*\(/m.test(code);
+  // v1.94.3 : réglages Paramètres › Scripts Pine de la page Graphique (bougies calculées, temps maximum) + calc_bars_count de indicator()
+  const pineCfg = () => { let p = {}; try { p = JSON.parse(localStorage.getItem("gr-prefs") || "{}") || {}; } catch (e) { /* */ } return { bars: Math.max(300, +p.pineBars || LIM), sec: Math.max(5, +p.pineSec || 30) }; };
+  const limOf = (code) => { if (isStrat(code)) return LIM_STRAT; const m = /calc_bars_count\s*=\s*(\d+)/.exec(code), b = pineCfg().bars; return m && +m[1] > 0 ? Math.min(b, +m[1]) : b; }; const jobs = new Map(), ovCache = new Map();
   const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i += 7) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return (h >>> 0).toString(36) + s.length; };
   const hcache = new Map(); const hashOf = (s) => { let h = hcache.get(s); if (!h) { h = hash(s); if (hcache.size > 200) hcache.clear(); hcache.set(s, h); } return h; };
   function worker() {
@@ -7279,12 +7282,12 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
     } catch (e) { W = false; }
     return W;
   }
-  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0].join("|"); };
+  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0, limOf(code)].join("|"); };
   function send(id, j) {
     const { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
     const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6);
     for (let i = 0; i < m; i++) { const b = bars[i + off], k = i * 6; flat[k] = b[0]; flat[k + 1] = b[1]; flat[k + 2] = b[2]; flat[k + 3] = b[3]; flat[k + 4] = b[4]; flat[k + 5] = b[5]; }
-    const oo = {}; for (const k in o) if (typeof o[k] !== "function") oo[k] = o[k]; if (isStrat(code) && !oo.timeLimit) oo.timeLimit = 120000;
+    const oo = {}; for (const k in o) if (typeof o[k] !== "function") oo[k] = o[k]; if (isStrat(code) && !oo.timeLimit) oo.timeLimit = 120000; if (!oo.timeLimit) oo.timeLimit = pineCfg().sec * 1000; // calcul dans le Worker : l'app ne gèle pas pendant ce temps
     W.postMessage({ id, sig, code, flat, m, off, n, o: oo }, [flat.buffer]);
   }
   function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - limOf(code)); if (isStrat(code) && !o.timeLimit) o = { ...o, timeLimit: 120000 }; const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
@@ -13282,7 +13285,7 @@ const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#0
   vgridC: "", hgridC: "", wmC: "", scaleLineC: "", navBtns: "hover", trLbl: true, trPL: true, trPLu: "money",
   /* v1.88 : réglages Trading façon TopstepX (compte démo de la page) */
   trBtns: true, tr1Click: true, trSnd: true, trSndV: 50, trSndT: "thin", trRejOnly: false, trPos: true, trRev: true, trCtl: "always", trDraft: false,
-  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, trPrev: true, trTheme: "tv", alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
+  trPLpos: true, trPLposU: "money", trPLbr: true, trPLbrU: "money", trExt: true, trAlign: "right", trShot: true, trPrev: true, trTheme: "tv", pineBars: "5000", pineSec: "30", alertLines: true, alertC: "#ff9800", alertActive: true, toastAuto: true };
 const LIGHT = { bg: "#ffffff", bg2: "", txt: "#131722", gridC: "rgba(42,46,57,0.07)", crossC: "#9598a1", sessC: "rgba(120,123,134,0.30)" };
 let PR = Object.assign({}, PDEF, LS.get("gr-prefs", {}));
 /* anciennes cases -> nouveaux menus (une fois), puis valeurs dérivées gardées à jour pour le reste du code */
@@ -14965,7 +14968,7 @@ function openSettings(tab) {
   const row = (l, c, hint) => `<div class="tv-r"><span class="tv-l">${l}</span><span class="tv-c">${c || ""}</span></div>${hint ? `<div class="tv-h">${hint}</div>` : ""}`;
   const sec = (t) => `<div class="tv-sec">${t}</div>`;
   const shown = [["h", "Masqué"], ["vl", "Valeur et ligne"], ["v", "Valeur"], ["l", "Ligne"]], vis = [["always", "Toujours visible"], ["hover", "Visible au survol"], ["never", "Masqué"]];
-  const IC = { sym: '<path d="M8 6v16M6 9h4v9H6zM18 4v20M16 8h4v12h-4z"/>', leg: '<path d="M5 8h18M5 13h18M5 18h12"/>', sc: '<path d="M7 5v15h16M7 5l-2 2M7 5l2 2M23 20l-2-2M23 20l-2 2"/>', canvas: '<path d="M6 22l2-6L19 5l4 4-11 11zM17 7l4 4"/>', trd: '<path d="M4 20l6-6 4 4 9-9M17 9h6v6"/>', al: '<circle cx="14" cy="15" r="7"/><path d="M14 11v4l3 2M6 7l3-2M22 7l-3-2"/>', ev: '<rect x="5" y="7" width="18" height="16" rx="2"/><path d="M5 12h18M10 5v4M18 5v4"/>' };
+  const IC = { sym: '<path d="M8 6v16M6 9h4v9H6zM18 4v20M16 8h4v12h-4z"/>', leg: '<path d="M5 8h18M5 13h18M5 18h12"/>', sc: '<path d="M7 5v15h16M7 5l-2 2M7 5l2 2M23 20l-2-2M23 20l-2 2"/>', canvas: '<path d="M6 22l2-6L19 5l4 4-11 11zM17 7l4 4"/>', trd: '<path d="M4 20l6-6 4 4 9-9M17 9h6v6"/>', pine: '<path d="M10 8l-5 6 5 6M18 8l5 6-5 6M16 6l-4 16"/>', al: '<circle cx="14" cy="15" r="7"/><path d="M14 11v4l3 2M6 7l3-2M22 7l-3-2"/>', ev: '<rect x="5" y="7" width="18" height="16" rx="2"/><path d="M5 12h18M10 5v4M18 5v4"/>' };
   const tabsDef = [
     ["sym", "Symbole", sec("Bougies") + row(ck("colorPrev", "Coloriser les barres selon la clôture précédente")) + row(ck("bodyOn", "Corps", true), sw("up") + sw("dn")) + row(ck("borderOn", "Bordures", true), sw("bdUp") + sw("bdDn")) + row(ck("wickOn", "Mèche", true), sw("wickUp") + sw("wickDn"))
       + row("Ligne / zone (types ligne)", sw("lineC") + sl("lineW", [[1, "1 px"], [2, "2 px"], [3, "3 px"], [4, "4 px"]], "sm"))
@@ -14986,6 +14989,9 @@ function openSettings(tab) {
       + sec("Boutons") + row("Navigation", sl("navBtns", vis))
       + sec("Marges") + row("Haut", num("mTop", "%")) + row("Bas", num("mBot", "%")) + row("Droite", num("rightOffset", "barres"))
       + sec("Thème") + row("Couleurs", `<span class="gr-seg"><button class="gr-btn${PR.theme !== "light" ? " gr-pri" : ""}" data-theme="dark">Sombre</button><button class="gr-btn${PR.theme === "light" ? " gr-pri" : ""}" data-theme="light">Clair</button></span>`)],
+    ["pine", "Scripts Pine", `<div class="tv-h" style="margin-top:10px">Calcul des scripts Pine (indicateurs) dans un fil à part : l'app ne gèle pas pendant le calcul. Un gros script (plusieurs unités de temps, beaucoup de boîtes / lignes) peut dépasser le temps maximum : calcule-le sur moins de bougies ou laisse-lui plus de temps.</div>`
+      + sec("Calcul") + row("Bougies calculées", sl("pineBars", [["1000", "1 000 dernières"], ["2000", "2 000 dernières"], ["3000", "3 000 dernières"], ["5000", "5 000 dernières (défaut)"], ["10000", "10 000 dernières"], ["20000", "20 000 dernières"]]), "Nombre de bougies sur lesquelles chaque indicateur Pine est calculé (une stratégie garde tout l'historique). calc_bars_count dans indicator() peut réduire ce nombre pour un script.")
+      + row("Temps maximum par calcul", sl("pineSec", [["8", "8 s"], ["15", "15 s"], ["30", "30 s (défaut)"], ["60", "60 s"], ["120", "2 min"]]), "Au-delà, le script est arrêté avec « Script trop lent »")],
     ["trd", "Trading", `<div class="tv-h" style="margin-top:10px">Ordres du compte démo de la page Graphique (aucun vrai ordre). Les marques d'exécution affichent tes trades TopstepX (journal de l'app).</div>`
       + sec("Général") + row(ck("trBtns", "Boutons Buy/sell", true), "", "Affiche les boutons d'achat et de vente directement sur le graphique")
       + row(ck("tr1Click", "Trading en un clic", true), "", "Passez, modifiez ou annulez des ordres, ou clôturez des positions instantanément sans confirmation")

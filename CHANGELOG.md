@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.3] — 2026-11-24
+### Ajouté
+- Page Graphique : Paramètres › **Scripts Pine** : nombre de **bougies calculées** par indicateur (1 000 → 20 000, défaut 5 000) et **temps maximum** par calcul (8 s → 2 min, défaut **30 s** au lieu de 8 s ; le calcul se fait dans un fil à part, l'app ne gèle pas). `calc_bars_count` de `indicator()` est respecté. Le message « Script trop lent » dit comment régler.
+
 ## [1.94.2] — 2026-11-24
 ### Corrigé
 - Page Graphique : souris immobile sur les bougies, la **ligne horizontale du curseur** (et son prix sur l'échelle) est remise toutes les 250 ms et après chaque rechargement des bougies : les mises à jour en direct ne l'effacent plus.
