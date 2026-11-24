@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.6] — 2026-11-24
+### Modifié
+- Page Graphique : la ligne de tendance (rayon, ligne étendue, ligne d'info…) se met à plat au même prix avec **Maj** maintenu (au lieu d'Alt), comme sur TradingView.
+
 ## [1.94.5] — 2026-11-24
 ### Ajouté
 - Page Graphique : **Alt maintenu** pendant le tracé d'une ligne de tendance (ou rayon, ligne étendue, ligne d'info…) ou pendant le déplacement d'un de ses points = la ligne se met **à plat, au même prix** que l'autre point.

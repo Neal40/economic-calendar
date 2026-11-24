@@ -13814,10 +13814,10 @@ Cell.prototype.up = function (e) {
     if (c.dragged && def.np === 2 && c.k === 1) { finishCreate(c.d, this); return; } c.down = false; return; }
   const g = DS.drag; if (g && g.cell === this) { DS.drag = null; if (g.moved) drawChanged(g.d); }
 };
-/** v1.94.5 : Alt maintenu pendant le tracé / le déplacement d'un point d'une ligne (tendance, rayon, étendue, info…) = ligne à plat, au prix de l'autre point */
-function altFlat(d, i, pt, e) { const def = T[d.tool]; if (e && e.altKey && pt && def && def.g === "lines" && def.np === 2 && d.p.length >= 2) { const o = d.p[i === 0 ? 1 : 0]; if (o && o !== pt && fin(o.p)) return { ...pt, p: o.p }; } return pt; }
-// Alt appuyé sans bouger la souris : la ligne en cours de tracé se met à plat tout de suite
-document.addEventListener("keydown", (e) => { if (e.key !== "Alt") return; const c = DS.creating; if (c && c.d && c.k > 0 && c.d.p[c.k]) { const def = T[c.d.tool]; if (def && def.g === "lines" && def.np === 2) { e.preventDefault(); c.d.p[c.k] = { ...c.d.p[c.k], p: c.d.p[0].p }; c.cell.redraw(); } } });
+/** v1.94.6 : Maj (avant : Alt) maintenu pendant le tracé / le déplacement d'un point d'une ligne (tendance, rayon, étendue, info…) = ligne à plat, au prix de l'autre point */
+function altFlat(d, i, pt, e) { const def = T[d.tool]; if (e && e.shiftKey && pt && def && def.g === "lines" && def.np === 2 && d.p.length >= 2) { const o = d.p[i === 0 ? 1 : 0]; if (o && o !== pt && fin(o.p)) return { ...pt, p: o.p }; } return pt; }
+// Maj appuyé sans bouger la souris : la ligne en cours de tracé se met à plat tout de suite
+document.addEventListener("keydown", (e) => { if (e.key !== "Shift") return; const c = DS.creating; if (c && c.d && c.k > 0 && c.d.p[c.k]) { const def = T[c.d.tool]; if (def && def.g === "lines" && def.np === 2) { e.preventDefault(); c.d.p[c.k] = { ...c.d.p[c.k], p: c.d.p[0].p }; c.cell.redraw(); } } });
 Cell.prototype.move = function (e) {
   if (e.buttons) return; KEYMOD.ctrl = e.ctrlKey || e.metaKey; const { x, y } = this.evPos(e), G = this.geo();
   if (DS.measure && DS.measure.cell === this && DS.measure.waiting && !DS.measure.done) { DS.measure.d.p[1] = this.ptAt(x, y, G, { mag: 0 }); this.redraw(); return; }
