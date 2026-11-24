@@ -2,6 +2,14 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.96.0] — 2026-11-24
+### Ajouté
+- Page Graphique : **arborescence façon TradingView** : onglets « Arborescence d'objets / Fenêtre de données », barre d'icônes (Créer un groupe de dessins, Cloner / Copier, Déplacer vers : groupe ou ordre de visualisation, Gérer les dessins de la mise en page), ligne du symbole, indicateurs, dessins et groupes-dossiers repliables ; œil / cadenas / corbeille au survol, éléments masqués grisés.
+- **Gérer les dessins de la mise en page** : filtres Synchronisé globalement / dans la mise en page / Non synchronisé, dessins rangés par symbole avec leur date de création, suppression d'un dessin ou de tout un symbole.
+- **Clic gauche maintenu** sur le graphique = bulle Ouverture / Haut / Bas / Fermeture de la bougie sous le curseur (sans les indicateurs).
+### Modifié
+- Réglages d'un dessin : plus besoin de cliquer OK, fermer la fenêtre (×, Échap, clic à côté) garde les changements ; seul « Annuler » les retire.
+
 ## [1.95.2] — 2026-11-24
 ### Corrigé
 - Page Graphique **responsive** : la barre du haut ne se chevauche plus quand la fenêtre est étroite. Selon la largeur, les textes (Alerte, Replay, Indicateurs, nom de la mise en page, Graphique / TradingView) puis les boutons secondaires (annuler / rétablir, modèles, comparer, plein écran, unités au-delà de 4…) se retirent ; le panneau de droite passe par-dessus le graphique au lieu de l'écraser.
