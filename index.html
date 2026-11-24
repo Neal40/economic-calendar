@@ -13374,7 +13374,7 @@ class Cell {
     this.main = this.mkPane(null); this.mkMain(); this.wire(); this.bind();
     this.el.addEventListener("pointerdown", () => { if (STATE.active !== this.idx) setActive(this.idx); }, true);
     // v1.94 : la souris quitte le graphique → plus de curseur à remettre
-    try { this.main.chart.chartElement().addEventListener("pointerleave", () => { this.mouseP = null; }); } catch (e) { /* */ }
+    try { const ce = this.main.chart.chartElement(); ce.addEventListener("pointerleave", () => { this.mouseP = null; this.btn = false; }); ce.addEventListener("pointermove", () => (this.lastMv = performance.now())); ce.addEventListener("pointerdown", () => (this.btn = true)); addEventListener("pointerup", () => (this.btn = false)); } catch (e) { /* */ }
   }
   // v1.94 : remet le curseur (lignes verticale + horizontale) à la position de la souris après une mise à jour en direct
   keepCross() { const m = this.mouseP; if (!m || this.dead || DS.creating || DS.drag) return; try { const t = this.main.chart.timeScale().coordinateToTime(m.x), pr = this.series.coordinateToPrice(m.y); if (t == null || pr == null || !isFinite(pr)) return; this.xRest = true; this.main.chart.setCrosshairPosition(pr, t, this.series); } catch (e) { /* */ } finally { this.xRest = false; } }
@@ -13481,7 +13481,7 @@ class Cell {
     if (this.pendT != null && n) { if (this.pendT < B[0][0] && this.feed && !this.feed.done && (this.pendN = (this.pendN || 0) + 1) < 12) this.feed.loadMore(); else { this.setRange({ from: Math.max(-5, liOf(B, this.st.iv, this.pendT)), to: n - 1 + PR.rightOffset }); this.pendT = null; this.pendN = 0; } }
     else if (this.pendGo && n) { const g = this.pendGo; if (g.t < B[0][0] && this.feed && !this.feed.done && ++g.n < 12) this.feed.loadMore(); else { this.pendGo = null; goToTime(this, g.t, g.keep); } }
     else if (fit && n) { const vis = clamp(Math.round(this.pEl.clientWidth / 8), 40, 400); this.setRange({ from: n - vis, to: n + PR.rightOffset }); }
-    this.legend(); this.redraw(); refreshPanels();
+    this.legend(); this.redraw(); refreshPanels(); requestAnimationFrame(() => this.keepCross());
   }
   tick(info) {
     const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (PR.rth && B.length !== B0.length)) { this.full(false); return; }
@@ -15800,6 +15800,8 @@ function pvDrop(it, p, s, px) { const tick = paSpec(s).tick, buy = TPF.side === 
     const good = k === "tp" ? (buy ? p > e : p < e) : buy ? p < e : p > e; if (!good) { toast(k === "tp" ? "Le take profit doit être du côté du gain" : "Le stop loss doit être du côté de la perte", true); return paRefresh(); }
     if (x[k + "M"] === "price") x[k] = paRound(p, tick); else x[k] = Math.max(1, Math.round(Math.abs(p - e) / tick)); }
   tpSave(); paRefresh(); paQuick(); }
+// v1.94.2 : souris immobile sur le graphique → la ligne horizontale du curseur est remise toutes les 250 ms (des mises à jour en direct l'effaçaient)
+setInterval(() => { if (!viewOn() || DS.creating || DS.drag || PA.drag) return; const now = performance.now(); CELLS.forEach((c) => { if (c.mouseP && !c.btn && now - (c.lastMv || 0) > 300) c.keepCross(); }); }, 250);
 (function paFrame() { requestAnimationFrame(paFrame); if (PA.ov && !PA.ov.hidden && viewOn()) { const c = activeCell(); if (c && PA.ov.parentNode === c.el) paOvPos(c); } })();
 function paHit(e) {
   if (!PA.lines.size || e.button !== 0) return null;

@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.2] — 2026-11-24
+### Corrigé
+- Page Graphique : souris immobile sur les bougies, la **ligne horizontale du curseur** (et son prix sur l'échelle) est remise toutes les 250 ms et après chaque rechargement des bougies : les mises à jour en direct ne l'effacent plus.
+
 ## [1.94.1] — 2026-11-24
 ### Ajouté
 - Compte démo de la page Graphique : **thème des ordres** dans Paramètres › Trading : **TradingView** ou **TopstepX** (étiquettes « | ~ -$442.00 | 2 | × », position « | $426.00 | -2 | × », vert / rouge vifs, bordures noires, lignes TopstepX).
