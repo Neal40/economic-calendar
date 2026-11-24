@@ -703,7 +703,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-lay span{max-width:150px;overflow:hidden;text-overflow:ellipsis}.gr-lay svg{width:18px}
 .gr-mode{display:flex;margin-left:6px;background:var(--gp);border:1px solid var(--gl);border-radius:6px;padding:2px;flex:none}
 .gr-mode button{display:flex;align-items:center;gap:4px;height:26px;padding:0 9px 0 4px;border-radius:4px;color:var(--gm);font-size:12px;font-weight:600}.gr-mode button svg{width:22px;height:22px}
-.gr-mode button.on{background:var(--ga);color:#fff}
+.gr-mode button.on{background:var(--ga);color:#fff}.gr-mode[hidden]{display:none!important}
 .gr-tvnav,.gr-ictbar{display:flex;align-items:center;gap:2px}.gr-tvnav{display:none}.gr-tvsrc{margin-left:6px;display:flex;align-items:center}
 .gr.tv .gr-tvnav{display:flex}.gr.tv .gr-ictbar,.gr.tv .gr-top>.gr-tb,.gr.tv .gr-top>.gr-sep,.gr.tv .gr-ivs{display:none}
 /* corps */
@@ -744,12 +744,22 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-ntip div{display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gr-ntip i{width:8px;height:8px;border-radius:50%;flex:none}
 .gr-zoom{position:absolute;z-index:5;background:rgba(41,98,255,.15);border-left:1px solid var(--ga);border-right:1px solid var(--ga);pointer-events:none}
 /* barre du bas */
+.gr-btn.gr-nvis{display:block;margin:0 10px 6px auto;height:24px;font-size:11px}
+.gr-ppanel{height:240px;flex:none;border-top:1px solid var(--gl);display:flex;flex-direction:column;background:var(--gb);min-height:0;font-size:12px}.gr-ppanel[hidden]{display:none!important}
+.pp-h{display:flex;align-items:center;gap:11px;padding:4px 8px;border-bottom:1px solid var(--gl);white-space:nowrap;overflow-x:auto;overflow-y:hidden;flex:none;scrollbar-width:thin}.pp-h>*{flex:none}
+.pp-acc{display:flex;align-items:center;gap:5px;height:28px;padding:0 8px;border-radius:6px;background:var(--gp);color:var(--gt)}.pp-acc:hover{background:var(--gh)}.pp-acc small{color:var(--gm);font-size:10px}.pp-acc svg{width:16px;height:16px}
+.pp-k{color:var(--gm)}.pp-k b{color:var(--gt);margin-left:4px;font-weight:600}.pp-k b.dn,.pp-t .dn{color:#f23645}.pp-t .up{color:#089981}
+.pp-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--gm)}.pp-empty b{color:var(--gt);font-size:14px}.pp-empty div{display:flex;align-items:center;gap:8px;margin-top:6px}
+.pp-go{height:32px;padding:0 16px;border-radius:16px;color:#fff;font-weight:600}.pp-go.sell{background:#f23645}.pp-go.buy{background:#2962ff}
+.pp-tabs{display:flex;align-items:center;gap:2px;padding:4px 8px;flex:none}.pp-tabs button{height:26px;padding:0 10px;border-radius:5px;color:var(--gm)}.pp-tabs button.on{background:var(--gp);color:var(--gt)}.pp-tabs em{font-style:normal;color:var(--gm);font-size:11px}
+.pp-b{flex:1;overflow:auto;min-height:0;padding:0 8px 6px}.pp-t{width:100%;border-collapse:collapse}.pp-t th{text-align:left;color:var(--gm);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--gl);position:sticky;top:0;background:var(--gb)}.pp-t td{padding:4px 6px;border-bottom:1px solid var(--gl)}
+.gr-bb.gr-pp{gap:4px}
 .gr-bot{height:32px;flex:none;border-top:1px solid var(--gl);display:flex;align-items:center;padding:0 6px;gap:2px;white-space:nowrap;overflow:hidden}
 .gr-ranges{display:flex;align-items:center;gap:1px}.gr-bb{height:24px;padding:0 7px;border-radius:4px;font-size:12px;color:var(--gt);display:flex;align-items:center}.gr-bb:hover{background:var(--gh)}.gr-bb.on{color:var(--ga)}.gr-bb.gr-ic{padding:0 3px}
 .gr-bsep{width:1px;height:16px;background:var(--gl);margin:0 3px}
 /* panneau de droite */
 .gr-rstrip{width:46px;flex:none;border-left:1px solid var(--gl);display:flex;flex-direction:column;align-items:center;padding:4px 0;gap:2px}
-.gr-rs{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--gt)}.gr-rs:hover{background:var(--gh)}.gr-rs.on{color:var(--ga);background:rgba(41,98,255,.12)}
+.gr-rsfill{flex:1}.gr-rs{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--gt)}.gr-rs:hover{background:var(--gh)}.gr-rs.on{color:var(--ga);background:rgba(41,98,255,.12)}
 .gr-rpanel{width:300px;flex:none;border-left:1px solid var(--gl);display:flex;flex-direction:column;min-height:0;overflow:hidden;background:var(--gb)}
 .gr.tv .gr-left,.gr.tv .gr-grid,.gr.tv .gr-bot,.gr.tv .gr-rstrip,.gr.tv .gr-rpanel,.gr.tv .gr-bpanel,.gr.tv .gr-float,.gr.tv .gr-favbar{display:none!important}
 .gr-tvhost{flex:1;position:relative;background:var(--gb);min-height:0}.gr:not(.tv) .gr-tvhost{display:none}
@@ -12510,6 +12520,19 @@ const VIS_U = [["sec", "Secondes", 1, 59], ["min", "Minutes", 1, 59], ["hr", "He
 function visOk(v, iv) { if (!v) return true; const p = ivParse(iv); if (!p) return true; let k, n;
   if (p.u === "S") { k = "sec"; n = p.n; } else if (p.u === "m") { if (p.n >= 60) { k = "hr"; n = p.n / 60; } else { k = "min"; n = p.n; } } else if (p.u === "D") { k = "day"; n = p.n; } else if (p.u === "W") { k = "wk"; n = p.n; } else { k = "mo"; n = p.n; }
   const e = v[k]; if (e === false) return false; if (e && typeof e === "object") { if (e.on === false) return false; if (fin(+e.min) && n < +e.min) return false; if (fin(+e.max) && n > +e.max) return false; } return true; }
+/** v1.97 : visibilité du trait des news par unité de temps (même réglage que la Visibilité des dessins, PR.evLineVis) */
+function evVisDlg() { const V0 = PR.evLineVis || {}, vOn = (k) => !(V0[k] === false || (V0[k] && V0[k].on === false));
+  const rows = VIS_U.map(([k, n, a, b]) => { const e = V0[k] && typeof V0[k] === "object" ? V0[k] : {}, lo = fin(+e.min) ? +e.min : a, hi = fin(+e.max) ? +e.max : b;
+    return `<div class="gr-vrow"><label class="gr-chk"><input type="checkbox" data-vk="${k}" ${vOn(k) ? "checked" : ""}><span>${n}</span></label><input class="gr-in sm" type="number" min="${a}" max="${b}" data-vmin="${k}" value="${lo}"><div class="gr-dbl"><i class="gr-drt"></i><input type="range" min="${a}" max="${b}" value="${lo}" data-vr1="${k}"><input type="range" min="${a}" max="${b}" value="${hi}" data-vr2="${k}"></div><input class="gr-in sm" type="number" min="${a}" max="${b}" data-vmax="${k}" value="${hi}"></div>`; }).join("");
+  const d = dlg("Trait des news : visibilité", `<div class="gr-mut">Le trait vertical à l'heure de chaque news n'est dessiné que sur les unités de temps cochées (ex. Minutes 1 → 1 pour le garder seulement en 1 minute).</div><div class="gr-vis">${rows}</div>`, { w: 480, cls: "gr-dset", ok: "OK",
+    left: `<button class="gr-btn" data-vm1="1">Seulement 1 minute</button><button class="gr-btn" data-vall="1">Tout</button>`,
+    onOk: (x) => { const V = {}; let any = false; VIS_U.forEach(([k, , a, b]) => { const on = x.querySelector(`[data-vk="${k}"]`), lo = +x.querySelector(`[data-vmin="${k}"]`).value, hi = +x.querySelector(`[data-vmax="${k}"]`).value; const o = { on: on.checked, min: fin(lo) ? clamp(lo, a, b) : a, max: fin(hi) ? clamp(hi, a, b) : b }; if (!o.on || o.min !== a || o.max !== b) { V[k] = o; any = true; } });
+      PR.evLineVis = any ? V : null; if (any && !PR.evLine) PR.evLine = true; savePrefs(); CELLS.forEach((c) => { c.loadEvents(); c.redraw(); }); refreshPanels(); } });
+  const root = d.el;
+  root.addEventListener("input", (e) => { const k = e.target.dataset; if (k.vr1 || k.vr2) { const u = k.vr1 || k.vr2, r1 = root.querySelector(`[data-vr1="${u}"]`), r2 = root.querySelector(`[data-vr2="${u}"]`); if (+r1.value > +r2.value) { if (k.vr1) r1.value = r2.value; else r2.value = r1.value; } root.querySelector(`[data-vmin="${u}"]`).value = r1.value; root.querySelector(`[data-vmax="${u}"]`).value = r2.value; }
+    if (k.vmin || k.vmax) { const u = k.vmin || k.vmax; root.querySelector(`[data-vr1="${u}"]`).value = root.querySelector(`[data-vmin="${u}"]`).value; root.querySelector(`[data-vr2="${u}"]`).value = root.querySelector(`[data-vmax="${u}"]`).value; } }, true);
+  const setAll = (only1) => VIS_U.forEach(([k, , a, b]) => { root.querySelector(`[data-vk="${k}"]`).checked = !only1 || k === "min"; const lo = a, hi = only1 && k === "min" ? 1 : b; root.querySelector(`[data-vmin="${k}"]`).value = root.querySelector(`[data-vr1="${k}"]`).value = lo; root.querySelector(`[data-vmax="${k}"]`).value = root.querySelector(`[data-vr2="${k}"]`).value = hi; });
+  root.querySelector("[data-vm1]").onclick = () => setAll(true); root.querySelector("[data-vall]").onclick = () => setAll(false); }
 const ivCat = (iv) => { const p = ivParse(iv); if (!p) return "min"; if (p.u === "S") return "sec"; if (p.u === "m") return p.n >= 60 ? "hr" : "min"; return { D: "day", W: "wk", M: "mo" }[p.u]; };
 const IV_GROUPS = [["Secondes", ["1S", "5S", "10S", "15S", "30S"]], ["Minutes", ["1", "2", "3", "5", "10", "15", "30", "45"]], ["Heures", ["60", "120", "180", "240", "360", "480", "720"]], ["Jours", ["1D", "2D", "3D", "1W", "1M", "3M", "6M", "12M"]]];
 function ivFromText(s) { // « 5 » « 5s » « 15m » « 1h » « H4 » « 4h » « D » « 2D » « W » « M » « 3M »
@@ -13132,13 +13155,19 @@ function lvDraw(pen, d, G, x0, x1, P0, P1, kind) { // Fibonacci / Gann : lignes 
   ys.sort((a, b) => a[2] - b[2]);
   if (d.s.bg !== false) for (let i = 1; i < ys.length; i++) { pen.fl(alpha(ys[i][0].c, d.s.bo ?? 0.12)); pen.rect(Math.min(x0, x1), ys[i - 1][2], Math.abs(x1 - x0) || 1, ys[i][2] - ys[i - 1][2], true, false); }
   const tvMode = "lc" in d.s || "lp" in d.s || "lt" in d.s; // modèle TopstepX : coefficient / prix / texte du niveau, police, position
+  const TX = []; // v1.97 : étiquettes posées après les lignes ; dézoomé, celles qui se chevauchent sont sautées (premier et dernier niveaux gardés) au lieu de se recouvrir
   ys.forEach(([l, p, y]) => { const xa = d.s.el ? -9999 : Math.min(x0, x1), xb = d.s.er ? 99999 : Math.max(x0, x1); pen.st(l.c, d.s.w || 1, d.s.ld || 0).seg(xa, y, xb, y);
-    if (d.s.lab === false) return;
-    if (!tvMode) { pen.text(d.s.lpos === "r" ? Math.max(x0, x1) + 4 : Math.min(x0, x1) - 4, y, `${+l.v.toFixed(3)} (${G.fp(p)})`, { col: l.c, fs: 11, al: d.s.lpos === "r" ? "left" : "right", bl: "middle" }); return; }
+    if (d.s.lab === false) return; const text = (x2, y2, str, o) => TX.push({ y: y2, f: () => pen.text(x2, y2, str, o), h: (o.fs || 11) + 2 });
+    if (!tvMode) { text(d.s.lpos === "r" ? Math.max(x0, x1) + 4 : Math.min(x0, x1) - 4, y, `${+l.v.toFixed(3)} (${G.fp(p)})`, { col: l.c, fs: 11, al: d.s.lpos === "r" ? "left" : "right", bl: "middle" }); return; }
     const parts = []; if (d.s.lc) parts.push(d.s.pct ? +(l.v * 100).toFixed(1) + "%" : String(+l.v.toFixed(3))); if (d.s.lp) parts.push("(" + G.fp(p) + ")"); if (d.s.lt && l.t) parts.push(l.t); if (!parts.length) return;
     const lp = d.s.lpos || "l", xr = d.s.er ? G.W - 6 : Math.max(x0, x1) + 4, xl = Math.min(x0, x1) - 4;
-    pen.text(lp === "r" ? xr : lp === "c" ? (Math.min(x0, x1) + Math.max(x0, x1)) / 2 : xl, y - (lp === "c" ? 2 : 0), parts.join(" · "), { col: l.c, fs: d.s.lfs || 11, al: lp === "r" ? (d.s.er ? "right" : "left") : lp === "c" ? "center" : "right", bl: lp === "c" ? "bottom" : "middle", bg: lp === "r" && d.s.er ? PR.bg : null, pad: 1 }); });
+    text(lp === "r" ? xr : lp === "c" ? (Math.min(x0, x1) + Math.max(x0, x1)) / 2 : xl, y - (lp === "c" ? 2 : 0), parts.join(" · "), { col: l.c, fs: d.s.lfs || 11, al: lp === "r" ? (d.s.er ? "right" : "left") : lp === "c" ? "center" : "right", bl: lp === "c" ? "bottom" : "middle", bg: lp === "r" && d.s.er ? PR.bg : null, pad: 1 }); });
+  lvLabels(TX).forEach((t) => t.f());
 }
+/** étiquettes de niveaux triées par y : garde celles qui ne se chevauchent pas (la première et la dernière toujours) */
+function lvLabels(TX) { if (TX.length < 3) return TX; const S = TX.slice().sort((a, b) => a.y - b.y), out = [S[0]], last = S[S.length - 1];
+  for (let i = 1; i < S.length - 1; i++) { const t = S[i]; if (t.y - out[out.length - 1].y >= Math.max(t.h, out[out.length - 1].h) && last.y - t.y >= Math.max(t.h, last.h)) out.push(t); }
+  if (last.y - out[out.length - 1].y >= 1 || out.length === 1) out.push(last); return out; }
 const PATN = (labels) => ({ np: labels.split(labels.includes(",") ? "," : "").length, def: S0({ c: "#2962ff", f: "rgba(41,98,255,0.15)", w: 2 }), draw(pen, P, d) {
   pen.st(d.s.c, d.s.w, d.s.d).poly(P, false, false);
   if (labels === "XABCD" || labels === "ABCD") { pen.fl(d.s.f); if (P.length >= 3 && labels === "XABCD") pen.poly([P[0], P[1], P[2]], true, true, false); if (P.length >= 5) pen.poly([P[2], P[3], P[4]], true, true, false); if (P.length >= 3) { pen.st(d.s.c, 1, 2).seg(P[0][0], P[0][1], P[2][0], P[2][1]); } if (P.length >= 5) pen.seg(P[2][0], P[2][1], P[4][0], P[4][1]); }
@@ -13297,7 +13326,7 @@ function posDraw(pen, P, d, G, dir) { // position longue / courte façon Trading
   const B = G.bars, i0 = Math.ceil(G.li(d.p[0].t)), i1 = Math.floor(G.li(d.p[1].t)); let hit = null;
   for (let i = Math.max(0, i0); i < B.length && i <= i1; i++) { const b = B[i]; const hs = dir > 0 ? b[3] <= sl : b[2] >= sl, ht = dir > 0 ? b[2] >= tp : b[3] <= tp; if (hs || ht) { hit = { i, win: !hs, p: hs ? sl : tp }; break; } }
   const lastI = Math.min(B.length - 1, i1), cur = hit ? hit.p : lastI >= i0 && B[lastI] ? B[lastI][4] : e, pts = (cur - e) * dir, pnl = pts * qty * pv;
-  if (lastI >= i0) { const xe = G.lx(hit ? hit.i : lastI), ye = G.y(cur); pen.fl("rgba(0,0,0,0.22)").rect(x0, yE, xe - x0, ye - yE, true, false); pen.st(alpha("#000000", 0.35), 1, 2).seg(x0, yE, xe, ye); }
+  if (lastI >= i0) { const xe = G.lx(hit ? hit.i : lastI), ye = G.y(cur); const zc = pts >= 0 ? s.tp : s.sl; pen.fl(alpha(zc, Math.min(0.6, Math.max(0.12, alphaOf(zc) + 0.14)))).rect(x0, yE, xe - x0, ye - yE, true, false); pen.st(alpha("#787b86", 0.9), 1, 2).seg(x0, yE, xe, ye); } // v1.97 : partie parcourue = couleur de la zone plus foncée (comme TradingView), plus de voile gris
   const show = s.always || DS.sel === d.id || (DS.hover && DS.hover.id === d.id) || (DS.drag && DS.drag.d === d) || (DS.creating && DS.creating.d === d); if (!show) return;
   const fs = +s.tfs || 12, col = s.txc || "#ffffff", xc = (x0 + x1) / 2, st = s.stats || "all", qtxt = nf(qty, qty % 1 ? 3 : 0);
   const part = (off, pc, tk, amt) => st === "amt" ? amt : st === "op" ? `${off} (${pc}%)` : st === "ot" ? `${off} ${tk}` : `${off} (${pc}%) ${tk} ${amt}`;
@@ -13320,7 +13349,9 @@ function posInput(d, root, t) { const dir = d.tool === "long" ? 1 : -1, c = acti
 const posHandles = (P) => P.length < 3 ? P.map((q, i) => ({ x: q[0], y: q[1], i })) : [{ x: P[0][0], y: P[0][1], i: 0, k: "entry" }, { x: P[0][0], y: P[1][1], i: 1, k: "tp" }, { x: P[0][0], y: P[2][1], i: 2, k: "sl" }, { x: P[1][0], y: P[0][1], i: 1, k: "w" }];
 const toolDef = (id) => T[id] || null;
 const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = LS.get("gr-tpldef", {})[tool], last = LS.get("gr-tpllast", {})[tool]; const s = JSON.parse(JSON.stringify(Object.assign({}, t.def || {}, tpl || {}, last || {}))); // v1.94 : dernier style utilisé (gardé après fermeture de l'app)
-  if (!s.lv && ["fib"].includes(tool)) s.lv = FIB_LV(); if (!s.lv && ["fibext", "fibchan"].includes(tool)) s.lv = FIBX_LV(); if (!s.lv && ["fibfan"].includes(tool)) s.lv = FAN_LV(); if (!s.lv && ["gannbox"].includes(tool)) s.lv = GANN_LV(); if (!s.lv && tool === "fibtime") s.lv = TZ_LV(); if (!s.lv && ["fibcirc", "fibarc"].includes(tool)) s.lv = CIRC_LV(); return s; };
+  if (!s.lv && ["fib"].includes(tool)) s.lv = FIB_LV(); if (!s.lv && ["fibext", "fibchan"].includes(tool)) s.lv = FIBX_LV(); if (!s.lv && ["fibfan"].includes(tool)) s.lv = FAN_LV(); if (!s.lv && ["gannbox"].includes(tool)) s.lv = GANN_LV(); if (!s.lv && tool === "fibtime") s.lv = TZ_LV(); if (!s.lv && ["fibcirc", "fibarc"].includes(tool)) s.lv = CIRC_LV();
+  if (t.g === "pos") ["tp", "sl"].forEach((k) => { if (!(alphaOf(s[k]) >= 0.02)) s[k] = t.def[k]; }); // v1.97 : zone objectif / stop jamais invisible par défaut
+  return s; };
 
 /* ---------- réglages du graphique (Paramètres) ---------- */
 const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#089981", wickDn: "#f23645", bdUp: "#089981", bdDn: "#f23645", bg: "#131722", bg2: "", txt: "#b2b5be", fs: 12,
@@ -13417,7 +13448,7 @@ const activeCell = () => CELLS[clamp(STATE.active, 0, CELLS.length - 1)] || null
 const LEGHOV = { id: null, t: 0 }; // indicateur survolé dans la légende
 class Cell {
   constructor(st, idx) {
-    this.st = st; this.idx = idx; this.feed = null; this.unsub = null; this.DB = []; this.T = []; this.R = {}; this.IS = new Map(); this.cmpS = new Map(); this.panes = []; this.hl = []; this.syncing = false; this.cross = null; this.dead = false;
+    this.st = st; this.idx = idx; this.vrPend = !!(st && st.vr); this.feed = null; this.unsub = null; this.DB = []; this.T = []; this.R = {}; this.IS = new Map(); this.cmpS = new Map(); this.panes = []; this.hl = []; this.syncing = false; this.cross = null; this.dead = false;
     this.el = el("div", "gr-cell"); this.el.innerHTML = `<div class="gr-panes"></div><div class="gr-cmsg" hidden></div><div class="gr-ntip" hidden></div><div class="gr-cnav"><button data-nv="zo" title="Dézoomer">−</button><button data-nv="zi" title="Zoomer">+</button><button data-nv="l" title="Défiler vers la gauche">‹</button><button data-nv="r" title="Défiler vers la droite">›</button><button data-nv="rs" title="Revenir à la dernière bougie">⟲</button></div>`;
     this.el.querySelector(".gr-cnav").addEventListener("click", (e) => { const b = e.target.closest("[data-nv]"); if (!b) return; const ts = this.main.chart.timeScale(), k = b.dataset.nv, sp0 = ts.options().barSpacing;
       if (k === "zi" || k === "zo") { const r = ts.getVisibleLogicalRange(); if (!r) return; const mid = r.to, w = (r.to - r.from) * (k === "zi" ? 0.75 : 1.33); ts.setVisibleLogicalRange({ from: mid - w, to: mid }); }
@@ -13440,7 +13471,7 @@ class Cell {
       crosshair: { mode: DS.cursor === "cross" ? (P.crossMag ? 1 : 0) : 2, vertLine: { color: P.crossC, style: P.crossS, width: 1, labelBackgroundColor: P.theme === "light" ? "#131722" : "#363a45" }, horzLine: { color: P.crossC, style: P.crossS, width: 1, labelBackgroundColor: P.theme === "light" ? "#131722" : "#363a45" } },
       rightPriceScale: { visible: !P.left, borderColor: P.scaleLineC || P.gridC, minimumWidth: P.scaleW, scaleMargins: isMain ? { top: P.mTop / 100, bottom: P.mBot / 100 } : { top: 0.1, bottom: 0.08 }, entireTextOnly: true },
       leftPriceScale: { visible: !!P.left, borderColor: P.scaleLineC || P.gridC, minimumWidth: P.scaleW },
-      timeScale: { visible: !!last, borderColor: P.scaleLineC || P.gridC, tickMarkFormatter: tickFmt, timeVisible: intra, secondsVisible: sec, rightOffset: P.rightOffset, barSpacing: 7, minBarSpacing: 0.3, shiftVisibleRangeOnNewBar: true, lockVisibleTimeRangeOnResize: true },
+      timeScale: { visible: !!last, borderColor: P.scaleLineC || P.gridC, tickMarkFormatter: tickFmt, timeVisible: intra, secondsVisible: sec, rightOffset: P.rightOffset, barSpacing: 7, minBarSpacing: 0.3, shiftVisibleRangeOnNewBar: true, allowShiftVisibleRangeOnWhitespaceReplacement: true, lockVisibleTimeRangeOnResize: true },
       localization: { locale: "fr-FR", timeFormatter: (t) => fmtTimeLbl(typeof t === "number" ? t : Date.UTC(t.year, t.month - 1, t.day) / 1000, intra, sec), priceFormatter: isMain ? (p) => fmtPx(p, this.spec) : undefined },
       watermark: { visible: isMain && !!P.wm, text: symCode(this.st.sym) + (P.wm === 2 ? "" : ", " + ivLabel(this.st.iv)), color: P.wmC || (P.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)"), fontSize: 56, horzAlign: "center", vertAlign: "center" },
       handleScale: { axisPressedMouseMove: { time: true, price: true }, mouseWheel: true, pinch: true }, handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true }, kineticScroll: { mouse: false, touch: true } };
@@ -13451,6 +13482,8 @@ class Cell {
     if (id) { const sp = el("div", "gr-split"); sp.title = "Glisser pour redimensionner le panneau"; this.pEl.append(sp); p.split = sp; this.dragSplit(sp, p); p.el.style.flex = `0 1 ${p.h || 22}%`; }
     this.pEl.append(p.el);
     p.chart = LW.createChart(p.host, this.opts(!id, true));
+    p.ws = p.chart.addLineSeries({ visible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); // v1.97 : heures à venir sur l'échelle de temps (points vides)
+    if (id && this.T && this.T.length) this.futWs(p);
     if (id) { p.anchor = p.chart.addLineSeries({ lineVisible: false, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, color: "rgba(0,0,0,0)" }); p.layer = new Layer(this, "pane", p); p.anchor.attachPrimitive(p.layer); if (this.T && this.T.length) p.anchor.setData(this.T.map((t) => ({ time: t }))); this.panes.push(p); this.relayout(); this.wirePane(p); }
     return p;
   }
@@ -13529,10 +13562,12 @@ class Cell {
     this.series.setData(data);
     if (this.hlc) { this.hlc[0].setData(B.map((b, i) => ({ time: this.T[i], value: b[2] }))); this.hlc[1].setData(B.map((b, i) => ({ time: this.T[i], value: b[3] }))); }
     this.inds(true); this.prevCloseLine(); this.loadEvents(); this.loadTrades();
-    this.panes.forEach((p) => p.anchor.setData(this.T.map((t) => ({ time: t }))));
+    this.panes.forEach((p) => p.anchor.setData(this.T.map((t) => ({ time: t })))); this.futWs();
     const n = B.length;
     if (this.pendT != null && n) { if (this.pendT < B[0][0] && this.feed && !this.feed.done && (this.pendN = (this.pendN || 0) + 1) < 12) this.feed.loadMore(); else { this.setRange({ from: Math.max(-5, liOf(B, this.st.iv, this.pendT)), to: n - 1 + PR.rightOffset }); this.pendT = null; this.pendN = 0; } }
     else if (this.pendGo && n) { const g = this.pendGo; if (g.t < B[0][0] && this.feed && !this.feed.done && ++g.n < 12) this.feed.loadMore(); else { this.pendGo = null; goToTime(this, g.t, g.keep); } }
+    else if (this.st.vr && this.st.vr.iv === this.st.iv && n && (this.vrPend || (fit && performance.now() < this.vrUntil))) { // v1.97 : zoom / position gardés par graphique (changement d'onglet, de mise en page)
+      this.applyVR(); if (this.vrPend) { this.vrPend = false; this.vrUntil = performance.now() + 8000; } }
     else if (fit && n) { const vis = clamp(Math.round(this.pEl.clientWidth / 8), 40, 400); this.setRange({ from: n - vis, to: n + PR.rightOffset }); }
     this.legend(); this.redraw(); refreshPanels(); requestAnimationFrame(() => this.keepCross());
   }
@@ -13541,11 +13576,19 @@ class Cell {
     const T = this.toTimes(B); const from = Math.max(0, Math.min(B0.length - 1, info && info.from != null ? info.from : B.length - 2));
     this.DB = B; this.T = T;
     try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i], B[i - 1])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
-      if (B.length > B0.length) this.panes.forEach((p) => { for (let i = B0.length; i < B.length; i++) p.anchor.update({ time: T[i] }); }); }
+      if (B.length > B0.length) { this.panes.forEach((p) => { for (let i = B0.length; i < B.length; i++) p.anchor.update({ time: T[i] }); }); this.futWs(); } }
     catch (e) { this.full(false); return; }
     this.inds(false, from); this.legend(); this.redraw(); checkAlerts(this.st.sym, B[B.length - 1]); requestAnimationFrame(() => this.keepCross());
     if (STATE.active === this.idx) refreshPanels(true);
   }
+  /** v1.97 : heures à droite de la dernière bougie (comme TradingView) = série invisible de points vides, au même pas que l'extrapolation des dessins (liOf / tOfLi) */
+  futWs(only) { const n = this.T.length, iv = this.st.iv, ok = n && ivIntra(iv) && !["renko", "lb", "range"].includes(this.st.type), sec = ivSec(iv), last = this.T[n - 1];
+    const data = ok ? Array.from({ length: 500 }, (_, k) => ({ time: last + (k + 1) * sec })) : [];
+    (only ? [only] : [this.main, ...this.panes]).forEach((p) => { if (p && p.ws) try { p.ws.setData(data); } catch (e) { /* */ } }); }
+  /** v1.97 : mémorise la vue (heures de début / fin, ou collée à la dernière bougie) dans l'état du graphique */
+  applyVR() { const v = this.st.vr, B = this.DB, n = B.length; if (!v || !n || v.iv !== this.st.iv) return; if (v.edge) this.setRange({ from: n - 1 + v.off - v.w, to: n - 1 + v.off }); else this.setRange({ from: liOf(B, this.st.iv, v.t0), to: liOf(B, this.st.iv, v.t1) }); }
+  saveVR() { try { const n = this.DB.length, r = n && this.main.chart.timeScale().getVisibleLogicalRange(); if (!r || this.dead) return; if (this.vrPend) return; // vue pas encore remise : on garde l'ancienne
+    this.st.vr = { iv: this.st.iv, t0: tOfLi(this.DB, this.st.iv, r.from), t1: tOfLi(this.DB, this.st.iv, r.to), w: r.to - r.from, off: r.to - (n - 1), edge: r.to >= n - 1 }; } catch (e) { /* */ } }
   setRange(r) { this.syncing = true; try { this.allCharts().forEach((c) => c.timeScale().setVisibleLogicalRange(r)); } catch (e) { /* pas encore de données */ } this.syncing = false; }
   syncPaneRange(p) { const r = this.main.chart.timeScale().getVisibleLogicalRange(); if (r) try { p.chart.timeScale().setVisibleLogicalRange(r); } catch (e) { /* */ } }
   msg(k) { const m = this.msgEl; if (!k) { m.hidden = true; return; } m.hidden = false; const sp = this.spec;
@@ -13713,7 +13756,7 @@ class Cell {
       if (r._vpvr) { const I = indInputs(x), i0 = Math.max(0, Math.floor(G.lOfX(0))), i1 = Math.min(this.DB.length - 1, Math.ceil(G.lOfX(G.W))); volProfile(pen, G, i0, i1, { rows: I.rows, va: I.va, cu: I.cu, cd: I.cd, poc: I.poc, right: true, width: G.W * I.w / 100 }, 0, G.W - 2); }
     }
     // événements économiques (bas du graphique)
-    if (P.evLine && this.evs && this.evs.length) { c.save(); c.setLineDash([4, 4]); c.lineWidth = 1; this.evs.forEach((e) => { const x = G.x(e.t); if (!fin(x) || x < 0 || x > G.W) return; c.strokeStyle = e.i === "high" ? "rgba(242,54,69,0.75)" : "rgba(255,152,0,0.75)"; c.beginPath(); c.moveTo(Math.round(x) + 0.5, 0); c.lineTo(Math.round(x) + 0.5, G.H); c.stroke(); }); c.restore(); }
+    if (P.evLine && this.evs && this.evs.length && visOk(P.evLineVis, this.st.iv)) { c.save(); c.setLineDash([4, 4]); c.lineWidth = 1; this.evs.forEach((e) => { const x = G.x(e.t); if (!fin(x) || x < 0 || x > G.W) return; c.strokeStyle = e.i === "high" ? "rgba(242,54,69,0.75)" : "rgba(255,152,0,0.75)"; c.beginPath(); c.moveTo(Math.round(x) + 0.5, 0); c.lineTo(Math.round(x) + 0.5, G.H); c.stroke(); }); c.restore(); }
     this.evHit = []; if (P.events && this.evs && this.evs.length) { const groups = []; this.evs.forEach((e) => { const x = G.x(e.t); if (!fin(x) || x < 0 || x > G.W) return; const g = groups.find((q) => Math.abs(q.x - x) < 9); if (g) g.ev.push(e); else groups.push({ x, ev: [e] }); });
       c.save(); c.font = "bold 9px -apple-system,Roboto,sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; groups.forEach((g) => { const hi = g.ev.some((e) => e.i === "high"), y = G.H - 11; c.fillStyle = hi ? "#f23645" : "#ff9800"; c.beginPath(); c.arc(g.x, y, 7.5, 0, PI2); c.fill(); c.fillStyle = "#fff"; c.fillText(g.ev.length > 1 ? String(g.ev.length) : "US", g.x, y + 0.5); this.evHit.push({ x: g.x, y, ev: g.ev }); }); c.restore(); }
     // plus haut / plus bas visibles
@@ -14036,7 +14079,7 @@ const tabCur = () => TABS.list.find((x) => x.id === TABS.cur) || TABS.list[0];
 const curLay = () => STATE.layoutId || "t:" + TABS.cur;
 const tabSym = (t) => { const s = t.state || {}, c = (s.cells || [])[s.active || 0] || (s.cells || [])[0]; return c || null; };
 function tabTitle(t) { if (t.custom) return t.custom; const L = t.layoutId && LAYOUTS.find((x) => x.id === t.layoutId); const c = tabSym(t); const base = c ? `${symCode(c.sym)}, ${ivLabel(c.iv)}` : "Graphique"; return L ? `${L.name} · ${base}` : base; }
-function tabSnap() { const t = tabCur(); if (!t) return; t.state = snapshotLayout(); t.state.max = !!STATE.max; t.layoutId = STATE.layoutId || null;
+function tabSnap() { const t = tabCur(); if (!t) return; CELLS.forEach((c) => c.saveVR()); t.state = snapshotLayout(); t.state.max = !!STATE.max; t.layoutId = STATE.layoutId || null;
   if (t.link) { const c = activeCell(), L = (TABS.links[t.link] = TABS.links[t.link] || {}); if (c) { L.sym = c.st.sym; L.iv = c.st.iv; try { const r = c.main.chart.timeScale().getVisibleRange(); if (r) L.rng = [r.from, r.to]; } catch (e) { /* */ } } } }
 const tabSave = debounce(() => { tabSnap(); LS.set(TABKEY(), TABS); renderTabs(); }, 400);
 function tabApply(t) {
@@ -14171,7 +14214,7 @@ ROOT.innerHTML = `
   <div class="gr-tvnav" id="grTvNav"><button class="gr-tb gr-ic" data-tv="back" title="Page précédente">${ICO.back}</button><button class="gr-tb gr-ic" data-tv="fwd" title="Page suivante">${ICO.fwd}</button><button class="gr-tb gr-ic" data-tv="reload" title="Recharger">${ICO.reload}</button><button class="gr-tb gr-ic" data-tv="home" title="Graphique TradingView">${ICO.home}</button><button class="gr-tb gr-ic" data-tv="window" title="Ouvrir dans une fenêtre">${ICO.extl}</button><span class="gr-tvsrc" id="grTvSrc"></span></div>
   <div class="gr-ictbar" id="grIctBar"><button class="gr-tb gr-ic" id="grGridBtn" title="Disposition des graphiques">${ICO.layout}</button><button class="gr-tb gr-lay" id="grLayBtn" title="Mises en page"><span id="grLayName">Sans titre</span>${ICO.chev}</button><button class="gr-tb gr-ic" id="grSaveBtn" title="Enregistrer la mise en page (Ctrl+S)">${ICO.save}</button>
   <button class="gr-tb gr-ic" id="grSetBtn" title="Paramètres du graphique">${ICO.gear}</button><button class="gr-tb gr-ic" id="grFullBtn" title="Plein écran (Maj+F)">${ICO.full}</button><button class="gr-tb gr-ic" id="grShotBtn" title="Instantané (Ctrl+Alt+S)">${ICO.camera}</button></div>
-  <div class="gr-mode" id="grMode"><button data-m="ict">${ICO.candles}<span>Graphique</span></button><button data-m="tv">${ICO.tv}<span>TradingView</span></button></div>
+  <div class="gr-mode" id="grMode" hidden><button data-m="ict">${ICO.candles}<span>Graphique</span></button><button data-m="tv">${ICO.tv}<span>TradingView</span></button></div>
 </div>
 <div class="gr-body">
   <div class="gr-left" id="grLeft"></div>
@@ -14179,6 +14222,7 @@ ROOT.innerHTML = `
     <div class="gr-grid" id="grGrid"></div>
     <div class="gr-tvhost" id="grTvHost" hidden></div>
     <div class="gr-bot" id="grBot"></div>
+    <div class="gr-ppanel" id="grPaperP" hidden></div>
   </div>
   <div class="gr-bpanel" id="grBPanel" hidden></div>
   <div class="gr-rpanel" id="grRPanel" hidden></div>
@@ -14271,7 +14315,7 @@ function colorPop(anchor, val, pick, o = {}) {
     hexIn.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); p.querySelector(".gr-cpok").click(); } };
     p.querySelector(".gr-cpok").onclick = () => { const cu = cpCustom().filter((c) => c.toLowerCase() !== hx.toLowerCase()); cu.push(hx); LS.set("gr-colors", cu.slice(-20)); grid(); place(); emit(); }; };
   const paint = () => { p.querySelectorAll(".gr-cps").forEach((b) => b.classList.toggle("on", b.dataset.c.toLowerCase() === hx.toLowerCase())); const bar = p.querySelector(".gr-cpbar"); if (bar) bar.style.setProperty("--c", hx); };
-  p.addEventListener("click", (e) => { const s = e.target.closest(".gr-cps"); if (s) { hx = s.dataset.c; hsv = hex2hsv(hx); emit(); return; } if (e.target.closest(".gr-cpadd")) { hsv = hex2hsv(hx); custom(); place(); } });
+  p.addEventListener("click", (e) => { const s = e.target.closest(".gr-cps"); if (s) { hx = s.dataset.c; hsv = hex2hsv(hx); if (!o.noAlpha && a < 0.02) { a = o.defA || 0.25; p.querySelectorAll("[data-cpa],[data-cpn]").forEach((x) => (x.value = Math.round(a * 100))); } emit(); return; } if (e.target.closest(".gr-cpadd")) { hsv = hex2hsv(hx); custom(); place(); } });
   p.addEventListener("contextmenu", (e) => { const s = e.target.closest(".gr-cpcu .gr-cps"); if (!s) return; e.preventDefault(); LS.set("gr-colors", cpCustom().filter((c) => c !== s.dataset.c)); s.remove(); });
   p.addEventListener("input", (e) => { const t = e.target; if (t.dataset.cpa != null || t.dataset.cpn != null) { a = clamp(+t.value || 0, 0, 100) / 100; const o2 = p.querySelector(t.dataset.cpa != null ? "[data-cpn]" : "[data-cpa]"); if (o2) o2.value = Math.round(a * 100); pick(out()); } });
   const place = () => { const r = anchor.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight; let x = r.left, y = r.bottom + 4; if (y + h > innerHeight - 6) y = Math.max(6, r.top - h - 4); if (x + w > innerWidth - 6) x = Math.max(6, innerWidth - w - 6); p.style.left = x + "px"; p.style.top = y + "px"; };
@@ -14317,7 +14361,7 @@ function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco ==
   for (let i = 0; i < n; i++) { const c = new Cell(STATE.cells[i], i), [x, y, w, h] = g.a[i]; c.el.style.gridArea = `${y + 1} / ${x + 1} / span ${h} / span ${w}`; host.append(c.el); CELLS.push(c); }
   setActive(STATE.active, true); refreshHeader(); saveState();
   // v1.94 : données déjà en cache (changement d'onglet / de mise en page) posées avant la mise en place du graphique → vue écrasée : on recentre
-  [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
+  [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (c.st.vr && performance.now() < (c.vrUntil || 0)) c.applyVR(); else if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
 }
 function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); }
 function syncCross(src, p) { if (!STATE.sync.cross || CELLS.length < 2 || !src.ptrIn) return; /* v1.94.7 : seul le graphique sous la souris recopie son curseur (un graphique caché recopiait le sien et effaçait la ligne horizontale) */ CELLS.forEach((c) => { if (c === src) return; try { if (p && p.time != null && p.point && src.DB.length) { const t = src.DB[clamp(Math.round(p.logical), 0, src.DB.length - 1)][0], i = clamp(Math.round(liOf(c.DB, c.st.iv, t)), 0, c.DB.length - 1); if (c.T[i] != null) c.main.chart.setCrosshairPosition(NaN, c.T[i], c.series); } else c.main.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
@@ -14751,7 +14795,7 @@ function drawMenu(d, c, x, y) {
       names.length ? "-" : null, ...names.map((n) => ({ t: n, f: () => tplApply(d, tpl[n]) }))].filter(Boolean) },
     { t: "Ordre de visualisation", ic: FI.layers, sub: [{ t: "Mettre au premier plan", f: () => zMove(d, c, 1e9) }, { t: "Mettre au Fond", f: () => zMove(d, c, -1e9) }, { t: "Mettre en avant", f: () => zMove(d, c, 1) }, { t: "Mettre vers l'Arrière", f: () => zMove(d, c, -1) }] },
     { t: "Visibilité des intervalles", ic: " ", sub: [["ge", "Intervalle actuel et supérieur"], ["le", "Intervalle actuel et inférieur"], ["eq", "Intervalle actuel uniquement"], ["all", "Tous les intervalles"]].map(([k, t]) => ({ t, on: vr === k, f: () => setVis(k) })) }, "-",
-    { t: "Créer un groupe de dessins", ic: FI.gplus, f: () => { const u = undOf(c.st.sym), G = dGroups(u), ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true }; dGroupsSet(u, G.concat(ng)); snap(); d.grp = ng.id; drawChanged(d); refreshTree(); toast("« " + ng.name + " » créé avec ce dessin"); } },
+    { t: "Créer un groupe de dessins", ic: FI.gplus, f: () => { const u = undOf(c.st.sym), G = dGroups(u), ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true, lay: curLay() }; dGroupsSet(u, G.concat(ng)); snap(); d.grp = ng.id; drawChanged(d); refreshTree(); toast("« " + ng.name + " » créé avec ce dessin"); } },
     { t: "Cloner", ic: FI.clone, f: () => cloneD(d, c) }, { t: "Copier", ic: " ", k: "Ctrl + C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
     { t: "Renommer", ic: FI.ren, f: () => askText("Renommer", nm, (n) => { snap(); d.name = n; drawChanged(d); refreshTree(); }) }, "-",
     // v1.94 : synchro comme TradingView (ce graphique / cette mise en page / toutes les mises en page)
@@ -14842,7 +14886,12 @@ function openDrawSettings(d, c) {
 /* ---------- panneaux de droite : liste de surveillance, alertes, actualités, détails, arborescence, fenêtre de données ---------- */
 const PANELS = [["wl", "list", "Liste de surveillance (Alt+W)"], ["al", "bell", "Alertes (Alt+Maj+A)"], ["news", "news", "Actualités et calendrier (Alt+N)"], ["det", "detail", "Détails du symbole (Alt+D)"], ["tree", "tree", "Arborescence des objets (Alt+O)"], ["dw", "data", "Fenêtre de données"], ["trade", "trade", "Trading (compte démo)"], ["pine", "code", "Éditeur Pine Script"], ["keys", "kbd", "Raccourcis clavier (?)"]];
 ICO.trade = sv('<path d="M14 4v20M18.5 8.5c-.8-1.3-2.5-2-4.5-2-2.6 0-4.5 1.3-4.5 3.3 0 4.6 9.5 2.4 9.5 7.2 0 2-2 3.5-5 3.5-2.2 0-4-.8-5-2.3"/>');
-function renderStrip() { $r("#grRStrip").innerHTML = PANELS.map(([k, ic, t]) => `<button class="gr-rs${(k === "pine" ? STATE.bpanel === "pine" : STATE.panel === k) ? " on" : ""}" data-p="${k}" title="${E(t)}">${ICO[ic]}</button>`).join(""); }
+/* v1.97 : barre de droite façon TradingView : mêmes icônes (liste, réveil, calques, calendrier), Fenêtre de données retirée (onglet de l'arborescence), Détails et Raccourcis en bas */
+const RSICO = { wl: sv('<rect x="6.5" y="5.5" width="15" height="17" rx="2.5"/><path d="M10 10.5h8M10 14h8M10 17.5h5"/>'), al: sv('<circle cx="14" cy="15" r="7.5"/><path d="M14 11v4.5l3 2M5.8 8.8l3.2-3.2M22.2 8.8L19 5.6M9 22l-1.5 1.5M19 22l1.5 1.5"/>'),
+  tree: sv('<path d="M14 5l9 5-9 5-9-5z"/><path d="M5 14l9 5 9-5"/>'), news: sv('<rect x="5.5" y="7" width="17" height="15.5" rx="2.5"/><path d="M5.5 11.5h17M10 5v4M18 5v4"/><path d="M9.5 15h2M13 15h2M16.5 15h2M9.5 18.5h2M13 18.5h2" stroke-linecap="round"/>') };
+const RS_TOP = ["wl", "al", "tree", "news", "trade", "pine"], RS_BOT = ["det", "keys"];
+function renderStrip() { const b = (k) => { const x = PANELS.find((p) => p[0] === k); if (!x) return ""; const [, ic, t] = x; return `<button class="gr-rs${(k === "pine" ? STATE.bpanel === "pine" : STATE.panel === k || (k === "tree" && STATE.panel === "dw")) ? " on" : ""}" data-p="${k}" title="${E(t)}">${RSICO[k] || ICO[ic]}</button>`; };
+  $r("#grRStrip").innerHTML = RS_TOP.map(b).join("") + `<span class="gr-rsfill"></span>` + RS_BOT.map(b).join(""); }
 $r("#grRStrip").onclick = (e) => { const b = e.target.closest("[data-p]"); if (!b) return; const k = b.dataset.p; if (k === "pine") { STATE.bpanel = STATE.bpanel === "pine" ? null : "pine"; renderPine(); renderStrip(); saveState(); return; } if (k === "keys") { openKeys(); return; } openPanel(k, true); };
 function openPanel(k, toggle) { STATE.panel = toggle && STATE.panel === k ? null : k; renderStrip(); refreshPanels(); saveState(); }
 let lastPanelAt = 0;
@@ -14939,7 +14988,8 @@ function paintAlerts(cell, c, G) { if (PR.alertLines === false) return; const u 
 function renderNews() { const P = $r("#grRPanel"), today = nyDate(NOW()), hiOnly = !!renderNews.hi; let h = "";
   for (let i = -1; i < 7; i++) { const d = addDays(today, i), ev = (window.calEvents ? window.calEvents(d) || [] : []).filter((e) => (!e.k || e.k === "ev") && (!hiOnly || e.i === "high")); if (!ev.length) continue; const dd = new Date(d + "T12:00:00Z");
     h += `<div class="gr-nd${d === today ? " today" : ""}">${JOURS[dd.getUTCDay()]} ${dd.getUTCDate()} ${MOIS[dd.getUTCMonth()]}${d === today ? " · aujourd'hui" : ""}</div>` + ev.map((e) => `<button class="gr-nr" data-d="${d}" data-t="${E(e.t)}"><i class="gr-imp ${e.i}"></i><span>${E(e.t || "")}</span><b>${E(e.n)}</b></button>`).join(""); }
-  P.innerHTML = ph("Actualités · calendrier USD", `<button class="gr-ib${hiOnly ? " on" : ""}" data-hi="1" title="Impact fort seulement">🔴</button>`) + `<label class="gr-chk gr-nline"><input type="checkbox" data-evl="1" ${PR.evLine ? "checked" : ""}><span>Trait sur le graphique à l'heure des news</span></label><div class="gr-news">${h || `<div class="gr-empty">Aucun événement cette semaine.</div>`}</div><div class="gr-pfoot"><a href="#calendrier">Ouvrir le calendrier économique</a> · <a href="#financialjuice">FinancialJuice en direct</a></div>`;
+  P.innerHTML = ph("Actualités · calendrier USD", `<button class="gr-ib${hiOnly ? " on" : ""}" data-hi="1" title="Impact fort seulement">🔴</button>`) + `<label class="gr-chk gr-nline"><input type="checkbox" data-evl="1" ${PR.evLine ? "checked" : ""}><span>Trait sur le graphique à l'heure des news</span></label><button class="gr-btn sm gr-nvis" data-evv="1" title="Unités de temps où le trait est affiché">Visibilité…${PR.evLineVis ? " ●" : ""}</button><div class="gr-news">${h || `<div class="gr-empty">Aucun événement cette semaine.</div>`}</div><div class="gr-pfoot"><a href="#calendrier">Ouvrir le calendrier économique</a> · <a href="#financialjuice">FinancialJuice en direct</a></div>`;
+  { const vb = P.querySelector("[data-evv]"); if (vb) vb.onclick = () => evVisDlg(); }
   P.onchange = (e) => { if (!e.target.closest("[data-evl]")) return; PR.evLine = e.target.checked; savePrefs(); CELLS.forEach((cc) => { cc.loadEvents(); cc.redraw(); }); };
   P.onclick = (e) => { if (e.target.closest("[data-hi]")) { renderNews.hi = !renderNews.hi; renderNews(); return; } const r = e.target.closest("[data-d]"); if (!r) return; const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(r.dataset.t); if (!m) return; const t = nyTime(r.dataset.d, (+m[1] % 12) + (/pm/i.test(m[3]) ? 12 : 0), +m[2]); goToTime(activeCell(), t); }; }
 // ----- détails du symbole -----
@@ -14964,19 +15014,19 @@ function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) retu
 const TSEL = new Set(); let treeQ = "", treeLast = null;
 const dGroups = (u) => { const all = LS.get("gr-dgroups", {}); return all[u] || []; }, dGroupsSet = (u, L) => { const all = LS.get("gr-dgroups", {}); all[u] = L; LS.set("gr-dgroups", all); };
 const dName = (d) => d.name || (d.txt ? d.txt.split("\n")[0] : T[d.tool] ? T[d.tool].n : d.tool);
-function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), gid = new Set(G.map((g) => g.id));
+function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), GV = G.filter((g) => g.lay === curLay() || L.some((d) => d.grp === g.id)), gid = new Set(G.map((g) => g.id));
   L.forEach((d) => { if (d.grp && !gid.has(d.grp)) delete d.grp; }); [...TSEL].forEach((id) => { if (!L.some((d) => d.id === id)) TSEL.delete(id); });
   const q = treeQ.trim().toLowerCase(), match = (d) => !q || dName(d).toLowerCase().includes(q) || (T[d.tool] && T[d.tool].n.toLowerCase().includes(q));
   // v1.96 : arborescence façon TradingView (onglets, barre d'icônes, ligne du symbole, indicateurs, dessins, groupes-dossiers)
   const act = (id, k, on, icOn, icOff, tip) => `<button class="gr-ib${on ? " keep" : ""}" data-${k}="${id}" title="${tip}">${on ? icOn : icOff}</button>`;
   const row = (d, inG) => `<div class="gr-tr gr-tdr${DS.sel === d.id || TSEL.has(d.id) ? " on" : ""}${d.hide ? " off" : ""}${inG ? " ing" : ""}" data-d="${d.id}"><span class="gr-tic">${ICO[d.tool] || ""}</span><span class="gr-tn" data-tn="${d.id}" title="Double-clic pour renommer">${E(dName(d))}</span><span class="gr-tact">${act(d.id, "tl", d.lock, ICO.lock, ICO.unlock, d.lock ? "Déverrouiller" : "Verrouiller")}${act(d.id, "th", d.hide, TVI.eyeoff, TVI.eye, d.hide ? "Afficher" : "Masquer")}<button class="gr-ib" data-tx="${d.id}" title="Supprimer">${ICO.trash}</button></span></div>`;
-  const rev = L.slice().reverse(), groups = G.map((g) => { const M = rev.filter((d) => d.grp === g.id), V = M.filter(match); if (q && !V.length) return ""; const allHide = M.length && M.every((d) => d.hide), allLock = M.length && M.every((d) => d.lock), open = g.open !== false;
+  const rev = L.slice().reverse(), groups = GV.map((g) => { const M = rev.filter((d) => d.grp === g.id), V = M.filter(match); if (q && !V.length) return ""; const allHide = M.length && M.every((d) => d.hide), allLock = M.length && M.every((d) => d.lock), open = g.open !== false;
     return `<div class="gr-tr gr-tgr${allHide ? " off" : ""}" data-g="${g.id}"><button class="gr-ib gr-tcar${open ? " open" : ""}" data-gt="${g.id}">${TVI.chev}</button><span class="gr-tic">${TVI.folder}</span><span class="gr-tn" data-gn="${g.id}" title="Double-clic pour renommer">${E(g.name)}</span><span class="gr-tact">${act(g.id, "gl", allLock, ICO.lock, ICO.unlock, "Verrouiller le groupe")}${act(g.id, "gh", allHide, TVI.eyeoff, TVI.eye, "Masquer / afficher le groupe")}<button class="gr-ib" data-gx="${g.id}" title="Supprimer le groupe et ses dessins">${ICO.trash}</button></span></div>${!open && !q ? "" : V.map((d) => row(d, true)).join("") || `<div class="gr-tdrop" data-g="${g.id}">Glisse des dessins ici</div>`}`; }).join("");
   const free = rev.filter((d) => !d.grp && match(d));
   P.innerHTML = objTabs() + `<div class="gr-otb"><button class="gr-ib" data-tgnew="1" title="Créer un groupe de dessins">${TVI.folderplus}</button><button class="gr-ib" data-tcopy="1" title="Cloner, Copier">${TVI.copy}</button><button class="gr-ib" data-tmove="1" title="Déplacer vers">${TVI.updown}</button><span class="gr-fill"></span><button class="gr-ib" data-tman="1" title="Gérer les dessins de la mise en page">${TVI.folderchk}</button></div>` +
     `<div class="gr-tree gr-ttv"><div class="gr-tr gr-tsym"><span class="gr-tic">${ICO.candles || ICO.fx}</span><span class="gr-tn"><b>${E(symCode(c.st.sym))} · ${E(ivLabel(c.st.iv))}</b></span></div>`
     + c.st.inds.map((x) => `<div class="gr-tr${x.hide ? " off" : ""}" data-i="${x.id}"><span class="gr-tic">${TVI.wave}</span><span class="gr-tn">${E(indTitle(x))}</span><span class="gr-tact"><button class="gr-ib" data-is="${x.id}" title="Paramètres">${ICO.gear}</button>${act(x.id, "ih", x.hide, TVI.eyeoff, TVI.eye, x.hide ? "Afficher" : "Masquer")}<button class="gr-ib" data-ix="${x.id}" title="Supprimer">${ICO.trash}</button></span></div>`).join("")
-    + `${free.map((d) => row(d, false)).join("")}${groups}${!L.length && !G.length ? `<div class="gr-empty">Aucun dessin.</div>` : ""}${G.length ? `<div class="gr-tdrop gr-tend gr-tdsec" data-g="">Glisse ici pour sortir d'un groupe</div>` : ""}</div>`;
+    + `${free.map((d) => row(d, false)).join("")}${groups}${!L.length && !GV.length ? `<div class="gr-empty">Aucun dessin.</div>` : ""}${GV.length ? `<div class="gr-tdrop gr-tend gr-tdsec" data-g="">Glisse ici pour sortir d'un groupe</div>` : ""}</div>`;
   const members = (g) => L.filter((d) => d.grp === g), selList = () => L.filter((d) => TSEL.has(d.id));
   const rename = (el, cur, cb) => { const inp = document.createElement("input"); inp.className = "gr-in sm gr-tren"; inp.value = cur; el.replaceWith(inp); inp.focus(); inp.select(); let done = false; const fin2 = (ok) => { if (done) return; done = true; if (ok && inp.value.trim() !== cur) cb(inp.value.trim()); renderTree(); };
     inp.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") fin2(true); if (e.key === "Escape") fin2(false); }; inp.onblur = () => fin2(true); inp.onpointerdown = (e) => e.stopPropagation(); };
@@ -14991,12 +15041,12 @@ function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || S
       { t: "Retirer le groupe et ses dessins", k: "Del", ic: ICO.trash, f: () => { if (M.length && !window.confirm(`Supprimer « ${g.name} » et ses ${M.length} dessin(s) ?`)) return; snap(); M.forEach((d) => { const k = L.indexOf(d); if (k >= 0) L.splice(k, 1); }); dGroupsSet(u, G.filter((x) => x !== g)); selectD(null); drawChanged(); renderTree(); } }], { cls: "gr-dmenu" });
   };
   P.onclick = (e) => { const g = (k) => { const b = e.target.closest(`[${k}]`); return b && b.getAttribute(k); }; let id; if (Date.now() - treeDragAt < 300) return; if (e.target.closest(".gr-tren")) return;
-    if (g("data-tgnew")) { const name = "Groupe " + (G.length + 1), ng = { id: uid(), name, open: true }; dGroupsSet(u, G.concat(ng)); const sel = selList().length ? selList() : DS.sel ? L.filter((d) => d.id === DS.sel) : []; if (sel.length) { snap(); sel.forEach((d) => (d.grp = ng.id)); drawChanged(); } TSEL.clear(); renderTree(); toast("« " + name + " » créé : glisse des dessins dedans, double-clic pour renommer"); return; }
+    if (g("data-tgnew")) { const name = "Groupe " + (G.length + 1), ng = { id: uid(), name, open: true, lay: curLay() }; dGroupsSet(u, G.concat(ng)); const sel = selList().length ? selList() : DS.sel ? L.filter((d) => d.id === DS.sel) : []; if (sel.length) { snap(); sel.forEach((d) => (d.grp = ng.id)); drawChanged(); } TSEL.clear(); renderTree(); toast("« " + name + " » créé : glisse des dessins dedans, double-clic pour renommer"); return; }
     if (g("data-tman")) { drawManager(); return; }
     if (g("data-tcopy")) { const S = selList().length ? selList() : selD() ? [selD()] : []; const b = e.target.closest("[data-tcopy]");
       menuAt(b, [{ t: "Cloner", dis: !S.length, f: () => S.forEach((d) => cloneD(d, c)) }, { t: "Copier", k: "Ctrl+C", dis: !S.length, f: () => { DS.clip = JSON.parse(JSON.stringify(S[S.length - 1])); toast(S.length > 1 ? "Dernier dessin sélectionné copié" : "Dessin copié"); } }]); return; }
     if (g("data-tmove")) { const S = selList().length ? selList() : selD() ? [selD()] : []; const b = e.target.closest("[data-tmove]"), one = S.length === 1 ? S[0] : null, mvG = (gid) => { snap(); S.forEach((d) => { if (gid) d.grp = gid; else delete d.grp; }); drawChanged(); renderTree(); };
-      menuAt(b, [{ t: "Nouveau groupe", dis: !S.length, f: () => { const ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true }; dGroupsSet(u, G.concat(ng)); mvG(ng.id); } }, ...G.map((x) => ({ t: x.name, ic: TVI.folder, dis: !S.length, f: () => mvG(x.id) })), { t: "Hors groupe", dis: !S.length, f: () => mvG(null) }, "-",
+      menuAt(b, [{ t: "Nouveau groupe", dis: !S.length, f: () => { const ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true, lay: curLay() }; dGroupsSet(u, G.concat(ng)); mvG(ng.id); } }, ...GV.map((x) => ({ t: x.name, ic: TVI.folder, dis: !S.length, f: () => mvG(x.id) })), { t: "Hors groupe", dis: !S.length, f: () => mvG(null) }, "-",
         { t: "Mettre au premier plan", dis: !one, f: () => zMove(one, c, 1e9) }, { t: "Avancer d'un niveau", dis: !one, f: () => zMove(one, c, 1) }, { t: "Reculer d'un niveau", dis: !one, f: () => zMove(one, c, -1) }, { t: "Mettre en arrière-plan", dis: !one, f: () => zMove(one, c, -1e9) }]); return; }
     if ((id = g("data-sa"))) { const S = selList(); if (id === "clr") { TSEL.clear(); renderTree(); return; } if (!S.length) return; snap(); if (id === "hide") { const h = !S.every((d) => d.hide); S.forEach((d) => (d.hide = h)); } if (id === "lock") { const k = !S.every((d) => d.lock); S.forEach((d) => (d.lock = k)); } if (id === "del") { S.forEach((d) => { const i = L.indexOf(d); if (i >= 0) L.splice(i, 1); }); TSEL.clear(); selectD(null); toast(S.length + " dessin(s) supprimé(s) (Ctrl+Z pour annuler)"); } drawChanged(); return; }
     if ((id = g("data-all"))) { if (!L.length) return; snap(); if (id === "hide") { const h = !L.every((d) => d.hide); L.forEach((d) => (d.hide = h)); } else { const k = !L.every((d) => d.lock); L.forEach((d) => (d.lock = k)); } drawChanged(); return; }
@@ -15054,14 +15104,14 @@ function refreshDataWin(i, c) { if (STATE.panel !== "dw" || !c) return; const P 
 /* ---------- barre du bas : plages, aller à, heure, séance, échelle ---------- */
 const RANGES = [["1J", "1", 86400], ["5J", "5", 5 * 86400], ["1M", "30", 31 * 86400], ["3M", "60", 92 * 86400], ["6M", "120", 183 * 86400], ["YTD", "1D", "ytd"], ["1A", "1D", 365 * 86400], ["5A", "1W", 5 * 365 * 86400], ["Tout", "1M", "all"]];
 function refreshBottom() { const b = $r("#grBot"), c = activeCell(); if (!b) return; const m = (c && c.st.scale) || {};
-  b.innerHTML = `<div class="gr-ranges">${RANGES.map(([n]) => `<button class="gr-bb" data-rg="${n}">${n}</button>`).join("")}<button class="gr-bb gr-ic" data-b="goto" title="Aller à… (Alt+G)">${ICO.drange.replace('width="28" height="28"', 'width="20" height="20"')}</button></div><span class="gr-fill"></span>
+  b.innerHTML = `<div class="gr-ranges">${RANGES.map(([n]) => `<button class="gr-bb" data-rg="${n}">${n}</button>`).join("")}<button class="gr-bb gr-ic" data-b="goto" title="Aller à… (Alt+G)">${ICO.drange.replace('width="28" height="28"', 'width="20" height="20"')}</button><i class="gr-bsep"></i><button class="gr-bb gr-pp${STATE.ppanel ? " on" : ""}" data-b="paper" title="Paper Trading (compte démo, aucun vrai ordre)"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 14l4-4 3 3 6-6"/><path d="M12 7h4v4"/></svg><span>Paper Trading</span></button></div><span class="gr-fill"></span>
     <button class="gr-bb" data-b="tz" id="grClock" title="Fuseau horaire"></button><i class="gr-bsep"></i><button class="gr-bb${PR.rth ? " on" : ""}" data-b="rth" title="Séance (Alt+Maj+E)">${PR.rth ? "RTH" : "ETH"}</button><i class="gr-bsep"></i>
     <button class="gr-bb${m.mode === 2 ? " on" : ""}" data-b="pct" title="Échelle en % (Alt+P)">%</button><button class="gr-bb${m.mode === 1 ? " on" : ""}" data-b="log" title="Échelle logarithmique (Alt+A)">log</button><button class="gr-bb${m.auto !== false ? " on" : ""}" data-b="auto" title="Échelle automatique">auto</button>`;
   clockTick(); }
 function clockTick() { const k = $r("#grClock"); if (!k) return; const t = NOW(), d = new Date((t + tzOff(dispTZ(), t)) * 1000); k.textContent = `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())} (${tzAbbr()}) ${(TZS.find((z) => z[0] === dispTZ()) || [, dispTZ()])[1]}`; CELLS.forEach((c) => { if (PR.countdown && c.feed && ivIntra(c.st.iv)) c.lay && c.lay.update(); }); }
 $r("#grBot").onclick = (e) => { const c = activeCell(); if (!c) return; const rg = e.target.closest("[data-rg]"), b = e.target.closest("[data-b]");
   if (rg) { const r = RANGES.find((x) => x[0] === rg.dataset.rg); const t0 = r[2] === "ytd" ? nyTime(nyDate(NOW()).slice(0, 4) + "-01-01", 0, 0) : r[2] === "all" ? 0 : NOW() - r[2]; targets("range").forEach((x) => { x.pendT = t0; if (x.st.iv !== r[1]) x.setIv(r[1]); else x.full(false); }); refreshHeader(); return; }
-  if (!b) return; const k = b.dataset.b; if (k === "goto") openGoto(); if (k === "tz") menuAt(b, ["h:Fuseau horaire", ...TZS.map(([z, n]) => ({ t: n, on: dispTZ() === z, f: () => { PR.tz = z; savePrefs(); CELLS.forEach((x) => { x.applyFmt(); x.full(false); }); refreshBottom(); } }))]);
+  if (!b) return; const k = b.dataset.b; if (k === "goto") openGoto(); if (k === "paper") { STATE.ppanel = !STATE.ppanel; saveState(); refreshBottom(); renderPaperP(); return; } if (k === "tz") menuAt(b, ["h:Fuseau horaire", ...TZS.map(([z, n]) => ({ t: n, on: dispTZ() === z, f: () => { PR.tz = z; savePrefs(); CELLS.forEach((x) => { x.applyFmt(); x.full(false); }); refreshBottom(); } }))]);
   if (k === "rth") toggleRTH(); if (k === "pct") setScale(c, { mode: (c.st.scale || {}).mode === 2 ? 0 : 2 }); if (k === "log") setScale(c, { mode: (c.st.scale || {}).mode === 1 ? 0 : 1 }); if (k === "auto") { setScale(c, { auto: true }); c.main.chart.timeScale().scrollToRealTime(); } };
 function setScale(c, o) { if (o.auto && c.wsc) { c.wsc.reset(); c.wsc.attach(); } c.st.scale = Object.assign({}, c.st.scale || {}, o); c.scaleMode(); refreshBottom(); saveState(); }
 function toggleRTH() { PR.rth = !PR.rth; savePrefs(); CELLS.forEach((c) => c.full(false)); refreshBottom(); toast(PR.rth ? "Séance régulière (RTH 9:30 – 16:15 NY)" : "Séance électronique complète (ETH)"); }
@@ -15101,7 +15151,7 @@ function openSettings(tab) {
       + sec("Échelle de temps") + row(ck("tsDow", "Jour de la semaine sur les étiquettes", true)) + row("Format de la date", sl("dateFmt", [["fr", "lun. 29 sept. '97"], ["long", "lun. 29 sept. 1997"], ["dmy", "29/09/1997"], ["mdy", "09/29/1997"], ["ymd", "1997-09-29"]])) + row("Format de l'heure", sl("h24", [["true", "24 heures"], ["false", "12 heures"]], "sm"))],
     ["canvas", "Toile", sec("Styles de base des graphiques") + row("Arrière-plan", `<select class="gr-in tv-sel sm" data-grad="1"><option value="">Uni</option><option value="g" ${PR.bg2 ? "selected" : ""}>Dégradé</option></select>` + sw("bg") + (PR.bg2 ? sw("bg2") : ""))
       + row(ck("vgrid", "Lignes de grille verticales", true), colorInput("p:vgridC", PR.vgridC || PR.gridC)) + row(ck("hgrid", "Lignes de grille horizontales", true), colorInput("p:hgridC", PR.hgridC || PR.gridC))
-      + row("Mire", sw("crossC") + sl("crossS", [[0, "Plein"], [1, "Pointillés"], [2, "Tirets"], [3, "Longs tirets"]], "sm")) + row(ck("crossMag", "Mire aimantée (OHLC)")) + row("Filigrane", sl("wm", [["", "Masqué"], [1, "Symbole et unité"], [2, "Symbole"]]) + colorInput("p:wmC", PR.wmC || (PR.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)")))
+      + row("Mire", sw("crossC") + sl("crossS", [[0, "Plein"], [1, "Pointillés"], [2, "Tirets"], [3, "Longs tirets"]], "sm")) + row(ck("crossMag", "Mire aimantée (OHLC)")) + row(ck("ohlcHold", "Bulle Ouverture / Haut / Bas / Fermeture au clic gauche maintenu", true)) + row("Filigrane", sl("wm", [["", "Masqué"], [1, "Symbole et unité"], [2, "Symbole"]]) + colorInput("p:wmC", PR.wmC || (PR.theme === "light" ? "rgba(19,23,34,0.07)" : "rgba(209,212,220,0.07)")))
       + row(ck("sess", "Séparateurs de séance (18:00 NY)", true), sw("sessC"))
       + sec("Échelles") + row("Texte", sw("txt") + sl("fs", [[10, "10"], [11, "11"], [12, "12"], [13, "13"], [14, "14"], [16, "16"]], "sm")) + row("Lignes", colorInput("p:scaleLineC", PR.scaleLineC || PR.gridC))
       + sec("Boutons") + row("Navigation", sl("navBtns", vis))
@@ -15127,7 +15177,7 @@ function openSettings(tab) {
       + row("Alignement de l'ordre et de la position", sl("trAlign", [["right", "Droite"], ["center", "Centre"], ["left", "Gauche"]], "sm"))
       + row(ck("trShot", "Ordres, exécutions et positions dans les captures de graphique", true), "", "Affiche vos transactions sur le graphique sous forme de captures d'écran")],
     ["al", "Alertes", sec("Visibilité de la ligne graphique") + row(ck("alertLines", "Lignes d'alerte", true), sw("alertC")) + row(ck("alertActive", "Uniquement les alertes actives", true)) + sec("Notifications") + row(ck("toastAuto", "Masquer automatiquement les toasts", true))],
-    ["ev", "Événements", sec("Calendrier économique USD") + row(ck("events", "Événements économiques (calendrier de l'app)", true)) + row(ck("evMed", "Inclure l'impact moyen (orange)", true)) + row(ck("evLine", "Trait à l'heure de chaque news (sur tout le graphique)"))]];
+    ["ev", "Événements", sec("Calendrier économique USD") + row(ck("events", "Événements économiques (calendrier de l'app)", true)) + row(ck("evMed", "Inclure l'impact moyen (orange)", true)) + row(ck("evLine", "Trait à l'heure de chaque news (sur tout le graphique)"), `<button class="gr-btn" data-evv="1">Visibilité…</button>`, "Unités de temps où le trait est affiché (ex. seulement en 1 minute)")]];
   const cur = tabsDef.some(([k]) => k === tab) ? tab : tab === "app" ? "canvas" : tab === "data" ? "sym" : "sym";
   const body = `<div class="tv-wrap"><nav class="tv-nav">${tabsDef.map(([k, n]) => `<button class="tv-ni${k === cur ? " on" : ""}" data-p="${k}">${sv(IC[k])}<span>${n}</span></button>`).join("")}</nav><div class="tv-body">${tabsDef.map(([k, , h]) => `<div class="tv-pane" data-p="${k}" ${k === cur ? "" : "hidden"}>${h}</div>`).join("")}</div></div>`;
   const d = dlg("Réglages", body, { w: 780, cls: "gr-dset gr-tvset", ok: "D'accord", left: `<button class="gr-btn tv-tpl" data-ctpl="1">Modèle ▾</button>`, onCancel: () => { PR = JSON.parse(before); applyPrefs(); }, onOk: () => { savePrefs(); } });
@@ -15142,6 +15192,7 @@ function openSettings(tab) {
   root.addEventListener("input", debounce(apply, 150));
   root.addEventListener("click", (e) => { const t = e.target.closest("[data-theme]"); if (t) { PR.theme = t.dataset.theme; Object.assign(PR, t.dataset.theme === "light" ? LIGHT : { bg: PDEF.bg, bg2: "", txt: PDEF.txt, gridC: PDEF.gridC, crossC: PDEF.crossC, sessC: PDEF.sessC }); PR.vgridC = PR.hgridC = PR.scaleLineC = PR.wmC = ""; applyPrefs(); d.close(true); openSettings("canvas"); }
     if (e.target.closest("[data-snd]")) { apply(); paSound(true); }
+    if (e.target.closest("[data-evv]")) { apply(); evVisDlg(); }
     if (e.target.closest("[data-clr]")) { FEEDS.forEach((f) => { f.ready = false; f.bars = []; }); LS.set("gr-tsxbad", []); tsxBad.clear(); CELLS.forEach((c) => c.bind()); toast("Cache vidé, bougies rechargées"); }
     const tb = e.target.closest("[data-ctpl]"); if (tb) { const all = ctplAll(), names = Object.keys(all).sort(natCmp), def = LS.get("gr-ctpldef", ""), reopen = () => { const p = root.querySelector(".tv-ni.on").dataset.p; d.close(true); openSettings(p); };
       menuAt(tb, [names.length ? "h:Mes modèles de graphique" : null, ...names.map((n) => ({ t: n + (n === def ? " (par défaut)" : ""), f: () => { PR = Object.assign({}, PR, all[n]); applyPrefs(); savePrefs(); toast("Modèle « " + n + " » appliqué"); reopen(); }, del: () => { const A = ctplAll(); delete A[n]; LS.set("gr-ctpl", A); if (LS.get("gr-ctpldef", "") === n) LS.set("gr-ctpldef", ""); toast("Modèle « " + n + " » supprimé"); } })), names.length ? "-" : null,
@@ -15293,7 +15344,8 @@ document.addEventListener("keyup", (e) => { KEYMOD.ctrl = e.ctrlKey || e.metaKey
 
 /* ---------- mode TradingView : le vrai site (app Windows) ou le widget officiel ---------- */
 const TV_SITE = () => !!(D && D.tvShow) && STATE.tvsrc !== "widget";
-function setMode(m) { STATE.mode = m === "tv" ? "tv" : "ict"; ROOT.classList.toggle("tv", STATE.mode === "tv"); saveState(); refreshHeader(); renderTvSrc(); refreshPanels(); renderFavBar();
+function setMode(m) { if (m === "tv") { const c = activeCell(), sp = c && c.spec; window.open("https://www.tradingview.com/chart/" + (sp && sp.tv ? "?symbol=" + encodeURIComponent(sp.tv) : ""), "_blank"); m = "ict"; if (STATE.mode !== "tv") return; } // v1.97 : plus de mode TradingView intégré : le site s'ouvre à part
+  STATE.mode = m === "tv" ? "tv" : "ict"; ROOT.classList.toggle("tv", STATE.mode === "tv"); saveState(); refreshHeader(); renderTvSrc(); refreshPanels(); renderFavBar();
   if (STATE.mode === "tv") { hideFloat(); tvOpen(); } else { tvClose(); if (!CELLS.length) renderGrid(); } }
 function renderTvSrc() { const s = $r("#grTvSrc"); if (!s) return; s.innerHTML = D && D.tvShow ? `<span class="gr-seg"><button class="gr-btn sm${TV_SITE() ? " gr-pri" : ""}" data-src="site" title="Ton compte TradingView (connexion gardée dans l'app)">Mon compte</button><button class="gr-btn sm${!TV_SITE() ? " gr-pri" : ""}" data-src="widget" title="Widget officiel TradingView (sans connexion)">Widget</button></span>` : `<span class="gr-mut">Widget officiel TradingView · l'app Windows ouvre ton vrai compte</span>`;
   $$r("#grTvNav [data-tv]").forEach((b) => (b.hidden = !TV_SITE())); }
@@ -15632,8 +15684,8 @@ function paPLtxt(s, pts, qty, unit) {
   return money(v).replace(" $", " USD");
 }
 const plOn = (k) => PR.trPL !== false && PR[k] !== false;
-const paLoad = () => { if (!PA.A) { const a = LS.get("gr-paper", null); PA.A = a && a.v === 1 ? a : grPaper.fresh(100000); } return PA.A; };
-const paSave = () => { grPaper.prune(PA.A); LS.set("gr-paper", PA.A); };
+const paLoad = () => { if (!PA.A) { const a = LS.get(paKey(paReg().cur), null); PA.A = a && a.v === 1 ? a : grPaper.fresh(100000); } return PA.A; };
+const paSave = () => { grPaper.prune(PA.A); LS.set(paKey(paReg().cur), PA.A); };
 const paSpec = (s) => { const sp = SYM(s); return { tick: sp.tick || 0.01, pv: sp.pv || 1 }; };
 const paRound = (p, tick) => (fin(p) && tick > 0 ? +(Math.round(p / tick) * tick).toFixed(decOf(tick)) : p);
 /** Bid = dernier prix du flux, Ask = Bid + écart (ticks) */
@@ -15700,7 +15752,7 @@ function paEngine() {
     if (f.length || before !== JSON.stringify(grPaper.live(A, s).map((o) => o.st))) ch = true; }
   if (ch) { paSave(); paRefresh(); }
 }
-function paRefresh() { if (STATE.panel === "trade") renderTrade(); paLines(); paQuick(); }
+function paRefresh() { if (STATE.panel === "trade") renderTrade(); renderPaperP(); paLines(); paQuick(); }
 
 /** clic droit sur le graphique : ordre limite / stop au prix cliqué (quantité du ticket), comme TradingView */
 function paCtxItems(c, p) {
@@ -15737,7 +15789,7 @@ function renderTrade() {
     <button class="gr-dtsec" data-sec="xOpen"><b>Réglages avancés</b><span>${TPF.xOpen ? "▴" : "▾"}</span></button>
     ${TPF.xOpen ? `<div class="gr-dtlab">Durée de validité</div><select class="gr-in gr-dtw" id="dtTif"${TPF.type === "market" ? " disabled" : ""}><option value="day"${TPF.tif === "day" ? " selected" : ""}>Jour (jusqu'à 17:00 NY)</option><option value="week"${TPF.tif === "week" ? " selected" : ""}>Semaine (vendredi 17:00 NY)</option><option value="gtc"${TPF.tif === "gtc" ? " selected" : ""}>Jusqu'à annulation</option></select>` : ""}
     <button class="gr-dtgo ${buy ? "buy" : "sell"}" id="dtGo"${!px || !qty ? " disabled" : ""}><b>${buy ? "Acheter" : "Vendre"}</b><small>${qty} ${E(code)} @ ${fin(e) ? f(e) : "—"} ${TPF.type === "market" ? "MARCHÉ" : TPF.type === "limit" ? "LIMITE" : "STOP"}</small></button>
-    <div class="gr-dth">Compte démo</div>
+    <div class="gr-dth">${E((paAcc() || { name: "Compte démo" }).name)} <button class="gr-ib" data-ppsw="1" title="Changer de compte de paper trading">${ICO.chev}</button></div>
     <div class="gr-dtinfo"><div><span>Solde</span><b>${money(A.bal)}</b></div><div><span>P&L latent</span><b id="dtUp" class="${uAll >= 0 ? "up" : "dn"}">${money(uAll)}</b></div><div><span>P&L réalisé</span><b class="${A.bal - A.start >= 0 ? "up" : "dn"}">${money(A.bal - A.start)}</b></div></div>
     <div class="gr-dth">Positions</div>
     ${Object.keys(A.pos).length ? Object.entries(A.pos).map(([k, p]) => { const u = grPaper.upnl(A, k, paPx(k), paSpec(k)); return `<div class="gr-dtrow"><span class="${p.q > 0 ? "up" : "dn"}">${p.q > 0 ? "Long" : "Short"} ${Math.abs(p.q)}</span><span>${E(symCode(k))} @ ${fmtPx(p.avg, SYM(k))}</span><b data-up="${E(k)}" class="${u >= 0 ? "up" : "dn"}">${money(u)}</b><button class="gr-btn sm" data-close="${E(k)}">Fermer</button></div>`; }).join("") : `<div class="gr-dtnone">Aucune position</div>`}
@@ -15770,15 +15822,74 @@ function renderTrade() {
   P.querySelectorAll("[data-ldel]").forEach((b) => (b.onclick = () => { TPF.ex.splice(+b.dataset.ldel, 1); tpSave(); renderTrade(); }));
   const add = q("#dtAdd"); if (add) add.onclick = () => { const l = TPF.ex[TPF.ex.length - 1]; TPF.ex.push({ tpOn: true, tpM: "ticks", tp: (l.tpM === "ticks" ? +l.tp : 240) * 2 || 480, slOn: l.slOn, slM: l.slM, sl: l.sl, qty: 1 }); if (TPF.qMode !== "risk" && TPF.qty < TPF.ex.length) TPF.qty = TPF.ex.length; tpSave(); renderTrade(); };
   const tif = q("#dtTif"); if (tif) tif.onchange = () => set("tif", tif.value);
-  q("#dtGo").onclick = tkSend;
+  q("#dtGo").onclick = tkSend; { const sw = P.querySelector("[data-ppsw]"); if (sw) sw.onclick = () => { const R = paReg(); menuAt(sw, ["h:Comptes de paper trading", ...R.list.map((x) => ({ t: x.name, on: x.id === R.cur ? true : undefined, f: () => paSwitch(x.id) })), "-", { t: "Créer un compte…", f: paNewDlg }]); }; }
   P.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => { if (!paOk(`Fermer la position ${symCode(b.dataset.close)} ?`)) return; grPaper.flatten(A, b.dataset.close, paPx, NOW(), paSpec); paSave(); paSound(); paRefresh(); paNote("Position démo fermée"); }));
   P.querySelectorAll("[data-can]").forEach((b) => (b.onclick = () => { if (!paOk("Annuler cet ordre ?")) return; grPaper.cancel(A, +b.dataset.can); paSave(); paRefresh(); }));
   P.querySelectorAll("[data-mod]").forEach((b) => (b.onclick = () => { const o = A.orders.find((x) => x.id === +b.dataset.mod); if (!o) return; const sp2 = paSpec(o.sym);
     askText(`Nouveau prix (${o.type === "stop" ? "stop" : "limite"})`, String(o.type === "stop" ? o.stop : o.price), (v) => { const p = paRound(num(v), sp2.tick); if (!fin(p)) return toast("Prix invalide", true); grPaper.modify(A, o.id, o.type === "stop" ? { stop: p } : { price: p }); paSave(); paRefresh(); }); }));
   q("#dtFlat").onclick = () => { if (!window.confirm("Fermer toutes les positions et annuler tous les ordres du compte démo ?")) return; grPaper.flatten(A, null, paPx, NOW(), paSpec); paSave(); paSound(); paRefresh(); paNote("Tout est fermé sur le compte démo"); };
 }
+/* ----- v1.97 : comptes de paper trading multiples + panneau du bas façon TradingView (bouton « Paper Trading » à droite d'Aller à) -----
+   Registre localStorage gr-paper-accts = { v, cur, list: [{ id, name, lev }] } ; compte « main » = ancienne clé gr-paper, les autres = gr-paper-<id>.
+   Seul le compte choisi exécute ses ordres (les autres sont en pause jusqu'à ce qu'on revienne dessus). Aucun vrai ordre. */
+const paReg = () => { let R = LS.get("gr-paper-accts", null); if (!R || R.v !== 1 || !Array.isArray(R.list) || !R.list.length) R = { v: 1, cur: "main", list: [{ id: "main", name: "Compte démo", lev: 500 }] }; if (!R.list.some((a) => a.id === R.cur)) R.cur = R.list[0].id; return R; };
+const paRegSave = (R) => LS.set("gr-paper-accts", R);
+const paKey = (id) => (id === "main" ? "gr-paper" : "gr-paper-" + id);
+const paAcc = () => { const R = paReg(); return R.list.find((a) => a.id === R.cur); };
+function paSwitch(id) { if (PA.A) paSave(); const R = paReg(); if (!R.list.some((a) => a.id === id)) return; R.cur = id; paRegSave(R); PA.A = null; PA.prev.clear(); paLoad(); paRefresh(); toast("Compte de paper trading : " + paAcc().name); }
+function paNewDlg() { const d = dlg("Créer un compte", `<label class="gr-tgl">Nom du compte<input class="gr-in" id="ppN" placeholder="Mon compte"></label><label class="gr-tgl">Solde de départ (USD)<input class="gr-in" id="ppB" type="number" min="1" step="1000" value="100000"></label>`,
+  { w: 380, ok: "Créer", onOk: (x) => { const n = x.querySelector("#ppN").value.trim(), b = +x.querySelector("#ppB").value; if (!n) { toast("Donne un nom au compte", true); return false; } if (!(b > 0)) { toast("Solde invalide", true); return false; }
+    const R = paReg(), id = "a" + Date.now().toString(36); if (PA.A) paSave(); const A = grPaper.fresh(b); LS.set(paKey(id), A); R.list.push({ id, name: n, lev: 500 }); R.cur = id; paRegSave(R); PA.A = null; PA.prev.clear(); paLoad(); paRefresh(); toast("Compte « " + n + " » créé"); } });
+  setTimeout(() => d.el.querySelector("#ppN").focus(), 0); }
+function paCfgDlg(id) { const R = paReg(), a = R.list.find((x) => x.id === id); if (!a) return; const A = id === R.cur ? paLoad() : LS.get(paKey(id), null) || grPaper.fresh(100000);
+  const levs = [1, 2, 5, 10, 20, 50, 100, 200, 500];
+  const d = dlg("Paramètres du compte", `<label class="gr-tgl">Nom du compte<input class="gr-in" id="ppN" value="${E(a.name)}"></label>
+    <div class="gr-sec">Effet de levier</div><label class="gr-tgl">Contrats à terme<select class="gr-in" id="ppL">${levs.map((v) => `<option value="${v}"${(+a.lev || 500) === v ? " selected" : ""}>${v}x</option>`).join("")}</select></label>
+    <div class="gr-sec">Commission</div><label class="gr-chk"><input type="checkbox" id="ppFo"${A.fee ? " checked" : ""}><span>Contrats à terme et options</span></label>
+    <label class="gr-tgl">Commission par contrat (USD, par côté)<input class="gr-in" id="ppF" type="number" min="0" step="0.01" value="${E(A.fee || 0.01)}"></label>`,
+    { w: 470, ok: "Sauvegarder", left: `<button class="gr-btn gr-ib" data-ppdel="1" title="Supprimer le compte">${ICO.trash}</button><button class="gr-btn" data-ppreset="1">Réinitialiser le compte…</button>`,
+      onOk: (x) => { const n = x.querySelector("#ppN").value.trim() || a.name, R2 = paReg(), a2 = R2.list.find((y) => y.id === id); if (!a2) return; a2.name = n; a2.lev = +x.querySelector("#ppL").value || 500; paRegSave(R2);
+        const fee = x.querySelector("#ppFo").checked ? Math.max(0, +x.querySelector("#ppF").value || 0) : 0; if (id === R2.cur) { PA.A.fee = fee; paSave(); } else { A.fee = fee; LS.set(paKey(id), A); } paRefresh(); } });
+  d.el.querySelector("[data-ppreset]").onclick = () => askText("Solde de départ du compte ($)", String(A.start || 100000), (v) => { const b = +String(v).replace(",", "."); if (!(b > 0)) return toast("Solde invalide", true); const F = grPaper.fresh(b); F.fee = A.fee || 0;
+    if (id === paReg().cur) { PA.A = F; PA.prev.clear(); paSave(); } else LS.set(paKey(id), F); d.close(false); paRefresh(); toast("Compte « " + a.name + " » réinitialisé : " + money(b)); });
+  d.el.querySelector("[data-ppdel]").onclick = () => { const R2 = paReg(); if (R2.list.length < 2) return toast("Garde au moins un compte (crée-en un autre avant de supprimer celui-ci)", true);
+    if (!window.confirm(`Supprimer le compte « ${a.name} » et tout son historique ? C'est définitif.`)) return; R2.list = R2.list.filter((y) => y.id !== id); try { localStorage.removeItem(paKey(id)); } catch (e) { /* */ }
+    const wasCur = R2.cur === id; if (wasCur) R2.cur = R2.list[0].id; paRegSave(R2); if (wasCur) { PA.A = null; PA.prev.clear(); paLoad(); } d.close(false); paRefresh(); toast("Compte « " + a.name + " » supprimé"); }; }
+/** chiffres du compte façon TradingView : P&L non réalisé, réalisé, actif, marge (valeur des positions / levier), fonds disponibles, marge de sécurité */
+function paNums(A) { const lev = +((paAcc() || {}).lev) || 500; let u = 0, mm = 0; for (const k of Object.keys(A.pos)) { const P = A.pos[k], px = paPx(k), sp = paSpec(k); u += grPaper.upnl(A, k, px, sp); mm += Math.abs(P.q) * (px ? px.bid : P.avg) * sp.pv / lev; }
+  const act = A.bal + u, free = act - mm; return { u, real: A.bal - A.start, act, mm, free, safe: act > 0 ? free / act * 100 : 0 }; }
+function renderPaperP() {
+  const P = $r("#grPaperP"); if (!P) return; P.hidden = !STATE.ppanel || STATE.mode === "tv"; if (P.hidden) return;
+  const R = paReg(), a = paAcc(), A = paLoad(), N = paNums(A), m = (v) => nf(v, 2), ords = grPaper.live(A), pos = Object.entries(A.pos), tab = STATE.pptab || "pos";
+  const head = `<div class="pp-h"><button class="pp-acc" data-ppacc="1"><b>${E(a.name)}</b><span>${m(A.bal)}</span><small>USD</small>${ICO.chev}</button>
+    <span class="pp-k">P&L non réalisé <b data-pp="u" class="${N.u >= 0 ? "" : "dn"}">${m(N.u)}</b></span><span class="pp-k">P&L réalisé <b class="${N.real >= 0 ? "" : "dn"}">${m(N.real)}</b></span><span class="pp-k">Actif <b data-pp="act">${m(N.act)}</b></span>
+    <span class="pp-k">Marge du compte <b data-pp="mm">${m(N.mm)}</b></span><span class="pp-k">Fonds disponibles <b data-pp="free">${m(N.free)}</b></span><span class="pp-k">Marge de sécurité <b data-pp="safe">${nf(N.safe, 2)} %</b></span>
+    <span class="gr-fill"></span><button class="gr-ib" data-ppcfg="1" title="Paramètres du compte">${ICO.gear}</button><button class="gr-ib" data-ppmin="1" title="Réduire le panneau">—</button></div>`;
+  let body;
+  if (!pos.length && !ords.length && !A.trades.length) body = `<div class="pp-empty"><b>Faites un trade pour commencer</b><span>Rouge ou bleu — choisissez votre pilule.</span><div><button class="pp-go sell" data-ppgo="sell">Sell</button><em>ou</em><button class="pp-go buy" data-ppgo="buy">Buy</button></div></div>`;
+  else { const th = (c) => `<tr>${c.map((x) => `<th>${x}</th>`).join("")}</tr>`;
+    const tPos = pos.length ? `<table class="pp-t">${th(["Symbole", "Côté", "Qté", "Prix moyen", "Dernier", "P&L non réalisé", ""])}${pos.map(([k, p]) => { const px = paPx(k), u = grPaper.upnl(A, k, px, paSpec(k)); return `<tr><td><b>${E(symCode(k))}</b></td><td class="${p.q > 0 ? "up" : "dn"}">${p.q > 0 ? "Long" : "Short"}</td><td>${Math.abs(p.q)}</td><td>${fmtPx(p.avg, SYM(k))}</td><td>${px ? fmtPx(px.bid, SYM(k)) : "—"}</td><td data-ppu="${E(k)}" class="${u >= 0 ? "up" : "dn"}">${money(u)}</td><td><button class="gr-btn sm" data-ppclose="${E(k)}">Fermer</button></td></tr>`; }).join("")}</table>` : `<div class="gr-dtnone">Aucune position</div>`;
+    const tOrd = ords.length ? `<table class="pp-t">${th(["Symbole", "Côté", "Type", "Qté", "Prix", "Statut", ""])}${ords.map((o) => `<tr><td><b>${E(symCode(o.sym))}</b></td><td class="${o.side === "buy" ? "up" : "dn"}">${o.side === "buy" ? "Achat" : "Vente"}</td><td>${o.kind === "tp" ? "Take profit" : o.kind === "sl" ? "Stop loss" : o.type === "limit" ? "Limite" : o.type === "stop" ? "Stop" : "Marché"}</td><td>${o.qty}</td><td>${o.type === "limit" ? fmtPx(o.price, SYM(o.sym)) : o.type === "stop" ? fmtPx(o.stop, SYM(o.sym)) : "—"}</td><td>${o.st === "pending" ? "En attente" : "Actif"}</td><td><button class="gr-btn sm" data-ppcan="${o.id}">Annuler</button></td></tr>`).join("")}</table>` : `<div class="gr-dtnone">Aucun ordre en cours</div>`;
+    const tHis = A.trades.length ? `<table class="pp-t">${th(["Fermé le (NY)", "Symbole", "Côté", "Qté", "Entrée", "Sortie", "P&L"])}${A.trades.slice(0, 200).map((t) => `<tr><td>${new Date(t.t1 * 1000).toLocaleString("fr-FR", { timeZone: "America/New_York", day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" })}</td><td><b>${E(symCode(t.sym))}</b></td><td class="${t.side === "long" ? "up" : "dn"}">${t.side === "long" ? "Long" : "Short"}</td><td>${t.qty}</td><td>${fmtPx(t.entry, SYM(t.sym))}</td><td>${fmtPx(t.exit, SYM(t.sym))}</td><td class="${t.pnl >= 0 ? "up" : "dn"}">${money(t.pnl)}</td></tr>`).join("")}</table>` : `<div class="gr-dtnone">Aucun trade</div>`;
+    body = `<div class="pp-tabs">${[["pos", "Positions", pos.length], ["ord", "Ordres", ords.length], ["his", "Historique", A.trades.length]].map(([k, n, c]) => `<button data-pptab="${k}" class="${tab === k ? "on" : ""}">${n}${c ? ` <em>${c}</em>` : ""}</button>`).join("")}<span class="gr-fill"></span>${pos.length || ords.length ? `<button class="gr-btn sm" data-ppflat="1">Tout fermer</button>` : ""}</div><div class="pp-b">${tab === "ord" ? tOrd : tab === "his" ? tHis : tPos}</div>`; }
+  P.innerHTML = head + body;
+  P.onclick = (e) => { const g = (k) => e.target.closest(`[data-${k}]`);
+    if (g("ppacc")) { const b = g("ppacc"); menuAt(b, ["h:Comptes de paper trading", ...R.list.map((x) => { const X = x.id === R.cur ? A : LS.get(paKey(x.id), null); return { t: `${x.name}  ·  ${X ? nf(X.bal, 2) : "—"} USD`, on: x.id === R.cur ? true : undefined, f: () => paSwitch(x.id) }; }), "-", { t: "Paramètres du compte…", f: () => paCfgDlg(R.cur) }, { t: "Créer un compte…", ic: ICO.plus, f: paNewDlg }]); return; }
+    if (g("ppcfg")) return paCfgDlg(R.cur);
+    if (g("ppmin")) { STATE.ppanel = false; saveState(); renderPaperP(); refreshBottom(); return; }
+    const t = g("pptab"); if (t) { STATE.pptab = t.dataset.pptab; saveState(); renderPaperP(); return; }
+    const go = g("ppgo"); if (go) { const s = paSym(), px = s && paPx(s); if (!s || !px) return toast("Pas de prix en direct pour ce graphique", true); const q = Math.max(1, Math.round(+TPF.qty || 1)), side = go.dataset.ppgo;
+      if (paOk(`${side === "buy" ? "Acheter" : "Vendre"} ${q} ${symCode(s)} au marché ?`)) paPlace({ sym: s, side, type: "market", qty: q, exits: [] }); return; }
+    const cl = g("ppclose"); if (cl) { if (!paOk(`Fermer la position ${symCode(cl.dataset.ppclose)} ?`)) return; grPaper.flatten(A, cl.dataset.ppclose, paPx, NOW(), paSpec); paSave(); paSound(); paRefresh(); return; }
+    const cn = g("ppcan"); if (cn) { if (!paOk("Annuler cet ordre ?")) return; grPaper.cancel(A, +cn.dataset.ppcan); paSave(); paRefresh(); return; }
+    if (g("ppflat")) { if (!window.confirm("Fermer toutes les positions et annuler tous les ordres de ce compte ?")) return; grPaper.flatten(A, null, paPx, NOW(), paSpec); paSave(); paSound(); paRefresh(); } };
+}
+/** valeurs en direct du panneau du bas (sans le redessiner) */
+function ppTick() { if (!STATE.ppanel) return; const P = $r("#grPaperP"), A = PA.A; if (!P || P.hidden || !A) return; const N = paNums(A), set = (k, v, cl) => { const x = P.querySelector(`[data-pp="${k}"]`); if (x) { x.textContent = v; if (cl != null) x.className = cl; } };
+  set("u", nf(N.u, 2), N.u >= 0 ? "" : "dn"); set("act", nf(N.act, 2)); set("mm", nf(N.mm, 2)); set("free", nf(N.free, 2)); set("safe", nf(N.safe, 2) + " %");
+  P.querySelectorAll("[data-ppu]").forEach((x) => { const k = x.dataset.ppu, u = grPaper.upnl(A, k, paPx(k), paSpec(k)); x.textContent = money(u); x.className = u >= 0 ? "up" : "dn"; }); }
 /** chiffres en direct sans redessiner le panneau (saisie en cours gardée) */
-function paTickUI() {
+function paTickUI() { ppTick();
   const A = PA.A; if (!A) return;
   if (STATE.panel === "trade") { const P = $r("#grRPanel"), s = paSym(), px = s && paPx(s); if (P && px) { const sp = SYM(s), b = P.querySelectorAll(".gr-dtside b"); if (b.length === 2) { b[0].textContent = fmtPx(px.bid, sp); b[1].textContent = fmtPx(px.ask, sp); }
       let all = 0; P.querySelectorAll("[data-up]").forEach((x) => { const k = x.dataset.up, u = grPaper.upnl(A, k, paPx(k), paSpec(k)); x.textContent = money(u); x.className = u >= 0 ? "up" : "dn"; });
@@ -15946,7 +16057,7 @@ function pvDrop(it, p, s, px) { const tick = paSpec(s).tick, buy = TPF.side === 
     t.innerHTML = [["Ouverture", b[1]], ["Haut", b[2]], ["Bas", b[3]], ["Fermeture", b[4]]].map(([k, v]) => `<div><span>${k}</span><b>${E(fmtPx(v, sp))}</b></div>`).join(""); t.hidden = false;
     let x = e.clientX - rr.left + 14, y = e.clientY - rr.top - 20; if (x + 200 > rr.width) x = e.clientX - rr.left - 214; t.style.left = x + "px"; t.style.top = clamp(y, 4, rr.height - 140) + "px"; };
   const stop = () => { clearTimeout(tm); tm = null; on = false; cell = null; const t = $r(".gr-ohlct"); if (t) t.hidden = true; };
-  document.addEventListener("pointerdown", (e) => { if (e.button !== 0 || !viewOn() || !e.target.closest || !e.target.closest(".gr-cell")) return; const c = CELLS.find((x) => x.main && x.main.host.contains(e.target)); if (!c) return;
+  document.addEventListener("pointerdown", (e) => { if (e.button !== 0 || PR.ohlcHold === false || !viewOn() || !e.target.closest || !e.target.closest(".gr-cell")) return; const c = CELLS.find((x) => x.main && x.main.host.contains(e.target)); if (!c) return;
     if ((T[DS.tool] && T[DS.tool].g !== "cur") || DS.creating || e.shiftKey || e.altKey || e.ctrlKey) return; const r = c.main.host.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; if (!c.inPlot(x, y) || c.hit(x, y)) return;
     cell = c; tm = setTimeout(() => { on = true; show(e); }, 180); }, true);
   addEventListener("pointermove", (e) => { if (on && !DS.drag && !PA.drag) show(e); });
@@ -15973,8 +16084,9 @@ setInterval(() => { paEngine(); if (viewOn()) { paTickUI(); paLines(); } }, 500)
 /* ---------- démarrage (à la première ouverture de la page) ---------- */
 let booted = false;
 function boot() {
-  if (booted) return; booted = true; ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); ROOT.classList.toggle("tv", STATE.mode === "tv");
-  buildLeft(); renderStrip(); renderGrid(); tabsWire(); respWire(); renderPine(); renderTvSrc(); refreshPanels(); if (STATE.mode === "tv") tvOpen();
+  if (booted) return; booted = true; if (STATE.mode === "tv") STATE.mode = "ict"; // v1.97 : bouton TradingView retiré (mode Graphique seulement)
+  ROOT.classList.toggle("light", PR.theme === "light"); ROOT.style.setProperty("--grbg", PR.bg); ROOT.classList.toggle("tv", STATE.mode === "tv");
+  buildLeft(); renderStrip(); renderGrid(); tabsWire(); respWire(); renderPine(); renderTvSrc(); refreshPanels(); renderPaperP(); if (STATE.mode === "tv") tvOpen();
   setInterval(clockTick, 1000); liveLoop();
 }
 function onView() { document.body.classList.toggle("on-gr", viewOn()); if (viewOn()) { boot(); if (STATE.mode === "tv") tvOpen(); else CELLS.forEach((c) => c.redraw()); liveLoop(); } else { tvClose(); closeMenu(); } }

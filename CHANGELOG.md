@@ -2,6 +2,21 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.97.0] — 2026-11-24
+### Ajouté
+- Page Graphique : bouton **Paper Trading** à droite d'« Aller à » (barre du bas) = panneau façon TradingView : **plusieurs comptes de paper trading** (liste, Créer un compte…, changer de compte), P&L non réalisé / réalisé, Actif, Marge du compte, Fonds disponibles, Marge de sécurité, onglets Positions / Ordres / Historique, « Faites un trade pour commencer » avec Sell / Buy. **Paramètres du compte** : nom, effet de levier, commission par contrat, réinitialiser, supprimer. Aucun vrai ordre ; seul le compte choisi exécute ses ordres.
+- **Heures à venir** sur l'échelle de temps, à droite de la dernière bougie (comme TradingView).
+- **Trait des news : visibilité par unité de temps** (panneau Actualités › Visibilité…, ou Paramètres › Événements) : par exemple seulement en 1 minute.
+- Paramètres › Toile : case pour **couper la bulle OHLC** du clic gauche maintenu.
+### Modifié
+- **Barre de droite** aux icônes de TradingView (liste, réveil, calques, calendrier) ; **Détails du symbole** et **Raccourcis clavier** en bas ; icône **Fenêtre de données** retirée (onglet de l'arborescence).
+- Bouton **Graphique / TradingView** retiré : « Voir sur TradingView » ouvre le site à part.
+- **Positions longue / courte** : la partie parcourue prend la couleur de sa zone (plus de voile gris) ; une zone objectif / stop à 0 % d'opacité repart sur les couleurs de TradingView, et choisir une couleur quand l'opacité est à 0 la remet à 25 %.
+- **Dossiers de l'arborescence par mise en page** : un dossier créé dans une mise en page n'apparaît plus dans les autres (sauf s'il y contient des dessins synchronisés).
+- **Changement d'onglet / de mise en page** : chaque graphique retrouve son zoom et sa position (plus de dézoom en revenant sur un onglet).
+### Corrigé
+- Étiquettes des niveaux de Fibonacci (« 0.5 · FVG »…) illisibles en dézoomé : celles qui se chevauchent ne sont plus dessinées les unes sur les autres (premier et dernier niveaux toujours affichés).
+
 ## [1.96.0] — 2026-11-24
 ### Ajouté
 - Page Graphique : **arborescence façon TradingView** : onglets « Arborescence d'objets / Fenêtre de données », barre d'icônes (Créer un groupe de dessins, Cloner / Copier, Déplacer vers : groupe ou ordre de visualisation, Gérer les dessins de la mise en page), ligne du symbole, indicateurs, dessins et groupes-dossiers repliables ; œil / cadenas / corbeille au survol, éléments masqués grisés.
