@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.94.4] — 2026-11-24
+### Corrigé
+- Page Graphique : **Alt+R** (recentrer) et les autres raccourcis Alt remarchent. Un clic sur un graphique lui rend le clavier (l'éditeur Pine ou un champ ne le garde plus), et l'app Windows n'a plus de menu caché qui pouvait intercepter Alt+lettre (F12 ouvre toujours les outils de développement).
+
 ## [1.94.3] — 2026-11-24
 ### Ajouté
 - Page Graphique : Paramètres › **Scripts Pine** : nombre de **bougies calculées** par indicateur (1 000 → 20 000, défaut 5 000) et **temps maximum** par calcul (8 s → 2 min, défaut **30 s** au lieu de 8 s ; le calcul se fait dans un fil à part, l'app ne gèle pas). `calc_bars_count` de `indicator()` est respecté. Le message « Script trop lent » dit comment régler.

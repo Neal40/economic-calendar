@@ -15148,6 +15148,8 @@ const IVB = { s: "", t: null };
 function ivBuf(ch) { IVB.s += ch; clearTimeout(IVB.t); let o = $r(".gr-ivbuf"); if (!o) { o = el("div", "gr-ivbuf"); ROOT.append(o); } const iv = ivFromText(IVB.s); o.innerHTML = `<b>${E(IVB.s)}</b><span>${iv ? E(ivLabel(iv, true)) + " · Entrée" : "…"}</span>`; IVB.t = setTimeout(() => ivCommit(), 1800); }
 function ivCommit() { clearTimeout(IVB.t); const iv = ivFromText(IVB.s); IVB.s = ""; const o = $r(".gr-ivbuf"); if (o) o.remove(); if (iv) applyIv(iv); }
 const viewOn = () => { const v = document.getElementById("v-graphique"); return !!v && v.classList.contains("on"); };
+// v1.94.4 : un clic sur un graphique lui rend le clavier (sinon l'éditeur Pine ou un champ gardait le focus et Alt+R & co. ne marchaient plus)
+document.addEventListener("pointerdown", (e) => { if (!viewOn() || !e.target.closest || !e.target.closest(".gr-cell")) return; const a = document.activeElement; if (a && a !== document.body && a.closest && a.closest("input, textarea, select, [contenteditable=true], .cm-editor, .monaco-editor") && !e.target.closest("input, textarea, select, [contenteditable=true]")) a.blur(); }, true);
 document.addEventListener("keydown", (e) => {
   if (!viewOn() || STATE.mode === "tv") return; KEYMOD.ctrl = e.ctrlKey || e.metaKey; KEYMOD.shift = e.shiftKey;
   if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable=true]")) return; if (ROOT.querySelector(".gr-ov")) return;
