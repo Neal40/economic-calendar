@@ -14,6 +14,10 @@ const marche = require("./marche");
 const updater = require("./updater");
 app.setPath("userData", backup.migrate(path.join(app.getPath("appData"), "Economic Calendar"), path.join(app.getPath("appData"), "Inner Circle Trader")));
 const ICT = () => path.join(app.getPath("desktop"), "Inner Circle Trader"); // dossier de travail : data/ + backups/
+/* v1.98 macOS : une fois les secrets passés à la clé du trousseau (desktop/secret.js, repère secrets-v2.ok), Chromium utilise un trousseau factice
+   (use-mock-keychain) : plus de fenêtre « Inner Circle Trader Safe Storage » au lancement, même après une mise à jour (signature ad-hoc qui change). */
+const MACKEY_OK = () => path.join(app.getPath("userData"), "secrets-v2.ok");
+if (process.platform === "darwin") { try { if (fs.existsSync(MACKEY_OK())) app.commandLine.appendSwitch("use-mock-keychain"); } catch (e) { /* ignore */ } }
 
 const PART = "persist:topstepx";              // TopstepX login session (kept between launches)
 const DB = () => path.join(app.getPath("userData"), "journal-db.json");
@@ -57,10 +61,14 @@ async function readToken(w) {
   try { await new Promise((ok) => (w.webContents.isLoading() ? w.webContents.once("did-stop-loading", ok) : ok())); } catch (e) {}
   try { return await w.webContents.executeJavaScript('localStorage.getItem("token")', true); } catch (e) { return null; }
 }
+/* Secrets (desktop/secret.js) : safeStorage sur Windows ; sur macOS clé AES du trousseau lisible sans fenêtre (plus de mot de passe demandé à chaque lancement / mise à jour) */
+const SECRET = require("./secret").make({ safeStorage, run: (args) => require("child_process").execFileSync("/usr/bin/security", args, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 10000 }) });
+function secRead(file) { const b = fs.readFileSync(file), r = SECRET.open(b); if (r.old) { try { fs.writeFileSync(file, SECRET.seal(r.s)); } catch (e) { /* ignore */ } } return r.s; }
+function secWrite(file, s) { fs.writeFileSync(file, SECRET.seal(s)); }
 /* Jeton TopstepX envoyé depuis Chrome (favori « Synchro App & TopstepX » sur topstepx.com) : chiffré avec safeStorage, jamais loggué ni renvoyé au renderer */
 const TSXFILE = () => path.join(app.getPath("userData"), "tsx-token.bin");
-function getChromeToken() { try { const b = fs.readFileSync(TSXFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; } }
-function setChromeToken(t) { try { if (!t) { fs.rmSync(TSXFILE(), { force: true }); return; } fs.writeFileSync(TSXFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, "utf8")); } catch (e) { /* ignore */ } }
+function getChromeToken() { try { return secRead(TSXFILE()); } catch (e) { return null; } }
+function setChromeToken(t) { try { if (!t) { fs.rmSync(TSXFILE(), { force: true }); return; } secWrite(TSXFILE(), t); } catch (e) { /* ignore */ } }
 async function getToken(interactive) {
   const ct = getChromeToken(); if (ct) return ct;
   let w = tsxWindow(false), t = await readToken(w);
@@ -138,12 +146,12 @@ ipcMain.handle("journal:logout", async () => {
 /* ---------- Coach IA du Profil (Skill IA) : API Claude, clé chiffrée avec safeStorage (jamais renvoyée au renderer) ---------- */
 const AIFILE = () => path.join(app.getPath("userData"), "anthropic-key.bin"), AI_MODEL = "claude-sonnet-5-5";
 const AI_SYSTEM = "Tu es un coach de performance pour un trader de futures (NQ / ES) en prop firm (Apex, Topstep, My Funded Futures). Tu analyses uniquement sa discipline, sa gestion du risque, sa constance et son process à partir des chiffres fournis. Tu ne donnes jamais de conseil d'investissement : pas de direction de marché, pas de niveau d'entrée, pas de trade à prendre. Tu t'appuies sur les chiffres du rapport, tu es direct et bienveillant, en français.";
-function getAiKey() { try { const b = fs.readFileSync(AIFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; } }
+function getAiKey() { try { return secRead(AIFILE()); } catch (e) { return null; } }
 ipcMain.handle("ai:status", async () => ({ ok: !!getAiKey(), model: AI_MODEL }));
 ipcMain.handle("ai:setKey", async (e, k) => { k = String(k || "").trim();
   if (!k) { try { fs.unlinkSync(AIFILE()); } catch (x) {} return { ok: false, reason: "removed" }; }
   if (!/^sk-ant-[\w-]{20,}$/.test(k)) return { ok: false, reason: "format" };
-  fs.writeFileSync(AIFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(k) : Buffer.from(k, "utf8")); return { ok: true }; });
+  secWrite(AIFILE(), k); return { ok: true }; });
 ipcMain.handle("ai:ask", async (e, prompt) => { const k = getAiKey(); if (!k) return { ok: false, reason: "clé API manquante" };
   try {
     const r = await net.fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "content-type": "application/json", "x-api-key": k, "anthropic-version": "2023-06-01" },
@@ -156,11 +164,11 @@ ipcMain.handle("ai:ask", async (e, prompt) => { const k = getAiKey(); if (!k) re
 /* ---------- Notion (Review) ---------- */
 const NFILE = () => path.join(app.getPath("userData"), "notion-token.bin");
 function getNotionToken() {
-  try { const b = fs.readFileSync(NFILE()); return safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8"); } catch (e) { return null; }
+  try { return secRead(NFILE()); } catch (e) { return null; }
 }
 function setNotionToken(t) {
   if (!t) { try { fs.unlinkSync(NFILE()); } catch (e) {} return; }
-  fs.writeFileSync(NFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, "utf8"));
+  secWrite(NFILE(), t);
 }
 const nfetch = (url, opts) => net.fetch(url, opts);
 const wrap = async (fn) => { const t = getNotionToken(); if (!t) return { ok: false, reason: "token" };
@@ -428,11 +436,11 @@ let copier = null;
 const CPFILE = () => path.join(app.getPath("userData"), "copier-config.bin");
 const CPLOG = () => path.join(app.getPath("userData"), "copier.log");
 function cpRead() {
-  try { const b = fs.readFileSync(CPFILE()); return JSON.parse(safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(b) : b.toString("utf8")); } catch (e) { return null; }
+  try { return JSON.parse(secRead(CPFILE())); } catch (e) { return null; }
 }
 function cpWrite(cfg) {
   const txt = JSON.stringify(cfg);
-  fs.writeFileSync(CPFILE(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(txt) : Buffer.from(txt, "utf8"));
+  secWrite(CPFILE(), txt);
 }
 function cpLog(level, text) {
   const line = `${new Date().toLocaleTimeString("fr-FR")}  ${level.toUpperCase().padEnd(5)} ${text}`;
@@ -598,8 +606,13 @@ function macAutoUpdate() {
   app.on("before-quit", () => { if (macStaged && !updBusy) macAutoSwap(false); });
 }
 
+/** macOS : relit une dernière fois les secrets au format safeStorage et les réécrit avec la clé du trousseau, puis pose le repère (une seule demande de mot de passe) */
+function macSecretsMigrate() {
+  if (process.platform !== "darwin") return; try { if (fs.existsSync(MACKEY_OK())) return; if (!SECRET.macReady()) return;
+    let ok = true; for (const f of [TSXFILE(), AIFILE(), NFILE(), CPFILE()]) { if (!fs.existsSync(f)) continue; try { secRead(f); if (!SECRET._isNew(fs.readFileSync(f))) ok = false; } catch (e) { ok = false; } }
+    if (ok) fs.writeFileSync(MACKEY_OK(), new Date().toISOString()); } catch (e) { /* ignore */ } }
 app.whenReady().then(() => {
-  if (!LOCK) return;
+  if (!LOCK) return; macSecretsMigrate();
   try { backup.run({ userData: app.getPath("userData"), dataDir: md().dir, root: path.join(ICT(), "backups") }); } // avant la fenêtre : Local Storage / IndexedDB pas encore ouverts
   catch (e) { try { new Notification({ title: "Inner Circle Trader", body: "Sauvegarde impossible : " + (e.message || e) }).show(); } catch (x) { /* ignore */ } }
   createWindow(); { const u = pendingUrl || process.argv.find((x) => String(x).startsWith(PROTO + "://")); if (u) win.webContents.once("did-finish-load", () => handleProtoUrl(u)); } mdSchedule(); updWatch(); macAutoUpdate();

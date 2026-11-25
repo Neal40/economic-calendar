@@ -229,6 +229,21 @@ body{background:#060607}
 .page .lead{color:#8b8d98;font-size:13.5px;margin:0 0 22px}
 .panel{background:#0e0e11;border:1px solid #1d1d22;border-radius:10px;padding:18px 18px}
 .panel+.panel{margin-top:14px}
+/* Saisonnalité (v1.98) */
+.ss-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px}
+.ss-in{background:#16171b;border:1px solid #2a2b31;border-radius:7px;padding:7px 10px;color:#e6e8ef;min-width:260px}
+.ss-seg{display:inline-flex;border:1px solid #2a2b31;border-radius:8px;overflow:hidden}.ss-seg button{background:#16171b;border:0;padding:7px 12px;color:#aeb1ba;cursor:pointer}.ss-seg button.on{background:#2f54eb;color:#fff}
+.ss-ck{display:inline-flex;align-items:center;gap:6px;color:#c9cbd3;font-size:13px}.ss-btn{background:#16171b;border:1px solid #2a2b31;border-radius:7px;padding:6px 11px;color:#e6e8ef;cursor:pointer}
+.ss-mut{color:#8b8d98;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}.ss-err{color:#ff8d84;margin:0 0 12px;font-size:13px}
+.ss-p{margin-bottom:16px}.ss-wrap{position:relative}.ss-svg{width:100%;height:auto;display:block}
+.ss-g{stroke:rgba(255,255,255,.06);stroke-width:1}.ss-g.z{stroke:rgba(255,255,255,.28)}.ss-ax{fill:#8b8d98;font-size:11px}
+.ss-l{fill:none;stroke-width:1.4;opacity:.85}.ss-l.cur{stroke-width:2.6;opacity:1}.ss-l.avg{stroke:#c9cbd3;stroke-width:2;stroke-dasharray:6 4;opacity:.9}.ss-hv{stroke:rgba(255,255,255,.35);stroke-dasharray:3 3}
+.ss-tip{position:absolute;min-width:170px;background:#16171b;border:1px solid #2a2b31;border-radius:8px;padding:8px 10px;font-size:12px;color:#e6e8ef;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.ss-tip div{display:flex;align-items:center;gap:6px;margin-top:3px}.ss-tip span{margin-left:auto}.ss-tip i,.ss-leg i{width:10px;height:3px;border-radius:2px;display:inline-block}
+.ss-tip .up,.ss-t .up{color:#26a69a}.ss-tip .dn{color:#ff6b6b}
+.ss-leg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.ss-leg button{display:inline-flex;align-items:center;gap:6px;background:#16171b;border:1px solid #2a2b31;border-radius:6px;padding:4px 9px;color:#d6d8df;cursor:pointer;font-size:12px}.ss-leg button.off{opacity:.35}.ss-leg button.cur{font-weight:700}.ss-leg i.avg{background:#c9cbd3;width:14px}
+.ss-t{width:100%;border-collapse:separate;border-spacing:2px;font-size:12px}.ss-t th{color:#8b8d98;font-weight:500;padding:5px 6px;text-align:center}.ss-t tr>th:first-child{text-align:left;white-space:nowrap}
+.ss-t td{text-align:center;padding:6px 4px;border-radius:4px;color:#f1f2f5;font-variant-numeric:tabular-nums}.ss-t td.na{color:#555}.ss-t .ss-avg th,.ss-t .ss-avg td{font-weight:600}.ss-t .ss-avg td{background:#1a1b20}
 .ptitle{font-size:12px;letter-spacing:.1em;color:#9a9ca7;text-transform:uppercase;margin:0 0 14px;font-weight:600}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}
 .kpi{background:#121216;border:1px solid #1f1f25;border-radius:8px;padding:12px 14px}
@@ -1976,6 +1991,7 @@ table.tbl:has(#subT){min-width:900px}
       <button class="nav sub" data-go="review"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Review</span></button>
       <button class="nav sub" data-go="graphique"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v3M7 17v4M17 5v3M17 16v3"/><rect x="5" y="6" width="4" height="11" rx="1"/><rect x="15" y="8" width="4" height="8" rx="1"/></svg><span>Graphique</span></button>
       <button class="nav sub" data-go="backtest"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Backtesteur</span></button>
+      <button class="nav sub" data-go="saison"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M6 15c2-6 4-6 6-2s4 4 6-4"/><path d="M6 9c2 3 4 4 6 2"/></svg><span>Saisonnalité</span></button>
       <button class="nav sub" data-go="copier"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><span>Trade copier</span></button>
       <button class="nav" data-go="skillia"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9.5 16h5M2 12v3M22 12v3"/></svg><span>Skill IA &amp; Coach IA</span></button>
       <button class="nav" data-go="excalidraw"><svg class="ic " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span>Excalidraw</span></button>
@@ -2092,6 +2108,11 @@ table.tbl:has(#subT){min-width:900px}
   <div class="panel"><div class="ptitle">Langue / Language</div>
     <div class="hintd" style="margin:0 0 10px">Langue de l'interface (français par défaut).</div>
     <select id="langSel" class="btn gray" style="min-width:180px"><option value="fr">Français</option><option value="en">English</option></select></div>
+</div></section>
+
+<section class="view" id="v-saison"><div class="page" style="max-width:1300px">
+  <h2>Saisonnalité</h2><p class="lead">Comment le marché a évolué, année par année, à la même période (comme les « Seasonals » de TradingView) : courbes depuis le début de l'année, moyenne et variations mensuelles.</p>
+  <div id="ssRoot"></div>
 </div></section>
 
 <section class="view" id="v-skillia"><div class="page" style="max-width:1300px">
@@ -2923,7 +2944,7 @@ function navOrdDraw(keep){ const box=$("navOrd"); if(!box) return; if(!keep||!na
 })();
 
 /* ---------- shell / routing ---------- */
-const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures","skillia","excalidraw"];
+const VIEWS=["marche","calendrier","financialjuice","journal","review","graphique","backtest","copier","comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus","profil","affiliation","abonnement","factures","skillia","excalidraw","saison"];
 function shell(){
   const b=S.brand; $("sName").textContent=b.name||"Trader"; $("sHandle").textContent=b.handle||"";
   $("sAv").innerHTML=b.img?`<img src="${b.img}" alt="">`:esc(b.logo||"");
@@ -2939,7 +2960,7 @@ function go(v){ v=String(v||""); let sub=""; { const i=v.indexOf("/"); if(i>0&&v
   if(v!=="journal") document.body.classList.remove("jt-neal-on","jt-bt-on","jt-p80-on"); else { let t="tsx"; try{t=localStorage.getItem("econcal-jtab")||"tsx"}catch(e){} document.body.classList.toggle("jt-neal-on", t==="neal"); document.body.classList.toggle("jt-bt-on", t==="bt"); document.body.classList.toggle("jt-p80-on", t==="p80"); if(t==="bt") setTimeout(()=>window.btJournal&&btJournal(),0); if(t==="p80") setTimeout(()=>window.p80Render&&p80Render(),0); }
   if(["comptes","topstep","apex","mffu","tradeify","phidias","payouts","recus"].includes(v) && window.comptesRender) comptesRender(v);
   if(v==="excalidraw"&&window.exdShow) exdShow(); else if(window.exdHide) exdHide();
-  if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&(bt.route?bt.route(sub):bt.show()),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
+  if(v==="saison"&&window.saisonShow) saisonShow(); if(v==="financialjuice") loadFJ(); if(v==="marche"&&window.marcheShow) marcheShow(); if(v==="profil"){ loadProfile(); if(window.appVerRender) appVerRender(); navOrdDraw(); } if(v==="skillia"){ setTimeout(()=>window.profilRender&&profilRender(),0); if(window.comptesLoad) comptesLoad().then(()=>window.profilRender&&profilRender()); } if(v==="affiliation") renderAff(); if(v==="abonnement") renderSubs(); if(v==="factures") renderBills(); if(v==="journal") setTimeout(()=>window.jdash&&jdash.redraw(),0); if(v==="backtest") setTimeout(()=>window.bt&&(bt.route?bt.route(sub):bt.show()),0); if(v==="copier") setTimeout(()=>window.copierUI&&copierUI.show(),0);
   try{ const h=v+(sub?"/"+sub:""); if(location.hash.slice(1)!==h) history.replaceState(null,"","#"+h) }catch(e){}
   $("app").querySelector(".main").scrollTop=0;
 }
@@ -12796,6 +12817,11 @@ class Feed {
 }
 const feedKey = (sym, iv) => sym + "|" + iv;
 function getFeed(sym, iv) { const k = feedKey(sym, iv); let f = FEEDS.get(k); if (!f) { f = new Feed(sym, iv); FEEDS.set(k, f); } f.used = Date.now(); return f; }
+/** v1.98 : bougies journalières pour la page Saisonnalité : [[jour de séance NY AAAA-MM-JJ, clôture], …] (≈ 15 ans si les données le permettent) */
+window.grSeason = { tsx: HAS_TSX, syms: () => [...SYMS.values()].filter((x) => x.src !== "csv").map((x) => ({ s: x.s, n: x.n, cat: x.cat })),
+  async bars(sym) { const f = getFeed(sym, "1D"); await f.load(); if (f.err) throw new Error(f.err === "login" ? "connexion TopstepX nécessaire (page Graphique)" : f.err);
+    for (let k = 0; k < 8 && !f.done && f.bars.length && f.bars[f.bars.length - 1][0] - f.bars[0][0] < 16 * 365 * 86400; k++) await f.loadMore();
+    const m = new Map(); f.bars.forEach((b) => m.set(sessDate(b[0] + 7 * 3600), b[4])); return [...m.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)); } };
 function gcFeeds() { const idle = [...FEEDS.values()].filter((f) => !f.subs.size).sort((a, b) => b.used - a.used); idle.slice(10).forEach((f) => FEEDS.delete(feedKey(f.sym, f.iv))); }
 const liveMs = (f) => { const s = ivSec(f.iv), base = +(PREF().poll || 1000), back = f.fails ? Math.min(60000, 2000 * 2 ** (f.fails - 1)) : 0; return back + (f.spec.src === "ff" ? Math.max(5000, base) : s >= 86400 ? Math.max(3000, base) : base); };
 let liveTimer = null;
@@ -13144,6 +13170,8 @@ const CIRC_LV = () => LV([[0.236, "#f23645"], [0.382, "#ff9800"], [0.5, "#4caf50
 const S0 = (o) => Object.assign({ c: "#2962ff", w: 2, d: 0 }, o);
 /* placement du texte d'une ligne façon TopstepX : th = l | c | r (début / milieu / fin), tv = t | m | b (au-dessus / sur / sous la ligne) ; absent = placement d'avant */
 const tvBl = (tv) => (tv === "m" ? "middle" : tv === "b" ? "top" : "bottom"), tvDy = (tv) => (tv === "m" ? 0 : tv === "b" ? 4 : -4);
+/** v1.98 : outils dont on peut placer le texte (Texte › Position du texte) et leur position par défaut */
+const TXPOS = { rect: { tv: "t", th: "c" }, trend: { tv: "t", th: "c" }, ray: { tv: "t", th: "r" }, hline: { tv: "t", th: "r" }, hray: { tv: "t", th: "l" }, vline: { tv: "t", th: "r" } };
 const lineTxt = (pen, d, a, b) => { if (!d.txt) return false; if (!d.s.th && !d.s.tv) return false; const L = a[0] <= b[0] ? a : b, R = a[0] <= b[0] ? b : a, th = d.s.th || "c";
   const q = th === "l" ? L : th === "r" ? R : [(L[0] + R[0]) / 2, (L[1] + R[1]) / 2]; pen.text(q[0], q[1] + tvDy(d.s.tv), d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 13, bold: d.s.b, italic: d.s.i, al: th === "l" ? "left" : th === "r" ? "right" : "center", bl: tvBl(d.s.tv), pad: 2, bg: d.s.tv === "m" ? PR.bg : null }); return true; };
 const pTxt = (pen, d, x, y, o = {}) => { if (d.txt) pen.text(x, y, d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 13, bold: d.s.b, italic: d.s.i, al: o.al || "center", bl: o.bl || "bottom", pad: 2 }); };
@@ -13161,7 +13189,7 @@ function lvDraw(pen, d, G, x0, x1, P0, P1, kind) { // Fibonacci / Gann : lignes 
     if (!tvMode) { text(d.s.lpos === "r" ? Math.max(x0, x1) + 4 : Math.min(x0, x1) - 4, y, `${+l.v.toFixed(3)} (${G.fp(p)})`, { col: l.c, fs: 11, al: d.s.lpos === "r" ? "left" : "right", bl: "middle" }); return; }
     const parts = []; if (d.s.lc) parts.push(d.s.pct ? +(l.v * 100).toFixed(1) + "%" : String(+l.v.toFixed(3))); if (d.s.lp) parts.push("(" + G.fp(p) + ")"); if (d.s.lt && l.t) parts.push(l.t); if (!parts.length) return;
     const lp = d.s.lpos || "l", xr = d.s.er ? G.W - 6 : Math.max(x0, x1) + 4, xl = Math.min(x0, x1) - 4;
-    text(lp === "r" ? xr : lp === "c" ? (Math.min(x0, x1) + Math.max(x0, x1)) / 2 : xl, y - (lp === "c" ? 2 : 0), parts.join(" · "), { col: l.c, fs: d.s.lfs || 11, al: lp === "r" ? (d.s.er ? "right" : "left") : lp === "c" ? "center" : "right", bl: lp === "c" ? "bottom" : "middle", bg: lp === "r" && d.s.er ? PR.bg : null, pad: 1 }); });
+    text(lp === "r" ? xr : lp === "c" ? (Math.min(x0, x1) + Math.max(x0, x1)) / 2 : xl, y - (lp === "c" ? 2 : 0), parts.join(" · "), { col: l.c, fs: d.s.lfs || 11, al: lp === "r" ? (d.s.er ? "right" : "left") : lp === "c" ? "center" : "right", bl: lp === "c" ? "bottom" : "middle", bg: null, pad: 1 }); }); // v1.98 : plus de rectangle couleur du fond derrière le texte (comme TradingView)
   lvLabels(TX).forEach((t) => t.f());
 }
 /** étiquettes de niveaux triées par y : garde celles qui ne se chevauchent pas (la première et la dernière toujours) */
@@ -13181,7 +13209,7 @@ const T = {
   cross: { n: "Croix", g: "cur", np: -9 }, dot: { n: "Point", g: "cur", np: -9 }, arrow: { n: "Flèche", g: "cur", np: -9 }, eraser: { n: "Gomme", g: "cur", np: -9 },
   // lignes
   trend: { n: "Ligne de tendance", g: "lines", np: 2, key: "Alt+T", def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], d.s.el, d.s.er, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (d.s.al) pen.arrow(P[0][0], P[0][1], P[1][0], P[1][1]); if (d.s.a0) pen.arrow(P[1][0], P[1][1], P[0][0], P[0][1]); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, (P[0][0] + P[1][0]) / 2, (P[0][1] + P[1][1]) / 2 - 4); lineLabel(pen, G, d, P[0], P[1]); } },
-  ray: { n: "Rayon", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], false, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); pTxt(pen, d, P[1][0], P[1][1] - 4); } },
+  ray: { n: "Rayon", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], false, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, P[1][0], P[1][1] - 4); } },
   info: { n: "Ligne d'info", g: "lines", np: 2, def: S0({ stats: true }), draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], P[0][1], P[1][0], P[1][1]); const a = Math.atan2(-(P[1][1] - P[0][1]), P[1][0] - P[0][0]) * 180 / Math.PI;
     lineLabel(pen, G, Object.assign({}, d, { s: Object.assign({}, d.s, { stats: true }) }), P[0], P[1]); pen.text(P[1][0] + 8, P[1][1] + 26, `Angle ${nf(a, 1)}°`, { col: "#fff", bg: alpha(d.s.c, 0.85), fs: 11, al: "left", bl: "middle" }); } },
   ext: { n: "Ligne étendue", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], true, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); } },
@@ -13356,7 +13384,7 @@ const defStyle = (tool) => { const t = T[tool]; if (!t) return {}; const tpl = L
 /* ---------- réglages du graphique (Paramètres) ---------- */
 const PDEF = { theme: "dark", tz: NYZ, up: "#089981", dn: "#f23645", wickUp: "#089981", wickDn: "#f23645", bdUp: "#089981", bdDn: "#f23645", bg: "#131722", bg2: "", txt: "#b2b5be", fs: 12,
   vgrid: true, hgrid: true, gridC: "rgba(42,46,57,0.55)", crossC: "#9598a1", crossS: 3, crossMag: false, lastLbl: true, priceLine: true, countdown: true, hiLo: false, prevClose: false,
-  wm: false, sess: true, sessC: "rgba(120,123,134,0.35)", events: true, evMed: true, evLine: false, trades: true, legSym: true, legOhlc: true, legChg: true, legVol: true, legArgs: true, legVals: true, legBg: false,
+  wm: false, sess: true, sessC: "rgba(120,123,134,0.35)", events: true, evMed: true, evLine: false, trades: true, execSrc: "both", legSym: true, legOhlc: true, legChg: true, legVol: true, legArgs: true, legVals: true, legBg: false,
   poll: 1000, rightOffset: 10, mTop: 10, mBot: 8, lineC: "#2962ff", lineW: 2, left: false, h24: true, rth: false, scaleW: 76, indLbl: true, symLbl: false,
   /* v1.73 : réglages façon TradingView */
   colorPrev: false, bodyOn: true, borderOn: true, wickOn: true, ethBg: "rgba(0,0,0,0)", legLogo: false, legTitle: "sym", legDay: false, legBgA: 40,
@@ -13647,13 +13675,20 @@ class Cell {
     for (let d = d0, n = 0; d <= d1 && n < 600; d = addDays(d, 1), n++) (window.calEvents(d) || []).forEach((e) => { if (e.k && e.k !== "ev") return; if (e.i === "low" || (e.i === "med" && !PR.evMed)) return; const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(e.t || ""); if (!m) return;
       this.evs.push({ t: nyTime(d, (+m[1] % 12) + (/pm/i.test(m[3]) ? 12 : 0), +m[2]), n: e.n, i: e.i, d }); }); }
   async loadTrades() { this.trades = []; if (!PR.trades || !this.DB.length || !ivIntra(this.st.iv)) { this.markers(); return; }
-    let rows = []; try { const d = window.jdash && window.jdash.data("trades"); if (d && d.status === "ok") rows = d.data; else if (D && D.journalGet) { if (!Cell.jcache || Date.now() - Cell.jcache.at > 60000) Cell.jcache = { at: Date.now(), p: D.journalGet() }; const db = await Cell.jcache.p; rows = (db && db.trades) || []; } } catch (e) { rows = []; }
+    const src = PR.execSrc || "both"; // v1.98 : marques d'exécution = TopstepX, compte de paper trading, ou les deux
+    let rows = []; if (src !== "paper") try { const d = window.jdash && window.jdash.data("trades"); if (d && d.status === "ok") rows = d.data; else if (D && D.journalGet) { if (!Cell.jcache || Date.now() - Cell.jcache.at > 60000) Cell.jcache = { at: Date.now(), p: D.journalGet() }; const db = await Cell.jcache.p; rows = (db && db.trades) || []; } } catch (e) { rows = []; }
     const u = undOf(this.st.sym), B = this.DB, t0 = B[0][0], t1 = B[B.length - 1][0] + ivSec(this.st.iv), out = [], snapT = (t) => { const i = Math.round(liOf(B, this.st.iv, t)); return this.T[clamp(i, 0, B.length - 1)]; };
     rows.forEach((r) => { const s = String(r.Symbol || r.Contract || "").replace(/[FGHJKMNQUVXZ]\d{1,2}$/, ""); if (undOf(s) !== u) return; const te = Date.parse(r.Entry) / 1000, tx = Date.parse(r.Exit) / 1000; if (!(te >= t0 && te <= t1)) return; const long = r.Direction === "Long", pnl = +r["Net P&L"] || 0;
       out.push({ time: snapT(te), position: long ? "belowBar" : "aboveBar", shape: long ? "arrowUp" : "arrowDown", color: long ? "#2962ff" : "#e91e63", text: PR.trLbl === false ? "" : `${long ? "Achat" : "Vente"} ${r.Size || 1} @ ${r["Entry Price"]}` });
       if (fin(tx) && tx <= t1) { const ep = +r["Entry Price"], xp = +r["Exit Price"], pts = fin(ep) && fin(xp) ? (xp - ep) * (long ? 1 : -1) : NaN, tk = this.spec.tick || 0.25;
         const pu = PR.trPLposU || PR.trPLu, txt = PR.trPL === false || PR.trPLpos === false ? "" : pu === "ticks" && fin(pts) ? `${pts >= 0 ? "+" : ""}${Math.round(pts / tk)} ticks` : pu === "pts" && fin(pts) ? `${pts >= 0 ? "+" : ""}${+pts.toFixed(2)} pts` : `${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} $`;
         out.push({ time: snapT(tx), position: long ? "aboveBar" : "belowBar", shape: "circle", color: pnl >= 0 ? "#089981" : "#f23645", text: txt }); } });
+    if (src !== "tsx") try { const A = paLoad(), sp = this.spec, tk = sp.tick || 0.25, lbl = PR.trLbl !== false, tag = src === "both" ? " · Paper" : "", fx = (v) => fmtPx(v, sp);
+      const ent = (t, long, q, px) => { if (t >= t0 && t <= t1) out.push({ time: snapT(t), position: long ? "belowBar" : "aboveBar", shape: long ? "arrowUp" : "arrowDown", color: long ? "#2962ff" : "#e91e63", text: lbl ? `${long ? "Achat" : "Vente"} ${q} @ ${fx(px)}${tag}` : "" }); };
+      A.trades.forEach((r) => { if (undOf(r.sym) !== u) return; const long = r.side === "long"; ent(r.t0, long, r.qty, r.entry);
+        if (r.t1 >= t0 && r.t1 <= t1) { const pts = (r.exit - r.entry) * (long ? 1 : -1), pu = PR.trPLposU || PR.trPLu, txt = PR.trPL === false || PR.trPLpos === false ? "" : pu === "ticks" ? `${pts >= 0 ? "+" : ""}${Math.round(pts / tk)} ticks` : pu === "pts" ? `${pts >= 0 ? "+" : ""}${+pts.toFixed(2)} pts` : `${r.pnl >= 0 ? "+" : ""}${r.pnl.toFixed(2)} $`;
+          out.push({ time: snapT(r.t1), position: long ? "aboveBar" : "belowBar", shape: "circle", color: r.pnl >= 0 ? "#089981" : "#f23645", text: txt + (txt ? tag : "") }); } });
+      Object.entries(A.pos).forEach(([k, P]) => { if (undOf(k) === u && P.q) ent(P.t, P.q > 0, Math.abs(P.q), P.avg); }); } catch (e) { /* */ }
     this.trades = out; this.markers(); }
   /* ----- légende (barre d'état) ----- */
   legend(i) {
@@ -13835,6 +13870,11 @@ function selectD(d, cell) { DS.sel = d ? d.id : null; CELLS.forEach((c) => c.red
 function setTool(t, keep) { if (DS.creating) cancelCreate(); DS.tool = t; if (["cross", "dot", "arrow", "eraser"].includes(t)) { DS.cursor = t; DS.tool = t === "eraser" ? "eraser" : "cross"; CELLS.forEach((c) => c.allCharts().forEach((ch) => ch.applyOptions({ crosshair: { mode: t === "cross" ? (PR.crossMag ? 1 : 0) : 2 } }))); }
   else if (!keep) { const g = TOOL_GROUPS.find((x) => x[2].includes(t)); if (g) { DS.last[g[0]] = t; LS.set("gr-lasttool", DS.last); } }
   CELLS.forEach((c) => (c.main.host.dataset.cur = t === "eraser" || DS.cursor === "eraser" ? "erase" : DS.cursor === "arrow" && t === "cross" ? "arrow" : T[t] && T[t].np !== -9 ? "draw" : "")); refreshTools(); }
+/** v1.98 : raccourci d'un outil à un point (lignes verticale / horizontale / rayon / croisée) = posé tout de suite sous la souris, sans clic */
+function toolNow(tool) { const def = T[tool], c = CELLS.find((x) => x.ptrIn && x.mouseP && !x.dead);
+  if (!def || def.np !== 1 || !c || DS.creating || DS.lockAll) return setTool(tool);
+  const G = c.geo(), { x, y } = c.mouseP; if (!c.inPlot(x, y)) return setTool(tool);
+  snap(); const pt = c.ptAt(x, y, G, {}), d = stampD({ id: uid(), tool, sym: undOf(c.st.sym), p: [pt], s: defStyle(tool), at: Date.now() }, c); drawsOf(c.st.sym).push(d); finishCreate(d, c); }
 function cancelCreate() { const c = DS.creating; if (!c) return; DS.creating = null; const L = drawsOf(c.cell.st.sym), i = L.indexOf(c.d); if (i >= 0) { if ((T[c.d.tool].np === 0 || T[c.d.tool].np === -1) && c.d.p.length >= 2) { if (T[c.d.tool].np === 0) c.d.p.pop(); c.d.done = true; finishCreate(c.d, c.cell); return; } L.splice(i, 1); HIST.u.pop(); } c.cell.redraw(); }
 function finishCreate(d, cell) {
   DS.creating = null; d.done = true; const def = T[d.tool];
@@ -14837,7 +14877,8 @@ function openDrawSettings(d, c) {
     d.tool === "fvp" ? `<div class="gr-fr"><span>Lignes</span><input class="gr-in sm" type="number" data-n="rows" value="${E(s.rows)}"><span>Zone de valeur %</span><input class="gr-in sm" type="number" data-n="va" value="${E(s.va)}"></div><div class="gr-fr"><span>Acheteurs</span>${colorInput("cu", s.cu)}<span>Vendeurs</span>${colorInput("cd", s.cd)}</div><div class="gr-fr"><span>POC</span>${colorInput("poc", s.poc)}</div>` : "",
     d.tool === "emoji" ? `<div class="gr-fr"><span>Émoji</span><div class="gr-emo sm">${EMOJIS.map((e) => `<button data-emo="${e}" class="${s.e === e ? "on" : ""}">${e}</button>`).join("")}</div></div><div class="gr-fr"><span>Taille</span><input class="gr-in sm" type="number" data-n="fs" value="${E(s.fs || 28)}"></div>` : "",
   ].join("");
-  const textT = hasTxt ? `<textarea class="gr-in gr-ta" id="grDTxt" placeholder="Texte affiché sur le dessin">${E(d.txt || "")}</textarea><div class="gr-fr"><span>Couleur du texte</span>${colorInput("tc", s.tc || s.c || "#d1d4dc")}<span>Taille</span><select class="gr-in sm" data-n="fs">${[10, 11, 12, 13, 14, 16, 18, 20, 24, 28, 32, 40].map((v) => `<option ${(s.fs || 13) == v ? "selected" : ""}>${v}</option>`).join("")}</select>${ck("b", "Gras")}${ck("i", "Italique")}</div>${d.tool === "text" ? `<div class="gr-fr"><span>Fond</span>${colorInput("bg", s.bg || "rgba(41,98,255,0)")}</div>` : ""}${d.tool === "hline" ? `<div class="gr-fr"><span>Position</span><select class="gr-in" data-n="tpos">${[["r", "Droite"], ["c", "Centre"], ["l", "Gauche"]].map(([v, n]) => `<option value="${v}" ${(s.tpos || "r") === v ? "selected" : ""}>${n}</option>`).join("")}</select></div>` : ""}` : "";
+  const textT = hasTxt ? `<textarea class="gr-in gr-ta" id="grDTxt" placeholder="Texte affiché sur le dessin">${E(d.txt || "")}</textarea><div class="gr-fr"><span>Couleur du texte</span>${colorInput("tc", s.tc || s.c || "#d1d4dc")}<span>Taille</span><select class="gr-in sm" data-n="fs">${[10, 11, 12, 13, 14, 16, 18, 20, 24, 28, 32, 40].map((v) => `<option ${(s.fs || 13) == v ? "selected" : ""}>${v}</option>`).join("")}</select>${ck("b", "Gras")}${ck("i", "Italique")}</div>${d.tool === "text" ? `<div class="gr-fr"><span>Fond</span>${colorInput("bg", s.bg || "rgba(41,98,255,0)")}</div>` : ""}${TXPOS[d.tool] ? (() => { const dv = TXPOS[d.tool], tv0 = s.tv || dv.tv, th0 = s.th || (d.tool === "hline" && s.tpos) || dv.th, op = (L, cur) => L.map(([v, n]) => `<option value="${v}" ${cur === v ? "selected" : ""}>${n}</option>`).join(""); // v1.98 : position du texte (comme TradingView)
+    return `<div class="gr-fr"><span>Position du texte</span><select class="gr-in" data-n="tv">${op([["t", "Haut"], ["m", "Milieu"], ["b", "Bas"]], tv0)}</select><select class="gr-in" data-n="th">${op([["l", "Gauche"], ["c", "Centre"], ["r", "Droite"]], th0)}</select></div>`; })() : ""}` : "";
   const lvT = lvl ? `<div class="gr-mut">Coche un niveau pour afficher sa ligne.</div><div class="gr-lvl">${s.lv.map((l, i) => `<div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-lo="${i}" ${l.on ? "checked" : ""}></label><input class="gr-in sm" type="number" step="any" data-lv="${i}" value="${l.v}">${colorInput("L:" + i, l.c)}<input class="gr-in sm gr-lvt" data-lt="${i}" value="${E(l.t || "")}" placeholder="Texte"><button class="gr-ib" data-ldel="${i}" title="Retirer">${ICO.x}</button></div>`).join("")}</div><button class="gr-btn" id="grLvAdd">+ Ajouter un niveau</button>` : "";
   const fmtIn = (t) => { const z = new Date((t + tzOff(dispTZ(), t)) * 1000).toISOString(); return z.slice(0, 16); };
   const coT = d.p.map((q, i) => `<div class="gr-fr"><span>Point ${i + 1}</span><input class="gr-in" type="datetime-local" data-ct="${i}" value="${fmtIn(q.t)}"><input class="gr-in sm" type="number" step="any" data-cp="${i}" value="${q.p}"></div>`).join("") + `<div class="gr-mut">Heures en ${E(TZS.find((z) => z[0] === dispTZ()) ? TZS.find((z) => z[0] === dispTZ())[1] : dispTZ())}.</div>`;
@@ -15170,7 +15211,7 @@ function openSettings(tab) {
       + `<div class="tv-sub">${row(ck("trRev", "Bouton de position inversée", true), "", "Ajoute le bouton d'inversion à côté de la position ouverte sur le graphique")}${row("Commandes de trading", sl("trCtl", [["always", "Toujours visible"], ["hover", "Visible avec déplacement de la souris"], ["never", "Masqué"]]), "Définit la visibilité des éléments pour les actions de trading")}</div>`
       + row(ck("trDraft", "Ordre de projet pour les ordres au marché"), "", "Affiche un ordre de projet sur le graphique avant d'envoyer un ordre au marché")
       + row(ck("trPL", "Valeur des profits et pertes", true)) + `<div class="tv-sub">${row(ck("trPLpos", "Positions", true), sl("trPLposU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}${row(ck("trPLbr", "Brackets", true), sl("trPLbrU", [["money", "Argent"], ["ticks", "Ticks"], ["pts", "Points"], ["pct", "Pourcentage"]], "sm"))}</div>`
-      + row(ck("trades", "Marques d'exécution", true)) + `<div class="tv-sub">${row(ck("trLbl", "Étiquettes d'exécution", true))}</div>`
+      + row(ck("trades", "Marques d'exécution", true)) + `<div class="tv-sub">${row(ck("trLbl", "Étiquettes d'exécution", true))}${row(`<span>Exécutions affichées</span>`, sl("execSrc", [["both", "TopstepX + Paper Trading"], ["tsx", "TopstepX seulement"], ["paper", "Paper Trading seulement"]]), "Paper Trading = compte de paper trading choisi")}</div>`
       + row(ck("trExt", "Lignes de prix étendues sur toute la largeur du graphique", true))
       + row(ck("trPrev", "Aperçu de l'ordre limite / stop du ticket avec ses TP / SL", true), "", "Entrée, TP et SL de l'aperçu se glissent sur le graphique ; × = revenir à un ordre au marché")
       + row("Thème des ordres", sl("trTheme", [["tv", "TradingView"], ["tsx", "TopstepX"]], "sm"), "Style des étiquettes de position, d'ordres, de TP et de SL sur le graphique")
@@ -15290,8 +15331,8 @@ const KDEF = [
   ["cCross", "Curseur croix", ["Ctrl+Alt+C"], () => setTool("cross")], ["cArrow", "Curseur flèche", ["Ctrl+Alt+A"], () => setTool("arrow")], ["cDot", "Curseur point", ["Ctrl+Alt+D"], () => setTool("dot")], ["cErase", "Gomme", ["Ctrl+Alt+E"], () => setTool("eraser")],
   ["max", "Agrandir / restaurer le graphique actif", ["Alt+Enter"], toggleMax], ["next", "Graphique suivant", ["Tab"], () => setActive((STATE.active + 1) % CELLS.length)], ["prev", "Graphique précédent", ["Shift+Tab"], () => setActive((STATE.active - 1 + CELLS.length) % CELLS.length)],
   ["shot", "Capture HD (télécharger)", ["Ctrl+Alt+S"], () => shot(false)], ["copyshot", "Copier l'image", ["Alt+Shift+S"], () => shot(true)], ["full", "Plein écran", ["Shift+F", "F11"], toggleFull], ["save", "Enregistrer la mise en page", ["Ctrl+S"], () => saveLayout()],
-  ["ind", "Indicateurs", ["/"], openIndicators], ["trend", "Ligne de tendance", ["Alt+T"], () => setTool("trend")], ["hline", "Ligne horizontale", ["Alt+H"], () => setTool("hline")], ["hray", "Rayon horizontal", ["Alt+J"], () => setTool("hray")],
-  ["vline", "Ligne verticale", ["Alt+V"], () => setTool("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => setTool("xline")], ["fib", "Retracement de Fibonacci", ["Alt+F"], () => setTool("fib")], ["rect", "Rectangle", ["Alt+E"], () => setTool("rect")],
+  ["ind", "Indicateurs", ["/"], openIndicators], ["trend", "Ligne de tendance", ["Alt+T"], () => setTool("trend")], ["hline", "Ligne horizontale", ["Alt+H"], () => toolNow("hline")], ["hray", "Rayon horizontal", ["Alt+J"], () => toolNow("hray")],
+  ["vline", "Ligne verticale", ["Alt+V"], () => toolNow("vline")], ["xline", "Ligne croisée", ["Alt+C"], () => toolNow("xline")], ["fib", "Retracement de Fibonacci", ["Alt+F"], () => setTool("fib")], ["rect", "Rectangle", ["Alt+E"], () => setTool("rect")],
   ["long", "Position longue", ["Alt+Shift+B"], () => setTool("long")], ["short", "Position courte", ["Alt+Shift+V"], () => setTool("short")],
   ["undo", "Annuler", ["Ctrl+Z"], () => undoRedo(false)], ["redo", "Rétablir", ["Ctrl+Y", "Ctrl+Shift+Z"], () => undoRedo(true)], ["del", "Supprimer le dessin sélectionné", ["Delete", "Backspace"], deleteSel],
   ["copy", "Copier le dessin", ["Ctrl+C"], () => { const d = selD(); if (d) { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } }], ["paste", "Coller le dessin", ["Ctrl+V"], () => { if (!DS.clip) return; if (DS.clip.kind === "ind") { pasteInd(curC(), DS.clip.x); return; } const c = curC(); snap(); const cp = stampD(JSON.parse(JSON.stringify(DS.clip)), c, true); cp.id = uid(); delete cp.anch; cp.sym = undOf(c.st.sym); const G = c.geo(); cp.p = cp.p.map((q) => ({ t: G.tOfL(G.li(q.t) + 3), p: q.p })); drawsOf(c.st.sym).push(cp); selectD(cp, c); drawChanged(cp); }],
@@ -15752,7 +15793,8 @@ function paEngine() {
     if (f.length || before !== JSON.stringify(grPaper.live(A, s).map((o) => o.st))) ch = true; }
   if (ch) { paSave(); paRefresh(); }
 }
-function paRefresh() { if (STATE.panel === "trade") renderTrade(); renderPaperP(); paLines(); paQuick(); }
+function paRefresh() { if (STATE.panel === "trade") renderTrade(); renderPaperP(); paLines(); paQuick();
+  { const A = PA.A, sig = A ? (paReg().cur + ":" + A.trades.length + ":" + Object.values(A.pos).map((p) => p.q + "@" + p.t).join(",")) : ""; if (sig !== PA.mkSig) { PA.mkSig = sig; if ((PR.execSrc || "both") !== "tsx") CELLS.forEach((c) => c.loadTrades()); } } }
 
 /** clic droit sur le graphique : ordre limite / stop au prix cliqué (quantité du ticket), comme TradingView */
 function paCtxItems(c, p) {
@@ -16052,15 +16094,16 @@ function pvDrop(it, p, s, px) { const tick = paSpec(s).tick, buy = TPF.side === 
     if (x[k + "M"] === "price") x[k] = paRound(p, tick); else x[k] = Math.max(1, Math.round(Math.abs(p - e) / tick)); }
   tpSave(); paRefresh(); paQuick(); }
 // v1.96 : clic gauche maintenu sur le graphique (curseur) = bulle OHLC de la bougie sous le curseur, comme TradingView
-(() => { let tm = null, on = false, cell = null; const tip = () => { let t = $r(".gr-ohlct"); if (!t) { t = el("div", "gr-ohlct"); ROOT.append(t); } return t; };
+(() => { let tm = null, on = false, cell = null, sx = 0, sy = 0; const tip = () => { let t = $r(".gr-ohlct"); if (!t) { t = el("div", "gr-ohlct"); ROOT.append(t); } return t; };
   const show = (e) => { const c = cell; if (!c || !c.DB.length) return; const r = c.main.host.getBoundingClientRect(), G = c.geo(), i = clamp(Math.round(G.lOfX(e.clientX - r.left)), 0, c.DB.length - 1), b = c.DB[i], sp = c.spec, rr = ROOT.getBoundingClientRect(), t = tip();
     t.innerHTML = [["Ouverture", b[1]], ["Haut", b[2]], ["Bas", b[3]], ["Fermeture", b[4]]].map(([k, v]) => `<div><span>${k}</span><b>${E(fmtPx(v, sp))}</b></div>`).join(""); t.hidden = false;
     let x = e.clientX - rr.left + 14, y = e.clientY - rr.top - 20; if (x + 200 > rr.width) x = e.clientX - rr.left - 214; t.style.left = x + "px"; t.style.top = clamp(y, 4, rr.height - 140) + "px"; };
   const stop = () => { clearTimeout(tm); tm = null; on = false; cell = null; const t = $r(".gr-ohlct"); if (t) t.hidden = true; };
   document.addEventListener("pointerdown", (e) => { if (e.button !== 0 || PR.ohlcHold === false || !viewOn() || !e.target.closest || !e.target.closest(".gr-cell")) return; const c = CELLS.find((x) => x.main && x.main.host.contains(e.target)); if (!c) return;
     if ((T[DS.tool] && T[DS.tool].g !== "cur") || DS.creating || e.shiftKey || e.altKey || e.ctrlKey) return; const r = c.main.host.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; if (!c.inPlot(x, y) || c.hit(x, y)) return;
-    cell = c; tm = setTimeout(() => { on = true; show(e); }, 180); }, true);
-  addEventListener("pointermove", (e) => { if (on && !DS.drag && !PA.drag) show(e); });
+    cell = c; sx = e.clientX; sy = e.clientY; tm = setTimeout(() => { tm = null; on = true; show(e); }, 450); }, true);
+  // v1.98 : la bulle n'apparaît qu'après un appui long sans bouger, et disparaît dès que la souris bouge
+  addEventListener("pointermove", (e) => { if ((tm || on) && Math.hypot(e.clientX - sx, e.clientY - sy) > 3) { clearTimeout(tm); tm = null; if (on) { on = false; const t = $r(".gr-ohlct"); if (t) t.hidden = true; } } });
   addEventListener("pointerup", stop); addEventListener("blur", stop); })();
 // v1.94.2 : souris immobile sur le graphique → la ligne horizontale du curseur est remise toutes les 250 ms (des mises à jour en direct l'effaçaient)
 setInterval(() => { if (!viewOn() || DS.creating || DS.drag || PA.drag) return; const now = performance.now(); CELLS.forEach((c) => { if (c.mouseP && !c.btn && now - (c.lastMv || 0) > 300) c.keepCross(); }); }, 250);
@@ -16614,6 +16657,109 @@ window.grApi = { TPF: () => TPF, DRAW: () => DRAW, drawsOf, drawChanged, LAYOUTS
   addEventListener("popstate", () => { if (b.classList.contains("mdrawer")) b.classList.remove("mdrawer"); });
   // calendrier sur téléphone : faire défiler jusqu'à aujourd'hui
   if (matchMedia("(max-width:760px)").matches) setTimeout(() => { const t = document.querySelector(".day.today"); if (t && (location.hash || "#calendrier") === "#calendrier") t.scrollIntoView({ block: "start" }); }, 400);
+})();
+</script>
+<script>
+/* ---------- Saisonnalité (page Laboratoire › Saisonnalité, v1.98) ----------
+   Comme les « Seasonals » de TradingView : une courbe par année (variation en % depuis la clôture de l'année précédente, jour par jour),
+   la moyenne des années complètes, puis un tableau des variations mensuelles (moyenne, % de mois positifs).
+   Bougies journalières du flux de la page Graphique (window.grSeason : CSV data_csv / TopstepX sur l'app, Forex Factory sur le web).
+   Logique pure seasonCalc (marqueurs seasonCalc:start/end). Réglages localStorage econcal-saison = { sym, n, avg, cur }. Calcule et affiche seulement. */
+/* seasonCalc:start */
+function seasonCalc(rows, nYears, curYear) {
+  // rows = [[AAAA-MM-JJ, clôture], …] trié ; nYears = années affichées (année en cours comprise)
+  const byY = new Map(); for (const [d, c] of rows) { if (!(c > 0)) continue; const y = +d.slice(0, 4); if (!byY.has(y)) byY.set(y, []); byY.get(y).push([d, c]); }
+  const ys = [...byY.keys()].sort((a, b) => a - b), last = curYear || ys[ys.length - 1], want = ys.filter((y) => y <= last && y > last - nYears);
+  const doy = (d) => { const t = Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10)), t0 = Date.UTC(+d.slice(0, 4), 0, 1); return Math.round((t - t0) / 86400000); };
+  const years = [];
+  for (const y of want) { const prev = byY.get(y - 1), cur = byY.get(y); const base = prev && prev.length ? prev[prev.length - 1][1] : cur[0][1];
+    const pts = cur.map(([d, c]) => [doy(d), (c / base - 1) * 100]);
+    const mon = Array(12).fill(null); let ref = base;
+    for (let m = 0; m < 12; m++) { const inM = cur.filter(([d]) => +d.slice(5, 7) === m + 1); if (!inM.length) continue; const lc = inM[inM.length - 1][1]; mon[m] = (lc / ref - 1) * 100; ref = lc; }
+    years.push({ y, pts, mon, full: !!(byY.get(y + 1)) || (cur.length && cur[cur.length - 1][0].slice(5) >= "12-20"), partialStart: !prev });
+  }
+  const full = years.filter((Y) => Y.full && !Y.partialStart);
+  const avg = []; if (full.length) { for (let d = 0; d <= 365; d++) { let s = 0, n = 0; for (const Y of full) { let v = null; for (const [x, p] of Y.pts) { if (x <= d) v = p; else break; } if (v != null) { s += v; n++; } } if (n) avg.push([d, s / n]); } }
+  const mAvg = Array(12).fill(null), mPos = Array(12).fill(null);
+  for (let m = 0; m < 12; m++) { const v = years.filter((Y) => !Y.partialStart && Y.mon[m] != null && Y.y !== last).map((Y) => Y.mon[m]); if (v.length) { mAvg[m] = v.reduce((a, b) => a + b, 0) / v.length; mPos[m] = v.filter((x) => x > 0).length / v.length * 100; } }
+  return { years, avg, mAvg, mPos, nFull: full.length };
+}
+/* seasonCalc:end */
+(() => {
+  const root = document.getElementById("ssRoot"); if (!root) return;
+  const MO = ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+  const COL = ["#2962ff", "#f23645", "#089981", "#ff9800", "#9c27b0", "#00bcd4", "#e91e63", "#8bc34a", "#795548", "#607d8b", "#ffc107", "#3f51b5", "#009688", "#cddc39", "#ff5722"];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  let cfg = { sym: "NQ", n: 5, avg: true, cur: true }; try { Object.assign(cfg, JSON.parse(localStorage.getItem("econcal-saison") || "{}")); } catch (e) { /* */ }
+  const save = () => { try { localStorage.setItem("econcal-saison", JSON.stringify(cfg)); } catch (e) { /* */ } };
+  let data = null, hidden = new Set(), busy = false, err = "", hover = null;
+  const pct = (v, d = 2) => (v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(d) + " %");
+  function syms() { const G = window.grSeason; if (!G) return []; return G.syms(); }
+  async function load() {
+    const G = window.grSeason; if (!G) { err = "Page Graphique indisponible."; draw(); return; }
+    busy = true; err = ""; draw();
+    try { const rows = await G.bars(cfg.sym); const cy = +new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric" }).format(new Date());
+      data = rows.length ? seasonCalc(rows, cfg.n, cy) : null; if (!data || !data.years.length) err = "Pas de bougies journalières pour " + cfg.sym + (G.tsx ? "" : " (sur le web : choisis un symbole Forex Factory, ou ouvre l'app pour les futures TopstepX)."); }
+    catch (e) { data = null; err = "Chargement impossible : " + (e && e.message || e); }
+    busy = false; draw();
+  }
+  function chart() {
+    if (!data) return ""; const W = 1100, H = 430, L = 56, R = 64, T = 14, B = 30, w = W - L - R, h = H - T - B, cy = data.years.length ? data.years[data.years.length - 1].y : 0;
+    const lines = data.years.filter((Y) => !hidden.has(Y.y) && (cfg.cur || Y.y !== cy));
+    let lo = 0, hi = 0; lines.forEach((Y) => Y.pts.forEach(([, p]) => { lo = Math.min(lo, p); hi = Math.max(hi, p); })); if (cfg.avg) data.avg.forEach(([, p]) => { lo = Math.min(lo, p); hi = Math.max(hi, p); });
+    const pad = Math.max(1, (hi - lo) * 0.08); lo -= pad; hi += pad;
+    const X = (d) => L + d / 365 * w, Y = (p) => T + (hi - p) / (hi - lo) * h;
+    const step = [1, 2, 5, 10, 20, 25, 50, 100].find((s) => (hi - lo) / s <= 8) || 200; let grid = "";
+    for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) grid += `<line x1="${L}" x2="${L + w}" y1="${Y(v)}" y2="${Y(v)}" class="ss-g${v === 0 ? " z" : ""}"/><text x="${W - R + 6}" y="${Y(v) + 4}" class="ss-ax">${v > 0 ? "+" : ""}${v}%</text>`;
+    const mStart = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; mStart.forEach((d, i) => { grid += `<line x1="${X(d)}" x2="${X(d)}" y1="${T}" y2="${T + h}" class="ss-g"/><text x="${X(d + 15)}" y="${H - 10}" class="ss-ax" text-anchor="middle">${MO[i]}</text>`; });
+    const path = (pts) => pts.map(([d, p], i) => `${i ? "L" : "M"}${X(d).toFixed(1)},${Y(p).toFixed(1)}`).join("");
+    const ci = (y) => COL[(data.years.findIndex((Z) => Z.y === y)) % COL.length];
+    let ln = lines.map((Yr) => `<path d="${path(Yr.pts)}" stroke="${ci(Yr.y)}" class="ss-l${Yr.y === cy ? " cur" : ""}"/>`).join("");
+    if (cfg.avg && data.avg.length) ln += `<path d="${path(data.avg)}" class="ss-l avg"/>`;
+    let hv = ""; if (hover != null) { const d = hover; hv = `<line x1="${X(d)}" x2="${X(d)}" y1="${T}" y2="${T + h}" class="ss-hv"/>`; }
+    return `<svg viewBox="0 0 ${W} ${H}" class="ss-svg" data-l="${L}" data-w="${w}">${grid}${ln}${hv}</svg>`;
+  }
+  function tip() {
+    if (!data || hover == null) return ""; const d = hover, dt = new Date(Date.UTC(2001, 0, 1) + d * 86400000), lab = dt.getUTCDate() + " " + MO[dt.getUTCMonth()];
+    const at = (pts) => { let v = null; for (const [x, p] of pts) { if (x <= d) v = p; else break; } return v; };
+    const it = data.years.filter((Y) => !hidden.has(Y.y)).map((Y) => [String(Y.y), at(Y.pts), COL[data.years.indexOf(Y) % COL.length]]); if (cfg.avg && data.avg.length) it.push(["Moyenne", at(data.avg), "#9598a1"]);
+    return `<b>${lab}</b>` + it.map(([n, v, c]) => `<div><i style="background:${c}"></i>${n}<span class="${v > 0 ? "up" : v < 0 ? "dn" : ""}">${pct(v)}</span></div>`).join("");
+  }
+  function table() {
+    if (!data) return ""; const cell = (v) => { if (v == null) return `<td class="na">—</td>`; const a = Math.min(1, Math.abs(v) / 8) * 0.55 + 0.08; return `<td style="background:${v >= 0 ? `rgba(8,153,129,${a})` : `rgba(242,54,69,${a})`}">${pct(v, 1)}</td>`; };
+    const rows = data.years.slice().reverse().map((Y) => { const yr = Y.pts.length ? Y.pts[Y.pts.length - 1][1] : null; return `<tr><th>${Y.y}${Y.partialStart ? " *" : ""}</th>${Y.mon.map(cell).join("")}${cell(yr)}</tr>`; }).join("");
+    return `<table class="ss-t"><tr><th></th>${MO.map((m) => `<th>${m}</th>`).join("")}<th>Année</th></tr>${rows}
+      <tr class="ss-avg"><th>Moyenne</th>${data.mAvg.map(cell).join("")}<td></td></tr>
+      <tr class="ss-avg"><th>Mois positifs</th>${data.mPos.map((v) => `<td>${v == null ? "—" : Math.round(v) + " %"}</td>`).join("")}<td></td></tr></table>
+      <div class="hintd">Variation de chaque mois = dernière clôture du mois / dernière clôture du mois précédent (heure de New York). Moyenne et mois positifs sur les années complètes affichées, sans l'année en cours.${data.years.some((Y) => Y.partialStart) ? " * année sans clôture de l'année précédente dans les données : départ = première clôture." : ""}</div>`;
+  }
+  function draw() {
+    const S = syms(), cats = [...new Set(S.map((x) => x.cat))];
+    const opt = cats.map((c) => `<optgroup label="${esc(c)}">${S.filter((x) => x.cat === c).map((x) => `<option value="${esc(x.s)}" ${x.s === cfg.sym ? "selected" : ""}>${esc(x.s)} — ${esc(x.n)}</option>`).join("")}</optgroup>`).join("");
+    const cy = data && data.years.length ? data.years[data.years.length - 1].y : null;
+    root.innerHTML = `<div class="ss-bar"><select id="ssSym" class="ss-in">${opt}</select>
+      <span class="ss-seg">${[3, 5, 10, 15].map((n) => `<button data-n="${n}" class="${cfg.n === n ? "on" : ""}">${n} ans</button>`).join("")}</span>
+      <label class="ss-ck"><input type="checkbox" id="ssAvg" ${cfg.avg ? "checked" : ""}> Moyenne</label><label class="ss-ck"><input type="checkbox" id="ssCur" ${cfg.cur ? "checked" : ""}> Année en cours</label>
+      <button class="ss-btn" id="ssRe" title="Recharger les bougies">⟳</button>${busy ? `<span class="ss-mut">Chargement…</span>` : ""}</div>
+      ${err ? `<div class="ss-err">${esc(err)}</div>` : ""}
+      ${data ? `<div class="panel ss-p"><div class="ptitle">${esc(cfg.sym)} · variation depuis le début de l'année</div><div class="ss-wrap">${chart()}<div class="ss-tip" ${hover == null ? "hidden" : ""}>${tip()}</div></div>
+        <div class="ss-leg">${data.years.map((Y, i) => `<button data-y="${Y.y}" class="${hidden.has(Y.y) ? "off" : ""}${Y.y === cy ? " cur" : ""}"><i style="background:${COL[i % COL.length]}"></i>${Y.y}</button>`).join("")}${cfg.avg && data.avg.length ? `<span class="ss-mut"><i class="avg"></i>Moyenne (${data.nFull} an${data.nFull > 1 ? "s" : ""})</span>` : ""}</div></div>
+        <div class="panel ss-p"><div class="ptitle">Variations mensuelles</div>${table()}</div>` : ""}`;
+    const q = (s) => root.querySelector(s);
+    q("#ssSym").onchange = (e) => { cfg.sym = e.target.value; hidden.clear(); save(); load(); };
+    root.querySelectorAll(".ss-seg [data-n]").forEach((b) => (b.onclick = () => { cfg.n = +b.dataset.n; save(); load(); }));
+    q("#ssAvg").onchange = (e) => { cfg.avg = e.target.checked; save(); draw(); }; q("#ssCur").onchange = (e) => { cfg.cur = e.target.checked; save(); draw(); };
+    q("#ssRe").onclick = () => load();
+    root.querySelectorAll(".ss-leg [data-y]").forEach((b) => (b.onclick = () => { const y = +b.dataset.y; hidden.has(y) ? hidden.delete(y) : hidden.add(y); draw(); }));
+    const svg = q(".ss-svg"); if (svg) { const L = +svg.dataset.l, w = +svg.dataset.w;
+      svg.onmousemove = (e) => { const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) * 1100 / r.width; const d = Math.round((x - L) / w * 365); const nv = d >= 0 && d <= 365 ? d : null; if (nv === hover) return; hover = nv; const t = q(".ss-tip"); const ln = svg.querySelector(".ss-hv");
+        if (ln) ln.remove(); if (hover != null) { const X = L + hover / 365 * w; svg.insertAdjacentHTML("beforeend", `<line x1="${X}" x2="${X}" y1="14" y2="400" class="ss-hv"/>`); }
+        t.hidden = hover == null; t.innerHTML = tip(); t.style.left = Math.min(r.width - 190, Math.max(0, e.clientX - r.left + 14)) + "px"; t.style.top = "10px"; };
+      svg.onmouseleave = () => { hover = null; const t = q(".ss-tip"); t.hidden = true; const ln = svg.querySelector(".ss-hv"); if (ln) ln.remove(); }; }
+  }
+  let started = false;
+  window.saisonShow = () => { if (!started) { started = true; draw(); load(); } else if (!data && !busy) load(); };
+  if (document.getElementById("v-saison").classList.contains("on")) window.saisonShow(); // page ouverte au lancement (#saison)
 })();
 </script>
 <script>

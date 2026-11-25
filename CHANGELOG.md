@@ -2,6 +2,17 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.98.0] — 2026-11-25
+### Ajouté
+- Nouvelle page **Laboratoire › Saisonnalité** (comme les « Seasonals » de TradingView) : une courbe par année (variation depuis la clôture de l'année précédente), moyenne des années complètes, choix 3 / 5 / 10 / 15 ans, années masquables, info-bulle au survol, et tableau des **variations mensuelles** (moyenne, % de mois positifs). Bougies journalières de la page Graphique (CSV / TopstepX sur l'app, Forex Factory sur le web).
+- Graphique : **position du texte** sur le rectangle, les lignes de tendance, rayons, lignes horizontales / verticales (Texte › Position du texte : Haut / Milieu / Bas et Gauche / Centre / Droite).
+- Graphique : Paramètres › Trading › **Exécutions affichées** = TopstepX + Paper Trading, TopstepX seulement ou Paper Trading seulement (marques du compte de paper trading choisi sur le graphique).
+### Modifié
+- macOS : plus de fenêtre « Inner Circle Trader veut utiliser… Safe Storage » au lancement. Les secrets (token Notion, jeton TopstepX, clé Claude, config du copier) sont chiffrés avec une clé rangée une fois dans le trousseau (desktop/secret.js) ; la demande peut apparaître **une dernière fois** au premier lancement de cette version, et les connexions des sites intégrés (TopstepX, X…) peuvent être à refaire une fois.
+- Graphique : la **bulle OHLC** n'apparaît qu'après un appui long sans bouger et disparaît dès que la souris bouge.
+- Graphique : raccourcis des **lignes verticale (Alt+V), horizontale (Alt+H), rayon horizontal (Alt+J) et ligne croisée (Alt+C)** = la ligne est posée tout de suite sous la souris, sans clic.
+- Graphique : textes des niveaux de **Fibonacci** sans rectangle couleur du fond derrière.
+
 ## [1.97.0] — 2026-11-24
 ### Ajouté
 - Page Graphique : bouton **Paper Trading** à droite d'« Aller à » (barre du bas) = panneau façon TradingView : **plusieurs comptes de paper trading** (liste, Créer un compte…, changer de compte), P&L non réalisé / réalisé, Actif, Marge du compte, Fonds disponibles, Marge de sécurité, onglets Positions / Ordres / Historique, « Faites un trade pour commencer » avec Sell / Buy. **Paramètres du compte** : nom, effet de levier, commission par contrat, réinitialiser, supprimer. Aucun vrai ordre ; seul le compte choisi exécute ses ordres.
