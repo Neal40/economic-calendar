@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.99.0] — 2026-11-25
+### Ajouté
+- **Quoi de neuf** : après chaque mise à jour, une fenêtre montre une seule fois les nouveautés de la version installée. Elles restent à revoir dans Paramètres › Profil › Application (« Quoi de neuf dans la vX », avec les versions précédentes), sur l'app comme sur le web.
+
 ## [1.98.0] — 2026-11-25
 ### Ajouté
 - Nouvelle page **Laboratoire › Saisonnalité** (comme les « Seasonals » de TradingView) : une courbe par année (variation depuis la clôture de l'année précédente), moyenne des années complètes, choix 3 / 5 / 10 / 15 ans, années masquables, info-bulle au survol, et tableau des **variations mensuelles** (moyenne, % de mois positifs). Bougies journalières de la page Graphique (CSV / TopstepX sur l'app, Forex Factory sur le web).

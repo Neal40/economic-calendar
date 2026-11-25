@@ -623,6 +623,13 @@ body.th-ict .day,body.th-ict .wrow{border-radius:2px}
 .apv .pf-bar{max-width:440px;height:7px}.apv .pf-bar i{background:var(--acc,#2f54eb);transition:width .2s}body.noir:not(.thx) .apv .pf-bar i{background:#fff}
 .apv a.btn{text-decoration:none;display:inline-flex;align-items:center}.apv .btn:disabled{opacity:.5;cursor:default}
 .apv-msg.err{color:#ef4d5a}.apv-msg.info{color:#f5a524}.apv-msg.ok{color:#3ddc97}
+.apv-cur{margin-top:14px;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;background:rgba(255,255,255,.02)}.apv-cur>summary{font-size:13.5px;color:#e8e9ee;font-weight:600}.apv-cur>summary span{color:#8b8d98;font-weight:400}
+.apv-g{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#d4b25a;margin:12px 0 2px;font-weight:600}.apv-prev{margin-top:12px}.apv-prev>summary{cursor:pointer;font-size:12.5px;color:#9a9ca7}
+.wn-ov{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px}
+.wn-box{width:min(640px,100%);max-height:min(80vh,760px);display:flex;flex-direction:column;background:#0f1320;border:1px solid #2a3042;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.5);color:#e8e9ee}
+.wn-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 10px}.wn-k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#d4b25a;font-weight:600}.wn-t{font-size:19px;font-weight:600;margin-top:4px}
+.wn-x{background:none;border:0;color:#9a9ca7;font-size:24px;line-height:1;cursor:pointer}.wn-b{overflow:auto;padding:0 20px 8px;margin:0}.wn-b ul{font-size:13.5px!important;line-height:1.55!important}
+.wn-f{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px 16px;border-top:1px solid #222839}
 .apv-new{margin-top:12px}.apv-new summary{cursor:pointer;font-size:12.5px;color:#9a9ca7}
 .apv-new .apv-v{font-weight:600;font-size:12.5px;margin:10px 0 2px}.apv-new ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.5;color:#c9cad1}.apv-new li{margin:3px 0}.apv-new code{font-size:11.5px}
 .updot{display:none;width:8px;height:8px;border-radius:50%;background:#f5a524;flex:none;margin-left:auto;box-shadow:0 0 0 3px rgba(245,165,36,.2)}
@@ -4936,6 +4943,42 @@ function payoutCalc(a, fk, pays) {
     catch (e) { /* hors ligne : pas de nouveautés */ }
   }
 
+  /* v1.99 : « Quoi de neuf » = sections du CHANGELOG de la version installée (et des précédentes), toujours visible ici + fenêtre une fois après chaque mise à jour */
+  const fmtFull = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*|`/g, "");
+  function parseAll(md) {
+    const out = []; let v = null, g = null;
+    for (const line of String(md).split(/\r?\n/)) {
+      const h = /^## \[(\d+\.\d+\.\d+)\](?:\s*[—-]\s*(\d{4}-\d{2}-\d{2}))?/.exec(line);
+      if (h) { v = { v: h[1], date: h[2] || "", groups: [] }; out.push(v); g = null; continue; }
+      if (!v) continue; const s3 = /^### (.+)/.exec(line); if (s3) { g = { h: s3[1].trim(), items: [] }; v.groups.push(g); continue; }
+      if (/^- /.test(line)) { if (!g) { g = { h: "", items: [] }; v.groups.push(g); } g.items.push(fmtFull(line.slice(2).trim())); }
+    }
+    return out.filter((x) => x.groups.some((y) => y.items.length));
+  }
+  ST.all = null; ST.allLoading = false; ST.wnOpen = false;
+  async function loadAll() { if (ST.all || ST.allLoading) return; ST.allLoading = true;
+    try { const r = await fetch("https://raw.githubusercontent.com/Neal40/economic-calendar/main/CHANGELOG.md", { cache: "no-store" }); if (r.ok) { ST.all = parseAll(await r.text()); render(); wnPopup(); } } catch (e) { /* hors ligne */ } finally { ST.allLoading = false; } }
+  const instVer = () => (ST.info && ST.info.version) || ST.webVer || "";
+  const frDate = (d) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ""); return m ? `${m[3]}/${m[2]}/${m[1]}` : ""; };
+  const verHTML = (x) => x.groups.filter((g) => g.items.length).map((g) => `${g.h ? `<div class="apv-g">${esc(g.h)}</div>` : ""}<ul>${g.items.map((t) => `<li>${t}</li>`).join("")}</ul>`).join("");
+  function curNews() {
+    const iv = instVer(); if (!ST.all || !iv || avail() || ST.phase) return "";
+    const i = ST.all.findIndex((x) => cmpVer(x.v, iv) === 0); if (i < 0) return ""; const cur = ST.all[i], prev = ST.all.slice(i + 1, i + 5);
+    return `<details class="apv-new apv-cur" ${ST.wnOpen ? "open" : ""}><summary>Quoi de neuf dans la v${esc(cur.v)}${cur.date ? ` <span>· ${frDate(cur.date)}</span>` : ""}</summary>${verHTML(cur)}
+      ${prev.length ? `<details class="apv-prev"><summary>Versions précédentes</summary>${prev.map((x) => `<div class="apv-v">v${esc(x.v)}${x.date ? ` · ${frDate(x.date)}` : ""}</div>${verHTML(x)}`).join("")}</details>` : ""}</details>`;
+  }
+  /** fenêtre « Quoi de neuf » une seule fois par version installée (app desktop) */
+  function wnPopup() {
+    const iv = ST.info && ST.info.version; if (!D || !iv || !ST.all || document.querySelector(".wn-ov")) return;
+    let seen = null; try { seen = localStorage.getItem("econcal-whatsnew"); } catch (e) { /* */ } if (seen === iv) return;
+    const cur = ST.all.find((x) => cmpVer(x.v, iv) === 0); try { localStorage.setItem("econcal-whatsnew", iv); } catch (e) { /* */ } if (!cur) return;
+    const ov = document.createElement("div"); ov.className = "wn-ov";
+    ov.innerHTML = `<div class="wn-box" role="dialog" aria-label="Quoi de neuf"><div class="wn-h"><div><div class="wn-k">Mise à jour installée</div><div class="wn-t">Quoi de neuf dans la v${esc(cur.v)}</div></div><button class="wn-x" title="Fermer">×</button></div><div class="wn-b apv-new">${verHTML(cur)}</div><div class="wn-f"><span class="hintd" style="margin:0">À revoir dans Paramètres › Profil › Application</span><button class="btn wn-ok">OK, compris</button></div></div>`;
+    const close = () => ov.remove(); ov.addEventListener("click", (e) => { if (e.target === ov || e.target.closest(".wn-x,.wn-ok")) close(); });
+    document.addEventListener("keydown", function k(e) { if (e.key === "Escape") { close(); document.removeEventListener("keydown", k); } });
+    document.body.appendChild(ov);
+  }
+
   /* ---------- rendu ---------- */
   function head() {
     const i = ST.info || {}, plat = D.platform === "darwin" ? "macOS" : D.platform === "win32" ? "Windows" : D.platform || "";
@@ -4968,7 +5011,7 @@ function payoutCalc(a, fk, pays) {
   function webHTML() {
     const v = ST.webVer;
     return `<div class="apv-top"><span class="apv-name">Inner Circle Trader</span>${v ? `<span class="pf-chip">v${esc(v)}</span>` : ""}<span class="hintd" style="margin:0">Version web</span></div>
-      <div class="apv-st ok"><i class="apv-dot"></i><div><span>La version web est toujours à jour : recharge la page pour avoir la dernière version.</span></div></div>
+      <div class="apv-st ok"><i class="apv-dot"></i><div><span>La version web est toujours à jour : recharge la page pour avoir la dernière version.</span></div></div>${curNews()}
       <div class="row2"><span class="hintd" style="margin:0">Télécharger l'app :</span><a class="btn gray" href="${REPO}/releases/tag/latest" target="_blank" rel="noopener">Windows</a><a class="btn gray" href="${REPO}/releases/tag/latest-mac" target="_blank" rel="noopener">Mac</a><a class="btn gray" href="${REPO}/releases/tag/latest-android" target="_blank" rel="noopener">Android</a></div>`;
   }
   function render() {
@@ -4978,7 +5021,7 @@ function payoutCalc(a, fk, pays) {
     const can = (ST.info && ST.info.install) || null;
     const hint = avail() && !ST.phase ? (can && can.ok ? "L'app se ferme, installe la nouvelle version et se relance toute seule. Tes données sont gardées." : can ? reasonText(can.reason) : "") : "";
     const lu = ST.info && ST.info.lastUpd, luTxt = lu && !lu.ok ? `<p class="hintd apv-msg err">Dernière mise à jour (${esc(lu.at)}) bloquée : ${lu.step === "ancienne-app" ? "macOS a refusé de remplacer l'app. Ouvre Réglages Système › Confidentialité et sécurité › Gestion des apps, autorise Inner Circle Trader, puis relance la mise à jour." : "la nouvelle version n'a pas pu être copiée, l'ancienne a été gardée."} <span style="opacity:.6">(${esc(lu.detail || "")})</span></p>` : "";
-    b.innerHTML = head() + status() + luTxt + news() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
+    b.innerHTML = head() + status() + luTxt + news() + curNews() + actions() + (ST.msg ? `<p class="hintd apv-msg ${ST.msgKind}">${esc(ST.msg)}</p>` : "") + (hint ? `<p class="hintd">${esc(hint)}</p>` : "")
       + (D.platform === "win32" && !ST.phase ? `<p class="hintd">La mise à jour automatique reste active.</p>` : D.platform === "darwin" && !ST.phase ? `<p class="hintd">Mise à jour automatique : l'app télécharge les nouvelles versions en arrière-plan et les installe quand tu la fermes (ou si le Mac reste inactif 10 min).</p>` : "");
   }
 
@@ -5009,7 +5052,7 @@ function payoutCalc(a, fk, pays) {
     const b = e.target.closest && e.target.closest("[data-apv]"); if (!b || b.disabled || !b.closest("#apvBody")) return;
     if (b.dataset.apv === "check") check(true); else if (b.dataset.apv === "install") install();
   });
-  document.addEventListener("toggle", (e) => { if (e.target.classList && e.target.classList.contains("apv-new")) ST.clOpen = e.target.open; }, true);
+  document.addEventListener("toggle", (e) => { if (!e.target.classList) return; if (e.target.classList.contains("apv-cur")) ST.wnOpen = e.target.open; else if (e.target.classList.contains("apv-new")) ST.clOpen = e.target.open; }, true);
   if (D && D.onAppUpd) D.onAppUpd((p) => {
     if (!p) return;
     if (p.phase === "download") {
@@ -5028,15 +5071,15 @@ function payoutCalc(a, fk, pays) {
       let a = null; try { a = JSON.parse(localStorage.getItem(AKEY) || "null"); localStorage.removeItem(AKEY); } catch (e) { /* ignore */ }
       if (i && a && a.from && Date.now() - a.at < 15 * 60 * 1000) {
         const ok = a.from !== curKey();
-        ST.msg = ok ? `Mise à jour installée : v${i.version}.` : "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub."; ST.msgKind = ok ? "ok" : "err";
+        ST.msg = ok ? `Mise à jour installée : v${i.version}.` : "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub."; ST.msgKind = ok ? "ok" : "err"; if (ok) ST.wnOpen = true;
         notify(ok ? `Mise à jour installée : v${i.version}.` : "La mise à jour n'a pas pu remplacer l'app : réessaie, ou télécharge-la depuis GitHub.");
       }
-      render(); if (location.hash === "#profil") check(false);
+      render(); if (location.hash === "#profil") check(false); loadAll();
     }).catch(() => {});
     setTimeout(() => check(false), 20 * 1000);         // au lancement : pastille sur le menu si une mise à jour est dispo
     setInterval(() => check(false), 3 * 3600 * 1000);  // puis toutes les 3 h
   } else if (/^https?:$/.test(location.protocol)) {
-    fetch("desktop/package.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => { if (j && j.version) { ST.webVer = j.version; render(); } }).catch(() => {});
+    fetch("desktop/package.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => { if (j && j.version) { ST.webVer = j.version; render(); loadAll(); } }).catch(() => {});
   }
   render();
 })();
