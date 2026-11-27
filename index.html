@@ -6442,7 +6442,7 @@ const PineParser = (() => {
 })();
 /* ---------- Pine Script v5 / v6 : AST -> JavaScript (exécuté une fois par bougie par PineRuntime) ---------- */
 const PineCodegen = (() => {
-  const SERIES = new Set(["open", "high", "low", "close", "volume", "time", "time_close", "bar_index", "last_bar_index", "hl2", "hlc3", "ohlc4", "hlcc4", "timenow", "time_tradingday", "year", "month", "weekofyear", "dayofmonth", "dayofweek", "hour", "minute", "second"]);
+  const SERIES = new Set(["open", "high", "low", "close", "volume", "time", "time_close", "bar_index", "last_bar_index", "last_bar_time", "hl2", "hlc3", "ohlc4", "hlcc4", "timenow", "time_tradingday", "year", "month", "weekofyear", "dayofmonth", "dayofweek", "hour", "minute", "second"]);
   const SRCNAMES = new Set(["open", "high", "low", "close", "volume", "hl2", "hlc3", "ohlc4", "hlcc4"]);
   const CALLMAP = { time: "time_fn", time_close: "time_close_fn", year: "year_fn", month: "month_fn", weekofyear: "weekofyear_fn", dayofmonth: "dayofmonth_fn", dayofweek: "dayofweek_fn", hour: "hour_fn", minute: "minute_fn", second: "second_fn", na: "na_fn",
     int: "cast_int", float: "cast_float", bool: "cast_bool", string: "cast_string", color: "color_fn", line: "cast_id", label: "cast_id", box: "cast_id", table: "cast_id", linefill: "cast_id", polyline: "cast_id", input: "input_fn", strategy: "strategy_fn" };
@@ -6696,7 +6696,7 @@ const PineRuntime = (() => {
       constructor(b, sec) { this.b = b; this.i = 0; this.sec = sec || tfs; }
       get open() { return this.b[this.i][1]; } get high() { return this.b[this.i][2]; } get low() { return this.b[this.i][3]; } get close() { return this.b[this.i][4]; } get volume() { return this.b[this.i][5]; }
       get time() { return this.b[this.i][0] * 1000; } get time_close() { const nx = this.b[this.i + 1]; return (nx && this.sec <= 86400 ? nx[0] : this.b[this.i][0] + this.sec) * 1000; }
-      get bar_index() { return this.i; } get last_bar_index() { return this.b.length - 1; } get timenow() { return this.b[this.b.length - 1][0] * 1000; }
+      get bar_index() { return this.i; } get last_bar_index() { return this.b.length - 1; } get last_bar_time() { return this.b.length ? this.b[this.b.length - 1][0] * 1000 : NaN; } get timenow() { return this.b[this.b.length - 1][0] * 1000; }
       get hl2() { const b = this.b[this.i]; return (b[2] + b[3]) / 2; } get hlc3() { const b = this.b[this.i]; return (b[2] + b[3] + b[4]) / 3; } get ohlc4() { const b = this.b[this.i]; return (b[1] + b[2] + b[3] + b[4]) / 4; } get hlcc4() { const b = this.b[this.i]; return (b[2] + b[3] + 2 * b[4]) / 4; }
       get time_tradingday() { return periodStart(this.b[this.i][0], tfSpec("D")) * 1000; }
       lt() { return new Date(nyFn(this.b[this.i][0]) * 1000); }

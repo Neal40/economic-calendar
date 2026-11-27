@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.100.2] — 2026-11-27
+### Corrigé
+- Scripts Pine : `last_bar_time` est reconnu. Les indicateurs qui s'en servent (ex. « Times & Macros », traits verticaux des heures clés) s'affichent enfin.
+
 ## [1.100.1] — 2026-11-27
 ### Modifié
 - Graphique : les lignes des niveaux de **Fibonacci** (et de Gann) s'interrompent aussi derrière leur texte (ex. « 0.75 · FVG »), comme les autres dessins et les scripts Pine.
