@@ -13247,13 +13247,18 @@ function lvDraw(pen, d, G, x0, x1, P0, P1, kind) { // Fibonacci / Gann : lignes 
   if (d.s.bg !== false) for (let i = 1; i < ys.length; i++) { pen.fl(alpha(ys[i][0].c, d.s.bo ?? 0.12)); pen.rect(Math.min(x0, x1), ys[i - 1][2], Math.abs(x1 - x0) || 1, ys[i][2] - ys[i - 1][2], true, false); }
   const tvMode = "lc" in d.s || "lp" in d.s || "lt" in d.s; // modèle TopstepX : coefficient / prix / texte du niveau, police, position
   const TX = []; // v1.97 : étiquettes posées après les lignes ; dézoomé, celles qui se chevauchent sont sautées (premier et dernier niveaux gardés) au lieu de se recouvrir
-  ys.forEach(([l, p, y]) => { const xa = d.s.el ? -9999 : Math.min(x0, x1), xb = d.s.er ? 99999 : Math.max(x0, x1); pen.st(l.c, d.s.w || 1, d.s.ld || 0).seg(xa, y, xb, y);
-    if (d.s.lab === false) return; const text = (x2, y2, str, o) => TX.push({ y: y2, f: () => pen.text(x2, y2, str, o), h: (o.fs || 11) + 2 });
+  const SEG = []; // v1.100.1 : lignes tracées après le calcul des étiquettes, interrompues derrière leur texte
+  ys.forEach(([l, p, y]) => { const xa = d.s.el ? -9999 : Math.min(x0, x1), xb = d.s.er ? 99999 : Math.max(x0, x1); SEG.push([l, xa, y, xb]);
+    if (d.s.lab === false) return; const text = (x2, y2, str, o) => TX.push({ y: y2, x: x2, s: str, o, f: () => pen.text(x2, y2, str, o), h: (o.fs || 11) + 2 });
     if (!tvMode) { text(d.s.lpos === "r" ? Math.max(x0, x1) + 4 : Math.min(x0, x1) - 4, y, `${+l.v.toFixed(3)} (${G.fp(p)})`, { col: l.c, fs: 11, al: d.s.lpos === "r" ? "left" : "right", bl: "middle" }); return; }
     const parts = []; if (d.s.lc) parts.push(d.s.pct ? +(l.v * 100).toFixed(1) + "%" : String(+l.v.toFixed(3))); if (d.s.lp) parts.push("(" + G.fp(p) + ")"); if (d.s.lt && l.t) parts.push(l.t); if (!parts.length) return;
     const lp = d.s.lpos || "l", xr = d.s.er ? G.W - 6 : Math.max(x0, x1) + 4, xl = Math.min(x0, x1) - 4;
     text(lp === "r" ? xr : lp === "c" ? (Math.min(x0, x1) + Math.max(x0, x1)) / 2 : xl, y - (lp === "c" ? 2 : 0), parts.join(" · "), { col: l.c, fs: d.s.lfs || 11, al: lp === "r" ? (d.s.er ? "right" : "left") : lp === "c" ? "center" : "right", bl: lp === "c" ? "bottom" : "middle", bg: null, pad: 1 }); }); // v1.98 : plus de rectangle couleur du fond derrière le texte (comme TradingView)
-  lvLabels(TX).forEach((t) => t.f());
+  const shown = lvLabels(TX), R = [];
+  if (pen.c && !pen.hit) shown.forEach((t) => { const o = t.o, fs = o.fs || 11, pad = o.pad ?? 0, c = pen.c; c.font = `${fs}px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif`; const lines = String(t.s).split("\n"), w = Math.max(...lines.map((x) => c.measureText(x).width)) + pad * 2, h = lines.length * Math.round(fs * 1.3) + pad * 2;
+    const bx = o.al === "center" ? t.x - w / 2 : o.al === "right" ? t.x - w : t.x, by = o.bl === "middle" ? t.y - h / 2 : o.bl === "bottom" ? t.y - h : t.y; R.push([bx - 4, by, w + 8, h]); });
+  SEG.forEach(([l, xa, y, xb]) => { pen.gaps = R.length ? R : null; pen.st(l.c, d.s.w || 1, d.s.ld || 0).seg(xa, y, xb, y); }); pen.gaps = null;
+  shown.forEach((t) => t.f());
 }
 /** étiquettes de niveaux triées par y : garde celles qui ne se chevauchent pas (la première et la dernière toujours) */
 function lvLabels(TX) { if (TX.length < 3) return TX; const S = TX.slice().sort((a, b) => a.y - b.y), out = [S[0]], last = S[S.length - 1];
