@@ -7383,7 +7383,8 @@ const PineAsync = (() => {
   const isStrat = (code) => /^\s*strategy\s*\(/m.test(code);
   // v1.94.3 : réglages Paramètres › Scripts Pine de la page Graphique (bougies calculées, temps maximum) + calc_bars_count de indicator()
   const pineCfg = () => { let p = {}; try { p = JSON.parse(localStorage.getItem("gr-prefs") || "{}") || {}; } catch (e) { /* */ } return { bars: Math.max(300, +p.pineBars || LIM), sec: Math.max(5, +p.pineSec || 30) }; };
-  const limOf = (code) => { if (isStrat(code)) return LIM_STRAT; const m = /calc_bars_count\s*=\s*(\d+)/.exec(code), b = pineCfg().bars; return m && +m[1] > 0 ? Math.min(b, +m[1]) : b; }; const jobs = new Map(), ovCache = new Map();
+  // v1.102.2 : en intraday, au moins 7 jours de bougies (ex. 1 min : 7 × 1 380 = 9 660), sinon un indicateur jour par jour (1st p.FVG, NWOG…) perd les jours précédents en 1 min
+  const limOf = (code, o) => { if (isStrat(code)) return LIM_STRAT; const m = /calc_bars_count\s*=\s*(\d+)/.exec(code), ts = o && +o.tfSec; let b = pineCfg().bars; if (ts >= 30 && ts < 86400) b = Math.max(b, Math.min(20000, Math.ceil((7 * 1380 * 60) / ts))); return m && +m[1] > 0 ? Math.min(b, +m[1]) : b; }; const jobs = new Map(), ovCache = new Map();
   const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i += 7) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return (h >>> 0).toString(36) + s.length; };
   const hcache = new Map(); const hashOf = (s) => { let h = hcache.get(s); if (!h) { h = hash(s); if (hcache.size > 200) hcache.clear(); hcache.set(s, h); } return h; };
   function worker() {
@@ -7406,7 +7407,7 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
     } catch (e) { W = false; }
     return W;
   }
-  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0, limOf(code)].join("|"); };
+  const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0, limOf(code, o)].join("|"); };
   // v1.100.6 : bougies du graphique laissées de côté (limite de bougies des scripts) → ajoutées à l'historique 1 h de request.security,
   // sinon les unités supérieures (W, D…) avaient un trou entre l'historique et la 1re bougie calculée (NWOG / NDOG faux en 1 min)
   function histFill(o, bars, off) {
@@ -7417,12 +7418,12 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
   }
   function send(id, j) {
     let { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
-    const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6); o = histFill(o, bars, off);
+    const n = bars.length, off = Math.max(0, n - limOf(code, o)), m = n - off, flat = new Float64Array(m * 6); o = histFill(o, bars, off);
     for (let i = 0; i < m; i++) { const b = bars[i + off], k = i * 6; flat[k] = b[0]; flat[k + 1] = b[1]; flat[k + 2] = b[2]; flat[k + 3] = b[3]; flat[k + 4] = b[4]; flat[k + 5] = b[5]; }
     const oo = {}; for (const k in o) if (typeof o[k] !== "function") oo[k] = o[k]; if (isStrat(code) && !oo.timeLimit) oo.timeLimit = 120000; if (!oo.timeLimit) oo.timeLimit = pineCfg().sec * 1000; // calcul dans le Worker : l'app ne gèle pas pendant ce temps
     W.postMessage({ id, sig, code, flat, m, off, n, o: oo }, [flat.buffer]);
   }
-  function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - limOf(code)); o = histFill(o, bars, off); if (isStrat(code) && !o.timeLimit) o = { ...o, timeLimit: 120000 }; const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
+  function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - limOf(code, o)); o = histFill(o, bars, off); if (isStrat(code) && !o.timeLimit) o = { ...o, timeLimit: 120000 }; const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
   function request(id, code, bars, o, cb) {
     let j = jobs.get(id); if (!j) jobs.set(id, (j = {})); j.cb = cb;
     const sig = sigOf(code, bars, o); if (j.resSig === sig) return j.res;
@@ -15335,7 +15336,7 @@ function openSettings(tab) {
       + sec("Marges") + row("Haut", num("mTop", "%")) + row("Bas", num("mBot", "%")) + row("Droite", num("rightOffset", "barres"))
       + sec("Thème") + row("Couleurs", `<span class="gr-seg"><button class="gr-btn${PR.theme !== "light" ? " gr-pri" : ""}" data-theme="dark">Sombre</button><button class="gr-btn${PR.theme === "light" ? " gr-pri" : ""}" data-theme="light">Clair</button></span>`)],
     ["pine", "Scripts Pine", `<div class="tv-h" style="margin-top:10px">Calcul des scripts Pine (indicateurs) dans un fil à part : l'app ne gèle pas pendant le calcul. Un gros script (plusieurs unités de temps, beaucoup de boîtes / lignes) peut dépasser le temps maximum : calcule-le sur moins de bougies ou laisse-lui plus de temps.</div>`
-      + sec("Calcul") + row("Bougies calculées", sl("pineBars", [["1000", "1 000 dernières"], ["2000", "2 000 dernières"], ["3000", "3 000 dernières"], ["5000", "5 000 dernières (défaut)"], ["10000", "10 000 dernières"], ["20000", "20 000 dernières"]]), "Nombre de bougies sur lesquelles chaque indicateur Pine est calculé (une stratégie garde tout l'historique). calc_bars_count dans indicator() peut réduire ce nombre pour un script.")
+      + sec("Calcul") + row("Bougies calculées", sl("pineBars", [["1000", "1 000 dernières"], ["2000", "2 000 dernières"], ["3000", "3 000 dernières"], ["5000", "5 000 dernières (défaut)"], ["10000", "10 000 dernières"], ["20000", "20 000 dernières"]]), "Nombre de bougies sur lesquelles chaque indicateur Pine est calculé (une stratégie garde tout l'historique). En intraday, au moins les 7 derniers jours (ex. 1 min : 9 660 bougies), pour que les indicateurs jour par jour gardent les jours précédents. calc_bars_count dans indicator() peut réduire ce nombre pour un script.")
       + row("Temps maximum par calcul", sl("pineSec", [["8", "8 s"], ["15", "15 s"], ["30", "30 s (défaut)"], ["60", "60 s"], ["120", "2 min"]]), "Au-delà, le script est arrêté avec « Script trop lent »")],
     ["trd", "Trading", `<div class="tv-h" style="margin-top:10px">Ordres du compte démo de la page Graphique (aucun vrai ordre). Les marques d'exécution affichent tes trades TopstepX (journal de l'app).</div>`
       + sec("Général") + row(ck("trBtns", "Boutons Buy/sell", true), "", "Affiche les boutons d'achat et de vente directement sur le graphique")

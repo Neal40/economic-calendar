@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.102.2] — 2026-11-27
+### Corrigé
+- Scripts Pine en intraday : ils sont calculés sur au moins les **7 derniers jours** de bougies (ex. 1 min : 9 660 bougies), même si « Bougies calculées » est plus bas. En 1 min, les indicateurs jour par jour (1st p.FVG, NWOG / NDOG…) n'affichaient que le jour en cours ; ils montrent maintenant les mêmes jours qu'en 15 min.
+
 ## [1.102.1] — 2026-11-27
 ### Corrigé
 - Scripts Pine en 1 min : les unités supérieures demandées par `request.security` (semaine, jour…) avaient un trou quand le graphique a plus de bougies que la limite des scripts. Les NWOG / NDOG de l'indicateur « NWOG & NDOG » étaient faux ou absents en 1 min ; ils sont maintenant les mêmes qu'en 15 min.
