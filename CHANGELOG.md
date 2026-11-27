@@ -2,6 +2,20 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.100.0] — 2026-11-27
+### Ajouté
+- Graphique : synchro **« dans des mises en page choisies »** (en plus d'aucune / la mise en page / globale), pour un dessin ou un **dossier** de l'arborescence (clic droit › Synchronisation).
+- Réglages d'un dessin : onglet **Synchronisation** (à droite de Visibilité), enregistré dans les **modèles** (ex. un modèle qui crée ses dessins déjà en synchro globale).
+- **Sélection multiple** (Ctrl / Maj + clic dans l'arborescence) : synchro, verrouiller, cacher, cloner, retirer s'appliquent à tous les dessins sélectionnés.
+- **Écrans partagés redimensionnables** : glisser la séparation entre deux graphiques (gauche / droite, haut / bas) ; double-clic = parts égales ; gardé par mise en page.
+- Position longue / courte cliquée avec le panneau Trading ouvert : l'**aperçu du ticket s'aligne** sur son entrée, son TP et son SL (et suit si on la déplace).
+### Modifié
+- **ETH / RTH** propre à chaque mise en page / onglet.
+- La **position du compte démo** reste visible sur tous les graphiques de son symbole (plus seulement le graphique actif).
+- Onglet **épinglé** : garde son titre.
+- **Plus de croix** sur les onglets (fermer : clic droit › Fermer l'onglet, Ctrl+W ou clic molette).
+- Texte **au milieu** d'une ligne (dessins et scripts Pine) : la ligne s'interrompt derrière le texte au lieu de passer dessous ; plus de fond ni de contour autour des textes.
+
 ## [1.99.0] — 2026-11-25
 ### Ajouté
 - **Quoi de neuf** : après chaque mise à jour, une fenêtre montre une seule fois les nouveautés de la version installée. Elles restent à revoir dans Paramètres › Profil › Application (« Quoi de neuf dans la vX », avec les versions précédentes), sur l'app comme sur le web.

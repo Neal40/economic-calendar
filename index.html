@@ -737,7 +737,8 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-lx{position:absolute;right:-6px;width:10px;height:22px;display:flex;align-items:center;justify-content:center;opacity:0;color:var(--gm)}.gr-lx svg{width:14px;transform:rotate(-90deg)}
 .gr-lg:hover .gr-lx{opacity:1}.gr-lsep{width:26px;height:1px;background:var(--gl);margin:4px 0;flex:none}
 .gr-center{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
-.gr-grid{flex:1;display:grid;gap:1px;background:var(--gl);min-height:0}
+.gr-grid{flex:1;display:grid;gap:1px;background:var(--gl);min-height:0;position:relative}
+.gr-gut{position:absolute;z-index:25;background:transparent;transition:background .1s}.gr-gut.v{top:0;bottom:0;width:7px;cursor:col-resize}.gr-gut.h{left:0;right:0;height:7px;cursor:row-resize}.gr-gut:hover,.gr-gut.on{background:rgba(41,98,255,.45)}
 .gr-grid.max>.gr-cell:not(.on){display:none}.gr-grid.max>.gr-cell.on{grid-area:1/1/-1/-1!important}
 .gr-cell{position:relative;background:var(--grbg);min-width:0;min-height:0;display:flex;flex-direction:column;outline:1px solid transparent;outline-offset:-1px}
 .gr-grid.multi>.gr-cell.on{outline-color:var(--ga)}
@@ -7278,7 +7279,7 @@ const PineDraw = (() => {
       c.closePath(); c.fill();
     }
     if (txt && tc) { const al = L.textalign === "left" ? "left" : L.textalign === "right" ? "right" : "center", tx = al === "left" ? bx + pad : al === "right" ? bx + w - pad : bx + w / 2;
-      if (st === "text_outline") { c.lineWidth = 3; c.strokeStyle = bg || "rgba(0,0,0,0.8)"; c.textAlign = al; c.textBaseline = "top"; lines.forEach((l, k) => c.strokeText(l, tx, by + pad + k * lh)); }
+      /* v1.100 : text_outline sans contour couleur du fond (texte lisible, pas « entouré ») */
       c.fillStyle = tc; textBlock(c, lines, tx, by + pad, al, "top", lh); }
   }
   function box(c, G, B) {
@@ -7291,11 +7292,19 @@ const PineDraw = (() => {
       const ha = B.text_halign === "left" ? "left" : B.text_halign === "right" ? "right" : "center", tx = ha === "left" ? Math.max(x1, 0) + 4 : ha === "right" ? Math.min(x2, G.W) - 4 : (Math.max(x1, 0) + Math.min(x2, G.W)) / 2, va = B.text_valign === "top" ? "top" : B.text_valign === "bottom" ? "bottom" : "center";
       c.save(); c.beginPath(); c.rect(x1, y1, w, h); c.clip(); textBlock(c, lines, tx, va === "top" ? y1 + 3 : va === "bottom" ? y1 + h - 3 : y1 + h / 2, ha, va, lh); c.restore(); }
   }
+  let GAPS = null;
+  /** v1.100 : rectangle d'un texte de label sans fond (style none / couleur transparente), pour interrompre les lignes dessous */
+  function labelGap(c, G, L) { const st = L.style || "label_down"; if (!L.text || (okc(L.color) && st !== "none" && st !== "text_outline")) return null; if (["xcross", "cross", "triangleup", "triangledown", "flag", "circle", "arrowup", "arrowdown", "square", "diamond"].includes(st)) return null;
+    const x = G.lx(L.x), y = G.y(L.y); if (!fin(x) || !fin(y)) return null; const fs = SZ[L.size] || 12, lh = Math.round(fs * 1.25), lines = String(L.text).split("\n"); c.font = fontOf(L.size); const tw = Math.max(...lines.map((l) => c.measureText(l).width)), w = tw + 8, h = lines.length * lh + 8, ar = 6;
+    let bx, by; switch (st) { case "label_up": bx = x - w / 2; by = y + ar; break; case "label_left": bx = x + ar; by = y - h / 2; break; case "label_right": bx = x - w - ar; by = y - h / 2; break; case "label_center": case "none": case "text_outline": bx = x - w / 2; by = y - h / 2; break; case "label_lower_left": bx = x; by = y - h; break; case "label_lower_right": bx = x - w; by = y - h; break; case "label_upper_left": bx = x; by = y; break; case "label_upper_right": bx = x - w; by = y; break; default: bx = x - w / 2; by = y - h - ar; }
+    const al = L.textalign === "left" ? 0 : L.textalign === "right" ? 2 : 1, tx = al === 0 ? bx + 4 : al === 2 ? bx + w - 4 - tw : bx + (w - tw) / 2; return [tx - 4, by + 2, tw + 8, h - 4]; }
   function line(c, G, L) {
     let x1 = G.lx(L.x1), y1 = G.y(L.y1), x2 = G.lx(L.x2), y2 = G.y(L.y2); if (![x1, y1, x2, y2].every(fin)) return; if (!okc(L.color)) return;
     if (L.extend === "none" && Math.max(x1, x2) < 0) return; if (L.extend === "none" && Math.min(x1, x2) > G.W) return;
     [x1, y1, x2, y2] = clipLine(G, x1, y1, x2, y2, L.extend);
-    const w = Math.max(1, L.width || 1); c.strokeStyle = L.color; c.fillStyle = L.color; c.lineWidth = w; dash(c, L.style, w); c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.setLineDash([]);
+    const w = Math.max(1, L.width || 1); c.strokeStyle = L.color; c.fillStyle = L.color; c.lineWidth = w; dash(c, L.style, w); c.beginPath();
+    if (GAPS && GAPS.length && Math.abs(y2 - y1) < 2) { let parts = [[Math.min(x1, x2), Math.max(x1, x2)]]; GAPS.forEach(([gx, gy, gw, gh]) => { if (y1 < gy || y1 > gy + gh) return; parts = parts.flatMap(([a, b]) => { const o = []; if (gx > a) o.push([a, Math.min(b, gx)]); if (gx + gw < b) o.push([Math.max(a, gx + gw), b]); return o.filter((p) => p[1] > p[0]); }); }); parts.forEach(([a, b]) => { c.moveTo(a, y1); c.lineTo(b, y1); }); }
+    else { c.moveTo(x1, y1); c.lineTo(x2, y2); } c.stroke(); c.setLineDash([]);
     if (L.style === "arrow_right" || L.style === "arrow_both") arrowHead(c, x1, y1, x2, y2, w); if (L.style === "arrow_left" || L.style === "arrow_both") arrowHead(c, x2, y2, x1, y1, w);
   }
   function table(c, G, T) {
@@ -7329,7 +7338,8 @@ const PineDraw = (() => {
       fills(c, G, r, i0, i1);
       (d.linefills || []).forEach((F) => { if (!okc(F.color)) return; const p = [[F.a[0], F.a[1]], [F.a[2], F.a[3]], [F.b[2], F.b[3]], [F.b[0], F.b[1]]].map(([x, y]) => [G.lx(x), G.y(y)]); if (!p.flat().every(fin)) return; c.fillStyle = F.color; c.beginPath(); p.forEach(([x, y], k) => (k ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.fill(); });
       (d.boxes || []).forEach((B) => box(c, G, B));
-      (d.lines || []).forEach((L) => line(c, G, L));
+      GAPS = (d.labels || []).map((L) => labelGap(c, G, L)).filter(Boolean);
+      (d.lines || []).forEach((L) => line(c, G, L)); GAPS = null;
       (d.polylines || []).forEach((P) => { const pts = P.pts.map(([x, y]) => [G.lx(x), G.y(y)]).filter(([x, y]) => fin(x) && fin(y)); if (pts.length < 2) return; c.beginPath(); pts.forEach(([x, y], k) => (k ? c.lineTo(x, y) : c.moveTo(x, y))); if (P.closed) c.closePath(); if (okc(P.fill_color)) { c.fillStyle = P.fill_color; c.fill(); } if (okc(P.line_color)) { c.strokeStyle = P.line_color; c.lineWidth = P.line_width || 1; dash(c, P.line_style, P.line_width || 1); c.stroke(); } });
       (d.labels || []).forEach((L) => label(c, G, L));
       c.setLineDash([]); (d.tables || []).forEach((T) => table(c, G, T));
@@ -13147,7 +13157,9 @@ class Pen {
   constructor(ctx, hit) { this.c = ctx; this.hit = hit; this.sh = []; }
   st(col, w, dash) { if (this.hit) return this; const c = this.c, lw = w || 1; c.strokeStyle = col; c.lineWidth = lw; c.setLineDash(dash === 1 ? [lw, lw * 2.2] : dash === 2 ? [lw * 4, lw * 3] : dash === 3 ? [lw * 8, lw * 5] : []); return this; }
   fl(col) { if (!this.hit) this.c.fillStyle = col; return this; }
-  seg(x1, y1, x2, y2) { if (this.hit) { this.sh.push([0, x1, y1, x2, y2]); return; } const c = this.c; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
+  seg(x1, y1, x2, y2) { if (this.hit) { this.sh.push([0, x1, y1, x2, y2]); return; } const c = this.c; c.beginPath();
+    if (this.gaps && this.gaps.length) { const parts = segGaps(x1, y1, x2, y2, this.gaps); parts.forEach(([a, b]) => { c.moveTo(x1 + (x2 - x1) * a, y1 + (y2 - y1) * a); c.lineTo(x1 + (x2 - x1) * b, y1 + (y2 - y1) * b); }); c.stroke(); return; }
+    c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
   poly(pts, close, fill, stroke = true) {
     if (!pts || pts.length < 2) return;
     if (this.hit) { if (fill && close) this.sh.push([1, pts]); if (stroke || !fill) { for (let i = 1; i < pts.length; i++) this.sh.push([0, pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]]); if (close) this.sh.push([0, pts[pts.length - 1][0], pts[pts.length - 1][1], pts[0][0], pts[0][1]]); } return; }
@@ -13215,8 +13227,16 @@ const S0 = (o) => Object.assign({ c: "#2962ff", w: 2, d: 0 }, o);
 const tvBl = (tv) => (tv === "m" ? "middle" : tv === "b" ? "top" : "bottom"), tvDy = (tv) => (tv === "m" ? 0 : tv === "b" ? 4 : -4);
 /** v1.98 : outils dont on peut placer le texte (Texte › Position du texte) et leur position par défaut */
 const TXPOS = { rect: { tv: "t", th: "c" }, trend: { tv: "t", th: "c" }, ray: { tv: "t", th: "r" }, hline: { tv: "t", th: "r" }, hray: { tv: "t", th: "l" }, vline: { tv: "t", th: "r" } };
-const lineTxt = (pen, d, a, b) => { if (!d.txt) return false; if (!d.s.th && !d.s.tv) return false; const L = a[0] <= b[0] ? a : b, R = a[0] <= b[0] ? b : a, th = d.s.th || "c";
-  const q = th === "l" ? L : th === "r" ? R : [(L[0] + R[0]) / 2, (L[1] + R[1]) / 2]; pen.text(q[0], q[1] + tvDy(d.s.tv), d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 13, bold: d.s.b, italic: d.s.i, al: th === "l" ? "left" : th === "r" ? "right" : "center", bl: tvBl(d.s.tv), pad: 2, bg: d.s.tv === "m" ? PR.bg : null }); return true; };
+/** v1.100 : morceaux [t0, t1] d'un segment hors des rectangles [x, y, w, h] (Liang-Barsky) */
+function segGaps(x1, y1, x2, y2, R) { let parts = [[0, 1]]; const dx = x2 - x1, dy = y2 - y1;
+  for (const [rx, ry, rw, rh] of R) { let t0 = 0, t1 = 1, ok = true; [[-dx, x1 - rx], [dx, rx + rw - x1], [-dy, y1 - ry], [dy, ry + rh - y1]].forEach(([p, q]) => { if (!ok) return; if (p === 0) { if (q < 0) ok = false; return; } const r = q / p; if (p < 0) { if (r > t1) ok = false; else if (r > t0) t0 = r; } else { if (r < t0) ok = false; else if (r < t1) t1 = r; } }); if (!ok || t1 <= t0) continue;
+    parts = parts.flatMap(([a, b]) => { const o = []; if (t0 > a) o.push([a, Math.min(b, t0)]); if (t1 < b) o.push([Math.max(a, t1), b]); return o.filter((x) => x[1] > x[0]); }); } return parts; }
+/** rectangle du texte « au milieu » d'une ligne, posé avant le trait pour l'interrompre */
+function gapFor(pen, d, a, b) { pen.gaps = null; if (!pen.c || pen.hit || !d.txt || d.s.tv !== "m") return; const L = a[0] <= b[0] ? a : b, R = a[0] <= b[0] ? b : a, th = d.s.th || "c", q = th === "l" ? L : th === "r" ? R : [(L[0] + R[0]) / 2, (L[1] + R[1]) / 2], fs = d.s.fs || 13, c = pen.c;
+  c.font = `${d.s.i ? "italic " : ""}${d.s.b ? "bold " : ""}${fs}px -apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif`; const lines = String(d.txt).split("\n"), w = Math.max(...lines.map((l) => c.measureText(l).width)) + 4, h = lines.length * Math.round(fs * 1.3) + 4;
+  const bx = th === "l" ? q[0] : th === "r" ? q[0] - w : q[0] - w / 2; pen.gaps = [[bx - 4, q[1] - h / 2, w + 8, h]]; }
+const lineTxt = (pen, d, a, b) => { pen.gaps = null; if (!d.txt) return false; if (!d.s.th && !d.s.tv) return false; const L = a[0] <= b[0] ? a : b, R = a[0] <= b[0] ? b : a, th = d.s.th || "c";
+  const q = th === "l" ? L : th === "r" ? R : [(L[0] + R[0]) / 2, (L[1] + R[1]) / 2]; pen.text(q[0], q[1] + tvDy(d.s.tv), d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 13, bold: d.s.b, italic: d.s.i, al: th === "l" ? "left" : th === "r" ? "right" : "center", bl: tvBl(d.s.tv), pad: 2, bg: null }); return true; };
 const pTxt = (pen, d, x, y, o = {}) => { if (d.txt) pen.text(x, y, d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 13, bold: d.s.b, italic: d.s.i, al: o.al || "center", bl: o.bl || "bottom", pad: 2 }); };
 const lineLabel = (pen, G, d, a, b) => { if (!d.s.stats) return; const p0 = d.p[0], p1 = d.p[1], dp = p1.p - p0.p, n = Math.round(G.li(p1.t) - G.li(p0.t)), tick = G.spec.tick || 0.01;
   pen.text(b[0] + 8, b[1], `${dp >= 0 ? "+" : ""}${G.fp(dp)} (${nf(dp / p0.p * 100, 2)} %) ${nf(dp / tick, 0)} ticks\n${n} barres · ${durTxt(p1.t - p0.t)}`, { col: "#fff", bg: alpha(d.s.c, 0.85), fs: 11, al: "left", bl: "middle" }); };
@@ -13251,15 +13271,15 @@ const T = {
   // curseurs
   cross: { n: "Croix", g: "cur", np: -9 }, dot: { n: "Point", g: "cur", np: -9 }, arrow: { n: "Flèche", g: "cur", np: -9 }, eraser: { n: "Gomme", g: "cur", np: -9 },
   // lignes
-  trend: { n: "Ligne de tendance", g: "lines", np: 2, key: "Alt+T", def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], d.s.el, d.s.er, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (d.s.al) pen.arrow(P[0][0], P[0][1], P[1][0], P[1][1]); if (d.s.a0) pen.arrow(P[1][0], P[1][1], P[0][0], P[0][1]); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, (P[0][0] + P[1][0]) / 2, (P[0][1] + P[1][1]) / 2 - 4); lineLabel(pen, G, d, P[0], P[1]); } },
-  ray: { n: "Rayon", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], false, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, P[1][0], P[1][1] - 4); } },
+  trend: { n: "Ligne de tendance", g: "lines", np: 2, key: "Alt+T", def: S0(), draw(pen, P, d, G) { gapFor(pen, d, P[0], P[1]); const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], d.s.el, d.s.er, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (d.s.al) pen.arrow(P[0][0], P[0][1], P[1][0], P[1][1]); if (d.s.a0) pen.arrow(P[1][0], P[1][1], P[0][0], P[0][1]); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, (P[0][0] + P[1][0]) / 2, (P[0][1] + P[1][1]) / 2 - 4); lineLabel(pen, G, d, P[0], P[1]); } },
+  ray: { n: "Rayon", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { gapFor(pen, d, P[0], P[1]); const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], false, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); if (!lineTxt(pen, d, P[0], P[1])) pTxt(pen, d, P[1][0], P[1][1] - 4); } },
   info: { n: "Ligne d'info", g: "lines", np: 2, def: S0({ stats: true }), draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], P[0][1], P[1][0], P[1][1]); const a = Math.atan2(-(P[1][1] - P[0][1]), P[1][0] - P[0][0]) * 180 / Math.PI;
     lineLabel(pen, G, Object.assign({}, d, { s: Object.assign({}, d.s, { stats: true }) }), P[0], P[1]); pen.text(P[1][0] + 8, P[1][1] + 26, `Angle ${nf(a, 1)}°`, { col: "#fff", bg: alpha(d.s.c, 0.85), fs: 11, al: "left", bl: "middle" }); } },
   ext: { n: "Ligne étendue", g: "lines", np: 2, def: S0(), draw(pen, P, d, G) { const [x1, y1, x2, y2] = extL(P[0][0], P[0][1], P[1][0], P[1][1], true, true, G.W, G.H); pen.st(d.s.c, d.s.w, d.s.d).seg(x1, y1, x2, y2); } },
   angle: { n: "Angle de tendance", g: "lines", np: 2, def: S0(), draw(pen, P, d) { pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], P[0][1], P[1][0], P[1][1]); const r = 40, a = Math.atan2(P[1][1] - P[0][1], P[1][0] - P[0][0]);
     pen.st(d.s.c, 1, 2).seg(P[0][0], P[0][1], P[0][0] + r + 20, P[0][1]); pen.st(d.s.c, 1, 0).arc(P[0][0], P[0][1], r, Math.min(0, a), Math.max(0, a)); pen.text(P[0][0] + r + 6, P[0][1] + (a < 0 ? -10 : 10), nf(-a * 180 / Math.PI, 1) + "°", { col: d.s.c, fs: 12, al: "left", bl: "middle" }); } },
-  hline: { n: "Ligne horizontale", g: "lines", np: 1, key: "Alt+H", def: S0({ w: 1 }), axis: true, draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d).seg(-10, P[0][1], G.W + 10, P[0][1]); if (!lineTxt(pen, d, [6, P[0][1]], [G.W - 6, P[0][1]])) pTxt(pen, d, d.s.tpos === "l" ? 6 : d.s.tpos === "c" ? G.W / 2 : G.W - 6, P[0][1] - 3, { al: d.s.tpos === "l" ? "left" : d.s.tpos === "c" ? "center" : "right" }); } },
-  hray: { n: "Rayon horizontal", g: "lines", np: 1, key: "Alt+J", def: S0({ w: 1 }), axis: true, draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], P[0][1], G.W + 10, P[0][1]); if (!lineTxt(pen, d, [P[0][0] + 4, P[0][1]], [G.W - 6, P[0][1]])) pTxt(pen, d, P[0][0] + 4, P[0][1] - 3, { al: "left" }); } },
+  hline: { n: "Ligne horizontale", g: "lines", np: 1, key: "Alt+H", def: S0({ w: 1 }), axis: true, draw(pen, P, d, G) { gapFor(pen, d, [6, P[0][1]], [G.W - 6, P[0][1]]); pen.st(d.s.c, d.s.w, d.s.d).seg(-10, P[0][1], G.W + 10, P[0][1]); if (!lineTxt(pen, d, [6, P[0][1]], [G.W - 6, P[0][1]])) pTxt(pen, d, d.s.tpos === "l" ? 6 : d.s.tpos === "c" ? G.W / 2 : G.W - 6, P[0][1] - 3, { al: d.s.tpos === "l" ? "left" : d.s.tpos === "c" ? "center" : "right" }); } },
+  hray: { n: "Rayon horizontal", g: "lines", np: 1, key: "Alt+J", def: S0({ w: 1 }), axis: true, draw(pen, P, d, G) { gapFor(pen, d, [P[0][0] + 4, P[0][1]], [G.W - 6, P[0][1]]); pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], P[0][1], G.W + 10, P[0][1]); if (!lineTxt(pen, d, [P[0][0] + 4, P[0][1]], [G.W - 6, P[0][1]])) pTxt(pen, d, P[0][0] + 4, P[0][1] - 3, { al: "left" }); } },
   vline: { n: "Ligne verticale", g: "lines", np: 1, key: "Alt+V", def: S0({ w: 1 }), taxis: true, draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d).seg(P[0][0], -10, P[0][0], G.H + 10); if (d.txt) { const tv = d.s.tv || "t", th = d.s.th; pen.text(P[0][0] + (th === "l" ? -4 : th === "c" ? 0 : 4), tv === "m" ? G.H / 2 : tv === "b" ? G.H - 8 : 8, d.txt, { col: d.s.tc || d.s.c, fs: d.s.fs || 12, bold: d.s.b, italic: d.s.i, al: th === "l" ? "right" : th === "c" ? "center" : "left", bl: tv === "m" ? "middle" : tv === "b" ? "bottom" : "top", bg: th === "c" ? PR.bg : null, pad: 2 }); } } },
   xline: { n: "Ligne croisée", g: "lines", np: 1, key: "Alt+C", def: S0({ w: 1 }), axis: true, taxis: true, draw(pen, P, d, G) { pen.st(d.s.c, d.s.w, d.s.d); pen.seg(-10, P[0][1], G.W + 10, P[0][1]); pen.seg(P[0][0], -10, P[0][0], G.H + 10); } },
   // canaux et fourchettes
@@ -13597,7 +13617,7 @@ class Cell {
   }
   bindCmp(c) { const f = getFeed(c.s, this.st.iv), fn = (type) => { if (type === "reset" || type === "tick" || type === "prepend") this.drawCmp(c, f); }; f.subs.add(fn); this.cmpUnsub.push(() => f.subs.delete(fn)); if (f.ready) this.drawCmp(c, f); else f.load(); }
   drawCmp(c, f) { const ch = this.main.chart; let s = this.cmpS.get(c.s); if (!s) { s = ch.addLineSeries({ color: c.c, lineWidth: 2, priceScaleId: PR.left ? "left" : "right", priceLineVisible: false, lastValueVisible: true, title: symCode(c.s) }); this.cmpS.set(c.s, s); }
-    const B = PR.rth ? rthOnly(f.bars, this.st.iv) : f.bars; s.setData(this.toTimes(B).map((t, i) => ({ time: t, value: B[i][4] }))); this.scaleMode(); }
+    const B = rthOn() ? rthOnly(f.bars, this.st.iv) : f.bars; s.setData(this.toTimes(B).map((t, i) => ({ time: t, value: B[i][4] }))); this.scaleMode(); }
   applyFmt() { const o = this.opts(true, !this.panes.length); this.main.chart.applyOptions(o); this.panes.forEach((p, i) => p.chart.applyOptions(this.opts(false, i === this.panes.length - 1))); }
   onFeed(type, info) {
     if (this.dead) return;
@@ -13609,7 +13629,7 @@ class Cell {
     if (type === "tick") this.tick(info);
   }
   disp() { // bougies affichées (RTH, type de graphique)
-    let B = this.feed ? this.feed.bars : []; if (PR.rth) B = rthOnly(B, this.st.iv);
+    let B = this.feed ? this.feed.bars : []; if (rthOn()) B = rthOnly(B, this.st.iv);
     const t = this.st.type, tick = this.spec.tick || 0.01;
     if (t === "heikin") return heikin(B); if (t === "renko") return renko(B, +this.st.box || 0, tick); if (t === "lb") return lineBreak(B, +this.st.lb || 3); if (t === "range") return rangeBars(B, +this.st.rng || 0, tick);
     return B;
@@ -13643,7 +13663,7 @@ class Cell {
     this.legend(); this.redraw(); refreshPanels(); requestAnimationFrame(() => this.keepCross());
   }
   tick(info) {
-    const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (PR.rth && B.length !== B0.length)) { this.full(false); return; }
+    const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (rthOn() && B.length !== B0.length)) { this.full(false); return; }
     const T = this.toTimes(B); const from = Math.max(0, Math.min(B0.length - 1, info && info.from != null ? info.from : B.length - 2));
     this.DB = B; this.T = T;
     try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i], B[i - 1])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
@@ -13794,7 +13814,7 @@ class Cell {
   }
   visibleD(d) { if (d.hide || DS.hideAll) return false; if (!this.syncOk(d)) return false; if (d.vis && !visOk(d.vis, this.st.iv)) return false;
     if (d.visR) { const s = ivSec(this.st.iv), op = d.visR.op, iv = d.visR.iv; if ((op === "ge" && s < iv) || (op === "le" && s > iv) || (op === "eq" && s !== iv)) return false; } return true; }
-  syncOk(d) { const m = syncOf(d); if (m === "global") return true; if ((d.lay || null) !== curLay()) return false; return m !== "none" || (d.cell || 0) === this.idx; }
+  syncOk(d) { const m = syncOf(d); if (m === "global") return true; if (m === "layouts") return (d.lays || []).includes(curLay()) || (d.lay || null) === curLay(); if ((d.lay || null) !== curLay()) return false; return m !== "none" || (d.cell || 0) === this.idx; }
   pts(d, G) { if (d.anch && d.anch.length === d.p.length) { const w = this.main.host.clientWidth, h = this.main.host.clientHeight; return d.anch.map((a) => [a[0] * w, a[1] * h]); } return d.p.map((q) => [G.x(q.t), G.y(q.p)]); } // v1.94 : dessin ancré = fixe à l'écran
   redraw() { if (this.lay) this.lay.update(); if (this.ilay) this.ilay.update(); }
   paint(layer, c, size) {
@@ -13903,13 +13923,25 @@ Cell.prototype.hit = function (x, y) {
     const pen = new Pen(null, true); try { def.draw(pen, P, d, G); } catch (e) { continue; } if (hitShapes(pen.sh, x, y, 5)) return { d }; }
   return null;
 };
-function drawChanged(d) { saveDraw(); CELLS.forEach((c) => c.redraw()); refreshTree(); if (d && DS.sel === d.id) showFloat(d); if (d && d.s && d.tool) lastStyle(d); }
+function drawChanged(d) { if (d && PA.posLink === d.id && STATE.panel === "trade") posToTicket(d, true); saveDraw(); CELLS.forEach((c) => c.redraw()); refreshTree(); if (d && DS.sel === d.id) showFloat(d); if (d && d.s && d.tool) lastStyle(d); }
 // v1.94 : dernier style utilisé par outil (comme TradingView) : le prochain dessin de cet outil le reprend, même après redémarrage
-const lastStyle = (d) => { if (DS.noLast) return; const all = LS.get("gr-tpllast", {}), st = JSON.parse(JSON.stringify(d.s)); if (JSON.stringify(all[d.tool]) === JSON.stringify(st)) return; all[d.tool] = st; LS.set("gr-tpllast", all); };
+const lastStyle = (d) => { if (DS.noLast) return; const all = LS.get("gr-tpllast", {}), st = JSON.parse(JSON.stringify(d.s)); delete st._sync; delete st._lays; if (JSON.stringify(all[d.tool]) === JSON.stringify(st)) return; all[d.tool] = st; LS.set("gr-tpllast", all); };
 // v1.94 : synchro d'un dessin : "none" = ce graphique seulement, "layout" = cette mise en page, "global" = toutes les mises en page (anciens dessins sans mise en page = global)
 const syncOf = (d) => d.sync || (d.lay !== undefined ? "layout" : "global");
-const stampD = (d, c, keepSync) => { if (!keepSync || !d.sync) d.sync = PR.drawSync || "layout"; d.lay = curLay(); d.cell = c ? c.idx : 0; return d; };
-function selectD(d, cell) { DS.sel = d ? d.id : null; CELLS.forEach((c) => c.redraw()); if (d) showFloat(d, cell); else hideFloat(); refreshTree(); }
+const stampD = (d, c, keepSync) => { if (!keepSync || !d.sync) { d.sync = (d.s && d.s._sync) || PR.drawSync || "layout"; if (d.sync === "layouts") d.lays = ((d.s && d.s._lays) || []).slice(); } d.lay = curLay(); d.cell = c ? c.idx : 0; if (d.sync === "layouts" && !(d.lays || []).includes(d.lay)) d.lays = (d.lays || []).concat(d.lay); return d; };
+/** v1.100 : synchro d'une liste de dessins (sélection multiple, dossier) : none | layout | layouts (mises en page choisies) | global */
+function setSync(list, mode, lays, c) { if (!list.length) return; snap(); const cur = curLay(); list.forEach((d) => { d.sync = mode; d.lay = cur; if (c) d.cell = c.idx; if (mode === "layouts") d.lays = (lays || []).slice(); else delete d.lays; }); drawChanged(list[0]); refreshTree(); }
+/** fenêtre « Mises en page choisies » : mises en page enregistrées + l'onglet actuel s'il n'en a pas */
+function pickLays(cur, cb) { const opts = LAYOUTS.map((L) => [L.id, L.name]); if (!STATE.layoutId) opts.unshift([curLay(), "Onglet actuel (mise en page non enregistrée)"]); const sel = new Set(cur && cur.length ? cur : [curLay()]);
+  const d = dlg("Synchroniser dans les mises en page choisies", `<div class="gr-mut" style="margin-bottom:8px">Le dessin apparaît dans chaque mise en page cochée (même symbole).</div>${opts.map(([id, n]) => `<label class="gr-chk" style="display:flex;margin:6px 0"><input type="checkbox" data-ly="${E(id)}" ${sel.has(id) ? "checked" : ""}><span>${E(n)}</span></label>`).join("") || `<div class="gr-empty">Aucune mise en page enregistrée.</div>`}`,
+    { w: 420, ok: "Appliquer", onOk: (x) => { const L = [...x.querySelectorAll("[data-ly]")].filter((i) => i.checked).map((i) => i.dataset.ly); if (!L.length) { toast("Coche au moins une mise en page", true); return false; } cb(L); } }); }
+const SYNCS = [["none", "Pas de synchronisation", "Seulement sur ce graphique de cette mise en page"], ["layout", "Synchroniser dans la mise en page", "Sur tous les graphiques de cette mise en page avec ce symbole"], ["layouts", "Synchroniser dans des mises en page choisies…", "Sur les mises en page que tu coches"], ["global", "Synchroniser globalement", "Sur toutes les mises en page avec ce symbole"]];
+/** v1.100 : position longue / courte sélectionnée avec le panneau Trading ouvert = le ticket prend son entrée, son TP et son SL (aperçu aligné) */
+function posToTicket(d, quiet) { if (!d || (d.tool !== "long" && d.tool !== "short") || d.p.length < 3 || typeof TPF === "undefined") return; const buy = d.tool === "long", s = paSym(), px = s ? paPx(s) : null, e = d.p[0].p;
+  TPF.side = buy ? "buy" : "sell"; TPF.type = px ? (buy ? (e < px.ask ? "limit" : "stop") : (e > px.bid ? "limit" : "stop")) : "limit"; TPF.pxMode = "price"; TPF.px = e;
+  if (!TPF.ex || !TPF.ex.length) TPF.ex = [{ qty: 1 }]; const x = TPF.ex[0]; x.tpOn = true; x.tpM = "price"; x.tp = d.p[1].p; x.slOn = true; x.slM = "price"; x.sl = d.p[2].p; TPF.ex.length = 1;
+  PA.posLink = d.id; tpSave(); paRefresh(); if (STATE.panel === "trade") renderTrade(); if (!quiet) toast("Ticket aligné sur la position : entrée, TP et SL"); }
+function selectD(d, cell) { if (d && (d.tool === "long" || d.tool === "short") && STATE.panel === "trade") posToTicket(d); else if (!d || d.id !== PA.posLink) PA.posLink = null; DS.sel = d ? d.id : null; CELLS.forEach((c) => c.redraw()); if (d) showFloat(d, cell); else hideFloat(); refreshTree(); }
 function setTool(t, keep) { if (DS.creating) cancelCreate(); DS.tool = t; if (["cross", "dot", "arrow", "eraser"].includes(t)) { DS.cursor = t; DS.tool = t === "eraser" ? "eraser" : "cross"; CELLS.forEach((c) => c.allCharts().forEach((ch) => ch.applyOptions({ crosshair: { mode: t === "cross" ? (PR.crossMag ? 1 : 0) : 2 } }))); }
   else if (!keep) { const g = TOOL_GROUPS.find((x) => x[2].includes(t)); if (g) { DS.last[g[0]] = t; LS.set("gr-lasttool", DS.last); } }
   CELLS.forEach((c) => (c.main.host.dataset.cur = t === "eraser" || DS.cursor === "eraser" ? "erase" : DS.cursor === "arrow" && t === "cross" ? "arrow" : T[t] && T[t].np !== -9 ? "draw" : "")); refreshTools(); }
@@ -14138,7 +14170,9 @@ let STATE = Object.assign({ mode: "ict", grid: "1", cells: [DEF_CELL()], active:
 if (!Array.isArray(STATE.cells) || !STATE.cells.length) STATE.cells = [DEF_CELL()];
 STATE.cells.forEach((c) => { c.inds = Array.isArray(c.inds) ? c.inds.filter((x) => x && x.t) : []; c.cmp = c.cmp || []; c.scale = c.scale || {}; if (!SYMS.has(c.sym) && !String(c.sym).startsWith("CSV:")) c.sym = DEF_CELL().sym; if (!ivParse(c.iv)) c.iv = "5"; });
 let LAYOUTS = LS.get("gr-layouts", []);
-const snapshotLayout = () => JSON.parse(JSON.stringify({ grid: STATE.grid, cells: STATE.cells, active: STATE.active, sync: STATE.sync }));
+const snapshotLayout = () => JSON.parse(JSON.stringify({ grid: STATE.grid, cells: STATE.cells, active: STATE.active, sync: STATE.sync, rth: rthOn(), splits: STATE.splits || {} }));
+/** v1.100 : séance ETH / RTH propre à chaque mise en page / onglet (avant : réglage global) */
+const rthOn = () => (STATE.rth === undefined ? !!PR.rth : !!STATE.rth);
 const saveState = debounce(() => { LS.set("gr-state", STATE); if (STATE.auto && STATE.layoutId) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId); if (L) { L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); } }  if (typeof tabSave === "function") tabSave(); }, 600);
 /* ---------- v1.94 : onglets façon TradingView (chaque onglet = une mise en page ; groupes colorés, liaison, fenêtre détachée) ---------- */
 const SS = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* */ } } };
@@ -14166,7 +14200,7 @@ function tabSnap() { const t = tabCur(); if (!t) return; CELLS.forEach((c) => c.
   if (t.link) { const c = activeCell(), L = (TABS.links[t.link] = TABS.links[t.link] || {}); if (c) { L.sym = c.st.sym; L.iv = c.st.iv; try { const r = c.main.chart.timeScale().getVisibleRange(); if (r) L.rng = [r.from, r.to]; } catch (e) { /* */ } } } }
 const tabSave = debounce(() => { tabSnap(); LS.set(TABKEY(), TABS); renderTabs(); }, 400);
 function tabApply(t) {
-  const s = t.state || {}; STATE.grid = s.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(s.cells && s.cells.length ? s.cells : [DEF_CELL()])); STATE.active = s.active || 0; STATE.sync = Object.assign({}, STATE.sync, s.sync || {}); STATE.layoutId = t.layoutId || null; STATE.max = !!s.max;
+  const s = t.state || {}; STATE.grid = s.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(s.cells && s.cells.length ? s.cells : [DEF_CELL()])); STATE.active = s.active || 0; STATE.sync = Object.assign({}, STATE.sync, s.sync || {}); STATE.layoutId = t.layoutId || null; STATE.max = !!s.max; if (s.rth !== undefined) STATE.rth = !!s.rth; else delete STATE.rth; STATE.splits = s.splits || {}; refreshBottom();
   const L = t.link && TABS.links[t.link], lk = t.lk || { sym: true, iv: true }, c0 = STATE.cells[STATE.active] || STATE.cells[0];
   if (L && c0) { if (lk.sym && L.sym) c0.sym = L.sym; if (lk.iv && L.iv) c0.iv = L.iv; }
   selectD(null); renderGrid(); refreshHeader(); saveState();
@@ -14243,7 +14277,7 @@ function renderTabs() { const bar = $r("#grTabs"); if (!bar) return; const L = T
     lastG = g ? g.id : null; if (g && g.col && t.id !== TABS.cur) return;
     const c = tabSym(t);
     h += `<div class="gr-tab${t.id === TABS.cur ? " on" : ""}${t.pin ? " pin" : ""}${g ? " ing" : ""}" data-t="${t.id}" draggable="true" style="${g ? `--gc:${g.color};` : ""}${t.link ? `--lc:${t.link}` : ""}" title="${E(tabTitle(t))}${t.link ? " — onglet lié" : ""}">
-      ${t.link ? `<i class="gr-tabl"></i>` : ""}${t.pin ? `<span class="gr-tabp">${E(c ? symCode(c.sym) : "★")}</span>` : `<span class="gr-tabn">${E(tabTitle(t))}</span><button class="gr-tabx" data-x="1" title="Fermer l'onglet (Ctrl+W)">×</button>`}</div>`; });
+      ${t.link ? `<i class="gr-tabl"></i>` : ""}${t.pin ? `<span class="gr-tabp">📌 ${E(tabTitle(t))}</span>` : `<span class="gr-tabn">${E(tabTitle(t))}</span><button hidden class="gr-tabx" data-x="1" title="Fermer l'onglet (Ctrl+W)">×</button>`}</div>`; });
   h += `<button class="gr-tabadd" id="grTabAdd" title="Nouvel onglet (Ctrl+T) — Maj + clic : nouvelle fenêtre">${ICO.plus}</button><span class="gr-tabsp"></span>`;
   // v1.94.1 : à droite comme TradingView : nouvelle fenêtre ; dans une fenêtre secondaire, fermer seulement cette fenêtre (l'app reste ouverte)
   h += `<button class="gr-tabw" id="grTabWin" title="Nouvelle fenêtre"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M10 13.5v3M6.5 16.5h7M2.5 6.5h15"/></svg></button>`;
@@ -14436,13 +14470,27 @@ const GRIDS = {
   "14": GG(7, 2),
   "16": GG(4, 4), "16x": GG(8, 2),
 };
+/* v1.100 : écrans partagés redimensionnables (glisser la séparation entre deux graphiques), proportions par disposition et par mise en page */
+const gridFr = (g) => { const sp = (STATE.splits || {})[STATE.grid] || {}; return { c: sp.c && sp.c.length === g.c ? sp.c : Array(g.c).fill(1), r: sp.r && sp.r.length === g.r ? sp.r : Array(g.r).fill(1) }; };
+function gridTpl(host, g) { const f = gridFr(g); host.style.gridTemplateColumns = f.c.map((x) => `minmax(0,${x}fr)`).join(" "); host.style.gridTemplateRows = f.r.map((x) => `minmax(0,${x}fr)`).join(" "); }
+function gridGutters(host, g) { host.querySelectorAll(".gr-gut").forEach((x) => x.remove()); if (STATE.max || (g.c < 2 && g.r < 2)) return;
+  const place = () => { const f = gridFr(g), W = host.clientWidth, H = host.clientHeight, sc = f.c.reduce((a, b) => a + b, 0), sr = f.r.reduce((a, b) => a + b, 0); let acc = 0;
+    host.querySelectorAll(".gr-gut.v").forEach((u, i) => { acc = f.c.slice(0, i + 1).reduce((a, b) => a + b, 0); u.style.left = (acc / sc) * W - 3 + "px"; });
+    host.querySelectorAll(".gr-gut.h").forEach((u, i) => { acc = f.r.slice(0, i + 1).reduce((a, b) => a + b, 0); u.style.top = (acc / sr) * H - 3 + "px"; }); };
+  const mk = (dir, i) => { const u = el("div", "gr-gut " + dir); u.title = "Glisser pour redimensionner (double-clic = parts égales)"; host.append(u);
+    u.ondblclick = () => { const sp = (STATE.splits = STATE.splits || {}); sp[STATE.grid] = Object.assign({}, sp[STATE.grid], { [dir === "v" ? "c" : "r"]: null }); gridTpl(host, g); place(); saveState(); };
+    u.onpointerdown = (e) => { e.preventDefault(); e.stopPropagation(); const f = gridFr(g), A = (dir === "v" ? f.c : f.r).slice(), tot = A.reduce((a, b) => a + b, 0), px = dir === "v" ? host.clientWidth : host.clientHeight, p0 = dir === "v" ? e.clientX : e.clientY, a0 = A[i], b0 = A[i + 1], mn = tot * 0.08;
+      u.classList.add("on"); const mv = (ev) => { const dd = ((dir === "v" ? ev.clientX : ev.clientY) - p0) / px * tot; const a = clamp(a0 + dd, mn, a0 + b0 - mn); A[i] = a; A[i + 1] = a0 + b0 - a; const sp = (STATE.splits = STATE.splits || {}); sp[STATE.grid] = Object.assign({}, sp[STATE.grid], { [dir === "v" ? "c" : "r"]: A.slice() }); gridTpl(host, g); place(); };
+      const up = () => { u.classList.remove("on"); removeEventListener("pointermove", mv); removeEventListener("pointerup", up); saveState(); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); }; };
+  for (let i = 0; i < g.c - 1; i++) mk("v", i); for (let i = 0; i < g.r - 1; i++) mk("h", i); place();
+  if (!host._gro) { host._gro = new ResizeObserver(() => { const gg = GRIDS[STATE.grid]; if (gg) { const fn = host._place; if (fn) fn(); } }); host._gro.observe(host); } host._place = place; }
 function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco === "function") gb.innerHTML = gridIco(GRIDS[STATE.grid] ? STATE.grid : "1", 28);
   CELLS.forEach((c) => c.destroy()); CELLS = []; if (!GRIDS[STATE.grid]) STATE.grid = "1"; const g = GRIDS[STATE.grid], n = g.a.length, host = $r("#grGrid");
   while (STATE.cells.length < n) { const b = STATE.cells[STATE.active] || STATE.cells[0]; STATE.cells.push(DEF_CELL({ sym: b.sym, iv: b.iv, type: b.type, inds: [{ id: uid(), t: "vol", inp: {} }] })); }
-  host.style.gridTemplateColumns = `repeat(${g.c},minmax(0,1fr))`; host.style.gridTemplateRows = `repeat(${g.r},minmax(0,1fr))`; host.classList.toggle("max", !!STATE.max); host.classList.toggle("multi", n > 1);
+  gridTpl(host, g); host.classList.toggle("max", !!STATE.max); host.classList.toggle("multi", n > 1);
   STATE.active = clamp(STATE.active, 0, n - 1);
   for (let i = 0; i < n; i++) { const c = new Cell(STATE.cells[i], i), [x, y, w, h] = g.a[i]; c.el.style.gridArea = `${y + 1} / ${x + 1} / span ${h} / span ${w}`; host.append(c.el); CELLS.push(c); }
-  setActive(STATE.active, true); refreshHeader(); saveState();
+  gridGutters(host, g); setActive(STATE.active, true); refreshHeader(); saveState();
   // v1.94 : données déjà en cache (changement d'onglet / de mise en page) posées avant la mise en place du graphique → vue écrasée : on recentre
   [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (c.st.vr && performance.now() < (c.vrUntil || 0)) c.applyVR(); else if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
 }
@@ -14868,7 +14916,7 @@ function tplItems(d, after) { const tpl = tplOf(d.tool), names = tplNames(d.tool
     "-", { t: "Utiliser comme style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); all[d.tool] = JSON.parse(JSON.stringify(d.s)); LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » mis à jour"); } },
     { t: "Réinitialiser le style par défaut", f: () => { const all = LS.get("gr-tpldef", {}); delete all[d.tool]; LS.set("gr-tpldef", all); toast("Style par défaut de « " + T[d.tool].n + " » réinitialisé"); } }].filter(Boolean); }
 tsxSeed();
-function drawMenu(d, c, x, y) {
+function drawMenu(d, c, x, y) { const TG = TSEL.size > 1 && TSEL.has(d.id) ? [...TSEL].map((id) => (findD(id) || {}).d).filter(Boolean) : [d]; // v1.100 : sélection multiple = l'action vaut pour tous
   const nm = dName(d), low = nm.charAt(0).toLowerCase() + nm.slice(1), names = tplNames(d.tool), tpl = tplOf(d.tool), cur = ivSec(c.st.iv), vr = d.visR && d.visR.iv === cur ? d.visR.op : d.visR ? "x" : d.vis && Object.values(d.vis).includes(false) ? "x" : "all";
   const setVis = (op) => { snap(); delete d.vis; if (op === "all") delete d.visR; else d.visR = { op, iv: cur }; drawChanged(d); toast(op === "all" ? "Visible sur tous les intervalles" : `Visible sur l'intervalle ${ivLabel(c.st.iv)}${op === "ge" ? " et supérieurs" : op === "le" ? " et inférieurs" : " uniquement"}`); };
   const goTo = () => { try { const G = c.geo(), li = G.li(d.p[0].t), ts = c.main.chart.timeScale(), r = ts.getVisibleLogicalRange(), w = r ? r.to - r.from : 120; ts.setVisibleLogicalRange({ from: li - w / 2, to: li + w / 2 }); selectD(d, c); } catch (e) { /* */ } };
@@ -14879,14 +14927,14 @@ function drawMenu(d, c, x, y) {
     { t: "Ordre de visualisation", ic: FI.layers, sub: [{ t: "Mettre au premier plan", f: () => zMove(d, c, 1e9) }, { t: "Mettre au Fond", f: () => zMove(d, c, -1e9) }, { t: "Mettre en avant", f: () => zMove(d, c, 1) }, { t: "Mettre vers l'Arrière", f: () => zMove(d, c, -1) }] },
     { t: "Visibilité des intervalles", ic: " ", sub: [["ge", "Intervalle actuel et supérieur"], ["le", "Intervalle actuel et inférieur"], ["eq", "Intervalle actuel uniquement"], ["all", "Tous les intervalles"]].map(([k, t]) => ({ t, on: vr === k, f: () => setVis(k) })) }, "-",
     { t: "Créer un groupe de dessins", ic: FI.gplus, f: () => { const u = undOf(c.st.sym), G = dGroups(u), ng = { id: uid(), name: "Groupe " + (G.length + 1), open: true, lay: curLay() }; dGroupsSet(u, G.concat(ng)); snap(); d.grp = ng.id; drawChanged(d); refreshTree(); toast("« " + ng.name + " » créé avec ce dessin"); } },
-    { t: "Cloner", ic: FI.clone, f: () => cloneD(d, c) }, { t: "Copier", ic: " ", k: "Ctrl + C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
+    { t: "Cloner" + (TG.length > 1 ? ` (${TG.length})` : ""), ic: FI.clone, f: () => TG.forEach((x) => cloneD(x, c)) }, { t: "Copier", ic: " ", k: "Ctrl + C", f: () => { DS.clip = JSON.parse(JSON.stringify(d)); toast("Dessin copié"); } },
     { t: "Renommer", ic: FI.ren, f: () => askText("Renommer", nm, (n) => { snap(); d.name = n; drawChanged(d); refreshTree(); }) }, "-",
     // v1.94 : synchro comme TradingView (ce graphique / cette mise en page / toutes les mises en page)
-    ...[["none", "Pas de synchronisation", "Seulement sur ce graphique de cette mise en page"], ["layout", "Synchroniser dans la mise en page", "Sur tous les graphiques de cette mise en page avec ce symbole"], ["global", "Synchroniser globalement", "Sur toutes les mises en page avec ce symbole"]].map(([k, t, tip]) => ({ t, tip, on: syncOf(d) === k, f: () => { snap(); d.sync = k; d.lay = curLay(); d.cell = c.idx; drawChanged(d); toast(t + " : " + tip.toLowerCase()); } })), "-",
+    ...SYNCS.map(([k, t, tip]) => ({ t: TG.length > 1 ? `${t.replace("…", "")} (${TG.length})${k === "layouts" ? "…" : ""}` : t, tip, on: TG.length === 1 && syncOf(d) === k, f: () => { if (k === "layouts") pickLays(d.lays, (L) => { setSync(TG, k, L, c); toast(`${TG.length} dessin(s) : ${L.length} mise(s) en page`); }); else { setSync(TG, k, null, c); toast((TG.length > 1 ? TG.length + " dessins : " : "") + tip.toLowerCase()); } } })), "-",
     { t: d.anch ? "Désancrer" : "Ancrer", ic: " ", tip: "Fixe le dessin à l'écran : il ne bouge plus avec le graphique", f: () => { snap(); if (d.anch) delete d.anch; else { const G = c.geo(), P = d.p.map((q) => [G.x(q.t), G.y(q.p)]), w = c.main.host.clientWidth || 1, h = c.main.host.clientHeight || 1; d.anch = P.map((q) => [q[0] / w, q[1] / h]); } drawChanged(d); } }, "-",
-    { t: d.lock ? "Déverrouiller" : "Verrouiller", ic: d.lock ? ICO.lock : ICO.unlock, f: () => { d.lock = !d.lock; drawChanged(d); if (selD() === d) showFloat(d); } },
-    { t: "Cacher", ic: ICO.eyeoff, f: () => { snap(); d.hide = true; selectD(null); drawChanged(); } },
-    { t: "Retirer", k: "Del", ic: ICO.trash, f: () => { selectD(d, c); deleteSel(); } }, "-",
+    { t: (d.lock ? "Déverrouiller" : "Verrouiller") + (TG.length > 1 ? ` (${TG.length})` : ""), ic: d.lock ? ICO.lock : ICO.unlock, f: () => { const v = !d.lock; TG.forEach((x) => (x.lock = v)); drawChanged(d); if (selD() === d) showFloat(d); } },
+    { t: "Cacher" + (TG.length > 1 ? ` (${TG.length})` : ""), ic: ICO.eyeoff, f: () => { snap(); TG.forEach((x) => (x.hide = true)); selectD(null); drawChanged(); } },
+    { t: "Retirer" + (TG.length > 1 ? ` (${TG.length})` : ""), k: "Del", ic: ICO.trash, f: () => { if (TG.length > 1) { snap(); TG.forEach((x) => { const f = findD(x.id); if (f) f.list.splice(f.i, 1); }); TSEL.clear(); selectD(null); drawChanged(); toast(TG.length + " dessins supprimés (Ctrl+Z pour annuler)"); } else { selectD(d, c); deleteSel(); } } }, "-",
     d.tool === "long" || d.tool === "short" ? { t: "Envoyer en ordre (compte démo)", ic: " ", f: () => paFromDraw(d, c) } : null, d.tool === "long" || d.tool === "short" ? "-" : null,
     { t: `Aller à ${low}`, ic: " ", f: goTo }, "-",
     { t: "Configurations…", ic: FI.set, f: () => openDrawSettings(d, c) }].filter(Boolean), { cls: "gr-dmenu" });
@@ -14925,6 +14973,9 @@ function openDrawSettings(d, c) {
   const lvT = lvl ? `<div class="gr-mut">Coche un niveau pour afficher sa ligne.</div><div class="gr-lvl">${s.lv.map((l, i) => `<div class="gr-fr"><label class="gr-chk"><input type="checkbox" data-lo="${i}" ${l.on ? "checked" : ""}></label><input class="gr-in sm" type="number" step="any" data-lv="${i}" value="${l.v}">${colorInput("L:" + i, l.c)}<input class="gr-in sm gr-lvt" data-lt="${i}" value="${E(l.t || "")}" placeholder="Texte"><button class="gr-ib" data-ldel="${i}" title="Retirer">${ICO.x}</button></div>`).join("")}</div><button class="gr-btn" id="grLvAdd">+ Ajouter un niveau</button>` : "";
   const fmtIn = (t) => { const z = new Date((t + tzOff(dispTZ(), t)) * 1000).toISOString(); return z.slice(0, 16); };
   const coT = d.p.map((q, i) => `<div class="gr-fr"><span>Point ${i + 1}</span><input class="gr-in" type="datetime-local" data-ct="${i}" value="${fmtIn(q.t)}"><input class="gr-in sm" type="number" step="any" data-cp="${i}" value="${q.p}"></div>`).join("") + `<div class="gr-mut">Heures en ${E(TZS.find((z) => z[0] === dispTZ()) ? TZS.find((z) => z[0] === dispTZ())[1] : dispTZ())}.</div>`;
+  const sy0 = syncOf(d), syT = `<div class="gr-mut" style="margin-bottom:8px">Enregistré avec le dessin et dans ses modèles : un modèle peut ainsi créer ses dessins déjà synchronisés globalement, ou seulement dans leur mise en page.</div>`
+    + SYNCS.map(([k, t, tip]) => `<label class="gr-chk" style="display:flex;margin:8px 0"><input type="radio" name="grSy" data-sy="${k}" ${sy0 === k ? "checked" : ""}><span><b style="font-weight:500">${E(t.replace("…", ""))}</b><br><small class="gr-mut">${E(tip)}</small></span></label>`).join("")
+    + `<div data-sylist ${sy0 === "layouts" ? "" : "hidden"} style="margin:4px 0 0 26px">${(STATE.layoutId ? [] : [[curLay(), "Onglet actuel"]]).concat(LAYOUTS.map((L) => [L.id, L.name])).map(([id, n]) => `<label class="gr-chk" style="display:flex;margin:4px 0"><input type="checkbox" data-syl="${E(id)}" ${(d.lays || [curLay()]).includes(id) ? "checked" : ""}><span>${E(n)}</span></label>`).join("")}</div>`;
   const V0 = d.vis || {}, vOn = (k) => !(V0[k] === false || (V0[k] && V0[k].on === false));
   const viT = `<label class="gr-chk gr-vrow"><input type="checkbox" data-vb="tick" ${V0.tick === false ? "" : "checked"}><span>Ticks</span></label>`
     + VIS_U.map(([k, n, a, b]) => { const e = V0[k] && typeof V0[k] === "object" ? V0[k] : {}, lo = fin(+e.min) ? +e.min : a, hi = fin(+e.max) ? +e.max : b;
@@ -14940,8 +14991,8 @@ function openDrawSettings(d, c) {
     <div class="gr-sec">Niveau de profit</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-tpt="1" value="${nT(1)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-tpp="1" value="${d.p[1].p}"></div>
     <div class="gr-sec">Niveau du stop</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-slt="1" value="${nT(2)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-slp="1" value="${d.p[2].p}"></div>
     <div class="gr-fr"><span>Précision QTY</span><select class="gr-in" data-n="qp">${[["def", "Par défaut"], ["0", "0"], ["1", "0,1"], ["2", "0,01"], ["3", "0,001"]].map(([v, n]) => `<option value="${v}" ${String(s.qp ?? "def") === v ? "selected" : ""}>${n}</option>`).join("")}</select></div>` : "";
-  let dd = null; dd = dlg(def.n, `<div class="gr-tabs">${inT ? `<button class="gr-tab on" data-p="in">Paramètres en entrée</button>` : ""}<button class="gr-tab${inT ? "" : " on"}" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button></div>
-    ${inT ? `<div class="gr-tpane" data-p="in">${inT}</div>` : ""}<div class="gr-tpane" data-p="st"${inT ? " hidden" : ""}>${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div>`,
+  let dd = null; dd = dlg(def.n, `<div class="gr-tabs">${inT ? `<button class="gr-tab on" data-p="in">Paramètres en entrée</button>` : ""}<button class="gr-tab${inT ? "" : " on"}" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button><button class="gr-tab" data-p="sy">Synchronisation</button></div>
+    ${inT ? `<div class="gr-tpane" data-p="in">${inT}</div>` : ""}<div class="gr-tpane" data-p="st"${inT ? " hidden" : ""}>${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div><div class="gr-tpane" data-p="sy" hidden>${syT}</div>`,
   { w: 500, cls: "gr-dset", left: `<button class="gr-btn" data-tplb="1">Modèle ▾</button>`, onCancel: () => { if (!dd.cancelled) { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); return; } /* v1.96 : × / Échap / clic dehors = garder (comme TradingView) */ const f = findD(d.id); if (f) { f.list[f.i] = JSON.parse(before); drawChanged(); } }, onOk: () => { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); } });
   tabs(dd.el); const root = dd.el;
   { const cb = root.querySelector('[data-x="cancel"]'); if (cb) cb.addEventListener("pointerdown", () => (dd.cancelled = true)); }
@@ -14951,6 +15002,8 @@ function openDrawSettings(d, c) {
     const tx = root.querySelector("#grDTxt"); if (tx) d.txt = tx.value;
     if (lvl) s.lv.forEach((l, i) => { const o = root.querySelector(`[data-lo="${i}"]`), v = root.querySelector(`[data-lv="${i}"]`), c2 = readColor(root, "L:" + i), tt = root.querySelector(`[data-lt="${i}"]`); if (o) l.on = o.checked; if (v && fin(+v.value)) l.v = +v.value; if (c2) l.c = c2; if (tt) { if (tt.value) l.t = tt.value; else delete l.t; } });
     d.p.forEach((q, i) => { const t = root.querySelector(`[data-ct="${i}"]`), p = root.querySelector(`[data-cp="${i}"]`); if (t && t.value) { const ms = Date.parse(t.value + ":00Z") / 1000; if (fin(ms)) { let g = ms; for (let k = 0; k < 3; k++) g = ms - tzOff(dispTZ(), g); q.t = g; } } if (p && fin(+p.value)) q.p = +p.value; });
+    { const r = root.querySelector("[data-sy]:checked"); if (r) { const k = r.dataset.sy, ls = [...root.querySelectorAll("[data-syl]")].filter((i) => i.checked).map((i) => i.dataset.syl), box = root.querySelector("[data-sylist]"); if (box) box.hidden = k !== "layouts";
+        d.sync = k; d.lay = curLay(); d.s._sync = k; if (k === "layouts") { d.lays = ls.length ? ls : [curLay()]; d.s._lays = d.lays.slice(); } else { delete d.lays; delete d.s._lays; } } }
     { const V = {}; let any = false; root.querySelectorAll("[data-vb]").forEach((e) => { if (!e.checked) { V[e.dataset.vb] = false; any = true; } });
       VIS_U.forEach(([k, , a, b]) => { const on = root.querySelector(`[data-vk="${k}"]`), lo = +(root.querySelector(`[data-vmin="${k}"]`) || {}).value, hi = +(root.querySelector(`[data-vmax="${k}"]`) || {}).value; if (!on) return;
         const o = { on: on.checked, min: fin(lo) ? clamp(lo, a, b) : a, max: fin(hi) ? clamp(hi, a, b) : b }; if (!o.on || o.min !== a || o.max !== b) { V[k] = o; any = true; } });
@@ -15004,7 +15057,7 @@ async function wlFetch(s) { const sp = SYM(s); try { let b = [];
   else if (sp.src === "ff") b = await ffFetch(s, "D1", 4, 0); else b = aggregate(await csvBars(s), "1D");
   if (b.length) { const l = b[b.length - 1]; WLP.set(s, { last: l[4], prev: b.length > 1 ? b[b.length - 2][4] : l[1], hi: l[2], lo: l[3], o: l[1], v: l[5], at: Date.now() }); checkAlerts(s, l); }
 } catch (e) { if (e.code === "login") WLP.set(s, { err: "login" }); } if (STATE.panel === "wl") renderWL(); }
-const livePx = (s) => { for (const c of CELLS) { const f = c.feed; if (c.st.sym === s && f && f.sym === s && f.bars.length && f.spec.src !== "csv" && !PR.rth) return f.bars[f.bars.length - 1][4]; } return null; };
+const livePx = (s) => { for (const c of CELLS) { const f = c.feed; if (c.st.sym === s && f && f.sym === s && f.bars.length && f.spec.src !== "csv" && !rthOn()) return f.bars[f.bars.length - 1][4]; } return null; };
 function renderWL() { const P = $r("#grRPanel"), act = activeCell();
   const rows = WL.map((s) => { const q = WLP.get(s) || {}, lp = livePx(s), last = lp != null ? lp : q.last, ch = fin(last) && fin(q.prev) ? last - q.prev : NaN, sp = SYM(s);
     return `<div class="gr-wlr${act && act.st.sym === s ? " on" : ""}" data-s="${E(s)}" draggable="true"><span class="gr-wls"><i class="gr-dot gr-s-${sp.src}"></i>${symLogo(s)}${E(symCode(s))}</span><b>${q.err === "login" ? "—" : fin(last) ? fmtPx(last, sp) : "…"}</b><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) ? (ch >= 0 ? "+" : "") + fmtPx(ch, sp) : ""}</em><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) && q.prev ? (ch >= 0 ? "+" : "") + (ch / q.prev * 100).toFixed(2) + " %" : ""}</em><button class="gr-ib gr-wlx" data-x="${E(s)}" title="Retirer">${ICO.x}</button></div>`; }).join("");
@@ -15080,7 +15133,7 @@ function renderNews() { const P = $r("#grRPanel"), today = nyDate(NOW()), hiOnly
 let detFeed = null, detUnsub = null;
 function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) return; const s = c.st.sym, sp = SYM(s), f = getFeed(s, "1D");
   if (detFeed !== f) { if (detUnsub) detUnsub(); detFeed = f; const fn = () => { if (STATE.panel === "det") renderDet(); }; f.subs.add(fn); detUnsub = () => f.subs.delete(fn); if (!f.ready) f.load(); }
-  const B = f.bars, n = B.length, last = c.DB.length && c.feed && c.feed.spec.src !== "csv" && !PR.rth ? c.feed.bars[c.feed.bars.length - 1][4] : n ? B[n - 1][4] : NaN, prev = n > 1 ? B[n - 2][4] : NaN, ch = last - prev;
+  const B = f.bars, n = B.length, last = c.DB.length && c.feed && c.feed.spec.src !== "csv" && !rthOn() ? c.feed.bars[c.feed.bars.length - 1][4] : n ? B[n - 1][4] : NaN, prev = n > 1 ? B[n - 2][4] : NaN, ch = last - prev;
   const perf = (k) => n > k ? (last / B[n - 1 - k][4] - 1) * 100 : NaN, y0 = n ? B.findIndex((b) => sessDate(b[0]).slice(0, 4) === sessDate(B[n - 1][0]).slice(0, 4)) : -1, ytd = y0 > 0 ? (last / B[y0 - 1][4] - 1) * 100 : NaN;
   const yr = B.slice(-252), hi52 = yr.length ? Math.max(...yr.map((b) => b[2])) : NaN, lo52 = yr.length ? Math.min(...yr.map((b) => b[3])) : NaN, fi = frontInfo(sp);
   const pc = (v) => fin(v) ? `<em class="${v >= 0 ? "up" : "dn"}">${v >= 0 ? "+" : ""}${v.toFixed(2)} %</em>` : "—", row = (k, v) => `<div class="gr-dr"><span>${k}</span><b>${v}</b></div>`;
@@ -15098,7 +15151,7 @@ function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) retu
 const TSEL = new Set(); let treeQ = "", treeLast = null;
 const dGroups = (u) => { const all = LS.get("gr-dgroups", {}); return all[u] || []; }, dGroupsSet = (u, L) => { const all = LS.get("gr-dgroups", {}); all[u] = L; LS.set("gr-dgroups", all); };
 const dName = (d) => d.name || (d.txt ? d.txt.split("\n")[0] : T[d.tool] ? T[d.tool].n : d.tool);
-function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), GV = G.filter((g) => g.lay === curLay() || L.some((d) => d.grp === g.id)), gid = new Set(G.map((g) => g.id));
+function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), GV = G.filter((g) => g.lay === curLay() || g.sync === "global" || (g.sync === "layouts" && (g.lays || []).includes(curLay())) || L.some((d) => d.grp === g.id)), gid = new Set(G.map((g) => g.id));
   L.forEach((d) => { if (d.grp && !gid.has(d.grp)) delete d.grp; }); [...TSEL].forEach((id) => { if (!L.some((d) => d.id === id)) TSEL.delete(id); });
   const q = treeQ.trim().toLowerCase(), match = (d) => !q || dName(d).toLowerCase().includes(q) || (T[d.tool] && T[d.tool].n.toLowerCase().includes(q));
   // v1.96 : arborescence façon TradingView (onglets, barre d'icônes, ligne du symbole, indicateurs, dessins, groupes-dossiers)
@@ -15121,6 +15174,7 @@ function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || S
     menu(e.clientX, e.clientY, [{ t: "Renommer", ic: FI.ren, f: () => askText("Renommer le groupe", g.name, (n) => { g.name = n; dGroupsSet(u, G); renderTree(); }) }, "-",
       { t: lk ? "Déverrouiller" : "Verrouiller", ic: lk ? ICO.lock : ICO.unlock, dis: !M.length, f: () => { snap(); M.forEach((d) => (d.lock = !lk)); drawChanged(); renderTree(); } },
       { t: hid ? "Afficher" : "Cacher", ic: hid ? ICO.eye : ICO.eyeoff, dis: !M.length, f: () => { snap(); M.forEach((d) => (d.hide = !hid)); drawChanged(); renderTree(); } }, "-",
+      { t: "Synchronisation", ic: " ", sub: SYNCS.map(([k, t, tip]) => ({ t, tip, on: (g.sync || "") === k, f: () => { const go = (L) => { g.sync = k; if (L) g.lays = L; else delete g.lays; dGroupsSet(u, G); setSync(M, k, L, c); toast(`Dossier « ${g.name} » : ${tip.toLowerCase()}`); }; if (k === "layouts") pickLays(g.lays, go); else go(null); } })) }, "-",
       { t: "Dégrouper", ic: " ", f: () => { snap(); M.forEach((d) => delete d.grp); dGroupsSet(u, G.filter((x) => x !== g)); drawChanged(); renderTree(); } },
       { t: "Retirer le groupe et ses dessins", k: "Del", ic: ICO.trash, f: () => { if (M.length && !window.confirm(`Supprimer « ${g.name} » et ses ${M.length} dessin(s) ?`)) return; snap(); M.forEach((d) => { const k = L.indexOf(d); if (k >= 0) L.splice(k, 1); }); dGroupsSet(u, G.filter((x) => x !== g)); selectD(null); drawChanged(); renderTree(); } }], { cls: "gr-dmenu" });
   };
@@ -15189,7 +15243,7 @@ function refreshDataWin(i, c) { if (STATE.panel !== "dw" || !c) return; const P 
 const RANGES = [["1J", "1", 86400], ["5J", "5", 5 * 86400], ["1M", "30", 31 * 86400], ["3M", "60", 92 * 86400], ["6M", "120", 183 * 86400], ["YTD", "1D", "ytd"], ["1A", "1D", 365 * 86400], ["5A", "1W", 5 * 365 * 86400], ["Tout", "1M", "all"]];
 function refreshBottom() { const b = $r("#grBot"), c = activeCell(); if (!b) return; const m = (c && c.st.scale) || {};
   b.innerHTML = `<div class="gr-ranges">${RANGES.map(([n]) => `<button class="gr-bb" data-rg="${n}">${n}</button>`).join("")}<button class="gr-bb gr-ic" data-b="goto" title="Aller à… (Alt+G)">${ICO.drange.replace('width="28" height="28"', 'width="20" height="20"')}</button><i class="gr-bsep"></i><button class="gr-bb gr-pp${STATE.ppanel ? " on" : ""}" data-b="paper" title="Paper Trading (compte démo, aucun vrai ordre)"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 14l4-4 3 3 6-6"/><path d="M12 7h4v4"/></svg><span>Paper Trading</span></button></div><span class="gr-fill"></span>
-    <button class="gr-bb" data-b="tz" id="grClock" title="Fuseau horaire"></button><i class="gr-bsep"></i><button class="gr-bb${PR.rth ? " on" : ""}" data-b="rth" title="Séance (Alt+Maj+E)">${PR.rth ? "RTH" : "ETH"}</button><i class="gr-bsep"></i>
+    <button class="gr-bb" data-b="tz" id="grClock" title="Fuseau horaire"></button><i class="gr-bsep"></i><button class="gr-bb${rthOn() ? " on" : ""}" data-b="rth" title="Séance (Alt+Maj+E)">${rthOn() ? "RTH" : "ETH"}</button><i class="gr-bsep"></i>
     <button class="gr-bb${m.mode === 2 ? " on" : ""}" data-b="pct" title="Échelle en % (Alt+P)">%</button><button class="gr-bb${m.mode === 1 ? " on" : ""}" data-b="log" title="Échelle logarithmique (Alt+A)">log</button><button class="gr-bb${m.auto !== false ? " on" : ""}" data-b="auto" title="Échelle automatique">auto</button>`;
   clockTick(); }
 function clockTick() { const k = $r("#grClock"); if (!k) return; const t = NOW(), d = new Date((t + tzOff(dispTZ(), t)) * 1000); k.textContent = `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())} (${tzAbbr()}) ${(TZS.find((z) => z[0] === dispTZ()) || [, dispTZ()])[1]}`; CELLS.forEach((c) => { if (PR.countdown && c.feed && ivIntra(c.st.iv)) c.lay && c.lay.update(); }); }
@@ -15198,7 +15252,7 @@ $r("#grBot").onclick = (e) => { const c = activeCell(); if (!c) return; const rg
   if (!b) return; const k = b.dataset.b; if (k === "goto") openGoto(); if (k === "paper") { STATE.ppanel = !STATE.ppanel; saveState(); refreshBottom(); renderPaperP(); return; } if (k === "tz") menuAt(b, ["h:Fuseau horaire", ...TZS.map(([z, n]) => ({ t: n, on: dispTZ() === z, f: () => { PR.tz = z; savePrefs(); CELLS.forEach((x) => { x.applyFmt(); x.full(false); }); refreshBottom(); } }))]);
   if (k === "rth") toggleRTH(); if (k === "pct") setScale(c, { mode: (c.st.scale || {}).mode === 2 ? 0 : 2 }); if (k === "log") setScale(c, { mode: (c.st.scale || {}).mode === 1 ? 0 : 1 }); if (k === "auto") { setScale(c, { auto: true }); c.main.chart.timeScale().scrollToRealTime(); } };
 function setScale(c, o) { if (o.auto && c.wsc) { c.wsc.reset(); c.wsc.attach(); } c.st.scale = Object.assign({}, c.st.scale || {}, o); c.scaleMode(); refreshBottom(); saveState(); }
-function toggleRTH() { PR.rth = !PR.rth; savePrefs(); CELLS.forEach((c) => c.full(false)); refreshBottom(); toast(PR.rth ? "Séance régulière (RTH 9:30 – 16:15 NY)" : "Séance électronique complète (ETH)"); }
+function toggleRTH() { STATE.rth = !rthOn(); saveState(); CELLS.forEach((c) => c.full(false)); refreshBottom(); toast(rthOn() ? "Séance régulière (RTH 9:30 – 16:15 NY)" : "Séance électronique complète (ETH)"); }
 function scaleMenu(c, x, y) { const m = c.st.scale || {}; menu(x, y, [{ t: "Échelle automatique", on: m.auto !== false, f: () => setScale(c, { auto: true }) }, "-", { t: "Normale", on: !m.mode, f: () => setScale(c, { mode: 0 }) }, { t: "Logarithmique", k: "Alt+A", on: m.mode === 1, f: () => setScale(c, { mode: 1 }) }, { t: "Pourcentage", k: "Alt+P", on: m.mode === 2, f: () => setScale(c, { mode: 2 }) }, { t: "Indexée à 100", on: m.mode === 3, f: () => setScale(c, { mode: 3 }) }, "-", { t: "Inverser l'échelle", k: "Alt+I", on: !!m.inv, f: () => setScale(c, { inv: !m.inv }) }, { t: PR.left ? "Échelle à droite" : "Échelle à gauche", f: () => { PR.left = !PR.left; savePrefs(); CELLS.forEach((cc) => { cc.applyFmt(); cc.mkMain(); cc.full(false); }); } }, "-", { t: "Réinitialiser le graphique", k: "Alt+R", f: () => resetChart(c) }]); }
 function resetChart(c) { if (!c) return; setScale(c, { auto: true }); const n = c.DB.length; if (n) c.setRange({ from: n - clamp(Math.round(c.pEl.clientWidth / 8), 40, 400), to: n + PR.rightOffset }); }
 function goToTime(c, t, keepZoom) { if (!c || !c.DB.length) return; const B = c.DB; if (t < B[0][0] && c.feed && !c.feed.done) { c.pendGo = { t, keep: keepZoom, n: 0 }; c.feed.loadMore(); return; } const li = liOf(B, c.st.iv, t), r = c.main.chart.timeScale().getVisibleLogicalRange(), w = r && keepZoom ? (r.to - r.from) / 2 : 60; c.setRange({ from: li - w, to: li + w }); }
@@ -15306,7 +15360,7 @@ function layDrawsTo(from, to, copy) { let n = 0; for (const k in DRAW) { const a
 function saveLayout(as) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId);
   if (!L || as) { askText(as ? "Enregistrer la mise en page sous" : "Nom de la mise en page", L ? L.name + " (copie)" : "Ma mise en page", (n) => { const x = { id: uid(), name: n, state: snapshotLayout(), at: Date.now() }; LAYOUTS.push(x); layDrawsTo(L ? L.id : curLay(), x.id, !!L); STATE.layoutId = x.id; LS.set("gr-layouts", LAYOUTS); saveState(); refreshHeader(); toast("Mise en page « " + n + " » enregistrée"); }); return; }
   L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); toast("Mise en page « " + L.name + " » enregistrée"); }
-function loadLayout(L) { if (!L) return; STATE.grid = L.state.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(L.state.cells || [DEF_CELL()])); STATE.active = L.state.active || 0; STATE.sync = Object.assign({}, STATE.sync, L.state.sync || {}); STATE.layoutId = L.id; STATE.max = false; renderGrid(); toast("Mise en page « " + L.name + " »"); }
+function loadLayout(L) { if (!L) return; STATE.grid = L.state.grid || "1"; STATE.cells = JSON.parse(JSON.stringify(L.state.cells || [DEF_CELL()])); STATE.active = L.state.active || 0; STATE.sync = Object.assign({}, STATE.sync, L.state.sync || {}); STATE.layoutId = L.id; STATE.max = false; if (L.state.rth !== undefined) STATE.rth = !!L.state.rth; STATE.splits = L.state.splits || {}; renderGrid(); refreshBottom(); toast("Mise en page « " + L.name + " »"); }
 function layoutMenu(btn) { const cur = LAYOUTS.find((x) => x.id === STATE.layoutId);
   menuAt(btn, [{ t: "Enregistrer", k: "Ctrl+S", f: () => saveLayout() }, { t: "Enregistrer sous…", f: () => saveLayout(true) }, cur && { t: "Renommer…", f: () => askText("Renommer la mise en page", cur.name, (n) => { cur.name = n; LS.set("gr-layouts", LAYOUTS); refreshHeader(); }) },
     { t: "Nouvelle mise en page", f: () => { STATE.layoutId = null; STATE.grid = "1"; STATE.cells = [DEF_CELL()]; STATE.active = 0; renderGrid(); } }, { t: "Sauvegarde automatique", on: !!STATE.auto, keep: true, f: () => { STATE.auto = !STATE.auto; saveState(); layoutMenu(btn); } },
@@ -16029,16 +16083,21 @@ const paColTsx = (it) => { const k = it.kind, x = it.x; if (k === "tp" || (k ===
   const side = it.o ? it.o.side : it.pv ? it.pv.side : it.d ? it.d.side : "buy"; return side === "buy" ? TSXC.b : TSXC.o; };
 const paCol = (it) => tsxOn() && it.kind !== "gtp" && it.kind !== "gsl" ? paColTsx(it) : (it.kind === "ord" ? (it.o.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "draft" ? (it.d.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pos" ? (it.P.q > 0 ? "#2962ff" : "#f23645") : it.kind === "pv" ? (it.pv.side === "buy" ? "#2962ff" : "#f23645") : it.kind === "pvx" ? (it.x === "tp" ? "#089981" : "#f23645") : PLCOL[it.kind]);
 function paLines() {
-  const keep = new Set(), c = activeCell(), A = PA.A;
-  if (c && A && c.series && PR.trPos !== false) {
-    for (const it of paItems(c)) { if (it.kind === "gtp" || it.kind === "gsl") continue; const key = it.key, price = PA.drag && PA.drag.key === key ? PA.drag.price : it.price; if (!fin(price)) continue; keep.add(key);
+  const keep = new Set(), c0 = activeCell(), A = PA.A;
+  if (c0 && A && PR.trPos !== false) for (const c of CELLS) { if (!c.series) continue; const act = c === c0; // v1.100 : position visible sur chaque graphique de son symbole (plus seulement le graphique actif)
+    for (const it of paItems(c)) { if (it.kind === "gtp" || it.kind === "gsl" || (!act && (it.kind === "pv" || it.kind === "pvx" || it.kind === "draft"))) continue; const key = (act ? "" : c.idx + ":") + it.key, price = PA.drag && PA.drag.key === key ? PA.drag.price : it.price; if (!fin(price)) continue; keep.add(key);
       let L = PA.lines.get(key); if (L && (L.cell !== c || L.series !== c.series)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } L = null; }
-      const col = paCol(it), prv = it.kind === "pv" || it.kind === "pvx", tsx = tsxOn(), opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : prv ? alpha(col, 0.45) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : prv ? 1 : tsx && it.kind === "tp" ? 1 : 2, axisLabelTextColor: tsx && (col === TSXC.g || col === TSXC.o) ? "#000000" : "#ffffff", lineVisible: PR.trExt !== false, axisLabelVisible: true, title: "" };
-      if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = it.o || (prv ? { pv: 1 } : null); }
+      const col = paCol(it), prv = it.kind === "pv" || it.kind === "pvx", tsx = tsxOn(), opt = { price, color: (it.o && it.o.st === "pending") || it.kind === "draft" ? alpha(col, 0.5) : prv ? alpha(col, 0.45) : col, lineWidth: 1, lineStyle: it.kind === "pos" ? 0 : prv ? 1 : tsx && it.kind === "tp" ? 1 : 2, axisLabelTextColor: tsx && (col === TSXC.g || col === TSXC.o) ? "#000000" : "#ffffff", lineVisible: PR.trExt !== false, axisLabelVisible: true, title: act ? "" : paLineTitle(it, c) };
+      if (L) L.line.applyOptions(opt); else PA.lines.set(key, (L = { cell: c, series: c.series, line: c.series.createPriceLine(opt) })); L.price = price; L.ord = act ? it.o || (prv ? { pv: 1 } : null) : null; }
   }
   for (const [k, L] of PA.lines) if (!keep.has(k)) { try { L.series.removePriceLine(L.line); } catch (e) { /* */ } PA.lines.delete(k); }
   paOverlay();
 }
+/** texte d'une ligne de position / d'ordre sur un graphique qui n'est pas l'actif (les étiquettes HTML ne sont que sur l'actif) */
+function paLineTitle(it, c) { const s = c.st.sym, px = paPx(s), sp = paSpec(s);
+  if (it.kind === "pos") { const u = px ? grPaper.upnl(PA.A, s, px, sp) : NaN; return `${it.P.q > 0 ? "+" : ""}${it.P.q}  ${fin(u) ? (u >= 0 ? "+" : "") + money(u) : ""}`; }
+  if (it.kind === "tp" || it.kind === "sl") { const v = paPL(it.o, it.P, it.price, s, it); return `${it.kind.toUpperCase()} ${it.o.qty}${fin(v) ? "  " + (v >= 0 ? "+" : "") + money(v) : ""}`; }
+  if (it.o) return `${it.o.type === "stop" ? "STP" : "LMT"} ${it.o.qty}`; return ""; }
 /* étiquettes HTML posées sur les lignes (recalées à chaque image tant que la page est affichée) */
 function paOverlay() {
   const c = activeCell(), A = PA.A;
