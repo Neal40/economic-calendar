@@ -3142,11 +3142,25 @@ render(); shell(); go(location.hash.slice(1)||"calendrier");
     const vy=innerHeight/2; let best=0, bd=Infinity; ranges.forEach((r,k)=>{ const b=r.getBoundingClientRect(), d=Math.abs(b.top-vy); if(d<bd){bd=d;best=k;} });
     go(ranges.length?best:-1);
   }
+  // amène le résultat dans la zone visible de ses conteneurs qui défilent (ex. éditeur Pine : texte dessiné sous la zone de saisie)
+  function reveal(r, el){
+    const pre=el.closest(".pe-pre"), ta=pre&&pre.closest(".pe-ed")&&pre.closest(".pe-ed").querySelector(".pe-ta");
+    if(ta){ const b=r.getBoundingClientRect(), p=pre.getBoundingClientRect(), y=b.top-p.top, x=b.left-p.left;
+      if(y<ta.scrollTop||y+b.height>ta.scrollTop+ta.clientHeight) ta.scrollTop=Math.max(0,y-ta.clientHeight/2);
+      if(x<ta.scrollLeft||x+b.width>ta.scrollLeft+ta.clientWidth) ta.scrollLeft=Math.max(0,x-ta.clientWidth/3);
+      ta.dispatchEvent(new Event("scroll")); return; }
+    for(let a=el.parentElement; a&&a!==document.body; a=a.parentElement){
+      const cs=getComputedStyle(a), sy=/(auto|scroll)/.test(cs.overflowY)&&a.scrollHeight>a.clientHeight, sx=/(auto|scroll)/.test(cs.overflowX)&&a.scrollWidth>a.clientWidth; if(!sy&&!sx) continue;
+      const b=r.getBoundingClientRect(), A=a.getBoundingClientRect();
+      if(sy&&(b.top<A.top||b.bottom>A.top+a.clientHeight)) a.scrollTop+=b.top-A.top-a.clientHeight/2;
+      if(sx&&(b.left<A.left||b.right>A.left+a.clientWidth)) a.scrollLeft+=b.left-A.left-a.clientWidth/3;
+    }
+  }
   function go(k){
     if(!ranges.length){ cur=-1; out.textContent=q.value?"0 résultat":""; bar.classList.toggle("none",!!q.value); return; }
     bar.classList.remove("none"); cur=(k+ranges.length)%ranges.length; const r=ranges[cur];
     if(HL) CSS.highlights.set("find-cur",new Highlight(r)); else { const s=getSelection(); s.removeAllRanges(); s.addRange(r); }
-    const el=r.startContainer.parentElement; const b=r.getBoundingClientRect();
+    const el=r.startContainer.parentElement; reveal(r, el); const b=r.getBoundingClientRect();
     if(b.top<70||b.bottom>innerHeight-20||b.left<0||b.right>innerWidth) el.scrollIntoView({block:"center",inline:"nearest"});
     out.textContent=(cur+1)+" / "+ranges.length+(ranges.length>=3000?"+":"");
   }
