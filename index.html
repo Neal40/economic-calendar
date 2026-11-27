@@ -7407,14 +7407,22 @@ self.onmessage = (e) => { const { id, sig, code, flat, m, off, n, o } = e.data; 
     return W;
   }
   const sigOf = (code, bars, o) => { const L = bars[bars.length - 1] || []; return [hashOf(code), bars.length, bars[0] ? bars[0][0] : 0, L.join(","), JSON.stringify(o.inputs || {}), o.tfSec, o.sym, o.pv, o.rvis || 0, o.lvis || 0, o.ltf ? o.ltf.length + ":" + (o.ltf[o.ltf.length - 1] || []).join(",") : 0, o.hist ? o.hist.length + ":" + (o.hist[0] || [])[0] : 0, limOf(code)].join("|"); };
+  // v1.100.6 : bougies du graphique laissées de côté (limite de bougies des scripts) → ajoutées à l'historique 1 h de request.security,
+  // sinon les unités supérieures (W, D…) avaient un trou entre l'historique et la 1re bougie calculée (NWOG / NDOG faux en 1 min)
+  function histFill(o, bars, off) {
+    if (!off || !o || !o.hist) return o; const hs = o.histSec || 3600, H = o.hist.slice(), lastH = H.length ? H[H.length - 1][0] : -Infinity;
+    for (let i = 0; i < off; i++) { const b = bars[i]; if (b[0] < lastH + hs && H.length && b[0] < lastH) continue; const k = Math.floor(b[0] / hs) * hs, L = H[H.length - 1];
+      if (L && L[0] === k) { L[2] = Math.max(L[2], b[2]); L[3] = Math.min(L[3], b[3]); L[4] = b[4]; L[5] = (L[5] || 0) + (b[5] || 0); } else H.push([k, b[1], b[2], b[3], b[4], b[5] || 0]); }
+    return { ...o, hist: H };
+  }
   function send(id, j) {
-    const { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
-    const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6);
+    let { sig, code, bars, o } = j.want; j.want = null; j.running = sig;
+    const n = bars.length, off = Math.max(0, n - limOf(code)), m = n - off, flat = new Float64Array(m * 6); o = histFill(o, bars, off);
     for (let i = 0; i < m; i++) { const b = bars[i + off], k = i * 6; flat[k] = b[0]; flat[k + 1] = b[1]; flat[k + 2] = b[2]; flat[k + 3] = b[3]; flat[k + 4] = b[4]; flat[k + 5] = b[5]; }
     const oo = {}; for (const k in o) if (typeof o[k] !== "function") oo[k] = o[k]; if (isStrat(code) && !oo.timeLimit) oo.timeLimit = 120000; if (!oo.timeLimit) oo.timeLimit = pineCfg().sec * 1000; // calcul dans le Worker : l'app ne gèle pas pendant ce temps
     W.postMessage({ id, sig, code, flat, m, off, n, o: oo }, [flat.buffer]);
   }
-  function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - limOf(code)); if (isStrat(code) && !o.timeLimit) o = { ...o, timeLimit: 120000 }; const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
+  function runSync(code, bars, o) { const c = PineEngine.compile(code); const n = bars.length, off = Math.max(0, n - limOf(code)); o = histFill(o, bars, off); if (isStrat(code) && !o.timeLimit) o = { ...o, timeLimit: 120000 }; const r = PineEngine.run(c, off ? bars.slice(off) : bars, { mintick: 0.25, ...o }); if (off) PineDraw.shift(r, off, n); r.off = off; r.engine = 2; r.ver = c.ver; return r; }
   function request(id, code, bars, o, cb) {
     let j = jobs.get(id); if (!j) jobs.set(id, (j = {})); j.cb = cb;
     const sig = sigOf(code, bars, o); if (j.resSig === sig) return j.res;
