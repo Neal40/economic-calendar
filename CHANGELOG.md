@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.101.1] — 2026-11-27
+### Corrigé
+- Graphique : sur **tous les dessins**, plus aucun trait (ligne du milieu pointillée d'un rectangle, bords, lignes des formes, etc.) ne passe sous le texte. Le trait s'interrompt derrière le texte pour qu'il reste lisible, quelle que soit sa position (avant, ce n'était le cas que pour les lignes avec le texte placé « sur » la ligne).
+
 ## [1.101.0] — 2026-11-27
 ### Ajouté
 - Graphique : le compte démo (paper trading) accepte les **quantités fractionnées, de 0,1 à 0,9 contrat** (puis 1,1, 2,5…), par pas de 0,1 — ex. 0,1 NQ = 2 $ le point. Ticket d'ordre, boutons rapides Vendre / Acheter, niveaux de sortie et ordres depuis les outils Position longue / courte. P&L et frais au prorata ; en mode « Risque $ », la taille est arrondie au dixième inférieur (un risque de 200 $ avec un stop à 80 ticks NQ donne 0,5 contrat au lieu d'un refus).

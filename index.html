@@ -13170,15 +13170,18 @@ function indCompute(x, B, X) { // -> { plots: {k: Float64Array}, col: {k: [coule
 /* ---------- dessins : crayon (dessin + test de clic avec la même géométrie) ---------- */
 class Pen {
   constructor(ctx, hit) { this.c = ctx; this.hit = hit; this.sh = []; }
+  /** v1.101.1 : zones de texte (sans fond) du dessin, mesurées avant le tracé : aucun trait ne passe dessous */
+  gapList() { const a = this.gaps && this.gaps.length ? this.gaps : null, b = this.ag && this.ag.length ? this.ag : null; return a && b ? a.concat(b) : a || b; }
   st(col, w, dash) { if (this.hit) return this; const c = this.c, lw = w || 1; c.strokeStyle = col; c.lineWidth = lw; c.setLineDash(dash === 1 ? [lw, lw * 2.2] : dash === 2 ? [lw * 4, lw * 3] : dash === 3 ? [lw * 8, lw * 5] : []); return this; }
   fl(col) { if (!this.hit) this.c.fillStyle = col; return this; }
   seg(x1, y1, x2, y2) { if (this.hit) { this.sh.push([0, x1, y1, x2, y2]); return; } const c = this.c; c.beginPath();
-    if (this.gaps && this.gaps.length) { const parts = segGaps(x1, y1, x2, y2, this.gaps); parts.forEach(([a, b]) => { c.moveTo(x1 + (x2 - x1) * a, y1 + (y2 - y1) * a); c.lineTo(x1 + (x2 - x1) * b, y1 + (y2 - y1) * b); }); c.stroke(); return; }
+    const gg = this.gapList(); if (gg) { const parts = segGaps(x1, y1, x2, y2, gg); parts.forEach(([a, b]) => { c.moveTo(x1 + (x2 - x1) * a, y1 + (y2 - y1) * a); c.lineTo(x1 + (x2 - x1) * b, y1 + (y2 - y1) * b); }); c.stroke(); return; }
     c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
   poly(pts, close, fill, stroke = true) {
     if (!pts || pts.length < 2) return;
     if (this.hit) { if (fill && close) this.sh.push([1, pts]); if (stroke || !fill) { for (let i = 1; i < pts.length; i++) this.sh.push([0, pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]]); if (close) this.sh.push([0, pts[pts.length - 1][0], pts[pts.length - 1][1], pts[0][0], pts[0][1]]); } return; }
-    const c = this.c; c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]); if (close) c.closePath(); if (fill) c.fill(); if (stroke) c.stroke();
+    const c = this.c; c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]); if (close) c.closePath(); if (fill) c.fill();
+    if (stroke) { if (this.gapList()) { for (let i = 1; i < pts.length; i++) this.seg(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]); if (close) this.seg(pts[pts.length - 1][0], pts[pts.length - 1][1], pts[0][0], pts[0][1]); } else c.stroke(); }
   }
   smooth(pts, w) { // trait à main levée lissé
     if (!pts || pts.length < 2) return;
@@ -13187,7 +13190,7 @@ class Pen {
     for (let i = 1; i < pts.length - 1; i++) { const mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2; c.quadraticCurveTo(pts[i][0], pts[i][1], mx, my); }
     const l = pts[pts.length - 1]; c.lineTo(l[0], l[1]); c.stroke(); c.lineCap = "butt"; c.lineJoin = "miter";
   }
-  rect(x, y, w, h, fill, stroke = true) { if (w < 0) { x += w; w = -w; } if (h < 0) { y += h; h = -h; } if (this.hit) { this.sh.push(fill ? [2, x, y, w, h] : [3, x, y, w, h]); return; } if (fill) this.c.fillRect(x, y, w, h); if (stroke) this.c.strokeRect(x, y, w, h); }
+  rect(x, y, w, h, fill, stroke = true) { if (w < 0) { x += w; w = -w; } if (h < 0) { y += h; h = -h; } if (this.hit) { this.sh.push(fill ? [2, x, y, w, h] : [3, x, y, w, h]); return; } if (fill) this.c.fillRect(x, y, w, h); if (stroke) { if (this.gapList()) { this.seg(x, y, x + w, y); this.seg(x + w, y, x + w, y + h); this.seg(x + w, y + h, x, y + h); this.seg(x, y + h, x, y); } else this.c.strokeRect(x, y, w, h); } }
   circ(cx, cy, r, fill, stroke = true) { r = Math.abs(r); if (this.hit) { this.sh.push([4, cx, cy, r, !!fill]); return; } const c = this.c; c.beginPath(); c.arc(cx, cy, r, 0, PI2); if (fill) c.fill(); if (stroke) c.stroke(); }
   ell(cx, cy, rx, ry, fill, stroke = true) { rx = Math.abs(rx); ry = Math.abs(ry); if (this.hit) { this.sh.push([5, cx, cy, rx, ry, !!fill]); return; } const c = this.c; c.beginPath(); c.ellipse(cx, cy, Math.max(rx, 0.1), Math.max(ry, 0.1), 0, 0, PI2); if (fill) c.fill(); if (stroke) c.stroke(); }
   arc(cx, cy, r, a0, a1, ccw) { r = Math.abs(r); if (this.hit) { const n = 24; let px = cx + r * Math.cos(a0), py = cy + r * Math.sin(a0); for (let k = 1; k <= n; k++) { const a = a0 + (a1 - a0) * k / n, x = cx + r * Math.cos(a), y = cy + r * Math.sin(a); this.sh.push([0, px, py, x, y]); px = x; py = y; } return; } const c = this.c; c.beginPath(); c.arc(cx, cy, r, a0, a1, !!ccw); c.stroke(); }
@@ -13201,11 +13204,15 @@ class Pen {
     const lh = Math.round(fs * 1.3), hh = lines.length * lh, W = w + pad * 2, H = hh + pad * 2;
     let bx = o.al === "center" ? x - W / 2 : o.al === "right" ? x - W : x, by = o.bl === "middle" ? y - H / 2 : o.bl === "bottom" ? y - H : y;
     if (this.hit) { this.sh.push([2, bx, by, W, H]); return { x: bx, y: by, w: W, h: H }; }
+    if (this.pre) { if (!o.bg) this.tb.push([bx - 3, by - 1, W + 6, H + 2]); return { x: bx, y: by, w: W, h: H }; }
     if (o.bg) { c.fillStyle = o.bg; c.beginPath(); if (c.roundRect) c.roundRect(bx, by, W, H, o.rad ?? 3); else c.rect(bx, by, W, H); c.fill(); if (o.bd) { c.setLineDash([]); c.strokeStyle = o.bd; c.lineWidth = 1; c.stroke(); } }
     c.fillStyle = o.col || "#d1d4dc"; c.textAlign = "left"; c.textBaseline = "middle"; lines.forEach((l, i) => c.fillText(l, bx + pad + (o.al === "center" ? (w - c.measureText(l).width) / 2 : o.al === "right" ? w - c.measureText(l).width : 0), by + pad + lh * i + lh / 2));
     return { x: bx, y: by, w: W, h: H };
   }
 }
+/** v1.101.1 : pré-passe d'un dessin = mesure seulement où tombe son texte (rien n'est tracé) */
+class PrePen extends Pen { constructor(ctx) { super(ctx, false); this.pre = true; this.tb = []; }
+  st() { return this; } fl() { return this; } seg() {} poly() {} smooth() {} rect() {} circ() {} ell() {} arc() {} quad() {} arrow() {} }
 const dSeg = (px, py, x1, y1, x2, y2) => { const dx = x2 - x1, dy = y2 - y1, l = dx * dx + dy * dy; let t = l ? ((px - x1) * dx + (py - y1) * dy) / l : 0; t = clamp(t, 0, 1); return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy)); };
 const inPoly = (x, y, p) => { let r = false; for (let i = 0, j = p.length - 1; i < p.length; j = i++) { const a = p[i], b = p[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1] || 1e-9) + a[0]) r = !r; } return r; };
 function hitShapes(sh, x, y, tol = 5) {
@@ -13845,7 +13852,7 @@ class Cell {
     // dessins de l'utilisateur
     const list = drawsOf(this.st.sym), sel = DS.sel, hov = DS.hover && DS.hover.cell === this ? DS.hover.id : null;
     for (const d of list) { if (!this.visibleD(d)) continue; const def = toolDef(d.tool); if (!def || !def.draw) continue; const P = this.pts(d, G); if (P.some((q) => !fin(q[0]) || !fin(q[1]))) continue;
-      c.save(); c.globalAlpha = hov === d.id && sel !== d.id ? 0.85 : 1; const pen = new Pen(c, false); try { def.draw(pen, P, d, G); } catch (e) { console.error(e); } c.restore();
+      c.save(); c.globalAlpha = hov === d.id && sel !== d.id ? 0.85 : 1; const pen = new Pen(c, false); if (PR.txtGap !== false) { const pp = new PrePen(c); try { def.draw(pp, P, d, G); } catch (e) { } c.restore(); c.save(); c.globalAlpha = hov === d.id && sel !== d.id ? 0.85 : 1; if (pp.tb.length) pen.ag = pp.tb; } try { def.draw(pen, P, d, G); } catch (e) { console.error(e); } c.restore();
       if (sel === d.id || (DS.creating && DS.creating.d === d)) this.paintHandles(c, d, P, def); }
     if (ALERTS.length) paintAlerts(this, c, G);
     if (DS.measure && DS.measure.cell === this) { const d = DS.measure.d, P = this.pts(d, G); if (P.every((q) => fin(q[0]) && fin(q[1]))) T.measure.draw(new Pen(c, false), P, d, G); }
