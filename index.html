@@ -13644,7 +13644,7 @@ class Cell {
   }
   bindCmp(c) { const f = getFeed(c.s, this.st.iv), fn = (type) => { if (type === "reset" || type === "tick" || type === "prepend") this.drawCmp(c, f); }; f.subs.add(fn); this.cmpUnsub.push(() => f.subs.delete(fn)); if (f.ready) this.drawCmp(c, f); else f.load(); }
   drawCmp(c, f) { const ch = this.main.chart; let s = this.cmpS.get(c.s); if (!s) { s = ch.addLineSeries({ color: c.c, lineWidth: 2, priceScaleId: PR.left ? "left" : "right", priceLineVisible: false, lastValueVisible: true, title: symCode(c.s) }); this.cmpS.set(c.s, s); }
-    const B = rthOn() ? rthOnly(f.bars, this.st.iv) : f.bars; s.setData(this.toTimes(B).map((t, i) => ({ time: t, value: B[i][4] }))); this.scaleMode(); }
+    const B = rthOn(this) ? rthOnly(f.bars, this.st.iv) : f.bars; s.setData(this.toTimes(B).map((t, i) => ({ time: t, value: B[i][4] }))); this.scaleMode(); }
   applyFmt() { const o = this.opts(true, !this.panes.length); this.main.chart.applyOptions(o); this.panes.forEach((p, i) => p.chart.applyOptions(this.opts(false, i === this.panes.length - 1))); }
   onFeed(type, info) {
     if (this.dead) return;
@@ -13656,7 +13656,7 @@ class Cell {
     if (type === "tick") this.tick(info);
   }
   disp() { // bougies affichées (RTH, type de graphique)
-    let B = this.feed ? this.feed.bars : []; if (rthOn()) B = rthOnly(B, this.st.iv);
+    let B = this.feed ? this.feed.bars : []; if (rthOn(this)) B = rthOnly(B, this.st.iv);
     const t = this.st.type, tick = this.spec.tick || 0.01;
     if (t === "heikin") return heikin(B); if (t === "renko") return renko(B, +this.st.box || 0, tick); if (t === "lb") return lineBreak(B, +this.st.lb || 3); if (t === "range") return rangeBars(B, +this.st.rng || 0, tick);
     return B;
@@ -13690,7 +13690,7 @@ class Cell {
     this.legend(); this.redraw(); refreshPanels(); requestAnimationFrame(() => this.keepCross());
   }
   tick(info) {
-    const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (rthOn() && B.length !== B0.length)) { this.full(false); return; }
+    const B0 = this.DB; const B = this.disp(); if (B.length < B0.length || this.st.type === "renko" || this.st.type === "lb" || this.st.type === "range" || (rthOn(this) && B.length !== B0.length)) { this.full(false); return; }
     const T = this.toTimes(B); const from = Math.max(0, Math.min(B0.length - 1, info && info.from != null ? info.from : B.length - 2));
     this.DB = B; this.T = T;
     try { for (let i = from; i < B.length; i++) { this.series.update(this.ptOf(B[i], T[i], B[i - 1])); if (this.hlc) { this.hlc[0].update({ time: T[i], value: B[i][2] }); this.hlc[1].update({ time: T[i], value: B[i][3] }); } }
@@ -13862,7 +13862,7 @@ class Cell {
   paintInd(c, G) {
     const P = PR;
     // fond des heures de trading électronique (hors séance régulière 9:30 – 16:15 NY)
-    if (P.ethBg && alphaOf(P.ethBg) > 0 && ivIntra(this.st.iv) && ivSec(this.st.iv) <= 3600 && !P.rth) { const B = this.DB, i0 = Math.max(0, Math.floor(G.lOfX(0)) - 1), i1 = Math.min(B.length - 1, Math.ceil(G.lOfX(G.W)) + 1); c.save(); c.fillStyle = P.ethBg; let s0 = -1;
+    if (P.ethBg && alphaOf(P.ethBg) > 0 && ivIntra(this.st.iv) && ivSec(this.st.iv) <= 3600 && !rthOn(this)) { const B = this.DB, i0 = Math.max(0, Math.floor(G.lOfX(0)) - 1), i1 = Math.min(B.length - 1, Math.ceil(G.lOfX(G.W)) + 1); c.save(); c.fillStyle = P.ethBg; let s0 = -1;
       const out = (i) => { const m = nyMin(B[i][0]); return m < 570 || m >= 975; };
       for (let i = i0; i <= i1 + 1; i++) { const o = i <= i1 && out(i); if (o && s0 < 0) s0 = i; if (!o && s0 >= 0) { const x0 = G.lx(s0 - 0.5), x1 = G.lx(i - 0.5); c.fillRect(x0, 0, x1 - x0, G.H); s0 = -1; } } c.restore(); }
     // séparateurs de séance (18:00 NY)
@@ -14197,9 +14197,12 @@ let STATE = Object.assign({ mode: "ict", grid: "1", cells: [DEF_CELL()], active:
 if (!Array.isArray(STATE.cells) || !STATE.cells.length) STATE.cells = [DEF_CELL()];
 STATE.cells.forEach((c) => { c.inds = Array.isArray(c.inds) ? c.inds.filter((x) => x && x.t) : []; c.cmp = c.cmp || []; c.scale = c.scale || {}; if (!SYMS.has(c.sym) && !String(c.sym).startsWith("CSV:")) c.sym = DEF_CELL().sym; if (!ivParse(c.iv)) c.iv = "5"; });
 let LAYOUTS = LS.get("gr-layouts", []);
-const snapshotLayout = () => JSON.parse(JSON.stringify({ grid: STATE.grid, cells: STATE.cells, active: STATE.active, sync: STATE.sync, rth: rthOn(), splits: STATE.splits || {} }));
+const snapshotLayout = () => JSON.parse(JSON.stringify({ grid: STATE.grid, cells: STATE.cells, active: STATE.active, sync: STATE.sync, rth: rthLayout(), splits: STATE.splits || {} }));
 /** v1.100 : séance ETH / RTH propre à chaque mise en page / onglet (avant : réglage global) */
-const rthOn = () => (STATE.rth === undefined ? !!PR.rth : !!STATE.rth);
+const rthLayout = () => (STATE.rth === undefined ? !!PR.rth : !!STATE.rth);
+/** v1.102 : séance ETH / RTH propre à chaque fenêtre (cellule) du graphique ; sans choix pour la fenêtre = séance de la mise en page. c = cellule (défaut : fenêtre active) */
+const rthOn = (c) => { const x = c === undefined ? activeCell() : c, st = x && (x.st || x); return st && st.rth !== undefined ? !!st.rth : rthLayout(); };
+function setCellRTH(c, on, quiet) { if (!c) return; c.st.rth = !!on; saveState(); c.full(false); refreshBottom(); if (!quiet) toast(`${symCode(c.st.sym)} : ${on ? "séance régulière (RTH 9:30 – 16:15 NY)" : "séance électronique complète (ETH)"}`); }
 const saveState = debounce(() => { LS.set("gr-state", STATE); if (STATE.auto && STATE.layoutId) { const L = LAYOUTS.find((x) => x.id === STATE.layoutId); if (L) { L.state = snapshotLayout(); L.at = Date.now(); LS.set("gr-layouts", LAYOUTS); } }  if (typeof tabSave === "function") tabSave(); }, 600);
 /* ---------- v1.94 : onglets façon TradingView (chaque onglet = une mise en page ; groupes colorés, liaison, fenêtre détachée) ---------- */
 const SS = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* */ } } };
@@ -14521,7 +14524,7 @@ function renderGrid() { const gb = $r("#grGridBtn"); if (gb && typeof gridIco ==
   // v1.94 : données déjà en cache (changement d'onglet / de mise en page) posées avant la mise en place du graphique → vue écrasée : on recentre
   [250, 900].forEach((ms) => setTimeout(() => CELLS.forEach((c) => { try { const r = c.main.chart.timeScale().getVisibleLogicalRange(); if (c.st.vr && performance.now() < (c.vrUntil || 0)) c.applyVR(); else if (r && c.DB.length > 50 && r.from < -20 && r.to - r.from > 400) resetChart(c); } catch (e) { /* */ } }), ms));
 }
-function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); }
+function setActive(i, quiet) { STATE.active = clamp(i, 0, CELLS.length - 1); CELLS.forEach((c, k) => c.el.classList.toggle("on", k === STATE.active)); if (!quiet) saveState(); refreshHeader(); refreshPanels(); refreshTree(); refreshBottom(); }
 function syncCross(src, p) { if (!STATE.sync.cross || CELLS.length < 2 || !src.ptrIn) return; /* v1.94.7 : seul le graphique sous la souris recopie son curseur (un graphique caché recopiait le sien et effaçait la ligne horizontale) */ CELLS.forEach((c) => { if (c === src) return; try { if (p && p.time != null && p.point && src.DB.length) { const t = src.DB[clamp(Math.round(p.logical), 0, src.DB.length - 1)][0], i = clamp(Math.round(liOf(c.DB, c.st.iv, t)), 0, c.DB.length - 1); if (c.T[i] != null) c.main.chart.setCrosshairPosition(NaN, c.T[i], c.series); } else c.main.chart.clearCrosshairPosition(); } catch (e) { /* */ } }); }
 let syncingT = false;
 function syncTime(src) { if (!STATE.sync.time || syncingT || CELLS.length < 2 || STATE.active !== src.idx) return; const r = src.main.chart.timeScale().getVisibleLogicalRange(); if (!r || !src.DB.length) return;
@@ -15085,7 +15088,7 @@ async function wlFetch(s) { const sp = SYM(s); try { let b = [];
   else if (sp.src === "ff") b = await ffFetch(s, "D1", 4, 0); else b = aggregate(await csvBars(s), "1D");
   if (b.length) { const l = b[b.length - 1]; WLP.set(s, { last: l[4], prev: b.length > 1 ? b[b.length - 2][4] : l[1], hi: l[2], lo: l[3], o: l[1], v: l[5], at: Date.now() }); checkAlerts(s, l); }
 } catch (e) { if (e.code === "login") WLP.set(s, { err: "login" }); } if (STATE.panel === "wl") renderWL(); }
-const livePx = (s) => { for (const c of CELLS) { const f = c.feed; if (c.st.sym === s && f && f.sym === s && f.bars.length && f.spec.src !== "csv" && !rthOn()) return f.bars[f.bars.length - 1][4]; } return null; };
+const livePx = (s) => { for (const c of CELLS) { const f = c.feed; if (c.st.sym === s && f && f.sym === s && f.bars.length && f.spec.src !== "csv" && !rthOn(c)) return f.bars[f.bars.length - 1][4]; } return null; };
 function renderWL() { const P = $r("#grRPanel"), act = activeCell();
   const rows = WL.map((s) => { const q = WLP.get(s) || {}, lp = livePx(s), last = lp != null ? lp : q.last, ch = fin(last) && fin(q.prev) ? last - q.prev : NaN, sp = SYM(s);
     return `<div class="gr-wlr${act && act.st.sym === s ? " on" : ""}" data-s="${E(s)}" draggable="true"><span class="gr-wls"><i class="gr-dot gr-s-${sp.src}"></i>${symLogo(s)}${E(symCode(s))}</span><b>${q.err === "login" ? "—" : fin(last) ? fmtPx(last, sp) : "…"}</b><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) ? (ch >= 0 ? "+" : "") + fmtPx(ch, sp) : ""}</em><em class="${ch >= 0 ? "up" : "dn"}">${fin(ch) && q.prev ? (ch >= 0 ? "+" : "") + (ch / q.prev * 100).toFixed(2) + " %" : ""}</em><button class="gr-ib gr-wlx" data-x="${E(s)}" title="Retirer">${ICO.x}</button></div>`; }).join("");
@@ -15161,7 +15164,7 @@ function renderNews() { const P = $r("#grRPanel"), today = nyDate(NOW()), hiOnly
 let detFeed = null, detUnsub = null;
 function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) return; const s = c.st.sym, sp = SYM(s), f = getFeed(s, "1D");
   if (detFeed !== f) { if (detUnsub) detUnsub(); detFeed = f; const fn = () => { if (STATE.panel === "det") renderDet(); }; f.subs.add(fn); detUnsub = () => f.subs.delete(fn); if (!f.ready) f.load(); }
-  const B = f.bars, n = B.length, last = c.DB.length && c.feed && c.feed.spec.src !== "csv" && !rthOn() ? c.feed.bars[c.feed.bars.length - 1][4] : n ? B[n - 1][4] : NaN, prev = n > 1 ? B[n - 2][4] : NaN, ch = last - prev;
+  const B = f.bars, n = B.length, last = c.DB.length && c.feed && c.feed.spec.src !== "csv" && !rthOn(c) ? c.feed.bars[c.feed.bars.length - 1][4] : n ? B[n - 1][4] : NaN, prev = n > 1 ? B[n - 2][4] : NaN, ch = last - prev;
   const perf = (k) => n > k ? (last / B[n - 1 - k][4] - 1) * 100 : NaN, y0 = n ? B.findIndex((b) => sessDate(b[0]).slice(0, 4) === sessDate(B[n - 1][0]).slice(0, 4)) : -1, ytd = y0 > 0 ? (last / B[y0 - 1][4] - 1) * 100 : NaN;
   const yr = B.slice(-252), hi52 = yr.length ? Math.max(...yr.map((b) => b[2])) : NaN, lo52 = yr.length ? Math.min(...yr.map((b) => b[3])) : NaN, fi = frontInfo(sp);
   const pc = (v) => fin(v) ? `<em class="${v >= 0 ? "up" : "dn"}">${v >= 0 ? "+" : ""}${v.toFixed(2)} %</em>` : "—", row = (k, v) => `<div class="gr-dr"><span>${k}</span><b>${v}</b></div>`;
@@ -15280,7 +15283,7 @@ $r("#grBot").onclick = (e) => { const c = activeCell(); if (!c) return; const rg
   if (!b) return; const k = b.dataset.b; if (k === "goto") openGoto(); if (k === "paper") { STATE.ppanel = !STATE.ppanel; saveState(); refreshBottom(); renderPaperP(); return; } if (k === "tz") menuAt(b, ["h:Fuseau horaire", ...TZS.map(([z, n]) => ({ t: n, on: dispTZ() === z, f: () => { PR.tz = z; savePrefs(); CELLS.forEach((x) => { x.applyFmt(); x.full(false); }); refreshBottom(); } }))]);
   if (k === "rth") toggleRTH(); if (k === "pct") setScale(c, { mode: (c.st.scale || {}).mode === 2 ? 0 : 2 }); if (k === "log") setScale(c, { mode: (c.st.scale || {}).mode === 1 ? 0 : 1 }); if (k === "auto") { setScale(c, { auto: true }); c.main.chart.timeScale().scrollToRealTime(); } };
 function setScale(c, o) { if (o.auto && c.wsc) { c.wsc.reset(); c.wsc.attach(); } c.st.scale = Object.assign({}, c.st.scale || {}, o); c.scaleMode(); refreshBottom(); saveState(); }
-function toggleRTH() { STATE.rth = !rthOn(); saveState(); CELLS.forEach((c) => c.full(false)); refreshBottom(); toast(rthOn() ? "Séance régulière (RTH 9:30 – 16:15 NY)" : "Séance électronique complète (ETH)"); }
+function toggleRTH() { const c = activeCell(); if (c) setCellRTH(c, !rthOn(c)); } // v1.102 : seulement la fenêtre active
 function scaleMenu(c, x, y) { const m = c.st.scale || {}; menu(x, y, [{ t: "Échelle automatique", on: m.auto !== false, f: () => setScale(c, { auto: true }) }, "-", { t: "Normale", on: !m.mode, f: () => setScale(c, { mode: 0 }) }, { t: "Logarithmique", k: "Alt+A", on: m.mode === 1, f: () => setScale(c, { mode: 1 }) }, { t: "Pourcentage", k: "Alt+P", on: m.mode === 2, f: () => setScale(c, { mode: 2 }) }, { t: "Indexée à 100", on: m.mode === 3, f: () => setScale(c, { mode: 3 }) }, "-", { t: "Inverser l'échelle", k: "Alt+I", on: !!m.inv, f: () => setScale(c, { inv: !m.inv }) }, { t: PR.left ? "Échelle à droite" : "Échelle à gauche", f: () => { PR.left = !PR.left; savePrefs(); CELLS.forEach((cc) => { cc.applyFmt(); cc.mkMain(); cc.full(false); }); } }, "-", { t: "Réinitialiser le graphique", k: "Alt+R", f: () => resetChart(c) }]); }
 function resetChart(c) { if (!c) return; setScale(c, { auto: true }); const n = c.DB.length; if (n) c.setRange({ from: n - clamp(Math.round(c.pEl.clientWidth / 8), 40, 400), to: n + PR.rightOffset }); }
 function goToTime(c, t, keepZoom) { if (!c || !c.DB.length) return; const B = c.DB; if (t < B[0][0] && c.feed && !c.feed.done) { c.pendGo = { t, keep: keepZoom, n: 0 }; c.feed.loadMore(); return; } const li = liOf(B, c.st.iv, t), r = c.main.chart.timeScale().getVisibleLogicalRange(), w = r && keepZoom ? (r.to - r.from) / 2 : 60; c.setRange({ from: li - w, to: li + w }); }
@@ -15294,7 +15297,7 @@ const CTPL_SKIP = ["tz", "poll"];
 const ctplAll = () => LS.get("gr-ctpl", {});
 const ctplOf = () => Object.fromEntries(Object.entries(PR).filter(([k]) => !CTPL_SKIP.includes(k)));
 function openSettings(tab) {
-  const before = JSON.stringify(PR);
+  const before = JSON.stringify(PR), sc = activeCell(), rthBefore = sc ? sc.st.rth : undefined; // v1.102 : séance = fenêtre active
   const ck = (k, n, def) => `<label class="tv-ck"><input type="checkbox" data-pk="${k}" ${(PR[k] ?? def) ? "checked" : ""}><span>${n}</span></label>`;
   const sw = (k) => colorInput("p:" + k, PR[k] || "rgba(0,0,0,0)");
   const sl = (k, opts, cls) => `<select class="gr-in tv-sel${cls ? " " + cls : ""}" data-ps="${k}">${opts.map(([v, t]) => `<option value="${v}" ${String(PR[k]) === String(v) ? "selected" : ""}>${t}</option>`).join("")}</select>`;
@@ -15306,7 +15309,7 @@ function openSettings(tab) {
   const tabsDef = [
     ["sym", "Symbole", sec("Bougies") + row(ck("colorPrev", "Coloriser les barres selon la clôture précédente")) + row(ck("bodyOn", "Corps", true), sw("up") + sw("dn")) + row(ck("borderOn", "Bordures", true), sw("bdUp") + sw("bdDn")) + row(ck("wickOn", "Mèche", true), sw("wickUp") + sw("wickDn"))
       + row("Ligne / zone (types ligne)", sw("lineC") + sl("lineW", [[1, "1 px"], [2, "2 px"], [3, "3 px"], [4, "4 px"]], "sm"))
-      + sec("Modification des données") + row("Séance", sl("rth", [["false", "Horaires de trading électronique"], ["true", "Horaires de trading réguliers"]])) + row("Fond des heures de trading électronique", sw("ethBg"))
+      + sec("Modification des données") + row("Séance", `<select class="gr-in tv-sel" data-cs="rth">${[["false", "Horaires de trading électronique (ETH)"], ["true", "Horaires de trading réguliers (RTH 9:30 – 16:15)"]].map(([v, t]) => `<option value="${v}" ${String(rthOn(sc)) === v ? "selected" : ""}>${t}</option>`).join("")}</select>`, sc ? `Pour cette fenêtre seulement (${E(symCode(sc.st.sym))} · ${E(ivLabel(sc.st.iv))}) : chaque fenêtre garde sa séance. Raccourci : Alt+Maj+E sur la fenêtre active.` : "") + row("Fond des heures de trading électronique", sw("ethBg"))
       + row("Précision", sl("prec", [["auto", "Par défaut"], [0, "1"], [1, "0,1"], [2, "0,01"], [3, "0,001"], [4, "0,0001"], [5, "0,00001"]])) + row("Fuseau horaire", sl("tz", TZS.map(([z, n]) => [z, n])))
       + row("Rafraîchissement en direct", sl("poll", [[500, "0,5 s"], [1000, "1 s"], [2000, "2 s"], [5000, "5 s"]], "sm")) + `<div class="tv-r"><span class="tv-l tv-mut">${HAS_TSX ? "Historique : CSV data_csv / data puis chartapi.topstepx.com." : "Sur le web : Forex Factory et CSV importés."}</span><span class="tv-c"><button class="gr-btn" data-clr="1">Vider le cache des bougies</button></span></div>`],
     ["leg", "Ligne d'état", sec("Instrument") + row(ck("legLogo", "Logo")) + row(ck("legSym", "Titre", true), sl("legTitle", [["name", "Nom"], ["sym", "Symbole"], ["symname", "Symbole & nom"]])) + row(ck("legOhlc", "Valeurs du graphique", true)) + row(ck("legChg", "Valeurs du changement de barre", true)) + row(ck("legVol", "Volume", true)) + row(ck("legDay", "Valeurs de changement du dernier jour"))
@@ -15346,12 +15349,13 @@ function openSettings(tab) {
     ["ev", "Événements", sec("Calendrier économique USD") + row(ck("events", "Événements économiques (calendrier de l'app)", true)) + row(ck("evMed", "Inclure l'impact moyen (orange)", true)) + row(ck("evLine", "Trait à l'heure de chaque news (sur tout le graphique)"), `<button class="gr-btn" data-evv="1">Visibilité…</button>`, "Unités de temps où le trait est affiché (ex. seulement en 1 minute)")]];
   const cur = tabsDef.some(([k]) => k === tab) ? tab : tab === "app" ? "canvas" : tab === "data" ? "sym" : "sym";
   const body = `<div class="tv-wrap"><nav class="tv-nav">${tabsDef.map(([k, n]) => `<button class="tv-ni${k === cur ? " on" : ""}" data-p="${k}">${sv(IC[k])}<span>${n}</span></button>`).join("")}</nav><div class="tv-body">${tabsDef.map(([k, , h]) => `<div class="tv-pane" data-p="${k}" ${k === cur ? "" : "hidden"}>${h}</div>`).join("")}</div></div>`;
-  const d = dlg("Réglages", body, { w: 780, cls: "gr-dset gr-tvset", ok: "D'accord", left: `<button class="gr-btn tv-tpl" data-ctpl="1">Modèle ▾</button>`, onCancel: () => { PR = JSON.parse(before); applyPrefs(); }, onOk: () => { savePrefs(); } });
+  const d = dlg("Réglages", body, { w: 780, cls: "gr-dset gr-tvset", ok: "D'accord", left: `<button class="gr-btn tv-tpl" data-ctpl="1">Modèle ▾</button>`, onCancel: () => { PR = JSON.parse(before); if (sc && sc.st.rth !== rthBefore) { if (rthBefore === undefined) delete sc.st.rth; else sc.st.rth = rthBefore; saveState(); } applyPrefs(); }, onOk: () => { savePrefs(); } });
   const root = d.el;
   root.querySelector(".tv-nav").onclick = (e) => { const b = e.target.closest("[data-p]"); if (!b) return; root.querySelectorAll(".tv-ni").forEach((x) => x.classList.toggle("on", x === b)); root.querySelectorAll(".tv-pane").forEach((x) => (x.hidden = x.dataset.p !== b.dataset.p)); };
   const apply = () => { root.querySelectorAll("[data-pk]").forEach((e) => (PR[e.dataset.pk] = e.checked));
     root.querySelectorAll("[data-ps]").forEach((e) => { const v = e.value; PR[e.dataset.ps] = v === "true" ? true : v === "false" ? false : v === "" ? "" : isNaN(+v) || /\//.test(v) ? v : +v; });
     root.querySelectorAll("[data-pn]").forEach((e) => { if (e.value !== "" && fin(+e.value)) PR[e.dataset.pn] = +e.value; });
+    const cs = root.querySelector('[data-cs="rth"]'); if (cs && sc && (cs.value === "true") !== rthOn(sc)) setCellRTH(sc, cs.value === "true", true);
     root.querySelectorAll("[data-k^='p:']").forEach((e) => { const k = e.dataset.k.slice(2); PR[k] = readColor(root, "p:" + k); });
     applyPrefs(); };
   root.addEventListener("change", (e) => { if (e.target.closest("[data-grad]")) { PR.bg2 = e.target.value ? PR.bg2 || "#000000" : ""; apply(); const p = root.querySelector(".tv-ni.on").dataset.p; d.close(true); openSettings(p); return; } apply(); });

@@ -2,6 +2,11 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.102.0] — 2026-11-27
+### Modifié
+- Graphique : la séance **ETH / RTH est propre à chaque fenêtre**. Le bouton ETH / RTH en bas (ou Alt+Maj+E) ne change que la fenêtre active ; le bouton affiche la séance de la fenêtre sélectionnée. Une fenêtre jamais réglée garde la séance de la mise en page.
+- Réglages › Symbole › Séance : choix ETH (horaires de trading électronique) ou RTH (9:30 – 16:15 NY) pour la fenêtre active ; « Annuler » remet la séance d'avant.
+
 ## [1.101.1] — 2026-11-27
 ### Corrigé
 - Graphique : sur **tous les dessins**, plus aucun trait (ligne du milieu pointillée d'un rectangle, bords, lignes des formes, etc.) ne passe sous le texte. Le trait s'interrompt derrière le texte pour qu'il reste lisible, quelle que soit sa position (avant, ce n'était le cas que pour les lignes avec le texte placé « sur » la ligne).
