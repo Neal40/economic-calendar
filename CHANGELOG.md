@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.101.0] — 2026-11-27
+### Ajouté
+- Graphique : le compte démo (paper trading) accepte les **quantités fractionnées, de 0,1 à 0,9 contrat** (puis 1,1, 2,5…), par pas de 0,1 — ex. 0,1 NQ = 2 $ le point. Ticket d'ordre, boutons rapides Vendre / Acheter, niveaux de sortie et ordres depuis les outils Position longue / courte. P&L et frais au prorata ; en mode « Risque $ », la taille est arrondie au dixième inférieur (un risque de 200 $ avec un stop à 80 ticks NQ donne 0,5 contrat au lieu d'un refus).
+
 ## [1.100.5] — 2026-11-27
 ### Corrigé
 - Ctrl+F : les flèches ↑ / ↓ font défiler jusqu'au mot trouvé, aussi dans l'éditeur Pine et dans les panneaux qui défilent (avant, le résultat était surligné mais restait hors de vue).

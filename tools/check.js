@@ -446,7 +446,13 @@ try {
   eq("refus stop", /au-dessus du prix Ask/.test(G.check({ sym: "X", side: "buy", type: "stop", qty: 1, stop: 100 }, px)), true);
   eq("refus SL", /sous l'entrée/.test(G.check({ sym: "X", side: "buy", type: "market", qty: 1, exits: [{ qty: 1, sl: 101 }] }, px)), true);
   eq("refus niveaux", /dépassent/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 1, exits: [{ qty: 1, tp: 90 }, { qty: 1, tp: 80 }] }, px)), true);
-  eq("refus quantité", /entier/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 0 }, px)), true);
+  eq("refus quantité", /0,1/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 0 }, px)), true);
+  eq("refus quantité 0,15", /0,1/.test(G.check({ sym: "X", side: "sell", type: "market", qty: 0.15 }, px)), true);
+  // v1.101 : quantités fractionnées (0,1 NQ) — 0,1 + 0,2 puis vente 0,3 = position à 0 (pas de 0,30000000004), P&L au prorata
+  eq("0,1 NQ", (() => { const B = G.fresh(1000), N = { tick: 0.25, pv: 20 }; G.place(B, { sym: "NQ", side: "buy", type: "market", qty: 0.1 }, px, N, 1); G.place(B, { sym: "NQ", side: "buy", type: "market", qty: 0.2 }, px, N, 2);
+    const q = B.pos.NQ.q; G.place(B, { sym: "NQ", side: "sell", type: "market", qty: 0.3, exits: [] }, { bid: 110.25, ask: 110.5 }, N, 3); return [q, B.pos.NQ, B.trades[0].qty, B.trades[0].pnl, B.bal]; })(), [0.3, undefined, 0.3, 60, 1060]);
+  eq("0,5 NQ avec TP / SL", (() => { const B = G.fresh(1000), N = { tick: 0.25, pv: 20 }; G.place(B, { sym: "NQ", side: "buy", type: "market", qty: 0.5, exits: [{ qty: 0.5, tp: 110, sl: 95 }] }, px, N, 1);
+    G.tick(B, "NQ", 94, 99, 0.25, 2, N); return [B.pos.NQ, B.trades[0].qty, B.trades[0].pnl, G.live(B).length]; })(), [undefined, 0.5, -52.5, 0]);
   // vente stop en attente : déclenchée quand le Bid passe sous le stop ; sorties en attente jusque-là
   A = G.fresh(10000);
   r = G.place(A, { sym: "MES", side: "sell", type: "stop", qty: 1, stop: 98, exits: [{ qty: 1, sl: 99 }] }, px, { tick: 0.25, pv: 5 }, 1);
