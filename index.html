@@ -6912,12 +6912,12 @@ const PineRuntime = (() => {
     const labelNs = {
       new: (...a) => { let r; if (isPt(a[0]) || (a[a.length - 1] instanceof NamedArgs && isPt(a[a.length - 1].point))) { r = argsOf(a, LABEL_NP); const xl = xlocOf(r.xloc); r = { ...r, x: pX(r.point, xl), y: r.point.price }; } else r = argsOf(a, LABEL_N);
         const yl = r.yloc || "price"; let y = r.y; if (yl === "abovebar") y = rt.s.high; else if (yl === "belowbar") y = rt.s.low;
-        return addDraw("label", { x: r.x, y, xloc: xlocOf(r.xloc), yloc: yl, text: isna(r.text) ? "" : String(tostr(r.text)), color: r.color === undefined ? "#2962ff" : r.color, style: r.style || "label_down", textcolor: r.textcolor === undefined ? "#ffffff" : r.textcolor, size: r.size || "normal", textalign: r.textalign || "center", tooltip: r.tooltip, font: r.text_font_family }); },
+        return addDraw("label", { x: r.x, y, xloc: xlocOf(r.xloc), yloc: yl, text: isna(r.text) ? "" : String(tostr(r.text)), color: r.color === undefined ? "#2962ff" : r.color, style: r.style || "label_down", textcolor: r.textcolor === undefined ? "#ffffff" : r.textcolor, size: r.size || "normal", textalign: r.textalign || "center", tooltip: r.tooltip, font: r.text_font_family, text_formatting: r.text_formatting }); },
       delete: delDraw, copy: (l) => (l && l.$k ? addDraw("label", { ...l, $del: false }) : NaN),
       get_x: (l) => l?.x ?? NaN, get_y: (l) => l?.y ?? NaN, get_text: (l) => l?.text ?? "",
       set_x: (l, v) => { if (l && l.$k) l.x = v; }, set_y: (l, v) => { if (l && l.$k) l.y = v; }, set_xy: (l, x, y) => { if (l && l.$k) { l.x = x; l.y = y; } }, set_point: (l, p) => { if (l && l.$k) { l.x = pX(p, l.xloc); l.y = p.price; } },
       set_text: (l, v) => { if (l && l.$k) l.text = isna(v) ? "" : tostr(v); }, set_xloc: (l, x, xl) => { if (l && l.$k) { l.x = x; l.xloc = xlocOf(xl); } }, set_yloc: (l, v) => { if (l && l.$k) l.yloc = v; },
-      set_color: (l, v) => { if (l && l.$k) l.color = v; }, set_style: (l, v) => { if (l && l.$k) l.style = v; }, set_textcolor: (l, v) => { if (l && l.$k) l.textcolor = v; }, set_size: (l, v) => { if (l && l.$k) l.size = v; }, set_textalign: (l, v) => { if (l && l.$k) l.textalign = v; }, set_tooltip: (l, v) => { if (l && l.$k) l.tooltip = v; }, set_text_font_family: () => {}, set_text_formatting: () => {},
+      set_color: (l, v) => { if (l && l.$k) l.color = v; }, set_style: (l, v) => { if (l && l.$k) l.style = v; }, set_textcolor: (l, v) => { if (l && l.$k) l.textcolor = v; }, set_size: (l, v) => { if (l && l.$k) l.size = v; }, set_textalign: (l, v) => { if (l && l.$k) l.textalign = v; }, set_tooltip: (l, v) => { if (l && l.$k) l.tooltip = v; }, set_text_font_family: () => {}, set_text_formatting: (l, v) => { if (l && l.$k) l.text_formatting = v; },
     };
     ["none", "xcross", "cross", "triangleup", "triangledown", "flag", "circle", "arrowup", "arrowdown", "label_up", "label_down", "label_left", "label_right", "label_lower_left", "label_lower_right", "label_upper_left", "label_upper_right", "label_center", "square", "diamond", "text_outline"].forEach((s) => (labelNs["style_" + s] = s));
     Object.defineProperty(labelNs, "all", { get: () => D.label.slice() });
@@ -7178,7 +7178,7 @@ const PineRuntime = (() => {
     function drawOut() {
       return {
         lines: D.line.map((l) => ({ x1: xIdx(l.x1, l.xloc), y1: +l.y1, x2: xIdx(l.x2, l.xloc), y2: +l.y2, color: l.color, width: l.width, style: l.style, extend: l.extend })),
-        labels: D.label.map((l) => ({ x: xIdx(l.x, l.xloc), y: +l.y, text: l.text, color: l.color, style: l.style, textcolor: l.textcolor, size: l.size, textalign: l.textalign, yloc: l.yloc, tooltip: l.tooltip })),
+        labels: D.label.map((l) => ({ x: xIdx(l.x, l.xloc), y: +l.y, text: l.text, color: l.color, style: l.style, textcolor: l.textcolor, size: l.size, textalign: l.textalign, yloc: l.yloc, tooltip: l.tooltip, text_formatting: l.text_formatting })),
         boxes: D.box.map((b) => ({ x1: xIdx(b.left, b.xloc), y1: +b.top, x2: xIdx(b.right, b.xloc), y2: +b.bottom, border_color: b.border_color, border_width: b.border_width, border_style: b.border_style, extend: b.extend, bgcolor: b.bgcolor, text: b.text, text_size: b.text_size, text_color: b.text_color, text_halign: b.text_halign, text_valign: b.text_valign })),
         tables: D.table.map((t) => ({ position: t.position, bgcolor: t.bgcolor, frame_color: t.frame_color, frame_width: t.frame_width, border_color: t.border_color, border_width: t.border_width, cells: Object.values(t.cells), merges: t.merges })),
         linefills: D.linefill.filter((f) => f.l1 && f.l2 && !f.l1.$del && !f.l2.$del).map((f) => ({ a: [xIdx(f.l1.x1, f.l1.xloc), +f.l1.y1, xIdx(f.l1.x2, f.l1.xloc), +f.l1.y2], b: [xIdx(f.l2.x1, f.l2.xloc), +f.l2.y1, xIdx(f.l2.x2, f.l2.xloc), +f.l2.y2], color: f.color })),
@@ -7230,7 +7230,8 @@ const PineDraw = (() => {
   const fin = (v) => typeof v === "number" && Number.isFinite(v);
   const okc = (c) => typeof c === "string" && c !== "" && !/^rgba\([^)]*,\s*0(\.0+)?\)$/.test(c) && !/^#[0-9a-f]{6}00$/i.test(c);
   const dash = (c, st, w) => c.setLineDash(st === "dotted" ? [Math.max(1, w), Math.max(2, w * 2)] : st === "dashed" ? [Math.max(4, w * 3), Math.max(3, w * 2)] : []);
-  const fontOf = (sz, mono) => `${SZ[sz] || (typeof sz === "number" ? sz : 12)}px ${mono ? "monospace" : "-apple-system,BlinkMacSystemFont,'Trebuchet MS',Roboto,Ubuntu,sans-serif"}`;
+  const fmtOf = (f) => { f = String(f || ""); return (f.includes("italic") ? "italic " : "") + (f.includes("bold") ? "bold " : ""); }; // text.format_bold + text.format_italic
+  const fontOf = (sz, mono, fmt) => `${fmtOf(fmt)}${SZ[sz] || (typeof sz === "number" ? sz : 12)}px ${mono ? "monospace" : "-apple-system,BlinkMacSystemFont,'Trebuchet MS',Roboto,Ubuntu,sans-serif"}`;
   function clipLine(G, x1, y1, x2, y2, ext) { // prolonge un segment (extend.left / right / both) jusqu'aux bords
     if (!ext || ext === "none" || (x1 === x2 && y1 === y2)) return [x1, y1, x2, y2];
     let L = x1 <= x2 ? [x1, y1] : [x2, y2], R = x1 <= x2 ? [x2, y2] : [x1, y1]; const ux = R[0] - L[0], uy = R[1] - L[1], big = ((G.W + G.H) * 4) / Math.max(1e-6, Math.hypot(ux, uy));
@@ -7243,8 +7244,8 @@ const PineDraw = (() => {
 
   function label(c, G, L) {
     const x = G.lx(L.x), y = G.y(L.y); if (!fin(x) || !fin(y) || x < -400 || x > G.W + 400) return;
-    const st = L.style || "label_down", fs = SZ[L.size] || 12, lh = Math.round(fs * 1.25), lines = String(L.text || "").split("\n"), txt = lines.some((l) => l !== "");
-    c.font = fontOf(L.size); const tw = txt ? Math.max(...lines.map((l) => c.measureText(l).width)) : 0, th = txt ? lines.length * lh : 0, pad = 4;
+    const st = L.style || "label_down", fs = SZ[L.size] || (typeof L.size === "number" ? L.size : 12), lh = Math.round(fs * 1.25), lines = String(L.text || "").split("\n"), txt = lines.some((l) => l !== "");
+    c.font = fontOf(L.size, false, L.text_formatting); const tw = txt ? Math.max(...lines.map((l) => c.measureText(l).width)) : 0, th = txt ? lines.length * lh : 0, pad = 4;
     const shape = ["xcross", "cross", "triangleup", "triangledown", "flag", "circle", "arrowup", "arrowdown", "square", "diamond"].includes(st);
     const bg = okc(L.color) ? L.color : null, tc = okc(L.textcolor) ? L.textcolor : null;
     if (shape) {
@@ -7295,7 +7296,7 @@ const PineDraw = (() => {
   let GAPS = null;
   /** v1.100 : rectangle d'un texte de label sans fond (style none / couleur transparente), pour interrompre les lignes dessous */
   function labelGap(c, G, L) { const st = L.style || "label_down"; if (!L.text || (okc(L.color) && st !== "none" && st !== "text_outline")) return null; if (["xcross", "cross", "triangleup", "triangledown", "flag", "circle", "arrowup", "arrowdown", "square", "diamond"].includes(st)) return null;
-    const x = G.lx(L.x), y = G.y(L.y); if (!fin(x) || !fin(y)) return null; const fs = SZ[L.size] || 12, lh = Math.round(fs * 1.25), lines = String(L.text).split("\n"); c.font = fontOf(L.size); const tw = Math.max(...lines.map((l) => c.measureText(l).width)), w = tw + 8, h = lines.length * lh + 8, ar = 6;
+    const x = G.lx(L.x), y = G.y(L.y); if (!fin(x) || !fin(y)) return null; const fs = SZ[L.size] || (typeof L.size === "number" ? L.size : 12), lh = Math.round(fs * 1.25), lines = String(L.text).split("\n"); c.font = fontOf(L.size, false, L.text_formatting); const tw = Math.max(...lines.map((l) => c.measureText(l).width)), w = tw + 8, h = lines.length * lh + 8, ar = 6;
     let bx, by; switch (st) { case "label_up": bx = x - w / 2; by = y + ar; break; case "label_left": bx = x + ar; by = y - h / 2; break; case "label_right": bx = x - w - ar; by = y - h / 2; break; case "label_center": case "none": case "text_outline": bx = x - w / 2; by = y - h / 2; break; case "label_lower_left": bx = x; by = y - h; break; case "label_lower_right": bx = x - w; by = y - h; break; case "label_upper_left": bx = x; by = y; break; case "label_upper_right": bx = x - w; by = y; break; default: bx = x - w / 2; by = y - h - ar; }
     const al = L.textalign === "left" ? 0 : L.textalign === "right" ? 2 : 1, tx = al === 0 ? bx + 4 : al === 2 ? bx + w - 4 - tw : bx + (w - tw) / 2; return [tx - 4, by + 2, tw + 8, h - 4]; }
   function line(c, G, L) {

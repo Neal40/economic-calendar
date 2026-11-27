@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.100.3] — 2026-11-27
+### Corrigé
+- Scripts Pine : le texte des étiquettes en **gras** / *italique* (`text_formatting`) s'affiche enfin comme demandé par le script.
+
 ## [1.100.2] — 2026-11-27
 ### Corrigé
 - Scripts Pine : `last_bar_time` est reconnu. Les indicateurs qui s'en servent (ex. « Times & Macros », traits verticaux des heures clés) s'affichent enfin.
