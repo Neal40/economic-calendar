@@ -1014,7 +1014,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .tvi-sec{margin:18px 0 6px!important}.tvi-body .gr-tpane>.tvi-sec:first-child{margin-top:10px!important}
 .tvi-r{display:flex;align-items:center;gap:10px;min-height:46px}.tvi-l{width:170px;flex:none;font-size:14px;line-height:1.25}
 .tvi-c{display:flex;align-items:center;gap:8px;flex:1;min-width:0;flex-wrap:wrap}.tvi-c.tvi-full{flex:1}
-.tvi-in{height:36px;border-radius:7px;font-size:14px;padding:0 10px;background:var(--gb)}.tvi-sel{min-width:120px;max-width:100%;flex:1}.tvi-num{width:96px;flex:none!important}
+.tvi-in{height:36px;border-radius:7px;font-size:14px;padding:0 10px;background:var(--gb)}.tvi-sel{min-width:120px;max-width:100%;flex:1}.tvi-num{width:96px;flex:none!important}.tvi-area{height:auto;min-height:72px;padding:8px 10px;line-height:1.45;resize:vertical;font-family:inherit;white-space:pre;overflow:auto;flex:1}
 .tvi-c input.tvi-in:not(.tvi-num){flex:1;min-width:90px}.tvi-w{width:66px;flex:none;padding:0 6px}.tvi-st{width:108px;flex:none;padding:0 6px}.tvi-ls{width:104px;flex:none;padding:0 6px}.tvi-ls:disabled{opacity:.4}
 .tvi-il{font-size:13px;color:var(--gm);margin-left:4px}.tvi-ck span{font-size:14px}
 .tvi-tip{display:inline-flex;color:var(--gm);cursor:help;margin-left:auto}.tvi-tip:hover{color:var(--gt)}
@@ -6957,8 +6957,8 @@ const PineRuntime = (() => {
         rt.inKeys.add(key); let opts = r.options; let def = r.defval;
         if (type === "enum") { const en = def && def.$en; opts = (opts || (en ? Object.values(en) : [])).map((x) => x.title); def = def ? def.title : ""; }
         if (type === "source") { opts = SRC; if (typeof def !== "string") def = "close"; }
-        meta = { key, type: type === "enum" ? "string" : type, def, min: r.minval, max: r.maxval, step: r.step, options: opts, group: r.group, inline: r.inline, tooltip: r.tooltip, ev: type === "enum" ? r.defval : null };
-        rt.inBySite.set(site, meta); rt.inputs.push({ key, type: meta.type, def, min: r.minval, max: r.maxval, step: r.step, options: opts, group: r.group, inline: r.inline, tooltip: r.tooltip }); }
+        meta = { key, type: type === "enum" || type === "area" ? "string" : type, area: type === "area", def, min: r.minval, max: r.maxval, step: r.step, options: opts, group: r.group, inline: r.inline, tooltip: r.tooltip, ev: type === "enum" ? r.defval : null };
+        rt.inBySite.set(site, meta); rt.inputs.push({ key, type: meta.type, area: meta.area, def, min: r.minval, max: r.maxval, step: r.step, options: opts, group: r.group, inline: r.inline, tooltip: r.tooltip }); }
       let v = meta.key in inVals ? inVals[meta.key] : meta.def;
       if (Array.isArray(meta.options) && meta.options.length && !meta.options.some((x) => String(x) === String(v))) v = meta.def;
       if (type === "int") { v = Math.round(+v); if (isna(v)) v = meta.def; } else if (type === "float") { v = +v; if (isna(v)) v = meta.def; } else if (type === "bool") v = v === true || v === "true";
@@ -6970,7 +6970,7 @@ const PineRuntime = (() => {
     const IN_N = ["defval", "title", "minval", "maxval", "step", "tooltip", "inline", "group", "confirm", "display"];
     const inp = (type, names = IN_N) => (...a) => { const r = argsOf(a, names); if (r.options === undefined && Array.isArray(r.minval) && type !== "int" && type !== "float") { r.options = r.minval; r.minval = undefined; } return inputCore(type, r); };
     const input = { int: inp("int"), float: inp("float"), bool: inp("bool", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), color: inp("color", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), string: inp("string", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]), source: inp("source", ["defval", "title", "tooltip", "inline", "group", "display"]),
-      timeframe: inp("string", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]), session: inp("string", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]), symbol: inp("string", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), price: inp("float", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), time: inp("int", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), text_area: inp("string", ["defval", "title", "tooltip", "group", "confirm", "display"]), enum: inp("enum", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]) };
+      timeframe: inp("string", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]), session: inp("string", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]), symbol: inp("string", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), price: inp("float", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), time: inp("int", ["defval", "title", "tooltip", "inline", "group", "confirm", "display"]), text_area: inp("area", ["defval", "title", "tooltip", "group", "confirm", "display"]), enum: inp("enum", ["defval", "title", "options", "tooltip", "inline", "group", "confirm", "display"]) };
     const input_fn = (...a) => { const r = argsOf(a, ["defval", "title", "tooltip", "inline", "group"]); const d = r.defval; if (typeof d === "string" && SRC.includes(d)) return inputCore("source", r); return inputCore(typeof d === "boolean" ? "bool" : typeof d === "number" ? (Number.isInteger(d) ? "int" : "float") : typeof d === "string" && /^#[0-9a-f]{6}/i.test(d) ? "color" : "string", r); };
     /* --- sorties : plot, hline, fill, bgcolor, formes --- */
     const DISP = { none: 0, pane: 1, data_window: 2, price_scale: 4, status_line: 8, all: 15 };
@@ -14675,7 +14675,7 @@ function indMenu(c, x, px, py) {
 }
 function openIndSettings(c, x, o = {}) {
   const d0 = indDef(x.t); if (!d0) return; const snap0 = o.snap || indSnap(x), r = c.R[x.id] || {}, pine = r._pine, I = indInputs(x);
-  const inp = pine ? (pine.inputs || []).map((f) => ({ k: f.key, n: String(f.key).replace(/ \(\d+\)$/, ""), d: f.def, t: f.options ? "sel" : f.type === "timeframe" ? "tf" : f.type === "bool" ? "bool" : f.type === "color" ? "color" : f.type === "source" ? "sel" : typeof f.def === "number" ? (Number.isInteger(f.def) && f.type !== "float" ? "int" : "float") : "text", o: f.options || (f.type === "source" ? SRC_O : null), min: f.min, max: f.max, step: f.step, g: f.group, il: f.inline, tip: f.tooltip })) : d0.inp.map((f) => ({ ...f, g: f.g, il: f.il, tip: f.tip }));
+  const inp = pine ? (pine.inputs || []).map((f) => ({ k: f.key, n: String(f.key).replace(/ \(\d+\)$/, ""), d: f.def, t: f.options ? "sel" : f.type === "timeframe" ? "tf" : f.type === "bool" ? "bool" : f.type === "color" ? "color" : f.type === "source" ? "sel" : f.area ? "area" : typeof f.def === "number" ? (Number.isInteger(f.def) && f.type !== "float" ? "int" : "float") : "text", o: f.options || (f.type === "source" ? SRC_O : null), min: f.min, max: f.max, step: f.step, g: f.group, il: f.inline, tip: f.tooltip })) : d0.inp.map((f) => ({ ...f, g: f.g, il: f.il, tip: f.tip }));
   const val = (f) => (x.inp && f.k in x.inp ? x.inp[f.k] : pine ? f.d : I[f.k]);
   const ctl = (f, lbl) => { const v = val(f), tip = f.tip ? ` title="${E(f.tip)}"` : "";
     if (f.t === "bool") return `<label class="tv-ck tvi-ck"${tip}><input type="checkbox" data-i="${E(f.k)}" ${v ? "checked" : ""}><span>${E(f.n)}</span></label>`;
@@ -14684,6 +14684,7 @@ function openIndSettings(c, x, o = {}) {
     if (f.t === "tf") { const L = ["", "1S", "5S", "15S", "30S", "1", "2", "3", "5", "10", "15", "30", "45", "60", "120", "180", "240", "1D", "1W", "1M", "3M", "6M", "12M"]; if (v && !L.includes(String(v))) L.push(String(v)); return lb + `<select class="gr-in tvi-in tvi-sel" data-i="${E(f.k)}"${tip}>${L.map((q) => `<option value="${q}" ${String(q) === String(v || "") ? "selected" : ""}>${q ? E(ivLabel(q, true)) : "Graphique"}</option>`).join("")}</select>`; }
     if (f.t === "color") return lb + colorInput("i:" + f.k, v);
     const num = f.t === "int" || f.t === "float";
+    if (f.t === "area") return lb + `<textarea class="gr-in tvi-in tvi-area" data-i="${E(f.k)}"${tip} rows="${Math.min(10, Math.max(3, String(v).split("\n").length))}" spellcheck="false">${E(v)}</textarea>`; // input.text_area : retours à la ligne gardés
     return lb + `<input class="gr-in tvi-in${num ? " tvi-num" : ""}" data-i="${E(f.k)}"${tip} ${num ? `type="number" step="${f.step || (f.t === "int" ? 1 : "any")}"${f.min != null ? ` min="${f.min}"` : ""}${f.max != null ? ` max="${f.max}"` : ""}` : ""} value="${E(v)}">`; };
   // lignes : groupes (titres en capitales) + entrées « inline » sur une même ligne, info-bulle (i) en bout de ligne
   // lignes : groupes (titres en capitales) + entrées « inline » sur une même ligne, info-bulle (i) en bout de ligne

@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.100.4] — 2026-11-27
+### Corrigé
+- Paramètres d'un script Pine : les champs de texte sur plusieurs lignes (`input.text_area`, ex. les listes de Times et de Macros) s'affichent en zone de texte et gardent leurs retours à la ligne. Avant, changer n'importe quel réglage collait toutes les lignes ensemble et l'indicateur n'affichait plus rien.
+
 ## [1.100.3] — 2026-11-27
 ### Corrigé
 - Scripts Pine : le texte des étiquettes en **gras** / *italique* (`text_formatting`) s'affiche enfin comme demandé par le script.
