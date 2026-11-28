@@ -2,6 +2,13 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.104.0] — 2026-11-28
+### Ajouté
+- Graphique : renommer un dessin en cliquant sur le **titre de sa fenêtre de paramètres** (ex. « Retracement de Fibonacci » → « Wick Daily »). Le nouveau nom est aussi celui de l'arborescence des objets ; un titre vide remet le nom d'origine.
+- Les **modèles de dessin** enregistrent le titre renommé : appliquer le modèle redonne ce titre au dessin.
+### Corrigé
+- Arborescence des objets : le double-clic sur le nom d'un dessin ouvre bien le renommage (le premier clic redessinait la liste et le double-clic se perdait).
+
 ## [1.103.0] — 2026-11-28
 ### Ajouté
 - Graphique : dans les paramètres des dessins Position longue / courte, case « Étiquettes sur l'échelle de prix (toujours, à leurs couleurs) » : l'objectif (couleur de l'objectif), l'entrée et le stop (couleur du stop) restent affichés sur l'échelle de prix, même quand le dessin n'est pas sélectionné. Désactivée par défaut.

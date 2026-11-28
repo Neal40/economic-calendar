@@ -960,6 +960,7 @@ body.thx .pstrats .pchip.on{background:var(--acc);border-color:var(--acc);color:
 .gr-float{background:var(--gb);border:0;border-radius:8px;padding:3px 4px;gap:1px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 6px 22px rgba(0,0,0,.18)}
 /* v1.102.3 : barres flottantes (dessin + favoris) sans ombrage, juste un fin contour */
 .gr-float,.gr-favbar{box-shadow:none!important;border:1px solid var(--gl)!important}
+.gr-dh b.gr-dren{cursor:text;border-radius:4px;padding:1px 4px;margin-left:-4px}.gr-dh b.gr-dren:hover{background:var(--gl)}.gr-dh .gr-dtin{font-size:15px;font-weight:600;flex:1;margin-right:10px}
 .gr-float .gr-fgrip{display:flex;align-items:center;padding:0 6px 0 4px;color:var(--gm);letter-spacing:0}
 .gr-float .gr-fb{width:34px;height:34px;border-radius:6px;font-weight:400;color:var(--gt)}.gr-float .gr-fb svg{width:28px;height:28px}
 .gr-fcol{position:relative;width:34px;height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;color:var(--gt)}.gr-fcol:hover{background:var(--gh)}
@@ -14421,7 +14422,7 @@ function dlg(title, body, o = {}) {
   const ov = el("div", "gr-ov"), d = el("div", "gr-dlg" + (o.cls ? " " + o.cls : "")); d.style.width = (o.w || 460) + "px"; if (o.h) d.style.height = o.h + "px";
   d.innerHTML = `<div class="gr-dh"><b>${E(title)}</b><button class="gr-dx" title="Fermer">${ICO.x}</button></div><div class="gr-db">${body}</div>${o.foot === false ? "" : `<div class="gr-df">${o.left || ""}<span class="gr-fill"></span>${o.cancel === false ? "" : `<button class="gr-btn" data-x="cancel">${E(o.cancelTxt || "Annuler")}</button>`}<button class="gr-btn gr-pri" data-x="ok">${E(o.ok || "OK")}</button></div>`}`;
   ov.append(d); ROOT.append(ov); const close = (ok) => { if (ok && o.onOk && o.onOk(d) === false) return; if (!ok && o.onCancel) o.onCancel(d); ov.remove(); document.removeEventListener("keydown", kd, true); };
-  const kd = (e) => { const all = ROOT.querySelectorAll(".gr-ov"); if (all[all.length - 1] !== ov) return; /* seule la fenêtre du dessus réagit à Entrée / Échap */ if (e.key === "Escape") { e.stopPropagation(); close(false); } if (e.key === "Enter" && o.enter !== false && !/TEXTAREA/.test(e.target.tagName) && !e.target.closest(".gr-ssin")) { e.preventDefault(); close(true); } };
+  const kd = (e) => { const all = ROOT.querySelectorAll(".gr-ov"); if (all[all.length - 1] !== ov) return; if (e.target.closest && e.target.closest(".gr-dtin")) return; /* v1.104 : renommage du titre en cours */ /* seule la fenêtre du dessus réagit à Entrée / Échap */ if (e.key === "Escape") { e.stopPropagation(); close(false); } if (e.key === "Enter" && o.enter !== false && !/TEXTAREA/.test(e.target.tagName) && !e.target.closest(".gr-ssin")) { e.preventDefault(); close(true); } };
   document.addEventListener("keydown", kd, true); d.querySelector(".gr-dx").onclick = () => close(false); ov.addEventListener("pointerdown", (e) => { if (e.target === ov) close(false); });
   d.querySelectorAll("[data-x]").forEach((b) => (b.onclick = () => close(b.dataset.x === "ok")));
   const head = d.querySelector(".gr-dh"); head.addEventListener("pointerdown", (e) => { if (e.target.closest("button")) return; const r = d.getBoundingClientRect(), x0 = e.clientX - r.left, y0 = e.clientY - r.top; d.style.position = "fixed"; d.style.margin = "0";
@@ -14947,10 +14948,10 @@ function tplManage(tool, d) { sortDlg("Modèles · " + (T[tool] ? T[tool].n : to
   del: (k) => tplDel(tool, k), open: d ? (k) => { const st = tplOf(tool)[k]; if (st) tplApply(d, st); } : null }); }
 function tplSave(tool, name, st) { const all = tplAll(), had = !!(all[tool] && all[tool][name]); all[tool] = all[tool] || {}; all[tool][name] = JSON.parse(JSON.stringify(st)); LS.set("gr-tpl", all); toast((had ? "Modèle « " + name + " » remplacé" : "Modèle « " + name + " » enregistré") + " (" + (T[tool] ? T[tool].n : tool) + ")"); }
 function tplDel(tool, name) { const all = tplAll(); if (!all[tool]) return; delete all[tool][name]; if (!Object.keys(all[tool]).length) delete all[tool]; LS.set("gr-tpl", all); toast("Modèle « " + name + " » supprimé"); }
-function tplApply(d, st) { snap(); const x = JSON.parse(JSON.stringify(st)), txt = x._txt; delete x._txt; d.s = Object.assign({}, d.s, x); if (txt != null) d.txt = txt;
+function tplApply(d, st) { snap(); const x = JSON.parse(JSON.stringify(st)), txt = x._txt, nm = x._name; delete x._txt; delete x._name; d.s = Object.assign({}, d.s, x); if (txt != null) d.txt = txt; if (nm) d.name = nm;
   if ((d.tool === "long" || d.tool === "short") && x.tpT > 0 && x.slT > 0 && d.p.length >= 3) { const tick = (SYM(d.sym) || {}).tick || 0.25, k = d.tool === "long" ? 1 : -1, e = d.p[0].p; d.p[1].p = e + k * x.tpT * tick; d.p[2].p = e - k * x.slT * tick; }
   drawChanged(d); }
-const tplStyle = (d) => Object.assign({}, JSON.parse(JSON.stringify(d.s)), d.txt ? { _txt: d.txt } : {});
+const tplStyle = (d) => Object.assign({}, JSON.parse(JSON.stringify(d.s)), d.txt ? { _txt: d.txt } : {}, d.name ? { _name: d.name } : {}); // v1.104 : le titre renommé est gardé dans le modèle
 function tplItems(d, after) { const tpl = tplOf(d.tool), names = tplNames(d.tool), done = () => after && after();
   return [names.length ? "h:Mes modèles" : null, ...names.map((n) => ({ t: n, f: () => { tplApply(d, tpl[n]); done(); }, del: () => tplDel(d.tool, n) })), names.length ? "-" : null,
     { t: "Enregistrer le modèle sous…", f: () => askText("Nom du modèle (" + T[d.tool].n + ")", names[0] || "Mon modèle", (n) => tplSave(d.tool, n, tplStyle(d))) },
@@ -15036,10 +15037,16 @@ function openDrawSettings(d, c) {
     <div class="gr-sec">Niveau de profit</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-tpt="1" value="${nT(1)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-tpp="1" value="${d.p[1].p}"></div>
     <div class="gr-sec">Niveau du stop</div><div class="gr-fr"><span>Ticks</span><input class="gr-in" type="number" data-slt="1" value="${nT(2)}"></div><div class="gr-fr"><span>Prix</span><input class="gr-in" type="number" step="any" data-slp="1" value="${d.p[2].p}"></div>
     <div class="gr-fr"><span>Précision QTY</span><select class="gr-in" data-n="qp">${[["def", "Par défaut"], ["0", "0"], ["1", "0,1"], ["2", "0,01"], ["3", "0,001"]].map(([v, n]) => `<option value="${v}" ${String(s.qp ?? "def") === v ? "selected" : ""}>${n}</option>`).join("")}</select></div>` : "";
-  let dd = null; dd = dlg(def.n, `<div class="gr-tabs">${inT ? `<button class="gr-tab on" data-p="in">Paramètres en entrée</button>` : ""}<button class="gr-tab${inT ? "" : " on"}" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button><button class="gr-tab" data-p="sy">Synchronisation</button></div>
+  let dd = null; dd = dlg(dName(d), `<div class="gr-tabs">${inT ? `<button class="gr-tab on" data-p="in">Paramètres en entrée</button>` : ""}<button class="gr-tab${inT ? "" : " on"}" data-p="st">Style</button>${hasTxt ? `<button class="gr-tab" data-p="tx">Texte</button>` : ""}${lvl ? `<button class="gr-tab" data-p="lv">Niveaux</button>` : ""}<button class="gr-tab" data-p="co">Coordonnées</button><button class="gr-tab" data-p="vi">Visibilité</button><button class="gr-tab" data-p="sy">Synchronisation</button></div>
     ${inT ? `<div class="gr-tpane" data-p="in">${inT}</div>` : ""}<div class="gr-tpane" data-p="st"${inT ? " hidden" : ""}>${style || `<div class="gr-empty">Pas de réglage de style.</div>`}</div>${hasTxt ? `<div class="gr-tpane" data-p="tx" hidden>${textT}</div>` : ""}${lvl ? `<div class="gr-tpane" data-p="lv" hidden>${lvT}</div>` : ""}<div class="gr-tpane" data-p="co" hidden>${coT}</div><div class="gr-tpane gr-vis" data-p="vi" hidden>${viT}</div><div class="gr-tpane" data-p="sy" hidden>${syT}</div>`,
   { w: 500, cls: "gr-dset", left: `<button class="gr-btn" data-tplb="1">Modèle ▾</button>`, onCancel: () => { if (!dd.cancelled) { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); return; } /* v1.96 : × / Échap / clic dehors = garder (comme TradingView) */ const f = findD(d.id); if (f) { f.list[f.i] = JSON.parse(before); drawChanged(); } }, onOk: () => { if (JSON.stringify(d) !== before) { HIST.u.push(beforeAll); HIST.r = []; refreshHeader(); } drawChanged(d); } });
   tabs(dd.el); const root = dd.el;
+  { // v1.104 : clic sur le titre = renommer le dessin (même nom que dans l'arborescence des objets ; vide = nom d'origine)
+    const hb = root.querySelector(".gr-dh b"); hb.classList.add("gr-dren"); hb.title = "Clic pour renommer le dessin";
+    hb.onclick = () => { if (root.querySelector(".gr-dh .gr-dtin")) return; const inp = el("input", "gr-in gr-dtin"); inp.value = dName(d); inp.placeholder = def.n; hb.replaceWith(inp); inp.focus(); inp.select(); let done = false;
+      const fin2 = (ok) => { if (done) return; done = true; if (ok) { const n = inp.value.trim(); if (n && n !== def.n) d.name = n; else delete d.name; drawChanged(d); if (STATE.panel === "tree") renderTree(); } hb.textContent = dName(d); inp.replaceWith(hb); };
+      inp.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") { e.preventDefault(); fin2(true); } if (e.key === "Escape") { e.preventDefault(); fin2(false); } }; inp.onblur = () => fin2(true); };
+  }
   { const cb = root.querySelector('[data-x="cancel"]'); if (cb) cb.addEventListener("pointerdown", () => (dd.cancelled = true)); }
   const apply = () => { root.querySelectorAll("[data-k]").forEach((e) => { const k = e.dataset.k; if (k.includes(":")) return; const v = readColor(root, k); if (v != null) s[k] = v; });
     root.querySelectorAll("[data-n]").forEach((e) => { const k = e.dataset.n; s[k] = e.tagName === "SELECT" && isNaN(+e.value) ? e.value : +e.value; });
@@ -15193,7 +15200,7 @@ function renderDet() { const P = $r("#grRPanel"), c = activeCell(); if (!c) retu
 // ----- arborescence des objets -----
 /* arborescence des objets (façon TopstepX) : groupes (gr-dgroups = { sous-jacent: [{ id, name, open }] }, d.grp), glisser-déposer = ordre d'affichage (premier plan en haut) et rangement dans un groupe,
    renommer (double-clic sur le nom → d.name), sélection multiple (Ctrl / Maj), masquer / verrouiller / supprimer par ligne, par groupe ou pour la sélection, recherche */
-const TSEL = new Set(); let treeQ = "", treeLast = null;
+const TSEL = new Set(); let treeQ = "", treeLast = null, treeClk = {};
 const dGroups = (u) => { const all = LS.get("gr-dgroups", {}); return all[u] || []; }, dGroupsSet = (u, L) => { const all = LS.get("gr-dgroups", {}); all[u] = L; LS.set("gr-dgroups", all); };
 const dName = (d) => d.name || (d.txt ? d.txt.split("\n")[0] : T[d.tool] ? T[d.tool].n : d.tool);
 function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || STATE.panel !== "tree") return; const u = undOf(c.st.sym), L = drawsOf(c.st.sym).filter((d) => c.syncOk(d)), G = dGroups(u), GV = G.filter((g) => g.lay === curLay() || g.sync === "global" || (g.sync === "layouts" && (g.lays || []).includes(curLay())) || L.some((d) => d.grp === g.id)), gid = new Set(G.map((g) => g.id));
@@ -15242,10 +15249,13 @@ function renderTree() { const P = $r("#grRPanel"), c = activeCell(); if (!c || S
     if ((id = g("data-tx"))) { const f = findD(id); if (f) { snap(); f.list.splice(f.i, 1); if (DS.sel === id) selectD(null); TSEL.delete(id); drawChanged(); } return; }
     if ((id = g("data-ih"))) { const x = c.st.inds.find((y) => y.id === id); x.hide = !x.hide; c.inds(true); c.legend(); saveState(); renderTree(); return; } if ((id = g("data-is"))) { openIndSettings(c, c.st.inds.find((y) => y.id === id)); return; } if ((id = g("data-ix"))) { removeInd(c, id); return; }
     if ((id = g("data-d"))) { const f = findD(id); if (!f) return;
+      // v1.104 : double-clic sur le nom = renommer (le 1er clic redessine l'arborescence, donc le dblclick natif se perdait)
+      const now = Date.now(); if (!e.ctrlKey && !e.metaKey && !e.shiftKey && treeClk.id === id && now - treeClk.t < 500 && e.target.closest("[data-tn]")) { treeClk = {}; const tn = P.querySelector(`[data-tn="${id}"]`); if (tn) rename(tn, dName(f.d), (n) => { snap(); if (n && n !== (T[f.d.tool] || {}).n) f.d.name = n; else delete f.d.name; drawChanged(); }); return; }
+      treeClk = { id, t: now };
       if (e.ctrlKey || e.metaKey) { if (TSEL.has(id)) TSEL.delete(id); else TSEL.add(id); if (DS.sel && DS.sel !== id) TSEL.add(DS.sel); treeLast = id; renderTree(); return; }
       if (e.shiftKey && (treeLast || DS.sel)) { const rows = [...P.querySelectorAll(".gr-tdr")].map((r) => r.dataset.d), a = rows.indexOf(treeLast || DS.sel), b = rows.indexOf(id); if (a >= 0 && b >= 0) rows.slice(Math.min(a, b), Math.max(a, b) + 1).forEach((x) => TSEL.add(x)); renderTree(); return; }
       TSEL.clear(); treeLast = id; selectD(f.d, c); goToTime(c, f.d.p[0].t, true); } };
-  P.ondblclick = (e) => { const tn = e.target.closest("[data-tn]"), gn = e.target.closest("[data-gn]");
+  P.ondblclick = (e) => { if (P.querySelector(".gr-tren")) return; const tn = e.target.closest("[data-tn]"), gn = e.target.closest("[data-gn]");
     if (gn) { const grp = G.find((x) => x.id === gn.dataset.gn); if (grp) rename(gn, grp.name, (n) => dGroupsSet(u, dGroups(u).map((x) => (x.id === grp.id ? Object.assign({}, x, { name: n || x.name }) : x)))); return; }
     if (tn) { const f = findD(tn.dataset.tn); if (f) rename(tn, dName(f.d), (n) => { snap(); if (n) f.d.name = n; else delete f.d.name; drawChanged(); }); } };
   /* glisser-déposer : ligne de dessin -> avant / après une autre ligne (prend son groupe), sur un en-tête de groupe (dedans, au premier plan du groupe), sur « Dessins » ou la zone du bas (hors groupe) */
