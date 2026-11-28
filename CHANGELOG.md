@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.103.0] — 2026-11-28
+### Ajouté
+- Graphique : dans les paramètres des dessins Position longue / courte, case « Étiquettes sur l'échelle de prix (toujours, à leurs couleurs) » : l'objectif (couleur de l'objectif), l'entrée et le stop (couleur du stop) restent affichés sur l'échelle de prix, même quand le dessin n'est pas sélectionné. Désactivée par défaut.
+
 ## [1.102.3] — 2026-11-27
 ### Modifié
 - Graphique : plus d'ombrage sous la barre d'outils de dessin flottante ni sous la barre des favoris, remplacé par un fin contour.
