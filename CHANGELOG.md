@@ -2,6 +2,10 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions [sémantiques](https://semver.org/lang/fr/).
 
+## [1.105.0] — 2026-11-28
+### Ajouté
+- Graphique : la case « Étiquettes de prix sur l'échelle (toujours, à la couleur du dessin) » existe maintenant pour **tous les dessins** (onglet Style), plus seulement les positions. Rectangle, tendance, etc. : un prix par point, à la couleur de la ligne. Retracement / extension de Fibonacci : un prix par niveau coché, à la couleur du niveau. Quand le dessin est sélectionné, les étiquettes bleues habituelles reprennent la main. Désactivée par défaut.
+
 ## [1.104.0] — 2026-11-28
 ### Ajouté
 - Graphique : renommer un dessin en cliquant sur le **titre de sa fenêtre de paramètres** (ex. « Retracement de Fibonacci » → « Wick Daily »). Le nouveau nom est aussi celui de l'arborescence des objets ; un titre vide remet le nom d'origine.
